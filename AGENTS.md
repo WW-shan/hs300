@@ -1,40 +1,49 @@
-# Repository Guidelines
+# AI 开发入口
 
-## Current Repository State
+修改、调试或审查本仓库前，必须完整阅读并遵循根目录的 [`CONTRIBUTING.md`](CONTRIBUTING.md)。其中定义了项目架构、数据契约、数据源插件化、缓存与性能要求、测试矩阵以及 PR 复审和合并标准。
 
-This directory is currently empty and is not a Git repository. No source tree, assets, manifests, build tools, or tests exist yet. Do not assume commands or frameworks until they are added; update this guide in the same change that introduces project tooling.
+涉及代码二次开发、前端插槽、后端可替换策略、扩展注册或上游升级兼容时，还必须阅读 [`docs/secondary-development.md`](docs/secondary-development.md)。该文档区分当前已实现能力与目标扩展契约；不得根据设计示例虚构尚不存在的 API。
 
-## Project Structure & Module Organization
+## 仓库定位
 
-When scaffolding the project, keep structure explicit and documented here. Recommended defaults:
+- 本仓库是 HS300 upstream-derived 项目：完整应用基线来自 `shy3130/tick-stock-panel`，后续 HS300 能力必须优先复用其数据源插件、K 线、指标、因子和回测链路。
+- CSI300 月度成分股快照与更新工具位于 `vendor/index-constituents/`，只包含 `constituents-csi300.csv` 数据文件。
+- 主要结构：`backend/`（FastAPI 与数据服务）、`frontend/`（React/Vite）、`docs/`（项目文档）、`vendor/`（第三方数据与工具）。
+- 当前已实现 HS300 快照/PIT 成员服务、`/api/hs300` 快照/成员/区间并集/日线同步 API、AData 日线 provider，以及策略与因子回测的按日 HS300 过滤。修改时仍必须搜索真实调用链和测试；设计/计划中的其他能力不能仅凭文档假设为已实现。
+- AData 只提供股票维表与不复权原始日线；复权由现有 `adj_factor` provider 和 enriched 管道处理。同步使用显式单次 provider 参数，不要临时覆盖全局数据源偏好。
 
-- `src/` for production source code.
-- `tests/` for tests; mirror the `src/` hierarchy where useful.
-- `assets/` for static, non-generated assets.
-- `scripts/` for repeatable development or data tasks.
-- `docs/` for design and operational documentation.
+## 常用验证命令
 
-Keep modules focused on one responsibility. Avoid catch-all `utils` modules and unexplained generated files.
+后端基线：
 
-## Build, Test, and Development Commands
+```bash
+cd backend && uv sync --extra dev --frozen
+cd backend && uv run pytest tests -q
+```
 
-No commands are currently defined. After selecting a stack, add pinned dependencies and document exact root-level commands here, such as:
+前端基线：
 
-- `make setup` or `npm install` installs dependencies.
-- `make test` or `npm test` runs the complete test suite.
-- `make lint` or `npm run lint` checks formatting and style.
-- `make run` or `npm run dev` starts the local application.
+```bash
+cd frontend && pnpm install --frozen-lockfile
+cd frontend && pnpm build
+```
 
-Prefer a checked-in task runner so contributors do not need to remember tool-specific invocations.
+聚焦前端测试：
 
-## Coding Style & Naming Conventions
+```bash
+cd frontend && pnpm vitest run src/<test-file>
+```
 
-No language or formatter is configured. When code is added, enforce it with a checked-in formatter and linter, and document the canonical command. Use UTF-8, LF line endings, and the selected language's standard indentation (for example, four spaces in Python and two in TypeScript). Use `snake_case` for Python functions and variables, `camelCase` for JavaScript/TypeScript values, and `PascalCase` for types and components.
+空白与补丁检查：
 
-## Testing Guidelines
+```bash
+git diff --check
+```
 
-No test framework or coverage threshold exists yet. Once selected, name tests by behavior, place them under `tests/` unless the framework requires co-location, and add regression tests for every bug fix. Run the full suite before opening a pull request; record any required coverage target in the tooling configuration.
+## 执行纪律
 
-## Commit & Pull Request Guidelines
-
-There is no Git history, so no commit convention can be inferred. After initializing Git, use concise imperative subjects such as `Add HS300 data loader`; consider Conventional Commits if the project adopts them. Keep commits focused. Pull requests should summarize the change, list verification commands, link relevant issues, and include screenshots only for UI changes. Never commit credentials, proprietary market data, or local environment files.
+- 先理解调用链、数据契约和现有测试，再进行修改。
+- 保持实现简单、改动范围最小，不处理无关问题。
+- 不覆盖工作区已有修改，不虚构测试或审查结果。
+- 不并行重写图表、指标、因子、回测、存储或数据源框架。
+- 以实际验证结果作为完成标准。

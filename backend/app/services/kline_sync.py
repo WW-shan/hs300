@@ -166,7 +166,9 @@ def sync_daily_batch(symbols: list[str],
                      start_time: datetime | None = None,
                      end_time: datetime | None = None,
                      on_chunk_done: Callable[[int, int], None] | None = None,
-                     failed_out: list[str] | None = None) -> pl.DataFrame:
+                     failed_out: list[str] | None = None,
+                     asset_type: str = "stock",
+                     provider_name: str | None = None) -> pl.DataFrame:
     """批量拉取多股日 K。
 
     优先使用 start_time / end_time 区间 + count=10000,确保覆盖完整时间段。
@@ -175,6 +177,30 @@ def sync_daily_batch(symbols: list[str],
     failed_out: 可选出参。拉取失败的分块标的会追加进该 list, 供上层判定「部分失败」
                 而非静默当成功(某分块断网 → 这些标的本轮未更新, 保持旧数据)。
     """
+    selected_provider = provider_name or preferences.get_daily_data_provider()
+    if selected_provider != "tickflow":
+        from app.data_providers import custom as custom_sources
+
+        if custom_sources.provider_has_dataset(selected_provider, "daily"):
+            provider = custom_sources.get_provider(selected_provider)
+            supports_asset_type = getattr(provider, "supports_asset_type", None)
+            # Preserve existing non-stock routing unless a plugin explicitly supports it.
+            supports_requested_asset = asset_type == "stock" or (
+                callable(supports_asset_type)
+                and supports_asset_type("daily", asset_type)
+            )
+            if supports_requested_asset:
+                end = end_time or datetime.now()
+                start = start_time or (end - timedelta(days=count or 365))
+                frame = provider.get_daily(
+                    symbols,
+                    start_time=start,
+                    end_time=end,
+                    asset_type=asset_type,
+                    on_chunk_done=on_chunk_done,
+                )
+                return _normalize_daily(frame) if not frame.is_empty() else pl.DataFrame()
+
     tf = get_client()
     out: list[pl.DataFrame] = []
     chunks = chunked(symbols, batch_size)

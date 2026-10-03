@@ -6,8 +6,8 @@ quotes.get_by_universes 作为补充来源。日K统一走 klines.batch。
 """
 from __future__ import annotations
 
-import logging
 import gc
+import logging
 from collections.abc import Callable
 from datetime import datetime, timedelta
 
@@ -81,6 +81,46 @@ def _fetch_instruments_by_type(instrument_type: str, asset_type_label: str) -> p
     instrument_type: 'index' / 'etf'
     asset_type_label: 写入 instruments 表的 asset_type 标记('index' / 'etf')
     """
+    from app.data_providers import custom as custom_sources
+
+    provider_name = preferences.get_daily_data_provider()
+    if provider_name != "tickflow" and custom_sources.provider_has_dataset(provider_name, "daily"):
+        try:
+            provider = custom_sources.get_provider(provider_name)
+            supports_asset_type = getattr(provider, "supports_asset_type", None)
+            if (
+                callable(supports_asset_type)
+                and supports_asset_type("daily", instrument_type)
+                and callable(getattr(provider, "get_instruments", None))
+            ):
+                items = provider.get_instruments(instrument_type) or []
+                custom_rows = []
+                for item in items:
+                    symbol = item.get("symbol") if isinstance(item, dict) else None
+                    if not symbol:
+                        continue
+                    custom_rows.append({
+                        "symbol": str(symbol),
+                        "name": item.get("name") or str(symbol),
+                    })
+                if custom_rows:
+                    return (
+                        pl.DataFrame(custom_rows)
+                        .with_columns([
+                            pl.col("symbol").str.split(".").list.first().alias("code"),
+                            pl.lit(asset_type_label).alias("asset_type"),
+                        ])
+                        .unique(subset=["symbol"], keep="last")
+                        .sort("symbol")
+                    )
+        except Exception as e:
+            logger.warning(
+                "provider %s get_instruments(%s) failed, falling back to TickFlow: %s",
+                provider_name,
+                instrument_type,
+                e,
+            )
+
     tf = get_client()
     rows: list[dict] = []
     for ex in _EXCHANGES:
@@ -95,7 +135,7 @@ def _fetch_instruments_by_type(instrument_type: str, asset_type_label: str) -> p
                     "symbol": str(symbol),
                     "name": item.get("name") or str(symbol),
                 })
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             logger.warning("get_instruments(%s, type=%s) failed: %s", ex, instrument_type, e)
 
     if not rows:
@@ -204,7 +244,19 @@ def sync_and_persist_index_daily(
     否则取 index_instruments 表全量(指数+ETF 合并存储)。
     on_chunk_done(current, total) 每个批次完成后回调。
     """
-    if not capset.has(Cap.KLINE_DAILY_BATCH):
+    from app.data_providers import custom as custom_sources
+
+    provider_name = preferences.get_daily_data_provider()
+    custom_provider = None
+    if provider_name != "tickflow" and custom_sources.provider_has_dataset(provider_name, "daily"):
+        try:
+            candidate = custom_sources.get_provider(provider_name)
+            supports_asset_type = getattr(candidate, "supports_asset_type", None)
+            if callable(supports_asset_type) and supports_asset_type("daily", "index"):
+                custom_provider = candidate
+        except Exception as e:
+            logger.warning("index daily provider %s unavailable: %s", provider_name, e)
+    if not capset.has(Cap.KLINE_DAILY_BATCH) and custom_provider is None:
         return 0
 
     if symbols_override:
@@ -237,6 +289,8 @@ def sync_and_persist_index_daily(
             batch_size=None,
             start_time=start_time,
             end_time=end_time,
+            asset_type="index",
+            provider_name=provider_name if custom_provider is not None else None,
         )
         if raw.is_empty():
             continue
@@ -339,7 +393,19 @@ def sync_and_persist_etf_daily(
     """同步 ETF 日K到独立 kline_etf_* parquet,并计算 ETF enriched。
     on_chunk_done(current, total) 每个批次完成后回调。
     """
-    if not capset.has(Cap.KLINE_DAILY_BATCH):
+    from app.data_providers import custom as custom_sources
+
+    provider_name = preferences.get_daily_data_provider()
+    custom_provider = None
+    if provider_name != "tickflow" and custom_sources.provider_has_dataset(provider_name, "daily"):
+        try:
+            candidate = custom_sources.get_provider(provider_name)
+            supports_asset_type = getattr(candidate, "supports_asset_type", None)
+            if callable(supports_asset_type) and supports_asset_type("daily", "etf"):
+                custom_provider = candidate
+        except Exception as e:  # noqa: BLE001
+            logger.warning("ETF daily provider %s unavailable: %s", provider_name, e)
+    if not capset.has(Cap.KLINE_DAILY_BATCH) and custom_provider is None:
         return 0
 
     if symbols_override:
@@ -372,6 +438,8 @@ def sync_and_persist_etf_daily(
             batch_size=None,
             start_time=start_time,
             end_time=end_time,
+            asset_type="etf",
+            provider_name=provider_name if custom_provider is not None else None,
         )
         if raw.is_empty():
             continue

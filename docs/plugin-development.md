@@ -311,6 +311,12 @@ uv run --extra dev python -m ruff check app/plugins/<your_plugin>/ tests/test_<y
 
 ## 现有插件参考
 
+- **`backend/app/plugins/akshare/`** — AkShare Python 插件(`runtime: python`, 无 API Key)
+  - 声明 `daily`、`adj_factor`、`financial`、`minute`、`realtime`; 日K支持股票/指数/ETF原始行情,分钟K使用新浪近期单标的接口,实时快照覆盖 A 股和指数。
+  - 日K和分钟K成交量由股转为手,涨跌幅由百分数转为小数;不声明 `full_minute`(上游没有全市场增量批量契约),也不声明 `depth5`(已验证的新浪快照只有买卖报价,东方财富五档接口在当前网络失败)。
+  - 除权因子使用新浪 `qfq-factor` 累积因子,相邻值反向相除转换为项目要求的单次 `pre/post` 事件因子;股票同步范围限定为本地 CSI 300 月度快照历史并集,ETF 无 AkShare 安全事件因子时按既有服务逻辑回退 TickFlow。
+  - 财务表通过东方财富批量报告接口按期读取,从 2021-Q1 到最近已过披露窗口的报告期;因子生效使用上游公告/更新日期,不把报告期日期伪装成公告日。CNINFO 股本变动按公告日期/变动日期映射至 `shares` 表,股数单位转换为股,仅拉取 CSI 300 月度快照历史并集以控制逐股请求量;该数据源的财报返回当前可见版本,不等于带完整版本历史的交易所 PIT 数据库。
+  - `requirements.txt` 锁定 AkShare 版本;provider 在上游调用边界增加超时和限速。真实接口连通性受当前网络/代理和上游限制影响;契约测试见 `backend/tests/test_akshare_provider.py`。
 - **`backend/app/plugins/fuyao/`** — 同花顺官方 REST 数据源(runtime: none, 纯 HTTP 零依赖)
   - 提供 `realtime`(A 股全市场快照, 分页拉取)、`daily`(原始价日K三档: 近端窗口走 daily-k-10d dump, 深窗口走 daily-k 10 年全量 dump(172MB 一次下载、缓存复用、10d 补尾), 兜底单标的接口按 10 年自动分片)、`adj_factor`(事件 dump + 前收盘价从本地日K dump 一次取齐、缺价标的回退单标的接口, 按交易所公式推导单事件比值, 涨跌停自检; 全市场配价从逐标的 ~13 分钟降为秒级); Key 在设置页卡片直接配置(先探后存), 或 `.env` 配 `FUYAO_API_KEY`
   - `client.py` — httpx 客户端(X-api-key 认证 + 统一信封解包 + 分页 + 页间隔限频 + 单标的日K + dump 预签名下载, S3 下载不带 Key 头)

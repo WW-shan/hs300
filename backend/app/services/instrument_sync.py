@@ -44,6 +44,56 @@ def _flatten_instruments(items: list[dict]) -> list[dict]:
     return rows
 
 
+def _preserve_missing_metadata(df: pl.DataFrame, path: Path) -> pl.DataFrame:
+    """Keep existing instrument metadata when a selected provider omits those fields."""
+    if not path.exists() or "symbol" not in df.columns:
+        return df
+    try:
+        existing = pl.read_parquet(path)
+    except Exception as e:
+        logger.warning("读取既有 instruments 元数据失败, 保持新源结果: %s", e)
+        return df
+    if existing.is_empty() or "symbol" not in existing.columns:
+        return df
+
+    metadata_fields = (
+        "region",
+        "listing_date",
+        "total_shares",
+        "float_shares",
+        "tick_size",
+        "limit_up",
+        "limit_down",
+    )
+    fallback_fields = [field for field in metadata_fields if field in existing.columns]
+    if not fallback_fields:
+        return df
+
+    existing = existing.unique(subset=["symbol"], keep="last")
+    aliases = {field: f"_existing_{field}" for field in fallback_fields}
+    fallback = existing.select(
+        "symbol",
+        *[
+            pl.col(field).alias(aliases[field])
+            for field in fallback_fields
+        ],
+    )
+    merged = df.join(fallback, on="symbol", how="left")
+    expressions = []
+    for field in fallback_fields:
+        fallback_dtype = existing.schema[field]
+        if field not in merged.columns:
+            merged = merged.with_columns(pl.lit(None).cast(fallback_dtype).alias(field))
+        target_dtype = fallback_dtype if merged.schema[field] == pl.Null else merged.schema[field]
+        expressions.append(
+            pl.coalesce(
+                pl.col(field).cast(target_dtype, strict=False),
+                pl.col(aliases[field]).cast(target_dtype, strict=False),
+            ).alias(field)
+        )
+    return merged.with_columns(expressions).drop(list(aliases.values()))
+
+
 def _fetch_instruments_via_provider() -> list[dict] | None:
     """若当前日K数据源不是 tickflow 且该 provider 提供 get_instruments, 用它拉标的维表。
 
@@ -98,6 +148,7 @@ def sync_instruments(data_dir: Path) -> int:
     df = df.with_columns(pl.lit(date.today()).alias("as_of"))
 
     out = data_dir / "instruments" / "instruments.parquet"
+    df = _preserve_missing_metadata(df, out)
     out.parent.mkdir(parents=True, exist_ok=True)
     atomic_write_parquet(df, out)
 

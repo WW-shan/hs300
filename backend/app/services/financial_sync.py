@@ -317,8 +317,16 @@ class FinancialScheduler:
         self._last_sync: dict[str, str] = {}  # {table: iso_timestamp}
         # 手动同步(run_now)是否正在进行。前端据此显示"同步中"并防重复点击。
         self._is_syncing = False
+        self._repo: Any | None = None
 
-    def start(self, data_dir: Path, capset: CapabilitySet, *, auto_schedule: bool = False) -> None:
+    def start(
+        self,
+        data_dir: Path,
+        capset: CapabilitySet,
+        *,
+        auto_schedule: bool = False,
+        repo: Any | None = None,
+    ) -> None:
         """初始化调度器，并按需启动周期同步后台任务。
 
         auto_schedule=False (默认): 仅初始化 (设置数据目录/能力 + 恢复 last_sync),
@@ -331,6 +339,7 @@ class FinancialScheduler:
         # 即便 app.state.capabilities 已更新, 调度器仍报 "no FINANCIAL capability"。
         self._data_dir = data_dir
         self._capset = capset
+        self._repo = repo
         if not capset.has(Cap.FINANCIAL) and not _financial_is_custom():
             logger.info("FinancialScheduler skipped: no FINANCIAL capability")
             return
@@ -377,6 +386,29 @@ class FinancialScheduler:
             preferences.set_financial_sync_time(table, ts)
         except Exception as e:  # noqa: BLE001
             logger.warning("persist financial_sync_time(%s) failed: %s", e)
+
+    def _recompute_share_dependents(self) -> None:
+        """Rebuild affected enriched rows so PIT shares take effect immediately."""
+        if self._data_dir is None:
+            return
+        shares = get_financial_df(self._data_dir, "shares")
+        if shares.is_empty() or "symbol" not in shares.columns:
+            return
+        symbols = sorted(set(shares["symbol"].drop_nulls().cast(pl.Utf8).to_list()))
+        if not symbols:
+            return
+
+        from app.indicators.pipeline import run_pipeline
+
+        written = run_pipeline(data_dir=self._data_dir, symbols=symbols)
+        logger.info(
+            "shares sync recomputed enriched: %d symbols, %d rows",
+            len(symbols),
+            written,
+        )
+        if self._repo is not None:
+            self._repo.rebuild_views()
+            self._repo.refresh_cache(background=True)
 
     def update_capabilities(self, capset: CapabilitySet) -> None:
         """刷新调度器持有的能力集。
@@ -445,6 +477,9 @@ class FinancialScheduler:
             if not fn:
                 return {}
             rows = fn(self._data_dir, self._capset)
+            if table == "shares" and rows:
+                _refresh_financials_views(self._data_dir)
+                self._recompute_share_dependents()
             self._record_sync(table)
             return {table: rows}
         # 全部同步
@@ -456,6 +491,8 @@ class FinancialScheduler:
             )
             self._record_sync(t)
         _refresh_financials_views(self._data_dir)
+        if result.get("shares"):
+            self._recompute_share_dependents()
         return result
 
     def run_now(self, table: str | None = None) -> dict[str, int]:
