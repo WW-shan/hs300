@@ -32,6 +32,11 @@ import { ListColumnCustomizer } from '@/components/ListColumnCustomizer'
 import { useTableSort } from '@/components/stock-table/useTableSort'
 import { resolveCandleConfig } from '@/lib/list-columns'
 import {
+  buildScreenerRunAllKey,
+  planScreenerRunAll,
+  tryReserveScreenerRunAll,
+} from '@/lib/screenerRunScheduler'
+import {
   SCREENER_BUILTIN_COLUMNS,
   SCREENER_COLUMN_GROUPS,
   buildExtColumnsParam,
@@ -42,6 +47,12 @@ import {
 
 // 获取策略为占位功能, 暂时隐藏入口; 恢复时改回 true
 const SHOW_STRATEGY_STORE = false
+
+type ScreenerRunAllVars = {
+  date?: string
+  strategyIds?: string[]
+  poolIdsForKey?: string[]
+}
 
 export function Screener() {
   const [assetType, setAssetType] = useState<'stock' | 'etf'>('stock')
@@ -280,14 +291,17 @@ export function Screener() {
   // 进入页面自动跑策略池中的策略，获取命中数 (日线走盘后缓存/渐进式 runAll;
   // 分钟策略结果不落缓存, 由 runAllMinute 异步批量计算后合入 hitCounts)
   const runAll = useMutation({
-    mutationFn: ({ date, strategyIds }: { date?: string; strategyIds?: string[] } = {}) =>
+    mutationFn: ({ date, strategyIds }: ScreenerRunAllVars = {}) =>
       api.screenerRunAll(
         date,
         strategyIds ?? dailyPoolIds,
         assetType,
       ),
-    onSuccess: (data) => {
+    onSuccess: (data, vars) => {
       if (data.as_of) setAsOf(data.as_of)
+      if (data.as_of && vars.poolIdsForKey?.length) {
+        runAllDateRef.current = buildScreenerRunAllKey(data.as_of, vars.poolIdsForKey)
+      }
       const counts: Record<string, number> = {}
       for (const [id, item] of Object.entries(data.results)) {
         counts[id] = item.total
@@ -330,11 +344,25 @@ export function Screener() {
   // 用 ref 同步门闩，避免同一渲染周期内 isPending 尚未更新导致重复触发
   const runAllPendingRef = useRef(false)
   const requestRunAll = useCallback((
-    vars: { date?: string; strategyIds?: string[] } = {},
+    vars: ScreenerRunAllVars = {},
     options?: Parameters<typeof runAll.mutate>[1],
-  ) => {
-    if (runAllPendingRef.current || runAll.isPending) return
-    runAllPendingRef.current = true
+    scheduleKey?: string,
+    allowSameKey = false,
+  ): boolean => {
+    if (scheduleKey) {
+      if (!tryReserveScreenerRunAll(
+        runAllDateRef,
+        runAllPendingRef,
+        runAll.isPending,
+        scheduleKey,
+        { allowSameKey },
+      )) {
+        return false
+      }
+    } else {
+      if (runAllPendingRef.current || runAll.isPending) return false
+      runAllPendingRef.current = true
+    }
     runAll.mutate(vars, {
       ...options,
       onSettled: (...args) => {
@@ -342,7 +370,35 @@ export function Screener() {
         options?.onSettled?.(...args)
       },
     })
+    return true
   }, [runAll])
+
+  const scheduleDailyPoolRun = useCallback((
+    dailyIds: string[],
+    forcedIds: string[] = [],
+    options: { allowSameKey?: boolean } = {},
+  ) => {
+    const cachedAsOfById = Object.fromEntries(
+      dailyIds.map(id => [id, summaryQuery.data?.results[id]?.as_of]),
+    )
+    const plan = planScreenerRunAll({
+      asOf: asOf || undefined,
+      dailyPoolIds: dailyIds,
+      cachedAsOfById,
+      forcedIds,
+    })
+    if (!plan) return false
+    return requestRunAll(
+      {
+        date: asOf || undefined,
+        strategyIds: plan.strategyIds,
+        poolIdsForKey: plan.dailyPoolIds,
+      },
+      undefined,
+      plan.runKey ?? undefined,
+      options.allowSameKey,
+    )
+  }, [asOf, requestRunAll, summaryQuery.data])
 
   // 摘要只同步当前日期的卡片数量，避免旧日期缓存短暂显示成当前结果。
   useEffect(() => {
@@ -577,7 +633,7 @@ export function Screener() {
     if (assetType !== 'stock' || tfFilter === '1m') return
     if (runAllMinute.isPending) return
     if (!asOf || strategyPresets.length === 0 || !summaryQuery.isSuccess || runAll.isPending || dailyPoolIds.length === 0) return
-    const runKey = `${asOf}|${dailyPoolIds.join(',')}`
+    const runKey = buildScreenerRunAllKey(asOf, dailyPoolIds)
     if (runAllDateRef.current === runKey) return
     // 缓存已覆盖当前策略池 → 秒加载, 不触发 runAll
     if (cacheCoversPool) {
@@ -586,9 +642,8 @@ export function Screener() {
     }
     // 未覆盖: 受系统开关控制
     if (!screenerAutoRun) return
-    runAllDateRef.current = runKey
-    requestRunAll({ date: asOf, strategyIds: missingStrategyIds })
-  }, [asOf, strategyPresets.length, summaryQuery.isSuccess, dailyPoolIds, cacheCoversPool, missingStrategyIds, screenerAutoRun, assetType, tfFilter, runAll.isPending, runAllMinute.isPending, requestRunAll])
+    scheduleDailyPoolRun(dailyPoolIds)
+  }, [asOf, strategyPresets.length, summaryQuery.isSuccess, dailyPoolIds, cacheCoversPool, missingStrategyIds, screenerAutoRun, assetType, tfFilter, runAll.isPending, runAllMinute.isPending, requestRunAll, scheduleDailyPoolRun])
 
   // 分钟策略自动计算: 结果不落盘后缓存, 每次进入页面/池变化后异步跑一轮点亮卡片。
   // 与日线 runAll 串行 (并发 run_all 会崩 Numba); 分钟卡片不可见 (日线视图) 时不白算。
@@ -1247,10 +1302,11 @@ export function Screener() {
             // 新增的日线策略立即自动扫描, 免去手动点刷新; 纯排序/删除不重跑
             if (assetType === 'stock') {
               const prev = new Set(pool)
-              const addedDaily = newPool.filter(
-                id => !prev.has(id) && !(strategyMap.get(id)?.timeframes?.includes('1m') ?? false),
+              const nextDailyPool = newPool.filter(
+                id => !(strategyMap.get(id)?.timeframes?.includes('1m') ?? false),
               )
-              if (addedDaily.length > 0) requestRunAll({ date: asOf || undefined, strategyIds: addedDaily })
+              const addedDaily = nextDailyPool.filter(id => !prev.has(id))
+              if (addedDaily.length > 0) scheduleDailyPoolRun(nextDailyPool, addedDaily)
             }
             reorderPool(newPool)
           }}
@@ -1272,11 +1328,15 @@ export function Screener() {
           if (!data.presets.some(s => s.id === id)) {
             throw new Error(`策略 ${id} 已保存但未加载，请检查策略代码`)
           }
+          const preset = data.presets.find(s => s.id === id)
           addToPool(id)
           // 新建策略为日线时立即扫描, 免去手动点刷新 (分钟策略仍手动单跑)
-          const preset = data.presets.find(s => s.id === id)
           if (assetType === 'stock' && preset && !preset.timeframes?.includes('1m')) {
-            requestRunAll({ date: asOf || undefined, strategyIds: [id] })
+            const nextPool = [...new Set([...pool, id])]
+            const nextDailyPool = nextPool.filter(
+              poolId => poolId === id || !(strategyMap.get(poolId)?.timeframes?.includes('1m') ?? false),
+            )
+            scheduleDailyPoolRun(nextDailyPool, [id], { allowSameKey: true })
           }
         }}
       />
@@ -1286,11 +1346,15 @@ export function Screener() {
         onClose={() => setShowComposite(false)}
         onSavedId={async id => {
           const data = await qc.fetchQuery({ queryKey: QK.screenerStrategies('all'), queryFn: () => api.screenerStrategies(), staleTime: 0 })
-          addToPool(id)
           // 新建叠加策略为日线时立即扫描, 免去手动点刷新 (分钟策略仍手动单跑)
           const preset = data.presets.find(s => s.id === id)
+          addToPool(id)
           if (assetType === 'stock' && preset && !preset.timeframes?.includes('1m')) {
-            requestRunAll({ date: asOf || undefined, strategyIds: [id] })
+            const nextPool = [...new Set([...pool, id])]
+            const nextDailyPool = nextPool.filter(
+              poolId => poolId === id || !(strategyMap.get(poolId)?.timeframes?.includes('1m') ?? false),
+            )
+            scheduleDailyPoolRun(nextDailyPool, [id], { allowSameKey: true })
           }
         }}
       />
