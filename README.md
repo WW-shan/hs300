@@ -105,28 +105,8 @@ docker compose up --build
 
 ---
 
-<img src="docs/sponsors/sponsor-header.svg" width="240" alt="赞助支持 Sponsor">
-
-<div align="center">
-
-<a href="https://www.runninghub.ai/call-api?source=github&inviteCode=edt5wh7c" target="_blank" rel="noopener noreferrer">
-  <img src="docs/sponsors/runninghub-banner-v3.svg?v=3" alt="RunningHub API — 单一接口直连 400+ 主流大模型" width="100%">
-</a>
-
-<a href="https://www.runninghub.ai/call-api?source=github&inviteCode=edt5wh7c" target="_blank" rel="noopener noreferrer">
-  <img src="docs/sponsors/runninghub-intro-card.svg?v=4" alt="About RunningHub API — 产品介绍" width="100%">
-</a>
-
-**本项目由 [RunningHub](https://www.runninghub.ai/call-api?source=github&inviteCode=edt5wh7c) 提供支持** · 单一接口直连 400+ 主流大模型 · 免费测试
-
-</div>
-
----
-
 > [!IMPORTANT]
 > ⚠️ 本项目谨作为本地量化提供解决思路与方案，**不作为投资软件或者看盘软件**。**明确不做**：不对标同花顺 / 通达信，不内置「AI 荐股 / 涨停预测」。数据源已插件化，可任意接入第三方数据源。仅供学习研究使用。
-
-📮 有任何项目问题可邮件联系 **415333856@qq.com** · 觉得有用请点个 ⭐ Star
 
 ---
 
@@ -685,30 +665,6 @@ PORT=3018                      # 服务端口
 | [docs/plugin-development.md](./docs/plugin-development.md)                                         | 数据源插件开发规范(以 stock-sdk / fuyao 为参考实现)                  |
 | [docs/secondary-development.md](./docs/secondary-development.md)                                   | 代码二次开发、前端插槽、后端策略接口与 AI 开发模板                   |
 | [backend/app/strategy/prompts/strategy-guide.md](./backend/app/strategy/prompts/strategy-guide.md) | 策略开发完整规范(AI 生成与手写)                                      |
-
----
-
-## ❤️ 支持项目
-
-<div align="center">
-
-<sub>如果这个项目对你有帮助,欢迎请作者喝杯咖啡 ☕</sub>
-
-<img src="./assets/support/wechat-appreciation.jpg" alt="微信赞赏码 · 感谢道友支持 愿一路长红" height="280" />
-
-<sub>作者精力有限,优先响应赞助回馈,希望理解 📈</sub>
-
-</div>
-
-## 💬 交流群
-
-<div align="center">
-
-<sub>该上游仓库中的交流群二维码未随本项目基线导入。</sub>
-
-</div>
-
----
 
 ## ⚠️ 免责声明
 
