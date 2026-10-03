@@ -2,7 +2,7 @@
 
 ## Status
 
-Design approved by the user; implementation is pending written-spec review.
+Approved by the user; implemented and verified in the local strategy page.
 
 ## Context
 
@@ -12,20 +12,21 @@ strategy produced two identical `POST /api/screener/run_all` requests for
 second request began 2 ms after the first request finished. Its result was the
 same as the first, so this is duplicate work, not a second strategy result.
 
-The strategy-pool confirmation handler immediately schedules newly added daily
-strategies. The page's auto-run effect also schedules uncached strategies when
-the pool changes. The synchronous pending guard prevents overlapping requests,
-but the explicit handler does not reserve the date/pool key used by the effect.
-After the first mutation settles, the effect can therefore submit the same work
-again while the cached summary is still stale.
+The strategy-pool confirmation handler and the AI/composite strategy save
+handlers immediately schedule newly added daily strategies. The page's auto-run
+effect also schedules uncached strategies when the pool changes. The synchronous
+pending guard prevents overlapping requests, but these explicit handlers do not
+reserve the date/pool key used by the effect. After the first mutation settles,
+the effect can therefore submit the same work again while the cached summary is
+still stale.
 
 ## Goal and Scope
 
 - Preserve the existing behavior: adding a daily strategy starts a scan
   immediately, including when automatic page scans are disabled.
-- Ensure the explicit pool-confirm path and the auto-run effect share one
-  date/pool scheduling key, preventing a duplicate scan after the first request
-  settles.
+- Ensure explicit strategy-pool, AI-builder, and composite-builder additions
+  share one date/pool scheduling key with the auto-run effect, preventing a
+  duplicate scan after the first request settles.
 - If an explicit request is rejected because another scan is still active, do
   not reserve the key; the effect must remain able to schedule the missing work
   after the active scan settles.
@@ -38,11 +39,13 @@ again while the cached summary is still stale.
 ## Implementation Shape
 
 Use the existing `runAllDateRef` and synchronous pending guard rather than
-adding another scheduler or changing API contracts. Make the request helper
-report whether it accepted a run. When pool confirmation successfully schedules
-the missing strategies for the resulting daily pool, reserve the same
-`asOf|dailyPoolIds` key that the effect uses. If the helper declines because a
-run is active, leave the key unreserved so the effect can retry after settlement.
+changing API contracts. Add a small shared daily-pool planning helper used by
+the explicit pool-confirm, AI-builder, and composite-builder paths as well as
+the auto-run effect. Make the request helper report whether it accepted a run.
+When a path successfully schedules missing strategies for the resulting daily
+pool, reserve the same `asOf|dailyPoolIds` key that the effect uses. If the helper
+declines because a run is active, leave the key unreserved so the effect can
+retry after settlement.
 
 ## Regression and Acceptance Checks
 
