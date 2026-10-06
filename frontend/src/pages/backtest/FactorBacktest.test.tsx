@@ -40,7 +40,7 @@ vi.mock('@/lib/api', () => ({
     }),
     hs300Sync: async () => ({
       ok: true,
-      provider: 'adata',
+      provider: 'akshare',
       symbols: 2,
       rows: 10,
       zero_row_symbols: [],

@@ -57,6 +57,7 @@ def test_fuyao_calendar_is_authoritative_even_before_open(monkeypatch):
 def test_chain_falls_through_to_tickflow_when_fuyao_unknown(monkeypatch):
     monday = datetime(2026, 9, 7, 10, 0, tzinfo=CN)
     monkeypatch.setattr(trading_day, "_probe_fuyao", lambda now: None)
+    monkeypatch.setattr(trading_day, "_probe_configured_calendar", lambda now: None)
     monkeypatch.setattr(trading_day, "_probe_tickflow", lambda now: True)
     assert is_trading_day(monday) is True
 
@@ -64,6 +65,7 @@ def test_chain_falls_through_to_tickflow_when_fuyao_unknown(monkeypatch):
 def test_all_probes_unknown_returns_none(monkeypatch):
     monday = datetime(2026, 9, 7, 10, 0, tzinfo=CN)
     monkeypatch.setattr(trading_day, "_probe_fuyao", lambda now: None)
+    monkeypatch.setattr(trading_day, "_probe_configured_calendar", lambda now: None)
     monkeypatch.setattr(trading_day, "_probe_tickflow", lambda now: None)
     assert is_trading_day(monday) is None
 
@@ -161,6 +163,7 @@ def test_unknown_verdict_retries_after_short_ttl(monkeypatch):
         return None
 
     monkeypatch.setattr(trading_day, "_probe_fuyao", _counting_probe)
+    monkeypatch.setattr(trading_day, "_probe_configured_calendar", lambda now: None)
     monkeypatch.setattr(trading_day, "_probe_tickflow", lambda now: None)  # 隔离真实网络
     assert is_trading_day(monday) is None
     # 手动把缓存时间拨回 10 分钟前 (超过 unknown TTL 300s) → 重探
@@ -256,6 +259,48 @@ def test_fuyao_provider_trading_days_conversion(monkeypatch):
     assert days == {date(2026, 9, 4), date(2026, 9, 7)}
 
 
+def test_trading_days_between_uses_configured_market_calendar(monkeypatch):
+    from app.data_providers import custom as custom_sources
+    from app.services import preferences
+
+    expected = {date(2026, 9, 30), date(2026, 10, 8)}
+
+    class CalendarProvider:
+        def trading_days(self):
+            return expected
+
+    monkeypatch.setattr(preferences, "get_daily_data_provider", lambda: "akshare")
+    monkeypatch.setattr(preferences, "get_realtime_data_provider", lambda: "tickflow")
+    monkeypatch.setattr(preferences, "get_minute_data_provider", lambda: "tickflow")
+    monkeypatch.setattr(custom_sources, "is_custom_provider", lambda name: name == "akshare")
+    monkeypatch.setattr(custom_sources, "get_provider", lambda name: CalendarProvider())
+
+    days = trading_day.trading_days_between(date(2026, 9, 28), date(2026, 10, 9))
+
+    assert days == expected
+
+
+def test_configured_provider_calendar_detects_weekday_holiday(monkeypatch):
+    from app.data_providers import custom as custom_sources
+    from app.services import preferences
+
+    holiday = date(2026, 10, 2)
+
+    class CalendarProvider:
+        def trading_days(self):
+            return {date(2026, 9, 30), date(2026, 10, 8)}
+
+    monkeypatch.setattr(preferences, "get_daily_data_provider", lambda: "tickflow")
+    monkeypatch.setattr(preferences, "get_realtime_data_provider", lambda: "akshare")
+    monkeypatch.setattr(preferences, "get_minute_data_provider", lambda: "tickflow")
+    monkeypatch.setattr(custom_sources, "is_custom_provider", lambda name: name == "akshare")
+    monkeypatch.setattr(custom_sources, "get_provider", lambda name: CalendarProvider())
+    monkeypatch.setattr(trading_day, "_probe_fuyao", lambda now: None)
+    monkeypatch.setattr(trading_day, "_probe_tickflow", lambda now: None)
+
+    assert is_trading_day(datetime.combine(holiday, dt_time(10), tzinfo=CN)) is False
+
+
 def test_unknown_verdict_is_cached_within_short_ttl(monkeypatch):
     """未知结论也要按 _TTL_UNKNOWN_S 缓存: 轮询每拍重探会重复打 tickflow 请求。"""
     monday = datetime(2026, 9, 7, 10, 0, tzinfo=CN)
@@ -270,6 +315,7 @@ def test_unknown_verdict_is_cached_within_short_ttl(monkeypatch):
         return None
 
     monkeypatch.setattr(trading_day, "_probe_fuyao", _fuyao)
+    monkeypatch.setattr(trading_day, "_probe_configured_calendar", lambda now: None)
     monkeypatch.setattr(trading_day, "_probe_tickflow", _tickflow)
 
     assert is_trading_day(monday) is None

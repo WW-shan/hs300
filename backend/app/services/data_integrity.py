@@ -10,8 +10,7 @@
 - d < 今天 且 时刻 ≥ d 15:00 → 尾盘定版 (close_final) → 完整
 - batch 权威行中仅夹杂少量零成交实时行 → 停牌残留 → 忽略
 - d == 今天         → 实时更新中, 属正常, 不校验
-- 分区缺失的工作日  → 缺口 (工作日近似; 节假日误报的代价是一次空范围拉取,
-  merge-upsert 空写, 无害)
+- 已确认交易日的分区缺失 → 缺口; 交易日历不可用时跳过缺失判断, 仍检查已有分区快照
 
 检测成本: 每分区只读 parquet 元数据 statistics (不解压数据页), 实测 ~0.5ms/分区。
 """
@@ -165,14 +164,16 @@ def _partition_is_snapshot(day: date, part_dir: Path, quote_ts_max_ms: int | Non
     return suspicious_rows > 0 and authoritative_rows <= suspicious_rows
 
 
-def _candidate_days(today: date, lookback_days: int) -> list[date]:
-    """最近 lookback_days 自然日内、严格早于今天的工作日 (节假日近似, 误报无害)。"""
-    days: list[date] = []
-    for offset in range(1, lookback_days + 1):
-        d = today - timedelta(days=offset)
-        if d.weekday() < 5:
-            days.append(d)
-    return sorted(days)
+def _candidate_days(
+    today: date,
+    lookback_days: int,
+    trading_days: set[date] | None,
+) -> list[date]:
+    """Return confirmed sessions in the recent window; never guess holidays as sessions."""
+    if trading_days is None:
+        return []
+    window_start = today - timedelta(days=lookback_days)
+    return sorted(day for day in trading_days if window_start <= day < today)
 
 
 def scan_recent_integrity(
@@ -180,6 +181,7 @@ def scan_recent_integrity(
     *,
     today: date | None = None,
     lookback_days: int = SCAN_WINDOW_DAYS,
+    trading_days: set[date] | None = None,
 ) -> list[IntegrityIssue]:
     """扫描最近交易日的数据完整性, 返回坏分区列表 (按日期升序)。
 
@@ -189,6 +191,7 @@ def scan_recent_integrity(
     data_dir = Path(data_dir)
     today = today or datetime.now(CN_TZ).date()
     window_start = today - timedelta(days=lookback_days)
+    candidate_days = _candidate_days(today, lookback_days, trading_days)
     issues: list[IntegrityIssue] = []
 
     for table in _DAILY_TABLES:
@@ -205,17 +208,29 @@ def scan_recent_integrity(
         if latest is None or latest < window_start:
             continue
 
-        for day in _candidate_days(today, lookback_days):
-            if day not in existing:
-                # 只报"尾部缺口": 晚于本地最新分区的缺失日。
-                # 历史内部空洞是另一类问题(laggards), 已有独立告警, 不在此扩面。
-                if day > latest:
-                    issues.append(IntegrityIssue(day=day, table=table, kind="missing"))
-                continue
+        # Existing partitions can still prove a partial-day snapshot if the calendar
+        # provider is down; confirmed calendars exclude holiday-tagged partitions.
+        snapshot_days = (
+            set(candidate_days)
+            if trading_days is not None
+            else {
+                day for day in existing
+                if window_start <= day < today and day.weekday() < 5
+            }
+        )
+        recent_existing = sorted(existing.intersection(snapshot_days))
+        for day in recent_existing:
             part_dir = base / f"date={day.isoformat()}"
             quote_ts = _quote_ts_max_ms(part_dir)
             if _partition_is_snapshot(day, part_dir, quote_ts):
                 issues.append(IntegrityIssue(day=day, table=table, kind="snapshot"))
+
+        if trading_days is not None:
+            for day in candidate_days:
+                if day not in existing and day > latest:
+                    # 只报"尾部缺口": 晚于本地最新分区的已确认交易日。
+                    # 历史内部空洞是另一类问题, 不在此扩面。
+                    issues.append(IntegrityIssue(day=day, table=table, kind="missing"))
 
     issues.sort(key=lambda i: (i.day, i.table))
     return issues
@@ -383,7 +398,15 @@ def boot_integrity_check(app_state) -> None:
     if repo is None:
         return
     try:
-        issues = scan_recent_integrity(repo.store.data_dir)
+        today = datetime.now(CN_TZ).date()
+        from app.services import trading_day
+
+        calendar_days = trading_day.trading_days_between(
+            today - timedelta(days=SCAN_WINDOW_DAYS), today,
+        )
+        issues = scan_recent_integrity(
+            repo.store.data_dir, today=today, trading_days=calendar_days,
+        )
     except Exception as e:  # noqa: BLE001
         logger.warning("boot integrity scan failed: %s", e)
         return
@@ -392,7 +415,7 @@ def boot_integrity_check(app_state) -> None:
         return
     earliest = earliest_issue_day(issues)
     logger.warning("boot integrity check: %s (共 %d 个坏分区)", describe_issues(issues), len(issues))
-    if not within_auto_repair_window(earliest):
+    if not within_auto_repair_window(earliest, today=today):
         logger.warning(
             "integrity: 最早坏日 %s 超出自动修复窗口(%d 天), 请在数据页手动执行数据修正",
             earliest, AUTO_REPAIR_MAX_LAG_DAYS,

@@ -40,7 +40,7 @@ class SyncRequest(BaseModel):
 
     start: date | None = None
     end: date | None = None
-    provider: str = "adata"
+    provider: str = "akshare"
 
 
 def _snapshot_root() -> Path:
@@ -170,7 +170,7 @@ def sync_daily(request: Request, payload: SyncRequest | None = None) -> dict:
             detail=f"同步起始日 {start.isoformat()} 晚于结束日 {end.isoformat()}",
         )
 
-    provider = str(body.provider or "").strip().lower()
+    provider = str(body.provider or "akshare").strip().lower()
     if not provider or not _daily_provider_available(provider):
         raise HTTPException(
             status_code=422,

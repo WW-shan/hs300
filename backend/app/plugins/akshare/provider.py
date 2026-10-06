@@ -328,6 +328,44 @@ def _as_datetime(
     return result
 
 
+def _timestamp_ms(value: Any) -> int | None:
+    """Normalize snapshot timestamps to Unix milliseconds; Sina naive times are Beijing time."""
+    if value is None or (isinstance(value, date) and not isinstance(value, datetime)):
+        return None
+    if isinstance(value, datetime):
+        parsed = value
+    else:
+        text = str(value).strip()
+        if not text or text.lower() in {"nan", "nat", "none"}:
+            return None
+        if len(text) == 14 and text.isdigit():
+            try:
+                parsed = datetime.strptime(text, "%Y%m%d%H%M%S")
+            except ValueError:
+                return None
+        else:
+            try:
+                numeric = float(text)
+            except ValueError:
+                numeric = None
+            if numeric is not None:
+                if not math.isfinite(numeric) or numeric <= 0:
+                    return None
+                return int(numeric if numeric >= 100_000_000_000 else numeric * 1000)
+            if " " not in text and "T" not in text:
+                return None
+            try:
+                parsed = datetime.fromisoformat(text.replace("/", "-"))
+            except ValueError:
+                return None
+    try:
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=ZoneInfo("Asia/Shanghai"))
+        return int(parsed.timestamp() * 1000)
+    except (OverflowError, OSError, ValueError):
+        return None
+
+
 def _volume_in_hands(value: Any) -> int | None:
     shares = _number(value)
     return math.floor(shares / 100.0) if shares is not None else None
@@ -536,6 +574,26 @@ class AkShareProvider:
 
     def close(self) -> None:
         pass
+
+    def trading_days(self) -> set[date]:
+        """Fetch Sina's exchange calendar for holiday-aware integrity checks."""
+        ak = _akshare()
+        endpoint = getattr(ak, "tool_trade_date_hist_sina", None)
+        if endpoint is None:
+            raise AkShareProviderError("当前 AkShare 版本缺少 tool_trade_date_hist_sina")
+        rows = _records(_call_akshare(endpoint), context="trading calendar")
+        days: set[date] = set()
+        for row in rows:
+            value = _first_value(row, "trade_date", "交易日", "日期")
+            if value is None:
+                continue
+            try:
+                days.add(_as_date(value, date.min))
+            except AkShareProviderError:
+                continue
+        if not days:
+            raise AkShareProviderError("AkShare 交易日历为空或字段不匹配")
+        return days
 
     def supports_asset_type(self, dataset: str, asset_type: str) -> bool:
         if dataset in {"daily", "minute"}:
@@ -799,6 +857,9 @@ class AkShareProvider:
             "amount": _number(_first_value(row, "成交额", "amount")),
             "change_pct": pct / 100.0 if pct is not None else None,
             "change_amount": _number(_first_value(row, "涨跌额", "pricechange", "change_amount")),
+            "timestamp": _timestamp_ms(
+                _first_value(row, "时间戳", "timestamp", "ticktime", "datetime")
+            ),
         }
 
     def get_realtime(self) -> list[dict[str, Any]]:

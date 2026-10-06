@@ -14,6 +14,7 @@ import pytest
 from app.market_time import CN_TZ, cn_today
 from app.services.data_integrity import (
     AUTO_REPAIR_MAX_LAG_DAYS,
+    SCAN_WINDOW_DAYS,
     IntegrityIssue,
     _is_snapshot,
     _quote_ts_max_ms,
@@ -31,6 +32,16 @@ THURSDAY = date(2026, 8, 20)
 
 def _ts_ms(day: date, t: time) -> int:
     return int(datetime.combine(day, t, tzinfo=CN_TZ).timestamp() * 1000)
+
+
+def _scan_with_weekday_calendar(data_dir, *, today=TODAY):
+    """Supply deterministic calendar dates for weekday-focused scanner tests."""
+    trading_days = {
+        today - timedelta(days=offset)
+        for offset in range(1, SCAN_WINDOW_DAYS + 1)
+        if (today - timedelta(days=offset)).weekday() < 5
+    }
+    return scan_recent_integrity(data_dir, today=today, trading_days=trading_days)
 
 
 def _write_daily_partition(root, table: str, day: date, quote_ts: int | None, symbols=("600001.SH",)) -> None:
@@ -87,15 +98,50 @@ def test_quote_ts_max_none_for_all_null(tmp_path):
 def test_batch_history_with_null_quote_ts_is_clean(tmp_path):
     _write_daily_partition(tmp_path, "kline_daily", THURSDAY, None)
     _write_daily_partition(tmp_path, "kline_daily", FRIDAY, None)
-    issues = scan_recent_integrity(tmp_path, today=TODAY)
+    issues = _scan_with_weekday_calendar(tmp_path, today=TODAY)
     # 周六/周日非工作日不扫; 无今日分区且周五为最新 → 周五之后无缺口
     assert issues == []
+
+
+def test_exchange_holidays_are_not_reported_as_missing_trade_days(tmp_path):
+    last_trade_day = date(2026, 9, 30)
+    holiday_today = date(2026, 10, 3)
+    trading_days = {
+        date(2026, 9, 28), date(2026, 9, 29), last_trade_day,
+    }
+    _write_daily_partition(tmp_path, "kline_daily", last_trade_day, None)
+
+    issues = scan_recent_integrity(
+        tmp_path,
+        today=holiday_today,
+        trading_days=trading_days,
+    )
+
+    assert issues == []
+
+
+def test_unknown_exchange_calendar_does_not_guess_missing_trading_days(tmp_path):
+    last_trade_day = date(2026, 9, 30)
+    holiday_today = date(2026, 10, 3)
+    _write_daily_partition(tmp_path, "kline_daily", last_trade_day, None)
+
+    assert scan_recent_integrity(tmp_path, today=holiday_today) == []
+
+
+def test_snapshot_is_still_detected_when_exchange_calendar_is_unavailable(tmp_path):
+    _write_daily_partition(
+        tmp_path, "kline_daily", FRIDAY, _ts_ms(FRIDAY, time(11, 58)),
+    )
+
+    issues = scan_recent_integrity(tmp_path, today=TODAY)
+
+    assert [(issue.day, issue.kind) for issue in issues] == [(FRIDAY, "snapshot")]
 
 
 def test_midday_snapshot_partition_is_flagged(tmp_path):
     _write_daily_partition(tmp_path, "kline_daily", FRIDAY, _ts_ms(FRIDAY, time(11, 58)))
     _write_daily_partition(tmp_path, "kline_daily", TODAY, _ts_ms(TODAY, time(10, 0)))
-    issues = scan_recent_integrity(tmp_path, today=TODAY)
+    issues = _scan_with_weekday_calendar(tmp_path, today=TODAY)
     assert [(i.day, i.table, i.kind) for i in issues] == [
         (FRIDAY, "kline_daily", "snapshot"),
     ]
@@ -104,7 +150,7 @@ def test_midday_snapshot_partition_is_flagged(tmp_path):
 def test_final_snapshot_after_close_is_clean(tmp_path):
     _write_daily_partition(tmp_path, "kline_daily", FRIDAY, _ts_ms(FRIDAY, time(15, 1)))
     _write_daily_partition(tmp_path, "kline_daily", TODAY, _ts_ms(TODAY, time(10, 0)))
-    assert scan_recent_integrity(tmp_path, today=TODAY) == []
+    assert _scan_with_weekday_calendar(tmp_path, today=TODAY) == []
 
 
 def test_zero_volume_live_residue_amid_batch_rows_is_clean(tmp_path):
@@ -124,7 +170,7 @@ def test_zero_volume_live_residue_amid_batch_rows_is_clean(tmp_path):
     }).write_parquet(part / "part.parquet")
     _write_daily_partition(tmp_path, "kline_daily", TODAY, _ts_ms(TODAY, time(10, 0)))
 
-    assert scan_recent_integrity(tmp_path, today=TODAY) == []
+    assert _scan_with_weekday_calendar(tmp_path, today=TODAY) == []
 
 
 def test_mostly_zero_preopen_rows_with_one_batch_row_is_flagged(tmp_path):
@@ -145,7 +191,7 @@ def test_mostly_zero_preopen_rows_with_one_batch_row_is_flagged(tmp_path):
     }).write_parquet(part / "part.parquet")
     _write_daily_partition(tmp_path, "kline_daily", TODAY, _ts_ms(TODAY, time(10, 0)))
 
-    issues = scan_recent_integrity(tmp_path, today=TODAY)
+    issues = _scan_with_weekday_calendar(tmp_path, today=TODAY)
     assert [(i.day, i.table, i.kind) for i in issues] == [
         (FRIDAY, "kline_daily", "snapshot"),
     ]
@@ -168,7 +214,7 @@ def test_all_zero_preopen_live_partition_is_still_flagged(tmp_path):
     }).write_parquet(part / "part.parquet")
     _write_daily_partition(tmp_path, "kline_daily", TODAY, _ts_ms(TODAY, time(10, 0)))
 
-    issues = scan_recent_integrity(tmp_path, today=TODAY)
+    issues = _scan_with_weekday_calendar(tmp_path, today=TODAY)
     assert [(i.day, i.table, i.kind) for i in issues] == [
         (FRIDAY, "kline_daily", "snapshot"),
     ]
@@ -178,7 +224,7 @@ def test_today_partition_is_never_flagged(tmp_path):
     # 今天的盘中 quote_ts 属正常实时更新
     _write_daily_partition(tmp_path, "kline_daily", FRIDAY, None)
     _write_daily_partition(tmp_path, "kline_daily", TODAY, _ts_ms(TODAY, time(9, 45)))
-    assert scan_recent_integrity(tmp_path, today=TODAY) == []
+    assert _scan_with_weekday_calendar(tmp_path, today=TODAY) == []
 
 
 def test_realtime_daily_builder_drops_halted_rows_before_zero_fill():
@@ -261,7 +307,7 @@ def test_halt_filter_drops_legacy_zero_volume_row_after_ohlc_fill():
 def test_missing_tail_day_flagged(tmp_path):
     # 周四有数据, 周五(工作日)整天停机缺失, 今天周一启动
     _write_daily_partition(tmp_path, "kline_daily", THURSDAY, None)
-    issues = scan_recent_integrity(tmp_path, today=TODAY)
+    issues = _scan_with_weekday_calendar(tmp_path, today=TODAY)
     assert [(i.day, i.table, i.kind) for i in issues] == [
         (FRIDAY, "kline_daily", "missing"),
     ]
@@ -270,7 +316,7 @@ def test_missing_tail_day_flagged(tmp_path):
 def test_snapshot_and_missing_both_reported(tmp_path):
     # 周四盘中快照 + 周五缺失
     _write_daily_partition(tmp_path, "kline_daily", THURSDAY, _ts_ms(THURSDAY, time(13, 30)))
-    issues = scan_recent_integrity(tmp_path, today=TODAY)
+    issues = _scan_with_weekday_calendar(tmp_path, today=TODAY)
     kinds = {(i.day, i.kind) for i in issues}
     assert (THURSDAY, "snapshot") in kinds
     assert (FRIDAY, "missing") in kinds
@@ -281,13 +327,13 @@ def test_no_recent_activity_not_flagged(tmp_path):
     # 最新分区早于扫描窗口 → 整族跳过 (首次启动/长期停用不自动修复)
     old = TODAY - timedelta(days=30)
     _write_daily_partition(tmp_path, "kline_daily", old, None)
-    assert scan_recent_integrity(tmp_path, today=TODAY) == []
+    assert _scan_with_weekday_calendar(tmp_path, today=TODAY) == []
 
 
 def test_interior_history_hole_not_flagged(tmp_path):
     # 历史内部空洞是 laggards 另一类问题, 只报"晚于本地最新分区"的尾部缺口
     _write_daily_partition(tmp_path, "kline_daily", FRIDAY, None)
-    issues = scan_recent_integrity(tmp_path, today=TODAY)
+    issues = _scan_with_weekday_calendar(tmp_path, today=TODAY)
     assert issues == []
 
 
@@ -295,7 +341,7 @@ def test_etf_family_independent(tmp_path):
     # ETF 族近期无活动 → 不判定, 即便股票族有问题
     _write_daily_partition(tmp_path, "kline_daily", FRIDAY, _ts_ms(FRIDAY, time(11, 58)))
     _write_daily_partition(tmp_path, "kline_daily", TODAY, _ts_ms(TODAY, time(10, 0)))
-    issues = scan_recent_integrity(tmp_path, today=TODAY)
+    issues = _scan_with_weekday_calendar(tmp_path, today=TODAY)
     assert all(i.table == "kline_daily" for i in issues)
     assert earliest_issue_day(issues, ("kline_etf_daily",)) is None
 
@@ -355,7 +401,7 @@ def test_issue_from_other_day_timestamp_not_flagged(tmp_path):
     pl.DataFrame({
         "symbol": ["a"], "date": [FRIDAY], "quote_ts": [_ts_ms(THURSDAY, time(11, 0))],
     }).write_parquet(part / "part.parquet")
-    issues = scan_recent_integrity(tmp_path, today=TODAY)
+    issues = _scan_with_weekday_calendar(tmp_path, today=TODAY)
     # 周五分区带周四时间戳 → 不判快照; 周四分区缺失且晚于最新(周五) → 不报
     assert issues == []
 
@@ -417,12 +463,14 @@ def test_realtime_gate_blocks_on_snapshot_and_launches_repair(tmp_path, monkeypa
     from fastapi import HTTPException
 
     from app.api import settings as settings_api
-    from app.services import data_integrity
+    from app.services import data_integrity, trading_day
 
-    real_today = datetime.now(CN_TZ).date()
-    snapshot_day = real_today - timedelta(days=1)
-    while snapshot_day.weekday() >= 5:
-        snapshot_day -= timedelta(days=1)
+    real_today = date(2026, 10, 3)
+    snapshot_day = date(2026, 9, 30)
+    monkeypatch.setattr("app.market_time.cn_today", lambda: real_today)
+    monkeypatch.setattr(
+        trading_day, "trading_days_between", lambda *_: {snapshot_day},
+    )
     _write_daily_partition(
         tmp_path, "kline_daily", snapshot_day,
         _ts_ms(snapshot_day, time(11, 58)),
@@ -483,6 +531,9 @@ def test_realtime_gate_blocks_when_no_local_data(tmp_path, monkeypatch):
 
 def test_realtime_gate_allows_clean_data(tmp_path, monkeypatch):
     from app.api import settings as settings_api
+    from app.services import trading_day
+
+    monkeypatch.setattr(trading_day, "trading_days_between", lambda *_: set())
 
     real_today = datetime.now(CN_TZ).date()
     previous_day = real_today - timedelta(days=1)
@@ -508,8 +559,41 @@ def test_realtime_gate_allows_clean_data(tmp_path, monkeypatch):
     assert saved == {"realtime_quotes_enabled": True}
 
 
+def test_realtime_gate_does_not_repair_missing_exchange_holidays(tmp_path, monkeypatch):
+    from app.api import settings as settings_api
+    from app.services import trading_day
+
+    today = date(2026, 10, 3)
+    last_trade_day = date(2026, 9, 30)
+    trading_days = {
+        date(2026, 9, 28), date(2026, 9, 29), last_trade_day,
+    }
+    _write_daily_partition(tmp_path, "kline_daily", last_trade_day, None)
+    monkeypatch.setattr("app.market_time.cn_today", lambda: today)
+    monkeypatch.setattr(
+        trading_day, "trading_days_between", lambda *_: trading_days,
+    )
+
+    saved = {}
+    monkeypatch.setattr(
+        "app.services.preferences.save", lambda payload: saved.update(payload),
+    )
+    qs = _QuoteServiceStub()
+    request = _gate_state(tmp_path, qs, repo=None)
+    req = settings_api.RealtimeQuotesPrefs(realtime_quotes_enabled=True)
+
+    result = settings_api.update_realtime_quotes(req, request)
+
+    assert result["realtime_quotes_enabled"] is True
+    assert qs.enabled is True
+    assert saved == {"realtime_quotes_enabled": True}
+
+
 def test_realtime_gate_ignores_old_issues_beyond_window(tmp_path, monkeypatch):
     from app.api import settings as settings_api
+    from app.services import trading_day
+
+    monkeypatch.setattr(trading_day, "trading_days_between", lambda *_: set())
 
     real_today = datetime.now(CN_TZ).date()
     old_day = real_today - timedelta(days=AUTO_REPAIR_MAX_LAG_DAYS + 1)
@@ -536,9 +620,10 @@ def test_realtime_gate_ignores_old_issues_beyond_window(tmp_path, monkeypatch):
 def test_boot_check_launches_repair_within_window(tmp_path, monkeypatch):
     from types import SimpleNamespace
 
-    from app.services import data_integrity
+    from app.services import data_integrity, trading_day
 
-    # boot_integrity_check 用真实"今天" — 往回找最近工作日造盘中快照分区
+    # boot_integrity_check uses the real local date; keep the fixture inside
+    # the auto-repair window regardless of when the test suite runs.
     launched = []
     monkeypatch.setattr(
         data_integrity, "launch_integrity_repair",
@@ -549,6 +634,9 @@ def test_boot_check_launches_repair_within_window(tmp_path, monkeypatch):
     probe = real_today - timedelta(days=1)
     while probe.weekday() >= 5:
         probe -= timedelta(days=1)
+    monkeypatch.setattr(
+        trading_day, "trading_days_between", lambda *_: {probe},
+    )
     data_dir = tmp_path / "boot"
     _write_daily_partition(data_dir, "kline_daily", probe, _ts_ms(probe, time(11, 58)))
     _write_daily_partition(data_dir, "kline_daily", real_today, _ts_ms(real_today, time(10, 0)))
@@ -581,13 +669,15 @@ def test_pipeline_self_heals_snapshot_day(tmp_path, monkeypatch):
     降级为从坏日起的范围拉取, 并把坏 enriched 分区删后重算。"""
     from app.config import settings as app_settings
     from app.jobs import daily_pipeline
-    from app.services import instrument_sync, kline_sync
+    from app.services import instrument_sync, kline_sync, trading_day
     from app.tickflow.repository import DataStore, KlineRepository
 
-    today = datetime.now(CN_TZ).date()
-    yesterday = today - timedelta(days=1)
-    while yesterday.weekday() >= 5:
-        yesterday -= timedelta(days=1)
+    today = date(2026, 10, 3)
+    yesterday = date(2026, 9, 30)
+    monkeypatch.setattr(daily_pipeline, "cn_today", lambda: today)
+    monkeypatch.setattr(
+        trading_day, "trading_days_between", lambda *_: {yesterday},
+    )
 
     _write_full_partition(tmp_path, "kline_daily", yesterday, _ts_ms(yesterday, time(11, 58)))
     _write_full_partition(tmp_path, "kline_daily", today, _ts_ms(today, time(10, 0)))
@@ -656,7 +746,7 @@ def test_quotes_flush_partition_keeps_quote_ts_for_integrity_scan(tmp_path, monk
     repo = KlineRepository(DataStore(tmp_path))
     assert kline_sync.sync_daily_by_quotes(repo) == 1
 
-    issues = scan_recent_integrity(tmp_path, today=TODAY)
+    issues = _scan_with_weekday_calendar(tmp_path, today=TODAY)
     assert [(i.day, i.table, i.kind) for i in issues] == [(FRIDAY, "kline_daily", "snapshot")]
 
     part_dir = tmp_path / "kline_daily" / f"date={FRIDAY.isoformat()}"

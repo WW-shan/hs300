@@ -264,8 +264,13 @@ def test_openai_kwargs_include_configured_reasoning_effort(monkeypatch):
     assert "reasoning_effort" not in ai_provider._openai_kwargs(temperature=None, max_tokens=1000)
 
 
-def test_openai_kwargs_none_max_tokens_omits_limit():
-    """max_tokens=None → 不传上限(推理模型思考 token 计入预算, 分析类调用放开)。"""
+def test_openai_kwargs_none_max_tokens_omits_limit(monkeypatch):
+    """max_tokens=None → 不传上限(推理模型思考 token 计入预算, 分析类调用放开)。
+
+    本机 secrets.json 可能配置 openai + reasoning_effort; 固定为 openai_compat
+    才能断言"仅 max_tokens/temperature"这一默认契约。
+    """
+    monkeypatch.setattr(secrets_store, "load", lambda: {"ai_provider": "openai_compat"})
     kwargs = ai_provider._openai_kwargs(temperature=0.5, max_tokens=None)
     assert "max_tokens" not in kwargs
     assert kwargs.get("temperature") == 0.5

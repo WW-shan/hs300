@@ -1012,16 +1012,29 @@ def update_realtime_quotes(req: RealtimeQuotesPrefs, request: Request) -> dict:
         # 历史完整性门禁: 检测到最近交易日的盘中快照/缺口时禁止开启 —
         # 实时 flush 写出"今天"分区后, 盘后管道的"只刷今天"分支会让停机日的
         # 半日快照永久留存。同时自动创建修复任务, 修完即可正常开启。
-        from app.services import data_integrity
+        from app.services import data_integrity, trading_day
 
         repo = getattr(request.app.state, "repo", None)
         if repo is not None:
             try:
-                issues = data_integrity.scan_recent_integrity(repo.store.data_dir)
+                from datetime import timedelta
+
+                from app.market_time import cn_today
+
+                today = cn_today()
+                calendar_days = trading_day.trading_days_between(
+                    today - timedelta(days=data_integrity.SCAN_WINDOW_DAYS),
+                    today,
+                )
+                issues = data_integrity.scan_recent_integrity(
+                    repo.store.data_dir,
+                    today=today,
+                    trading_days=calendar_days,
+                )
             except Exception:  # noqa: BLE001
                 issues = []
             earliest = data_integrity.earliest_issue_day(issues)
-            if issues and data_integrity.within_auto_repair_window(earliest):
+            if issues and data_integrity.within_auto_repair_window(earliest, today=today):
                 job_id, is_new = data_integrity.launch_integrity_repair(
                     request.app.state, earliest, "realtime_gate",
                 )

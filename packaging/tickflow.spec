@@ -122,14 +122,12 @@ datas += [(HS300_SNAPSHOTS, "vendor/index-constituents/docs")]
 # ── 内置数据源插件 (运行时扫 plugin.yaml + importlib 动态加载 entry) ──
 # loader._load_builtin_plugins 先按目录扫 app/plugins/<name>/plugin.yaml, 再用
 # importlib.import_module(entry) 加载 provider — PyInstaller 静态分析两条都看不到。
-# AData 是 HS300 日K同步的内置默认数据源, 且 SDK 内部用 pandas 读自带的 CSV 缓存
-# (adata/stock/cache/code.csv 等: get_instruments 第一步就是 pd.read_csv), 因此
-# 清单、模块与数据文件必须一并进包, 否则 frozen 桌面版里该插件直接不可用。
-ADATA_PLUGIN_MANIFEST = str(ROOT / "backend" / "app" / "plugins" / "adata" / "plugin.yaml")
-datas += [(ADATA_PLUGIN_MANIFEST, "app/plugins/adata")]
-hiddenimports += ["app.plugins.adata.provider"]
-hiddenimports += collect_submodules("adata")
-datas += collect_data_files("adata")
+# AkShare 是 HS300 日K同步的内置默认数据源; plugin.yaml + provider 模块必须进包,
+# 否则 frozen 桌面版里该插件直接不可用。akshare SDK 及其依赖 (mini-racer 等) 由
+# uv sync 装进 venv, PyInstaller 静态分析能自动收集, 无需显式 hiddenimports。
+AKSHARE_PLUGIN_MANIFEST = str(ROOT / "backend" / "app" / "plugins" / "akshare" / "plugin.yaml")
+datas += [(AKSHARE_PLUGIN_MANIFEST, "app/plugins/akshare")]
+hiddenimports += ["app.plugins.akshare.provider"]
 
 # ── 排除不需要的重型依赖 (主包不含 vectorbt 回测链) ──────────────────
 excludes = [

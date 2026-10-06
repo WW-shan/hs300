@@ -4,7 +4,7 @@
 
 ## Conclusion
 
-Use `shy3130/tick-stock-panel` as the complete application base, `yfiua/index-constituents` as the HS300 point-in-time dataset, and `1nchaos/adata` as the market-data SDK. This gives the project a working FastAPI/React/Polars/DuckDB application, historical HS300 membership snapshots, and a maintained data source without rebuilding the system from scratch.
+Use `shy3130/tick-stock-panel` as the complete application base, `yfiua/index-constituents` as the HS300 point-in-time dataset, and `akfamily/akshare` as the market-data SDK. This gives the project a working FastAPI/React/Polars/DuckDB application, historical HS300 membership snapshots, and a maintained data source without rebuilding the system from scratch.
 
 ## Pinned Versions
 
@@ -12,7 +12,7 @@ Use `shy3130/tick-stock-panel` as the complete application base, `yfiua/index-co
 |---|---|---|---|
 | `shy3130/tick-stock-panel` | MIT | `3c0d351efe3f817ab187a7dbd1df3ba43b5d2d39` | Complete application baseline; local HS300 changes stay at service/plugin/API/UI edges and focused PIT filters. |
 | `yfiua/index-constituents` | Apache-2.0 | `5f0846e5ed4285895b4dd26dcc2d771a6ce68b79` | Only CSI300 monthly snapshots and their update tooling are imported. |
-| `1nchaos/adata` | Apache-2.0 | `adata==2.9.5` | Pinned runtime dependency; no AData source is copied into the repository. |
+| `akfamily/akshare` | MIT | `akshare==1.19.1` | Pinned runtime dependency; no AkShare source is copied into the repository. |
 
 ## Candidate Comparison
 
@@ -20,7 +20,7 @@ Use `shy3130/tick-stock-panel` as the complete application base, `yfiua/index-co
 |---|---:|---:|---|---|---|
 | `shy3130/tick-stock-panel` | MIT | 5,293 | 2026-09-28 | Complete A-share workbench: FastAPI, React, Polars, DuckDB, factors, backtests, plugins, CI, 2,400+ tests | **Selected as application base** |
 | `yfiua/index-constituents` | Apache-2.0 | 63 | 2026-09-01 | Monthly CSI300 constituent snapshots since 2023-07 | **Selected for HS300 PIT data** |
-| `1nchaos/adata` | Apache-2.0 | 5,256 | 2025-12-26 | A-share stock/index market SDK with adjusted daily bars | **Selected as data dependency** |
+| `akfamily/akshare` | MIT | 13,400 | 2026-10-05 | A-share market data SDK with raw daily bars, factors, financials | **Selected as data dependency** |
 | `myhhub/stock` | Apache-2.0 | 14,666 | 2026-04-02 | Tornado + MySQL + crawler stock system, 200+ factors, no visible test suite | Not selected as base |
 | `ling-0729/KHunter` | MIT | 603 | 2026-09-13 | Flask + SQLite + AKShare strategy system, one test file | Not selected as base |
 | `hello245m/free-stockdb` | MIT | 2,710 | 2026-09-08 | Local C++ market database and 39 indicators | Optional performance engine later |
@@ -33,7 +33,7 @@ Use `shy3130/tick-stock-panel` as the complete application base, `yfiua/index-co
 
 - It already has the target architecture: FastAPI backend, React frontend, Polars + DuckDB storage, plugin data sources, factor DSL, backtest engine, and Docker deployment.
 - It has the strongest test posture among the whole-application candidates.
-- Its plugin system allows adding AData without rewriting storage, services, or UI.
+- Its plugin system allows adding AkShare without rewriting storage, services, or UI.
 - Its existing screener/factor/backtest paths accept symbol pools; the HS300 preset loads the date-range union and uses the existing backtest services with daily snapshot masks rather than creating a parallel evaluation framework.
 
 ## Why `index-constituents`
@@ -46,10 +46,10 @@ Limitation:
 
 - History begins in 2023-07. Backtests before that date must either be excluded or backfilled from another licensed source.
 
-## Why `adata`
+## Why `akshare`
 
-- It is a maintained Apache-2.0 SDK rather than a scraping script.
-- It exposes stock metadata and daily bars. The builtin provider requests unadjusted raw prices (`adjust_type=0`) so the existing routed `adj_factor` + enriched pipeline remains the single forward-adjustment owner.
+- It is a maintained MIT-licensed SDK rather than a scraping script.
+- It exposes stock/index/ETF metadata, daily/minute bars, adjustment factors, financial statements, and share changes. The builtin provider requests unadjusted raw prices so the existing routed `adj_factor` + enriched pipeline remains the single forward-adjustment owner.
 - It is easier to pin and test than copying a crawler from another application.
 
 ## Reuse Boundary
@@ -61,7 +61,7 @@ Copy now:
 
 Use as pinned dependencies:
 
-1. `adata==2.9.5`.
+1. `akshare==1.19.1`.
 
 Defer:
 

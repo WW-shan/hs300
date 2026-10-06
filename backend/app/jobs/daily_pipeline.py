@@ -243,9 +243,13 @@ def run_now(
     index_stale_day: _date | None = None
     if override_start_date is None:
         try:
-            from app.services import data_integrity
+            from app.services import data_integrity, trading_day
+
+            calendar_days = trading_day.trading_days_between(
+                today - _td(days=data_integrity.SCAN_WINDOW_DAYS), today,
+            )
             integrity_issues = data_integrity.scan_recent_integrity(
-                repo.store.data_dir, today=today,
+                repo.store.data_dir, today=today, trading_days=calendar_days,
             )
             if integrity_issues:
                 stale_day = data_integrity.earliest_issue_day(integrity_issues, ("kline_daily",))

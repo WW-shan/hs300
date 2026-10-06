@@ -135,23 +135,18 @@ jobs:
         working-directory: backend
         run: uv run pyinstaller ../packaging/tickflow.spec --noconfirm
 
-      - name: 检查 AData 内置插件 (全部平台)
-        # HS300 日K同步默认走内置 AData provider: loader 只按 plugin.yaml 扫目录 +
-        # importlib 动态加载 entry, SDK 又用 pandas 读自带 CSV 缓存 (code.csv 等),
-        # PyInstaller 静态分析都看不到 — tickflow.spec 漏收时桌面版会静默缺数据源,
-        # 故对打包产物做兜底校验。
+      - name: 检查 AkShare 内置插件 (全部平台)
+        # HS300 日K同步默认走内置 AkShare provider: loader 只按 plugin.yaml 扫目录 +
+        # importlib 动态加载 entry, PyInstaller 静态分析对 yaml + 动态导入看不到 —
+        # tickflow.spec 漏收 plugin.yaml 时桌面版该插件不可用, 故做兜底校验。
         shell: bash
         run: |
           root="backend/dist/TickFlowStockPanel/_internal"
-          missing=()
-          for rel in "app/plugins/adata/plugin.yaml" "adata/stock/cache/code.csv"; do
-            [ -f "$root/$rel" ] || missing+=("$rel")
-          done
-          if [ ${#missing[@]} -gt 0 ]; then
-            echo "PyInstaller output is missing AData resources: ${missing[*]}"
+          if [ ! -f "$root/app/plugins/akshare/plugin.yaml" ]; then
+            echo "PyInstaller output is missing akshare plugin manifest"
             exit 1
           fi
-          echo "AData resources present (plugin manifest + SDK data files)"
+          echo "AkShare plugin manifest present"
 
       - name: 检查 Polars 兼容内核 (仅 Windows)
         if: matrix.platform == 'windows'

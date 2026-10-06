@@ -2842,7 +2842,7 @@ export const api = {
     )
     return { presets: data.strategies, load_errors: data.load_errors }
   },
-  // HS300 成分快照 — 快照列表 / 单日 PIT 成员 / 区间并集 / AData 日K同步
+  // HS300 成分快照 — 快照列表 / 单日 PIT 成员 / 区间并集 / AkShare 日K同步
   hs300Snapshots: () =>
     request<HS300SnapshotsResponse>('/api/hs300/snapshots'),
   hs300Members: (asOf: string) =>
@@ -2855,7 +2855,7 @@ export const api = {
     request<HS300SyncResponse>('/api/hs300/sync', {
       method: 'POST',
       timeoutMs: COMPUTE_REQUEST_TIMEOUT_MS,
-      body: JSON.stringify({ start: start ?? null, end: end ?? null, provider: 'tickflow' }),
+      body: JSON.stringify({ start: start ?? null, end: end ?? null, provider: 'akshare' }),
     }),
   screenerRunPreset: (strategy_id: string, pool?: string[], asOf?: string, extColumns?: string, assetType: 'stock' | 'etf' = 'stock', timeframe: '1d' | '1m' = '1d') =>
     request<ScreenerResult>('/api/screener/run_preset', {

@@ -4,7 +4,7 @@ import { api } from './api'
 
 afterEach(() => vi.unstubAllGlobals())
 
-it('uses the working TickFlow provider explicitly for HS300 sync', async () => {
+it('uses AkShare as the default provider for HS300 sync', async () => {
   const fetchMock = vi.fn().mockResolvedValue({
     ok: true,
     json: async () => ({ ok: true }),
@@ -18,6 +18,6 @@ it('uses the working TickFlow provider explicitly for HS300 sync', async () => {
   expect(JSON.parse(init.body as string)).toEqual({
     start: null,
     end: null,
-    provider: 'tickflow',
+    provider: 'akshare',
   })
 })

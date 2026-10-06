@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from datetime import date, datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import pandas as pd
 import polars as pl
@@ -26,6 +27,43 @@ def test_manifest_declares_only_implemented_datasets():
         "daily", "adj_factor", "financial", "minute", "realtime",
     }
     assert set(provider_mod._AkShareConfig().datasets) == set(manifest["datasets"])
+
+
+def test_trading_days_normalizes_akshare_calendar(monkeypatch):
+    provider_mod = _module()
+
+    class FakeAkShare:
+        @staticmethod
+        def tool_trade_date_hist_sina():
+            return pd.DataFrame({
+                "trade_date": ["2026-09-30", "2026-10-08"],
+            })
+
+    monkeypatch.setattr(provider_mod, "_akshare", lambda: FakeAkShare)
+    monkeypatch.setattr(
+        provider_mod, "_call_akshare", lambda function, **kwargs: function(**kwargs),
+    )
+
+    days = provider_mod.AkShareProvider().trading_days()
+
+    assert days == {date(2026, 9, 30), date(2026, 10, 8)}
+
+
+def test_trading_days_rejects_empty_or_invalid_calendar(monkeypatch):
+    provider_mod = _module()
+
+    class FakeAkShare:
+        @staticmethod
+        def tool_trade_date_hist_sina():
+            return pl.DataFrame({"trade_date": [None, "not-a-date"]})
+
+    monkeypatch.setattr(provider_mod, "_akshare", lambda: FakeAkShare)
+    monkeypatch.setattr(
+        provider_mod, "_call_akshare", lambda function, **kwargs: function(**kwargs),
+    )
+
+    with pytest.raises(provider_mod.AkShareProviderError, match="交易日历为空"):
+        provider_mod.AkShareProvider().trading_days()
 
 
 def test_qfq_cumulative_factors_become_single_event_factors(monkeypatch):
@@ -505,6 +543,37 @@ def test_realtime_snapshots_convert_percent_and_volume_units(monkeypatch):
     assert index["symbol"] == "000001.SH"
     assert index["change_pct"] == 0.001
     assert index["volume"] == 123
+
+
+def test_realtime_snapshot_preserves_sina_timestamp_as_epoch_ms(monkeypatch):
+    provider_mod = _module()
+    source_day = date(2026, 10, 4)
+    source_time = f"{source_day.isoformat()} 15:00:02"
+    expected_timestamp = int(
+        datetime.fromisoformat(source_time)
+        .replace(tzinfo=ZoneInfo("Asia/Shanghai"))
+        .timestamp() * 1000
+    )
+
+    class FakeAkShare:
+        @staticmethod
+        def stock_zh_a_spot():
+            return pd.DataFrame([{
+                "代码": "sh600519", "最新价": 103.0, "昨收": 100.0,
+                "今开": 101.0, "最高": 105.0, "最低": 99.0,
+                "成交量": 12345, "成交额": 1265000.0, "时间戳": source_time,
+            }])
+
+    monkeypatch.setattr(provider_mod, "_akshare", lambda: FakeAkShare)
+
+    row = provider_mod.AkShareProvider().get_realtime()[0]
+
+    assert row["timestamp"] == expected_timestamp
+    from app.services import quote_service
+
+    monkeypatch.setattr(quote_service, "cn_today", lambda: source_day)
+    daily = quote_service.QuoteService._build_daily([row])
+    assert daily["quote_ts"].to_list() == [expected_timestamp]
 
 
 def test_minute_history_is_beijing_wallclock_with_volume_in_hands(monkeypatch):

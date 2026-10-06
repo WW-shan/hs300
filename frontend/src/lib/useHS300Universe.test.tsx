@@ -42,7 +42,7 @@ vi.mock('@/lib/api', () => ({
       fixtures.syncCalls += 1
       return {
         ok: true,
-        provider: 'tickflow',
+        provider: 'akshare',
         symbols: 300,
         rows: 123,
         zero_row_symbols: [],
@@ -175,7 +175,7 @@ it('区间并集 hook 拉取覆盖快照的并集', async () => {
   expect(fixtures.betweenCalls).toEqual(['2023-07-01..2023-08-31'])
 })
 
-it('触发一次 AData 同步并返回落盘结果', async () => {
+it('触发一次 AkShare 同步并返回落盘结果', async () => {
   const invalidateQueries = vi.spyOn(queryClient, 'invalidateQueries')
   let universe: Universe | null = null
   function Harness() {
