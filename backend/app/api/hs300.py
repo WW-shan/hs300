@@ -5,7 +5,7 @@
 端点:
   GET  /snapshots  月度快照日期列表
   GET  /members    指定查询日的成分股 (point-in-time)
-  POST /sync       按区间成员并集同步日 K (默认 AData)
+  POST /sync       按区间成员并集同步日 K (默认 AkShare)
 
 同步入口复用 kline_sync.sync_and_persist_daily_batch 与偏好路由机制,
 不新增第二套数据源或写入链路。
