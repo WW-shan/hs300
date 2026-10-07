@@ -545,7 +545,7 @@ def test_realtime_snapshots_convert_percent_and_volume_units(monkeypatch):
     assert index["volume"] == 123
 
 
-def test_realtime_snapshot_preserves_sina_timestamp_as_epoch_ms(monkeypatch):
+def test_realtime_full_datetime_timestamp_is_preserved_as_epoch_ms(monkeypatch):
     provider_mod = _module()
     source_day = date(2026, 10, 4)
     source_time = f"{source_day.isoformat()} 15:00:02"
@@ -574,6 +574,27 @@ def test_realtime_snapshot_preserves_sina_timestamp_as_epoch_ms(monkeypatch):
     monkeypatch.setattr(quote_service, "cn_today", lambda: source_day)
     daily = quote_service.QuoteService._build_daily([row])
     assert daily["quote_ts"].to_list() == [expected_timestamp]
+
+
+def test_realtime_bare_sina_clock_time_does_not_invent_a_date(monkeypatch):
+    """实测 Sina `时间戳` 只有 HH:MM:SS (无日期), 无法归属交易日, 不得臆造当日时间戳."""
+    provider_mod = _module()
+
+    class FakeAkShare:
+        @staticmethod
+        def stock_zh_a_spot():
+            return pd.DataFrame([{
+                "代码": "sh600519", "最新价": 103.0, "昨收": 100.0,
+                "今开": 101.0, "最高": 105.0, "最低": 99.0,
+                "成交量": 12345, "成交额": 1265000.0, "时间戳": "15:30:00",
+            }])
+
+    monkeypatch.setattr(provider_mod, "_akshare", lambda: FakeAkShare)
+
+    row = provider_mod.AkShareProvider().get_realtime()[0]
+
+    assert row["symbol"] == "600519.SH"
+    assert row["timestamp"] is None
 
 
 def test_minute_history_is_beijing_wallclock_with_volume_in_hands(monkeypatch):
