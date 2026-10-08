@@ -49,19 +49,14 @@
 - **动态当前成分筛选器**：`backend/app/hs300/current.py` 经中证指数官方接口（`index_stock_cons_csindex`，东方财富降级）实时解析当前沪深300成分，结果在 `data/hs300/current_members.json` 缓存 6 小时；接口与缓存都不可用时 fail-closed 报错，绝不回退固定池。`GET /api/hs300/current` 返回 `as_of/source/count/members`。
 - **应用位置**：策略回测、因子回测与筛选器均可启用「沪深300 筛选器」，对当前名单取交集运行；筛选器的单跑结果不写入全局策略缓存。
 - **幸存者偏差（已知限制）**：官方只提供当前成分，历史回测按当前名单整段过滤，历史上被调出的股票不会出现；已调样的历史成分无法自动回填。
-- **AkShare provider**：`backend/app/plugins/akshare/` 提供 A 股/指数/ETF 原始价日 K、除权因子、财报与股本变动（成交量由股转手，百分数涨跌幅转小数；复权在本地 `adj_factor` + enriched 管道）。HS300 同步单次默认使用 AkShare，不会改写全局日 K 数据源偏好；整批零行会显式返回失败，部分零行会在响应中列出。
+- **AkShare provider 与行情同步**：`backend/app/plugins/akshare/` 提供 A 股/指数/ETF 原始价日 K、除权因子、财报与股本变动（成交量由股转手，百分数涨跌幅转小数；复权在本地 `adj_factor` + enriched 管道）。行情由系统日 K 管线按全市场统一同步，HS300 筛选器只决定「筛谁」,不提供单独的名单同步入口。
 - 上游来源、许可证和本地修改记录见 [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md)。
 
-#### HS300 同步与查询
+#### HS300 名单查询
 
 ```bash
 # 当前沪深300名单（source=csindex/em/cache，6 小时内走缓存；refresh=true 强制拉取官方接口）
 curl 'http://localhost:3018/api/hs300/current'
-
-# 按当前名单同步日 K（数据源 AkShare，缺省覆盖最近 3 年，可显式指定区间）
-curl -X POST http://localhost:3018/api/hs300/sync \
-  -H 'Content-Type: application/json' \
-  -d '{"provider": "akshare"}'
 ```
 
 ### 本地开发与基线验证
