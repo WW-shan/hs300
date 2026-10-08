@@ -946,7 +946,7 @@ export function StrategyBacktest({ loadCandidate, onLoadConsumed }: {
   const [strategyGroup, setStrategyGroup] = useState<StrategyGroup>('all')
   const [symbols, setSymbols] = useState(saved?.symbols ?? '')
   const [assetType, setAssetType] = useState<'stock' | 'etf'>(saved?.assetType ?? 'stock')
-  // HS300 逐日成分过滤 (PIT): 后端按快照在每日评分前过滤, symbols 只负责覆盖数据加载
+  // HS300 动态筛选: 后端按官方当前成分过滤, symbols 只代表用户自选池
   const [hs300Enabled, setHs300Enabled] = useState(false)
   const [start, setStart] = useState(saved?.start ?? THREE_MONTHS_AGO)
   const [end, setEnd] = useState(saved?.end ?? TODAY)

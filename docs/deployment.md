@@ -8,7 +8,7 @@
 
 ## 方式 A:上游 GHCR 镜像说明
 
-本仓库当前不假设存在与 HS300 功能匹配的已发布镜像。`shy3130/tick-stock-panel` 的 GHCR 镜像是上游基线，不含本仓库的 HS300 API、AkShare provider 和 PIT 修改，不能用于部署此项目。请使用方式 B 的 `docker compose up --build` 从当前源码构建。
+本仓库当前不假设存在与 HS300 功能匹配的已发布镜像。`shy3130/tick-stock-panel` 的 GHCR 镜像是上游基线，不含本仓库的 HS300 动态成分 API、AkShare provider 与筛选器改造，不能用于部署此项目。请使用方式 B 的 `docker compose up --build` 从当前源码构建。
 
 ---
 

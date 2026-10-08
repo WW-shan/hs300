@@ -202,7 +202,7 @@ export function startBacktest(params: {
   asset_type?: 'stock' | 'etf'
   minute_fill?: boolean
   regime_filter?: { states?: string[]; min_score?: number } | null
-  /** HS300 逐日成分过滤 (point-in-time), 由后端按快照解析 */
+  /** HS300 动态筛选: 由后端按官方当前成分过滤整段回测 */
   hs300?: boolean
 }): void {
   // 取消之前的任务状态
