@@ -50,6 +50,13 @@ data/**
 #   - 概念/行业改为「首次启动自动从远程接口拉取」(见 app/services/ext_presets.py)
 #     作者更新数据只需改接口 JSON, 用户下次拉取自动同步, 无需发版、无需碰 git。
 # 这样 git pull 物理上无法影响用户本地 data, 杜绝「更新后数据丢失」。
+# 例外: AI 策略与迭代记录随仓库版本化, 便于部署迁移到新机器后直接继续迭代
+# (见 data/strategies/ai/); 其余 data/ 内容仍不入库, custom/ 保持私有忽略。
+!data/strategies/
+!data/strategies/ai/
+!data/strategies/ai/*.py
+!data/strategies/ai/.iterations/
+!data/strategies/ai/.iterations/**
 
 # ===== Secrets =====
 .env
