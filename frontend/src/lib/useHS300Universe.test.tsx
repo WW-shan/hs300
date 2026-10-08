@@ -7,7 +7,6 @@ import { useHS300Current } from './useHS300Universe'
 
 const fixtures = vi.hoisted(() => ({
   currentCalls: [] as boolean[],
-  syncCalls: 0,
 }))
 
 vi.mock('@/lib/api', () => ({
@@ -25,20 +24,6 @@ vi.mock('@/lib/api', () => ({
         ],
       }
     },
-    hs300Sync: async () => {
-      fixtures.syncCalls += 1
-      return {
-        ok: true,
-        provider: 'akshare',
-        symbols: 2,
-        rows: 123,
-        zero_row_symbols: [],
-        start: '2026-01-01',
-        end: '2026-09-30',
-        as_of: '2026-09-30',
-        source: 'csindex',
-      }
-    },
   },
 }))
 
@@ -51,7 +36,6 @@ let queryClient: QueryClient
 beforeEach(() => {
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
   fixtures.currentCalls = []
-  fixtures.syncCalls = 0
   queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })
   host = document.createElement('div')
   document.body.appendChild(host)
@@ -116,29 +100,4 @@ it('刷新时强制走后端 refresh=true', async () => {
   await act(async () => current!.refresh())
   await waitFor(() => expect(fixtures.currentCalls).toEqual([false, true]))
   await waitFor(() => expect(current!.isRefreshing).toBe(false))
-})
-
-it('触发一次按当前名单的 AkShare 日K同步', async () => {
-  const invalidateQueries = vi.spyOn(queryClient, 'invalidateQueries')
-  let current: Current | null = null
-  function Harness() {
-    current = useHS300Current()
-    return null
-  }
-  await act(async () => {
-    root.render(
-      <QueryClientProvider client={queryClient}>
-        <Harness />
-      </QueryClientProvider>,
-    )
-  })
-  await waitFor(() => expect(current?.count).toBe(2))
-
-  await act(async () => current!.syncDaily())
-  expect(fixtures.syncCalls).toBe(1)
-  await waitFor(() => expect(current?.syncHint).toBe('已同步 123 行'))
-  expect(current!.syncError).toBeNull()
-  expect(invalidateQueries).toHaveBeenCalledWith(expect.objectContaining({
-    queryKey: ['screener-kline-batch'],
-  }))
 })

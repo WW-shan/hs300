@@ -11,9 +11,6 @@ export interface HS300FilterToggleProps {
   error?: string | null
   onRefresh?: () => void
   isRefreshing?: boolean
-  onSync?: () => void
-  isSyncing?: boolean
-  syncHint?: string | null
   disabled?: boolean
   className?: string
 }
@@ -29,6 +26,8 @@ const SOURCE_LABELS: Record<string, string> = {
  *
  * 不提供快照日期下拉、不维护固定 300 池; 页面把 enabled 传给后端, 由后端按
  * 官方当前名单统一完成回测/因子/选股过滤。
+ * 日K数据的补齐由系统日K管线 (全市场) 负责, 这里不再提供单独的"同步日K"
+ * 按钮: 沪深300 名册只决定"筛谁", 与基础行情同步解耦。
  */
 export function HS300FilterToggle({
   enabled,
@@ -40,9 +39,6 @@ export function HS300FilterToggle({
   error = null,
   onRefresh,
   isRefreshing = false,
-  onSync,
-  isSyncing = false,
-  syncHint = null,
   disabled = false,
   className = '',
 }: HS300FilterToggleProps) {
@@ -82,20 +78,6 @@ export function HS300FilterToggle({
           刷新名单
         </button>
       )}
-      {onSync && (
-        <button
-          type="button"
-          className="inline-flex items-center gap-1 rounded border border-border px-1.5 py-0.5 hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-50"
-          title="按官方当前名单同步日K"
-          disabled={disabled || isSyncing}
-          onClick={onSync}
-          data-testid="hs300-sync"
-        >
-          <RefreshCw className={cn('h-3 w-3', isSyncing && 'animate-spin')} />
-          同步日K
-        </button>
-      )}
-      {syncHint && <span className="text-accent" data-testid="hs300-sync-hint">{syncHint}</span>}
       {error && <span className="text-loss" data-testid="hs300-error">{error}</span>}
       <span className="text-muted" data-testid="hs300-filter-note">
         官方动态名单, 不读快照归档; 历史回测使用当前成分存在幸存者偏差。

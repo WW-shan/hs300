@@ -10,6 +10,7 @@ const HS300_STALE_MS = 6 * 60 * 60 * 1000
  *
  * 返回的 count/symbols 是当前官方名单; 页面只负责开关与展示, 具体过滤由后端
  * 按同一份名单完成 (回测/因子用 symbols 作为数据加载边界, 选股用 pool 过滤)。
+ * 行情数据同步不在本 hook 内: 日K由系统管线统一同步全市场, 名单与数据解耦。
  */
 export function useHS300Current() {
   const queryClient = useQueryClient()
@@ -27,21 +28,7 @@ export function useHS300Current() {
     },
   })
 
-  const sync = useMutation({
-    mutationFn: () => api.hs300Sync(),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['kline-batch'] })
-      void queryClient.invalidateQueries({ queryKey: QK.screenerKlineBatchPrefix })
-      void queryClient.invalidateQueries({ queryKey: QK.dataStatus })
-    },
-  })
-
   const members = query.data?.members ?? []
-  const syncHint = sync.data
-    ? `已同步 ${sync.data.rows} 行${sync.data.zero_row_symbols.length > 0
-      ? `，${sync.data.zero_row_symbols.length} 只无数据`
-      : ''}`
-    : null
 
   return {
     members,
@@ -54,9 +41,5 @@ export function useHS300Current() {
     error: (query.error ?? refresh.error ?? null) as Error | null,
     refresh: () => refresh.mutate(),
     isRefreshing: refresh.isPending,
-    syncDaily: () => sync.mutate(),
-    isSyncing: sync.isPending,
-    syncHint,
-    syncError: sync.error as Error | null,
   }
 }

@@ -19,10 +19,9 @@ afterEach(async () => {
   host.remove()
 })
 
-it('展示官方当前名单并提供开关/刷新/同步回调', async () => {
+it('展示官方当前名单并提供开关/刷新回调', async () => {
   const onChange = vi.fn()
   const onRefresh = vi.fn()
-  const onSync = vi.fn()
   await act(async () => {
     root.render(
       <HS300FilterToggle
@@ -32,7 +31,6 @@ it('展示官方当前名单并提供开关/刷新/同步回调', async () => {
         asOf="2026-09-30"
         source="csindex"
         onRefresh={onRefresh}
-        onSync={onSync}
       />,
     )
   })
@@ -45,8 +43,7 @@ it('展示官方当前名单并提供开关/刷新/同步回调', async () => {
   expect(onChange).toHaveBeenCalledWith(true)
   await act(async () => host.querySelector<HTMLButtonElement>('[data-testid="hs300-refresh"]')!.click())
   expect(onRefresh).toHaveBeenCalledTimes(1)
-  await act(async () => host.querySelector<HTMLButtonElement>('[data-testid="hs300-sync"]')!.click())
-  expect(onSync).toHaveBeenCalledTimes(1)
+  expect(host.querySelector('[data-testid="hs300-sync"]')).toBeNull()
 })
 
 it('官方名单不可用时展示错误且不提供快照回退', async () => {

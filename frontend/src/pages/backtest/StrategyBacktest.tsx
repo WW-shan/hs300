@@ -1767,12 +1767,9 @@ export function StrategyBacktest({ loadCandidate, onLoadConsumed }: {
             asOf={hs300.asOf}
             source={hs300.source}
             isLoading={hs300.isLoading}
-            error={hs300.error?.message ?? hs300.syncError?.message ?? null}
+            error={hs300.error?.message ?? null}
             onRefresh={hs300.refresh}
             isRefreshing={hs300.isRefreshing}
-            onSync={hs300.syncDaily}
-            isSyncing={hs300.isSyncing}
-            syncHint={hs300.syncHint}
             className="bg-surface"
           />
         )}
@@ -2877,12 +2874,9 @@ export function StrategyBacktest({ loadCandidate, onLoadConsumed }: {
                         asOf={hs300.asOf}
                         source={hs300.source}
                         isLoading={hs300.isLoading}
-                        error={hs300.error?.message ?? hs300.syncError?.message ?? null}
+                        error={hs300.error?.message ?? null}
                         onRefresh={hs300.refresh}
                         isRefreshing={hs300.isRefreshing}
-                        onSync={hs300.syncDaily}
-                        isSyncing={hs300.isSyncing}
-                        syncHint={hs300.syncHint}
                       />
                     </div>
                   )}

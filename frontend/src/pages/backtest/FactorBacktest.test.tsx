@@ -29,17 +29,6 @@ vi.mock('@/lib/api', () => ({
         { symbol: '000002.SZ', name: 'B' },
       ],
     }),
-    hs300Sync: async () => ({
-      ok: true,
-      provider: 'akshare',
-      symbols: 2,
-      rows: 10,
-      zero_row_symbols: [],
-      start: '2026-01-01',
-      end: '2026-09-30',
-      as_of: '2026-09-30',
-      source: 'csindex',
-    }),
   },
 }))
 
