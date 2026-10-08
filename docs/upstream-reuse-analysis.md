@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-28
 
-> **更新 2026-10-08**：HS300 成分已不再使用 `yfiua/index-constituents` 月度快照，改为调用中证指数官方接口实时解析**当前成分**（动态筛选器，无固定 300 池、无 PIT 归档）。下文中与固定快照数据集有关的选择、理由与复用边界仅作历史决策记录，不再代表当前实现。
+> **更新 2026-10-08**：HS300 成分已不再使用 `yfiua/index-constituents` 月度快照，改为调用中证指数官方接口实时解析**当前成分**（动态筛选器，无固定 300 池、无 PIT 归档）。同日已将上游 `shy3130/tick-stock-panel` 从初始导入基线 `3c0d351e` 合并到当前 main `0533def9`。下文中与固定快照数据集有关的选择、理由与复用边界仅作历史决策记录，不再代表当前实现。
 
 ## Conclusion
 
@@ -12,7 +12,7 @@ Use `shy3130/tick-stock-panel` as the complete application base and `akfamily/ak
 
 | Source | License | Pin | Local use |
 |---|---|---|---|
-| `shy3130/tick-stock-panel` | MIT | `3c0d351efe3f817ab187a7dbd1df3ba43b5d2d39` | Complete application baseline; local HS300 changes stay at service/plugin/API/UI edges and focused PIT filters. |
+| `shy3130/tick-stock-panel` | MIT | `0533def9cdc830b95d9d4ed842d93fb839bf83fd` | Complete application baseline; local HS300 changes stay at service/plugin/API/UI edges and focused PIT filters. |
 | `yfiua/index-constituents` | Apache-2.0 | `5f0846e5ed4285895b4dd26dcc2d771a6ce68b79` | Imported early on, then removed on 2026-10-08: fixed monthly snapshots are stale relative to the official current constituents. Not used by the current implementation. |
 | `akfamily/akshare` | MIT | `akshare==1.19.1` | Pinned runtime dependency; no AkShare source is copied into the repository. |
 

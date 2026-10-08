@@ -43,7 +43,7 @@
 
 | 来源 | License | 精确版本 | 复用边界 |
 | :--- | :--- | :--- | :--- |
-| [`shy3130/tick-stock-panel`](https://github.com/shy3130/tick-stock-panel) | MIT | `3c0d351efe3f817ab187a7dbd1df3ba43b5d2d39` | 完整应用基线，排除上游 `.git/`、`.venv/`、`node_modules/`、截图目录和社区二维码 |
+| [`shy3130/tick-stock-panel`](https://github.com/shy3130/tick-stock-panel) | MIT | `0533def9cdc830b95d9d4ed842d93fb839bf83fd` | 完整应用基线，排除上游 `.git/`、`.venv/`、`node_modules/`、截图目录和社区二维码 |
 | [`akfamily/akshare`](https://github.com/akfamily/akshare) | MIT | `1.19.1` | 运行时依赖（pin 在 `backend/pyproject.toml`），不复制源码 |
 
 ### HS300 能力与数据限制

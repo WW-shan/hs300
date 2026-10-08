@@ -5,7 +5,8 @@ This repository records the upstream provenance and local reuse boundary for its
 ## tick-stock-panel
 
 - Upstream repository: <https://github.com/shy3130/tick-stock-panel>
-- Commit: `3c0d351efe3f817ab187a7dbd1df3ba43b5d2d39`
+- Initial import baseline: `3c0d351efe3f817ab187a7dbd1df3ba43b5d2d39`.
+- Current merged upstream main: `0533def9cdc830b95d9d4ed842d93fb839bf83fd` (2026-10-08).
 - License: MIT; see [`LICENSE`](LICENSE).
 - Imported paths: the complete application baseline at the repository root, including `backend/`, `frontend/`, `tests`, CI workflows, Docker files, documentation, data-source plugin infrastructure, and supporting assets.
 - Import exclusions: `.git/`, `.venv/`, `node_modules/`, `gui-test-screenshots/`, and `community-qr-code.jpg`.
