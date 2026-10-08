@@ -10,7 +10,10 @@
 - d < 今天 且 时刻 ≥ d 15:00 → 尾盘定版 (close_final) → 完整
 - batch 权威行中仅夹杂少量零成交实时行 → 停牌残留 → 忽略
 - d == 今天         → 实时更新中, 属正常, 不校验
-- 已确认交易日的分区缺失 → 缺口; 交易日历不可用时跳过缺失判断, 仍检查已有分区快照
+- 分区缺失的候选日  → 缺口 (fuyao 日历可用按真实交易日, 否则工作日近似;
+  节假日误报对修复只是空拉取, 但对 realtime_gate 是 409 死锁 —
+  休市日永远无数据, 门禁循环放行不了, 故日历优先, 见 §4.24)
+- 交易日历完全不可用时跳过缺失判断, 仍检查已有分区快照
 
 检测成本: 每分区只读 parquet 元数据 statistics (不解压数据页), 实测 ~0.5ms/分区。
 """
@@ -18,6 +21,8 @@ from __future__ import annotations
 
 import contextlib
 import logging
+import threading
+import time
 from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
@@ -167,13 +172,62 @@ def _partition_is_snapshot(day: date, part_dir: Path, quote_ts_max_ms: int | Non
 def _candidate_days(
     today: date,
     lookback_days: int,
-    trading_days: set[date] | None,
+    trading_days: set[date] | None = None,
 ) -> list[date]:
-    """Return confirmed sessions in the recent window; never guess holidays as sessions."""
-    if trading_days is None:
-        return []
-    window_start = today - timedelta(days=lookback_days)
-    return sorted(day for day in trading_days if window_start <= day < today)
+    """最近 lookback_days 自然日内、严格早于今天的交易日。
+
+    优先使用调用方传入的已确认交易日集合; 否则消费 fuyao 日历
+    (stale-while-error)。日历从未可用时回退工作日近似, 调用方可通过
+    ``calendar is None`` 判断是否应跳过缺失日检查。
+    """
+    calendar = trading_days if trading_days is not None else _trading_calendar()
+    days: list[date] = []
+    for offset in range(1, lookback_days + 1):
+        d = today - timedelta(days=offset)
+        if calendar is not None:
+            if d in calendar:
+                days.append(d)
+        elif d.weekday() < 5:
+            days.append(d)
+    return sorted(days)
+
+
+# ---------------------------------------------------------------------------
+# 交易日历 (fuyao) — 「工作日近似」在节假日误报 missing; 修复任务对休市日
+# 永远拉不到数据, realtime_gate 因此循环 409 (2026-09-25 中秋实证)。
+# 取数失败时沿用上一次成功结果 (stale-while-error): 节假日表近乎不变,
+# 陈旧日历仍远好于退回工作日近似 (长假期内误报会让门禁反复死锁)。
+# ---------------------------------------------------------------------------
+_CAL_TTL_S = 1800.0  # 成功/失败结论统一 30 分钟复取 (日历变化极稀疏)
+_CAL_LOCK = threading.Lock()
+_CAL: tuple[float, set[date] | None] = (0.0, None)  # (取数时刻, 交易日集合)
+
+
+def _trading_calendar() -> set[date] | None:
+    """A 股交易日集合 (fuyao 近一年); 从未取到过 → None (调用方回退周几近似)。
+
+    与 trading_day.is_trading_day 探测链第 1 环同源; 这里需要**任意历史日**
+    的判定, 故直接消费整年集合。线程安全 (gate / boot / 修复管道共用)。
+    """
+    now = time.monotonic()
+    global _CAL
+    with _CAL_LOCK:
+        fetched_at, cached = _CAL
+        if fetched_at and now - fetched_at < _CAL_TTL_S:
+            return cached
+    fetched: set[date] | None = None
+    try:
+        from app.data_providers import custom as custom_sources
+
+        if custom_sources.is_custom_provider("fuyao"):
+            raw = custom_sources.get_provider("fuyao").trading_days()
+            if raw:
+                fetched = set(raw)
+    except Exception:  # noqa: BLE001 — 日历不可用不上抛, 回退 stale/近似
+        fetched = None
+    with _CAL_LOCK:
+        _CAL = (now, fetched if fetched is not None else cached)
+        return _CAL[1]
 
 
 def scan_recent_integrity(
@@ -191,7 +245,8 @@ def scan_recent_integrity(
     data_dir = Path(data_dir)
     today = today or datetime.now(CN_TZ).date()
     window_start = today - timedelta(days=lookback_days)
-    candidate_days = _candidate_days(today, lookback_days, trading_days)
+    calendar = trading_days if trading_days is not None else _trading_calendar()
+    candidate_days = _candidate_days(today, lookback_days, calendar)
     issues: list[IntegrityIssue] = []
 
     for table in _DAILY_TABLES:
@@ -210,22 +265,20 @@ def scan_recent_integrity(
 
         # Existing partitions can still prove a partial-day snapshot if the calendar
         # provider is down; confirmed calendars exclude holiday-tagged partitions.
-        snapshot_days = (
-            set(candidate_days)
-            if trading_days is not None
-            else {
+        if calendar is not None:
+            recent_existing = sorted(existing.intersection(candidate_days))
+        else:
+            recent_existing = sorted(
                 day for day in existing
                 if window_start <= day < today and day.weekday() < 5
-            }
-        )
-        recent_existing = sorted(existing.intersection(snapshot_days))
+            )
         for day in recent_existing:
             part_dir = base / f"date={day.isoformat()}"
             quote_ts = _quote_ts_max_ms(part_dir)
             if _partition_is_snapshot(day, part_dir, quote_ts):
                 issues.append(IntegrityIssue(day=day, table=table, kind="snapshot"))
 
-        if trading_days is not None:
+        if calendar is not None:
             for day in candidate_days:
                 if day not in existing and day > latest:
                     # 只报"尾部缺口": 晚于本地最新分区的已确认交易日。
