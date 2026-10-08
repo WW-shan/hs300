@@ -37,43 +37,31 @@
 
 ## 🧭 HS300 项目来源与当前阶段
 
-本仓库是 **HS300 upstream-derived 项目**，不是从零手写的量化系统。Task 1 导入完整上游应用基线，Tasks 2–7 在其既有服务、provider、因子、回测与前端链路上补齐 HS300 PIT 纵切片；K 线、指标、图表、因子计算和回测框架均复用上游实现。
+本仓库是 **HS300 upstream-derived 项目**，不是从零手写的量化系统。应用基线整体来自上游 tick-stock-panel；HS300 成分识别以中证指数官方接口的**当前成分**为准（动态筛选器，非固定 300 池、非月度快照），K 线、指标、图表、因子计算和回测框架均复用上游实现。
 
 | 来源 | License | 精确版本 | 复用边界 |
 | :--- | :--- | :--- | :--- |
 | [`shy3130/tick-stock-panel`](https://github.com/shy3130/tick-stock-panel) | MIT | `3c0d351efe3f817ab187a7dbd1df3ba43b5d2d39` | 完整应用基线，排除上游 `.git/`、`.venv/`、`node_modules/`、截图目录和社区二维码 |
-| [`yfiua/index-constituents`](https://github.com/yfiua/index-constituents) | Apache-2.0 | `5f0846e5ed4285895b4dd26dcc2d771a6ce68b79` | 仅导入 CSI300 月度 CSV、LICENSE、README、依赖和更新工具到 `vendor/index-constituents/` |
 | [`akfamily/akshare`](https://github.com/akfamily/akshare) | MIT | `1.19.1` | 运行时依赖（pin 在 `backend/pyproject.toml`），不复制源码 |
 
 ### HS300 能力与数据限制
 
-- **AkShare provider 与 HS300 API 已实现**：`backend/app/plugins/akshare/` 提供 A 股/指数/ETF 原始价日 K、除权因子、财报与股本变动（成交量由股转手，百分数涨跌幅转小数；复权在本地 `adj_factor` + enriched 管道），`backend/app/api/hs300.py` 暴露快照/成分/区间并集/同步接口。HS300 同步单次默认使用 AkShare，不会改写全局日 K 数据源偏好；整批零行会显式返回失败，部分零行会在响应中列出。
-- **CSI300 历史快照从 2023-07 开始**：早于 `2023-07-01` 的查询与同步显式报错（HTTP 422），不会回退到第一个快照。
-- **回测按日过滤（point-in-time）**：策略与因子回测可带 `hs300=true`，服务端按月度快照在每个执行日只放行当日成分股（因子截面在算好全量前瞻收益后逐日过滤，前端「应用 HS300」按区间并集加载行情）；筛选 `pool` 的单跑结果不写入全局策略缓存。
+- **动态当前成分筛选器**：`backend/app/hs300/current.py` 经中证指数官方接口（`index_stock_cons_csindex`，东方财富降级）实时解析当前沪深300成分，结果在 `data/hs300/current_members.json` 缓存 6 小时；接口与缓存都不可用时 fail-closed 报错，绝不回退固定池。`GET /api/hs300/current` 返回 `as_of/source/count/members`。
+- **应用位置**：策略回测、因子回测与筛选器均可启用「沪深300 筛选器」，对当前名单取交集运行；筛选器的单跑结果不写入全局策略缓存。
+- **幸存者偏差（已知限制）**：官方只提供当前成分，历史回测按当前名单整段过滤，历史上被调出的股票不会出现；已调样的历史成分无法自动回填。
+- **AkShare provider**：`backend/app/plugins/akshare/` 提供 A 股/指数/ETF 原始价日 K、除权因子、财报与股本变动（成交量由股转手，百分数涨跌幅转小数；复权在本地 `adj_factor` + enriched 管道）。HS300 同步单次默认使用 AkShare，不会改写全局日 K 数据源偏好；整批零行会显式返回失败，部分零行会在响应中列出。
 - 上游来源、许可证和本地修改记录见 [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md)。
 
 #### HS300 同步与查询
 
 ```bash
-# 同步区间内全部快照成分的日 K（数据源 AkShare，缺省覆盖全部快照）
+# 当前沪深300名单（source=csindex/em/cache，6 小时内走缓存；refresh=true 强制拉取官方接口）
+curl 'http://localhost:3018/api/hs300/current'
+
+# 按当前名单同步日 K（数据源 AkShare，缺省覆盖最近 3 年，可显式指定区间）
 curl -X POST http://localhost:3018/api/hs300/sync \
   -H 'Content-Type: application/json' \
-  -d '{"start": "2023-07-01", "end": "2026-09-26", "provider": "akshare"}'
-
-# 快照列表 / 指定查询日的 PIT 成分 / 区间并集（回测加载用）
-curl 'http://localhost:3018/api/hs300/snapshots'
-curl 'http://localhost:3018/api/hs300/members?as_of=2026-09-28'
-curl 'http://localhost:3018/api/hs300/members-between?start=2023-07-01&end=2026-09-28'
-```
-
-容器/桌面版通过 `HS300_SNAPSHOT_DIR` 指定快照目录；Docker 镜像与 PyInstaller 包已内置 `vendor/index-constituents/docs`。
-
-刷新月度快照（在 vendor 目录内执行，依赖见同目录 `requirements.txt`；只需保留 CSI300 文件）：
-
-```bash
-cd vendor/index-constituents
-pip install -r requirements.txt
-./update-monthly.sh
+  -d '{"provider": "akshare"}'
 ```
 
 ### 本地开发与基线验证
@@ -540,7 +528,7 @@ cp .env.example .env
 docker compose up --build
 ```
 
-**打开 <http://localhost:3018> 即可使用。** 本地构建确保 HS300 API、AkShare provider 和 CSI300 快照都来自当前仓库版本；不要用上游 tick-stock-panel 镜像替代。
+**打开 <http://localhost:3018> 即可使用。** 本地构建确保 HS300 当前成分 API 与 AkShare provider 都来自当前仓库版本；不要用上游 tick-stock-panel 镜像替代。
 
 </div>
 
@@ -674,7 +662,7 @@ PORT=3018                      # 服务端口
 
 [MIT](./LICENSE) © tick-stock-panel contributors
 
-HS300 基线同时复用 Apache-2.0 的 `index-constituents` 和 MIT 的 AkShare 1.19.1；完整来源记录见 [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md)。
+HS300 基线复用 MIT 的 AkShare 1.19.1；成分识别直接调用中证指数官方公开接口，不再随仓库引入固定成分快照数据集。完整来源记录见 [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md)。
 
 本项目依赖 [TickFlow](https://tickflow.org/auth/register?ref=V3KDKGXPEA) 提供数据服务,使用前请遵守其服务条款
 

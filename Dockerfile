@@ -128,12 +128,8 @@ COPY backend/app ./app
 # COPY --from 不受 .dockerignore 的 **/node_modules 规则影响。
 COPY --from=stocksdk-builder /build/node_modules ./app/plugins/stocksdk/node_modules
 COPY tiers.yaml /app/tiers.yaml
-# HS300 月度成分快照 (/api/hs300 依赖, 只读 ~320KB)。容器内 _PROJECT_ROOT 错算到 /,
-# 与 static/tiers 同样用环境变量显式指定路径。
-COPY vendor/index-constituents/docs ./vendor/index-constituents/docs
 ENV STATIC_DIR=/app/static \
     TIERS_YAML=/app/tiers.yaml \
-    HS300_SNAPSHOT_DIR=/app/vendor/index-constituents/docs \
     DATA_DIR=/app/data \
     TICKFLOW_ENV_FILE=/app/.env
 

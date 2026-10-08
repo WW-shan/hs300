@@ -17,8 +17,8 @@ import { StockPreviewDialog } from '@/components/StockPreviewDialog'
 import { type NavItem } from '@/lib/listNav'
 import { WatchlistAddMenu } from '@/components/WatchlistAddMenu'
 import { useStrategyPool } from '@/lib/useStrategyPool'
-import { useHS300Universe } from '@/lib/useHS300Universe'
-import { UniverseSelector } from '@/components/hs300/UniverseSelector'
+import { useHS300Current } from '@/lib/useHS300Universe'
+import { HS300FilterToggle } from '@/components/hs300/HS300FilterToggle'
 import { StrategyCard, CardSize, loadCardSize, cardWrapCls } from '@/components/screener/StrategyCard'
 import { ScreenerTable } from '@/components/screener/ScreenerTable'
 import { ScreenerFilter as ScreenerFilterType, defaultFilter, filterActive, countActiveFilters, applyFilter, FilterPanel } from '@/components/screener/ScreenerFilter'
@@ -80,9 +80,9 @@ export function Screener() {
   const [showComposite, setShowComposite] = useState(false)
   const { pool, addToPool, removeFromPool, reorderPool, prune } = useStrategyPool()
   const [cardSize, setCardSize] = useState<CardSize>(loadCardSize)
-  // HS300 成分池: 应用后单策略运行按池过滤 (后端不写全局策略缓存, 见 run_preset)
-  const [hs300Pool, setHs300Pool] = useState<string[] | null>(null)
-  const hs300 = useHS300Universe()
+  // HS300 动态筛选: 后端用官方当前名单过滤单策略运行 (不写全局策略缓存)。
+  const [hs300Enabled, setHs300Enabled] = useState(false)
+  const hs300 = useHS300Current()
   // 日k蜡烛图显示开关（仅当 candle 列可见时才有意义；持久化）
   const [dailyKChartVisible, setDailyKChartVisible] = useState<boolean>(() => storage.screenerCandle.get(true))
   const toggleDailyKChart = useCallback(() => {
@@ -349,6 +349,7 @@ export function Screener() {
     scheduleKey?: string,
     allowSameKey = false,
   ): boolean => {
+    if (hs300Enabled) return false
     if (scheduleKey) {
       if (!tryReserveScreenerRunAll(
         runAllDateRef,
@@ -371,7 +372,7 @@ export function Screener() {
       },
     })
     return true
-  }, [runAll])
+  }, [runAll, hs300Enabled])
 
   const scheduleDailyPoolRun = useCallback((
     dailyIds: string[],
@@ -402,7 +403,7 @@ export function Screener() {
 
   // 摘要只同步当前日期的卡片数量，避免旧日期缓存短暂显示成当前结果。
   useEffect(() => {
-    if (!summaryQuery.data || !asOf) return
+    if (!summaryQuery.data || !asOf || hs300Enabled) return
     const counts: Record<string, number> = {}
     const expired: Record<string, number> = {}
     for (const [id, r] of Object.entries(summaryQuery.data.results)) {
@@ -438,7 +439,14 @@ export function Screener() {
         setPendingRun(rest.length ? { ...pendingRun, ids: rest } : null)
       }
     }
-  }, [summaryQuery.data, asOf, pendingRun, strategyMap])
+  }, [summaryQuery.data, asOf, hs300Enabled, pendingRun, strategyMap])
+
+  // HS300 过滤后的结果与全局缓存口径不同: 开启时清空卡片命中数, 由点击卡片实时计算。
+  useEffect(() => {
+    if (!hs300Enabled) return
+    setHitCounts({})
+    setExpiredCounts({})
+  }, [hs300Enabled])
 
   // 渐进式兜底: 后台计算最长等 8 分钟, 防止异常时无限轮询
   useEffect(() => {
@@ -450,12 +458,12 @@ export function Screener() {
   // 当前单策略缓存更新后同步明细；参数保存的强制重算结果仍由 run 直接覆盖。
   useEffect(() => {
     const cached = singleCachedQuery.data?.result
-    if (!cached || showAll || cached.strategy !== activeStrategy || cached.as_of !== asOf) return
+    if (hs300Enabled || !cached || showAll || cached.strategy !== activeStrategy || cached.as_of !== asOf) return
     setResult(cached)
     if (activeStrategy) {
       setHitCounts(prev => ({ ...prev, [activeStrategy]: cached.total }))
     }
-  }, [singleCachedQuery.data, showAll, activeStrategy, asOf])
+  }, [singleCachedQuery.data, showAll, activeStrategy, asOf, hs300Enabled])
 
   const effectiveResults = useMemo(() => {
     if (fullCachedQuery.data?.as_of !== asOf) return null
@@ -630,7 +638,7 @@ export function Screener() {
     // 分钟筛选视图下不跑日线缓存 (切回 全部/日线 视图时本 effect 会重新评估)
     // 与分钟 runAll 互斥: 后端并发 run_all 会崩 Numba, 分钟在跑时先让路,
     // 其结束后 isPending 翻转, 本 effect 重新评估
-    if (assetType !== 'stock' || tfFilter === '1m') return
+    if (assetType !== 'stock' || tfFilter === '1m' || hs300Enabled) return
     if (runAllMinute.isPending) return
     if (!asOf || strategyPresets.length === 0 || !summaryQuery.isSuccess || runAll.isPending || dailyPoolIds.length === 0) return
     const runKey = buildScreenerRunAllKey(asOf, dailyPoolIds)
@@ -643,13 +651,13 @@ export function Screener() {
     // 未覆盖: 受系统开关控制
     if (!screenerAutoRun) return
     scheduleDailyPoolRun(dailyPoolIds)
-  }, [asOf, strategyPresets.length, summaryQuery.isSuccess, dailyPoolIds, cacheCoversPool, missingStrategyIds, screenerAutoRun, assetType, tfFilter, runAll.isPending, runAllMinute.isPending, requestRunAll, scheduleDailyPoolRun])
+  }, [asOf, strategyPresets.length, summaryQuery.isSuccess, dailyPoolIds, cacheCoversPool, missingStrategyIds, screenerAutoRun, assetType, tfFilter, hs300Enabled, runAll.isPending, runAllMinute.isPending, requestRunAll, scheduleDailyPoolRun])
 
   // 分钟策略自动计算: 结果不落盘后缓存, 每次进入页面/池变化后异步跑一轮点亮卡片。
   // 与日线 runAll 串行 (并发 run_all 会崩 Numba); 分钟卡片不可见 (日线视图) 时不白算。
   // 不随 asOf 变化重跑 — 分钟分区只有最新交易日, 与 asOf 无关 (单跑同口径)。
   useEffect(() => {
-    if (assetType !== 'stock' || tfFilter === '1d') return
+    if (assetType !== 'stock' || tfFilter === '1d' || hs300Enabled) return
     if (runAll.isPending || runAllPendingRef.current) return
     if (!asOf || strategyPresets.length === 0 || runAllMinute.isPending || minutePoolIds.length === 0) return
     const runKey = `${minutePoolIds.join(',')}|${assetType}`
@@ -658,12 +666,12 @@ export function Screener() {
     if (!screenerAutoRun) return
     minuteRunDateRef.current = runKey
     minuteMutate(minutePoolIds)
-  }, [asOf, strategyPresets.length, minutePoolIds, screenerAutoRun, assetType, tfFilter, runAll.isPending, runAllMinute.isPending, minuteMutate])
+  }, [asOf, strategyPresets.length, minutePoolIds, screenerAutoRun, assetType, tfFilter, hs300Enabled, runAll.isPending, runAllMinute.isPending, minuteMutate])
 
   // 执行周期由策略自身声明决定: 日线走盘后缓存/单跑, 分钟走本地分钟K分区实时跑
   const run = useMutation({
     mutationFn: ({ id, date, timeframe: tf }: { id: string; date: string; timeframe: '1d' | '1m' }) =>
-      api.screenerRunPreset(id, hs300Pool ?? undefined, date || undefined, extColumnsParam || undefined, assetType, tf),
+      api.screenerRunPreset(id, undefined, date || undefined, extColumnsParam || undefined, assetType, tf, hs300Enabled),
     onSuccess: (data, vars) => {
       setResult(data)
       // 同步更新卡片上的命中数
@@ -687,7 +695,7 @@ export function Screener() {
     }
     // 摘要命中时由 singleCachedQuery 按需加载明细；缺失时才单独计算。
     // HS300 池过滤结果与全局缓存口径不同，必须实时单跑。
-    if (!hs300Pool && (summaryQuery.data?.results[s.id]?.as_of === asOf || runAll.isPending)) return
+    if (!hs300Enabled && (summaryQuery.data?.results[s.id]?.as_of === asOf || runAll.isPending)) return
     run.mutate({ id: s.id, date: asOf, timeframe: tf })
   }
 
@@ -954,40 +962,22 @@ export function Screener() {
       />
 
       <div className="px-8 py-4 space-y-3">
-        {/* HS300 成分池 — 应用到单策略运行 (run_preset 的 pool 参数) */}
+        {/* HS300 动态筛选 — 服务端按官方当前名单过滤单策略运行 */}
         {assetType === 'stock' && (
-          <div className="flex flex-wrap items-center gap-2">
-            <UniverseSelector
-              snapshots={hs300.snapshots}
-              selectedDate={hs300.selectedDate}
-              onDateChange={date => { hs300.setSelectedDate(date); setHs300Pool(null) }}
-              memberCount={hs300.symbols.length}
-              earliest={hs300.earliest}
-              isLoading={hs300.isLoading}
-              error={hs300.error?.message ?? hs300.syncError?.message ?? null}
-              onSync={hs300.syncDaily}
-              isSyncing={hs300.isSyncing}
-              syncHint={hs300.syncHint}
-              onApply={() => {
-                setHs300Pool(hs300.symbols)
-                if (activeStrategy && hs300.symbols.length > 0) {
-                  const target = strategyMap.get(activeStrategy)
-                  const tf = target?.timeframes?.includes('1m') ? '1m' as const : '1d' as const
-                  run.mutate({ id: activeStrategy, date: tf === '1m' ? '' : asOf, timeframe: tf })
-                }
-              }}
-              appliedHint={hs300Pool ? `已应用 ${hs300Pool.length} 只` : null}
-            />
-            {hs300Pool && (
-              <button
-                type="button"
-                onClick={() => setHs300Pool(null)}
-                className="text-[11px] text-muted hover:text-accent"
-              >
-                清除 HS300 池
-              </button>
-            )}
-          </div>
+          <HS300FilterToggle
+            enabled={hs300Enabled}
+            onChange={setHs300Enabled}
+            memberCount={hs300.count}
+            asOf={hs300.asOf}
+            source={hs300.source}
+            isLoading={hs300.isLoading}
+            error={hs300.error?.message ?? hs300.syncError?.message ?? null}
+            onRefresh={hs300.refresh}
+            isRefreshing={hs300.isRefreshing}
+            onSync={hs300.syncDaily}
+            isSyncing={hs300.isSyncing}
+            syncHint={hs300.syncHint}
+          />
         )}
 
         {/* 策略卡片 */}

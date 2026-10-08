@@ -1,6 +1,6 @@
 # HS300 Upstream-Reuse Implementation Plan
 
-> **历史实施记录（已归档）**: 本计划记录 AData 数据源时期的实施步骤与当时验证结果；实现已于 2026-10-07 切换为 AkShare（commit 596f7c8）。当前数据源、依赖与验证口径以 `AGENTS.md`、`docs/upstream-reuse-analysis.md`、`backend/pyproject.toml` 为准，不要按本文中的 AData 步骤执行。
+> **历史实施记录（已归档）**: 本计划记录 AData 数据源时期的实施步骤与当时验证结果；实现已于 2026-10-07 切换为 AkShare（commit 596f7c8）。当前数据源、依赖与验证口径以 `AGENTS.md`、`docs/upstream-reuse-analysis.md`、`backend/pyproject.toml` 为准，不要按本文中的 AData 步骤执行。另：2026-10-08 起 HS300 成分改为中证指数官方接口实时解析的当前名单（动态筛选器），`index-constituents` 月度快照/PIT 机制已删除，本文中的快照步骤同样不再适用。
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 

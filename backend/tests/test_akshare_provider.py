@@ -84,8 +84,8 @@ def test_qfq_cumulative_factors_become_single_event_factors(monkeypatch):
     monkeypatch.setattr(provider_mod, "_akshare", lambda: FakeAkShare)
     monkeypatch.setattr(
         provider_mod,
-        "_hs300_symbols_for_range",
-        lambda start, end: {"600000.SH"},
+        "_current_hs300_symbols",
+        lambda: {"600000.SH"},
     )
     progress = []
 
@@ -127,8 +127,8 @@ def test_factor_conversion_matches_forward_adjustment_contract(monkeypatch):
     monkeypatch.setattr(provider_mod, "_akshare", lambda: FakeAkShare)
     monkeypatch.setattr(
         provider_mod,
-        "_hs300_symbols_for_range",
-        lambda start, end: {"600000.SH"},
+        "_current_hs300_symbols",
+        lambda: {"600000.SH"},
     )
     factors = provider_mod.AkShareProvider().get_adj_factors(
         ["600000.SH"], date(2023, 7, 1), date(2023, 10, 1)
@@ -174,8 +174,8 @@ def test_adj_factor_empty_or_invalid_payload_fails_closed(monkeypatch):
     monkeypatch.setattr(provider_mod, "_akshare", lambda: FakeAkShare)
     monkeypatch.setattr(
         provider_mod,
-        "_hs300_symbols_for_range",
-        lambda start, end: {"600000.SH"},
+        "_current_hs300_symbols",
+        lambda: {"600000.SH"},
     )
 
     with pytest.raises(provider_mod.AkShareProviderError, match="factor"):
@@ -195,8 +195,8 @@ def test_adj_factor_empty_payload_does_not_look_like_success(monkeypatch):
     monkeypatch.setattr(provider_mod, "_akshare", lambda: FakeAkShare)
     monkeypatch.setattr(
         provider_mod,
-        "_hs300_symbols_for_range",
-        lambda start, end: {"600000.SH"},
+        "_current_hs300_symbols",
+        lambda: {"600000.SH"},
     )
 
     with pytest.raises(provider_mod.AkShareProviderError, match="为空"):
@@ -248,8 +248,8 @@ def test_financial_metrics_use_report_and_announcement_dates(monkeypatch):
     monkeypatch.setattr(provider_mod, "_today_cn", lambda: date(2026, 10, 1))
     monkeypatch.setattr(
         provider_mod,
-        "_hs300_symbols_for_range",
-        lambda start, end: {"600519.SH"},
+        "_current_hs300_symbols",
+        lambda: {"600519.SH"},
     )
 
     frame = provider_mod.AkShareProvider().get_financials(
@@ -679,8 +679,8 @@ def test_empty_cninfo_share_history_is_not_reported_as_a_provider_failure(monkey
     monkeypatch.setattr(provider_mod, "_akshare", lambda: FakeAkShare)
     monkeypatch.setattr(
         provider_mod,
-        "_hs300_symbols_for_range",
-        lambda start, end: {"600837.SH"},
+        "_current_hs300_symbols",
+        lambda: {"600837.SH"},
     )
 
     frame = provider_mod.AkShareProvider().get_financials(

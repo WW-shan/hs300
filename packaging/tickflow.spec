@@ -32,7 +32,6 @@ ROOT = Path(SPECPATH).parent
 FRONTEND_DIST = str(ROOT / "frontend" / "dist")
 TIERS_YAML = str(ROOT / "tiers.yaml")
 BUILTIN_STRATEGIES = str(ROOT / "backend" / "app" / "strategy" / "builtin")
-HS300_SNAPSHOTS = str(ROOT / "vendor" / "index-constituents" / "docs")
 # 图标按平台选: Windows 用 .ico, macOS 用 .icns (PyInstaller 对 .ico 在
 # mac 上静默忽略, 不换格式 Dock/Finder 会显示通用图标)。两者都由
 # packaging/generate_icon.py 一并生成。
@@ -116,8 +115,6 @@ datas += [(FRONTEND_DIST, "static")]
 datas += [(TIERS_YAML, ".")]
 # 内置策略 → app/strategy/builtin/ (importlib 动态加载, 不能进 PYZ)
 datas += [(BUILTIN_STRATEGIES, "app/strategy/builtin")]
-# CSI300 月度成分快照 → vendor/index-constituents/docs (frozen 读 _MEIPASS 下同路径)
-datas += [(HS300_SNAPSHOTS, "vendor/index-constituents/docs")]
 
 # ── 内置数据源插件 (运行时扫 plugin.yaml + importlib 动态加载 entry) ──
 # loader._load_builtin_plugins 先按目录扫 app/plugins/<name>/plugin.yaml, 再用

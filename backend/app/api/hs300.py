@@ -1,29 +1,26 @@
-"""HS300 成分股 API — 快照浏览、PIT 成员查询与日线批量同步。
+"""HS300 动态筛选 API — 官方当前成分查询与按当前名单同步日 K。
 
 路由前缀: /api/hs300
 
 端点:
-  GET  /snapshots  月度快照日期列表
-  GET  /members    指定查询日的成分股 (point-in-time)
-  POST /sync       按区间成员并集同步日 K (默认 AkShare)
+  GET  /current  官方最新沪深300成分 (中证指数 -> 东方财富降级, 6h 缓存)
+  POST /sync     按当前成分名单同步日 K (默认 AkShare)
 
-同步入口复用 kline_sync.sync_and_persist_daily_batch 与偏好路由机制,
-不新增第二套数据源或写入链路。
+不再提供月度快照浏览/区间并集接口: HS300 只作为动态筛选器, 不维护固定 300 池。
+同步入口复用 kline_sync.sync_and_persist_daily_batch 与偏好路由机制, 不新增
+第二套数据源或写入链路。
 """
 
 from __future__ import annotations
 
 import logging
 import threading
-from datetime import date, datetime, time
-from pathlib import Path
-from typing import Annotated
+from datetime import date, datetime, time, timedelta
 
 from fastapi import APIRouter, HTTPException, Query, Request
 from pydantic import BaseModel
 
-from app.config import resolve_hs300_snapshot_dir, settings
-from app.hs300.service import HS300MembershipError, HS300Service
+from app.hs300.current import CurrentMembersError, load_current_members
 from app.services import kline_sync
 
 logger = logging.getLogger(__name__)
@@ -36,19 +33,11 @@ _SYNC_IN_PROGRESS = False
 
 
 class SyncRequest(BaseModel):
-    """HS300 日 K 同步入参; 区间缺省覆盖全部快照。"""
+    """HS300 日 K 同步入参; 区间缺省为最近三年。"""
 
     start: date | None = None
     end: date | None = None
     provider: str = "akshare"
-
-
-def _snapshot_root() -> Path:
-    return resolve_hs300_snapshot_dir(settings.hs300_snapshot_dir)
-
-
-def _service() -> HS300Service:
-    return HS300Service(_snapshot_root())
 
 
 def _daily_provider_available(name: str) -> bool:
@@ -60,14 +49,11 @@ def _daily_provider_available(name: str) -> bool:
     return custom_sources.provider_has_dataset(name, "daily")
 
 
-def _available_snapshots(service: HS300Service) -> list[date]:
-    snapshots = service.snapshot_dates()
-    if not snapshots:
-        raise HTTPException(
-            status_code=503,
-            detail=f"未找到 CSI300 成分股快照: {_snapshot_root()}",
-        )
-    return snapshots
+def _current_members_or_503(refresh: bool = False):
+    try:
+        return load_current_members(refresh=refresh)
+    except CurrentMembersError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
 
 
 def _refresh_enriched_for_symbols(repo, symbols: list[str]) -> None:
@@ -85,85 +71,26 @@ def _refresh_enriched_for_symbols(repo, symbols: list[str]) -> None:
     invalidate_storage_cache()
 
 
-@router.get("/snapshots")
-def list_snapshots() -> dict:
-    """返回可用月度快照日期 (升序)。"""
-    service = _service()
-    snapshots = _available_snapshots(service)
-    return {
-        "snapshots": [day.isoformat() for day in snapshots],
-        "earliest": snapshots[0].isoformat(),
-        "latest": snapshots[-1].isoformat(),
-    }
-
-
-@router.get("/members")
-def get_members(
-    as_of: Annotated[date, Query(description="查询日 YYYY-MM-DD, 取不晚于该日的最近一份快照")],
+@router.get("/current")
+def get_current(
+    refresh: bool = Query(False, description="true 时忽略 6h 缓存, 强制拉取官方接口"),
 ) -> dict:
-    """返回 PIT 语义下的 HS300 成分股 (最新快照在 on/before 查询日生效)。"""
-    service = _service()
-    _available_snapshots(service)
-    try:
-        members = service.members(as_of)
-    except HS300MembershipError as exc:
-        raise HTTPException(status_code=422, detail=str(exc)) from exc
-    return {
-        "as_of": as_of.isoformat(),
-        "snapshot_date": members["snapshot_date"][0].isoformat(),
-        "members": members.select("symbol", "name").to_dicts(),
-    }
-
-
-@router.get("/members-between")
-def get_members_between(
-    start: Annotated[date, Query(description="起始日 YYYY-MM-DD")],
-    end: Annotated[date, Query(description="结束日 YYYY-MM-DD")],
-) -> dict:
-    """返回区间内所有快照成分的并集 (供回测加载数据; PIT 过滤仍由服务端逐日执行)。"""
-    service = _service()
-    snapshots = _available_snapshots(service)
-    if start < snapshots[0]:
-        raise HTTPException(
-            status_code=422,
-            detail=f"起始日 {start.isoformat()} 早于首个快照 {snapshots[0].isoformat()}",
-        )
-    if start > end:
-        raise HTTPException(
-            status_code=422,
-            detail=f"起始日 {start.isoformat()} 晚于结束日 {end.isoformat()}",
-        )
-    try:
-        frame = service.members_between(start, end)
-    except HS300MembershipError as exc:
-        raise HTTPException(status_code=422, detail=str(exc)) from exc
-    latest_name = (
-        frame.sort(["symbol", "snapshot_date"])
-        .unique(subset=["symbol"], keep="last")
-        .sort("symbol")
-    )
-    return {
-        "start": start.isoformat(),
-        "end": end.isoformat(),
-        "snapshot_dates": sorted(d.isoformat() for d in frame["snapshot_date"].unique()),
-        "members": latest_name.select("symbol", "name").to_dicts(),
-    }
+    """返回官方最新沪深300成分; 失败时 fail-closed, 不回退历史快照。"""
+    members = _current_members_or_503(refresh=refresh)
+    return members.to_dict()
 
 
 @router.post("/sync")
 def sync_daily(request: Request, payload: SyncRequest | None = None) -> dict:
-    """按区间成分股并集同步日 K, 数据源覆盖仅作用于本次调用。"""
+    """按当前成分名单同步日 K, 数据源覆盖仅作用于本次调用。"""
     body = payload or SyncRequest()
-    service = _service()
-    snapshots = _available_snapshots(service)
+    members = _current_members_or_503()
+    symbols = members.symbols
+    if not symbols:
+        raise HTTPException(status_code=503, detail="HS300 当前成分为空, 拒绝同步")
 
-    start = body.start or snapshots[0]
-    end = body.end or snapshots[-1]
-    if start < snapshots[0]:
-        raise HTTPException(
-            status_code=422,
-            detail=f"同步起始日 {start.isoformat()} 早于首个快照 {snapshots[0].isoformat()}",
-        )
+    end = body.end or date.today()
+    start = body.start or (end - timedelta(days=365 * 3))
     if start > end:
         raise HTTPException(
             status_code=422,
@@ -176,12 +103,6 @@ def sync_daily(request: Request, payload: SyncRequest | None = None) -> dict:
             status_code=422,
             detail=f"数据源 {body.provider!r} 未提供日K数据集",
         )
-
-    try:
-        membership = service.members_between(start, end)
-    except HS300MembershipError as exc:
-        raise HTTPException(status_code=422, detail=str(exc)) from exc
-    symbols = membership["symbol"].unique(maintain_order=True).to_list()
 
     global _SYNC_IN_PROGRESS
     with _SYNC_LOCK:
@@ -237,4 +158,6 @@ def sync_daily(request: Request, payload: SyncRequest | None = None) -> dict:
         "zero_row_symbols": zero_row_symbols,
         "start": start.isoformat(),
         "end": end.isoformat(),
+        "as_of": members.as_of,
+        "source": members.source,
     }

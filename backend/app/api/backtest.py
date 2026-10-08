@@ -67,22 +67,6 @@ def _guard_server_backtest_range(start: date, end: date):
         raise HTTPException(status_code=400, detail=BACKTEST_SERVER_GUARD_MESSAGE)
 
 
-def _guard_hs300_range(enabled: bool, start: date) -> None:
-    """拒绝成分快照起点之前的因子/回测请求, 避免把早期区间误当成全市场。"""
-    if not enabled:
-        return
-    from app.hs300.service import MIN_SNAPSHOT_DATE
-
-    if start < MIN_SNAPSHOT_DATE:
-        raise HTTPException(
-            status_code=422,
-            detail=(
-                f"CSI300 snapshots begin on {MIN_SNAPSHOT_DATE.isoformat()}; "
-                f"requested {start.isoformat()}"
-            ),
-        )
-
-
 # ================================================================
 # 状态
 # ================================================================
@@ -179,7 +163,6 @@ def factor_run(req: FactorBacktestRequest, request: Request):
 
     end = req.end or date.today()
     start = _resolve_start(req, end, FACTOR_DEFAULT_DAYS)
-    _guard_hs300_range(req.hs300, start)
     _guard_server_backtest_range(start, end)
     symbols = req.symbols if req.symbols else None
     if symbols is not None and len(symbols) > FACTOR_MAX_SYMBOLS:
@@ -236,7 +219,6 @@ def factor_batch(req: FactorBatchRequest, request: Request):
 
     end = req.end or date.today()
     start = _resolve_start(req, end, FACTOR_DEFAULT_DAYS)
-    _guard_hs300_range(req.hs300, start)
     _guard_server_backtest_range(start, end)
     symbols = req.symbols if req.symbols else None
     if symbols is not None and len(symbols) > FACTOR_MAX_SYMBOLS:
@@ -407,7 +389,6 @@ def strategy_run(req: StrategyBacktestRequest, request: Request):
 
     end = req.end or date.today()
     start = _resolve_start(req, end, FACTOR_DEFAULT_DAYS)
-    _guard_hs300_range(req.hs300, start)
     _guard_server_backtest_range(start, end)
     _guard_minute_strategy_backtest(request, req.strategy_id, start, req.asset_type)
 
@@ -544,7 +525,8 @@ async def strategy_stream(
 ):
     """SSE 流式策略回测: 实时推送进度, 完成后推送结果, 支持重连 (刷新/切页后恢复)。
 
-    hs300=True 时按 HS300 月度快照做逐日成分过滤 (point-in-time)。
+    hs300=True 时按官方最新沪深300成分过滤整段回测; 不再读取月度快照归档。
+    历史回测使用当前成分会存在幸存者偏差, 调用方需在 UI 明确提示。
 
     - 相同参数的任务只启动一次, 多次连接订阅同一个任务
     - 断开连接不会取消任务 (除非显式调用 cancel)
@@ -567,7 +549,6 @@ async def strategy_stream(
         # 空 start = 全部历史: 用本地最早日K日期, 查不到再回退到默认窗口
         earliest = request.app.state.repo.earliest_daily_date()
         start_date = earliest or (end_date - timedelta(days=FACTOR_DEFAULT_DAYS))
-    _guard_hs300_range(hs300, start_date)
     _guard_minute_strategy_backtest(request, strategy_id, start_date, asset_type)
 
     # 服务端范围保护

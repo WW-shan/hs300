@@ -413,22 +413,11 @@ export interface HS300Member {
   name: string
 }
 
-export interface HS300SnapshotsResponse {
-  snapshots: string[]
-  earliest: string
-  latest: string
-}
-
-export interface HS300MembersResponse {
-  as_of: string
-  snapshot_date: string
-  members: HS300Member[]
-}
-
-export interface HS300MembersBetweenResponse {
-  start: string
-  end: string
-  snapshot_dates: string[]
+export interface HS300CurrentResponse {
+  as_of: string | null
+  source: string
+  fetched_at: string
+  count: number
   members: HS300Member[]
 }
 
@@ -440,6 +429,8 @@ export interface HS300SyncResponse {
   zero_row_symbols: string[]
   start: string
   end: string
+  as_of: string | null
+  source: string
 }
 
 export interface ScreenerResultSummary {
@@ -2842,32 +2833,26 @@ export const api = {
     )
     return { presets: data.strategies, load_errors: data.load_errors }
   },
-  // HS300 成分快照 — 快照列表 / 单日 PIT 成员 / 区间并集 / AkShare 日K同步
-  hs300Snapshots: () =>
-    request<HS300SnapshotsResponse>('/api/hs300/snapshots'),
-  hs300Members: (asOf: string) =>
-    request<HS300MembersResponse>(`/api/hs300/members?as_of=${encodeURIComponent(asOf)}`),
-  hs300MembersBetween: (start: string, end: string) =>
-    request<HS300MembersBetweenResponse>(
-      `/api/hs300/members-between?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`,
-    ),
+  // HS300 动态筛选 — 官方当前成分 / AkShare 日K同步 (无月度快照归档)
+  hs300Current: (refresh = false) =>
+    request<HS300CurrentResponse>(`/api/hs300/current${refresh ? '?refresh=true' : ''}`),
   hs300Sync: (start?: string, end?: string) =>
     request<HS300SyncResponse>('/api/hs300/sync', {
       method: 'POST',
       timeoutMs: COMPUTE_REQUEST_TIMEOUT_MS,
       body: JSON.stringify({ start: start ?? null, end: end ?? null, provider: 'akshare' }),
     }),
-  screenerRunPreset: (strategy_id: string, pool?: string[], asOf?: string, extColumns?: string, assetType: 'stock' | 'etf' = 'stock', timeframe: '1d' | '1m' = '1d') =>
+  screenerRunPreset: (strategy_id: string, pool?: string[], asOf?: string, extColumns?: string, assetType: 'stock' | 'etf' = 'stock', timeframe: '1d' | '1m' = '1d', hs300 = false) =>
     request<ScreenerResult>('/api/screener/run_preset', {
       method: 'POST',
       timeoutMs: COMPUTE_REQUEST_TIMEOUT_MS,
-      body: JSON.stringify({ strategy_id, pool, as_of: asOf ?? null, ext_columns: extColumns || null, asset_type: assetType, timeframe }),
+      body: JSON.stringify({ strategy_id, pool, as_of: asOf ?? null, ext_columns: extColumns || null, asset_type: assetType, timeframe, hs300 }),
     }),
-  screenerRunCustom: (conditions: string[], orderBy?: string, limit = 30, pool?: string[], extColumns?: string, assetType: 'stock' | 'etf' = 'stock') =>
+  screenerRunCustom: (conditions: string[], orderBy?: string, limit = 30, pool?: string[], extColumns?: string, assetType: 'stock' | 'etf' = 'stock', hs300 = false) =>
     request<ScreenerResult>('/api/screener/run', {
       method: 'POST',
       timeoutMs: COMPUTE_REQUEST_TIMEOUT_MS,
-      body: JSON.stringify({ conditions, order_by: orderBy, limit, pool, ext_columns: extColumns || null, asset_type: assetType }),
+      body: JSON.stringify({ conditions, order_by: orderBy, limit, pool, ext_columns: extColumns || null, asset_type: assetType, hs300 }),
     }),
   screenerRunAll: (asOf?: string, strategyIds?: string[], assetType: 'stock' | 'etf' = 'stock', timeframe: '1d' | '1m' = '1d') =>
     request<ScreenerRunAllSummary>(

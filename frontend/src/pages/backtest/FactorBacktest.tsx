@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import { Play, BarChart3, BookmarkPlus, Clock } from 'lucide-react'
@@ -8,8 +8,8 @@ import { EmptyState } from '@/components/EmptyState'
 import { DatePicker } from '@/components/DatePicker'
 import { toast } from '@/components/Toast'
 import { QK } from '@/lib/queryKeys'
-import { useHS300MembersBetween, useHS300Universe } from '@/lib/useHS300Universe'
-import { UniverseSelector } from '@/components/hs300/UniverseSelector'
+import { useHS300Current } from '@/lib/useHS300Universe'
+import { HS300FilterToggle } from '@/components/hs300/HS300FilterToggle'
 import { FactorICChart } from './charts/FactorICChart'
 import { FactorGroupNavChart } from './charts/FactorGroupNavChart'
 import { factorResultCandidate } from './researchCandidates'
@@ -90,24 +90,13 @@ export function FactorBacktest({ initialFactorName = 'momentum_20d' }: { initial
   const [factorName, setFactorName] = useState(initialFactorName)
   const [symbols, setSymbols] = useState('')
   const [assetType, setAssetType] = useState<'stock' | 'etf'>('stock')
-  // HS300 逐日成分过滤 (PIT): 后端按快照在每日截面过滤, symbols 只负责覆盖数据加载
+  // HS300 动态筛选: 后端按官方当前名单过滤, symbols 只代表用户自选池
   const [hs300Enabled, setHs300Enabled] = useState(false)
-  const hs300 = useHS300Universe()
+  const hs300 = useHS300Current()
   const [start, setStart] = useState(THREE_MONTHS_AGO)
   const [end, setEnd] = useState(TODAY)
-  // 区间并集: 覆盖区间内全部曾入选标的, 否则早先成分的行情不会被加载
-  const hs300Union = useHS300MembersBetween(
-    start || null,
-    end || null,
-    hs300Enabled && assetType === 'stock',
-  )
   const hs300Active = hs300Enabled && assetType === 'stock'
-
-  // 启用 HS300 后把股票池同步为区间并集 (快照切换/区间变化时自动更新)
-  useEffect(() => {
-    if (!hs300Enabled || hs300Union.symbols.length === 0) return
-    setSymbols(hs300Union.symbols.join(','))
-  }, [hs300Enabled, hs300Union.symbols])
+  const hs300Blocked = hs300Active && (hs300.isLoading || !!hs300.error || hs300.count === 0)
 
   const [nGroups, setNGroups] = useState(5)
   const [weight, setWeight] = useState<'equal' | 'factor_weight'>('equal')
@@ -146,9 +135,7 @@ export function FactorBacktest({ initialFactorName = 'momentum_20d' }: { initial
       api.factorRun({
         factor_name: factorName,
         asset_type: assetType,
-        symbols: hs300Active
-          ? hs300Union.symbols
-          : symbols ? symbols.split(',').map(s => s.trim()).filter(Boolean) : null,
+        symbols: symbols ? symbols.split(',').map(s => s.trim()).filter(Boolean) : null,
         start: start || null,
         end: end || undefined,
         n_groups: nGroups,
@@ -263,40 +250,26 @@ export function FactorBacktest({ initialFactorName = 'momentum_20d' }: { initial
             type="text"
             value={symbols}
             onChange={e => setSymbols(e.target.value)}
-            disabled={hs300Active}
-            placeholder={hs300Active ? 'HS300 已自动加载区间成员并集' : '留空则使用全市场，建议最近3个月'}
+            placeholder={hs300Active ? '留空则使用全市场，仅保留沪深300当前成分' : '留空则使用全市场，建议最近3个月'}
             className={`w-full px-2.5 py-1.5 rounded-input bg-surface border border-border text-xs font-mono
               focus:outline-none focus:border-accent transition-colors duration-150 ease-smooth`}
           />
           {assetType === 'stock' && (
             <div className="mt-2">
-              <UniverseSelector
-                snapshots={hs300.snapshots}
-                selectedDate={hs300.selectedDate}
-                onDateChange={hs300.setSelectedDate}
-                memberCount={hs300.symbols.length}
-                earliest={hs300.earliest}
-                isLoading={hs300.isLoading || (hs300Enabled && hs300Union.isLoading)}
-                error={hs300.error?.message ?? hs300.syncError?.message ?? (hs300Enabled ? hs300Union.error?.message ?? null : null)}
+              <HS300FilterToggle
+                enabled={hs300Enabled}
+                onChange={setHs300Enabled}
+                memberCount={hs300.count}
+                asOf={hs300.asOf}
+                source={hs300.source}
+                isLoading={hs300.isLoading}
+                error={hs300.error?.message ?? hs300.syncError?.message ?? null}
+                onRefresh={hs300.refresh}
+                isRefreshing={hs300.isRefreshing}
                 onSync={hs300.syncDaily}
                 isSyncing={hs300.isSyncing}
                 syncHint={hs300.syncHint}
-                onApply={() => setHs300Enabled(true)}
-                appliedHint={
-                  hs300Enabled
-                    ? `PIT 过滤已启用 · 数据加载 ${symbols.split(',').filter(Boolean).length || 0} 只`
-                    : null
-                }
               />
-              {hs300Enabled && (
-                <button
-                  type="button"
-                  onClick={() => setHs300Enabled(false)}
-                  className="mt-1 text-[11px] text-muted hover:text-accent"
-                >
-                  关闭 HS300 过滤
-                </button>
-              )}
             </div>
           )}
         </div>
@@ -380,9 +353,7 @@ export function FactorBacktest({ initialFactorName = 'momentum_20d' }: { initial
 
         <button
           onClick={() => run.mutate()}
-          disabled={run.isPending || (hs300Active && (
-            hs300Union.isLoading || !!hs300Union.error || hs300Union.symbols.length === 0
-          ))}
+          disabled={run.isPending || hs300Blocked}
           className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-btn
             bg-accent text-sm font-medium text-white hover:bg-accent/90
             transition-colors duration-150 ease-smooth disabled:opacity-50"

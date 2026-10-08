@@ -66,19 +66,6 @@ _PROJECT_ROOT = _project_root()
 _RESOURCE_ROOT = _resource_root()
 
 
-def hs300_snapshot_default_dir() -> Path:
-    """内置 HS300 月度成分快照目录 (frozen: 资源目录; 否则项目根/容器工作目录)。"""
-    if _IS_FROZEN:
-        return _RESOURCE_ROOT / "vendor" / "index-constituents" / "docs"
-    return _PROJECT_ROOT / "vendor" / "index-constituents" / "docs"
-
-
-def resolve_hs300_snapshot_dir(configured_dir: Path | str) -> Path:
-    """Treat blank or dot-only environment values as the bundled snapshot directory."""
-    raw = str(configured_dir).strip()
-    if raw in {"", "."}:
-        return hs300_snapshot_default_dir()
-    return Path(configured_dir)
 _ENV_FILE = Path(
     os.environ.get(
         "TICKFLOW_ENV_FILE",
@@ -166,10 +153,6 @@ class Settings(BaseSettings):
 
     # 静态文件(前端 dist) — frozen: 资源目录的 static/; 非 frozen: frontend/dist
     static_dir: Path = _RESOURCE_ROOT / "static" if _IS_FROZEN else (_PROJECT_ROOT / "frontend" / "dist")
-
-    # HS300 月度成分快照 — frozen: 资源目录内 vendor/; 非 frozen: 项目根 vendor/。
-    # 容器内 _PROJECT_ROOT 会错算到 /, Docker 通过 HS300_SNAPSHOT_DIR 显式覆盖。
-    hs300_snapshot_dir: Path = hs300_snapshot_default_dir()
 
     @model_validator(mode="after")
     def _resolve_paths(self) -> Settings:

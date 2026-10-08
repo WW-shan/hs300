@@ -3,35 +3,22 @@ import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
-import { useHS300MembersBetween, useHS300Universe } from './useHS300Universe'
+import { useHS300Current } from './useHS300Universe'
 
 const fixtures = vi.hoisted(() => ({
-  snapshotCalls: 0,
-  memberCalls: [] as string[],
-  betweenCalls: [] as string[],
+  currentCalls: [] as boolean[],
   syncCalls: 0,
 }))
 
 vi.mock('@/lib/api', () => ({
   api: {
-    hs300Snapshots: async () => {
-      fixtures.snapshotCalls += 1
-      return { snapshots: ['2023-07-01', '2026-09-01'], earliest: '2023-07-01', latest: '2026-09-01' }
-    },
-    hs300Members: async (asOf: string) => {
-      fixtures.memberCalls.push(asOf)
+    hs300Current: async (refresh = false) => {
+      fixtures.currentCalls.push(refresh)
       return {
-        as_of: asOf,
-        snapshot_date: asOf,
-        members: [{ symbol: '600519.SH', name: '贵州茅台' }],
-      }
-    },
-    hs300MembersBetween: async (start: string, end: string) => {
-      fixtures.betweenCalls.push(`${start}..${end}`)
-      return {
-        start,
-        end,
-        snapshot_dates: ['2023-07-01', '2023-08-01'],
+        as_of: '2026-09-30',
+        source: 'csindex',
+        fetched_at: '2026-10-08T12:00:00+08:00',
+        count: 2,
         members: [
           { symbol: '600519.SH', name: '贵州茅台' },
           { symbol: '300750.SZ', name: '宁德时代' },
@@ -43,18 +30,19 @@ vi.mock('@/lib/api', () => ({
       return {
         ok: true,
         provider: 'akshare',
-        symbols: 300,
+        symbols: 2,
         rows: 123,
         zero_row_symbols: [],
-        start: '2023-07-01',
-        end: '2026-09-01',
+        start: '2026-01-01',
+        end: '2026-09-30',
+        as_of: '2026-09-30',
+        source: 'csindex',
       }
     },
   },
 }))
 
-type Universe = ReturnType<typeof useHS300Universe>
-type Between = ReturnType<typeof useHS300MembersBetween>
+type Current = ReturnType<typeof useHS300Current>
 
 let host: HTMLDivElement
 let root: Root
@@ -62,9 +50,7 @@ let queryClient: QueryClient
 
 beforeEach(() => {
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
-  fixtures.snapshotCalls = 0
-  fixtures.memberCalls = []
-  fixtures.betweenCalls = []
+  fixtures.currentCalls = []
   fixtures.syncCalls = 0
   queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })
   host = document.createElement('div')
@@ -79,69 +65,22 @@ afterEach(async () => {
 })
 
 async function waitFor(assert: () => void) {
-  // 每轮都在 act 内让出事件循环, 查询状态更新不会触发 act 警告。
   for (let attempt = 0; attempt < 100; attempt += 1) {
-    await act(async () => {
-      await new Promise(resolve => setTimeout(resolve, 0))
-    })
+    await act(async () => new Promise(resolve => setTimeout(resolve, 0)))
     try {
       assert()
       return
     } catch {
-      // 继续等待
+      // keep waiting
     }
   }
   assert()
 }
 
-it('默认选中最新快照并加载 PIT 成员', async () => {
-  let latest: Universe | null = null
+it('只拉取官方当前成分, 不再请求快照接口', async () => {
+  let current: Current | null = null
   function Harness() {
-    latest = useHS300Universe()
-    return <div data-symbols={latest.symbols.join(',')} />
-  }
-  await act(async () => {
-    root.render(
-      <QueryClientProvider client={queryClient}>
-        <Harness />
-      </QueryClientProvider>,
-    )
-  })
-
-  await waitFor(() => expect(latest?.symbols).toEqual(['600519.SH']))
-  expect(latest!.selectedDate).toBe('2026-09-01')
-  expect(latest!.snapshotDate).toBe('2026-09-01')
-  expect(fixtures.memberCalls).toEqual(['2026-09-01'])
-  expect(host.querySelector('[data-symbols]')?.getAttribute('data-symbols')).toBe('600519.SH')
-})
-
-it('切换快照只按新日期请求成员, 快照列表共享缓存', async () => {
-  let latest: Universe | null = null
-  function Harness() {
-    latest = useHS300Universe()
-    return null
-  }
-  await act(async () => {
-    root.render(
-      <QueryClientProvider client={queryClient}>
-        <Harness />
-      </QueryClientProvider>,
-    )
-  })
-  await waitFor(() => expect(latest?.symbols).toEqual(['600519.SH']))
-
-  await act(async () => latest!.setSelectedDate('2023-07-01'))
-  await waitFor(() => expect(fixtures.memberCalls).toEqual(['2026-09-01', '2023-07-01']))
-
-  expect(latest!.selectedDate).toBe('2023-07-01')
-  expect(latest!.members).toEqual([{ symbol: '600519.SH', name: '贵州茅台' }])
-  expect(fixtures.snapshotCalls).toBe(1)
-})
-
-it('区间并集 hook 在缺少端点参数时不请求', async () => {
-  let between: Between | null = null
-  function Harness() {
-    between = useHS300MembersBetween(null, null)
+    current = useHS300Current()
     return null
   }
   await act(async () => {
@@ -152,14 +91,17 @@ it('区间并集 hook 在缺少端点参数时不请求', async () => {
     )
   })
 
-  expect(between!.symbols).toEqual([])
-  expect(fixtures.betweenCalls).toEqual([])
+  await waitFor(() => expect(current?.symbols).toEqual(['600519.SH', '300750.SZ']))
+  expect(current!.count).toBe(2)
+  expect(current!.asOf).toBe('2026-09-30')
+  expect(current!.source).toBe('csindex')
+  expect(fixtures.currentCalls).toEqual([false])
 })
 
-it('区间并集 hook 拉取覆盖快照的并集', async () => {
-  let between: Between | null = null
+it('刷新时强制走后端 refresh=true', async () => {
+  let current: Current | null = null
   function Harness() {
-    between = useHS300MembersBetween('2023-07-01', '2023-08-31')
+    current = useHS300Current()
     return null
   }
   await act(async () => {
@@ -169,17 +111,18 @@ it('区间并集 hook 拉取覆盖快照的并集', async () => {
       </QueryClientProvider>,
     )
   })
+  await waitFor(() => expect(current?.count).toBe(2))
 
-  await waitFor(() => expect(between?.symbols).toEqual(['600519.SH', '300750.SZ']))
-  expect(between!.snapshotDates).toEqual(['2023-07-01', '2023-08-01'])
-  expect(fixtures.betweenCalls).toEqual(['2023-07-01..2023-08-31'])
+  await act(async () => current!.refresh())
+  await waitFor(() => expect(fixtures.currentCalls).toEqual([false, true]))
+  await waitFor(() => expect(current!.isRefreshing).toBe(false))
 })
 
-it('触发一次 AkShare 同步并返回落盘结果', async () => {
+it('触发一次按当前名单的 AkShare 日K同步', async () => {
   const invalidateQueries = vi.spyOn(queryClient, 'invalidateQueries')
-  let universe: Universe | null = null
+  let current: Current | null = null
   function Harness() {
-    universe = useHS300Universe()
+    current = useHS300Current()
     return null
   }
   await act(async () => {
@@ -189,13 +132,12 @@ it('触发一次 AkShare 同步并返回落盘结果', async () => {
       </QueryClientProvider>,
     )
   })
-  await waitFor(() => expect(universe?.symbols).toEqual(['600519.SH']))
+  await waitFor(() => expect(current?.count).toBe(2))
 
-  await act(async () => universe!.syncDaily())
+  await act(async () => current!.syncDaily())
   expect(fixtures.syncCalls).toBe(1)
-  await waitFor(() => expect(universe?.syncHint).toBe('已同步 123 行'))
-
-  expect(universe!.syncError).toBeNull()
+  await waitFor(() => expect(current?.syncHint).toBe('已同步 123 行'))
+  expect(current!.syncError).toBeNull()
   expect(invalidateQueries).toHaveBeenCalledWith(expect.objectContaining({
     queryKey: ['screener-kline-batch'],
   }))

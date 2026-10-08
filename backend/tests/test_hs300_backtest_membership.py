@@ -1,12 +1,12 @@
-"""HS300 回测 PIT 成分过滤回归 — 每个执行日只允许当日快照成分参与。
+"""HS300 动态筛选回归 — 整段回测使用官方当前成分, 不再读取 PIT 归档。
 
-静态并集 (把快照成分股并起来直接当 symbols 传) 会让已调出成分股在非成员日继续
-被选中/成交, 属于幸存者偏差的对偶错误。回测必须在信号/评分前按日过滤。
+筛选器只维护一份"当前沪深300"名单: 官方接口 -> 6h 缓存 -> fail-closed。
+历史回测使用当前名单会有幸存者偏差, 但不会再出现"归档停更导致名单错误"或
+"年份被固定"的问题。
 """
 from __future__ import annotations
 
 from datetime import date
-from pathlib import Path
 from types import SimpleNamespace
 
 import numpy as np
@@ -16,29 +16,33 @@ import pytest
 from app.backtest.engine import SimResult
 from app.backtest.matrix import build_market_data_matrix, make_signal_matrix
 from app.backtest.strategy import StrategyBacktestConfig, StrategyBacktestService
+from app.hs300.current import CurrentMembers, CurrentMembersError
 from app.strategy.engine import StrategyDef
 
 MEMBER_A = "600001.SH"
 MEMBER_B = "000002.SZ"
-START = date(2024, 1, 31)  # 1 月快照最后一天, 次日切换到 2 月快照
+START = date(2024, 1, 31)
 DATES = (START, date(2024, 2, 1), date(2024, 2, 2))
 
 
-def _snapshot(root: Path, year: int, month: int, symbols: list[str]) -> None:
-    path = root / f"{year:04d}" / f"{month:02d}" / "constituents-csi300.csv"
-    path.parent.mkdir(parents=True, exist_ok=True)
-    pl.DataFrame(
-        {"Symbol": symbols, "Name": [f"name-{i}" for i in range(len(symbols))]}
-    ).write_csv(path)
+def _current(symbols: list[str]) -> CurrentMembers:
+    return CurrentMembers(
+        as_of="2024-01-31",
+        source="csindex",
+        fetched_at="2024-01-31T12:00:00+08:00",
+        members=tuple(
+            {"symbol": symbol, "name": f"name-{index}"}
+            for index, symbol in enumerate(symbols)
+        ),
+    )
 
 
 @pytest.fixture()
-def hs300_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
-    root = tmp_path / "docs"
-    _snapshot(root, 2024, 1, ["600001.SS"])  # 1 月: A 在成分内
-    _snapshot(root, 2024, 2, ["000002.SZ"])  # 2 月: B 在成分内
-    monkeypatch.setattr("app.config.settings.hs300_snapshot_dir", root)
-    return root
+def current_hs300(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        "app.hs300.current.load_current_members",
+        lambda **_kwargs: _current([MEMBER_A]),
+    )
 
 
 def _panel() -> pl.DataFrame:
@@ -106,8 +110,10 @@ class _EngineStub:
         self.panel = panel
         self.repo = _RepoStub()
         self.sim_matrix = None
+        self.loaded_symbols = None
 
     def load_panel(self, symbols, start: date, end: date, columns=None, asset_type: str = "stock") -> pl.DataFrame:
+        self.loaded_symbols = list(symbols) if symbols is not None else None
         return self.panel
 
     def load_panel_for_backtest(self, symbols, start, end, feature_plan, asset_type="stock") -> pl.DataFrame:
@@ -157,7 +163,10 @@ def _entry_by_date(result, engine) -> dict[str, dict[str, int]]:
     }
 
 
-def _run(hs300: bool, strategy: StrategyDef | None = None):
+_UNSET = object()
+
+
+def _run(hs300: bool, strategy: StrategyDef | None = None, symbols=_UNSET):
     engine = _EngineStub(_panel())
     service = StrategyBacktestService(
         engine=engine,
@@ -165,7 +174,7 @@ def _run(hs300: bool, strategy: StrategyDef | None = None):
     )
     result = service.run(StrategyBacktestConfig(
         strategy_id="test",
-        symbols=[MEMBER_A, MEMBER_B],
+        symbols=[MEMBER_A, MEMBER_B] if symbols is _UNSET else symbols,
         start=START,
         end=DATES[-1],
         matching="close_t",
@@ -175,7 +184,7 @@ def _run(hs300: bool, strategy: StrategyDef | None = None):
     return result, engine
 
 
-def test_static_union_enters_every_date_without_pit_filter(hs300_root: Path) -> None:
+def test_without_hs300_both_symbols_enter_every_date() -> None:
     result, engine = _run(hs300=False)
 
     assert result.error is None
@@ -186,38 +195,46 @@ def test_static_union_enters_every_date_without_pit_filter(hs300_root: Path) -> 
     }
 
 
-def test_pit_filter_only_allows_snapshot_member_per_date(hs300_root: Path) -> None:
+def test_current_hs300_filter_applies_same_official_list_to_every_date(current_hs300: None) -> None:
     result, engine = _run(hs300=True)
 
     assert result.error is None
     assert _entry_by_date(result, engine) == {
         "2024-01-31": {MEMBER_A: 1, MEMBER_B: 0},
-        "2024-02-01": {MEMBER_A: 0, MEMBER_B: 1},
-        "2024-02-02": {MEMBER_A: 0, MEMBER_B: 1},
+        "2024-02-01": {MEMBER_A: 1, MEMBER_B: 0},
+        "2024-02-02": {MEMBER_A: 1, MEMBER_B: 0},
     }
-    assert result.stats["selection"]["entry_candidates"] == 3
     assert result.config["hs300"] is True
-    assert result.config["hs300_membership_range"] == {
-        "start": START.isoformat(),
-        "end": DATES[-1].isoformat(),
-    }
+    assert result.config["hs300_scope"] == "current_official"
+    assert result.config["symbols"] == [MEMBER_A, MEMBER_B]
 
 
-def test_pit_backtest_uses_default_snapshot_root_when_setting_is_blank(
-    hs300_root: Path,
+def test_current_hs300_filter_limits_data_load_boundary_when_symbols_empty(
+    current_hs300: None,
+) -> None:
+    result, engine = _run(hs300=True, symbols=None)
+
+    assert result.error is None
+    assert engine.loaded_symbols == [MEMBER_A]
+    assert result.config["symbols"] == [MEMBER_A]
+
+
+def test_current_hs300_filter_fails_closed_when_official_unavailable(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    from app.backtest.strategy import _hs300_membership_frame
+    def _boom(**_kwargs):
+        raise CurrentMembersError("官方接口不可用")
 
-    monkeypatch.setattr("app.config.settings.hs300_snapshot_dir", Path(""))
-    monkeypatch.setattr("app.config.hs300_snapshot_default_dir", lambda: hs300_root)
+    monkeypatch.setattr("app.hs300.current.load_current_members", _boom)
+    result, _ = _run(hs300=True)
 
-    frame = _hs300_membership_frame(START, DATES[-1])
+    assert result.error is not None
+    assert "HS300" in result.error
 
-    assert frame.filter(pl.col("effective_date") == date(2024, 1, 1))["symbol"].to_list() == [MEMBER_A]
 
-
-def test_pit_filter_runs_before_scoring_for_matrix_native(hs300_root: Path) -> None:
+def test_current_hs300_filter_runs_before_scoring_for_matrix_native(
+    current_hs300: None,
+) -> None:
     class NativeStrategy:
         def required_fields(self):
             return frozenset({"open", "high", "low", "close", "volume"})
@@ -244,12 +261,12 @@ def test_pit_filter_runs_before_scoring_for_matrix_native(hs300_root: Path) -> N
     assert result.error is None
     assert _entry_by_date(result, engine) == {
         "2024-01-31": {MEMBER_A: 1, MEMBER_B: 0},
-        "2024-02-01": {MEMBER_A: 0, MEMBER_B: 1},
-        "2024-02-02": {MEMBER_A: 0, MEMBER_B: 1},
+        "2024-02-01": {MEMBER_A: 1, MEMBER_B: 0},
+        "2024-02-02": {MEMBER_A: 1, MEMBER_B: 0},
     }
 
 
-def test_hs300_flag_survives_worker_config_round_trip(hs300_root: Path) -> None:
+def test_hs300_flag_survives_worker_config_round_trip() -> None:
     """worker 用 asdict() JSON 传参, hs300 布尔位必须原样往返。"""
     import json
 
@@ -329,11 +346,11 @@ def test_strategy_cancel_matches_hs300_stream_job_key(
     assert job.cancel_event.is_set()
 
 
-def test_strategy_api_response_uses_point_in_time_membership(
-    hs300_root: Path,
+def test_strategy_api_uses_current_membership(
+    current_hs300: None,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """通过策略回测 API/worker 接线验证请求不会退化成静态并集。"""
+    """通过策略回测 API/worker 接线验证请求使用官方当前名单, 不退化成归档并集。"""
     from fastapi import FastAPI
     from fastapi.testclient import TestClient
 
@@ -373,60 +390,7 @@ def test_strategy_api_response_uses_point_in_time_membership(
         "error": None,
         "entries": {
             "2024-01-31": {MEMBER_A: 1, MEMBER_B: 0},
-            "2024-02-01": {MEMBER_A: 0, MEMBER_B: 1},
-            "2024-02-02": {MEMBER_A: 0, MEMBER_B: 1},
+            "2024-02-01": {MEMBER_A: 1, MEMBER_B: 0},
+            "2024-02-02": {MEMBER_A: 1, MEMBER_B: 0},
         },
     }
-
-
-@pytest.mark.parametrize(
-    ("method", "path", "payload"),
-    [
-        (
-            "post",
-            "/api/backtest/strategy/run",
-            {
-                "strategy_id": "test",
-                "start": "2023-06-30",
-                "end": "2023-07-01",
-            },
-        ),
-        (
-            "get",
-            "/api/backtest/strategy/stream",
-            {
-                "strategy_id": "test",
-                "start": "2023-06-30",
-                "end": "2023-07-01",
-            },
-        ),
-    ],
-)
-def test_strategy_api_rejects_hs300_range_before_first_snapshot(
-    monkeypatch: pytest.MonkeyPatch,
-    method: str,
-    path: str,
-    payload: dict,
-) -> None:
-    from fastapi import FastAPI
-    from fastapi.testclient import TestClient
-
-    from app.api import backtest as backtest_api
-    from app.backtest import worker as worker_api
-
-    monkeypatch.setattr(
-        worker_api,
-        "make_worker_task",
-        lambda *args, **kwargs: pytest.fail("worker must not start before the first snapshot"),
-    )
-    app = FastAPI()
-    app.include_router(backtest_api.router)
-    client = TestClient(app)
-
-    if method == "post":
-        response = client.post(path, json={**payload, "hs300": True})
-    else:
-        response = client.get(path, params={**payload, "hs300": True})
-
-    assert response.status_code == 422
-    assert "2023-07-01" in response.json()["detail"]

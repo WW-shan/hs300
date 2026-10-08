@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-28
 
-**Status:** Approved for implementation planning (历史记录) — 本设计定稿时市场数据源为 AData；实现已于 2026-10-07 切换为 AkShare，当前数据源契约见 `AGENTS.md` 与 `docs/upstream-reuse-analysis.md`。以下内容保留原始设计上下文，不得据其中的 AData 依赖描述恢复实现。
+**Status:** Approved for implementation planning (历史记录) — 本设计定稿时市场数据源为 AData；实现已于 2026-10-07 切换为 AkShare，当前数据源契约见 `AGENTS.md` 与 `docs/upstream-reuse-analysis.md`。以下内容保留原始设计上下文，不得据其中的 AData 依赖描述恢复实现。HS300 成分已于 2026-10-08 改为官方接口实时解析的当前名单（动态筛选器），`index-constituents` 固定快照/PIT 机制已删除。
 
 ## Goal
 

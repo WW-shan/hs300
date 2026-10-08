@@ -2,7 +2,7 @@
 
 The adapter uses Sina for raw bars and quotes, Eastmoney batch reports for financial
 statements, and CNINFO share-change announcements. Historical adjustment and share
-requests are bounded by the local HS300 snapshot universe where appropriate.
+requests are bounded by the official current CSI 300 universe where appropriate.
 """
 from __future__ import annotations
 
@@ -16,14 +16,12 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
 from itertools import pairwise
-from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
 import polars as pl
 
-from app.config import resolve_hs300_snapshot_dir, settings
-from app.hs300 import HS300MembershipError, HS300Service
+from app.hs300.current import CurrentMembersError, load_current_members
 
 logger = logging.getLogger(__name__)
 
@@ -433,24 +431,12 @@ def _records(frame: Any, *, context: str) -> list[dict[str, Any]]:
     raise AkShareProviderError(f"{context}响应不是可识别的表格: {type(frame).__name__}")
 
 
-def _hs300_symbols_for_range(
-    start_time: datetime | date | str | None,
-    end_time: datetime | date | str | None,
-) -> set[str]:
-    """Resolve the PIT membership union locally; no current constituents are guessed."""
-    from app.hs300.service import MIN_SNAPSHOT_DATE
-
-    today = _today_cn()
-    start = max(_as_date(start_time, MIN_SNAPSHOT_DATE), MIN_SNAPSHOT_DATE)
-    end = min(_as_date(end_time, today), today)
-    if end < start:
-        return set()
-    root = resolve_hs300_snapshot_dir(settings.hs300_snapshot_dir)
+def _current_hs300_symbols() -> set[str]:
+    """Official current CSI 300 members; no fixed archive and no PIT fallback."""
     try:
-        members = HS300Service(Path(root)).members_between(start, end)
-    except HS300MembershipError as exc:
-        raise AkShareProviderError(f"无法安全解析 HS300 历史成分: {exc}") from exc
-    return set(members["symbol"].unique().to_list())
+        return set(load_current_members().symbols)
+    except CurrentMembersError as exc:
+        raise AkShareProviderError(f"无法安全解析当前沪深300成分: {exc}") from exc
 
 
 def _factor_rows(frame: Any, symbol: str) -> list[dict[str, Any]]:
@@ -913,7 +899,7 @@ class AkShareProvider:
         end = min(_as_date(end_time, _today_cn()), _today_cn())
         if end < start:
             raise AkShareProviderError("除权因子开始日期晚于结束日期")
-        membership = _hs300_symbols_for_range(start, end)
+        membership = _current_hs300_symbols()
         requested = {
             normalized
             for symbol in symbols
@@ -1051,9 +1037,7 @@ class AkShareProvider:
         if not requested:
             return pl.DataFrame(schema=schema)
 
-        from app.hs300.service import MIN_SNAPSHOT_DATE
-
-        hs300_universe = _hs300_symbols_for_range(MIN_SNAPSHOT_DATE, _today_cn())
+        hs300_universe = _current_hs300_symbols()
         requested = sorted(set(requested) & hs300_universe)
         if not requested:
             return pl.DataFrame(schema=schema)

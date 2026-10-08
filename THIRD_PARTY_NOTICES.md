@@ -1,6 +1,6 @@
 # Third-Party Notices
 
-This repository records the upstream provenance and local reuse boundary for its application baseline and CSI300 snapshot data.
+This repository records the upstream provenance and local reuse boundary for its application baseline.
 
 ## tick-stock-panel
 
@@ -9,15 +9,7 @@ This repository records the upstream provenance and local reuse boundary for its
 - License: MIT; see [`LICENSE`](LICENSE).
 - Imported paths: the complete application baseline at the repository root, including `backend/`, `frontend/`, `tests`, CI workflows, Docker files, documentation, data-source plugin infrastructure, and supporting assets.
 - Import exclusions: `.git/`, `.venv/`, `node_modules/`, `gui-test-screenshots/`, and `community-qr-code.jpg`.
-- Local modifications: the project adds the `app.hs300` PIT membership service, an AkShare builtin provider, `/api/hs300` endpoints, strategy/factor PIT backtest filtering, HS300 frontend presets, and snapshot-aware packaging. `AGENTS.md`, `README.md`, and project-specific design/plan documents describe the upstream-derived boundary. Upstream K-line, indicator, factor, chart, storage, and backtest engines remain in use.
-
-## index-constituents
-
-- Upstream repository: <https://github.com/yfiua/index-constituents>
-- Commit: `5f0846e5ed4285895b4dd26dcc2d771a6ce68b79`
-- License: Apache-2.0; see [`vendor/index-constituents/LICENSE`](vendor/index-constituents/LICENSE).
-- Imported paths: `vendor/index-constituents/LICENSE`, `README.md`, `requirements.txt`, `get-constituents.py`, `get-constituents-historical.py`, `update-monthly.sh`, and only `docs/**/constituents-csi300.csv` snapshot files.
-- Local modifications: none; the imported files remain unchanged from the pinned upstream commit. No other index datasets were imported.
+- Local modifications: the project adds the `app.hs300` dynamic current-membership service (official CSI300 endpoint; no fixed pool and no snapshot archive), an AkShare builtin provider, `/api/hs300` endpoints, HS300 filtering in the screener/strategy/factor backtests, and HS300 frontend presets. `AGENTS.md`, `README.md`, and project-specific design/plan documents describe the upstream-derived boundary. Upstream K-line, indicator, factor, chart, storage, and backtest engines remain in use.
 
 ## akshare
 

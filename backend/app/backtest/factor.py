@@ -159,6 +159,16 @@ class FactorBatchResult:
     error: str | None = None
 
 
+def _current_hs300_symbols() -> list[str]:
+    """官方当前沪深300名单; 用于限定因子面板的数据加载边界。"""
+    from app.hs300.current import CurrentMembersError, current_symbols
+
+    try:
+        return current_symbols()
+    except CurrentMembersError as exc:
+        raise ValueError(f"HS300 当前成分不可用: {exc}") from exc
+
+
 class FactorBacktestService:
     def __init__(self, engine: BacktestEngine) -> None:
         self.engine = engine
@@ -182,6 +192,11 @@ class FactorBacktestService:
     ) -> FactorResult:
         t0 = time.perf_counter()
         run_id = uuid.uuid4().hex[:10]
+        if config.hs300 and config.symbols is None:
+            try:
+                config.symbols = _current_hs300_symbols()
+            except ValueError as exc:
+                return self._error_result(config, run_id, t0, str(exc))
         generation = self._data_generation(config.asset_type)
         panel = self._load_factor_panel(
             config,
@@ -252,6 +267,16 @@ class FactorBacktestService:
                 error="至少选择一个因子",
             )
 
+        if config.hs300 and config.symbols is None:
+            try:
+                config.symbols = _current_hs300_symbols()
+            except ValueError as exc:
+                return FactorBatchResult(
+                    run_id=run_id,
+                    config=result_config,
+                    error=str(exc),
+                    elapsed_ms=round((time.perf_counter() - t0) * 1000, 1),
+                )
         generation = self._data_generation(config.asset_type)
         panel = self._load_factor_panel(
             config,
@@ -463,11 +488,11 @@ class FactorBacktestService:
         panel: pl.DataFrame,
         config: FactorConfig | FactorBatchConfig,
     ) -> pl.DataFrame:
-        """按日只保留当日生效的 HS300 成分 (PIT)。
+        """只保留官方当前沪深300成分 (整段回测同一份名单)。
 
-        必须在 _attach_shared_next_return 之后调用: 成分股在最后一个成员日的
-        下期收益仍取全量收盘价, 先过滤会丢失收益并缩小截面。复用策略回测同一
-        套快照解析与面板掩码, 禁止第二套成分口径。
+        必须在 _attach_shared_next_return 之后调用, 保证下期收益仍按调用方
+        的完整价格轴计算。复用策略回测同一套当前成分解析与面板掩码, 禁止
+        第二套成分口径; 历史回测中的幸存者偏差由调用方提示。
         """
         from app.backtest.strategy import _hs300_membership_frame, _hs300_panel_row_mask
 
@@ -1351,9 +1376,7 @@ class FactorBacktestService:
             "slippage_bps": c.slippage_bps,
             "asset_type": c.asset_type,
             "hs300": c.hs300,
-            "hs300_membership_range": (
-                {"start": str(c.start), "end": str(c.end)} if c.hs300 else None
-            ),
+            "hs300_scope": "current_official" if c.hs300 else None,
         }
 
     @staticmethod
@@ -1372,7 +1395,5 @@ class FactorBacktestService:
             "slippage_bps": c.slippage_bps,
             "asset_type": c.asset_type,
             "hs300": c.hs300,
-            "hs300_membership_range": (
-                {"start": str(c.start), "end": str(c.end)} if c.hs300 else None
-            ),
+            "hs300_scope": "current_official" if c.hs300 else None,
         }

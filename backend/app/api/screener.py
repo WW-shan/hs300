@@ -34,6 +34,8 @@ class CustomRequest(BaseModel):
     as_of: Optional[date] = None
     ext_columns: Optional[str] = None
     asset_type: str = "stock"
+    # True 时服务端用官方当前沪深300名单限定 pool (动态, 不读快照归档)。
+    hs300: bool = False
 
 
 class PresetRequest(BaseModel):
@@ -43,6 +45,26 @@ class PresetRequest(BaseModel):
     ext_columns: Optional[str] = None
     asset_type: str = "stock"
     timeframe: str = "1d"
+    # True 时服务端用官方当前沪深300名单限定 pool (动态, 不读快照归档)。
+    hs300: bool = False
+
+
+def _scope_pool(pool: list[str] | None, hs300: bool) -> list[str] | None:
+    """把调用方 pool 与官方当前 HS300 名单取交集; hs300=False 时原样返回。"""
+    if not hs300:
+        return pool
+    from app.hs300.current import CurrentMembersError, current_symbols
+
+    try:
+        current = set(current_symbols())
+    except CurrentMembersError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    if not pool:
+        return sorted(current)
+    scoped = sorted(current & {str(symbol).strip() for symbol in pool if str(symbol).strip()})
+    if not scoped:
+        raise HTTPException(status_code=422, detail="指定股票池与当前沪深300无交集")
+    return scoped
 
 
 def _safe(result_dict: dict) -> dict:
@@ -296,7 +318,7 @@ def run_custom(req: CustomRequest, request: Request):
         conditions=req.conditions,
         order_by=req.order_by,
         limit=req.limit,
-        pool=req.pool,
+        pool=_scope_pool(req.pool, req.hs300),
     )
     safe_data = _safe(asdict(result))
     warnings = _coverage_warnings(svc, as_of)
@@ -322,6 +344,7 @@ def run_preset(req: PresetRequest, request: Request):
     if not engine:
         raise HTTPException(status_code=404, detail=f"策略引擎未初始化或策略 {req.strategy_id} 不存在")
 
+    scoped_pool = _scope_pool(req.pool, req.hs300)
     try:
         if not engine.has(req.strategy_id):
             raise ValueError(f"unknown strategy: {req.strategy_id}")
@@ -339,7 +362,7 @@ def run_preset(req: PresetRequest, request: Request):
         result = engine.run(
             req.strategy_id,
             context,
-            pool=req.pool,
+            pool=scoped_pool,
             params=params,
             overrides=overrides or None,
         )
@@ -361,7 +384,7 @@ def run_preset(req: PresetRequest, request: Request):
             safe_data["warnings"] = warnings
         # pool 是调用方作用域过滤 (如 HS300 成分池), 缓存键没有 pool 维度:
         # 写入会把池内结果冒充全市场结果下发给 /cached 与策略卡片。
-        if not req.pool:
+        if not scoped_pool:
             _update_cache_strategy(data_dir, str(as_of), req.strategy_id, safe_data)
 
     return _result_with_ext(safe_data, ext_values)

@@ -10,9 +10,7 @@
 export const QK = {
   // 全局 / 共享 (Layout 预取)
   capabilities:   ['capabilities'] as const,
-  hs300Snapshots: ['hs300-snapshots'] as const,
-  hs300Members:   (asOf: string) => ['hs300-members', asOf] as const,
-  hs300MembersBetween: (start: string, end: string) => ['hs300-members-between', start, end] as const,
+  hs300Current:  ['hs300-current'] as const,
   settings:       ['settings'] as const,
   endpoints:      ['endpoints'] as const,
   version:        ['version'] as const,

@@ -45,7 +45,7 @@ from app.backtest.minute_trigger import (
     build_minute_entry_reference,
     unsupported_minute_exit_signals,
 )
-from app.config import resolve_hs300_snapshot_dir, settings
+from app.config import settings
 from app.indicators.pipeline import (
     ENRICHED_STORAGE_COLS,
     INDICATOR_COLUMNS,
@@ -574,8 +574,8 @@ class StrategyBacktestConfig:
     # 市场环境过滤: {"states": ["strong",...], "min_score": 60}。
     # 强制 T-1: regime[T-1] 决定 entry[T](防未来函数)。None=不过滤。
     regime_filter: dict | None = None
-    # HS300 逐日成分过滤 (point-in-time): 每个执行日只允许当日快照内的成分股。
-    # 服务端按 [start, end] 快照自行解析, 不接收整表成分数据。
+    # HS300 动态筛选器: 服务端解析官方最新成分, 整段回测按当前名单过滤。
+    # 不读月度归档; 历史回测使用当前成分会产生幸存者偏差, GUI 需明确提示。
     hs300: bool = False
 
     def __post_init__(self) -> None:
@@ -730,25 +730,38 @@ class PreparedMatrixBacktest:
     compute_cache: MatrixComputeCache
 
 
-def _hs300_membership_frame(start: date, end: date) -> pl.DataFrame:
-    """读取覆盖 [start, end] 的 HS300 快照成分 (effective_date, symbol)。"""
-    from app.hs300.service import HS300MembershipError, HS300Service
+def _hs300_membership_frame(_start: date, _end: date) -> pl.DataFrame:
+    """官方当前沪深300名单, 作为整段回测的筛选器 (effective_date, symbol)。
+
+    `_start`/`_end` 仅用于保持调用签名稳定; 当前名单对整个回测窗口生效。
+    名单由 `load_current_members()` 动态解析 (官方接口 + 6h 缓存), 不再读取
+    月度快照归档。历史回测使用当前成分会产生幸存者偏差, 由 GUI 明确提示。
+    """
+    from app.hs300.current import CurrentMembersError, load_current_members
 
     try:
-        snapshot_dir = resolve_hs300_snapshot_dir(settings.hs300_snapshot_dir)
-        frame = HS300Service(snapshot_dir).members_between(start, end)
-    except HS300MembershipError as exc:
-        raise ValueError(f"HS300 成分快照不可用: {exc}") from exc
-    return frame.select("effective_date", "symbol")
+        result = load_current_members()
+    except CurrentMembersError as exc:
+        raise ValueError(f"HS300 当前成分不可用: {exc}") from exc
+    if not result.members:
+        raise ValueError("HS300 当前成分为空")
+
+    return pl.DataFrame(
+        {
+            "effective_date": [date(1900, 1, 1)] * len(result.members),
+            "symbol": [member["symbol"] for member in result.members],
+        },
+        schema={"effective_date": pl.Date, "symbol": pl.String},
+    )
 
 
 def _hs300_member_sets(
     trading_dates: Sequence[date],
     membership: pl.DataFrame,
 ) -> list[set[str]]:
-    """每个交易日的生效成分: 取不晚于该日的最近快照。
+    """每个交易日使用的 HS300 名单; 当前筛选器对所有交易日使用同一份名单。
 
-    入参 trading_dates 必须升序; 无快照覆盖的日期返回空集 (fail-closed 不放行)。
+    入参 trading_dates 必须升序; 名单缺失的日期返回空集 (fail-closed 不放行)。
     """
     by_effective: dict[date, set[str]] = {}
     for effective, symbol in membership.iter_rows():
@@ -764,7 +777,7 @@ def _hs300_member_sets(
 
 
 def _hs300_matrix_mask(market: MarketDataMatrix, membership: pl.DataFrame) -> np.ndarray:
-    """[T, S] 掩码: 每个交易日只放行当日生效快照内的成分股。"""
+    """[T, S] 掩码: 每个交易日只放行官方当前沪深300成分。"""
     trading_dates = [
         date.fromisoformat(str(label)[:10]) for label in market.timestamp_labels
     ]
@@ -780,7 +793,7 @@ def _hs300_matrix_mask(market: MarketDataMatrix, membership: pl.DataFrame) -> np
 
 
 def _hs300_panel_row_mask(panel: pl.DataFrame, membership: pl.DataFrame) -> pl.Series:
-    """面板行级掩码, 与 panel 行序对齐。"""
+    """面板行级掩码 (当前沪深300名单), 与 panel 行序对齐。"""
     unique_dates = sorted(set(panel.get_column("date").cast(pl.Date).to_list()))
     member_sets = _hs300_member_sets(unique_dates, membership)
     rows = [
@@ -1223,6 +1236,12 @@ class StrategyBacktestService:
                 hs300_membership = _hs300_membership_frame(config.start, config.end)
             except ValueError as e:
                 return _err(str(e))
+            # 名单只用于限定数据加载边界; 真正的候选过滤在评分/成交前由掩码完成。
+            # 用户显式传入 symbols 时保留用户池, 与 HS300 取交集由掩码处理。
+            if config.symbols is None:
+                config.symbols = sorted(
+                    set(hs300_membership.get_column("symbol").to_list())
+                )
 
         if s.execution_backend == "minute_filter":
             # 分钟策略回测: 逐交易日回放 filter_minute_history (与实盘选股同源),
@@ -2628,9 +2647,7 @@ class StrategyBacktestService:
             "minute_fill": c.minute_fill,
             "regime_filter": c.regime_filter,
             "hs300": c.hs300,
-            "hs300_membership_range": (
-                {"start": str(c.start), "end": str(c.end)} if c.hs300 else None
-            ),
+            "hs300_scope": "current_official" if c.hs300 else None,
         }
 
     @staticmethod

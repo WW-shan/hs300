@@ -6,12 +6,6 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 import { FactorBacktest } from './FactorBacktest'
 
 const fixtures = vi.hoisted(() => ({
-  resolveBetween: null as ((value: {
-    start: string
-    end: string
-    snapshot_dates: string[]
-    members: { symbol: string; name: string }[]
-  }) => void) | null,
   factorRuns: [] as Record<string, unknown>[],
 }))
 
@@ -25,18 +19,15 @@ vi.mock('@/lib/api', () => ({
       return { error: 'fixture result', config: payload }
     },
     researchCandidateCreate: async () => ({ ok: true }),
-    hs300Snapshots: async () => ({
-      snapshots: ['2023-07-01', '2024-02-01'],
-      earliest: '2023-07-01',
-      latest: '2024-02-01',
-    }),
-    hs300Members: async (asOf: string) => ({
-      as_of: asOf,
-      snapshot_date: asOf,
-      members: [{ symbol: '000002.SZ', name: 'B' }],
-    }),
-    hs300MembersBetween: async () => new Promise(resolve => {
-      fixtures.resolveBetween = resolve
+    hs300Current: async () => ({
+      as_of: '2026-09-30',
+      source: 'csindex',
+      fetched_at: '2026-10-08T12:00:00+08:00',
+      count: 2,
+      members: [
+        { symbol: '600001.SH', name: 'A' },
+        { symbol: '000002.SZ', name: 'B' },
+      ],
     }),
     hs300Sync: async () => ({
       ok: true,
@@ -44,8 +35,10 @@ vi.mock('@/lib/api', () => ({
       symbols: 2,
       rows: 10,
       zero_row_symbols: [],
-      start: '2023-07-01',
-      end: '2024-02-01',
+      start: '2026-01-01',
+      end: '2026-09-30',
+      as_of: '2026-09-30',
+      source: 'csindex',
     }),
   },
 }))
@@ -56,7 +49,6 @@ let client: QueryClient
 
 beforeEach(() => {
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
-  fixtures.resolveBetween = null
   fixtures.factorRuns = []
   client = new QueryClient({ defaultOptions: { queries: { retry: false } } })
   host = document.createElement('div')
@@ -83,38 +75,35 @@ async function waitFor(assertion: () => void) {
   assertion()
 }
 
-it('waits for the PIT union and submits it with hs300 enabled', async () => {
+async function waitForElement<T extends Element>(selector: string): Promise<T> {
+  for (let attempt = 0; attempt < 100; attempt += 1) {
+    const element = host.querySelector<T>(selector)
+    if (element) return element
+    await act(async () => new Promise(resolve => setTimeout(resolve, 0)))
+  }
+  throw new Error('element not found: ' + selector)
+}
+
+it('uses the official current HS300 filter without injecting a fixed symbols pool', async () => {
   await act(async () => root.render(
     <QueryClientProvider client={client}>
       <FactorBacktest initialFactorName="turnover_rate" />
     </QueryClientProvider>,
   ))
 
-  await waitFor(() => expect(
-    host.querySelector<HTMLButtonElement>('[data-testid="hs300-apply"]')?.disabled,
-  ).toBe(false))
-  await act(async () => host.querySelector<HTMLButtonElement>('[data-testid="hs300-apply"]')!.click())
+  const checkbox = await waitForElement<HTMLInputElement>('[data-testid="hs300-filter-checkbox"]')
+  await waitFor(() => expect(checkbox.disabled).toBe(false))
+  await act(async () => checkbox.click())
 
   const runButton = Array.from(host.querySelectorAll('button'))
     .find(button => button.textContent?.includes('开始因子分析')) as HTMLButtonElement
   expect(runButton).toBeDefined()
-  expect(runButton.disabled).toBe(true)
-
-  await act(async () => fixtures.resolveBetween?.({
-    start: '2023-11-28',
-    end: '2024-02-28',
-    snapshot_dates: ['2023-11-01', '2024-02-01'],
-    members: [
-      { symbol: '600001.SH', name: 'A' },
-      { symbol: '000002.SZ', name: 'B' },
-    ],
-  }))
   await waitFor(() => expect(runButton.disabled).toBe(false))
   await act(async () => runButton.click())
   await waitFor(() => expect(fixtures.factorRuns).toHaveLength(1))
 
   expect(fixtures.factorRuns[0]).toEqual(expect.objectContaining({
-    symbols: ['600001.SH', '000002.SZ'],
     hs300: true,
+    symbols: null,
   }))
 })

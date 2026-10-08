@@ -25,8 +25,8 @@ import { useCustomSignalNames } from '@/lib/useCustomSignalNames'
 import { SignalPicker } from '@/components/screener/SignalPicker'
 import { startBacktest, stopBacktest, tryReconnect, useBacktestTask } from '@/lib/backtestTask'
 import { useDataStatus, useCapabilities } from '@/lib/useSharedQueries'
-import { useHS300MembersBetween, useHS300Universe } from '@/lib/useHS300Universe'
-import { UniverseSelector } from '@/components/hs300/UniverseSelector'
+import { useHS300Current } from '@/lib/useHS300Universe'
+import { HS300FilterToggle } from '@/components/hs300/HS300FilterToggle'
 import { EmptyState } from '@/components/EmptyState'
 import { WarmupBadge } from '@/components/WarmupBadge'
 import { DatePicker } from '@/components/DatePicker'
@@ -989,19 +989,12 @@ export function StrategyBacktest({ loadCandidate, onLoadConsumed }: {
   // 跨会话/拉新代码后自动渲染一个可能对应已失效策略的旧结果会造成困惑
   // (切页不卸载组件,内存中的 result 仍保留,无需靠 localStorage 恢复)。
   const [result, setResult] = useState<StrategyBacktestResult | null>(null)
-  const hs300 = useHS300Universe()
-  // 区间并集: 覆盖区间内全部曾入选标的, 否则早先成分的行情不会被加载
-  const hs300Union = useHS300MembersBetween(
-    start || null,
-    end || null,
-    hs300Enabled && assetType === 'stock',
+  const hs300 = useHS300Current()
+  const hs300Active = hs300Enabled && assetType === 'stock'
+  // 官方当前名单未就绪前禁止运行, 避免拿旧缓存/空名单跑出错误结果。
+  const hs300Blocked = hs300Active && (
+    hs300.isLoading || !!hs300.error || hs300.count === 0
   )
-
-  // 启用 HS300 后把股票池同步为区间并集 (快照切换/区间变化时自动更新)
-  useEffect(() => {
-    if (!hs300Enabled || hs300Union.symbols.length === 0) return
-    setSymbols(hs300Union.symbols.join(','))
-  }, [hs300Enabled, hs300Union.symbols])
 
   // 候选方案「载入复测」: 把保存的 23 项回测配置回填到表单 (字段缺失时保留当前值)
   useEffect(() => {
@@ -1217,7 +1210,7 @@ export function StrategyBacktest({ loadCandidate, onLoadConsumed }: {
       strategy_id: selectedStrategy,
       asset_type: assetType,
       symbols: symbols ? symbols.split(',').map(s => s.trim()).filter(Boolean) : null,
-      hs300: hs300Enabled && assetType === 'stock',
+      hs300: hs300Active,
       start: start || null,
       end: end || undefined,
       matching,
@@ -1581,7 +1574,9 @@ export function StrategyBacktest({ loadCandidate, onLoadConsumed }: {
   const selectedStrategyName = detail?.name ?? strategyList.find(st => st.id === selectedStrategy)?.name ?? '未选择策略'
   const selectedStrategySource = detail?.source ?? strategyList.find(st => st.id === selectedStrategy)?.source
   const stockPoolCount = symbols.split(',').map(s => s.trim()).filter(Boolean).length
-  const stockPoolSummary = stockPoolCount > 0 ? `股票池 已限定 ${stockPoolCount} 只` : '股票池 全市场'
+  const stockPoolSummary = hs300Active
+    ? `筛选器 沪深300 · 官方当前${hs300.count > 0 ? ` (${hs300.count} 只)` : ''}`
+    : stockPoolCount > 0 ? `股票池 已限定 ${stockPoolCount} 只` : '股票池 全市场'
   const resultStartDate = result?.config?.start ?? result?.equity_curve?.[0]?.date ?? start
   const resultEndDate = result?.config?.end ?? result?.equity_curve?.[result.equity_curve.length - 1]?.date ?? end
   const resultTradeDays = result?.equity_curve?.length ?? 0
@@ -1763,6 +1758,24 @@ export function StrategyBacktest({ loadCandidate, onLoadConsumed }: {
           <span className="mt-1 block text-[10px] font-medium text-secondary">{stockPoolSummary}</span>
           <span className="mt-1 block text-[10px] leading-4 text-muted">{advancedSummary}</span>
         </button>
+
+        {assetType === 'stock' && (
+          <HS300FilterToggle
+            enabled={hs300Enabled}
+            onChange={setHs300Enabled}
+            memberCount={hs300.count}
+            asOf={hs300.asOf}
+            source={hs300.source}
+            isLoading={hs300.isLoading}
+            error={hs300.error?.message ?? hs300.syncError?.message ?? null}
+            onRefresh={hs300.refresh}
+            isRefreshing={hs300.isRefreshing}
+            onSync={hs300.syncDaily}
+            isSyncing={hs300.isSyncing}
+            syncHint={hs300.syncHint}
+            className="bg-surface"
+          />
+        )}
 
         <div className="rounded-btn border border-border bg-surface p-2.5">
           <div className="flex items-center justify-between gap-2">
@@ -1986,6 +1999,14 @@ export function StrategyBacktest({ loadCandidate, onLoadConsumed }: {
           </div>
         )}
 
+        {hs300Blocked && (
+          <div className="text-[10px] leading-4 text-warning">
+            {hs300.error
+              ? `HS300 当前成分加载失败：${hs300.error.message}`
+              : 'HS300 官方当前名单未就绪，完成后才能运行'}
+          </div>
+        )}
+
         {isPending ? (
           <button
             onClick={stopBacktest}
@@ -1999,7 +2020,7 @@ export function StrategyBacktest({ loadCandidate, onLoadConsumed }: {
         ) : (
           <button
             onClick={handleRun}
-            disabled={!selectedStrategy || strategyDetail.isLoading || backtestDataUnavailable}
+            disabled={!selectedStrategy || strategyDetail.isLoading || backtestDataUnavailable || hs300Blocked}
             className="group w-full inline-flex items-center justify-center gap-2.5 rounded-btn border border-accent/40
               bg-gradient-to-r from-accent to-blue-500 px-3 py-2.5 text-white shadow-[0_10px_24px_rgba(59,130,246,0.22)]
               transition-all duration-150 ease-smooth hover:-translate-y-0.5 hover:shadow-[0_14px_28px_rgba(59,130,246,0.28)]
@@ -2849,36 +2870,23 @@ export function StrategyBacktest({ loadCandidate, onLoadConsumed }: {
                   <StockPoolPicker value={symbols} onChange={setSymbols} assetType={assetType} />
                   {assetType === 'stock' && (
                     <div className="flex flex-wrap items-center gap-2">
-                      <UniverseSelector
-                        snapshots={hs300.snapshots}
-                        selectedDate={hs300.selectedDate}
-                        onDateChange={hs300.setSelectedDate}
-                        memberCount={hs300.symbols.length}
-                        earliest={hs300.earliest}
-                        isLoading={hs300.isLoading || (hs300Enabled && hs300Union.isLoading)}
-                        error={hs300.error?.message ?? hs300.syncError?.message ?? (hs300Enabled ? hs300Union.error?.message ?? null : null)}
+                      <HS300FilterToggle
+                        enabled={hs300Enabled}
+                        onChange={setHs300Enabled}
+                        memberCount={hs300.count}
+                        asOf={hs300.asOf}
+                        source={hs300.source}
+                        isLoading={hs300.isLoading}
+                        error={hs300.error?.message ?? hs300.syncError?.message ?? null}
+                        onRefresh={hs300.refresh}
+                        isRefreshing={hs300.isRefreshing}
                         onSync={hs300.syncDaily}
                         isSyncing={hs300.isSyncing}
                         syncHint={hs300.syncHint}
-                        onApply={() => setHs300Enabled(true)}
-                        appliedHint={
-                          hs300Enabled
-                            ? `PIT 过滤已启用 · 数据加载 ${symbols.split(',').filter(Boolean).length || 0} 只`
-                            : null
-                        }
                       />
-                      {hs300Enabled && (
-                        <button
-                          type="button"
-                          onClick={() => setHs300Enabled(false)}
-                          className="text-[11px] text-muted hover:text-accent"
-                        >
-                          关闭 HS300 过滤
-                        </button>
-                      )}
                     </div>
                   )}
-                  <div className="text-[11px] leading-5 text-muted">默认全市场回测，由基础过滤、策略条件和买卖触发器筛选；需要单票调试或自选池回测时再限定股票池。「应用 HS300」会按回测区间加载成分并集，并由后端逐日只放行当日成分股。</div>
+                  <div className="text-[11px] leading-5 text-muted">默认全市场回测，由基础过滤、策略条件和买卖触发器筛选；需要单票调试或自选池回测时再限定股票池。「只看沪深300」由后端按官方当前成分筛选（动态更新，不使用快照归档）；历史回测使用当前成分存在幸存者偏差。</div>
                 </ConfigSection>
               )}
 
