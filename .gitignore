@@ -116,3 +116,13 @@ TickFlowStockPanel.app/
 TickFlowStockPanel-macos*.dmg
 TickFlowStockPanel-macos*.zip
 reports/cursor_tickflow_pro_rate_limit_p0.bundle
+
+# ===== 因子/策略依赖的用户数据 (随仓库版本化: 便于迁移与复现) =====
+# 自定义因子是策略评分的一部分, 必须随策略一起备份, 否则策略会静默退化。
+!data/user_data/
+!data/user_data/custom_factors/
+!data/user_data/custom_factors/*.json
+!data/user_data/preferences.json
+!data/hs300/
+!data/hs300/current_members.json
+# 注意: data/user_data/api_tokens.json 含密钥, 保持忽略; 其余运行时数据 (K线/回测/缓存) 仍不入库。
