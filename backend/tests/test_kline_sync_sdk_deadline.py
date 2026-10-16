@@ -90,6 +90,9 @@ def test_daily_loop_timeout_marks_failed(monkeypatch):
         ["600000.SH", "000001.SZ"], count=250, batch_size=1, rpm=None,
         on_chunk_done=lambda cur, total: beats.append((cur, total)),
         failed_out=failed,
+        # 本用例验证 TickFlow 路径的 deadline; 必须显式指定 provider,
+        # 否则会跟随用户偏好(如 akshare)走自定义源分支, 真实联网抓数据, 用例不再 hermetic。
+        provider_name="tickflow",
     )
 
     assert df.is_empty()
