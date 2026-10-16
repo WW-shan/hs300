@@ -16,6 +16,7 @@ from __future__ import annotations
 import os
 import sys
 from datetime import date, datetime
+from pathlib import Path
 
 import polars as pl
 import pytest
@@ -40,12 +41,18 @@ def _minute_frame() -> pl.DataFrame:
     })
 
 
-def _flaky_replace(monkeypatch, fail_times: int) -> dict:
-    """os.replace 前 fail_times 次 raise PermissionError, 之后正常执行。"""
+def _flaky_replace(monkeypatch, fail_times: int, target: Path | None = None) -> dict:
+    """os.replace 前 fail_times 次 raise PermissionError, 之后正常执行。
+
+    target 给定时只拦截/计数发往该路径的替换: 全量 mock 会被同进程后台线程
+    (调度器/同步任务) 的其他原子写污染计数, 造成 CI 偶发 assert 3 == 2。
+    """
     real_replace = os.replace
     state = {"calls": 0}
 
     def _flaky(src, dst):
+        if target is not None and Path(dst) != Path(target):
+            return real_replace(src, dst)
         state["calls"] += 1
         if state["calls"] <= fail_times:
             raise PermissionError(5, "拒绝访问。")
@@ -62,7 +69,7 @@ def test_retry_succeeds_after_transient_blocks(tmp_path, monkeypatch):
     out.write_bytes(b"old")
     src = tmp_path / "part.parquet.tmp"
     src.write_bytes(b"new")
-    state = _flaky_replace(monkeypatch, fail_times=2)
+    state = _flaky_replace(monkeypatch, fail_times=2, target=out)
 
     repository.replace_with_retry(src, out, attempts=5, delay_s=0)
 
@@ -86,7 +93,7 @@ def test_retry_no_block_single_attempt(tmp_path, monkeypatch):
     out.write_bytes(b"old")
     src = tmp_path / "part.parquet.tmp"
     src.write_bytes(b"new")
-    state = _flaky_replace(monkeypatch, fail_times=0)
+    state = _flaky_replace(monkeypatch, fail_times=0, target=out)
 
     repository.replace_with_retry(src, out, attempts=5, delay_s=0)
 
@@ -97,9 +104,9 @@ def test_retry_no_block_single_attempt(tmp_path, monkeypatch):
 # ---------- 两处 _atomic_write_parquet 接入 ----------
 
 def test_kline_sync_atomic_write_survives_transient_lock(tmp_path, monkeypatch):
-    state = _flaky_replace(monkeypatch, fail_times=1)
     out = tmp_path / "date=2026-01-15" / "part.parquet"
     out.parent.mkdir(parents=True)
+    state = _flaky_replace(monkeypatch, fail_times=1, target=out)
 
     kline_sync._atomic_write_parquet(_minute_frame(), out)
 
@@ -109,9 +116,9 @@ def test_kline_sync_atomic_write_survives_transient_lock(tmp_path, monkeypatch):
 
 
 def test_repository_atomic_write_survives_transient_lock(tmp_path, monkeypatch):
-    state = _flaky_replace(monkeypatch, fail_times=1)
     out = tmp_path / "kline_minute" / "date=2026-01-15" / "part.parquet"
     out.parent.mkdir(parents=True)
+    state = _flaky_replace(monkeypatch, fail_times=1, target=out)
 
     repository.KlineRepository._atomic_write_parquet(_minute_frame(), out)
 
@@ -121,11 +128,11 @@ def test_repository_atomic_write_survives_transient_lock(tmp_path, monkeypatch):
 
 def test_write_minute_partition_survives_reader_race(tmp_path, monkeypatch):
     """集成: _write_minute_partition 读旧→concat→写新全程有读锁竞态仍完成。"""
-    state = _flaky_replace(monkeypatch, fail_times=2)
     # 预置旧分区 (读改写路径)
     old_dir = tmp_path / "date=2026-01-15"
     old_dir.mkdir(parents=True)
     _minute_frame().write_parquet(old_dir / "part.parquet")
+    state = _flaky_replace(monkeypatch, fail_times=2, target=old_dir / "part.parquet")
 
     written = kline_sync._write_minute_partition(_minute_frame(), tmp_path)
 
