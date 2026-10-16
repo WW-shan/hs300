@@ -260,9 +260,12 @@ async def _application_lifespan(app: FastAPI):
         store.data_dir / "strategies" / "ai",
         store.data_dir / "strategies" / "composite",
     ]
+    from app.services.industry_map import industry_loader_for
+
     strategy_engine = StrategyEngine(
         strategy_dirs=strategy_dirs,
         override_loader=lambda sid: strategy_config.load_override(store.data_dir, sid),
+        industry_loader=industry_loader_for(store.data_dir),
     )
     app.state.strategy_engine = strategy_engine
     logger.info("strategy engine loaded: %d strategies", len(strategy_engine.list_strategies()))

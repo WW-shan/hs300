@@ -23,6 +23,10 @@ import polars as pl
 
 from app.config import settings
 from app.strategy.scoring import (
+    effective_neutralize,
+    neutralize_columns,
+    neutralize_enabled,
+    neutralize_scoring_columns,
     SCORING_DIRECTION_LOW,
     effective_scoring,
     effective_scoring_directions,
@@ -240,6 +244,7 @@ class StrategyEngine:
         strategy_dirs: list[Path] | None = None,
         *,
         override_loader: Callable[[str], dict] | None = None,
+        industry_loader: Callable[[], pl.DataFrame] | None = None,
     ):
         self._strategies: dict[str, StrategyDef] = {}
         self._load_errors: list[dict] = []  # 加载失败的策略 [{file, error}]
@@ -250,6 +255,8 @@ class StrategyEngine:
         # 保证 composite 内跑子策略与单独跑子策略使用同一口径(CONTRIBUTING §5.1)。
         # None 时(测试/无 data_dir) 子策略用默认参数, 不报错。
         self._override_loader = override_loader
+        # 评分中性化 (R17) 需要的行业映射; 未注入时策略若声明 neutralize 会 fail-closed
+        self._industry_loader = industry_loader
         self._load_all(retain_previous_on_error=False)
 
     # ================================================================
@@ -1040,8 +1047,26 @@ class StrategyEngine:
             expr = s.filter_fn(df, params)
             df = df.filter(expr)
 
-        # Stage 3: 评分
-        df = self._apply_scoring(df, scoring, scoring_directions)
+        # Stage 3: 评分 (先按需中性化; 统计量在进入本步的池内计算)
+        neutralize = effective_neutralize(s.meta, overrides)
+        if neutralize_enabled(neutralize) and neutralize.get("industry"):
+            from app.services.industry_map import INDUSTRY_COLUMN, attach_industry_l1
+
+            industry_column = str(neutralize.get("industry") or INDUSTRY_COLUMN)
+            if industry_column not in df.columns:
+                if self._industry_loader is None:
+                    raise ValueError(
+                        "评分中性化需要行业数据, 但当前引擎未注入行业加载器 (industry_loader)"
+                    )
+                df = df.join(self._industry_loader(), on="symbol", how="left")
+                if industry_column != INDUSTRY_COLUMN and industry_column not in df.columns:
+                    raise ValueError(f"评分中性化缺少列: {industry_column}")
+        df = self._apply_scoring(
+            df,
+            scoring,
+            scoring_directions,
+            neutralize,
+        )
         entry_signal_hits = self._collect_signal_hits(df, entry_signals)
         if not entry_signals and (
             s.filter_history_fn or s.filter_fn or s.execution_backend == "minute_filter"
@@ -1699,10 +1724,28 @@ class StrategyEngine:
         df: pl.DataFrame,
         weights: dict,
         directions: Mapping[str, str] | None = None,
+        neutralize: Mapping[str, Any] | None = None,
+        *,
+        universe_col: str | None = None,
     ) -> pl.DataFrame:
-        """通用评分: min-max 归一化 → 加权求和 → 0~100 分"""
+        """通用评分: (可选)中性化 → min-max 归一化 → 加权求和 → 0~100 分"""
         if not weights:
             return df
+
+        if neutralize_enabled(neutralize):
+            style_columns = neutralize_columns(neutralize)
+            missing_styles = [name for name in style_columns if name not in df.columns]
+            if missing_styles:
+                df = materialize_scoring_columns(df, style_columns)
+                still_missing = [name for name in style_columns if name not in df.columns]
+                if still_missing:
+                    raise ValueError(f"评分中性化缺少列: {still_missing}")
+            df = neutralize_scoring_columns(
+                df,
+                [str(name) for name in weights],
+                neutralize,
+                universe_col=universe_col,
+            )
 
         executable = [
             (str(col), value, weight)

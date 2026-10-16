@@ -197,9 +197,12 @@ def _worker_entry(task: dict[str, Any], event_queue, cancel_event) -> None:
         from app.factors.store import load_into_registry
 
         load_into_registry(data_dir)
+        from app.services.industry_map import industry_loader_for
+
         strategy_engine = StrategyEngine(
             strategy_dirs=_strategy_dirs(data_dir),
             override_loader=lambda sid: strategy_config.load_override(data_dir, sid),
+            industry_loader=industry_loader_for(data_dir),
         )
         service = StrategyBacktestService(BacktestEngine(repo), strategy_engine)
 

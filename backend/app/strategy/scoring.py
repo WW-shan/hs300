@@ -49,6 +49,157 @@ def effective_scoring_directions(overrides: Mapping[str, Any] | None) -> dict[st
     }
 
 
+NEUTRALIZE_STYLE_MAX = 1
+
+
+def effective_neutralize(
+    meta: Mapping[str, Any] | None,
+    overrides: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """解析评分中性化配置 (R17)。
+
+    META 形态::
+
+        "neutralize": {
+            "industry": "industry_l1",      # 行业列 (按 date x industry 去均值)
+            "styles": ["log_float_mv"],     # 风格列 (横截面 OLS 残差化, 最多 1 个)
+            "exclude": ["uf_small_mv"],     # 跳过中性化的评分腿
+        }
+
+    overrides["neutralize"] 按 key 覆盖 META；非法配置直接抛 ValueError (fail-closed,
+    不做"配置写错就静默不中性化"的降级)。
+    """
+    spec: dict[str, Any] = {}
+    meta_spec = (meta or {}).get("neutralize")
+    if isinstance(meta_spec, Mapping):
+        spec.update(meta_spec)
+    override_spec = (overrides or {}).get("neutralize")
+    if isinstance(override_spec, Mapping):
+        spec.update(override_spec)
+
+    industry = spec.get("industry")
+    styles = spec.get("styles") or []
+    exclude = spec.get("exclude") or []
+    if industry is not None and (not isinstance(industry, str) or not industry.strip()):
+        raise ValueError("neutralize.industry 必须是非空列名字符串")
+    if not isinstance(styles, (list, tuple)) or any(
+        not isinstance(item, str) or not item.strip() for item in styles
+    ):
+        raise ValueError("neutralize.styles 必须是列名列表")
+    if len(styles) > NEUTRALIZE_STYLE_MAX:
+        raise ValueError(
+            f"neutralize.styles 目前最多支持 {NEUTRALIZE_STYLE_MAX} 个风格列"
+        )
+    if not isinstance(exclude, (list, tuple)) or any(
+        not isinstance(item, str) or not item.strip() for item in exclude
+    ):
+        raise ValueError("neutralize.exclude 必须是列名列表")
+    shrink = spec.get("shrink", 1.0)
+    if shrink is None:
+        shrink = 1.0
+    if isinstance(shrink, bool) or not isinstance(shrink, (int, float)):
+        raise ValueError("neutralize.shrink 必须是 0~1 的数值")
+    shrink = float(shrink)
+    if not (0.0 <= shrink <= 1.0):
+        raise ValueError("neutralize.shrink 必须在 [0, 1] 内")
+    return {
+        "industry": str(industry) if industry else None,
+        "styles": [str(item) for item in styles],
+        "exclude": [str(item) for item in exclude],
+        "shrink": shrink,
+    }
+
+
+def neutralize_enabled(spec: Mapping[str, Any] | None) -> bool:
+    return bool(spec and (spec.get("industry") or spec.get("styles")))
+
+
+def neutralize_columns(spec: Mapping[str, Any] | None) -> list[str]:
+    """中性化需要参与物化/依赖解析的因子列 (不含外部联表的行业列)。"""
+    if not spec:
+        return []
+    return [str(name) for name in (spec.get("styles") or [])]
+
+
+def neutralize_scoring_columns(
+    frame: pl.DataFrame,
+    names: Collection[str],
+    spec: Mapping[str, Any] | None,
+    *,
+    universe_col: str | None = None,
+) -> pl.DataFrame:
+    """在 min-max 归一化之前, 对评分腿做行业/市值中性化。
+
+    - 行业中性: 按 (date, industry) 去均值, 即"行业内排序"的连续版本;
+      去均值后再做**逐行业 z-score** (R17b): 残差对行业哑变量正交, 但全截面 min-max
+      等价于逐行业仿射变换, 会把行业均值重新引入; 逐行业标准化保证下游归一化不再
+      改变行业中性 (std 缺失/为 0 的行业置 0)
+    - 市值中性: 对风格列做逐日横截面 OLS 残差化 (单风格列闭式解);
+    - 统计量只在候选集内计算 (universe_col 为 True 的行), 未声明时用整帧;
+    - 缺列 (行业列/风格列/date) 直接抛 ValueError, 不静默退化为未中性化。
+    """
+    if not neutralize_enabled(spec):
+        return frame
+
+    industry = spec.get("industry")
+    styles = [str(name) for name in (spec.get("styles") or [])]
+    exclude = {str(name) for name in (spec.get("exclude") or [])}
+    shrink = float(spec.get("shrink", 1.0))
+
+    for column in [*([industry] if industry else []), *styles]:
+        if column not in frame.columns:
+            raise ValueError(f"评分中性化缺少列: {column}")
+    if industry and "date" not in frame.columns:
+        raise ValueError("行业中性化需要 date 列")
+
+    has_universe = bool(universe_col) and universe_col in frame.columns
+
+    def _masked(name: str) -> pl.Expr:
+        expr = pl.col(name)
+        if has_universe:
+            return pl.when(pl.col(str(universe_col))).then(expr).otherwise(None)
+        return expr
+
+    work = frame
+    for name in list(names):
+        if name in exclude or name not in frame.columns:
+            continue
+        raw_value = _masked(name)
+        value = raw_value
+        if industry:
+            value = value - value.mean().over(["date", industry])
+        if styles:
+            style_values: list[pl.Expr] = []
+            for style_name in styles:
+                style = _masked(style_name)
+                if industry:
+                    style = style - style.mean().over(["date", industry])
+                style_values.append(style)
+            style_expr = style_values[0]
+            value_centered = value - value.mean().over("date")
+            style_centered = style_expr - style_expr.mean().over("date")
+            denom = (style_centered * style_centered).sum().over("date")
+            beta = (
+                pl.when(denom > 0)
+                .then((value_centered * style_centered).sum().over("date") / denom)
+                .otherwise(0.0)
+            )
+            value = value_centered - beta * style_centered
+        if industry:
+            ind_mean = value.mean().over(["date", industry])
+            ind_std = value.std().over(["date", industry])
+            neutral = (
+                pl.when(ind_std.is_null() | (ind_std <= 0))
+                .then(0.0)
+                .otherwise((value - ind_mean) / ind_std)
+            )
+            # shrink=1 → 完整中性化; shrink=0 → 基线; 0<λ<1 → 线性收缩 (R17c)。
+            # 收缩放在 z-score **之后**, 否则会被逐行业仿射不变性吸收 (R17c 的预跑发现)。
+            value = shrink * neutral + (1.0 - shrink) * raw_value
+        work = work.with_columns(value.alias(name))
+    return work
+
+
 def scoring_warmup_bars(scoring: Mapping[str, Any]) -> int:
     warmups: list[int] = [
         _ROLLING_SCORING_WARMUP.get(str(name), 1)

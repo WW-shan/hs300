@@ -55,6 +55,10 @@ from app.indicators.pipeline import (
 from app.strategy.engine import StrategyDataContext, StrategyDef, StrategyEngine
 from app.strategy.scoring import (
     SCORING_DIRECTION_LOW,
+    effective_neutralize,
+    neutralize_columns,
+    neutralize_enabled,
+    neutralize_scoring_columns,
     effective_scoring,
     effective_scoring_directions,
     materialize_scoring_columns,
@@ -160,6 +164,14 @@ class StrategyDependencyResolver:
 
         scoring = effective_scoring(strategy.meta.get("scoring"), overrides)
         required_features.update(scoring_dependencies(scoring))
+        neutralize = effective_neutralize(strategy.meta, overrides)
+        neutralize_style_columns = neutralize_columns(neutralize)
+        if neutralize_style_columns:
+            required_features.update(
+                scoring_dependencies(
+                    {str(name): 1.0 for name in neutralize_style_columns}
+                )
+            )
         order_by = strategy.meta.get("order_by")
         if order_by and order_by != "score":
             required_features.add(str(order_by))
@@ -1340,6 +1352,8 @@ class StrategyBacktestService:
                     config, prepared.market_data.timestamp_labels
                 )
         elif s.execution_backend in ("matrix_native", "composite"):
+            if neutralize_enabled(effective_neutralize(s.meta, overrides)):
+                return _err("矩阵/复合策略暂不支持评分中性化 (neutralize)")
             t_load = time.perf_counter()
             max_hold_for_profile = self._override_value(
                 overrides,
@@ -1412,6 +1426,21 @@ class StrategyBacktestService:
             timing_ms["load_panel"] = round((time.perf_counter() - t_load) * 1000, 1)
             if panel.is_empty():
                 return _err("无数据，请检查日期范围或先运行盘后管道")
+            neutralize_spec = effective_neutralize(s.meta, overrides)
+            if neutralize_enabled(neutralize_spec) and neutralize_spec.get("industry"):
+                from app.services.industry_map import attach_industry_l1
+
+                data_dir = getattr(
+                    getattr(getattr(self.engine, "repo", None), "store", None),
+                    "data_dir",
+                    None,
+                )
+                try:
+                    panel = attach_industry_l1(panel, data_dir)
+                except ValueError as e:
+                    return _err(f"评分中性化失败: {e}")
+                if neutralize_spec["industry"] not in panel.columns:
+                    return _err(f"评分中性化缺少列: {neutralize_spec['industry']}")
             # 环境过滤下正式起点=面板首日时顺延 (首日让渡为预热)
             if config.regime_filter:
                 date_labels = tuple(
@@ -1692,7 +1721,16 @@ class StrategyBacktestService:
             candidate_mask = basic_mask & candidate_filter_mask
             if hs300_membership is not None:
                 candidate_mask = candidate_mask & _hs300_panel_row_mask(panel, hs300_membership)
-            panel = self._apply_score(panel, s, overrides, universe_mask=candidate_mask, factor_snapshot=factor_snapshot)
+            try:
+                panel = self._apply_score(
+                    panel,
+                    s,
+                    overrides,
+                    universe_mask=candidate_mask,
+                    factor_snapshot=factor_snapshot,
+                )
+            except ValueError as e:
+                return _err(f"评分中性化失败: {e}")
             formal_candidate_mask = candidate_mask & formal_range
             entry_mask = self._build_entry_mask_from_candidate(panel, candidate_mask, s, entry_signals)
             entry_mask = entry_mask & formal_range
@@ -2669,12 +2707,23 @@ class StrategyBacktestService:
     ) -> pl.DataFrame:
         scoring = effective_scoring(s.meta.get("scoring"), overrides)
         directions = effective_scoring_directions(overrides)
+        neutralize = effective_neutralize(s.meta, overrides)
 
         work = materialize_scoring_columns(panel, scoring.keys())
+        neutralize_style_columns = neutralize_columns(neutralize)
+        if neutralize_style_columns:
+            work = materialize_scoring_columns(work, neutralize_style_columns)
         temporary_scoring_columns = [name for name in scoring if name not in panel.columns and name in work.columns]
         has_universe = universe_mask is not None and len(universe_mask) == len(panel)
         if has_universe:
             work = work.with_columns(universe_mask.rename("_score_universe"))
+        if neutralize_enabled(neutralize):
+            work = neutralize_scoring_columns(
+                work,
+                list(scoring.keys()),
+                neutralize,
+                universe_col="_score_universe" if has_universe else None,
+            )
 
         # 因子归因快照: 在临时因子列被 _finish 丢弃前, 截取候选行的
         # (symbol, date, 因子值)。与评分共用同一份物化结果, 无第二次计算。
