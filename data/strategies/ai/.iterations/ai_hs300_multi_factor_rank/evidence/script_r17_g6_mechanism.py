@@ -47,9 +47,16 @@ GROUPS = {
         "M2": dict(BASE, neutralize={"industry": "industry_l1", "styles": ["log_float_mv"], "shrink": 0.5}),
     },
 }
-OUT_JSON = {"b": "r17b_g6_mechanism.json", "c": "r17c_g6_mechanism.json"}
-MV_CHECK = {"b": ("N6", "N7"), "c": ("M2",)}
-HHI_CHECK = {"b": ("N5", "N7"), "c": ("M1",)}
+# R18: 中性化 × 分散度 (maxpos 随候选变化)
+MAXPOS = {"b": {}, "c": {}, "d": {"P2": 20, "P3": 20}}
+GROUPS["d"] = {
+    "P0": dict(BASE, neutralize={}),
+    "P2": dict(BASE, neutralize={"industry": "industry_l1", "shrink": 0.5}),
+    "P3": dict(BASE, neutralize={}),
+}
+OUT_JSON = {"b": "r17b_g6_mechanism.json", "c": "r17c_g6_mechanism.json", "d": "r18_g6_mechanism.json"}
+MV_CHECK = {"b": ("N6", "N7"), "c": ("M2",), "d": ()}
+HHI_CHECK = {"b": ("N5", "N7"), "c": ("M1",), "d": ("P2", "P3")}
 
 group = sys.argv[1] if len(sys.argv) > 1 else "c"
 CANDS = GROUPS[group]
@@ -57,7 +64,7 @@ CANDS = GROUPS[group]
 with open(os.path.join(REPO, "data", "hs300", "current_members.json")) as fh:
     mem = [m["symbol"] for m in json.load(fh)["members"]]
 
-mv = (pl.scan_parquet(os.path.join(REPO, "data", "kline_daily_enriched", "date=*", "part.parquet"))
+mv = (pl.scan_parquet(os.path.join(REPO, "data", "kline_daily_enriched", "date=*", "part.parquet"), extra_columns="ignore")
       .filter(pl.col("symbol").is_in(mem))
       .select(["symbol", "date", "close", "volume", "turnover_rate"])
       .with_columns(pl.col("date").cast(pl.Utf8))
@@ -77,7 +84,7 @@ def ind_of(sym):
     return str(v).split("-")[0] if v else None
 
 
-cal = (pl.scan_parquet(os.path.join(REPO, "data", "kline_index_daily", "date=*", "part.parquet"))
+cal = (pl.scan_parquet(os.path.join(REPO, "data", "kline_index_daily", "date=*", "part.parquet"), extra_columns="ignore")
        .filter(pl.col("symbol") == "000300.SH").select("date").collect().sort("date")
        .with_columns(pl.col("date").cast(pl.Utf8))["date"].to_list())
 cal = [x for x in cal if x >= START]
@@ -85,7 +92,7 @@ cal = [x for x in cal if x >= START]
 out = {"start": START, "group": group, "cands": {}}
 t0 = time.time()
 for tag, ov in CANDS.items():
-    s, err, el, raw = run_bt(overrides=ov)
+    s, err, el, raw = run_bt(maxpos=MAXPOS[group].get(tag, 10), overrides=ov)
     if err:
         raise RuntimeError(f"{tag}: {err}")
     trades = raw.get("trades") or []
@@ -110,7 +117,7 @@ for tag, ov in CANDS.items():
                          "hhi_mean": st.mean(hhis) if hhis else None, "hhi_n": len(hhis)}
     print(tag, out["cands"][tag], f"({time.time()-t0:.0f}s)", flush=True)
 
-base_tag = "N0" if group == "b" else "M0"
+base_tag = {"b": "N0", "c": "M0", "d": "P0"}[group]
 b = out["cands"][base_tag]
 for tag in MV_CHECK[group]:
     v, bv = out["cands"][tag]["mv_pct_absdev_mean"], b["mv_pct_absdev_mean"]
