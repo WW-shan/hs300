@@ -47,6 +47,10 @@
 20% 资金运行 ai_hs300_multi_factor_rank 的 V20 配置 (max_positions=20, hold=20, 止损 -20%),
 按日再平衡。B80 滚动一年正收益率 95.5% / 最差滚动一年 -14.9% / 2× 成本正收益率 94.4%,
 但权重仍是样本内选择, 详见 .iterations/ai_hs300_multi_factor_rank/LEDGER.md 的 R19~R21。
+
+R22~R30 多维度研究更新 (2026-10-17): 本文件是默认组合 B80 的低风险腿 (80% 权重), 维持不变。
+跨维度条件候选 C6 = 50% 动量腿 + 25% D1 (低PB∩高ROE∩高现金流) + 25% D4 (低负债∩高OCF/负债),
+3× 成本下相位平均 Sharpe 1.290, 仅因 D1 行业集中度 53.5% 未过终审; 详见 LEDGER R22~R30。
 """
 
 import polars as pl
