@@ -1,4 +1,4 @@
-﻿import json, os
+import json, os
 T=os.environ["TEMP"]
 runs=json.load(open(os.path.join(T,"r8_curves.json"),encoding="utf-8"))
 # trailing 252-day return ending 2026-10-14 (or last available), per phase

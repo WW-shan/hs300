@@ -23,19 +23,6 @@ docker compose up --build
 
 Docker 采用两阶段构建,前端 dist 拷进后端镜像,**单容器**运行,数据完全在自己手里。
 
-> ⚠️ **stock-sdk 插件默认不打包(合规考虑)**
->
-> stock-sdk 数据源本质是抓取第三方财经网站(如东方财富)的行情接口,未经对方授权,可能违反其服务条款并涉及交易所行情版权问题。**出于合规考虑,Docker 默认构建不再内置 stock-sdk 插件依赖**。
->
-> - **默认行为**:`docker compose up --build` 构建出的镜像**不含** stock-sdk,插件不可用。
-> - **如确需启用**(自行承担合规责任):
->   ```bash
->   docker compose build --build-arg INCLUDE_STOCKSDK=1
->   docker compose up -d
->   ```
-> - 启用后镜像会额外内置 Node.js 运行时并预装 stock-sdk 依赖,插件开箱即用。
-> - **建议优先使用 TickFlow 等正规授权数据源。**
-
 更新到新版本:
 
 ```bash

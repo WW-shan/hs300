@@ -23,7 +23,7 @@ class _CacheSpy:
 
 def test_extend_history_rebuilds_repository_cache_after_enriched_write(monkeypatch, tmp_path):
     repo = _CacheSpy(tmp_path / "data")
-    monkeypatch.setattr(extend_history, "_resolve_universe", lambda _capset: ["000001.SZ"])
+    monkeypatch.setattr(extend_history, "_resolve_universe", lambda _capset, repo=None: ["000001.SZ"])
     monkeypatch.setattr(extend_history.kline_sync, "sync_and_persist_daily_batch", lambda *a, **k: 5)
     monkeypatch.setattr(preferences, "get_adj_factor_provider", lambda: "tickflow")
     monkeypatch.setattr(extend_history, "_refresh_single_view", lambda *_args: None)

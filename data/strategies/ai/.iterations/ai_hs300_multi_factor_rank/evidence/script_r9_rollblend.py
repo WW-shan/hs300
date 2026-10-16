@@ -1,4 +1,4 @@
-﻿import json, os, statistics as st, urllib.request
+import json, os, statistics as st, urllib.request
 T=os.environ["TEMP"]
 runs=json.load(open(os.path.join(T,"r8_curves.json"),encoding="utf-8"))
 u="http://127.0.0.1:3018/api/kline/daily?symbol=000300.SH&start_date=2018-05-31&end_date=2026-10-14"

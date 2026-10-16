@@ -40,6 +40,7 @@ from pathlib import Path
 import polars as pl
 
 from app.market_time import CN_TZ, cn_now, cn_today
+from app.parquet import scan_daily_parquet
 from app.services.fs_utils import atomic_write_text
 
 logger = logging.getLogger(__name__)
@@ -257,6 +258,34 @@ def update_settings(data_dir: Path, account_id: str = DEFAULT_ACCOUNT_ID, **fiel
             acc[key] = v
         save_account(data_dir, acc, account_id)
         return acc
+
+
+def delete_account(data_dir: Path, account_id: str = DEFAULT_ACCOUNT_ID, *, force: bool = False) -> tuple[dict | None, str | None]:
+    """删除账户及其全部数据 (台账/持仓/净值/规则, 不可恢复)。
+
+    fail-closed: 账户仍有持仓标的或待成交订单时拒绝删除, 调用方显式 force=True
+    才强删。目录删除限定在 accounts/{account_id} (id 校验只允许字母数字下划线
+    短横线, 无路径穿越面)。返回 (统计, None) 或 (None, 拒绝原因)。
+    """
+    with PAPER_LOCK:
+        acc = get_account(data_dir, account_id)
+        if acc is None:
+            return None, "账户不存在"
+        positions = load_positions(data_dir, account_id)
+        holdings = sum(1 for p in positions.values() if p["qty"] > 0)
+        pending = sum(1 for o in load_orders(data_dir, account_id) if o["status"] == "pending")
+        if (holdings or pending) and not force:
+            detail = " 与 ".join(
+                s for s in (
+                    f"{holdings} 个持仓标的" if holdings else "",
+                    f"{pending} 张待成交订单" if pending else "",
+                ) if s
+            )
+            return None, f"账户仍有 {detail}, 确认删除需 force=true"
+        root = accounts_base(data_dir) / validate_account_id(account_id)
+        if root.exists():
+            shutil.rmtree(root)
+        return {"holdings": holdings, "pending_orders": pending}, None
 
 
 # ── 费用 (纯函数) ───────────────────────────────────────
@@ -808,7 +837,7 @@ def read_daily_bar(data_dir: Path, symbol: str, asset_type: str, day: str) -> di
         return None
     try:
         df = (
-            pl.scan_parquet((base / "**" / "*.parquet").as_posix())
+            scan_daily_parquet((base / "**" / "*.parquet").as_posix())
             .filter((pl.col("symbol") == symbol) & (pl.col("date") == _date.fromisoformat(day)))
             .select(["open", "close"])
             .collect()
@@ -828,7 +857,7 @@ def _prev_close(data_dir: Path, symbol: str, asset_type: str, day: str) -> float
         return None
     try:
         df = (
-            pl.scan_parquet((base / "**" / "*.parquet").as_posix())
+            scan_daily_parquet((base / "**" / "*.parquet").as_posix())
             .filter((pl.col("symbol") == symbol) & (pl.col("date") < _date.fromisoformat(day)))
             .sort("date")
             .select(pl.col("close").last())
@@ -849,7 +878,7 @@ def _index_close(data_dir: Path, day: str) -> float | None:
         return None
     try:
         df = (
-            pl.scan_parquet((base / "**" / "*.parquet").as_posix())
+            scan_daily_parquet((base / "**" / "*.parquet").as_posix())
             .filter((pl.col("symbol") == "000300.SH") & (pl.col("date") == _date.fromisoformat(day)))
             .select("close")
             .collect()

@@ -1,4 +1,4 @@
-﻿"""Memory-safe HS300-scoped history extension BACKWARD: 2018-01-01 .. 2021-05-31.
+"""Memory-safe HS300-scoped history extension BACKWARD: 2018-01-01 .. 2021-05-31.
 
 Extends daily K + adj factor + enriched for the 300 current HS300 members and
 core benchmark indices. Scoped to ~300 symbols so peak memory stays small.

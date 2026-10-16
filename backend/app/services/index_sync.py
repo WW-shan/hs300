@@ -257,6 +257,7 @@ def sync_and_persist_index_daily(
         except Exception as e:
             logger.warning("index daily provider %s unavailable: %s", provider_name, e)
     if not capset.has(Cap.KLINE_DAILY_BATCH) and custom_provider is None:
+        kline_sync._log_cap_unavailable("daily", "指数/ETF 日K同步")
         return 0
 
     if symbols_override:
@@ -406,6 +407,7 @@ def sync_and_persist_etf_daily(
         except Exception as e:  # noqa: BLE001
             logger.warning("ETF daily provider %s unavailable: %s", provider_name, e)
     if not capset.has(Cap.KLINE_DAILY_BATCH) and custom_provider is None:
+        kline_sync._log_cap_unavailable("daily", "ETF 日K同步")
         return 0
 
     if symbols_override:

@@ -1,4 +1,4 @@
-﻿import csv, json, math, statistics as st, urllib.request
+import csv, json, math, statistics as st, urllib.request
 EV=r"D:\Code\hs300\data\strategies\ai\.iterations\ai_hs300_multi_factor_rank\evidence\v2_equity_2018-06-01_2026-10-14.csv"
 rows=[]
 with open(EV,encoding="utf-8") as f:

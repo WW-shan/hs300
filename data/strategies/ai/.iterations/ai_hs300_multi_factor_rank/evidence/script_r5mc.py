@@ -1,4 +1,4 @@
-﻿import json, os, math, random
+import json, os, math, random
 import statistics as st
 T=os.environ["TEMP"]
 s1=json.load(open(os.path.join(T,"r3_step1.json"),encoding="utf-8"))

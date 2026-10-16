@@ -6,7 +6,8 @@ This repository records the upstream provenance and local reuse boundary for its
 
 - Upstream repository: <https://github.com/shy3130/tick-stock-panel>
 - Initial import baseline: `3c0d351efe3f817ab187a7dbd1df3ba43b5d2d39`.
-- Current merged upstream main: `0533def9cdc830b95d9d4ed842d93fb839bf83fd` (2026-10-08).
+- Current merged upstream main: `b7892e49e256322efa1b9b9f9972d834430c77da` (2026-10-16).
+- 注: 上游在 2026-10-08 之后重写过历史 — 旧的合并点 `0533def9` 已不在上游任何 ref 上, 其等价提交为 `85b8a3f9`; 本次按内容做三方合并 (base=0533def9), 并同步移除了上游已从历史中 清除的合规风险插件 `backend/app/plugins/stocksdk/`。
 - License: MIT; see [`LICENSE`](LICENSE).
 - Imported paths: the complete application baseline at the repository root, including `backend/`, `frontend/`, `tests`, CI workflows, Docker files, documentation, data-source plugin infrastructure, and supporting assets.
 - Import exclusions: `.git/`, `.venv/`, `node_modules/`, `gui-test-screenshots/`, and `community-qr-code.jpg`.

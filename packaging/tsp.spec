@@ -31,7 +31,8 @@ block_cipher = None
 ROOT = Path(SPECPATH).parent
 FRONTEND_DIST = str(ROOT / "frontend" / "dist")
 TIERS_YAML = str(ROOT / "tiers.yaml")
-BUILTIN_STRATEGIES = str(ROOT / "backend" / "app" / "strategy" / "builtin")
+RESEARCH_TEMPLATE = str(ROOT / "backend" / "app" / "strategy" / "research")
+# 内置策略种子目录 (strategy_seeds 按路径读文本, frozen 下需落盘, 同 research)
 # 图标按平台选: Windows 用 brand/icon.ico, macOS 用 brand/icon.icns —
 # 两者均由 brand/png/logo-tile-light-512.png 派生 (浅色圆角卡版, 品牌资产唯一来源,
 # 见 brand/README 接入指引), 无需 CI 现场生成。
@@ -48,6 +49,18 @@ for pkg in ("polars", "pyarrow", "duckdb", "fastexcel"):
     datas += d
     binaries += b
     hiddenimports += h
+
+# tdxaidata (TdxQuant 插件依赖) — 后端对其全部懒导入, 必须显式声明:
+#   纯 Python 接口 (包 __init__ + tdxaidata.py) 进 PYZ; lib/ 是跨平台原生库
+#   合集 (win dll / mac dylib / linux so 同包), 运行时由 client.materialize_lib
+#   复制物化后 ctypes 加载, 属数据文件 — 只能整目录按 datas 复制。
+#   注意不能用 collect_all / collect_submodules: lib/ 下的 libTdxAiData.so
+#   会被当成 Python 扩展子模块收进 binaries, mac 构建的 macholib 解析
+#   Linux ELF 直接崩。
+if (spec_tdx := find_spec("tdxaidata")) is not None and spec_tdx.origin:
+    _tdx_pkg = Path(spec_tdx.origin).parent
+    datas += [(str(_tdx_pkg / "lib"), "tdxaidata/lib")]
+    hiddenimports += ["tdxaidata", "tdxaidata.tdxaidata"]
 
 # Polars 的发行包名为 polars-runtime-32 / polars-runtime-compat, 但实际
 # Python 导入包带前导下划线。release.yml 安装 legacy-cpu 后必须收集二者，
@@ -67,14 +80,29 @@ hiddenimports += collect_submodules("polars")
 # entry 又是 importlib 字符串动态导入 — 两条链路静态分析都看不见, 必须双声明:
 # datas 把清单 yaml 落盘 (frozen 下 plugins_dir() 恰好解析到 _internal/app/plugins),
 # hiddenimports 把 provider/client 塞进 PYZ。
-# 注: stocksdk 出于合规暂不进桌面包 (与 GHCR 镜像口径一致), 需要时仿照添加。
+# 注: 其他内置插件如需进桌面包, 仿照 fuyao 双声明添加。
 datas += [
     (str(ROOT / "backend" / "app" / "plugins" / "fuyao" / "plugin.yaml"), "app/plugins/fuyao"),
+    (str(ROOT / "backend" / "app" / "plugins" / "tdxquant" / "plugin.yaml"), "app/plugins/tdxquant"),
 ]
 hiddenimports += [
     "app.plugins.fuyao.provider",
     "app.plugins.fuyao.client",
+    "app.plugins.tdxquant.provider",
+    "app.plugins.tdxquant.client",
+    "app.plugins.tdxquant.probe",
 ]
+
+# ── 后端源码扩展 (app/custom/*) ──────────────────────────────────────
+# extensions/loader.py 运行时用 importlib.import_module + pkgutil.iter_modules
+# 发现 app/custom/* — 与插件同样对静态分析不可见, 必须双声明 (issue #459:
+# 未声明时冻结包里扩展静默消失, 助手路由未注册 → 请求落到 GET-only SPA 兜底
+# 返回 405):
+#   datas 落盘到 _internal/app/custom — frozen 下 app.__path__ 解析到
+#     _internal/app, 保 pkgutil 枚举与磁盘可见性;
+#   hiddenimports 进 PYZ — 保 importlib.import_module 可导入。
+datas += [(str(ROOT / "backend" / "app" / "custom"), "app/custom")]
+hiddenimports += collect_submodules("app.custom")
 
 # ── pywebview 平台后端 (动态导入, PyInstaller 默认抓不到) ────────────
 hiddenimports += collect_submodules("webview")
@@ -135,8 +163,10 @@ datas += [(TIERS_YAML, ".")]
 # frontend/package.json → 包根 (app/__init__.py frozen 模式读 _MEIPASS/package.json,
 # __version__ 与安装包 AppVersion / 页面显示同源, 版本号只改 package.json 一处)
 datas += [(str(ROOT / "frontend" / "package.json"), ".")]
-# 内置策略 → app/strategy/builtin/ (importlib 动态加载, 不能进 PYZ)
-datas += [(BUILTIN_STRATEGIES, "app/strategy/builtin")]
+# 研究模板 → app/strategy/research/ (importlib 动态加载, 不能进 PYZ; 挖掘功能依赖)
+datas += [(RESEARCH_TEMPLATE, "app/strategy/research")]
+# 策略种子 → app/strategy/seeds/ (启动时按路径读取种入 custom, 不进 PYZ)
+datas += [(str(ROOT / "backend" / "app" / "strategy" / "seeds"), "app/strategy/seeds")]
 
 # ── 内置数据源插件 (运行时扫 plugin.yaml + importlib 动态加载 entry) ──
 # loader._load_builtin_plugins 先按目录扫 app/plugins/<name>/plugin.yaml, 再用

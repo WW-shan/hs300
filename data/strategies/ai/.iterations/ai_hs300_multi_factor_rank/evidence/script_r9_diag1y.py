@@ -1,4 +1,4 @@
-﻿import csv, json, os, statistics as st, urllib.request
+import csv, json, os, statistics as st, urllib.request
 T=os.environ["TEMP"]
 runs=json.load(open(os.path.join(T,"r8_curves.json"),encoding="utf-8"))
 # benchmark map

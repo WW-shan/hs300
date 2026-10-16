@@ -1,4 +1,4 @@
-﻿import json, time, urllib.request, os, statistics as st, math
+import json, time, urllib.request, os, statistics as st, math
 BASE="http://localhost:3018"
 def post(path,payload,timeout=900):
     r=urllib.request.Request(BASE+path,data=json.dumps(payload).encode(),headers={"Content-Type":"application/json"})
