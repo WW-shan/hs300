@@ -1573,3 +1573,46 @@ P2 配置: `ai_hs300_lowrisk_alpha` + 行业中性 λ=0.5 + max_positions=20 + h
 V20 配置: `ai_hs300_multi_factor_rank` + max_positions=20 + hold=20 + 止损 -20%。
 **仍未做**: 真实样本外/模拟盘、逐日再平衡摩擦、税费细节、历史成分逐日复现 (当前仍用当前 HS300 名单, 有幸存者偏差)。
 因此 B80 是当前研究证据下的最优候选, 不是“已验证可盈利”结论。
+
+---
+
+# R22 · 财报数据补齐 + 财务价值因子初筛 (2026-10-17, 多维度计划第一轮: 财报维度) — 事前预注册
+
+> 本轮起执行计划见 `docs/superpowers/plans/2026-10-17-hs300-multidim-factor-research.md` (R22~R30 全维度)。
+
+**动机**: v1/v2/P2/B80 使用的全部因子都来自量价与市场结构, 未使用财报信息; 本地 `data/financials` 四表长期为空 (仅 shares)。R22 先补齐财报数据并做价值维度初筛, 作为 R23 (质量/成长/安全) 与 R28 (跨维度组合) 的输入。
+
+**数据现状 (2026-10-17 实测, 本轮前置已完成)**:
+- 数据源: `financial_data_provider=akshare` (custom provider 路径, 绕过 TickFlow 套餐门控);
+- 本地表 (全市场并集): metrics 119,820 行 / income 113,255 / balance_sheet 111,683 / cash_flow 6,580→已重同步补齐 / shares 15,457;
+- HS300 300 只覆盖: metrics/income/cash_flow 300/300, balance_sheet 300/300, 最少 10~12 个报告期, 最新期 2026-06-30, HS300 行 `announce_date` 无空值;
+- 历史窗口: provider `_MIN_HISTORY_PERIOD = 2021-03-31` → 财务因子 2018~2021 不可得, 本轮判定窗口为 **2021-06-01 ~ 2026-10-14**, 不得声称覆盖 2018 熊市;
+- 点时契约: `backend/app/backtest/fundamentals.py` (公告日次日生效, 无数据为 null 不填 0); 行业列 `industry_l1` 为同花顺快照回填 (快照偏差)。
+- 过程记录: 00:22 后端 FinancialScheduler 自行触发 `table=all` 全市场同步, 与本轮 evidence 脚本的 300 只直连同步并发写同一 Parquet; 结果 metrics/income/balance_sheet 为全市场并集, cash_flow 被后写覆盖为 300 只, 已重新补齐为全市场。教训: 手动同步前必须确认调度器空闲 (financial_sync 无跨进程写锁)。
+
+**候选因子 (先写, 只测这些, 不事后扩展)**:
+| 代号 | 定义 | 来源 |
+| --- | --- | --- |
+| F_pb | `pb_latest` = close / bps | 已注册 PIT |
+| F_roe | `roe_latest` | 已注册 PIT |
+| F_gm | `gross_margin_latest` | 已注册 PIT |
+| F_nm | `net_margin_latest` | 已注册 PIT |
+| F_rev_yoy | `revenue_yoy_latest` | 已注册 PIT |
+| F_ni_yoy | `net_income_yoy_latest` | 已注册 PIT |
+| F_debt | `debt_ratio_latest` | 已注册 PIT |
+| F_ep | E/P = roe / (100 × pb) | 合成 (离线; 与 PB/ROE 同一 PIT 快照) |
+| F_pb_pct | PB 自身 3 年分位 (仅用过去数据, 不足 2 年置 null) | 离线 |
+| F_qv | 低 PB 1/3 × 高 ROE 1/3 交集, 月度等权多头 | 离线组合 |
+
+**判定门槛 (先写, 结果出来不得更改)**:
+| # | 门槛 | 阈值 |
+| --- | --- | --- |
+| D0 | metrics 覆盖 | ≥280/300 只且每只 ≥8 期 (实测 300/300, 最少 12 期 → 已过) |
+| F1 | 月频 Spearman IC | \|IC\| ≥ 0.03 且 2022~2026 逐年同号 ≥ 4/5 |
+| F2 | 5 分组多空 | 年化 > 0 且分组均值单调 \|Spearman\| ≥ 0.7 |
+| F3 | 2× 成本 (佣金 4bp + 滑点 10bp) | 多空年化 > 0 |
+| F4 | 与 v2 三腿截面相关 | \|ρ\| < 0.7 |
+| F5 | 价值质量组合 | 低 PB×高 ROE 多头年化 > 纯低 PB 多头 |
+
+**采纳规则 (先写)**: \|IC\| ≥ 0.03 且方向稳定的因子进入 R23/R28 候选池; F_qv 过 F5 则作为 R28 组合腿候选; 未过因子记负知识, 不写入任何策略文件。
+**纪律**: 本轮不测股息率/自由现金流收益率 (数据缺口登记); 不做 PB/PE 参数网格; 不因结果改门槛; 全程 `hs300=true`、月度 5 分组、T+1 开盘成交口径与既有轮次一致。
