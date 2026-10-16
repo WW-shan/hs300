@@ -41,6 +41,12 @@
 
 风险: 单相位误差 ±10pp 量级; qfq 数据修订会移动历史数字; 整段回测按"当前"HS300 名单过滤
 (幸存者偏差); 未做实盘/模拟盘验证。本策略不能承诺当前 regime 下的稳定 alpha。
+
+当前部署建议 (R19~R21, 2026-10-16): 本文件只实现低风险腿。若以"近一年不亏 + 低回撤"为目标,
+建议 80% 资金运行本策略的 P2 配置 (neutralize 行业 λ=0.5, max_positions=20, hold=35),
+20% 资金运行 ai_hs300_multi_factor_rank 的 V20 配置 (max_positions=20, hold=20, 止损 -20%),
+按日再平衡。B80 滚动一年正收益率 95.5% / 最差滚动一年 -14.9% / 2× 成本正收益率 94.4%,
+但权重仍是样本内选择, 详见 .iterations/ai_hs300_multi_factor_rank/LEDGER.md 的 R19~R21。
 """
 
 import polars as pl
