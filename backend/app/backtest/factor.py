@@ -169,6 +169,31 @@ def _current_hs300_symbols() -> list[str]:
         raise ValueError(f"HS300 当前成分不可用: {exc}") from exc
 
 
+def _fundamental_dependency_closure(factor_names) -> set[str]:
+    """请求因子 (含 custom/composite 依赖闭包) 中属于 PIT 财务因子的集合。
+
+    R22 回归: 财务列注入只认顶层因子名, 使引用 roe_latest/pb_latest 的
+    自定义合成因子在因子回测里报 "因子列不存在于 enriched 数据中"。
+    """
+    from app.factors.registry import get_factor
+
+    found: set[str] = set()
+    seen: set[str] = set()
+    stack = [str(name) for name in factor_names]
+    while stack:
+        name = stack.pop()
+        if name in seen:
+            continue
+        seen.add(name)
+        if name in FUNDAMENTAL_FACTOR_NAMES:
+            found.add(name)
+            continue
+        spec = get_factor(name)
+        if spec is not None:
+            stack.extend(spec.dependencies or ())
+    return found
+
+
 class FactorBacktestService:
     def __init__(self, engine: BacktestEngine) -> None:
         self.engine = engine
@@ -206,7 +231,7 @@ class FactorBacktestService:
         if panel.is_empty():
             return self._error_result(config, run_id, t0, "无数据, 请检查日期范围或先运行盘后管道")
 
-        if config.factor_name in FUNDAMENTAL_FACTOR_NAMES and self._fundamentals_missing():
+        if _fundamental_dependency_closure([config.factor_name]) and self._fundamentals_missing():
             return self._error_result(
                 config, run_id, t0,
                 "本地没有财务数据: 请先在数据页同步财务数据后再使用财务因子",
@@ -312,7 +337,7 @@ class FactorBacktestService:
 
         metadata = {item["id"]: item for item in FACTOR_COLUMNS}
         fundamentals_missing = (
-            any(name in FUNDAMENTAL_FACTOR_NAMES for name in factor_names)
+            bool(_fundamental_dependency_closure(factor_names))
             and self._fundamentals_missing()
         )
         items: list[FactorBatchItem] = []
@@ -470,10 +495,9 @@ class FactorBacktestService:
         if panel.is_empty():
             return panel
 
-        missing = set(factor_names) - set(panel.columns)
-        if missing:
-            panel = self._compute_missing_factors(panel, missing)
-        fundamental_names = [name for name in factor_names if name in FUNDAMENTAL_FACTOR_NAMES]
+        # 财务列必须先于自定义/复合因子的物化注入: 依赖闭包里出现的 PIT 财务因子
+        # (如 roe_latest/pb_latest) 无法从行情列计算, 晚注入会让合成因子永久缺列。
+        fundamental_names = sorted(_fundamental_dependency_closure(factor_names))
         if fundamental_names:
             # 点时财务因子: 公告日门控, 无数据标的保持 null (不参与该日截面)。
             panel = attach_fundamental_factors(
@@ -481,6 +505,9 @@ class FactorBacktestService:
                 load_fundamental_snapshot(self._fundamentals_data_dir()),
                 fundamental_names,
             )
+        missing = set(factor_names) - set(panel.columns)
+        if missing:
+            panel = self._compute_missing_factors(panel, missing)
         return panel
 
     @staticmethod

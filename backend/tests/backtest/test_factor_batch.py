@@ -200,3 +200,65 @@ def test_derived_factors_are_computed_from_shared_base_panel():
     assert last["intraday_return"] == pytest.approx(1 / 0.99 - 1)
     assert last["close_position"] == pytest.approx(2 / 3)
     assert last["distance_to_high_60d"] == pytest.approx(0.0)
+
+
+def test_custom_factor_with_fundamental_dependency_attaches_snapshot(monkeypatch, tmp_path):
+    """自定义因子引用 PIT 财务基础因子时, 财务列必须按依赖闭包先注入再物化。
+
+    回归: R22 发现 `uf_ep_roe_pb = roe_latest/(100*pb_latest)` 在因子回测报
+    "因子列不存在于 enriched 数据中", 原因是财务列注入只认顶层因子名。
+    """
+    from types import SimpleNamespace
+
+    from app.factors import registry
+    from app.factors.registry import FactorSpec
+
+    engine = _Engine(_panel())
+    engine.repo = SimpleNamespace(store=SimpleNamespace(data_dir=tmp_path))
+    service = FactorBacktestService(engine)
+
+    fake = FactorSpec(
+        id="uf_fake_fund_combo",
+        label="fake-fund-combo",
+        group="测试",
+        formula_text="roe_latest",
+        kind="custom",
+        dependencies=frozenset({"roe_latest"}),
+    )
+    real_get = registry.get_factor
+    monkeypatch.setattr(
+        registry,
+        "get_factor",
+        lambda name: fake if name == fake.id else real_get(name),
+    )
+
+    attached: dict[str, list[str]] = {}
+
+    def fake_attach(panel, snapshot, names):
+        attached["names"] = sorted(names)
+        return panel.with_columns(pl.lit(10.0).alias("roe_latest"))
+
+    computed: dict[str, set] = {}
+
+    def fake_compute(panel, missing, **kwargs):
+        computed["panel_columns"] = set(panel.columns)
+        computed["missing"] = set(missing)
+        return panel.with_columns(pl.lit(1.0).alias(fake.id))
+
+    monkeypatch.setattr("app.backtest.factor.attach_fundamental_factors", fake_attach)
+    monkeypatch.setattr("app.backtest.factor.load_fundamental_snapshot", lambda data_dir: object())
+    monkeypatch.setattr(service, "_compute_missing_factors", fake_compute)
+
+    config = FactorConfig(
+        factor_name=fake.id,
+        symbols=None,
+        start=date(2026, 1, 1),
+        end=date(2026, 1, 8),
+        n_groups=3,
+        rebalance="daily",
+    )
+    panel = service._load_factor_panel(config, [fake.id])
+
+    assert attached["names"] == ["roe_latest"]
+    assert "roe_latest" in computed["panel_columns"]
+    assert fake.id in panel.columns
