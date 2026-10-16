@@ -19,6 +19,18 @@ from app.backtest.strategy import StrategyBacktestConfig, StrategyBacktestServic
 from app.hs300.current import CurrentMembers, CurrentMembersError
 from app.strategy.engine import StrategyDef
 
+@pytest.fixture(autouse=True)
+def _migrated_signal_definitions(monkeypatch):
+    """注入迁移自内置的信号定义 (signal_limit_up/down 已改为定义驱动的 JSON)。
+
+    干净环境 (CI / 空 data 目录) 下必须自带定义, 否则依赖解析会报
+    "策略引用了不存在的信号" —— 与上游 tests/signal_seeds.py 同口径。
+    """
+    from tests.signal_seeds import install_pipeline_caches
+
+    install_pipeline_caches(monkeypatch)
+
+
 MEMBER_A = "600001.SH"
 MEMBER_B = "000002.SZ"
 START = date(2024, 1, 31)
