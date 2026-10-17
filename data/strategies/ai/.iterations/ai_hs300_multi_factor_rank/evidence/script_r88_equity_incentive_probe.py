@@ -48,7 +48,7 @@ MIN_COUNTS = {
     "esop_launch": {"events": 5, "symbols": 3, "min_discovery_events": 1, "min_validation_events": 1},
 }
 EXCLUDE_LEGAL = ("法律意见", "独立财务顾问", "核查意见", "审核意见", "摘要")
-EXCLUDE_NOISE = ("终止", "取消", "注销", "考核", "名单", "修订", "更新", "说明", "登记", "完成", "解锁", "行权", "归属", "条件成就", "解除限售", "上市流通", "结果")
+EXCLUDE_NOISE = ("终止", "取消", "注销", "考核", "名单", "修订", "更新", "说明", "登记", "完成", "解锁", "行权", "归属", "条件成就", "解除限售", "上市流通", "结果", "调整", "更正", "自查")
 
 
 def _normalize(raw, symbol: str) -> pl.DataFrame:
