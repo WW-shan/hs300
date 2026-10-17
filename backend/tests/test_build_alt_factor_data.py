@@ -52,3 +52,15 @@ def test_fund_holding_frame_respects_lag_and_computes_changes() -> None:
     assert q2["fund_count_chg_qoq_low"] == pytest.approx(0.2)
     assert q2["fund_holding_ratio_chg_qoq_low"] == pytest.approx(0.5)
     assert q2["fund_holding_value_chg_qoq_low"] == pytest.approx(0.4)
+
+
+def test_decayed_event_score_starts_next_trading_day() -> None:
+    dates = [date(2024, 1, 2), date(2024, 1, 3), date(2024, 1, 4)]
+    scores = build_alt_factor_data._decayed_event_score(
+        [date(2024, 1, 2)],
+        [2.0],
+        [day.toordinal() for day in dates],
+        window=2,
+    )
+
+    assert scores == [0.0, 2.0, 1.0]

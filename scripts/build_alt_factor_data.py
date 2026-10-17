@@ -48,6 +48,18 @@ FIELDS = [
     ExtField("fund_holding_ratio_low", "float", "基金持股占流通股比例反向"),
     ExtField("fund_holding_ratio_chg_qoq_low", "float", "基金持股比例季度变化反向"),
     ExtField("fund_holding_value_chg_qoq_low", "float", "基金持股市值季度变化反向"),
+    ExtField("lhb_net_buy_ratio_20d", "float", "龙虎榜净买额占市场成交额20日衰减"),
+    ExtField("lhb_inst_net_buy_ratio_20d", "float", "龙虎榜机构净买额占市场成交额20日衰减"),
+    ExtField("lhb_event_count_20d_low", "float", "龙虎榜上榜次数20日衰减反向"),
+    ExtField("pledge_ratio_low", "float", "股权质押比例反向"),
+    ExtField("pledge_ratio_chg_1m_low", "float", "股权质押比例月度变化反向"),
+    ExtField("repurchase_event_60d", "float", "回购计划公告60日衰减"),
+    ExtField("block_trade_ratio_20d_low", "float", "大宗交易成交额占流通市值20日衰减反向"),
+    ExtField("block_premium_20d", "float", "大宗交易成交额加权折溢率20日衰减"),
+    ExtField("analyst_rating_score_20d", "float", "分析师评级20日滚动水平"),
+    ExtField("analyst_rating_change_20d", "float", "分析师评级调整20日衰减"),
+    ExtField("forecast_surprise_60d", "float", "业绩预告预期差60日衰减"),
+    ExtField("express_surprise_60d", "float", "业绩快报净利润同比预期差60日衰减"),
     ExtField("margin_chg_1m_low", "float", "两融余额月度变化反向"),
     ExtField("goodwill_ratio_low", "float", "商誉/总资产反向"),
     ExtField("intangible_ratio_low", "float", "无形资产/总资产反向"),
@@ -280,6 +292,436 @@ def _fund_holding_daily(
     return _fund_holding_frame(raw, dates, symbols, instruments)
 
 
+def _stock_code_map(instruments: pl.DataFrame) -> pl.DataFrame:
+    return instruments.select([
+        pl.col("symbol").cast(pl.String),
+        pl.col("code").cast(pl.String).str.zfill(6).alias("_code6"),
+    ]).unique(subset=["_code6"], keep="last")
+
+
+def _lhb_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
+    detail_paths = sorted((DATA / "research" / "r43_lhb").glob("detail_*.parquet"))
+    inst_paths = sorted((DATA / "research" / "r43_lhb").glob("jgmm_*.parquet"))
+    if not detail_paths and not inst_paths:
+        return pl.DataFrame(schema={
+            "symbol": pl.String, "date": pl.Date,
+            "lhb_net_buy_ratio_20d": pl.Float64,
+            "lhb_inst_net_buy_ratio_20d": pl.Float64,
+            "lhb_event_count_20d_low": pl.Float64,
+        })
+    instruments = pl.read_parquet(DATA / "instruments" / "instruments.parquet")
+    code_map = _stock_code_map(instruments)
+    details = pl.concat(
+        [pl.read_parquet(path) for path in detail_paths], how="diagonal_relaxed"
+    ) if detail_paths else pl.DataFrame()
+    if not details.is_empty():
+        details = (
+            details.select([
+                pl.col("代码").cast(pl.String).str.extract(r"(\d{6})", 1).str.zfill(6).alias("_code6"),
+                pl.col("上榜日").cast(pl.Date, strict=False).alias("date"),
+                pl.col("龙虎榜净买额").cast(pl.Float64, strict=False).fill_null(0.0),
+                pl.col("市场总成交额").cast(pl.Float64, strict=False).fill_null(0.0),
+            ])
+            .join(code_map, on="_code6", how="inner")
+            .filter(pl.col("symbol").is_in(symbols) & pl.col("date").is_not_null())
+            .group_by(["symbol", "date"]).agg([
+                pl.col("龙虎榜净买额").sum().alias("_net_buy"),
+                pl.col("市场总成交额").max().alias("_market_turnover"),
+                pl.len().alias("_event_count"),
+            ])
+            .with_columns(
+                pl.when(pl.col("_market_turnover") > 0)
+                .then(pl.col("_net_buy") / pl.col("_market_turnover") * 100.0)
+                .otherwise(0.0)
+                .alias("_net_buy_ratio")
+            )
+        )
+    else:
+        details = pl.DataFrame(schema={
+            "symbol": pl.String, "date": pl.Date,
+            "_net_buy_ratio": pl.Float64, "_event_count": pl.UInt32,
+        })
+    inst = pl.concat(
+        [pl.read_parquet(path) for path in inst_paths], how="diagonal_relaxed"
+    ) if inst_paths else pl.DataFrame()
+    if not inst.is_empty():
+        inst = (
+            inst.select([
+                pl.col("代码").cast(pl.String).str.extract(r"(\d{6})", 1).str.zfill(6).alias("_code6"),
+                pl.col("上榜日期").cast(pl.Date, strict=False).alias("date"),
+                pl.col("机构买入净额").cast(pl.Float64, strict=False).fill_null(0.0),
+                pl.col("市场总成交额").cast(pl.Float64, strict=False).fill_null(0.0),
+            ])
+            .join(code_map, on="_code6", how="inner")
+            .filter(pl.col("symbol").is_in(symbols) & pl.col("date").is_not_null())
+            .group_by(["symbol", "date"]).agg([
+                pl.col("机构买入净额").sum().alias("_inst_net_buy"),
+                pl.col("市场总成交额").max().alias("_market_turnover"),
+            ])
+            .with_columns(
+                pl.when(pl.col("_market_turnover") > 0)
+                .then(pl.col("_inst_net_buy") / pl.col("_market_turnover") * 100.0)
+                .otherwise(0.0)
+                .alias("_inst_net_buy_ratio")
+            )
+            .select(["symbol", "date", "_inst_net_buy_ratio"])
+        )
+    else:
+        inst = pl.DataFrame(schema={
+            "symbol": pl.String, "date": pl.Date, "_inst_net_buy_ratio": pl.Float64,
+        })
+    merged = details.join(inst, on=["symbol", "date"], how="full", coalesce=True).sort(
+        ["symbol", "date"]
+    )
+    date_values = [day.toordinal() for day in dates]
+    rows: list[dict] = []
+    for symbol in symbols:
+        part = merged.filter(pl.col("symbol") == symbol)
+        if part.is_empty():
+            continue
+        event_dates = part["date"].to_list()
+        net_score = _decayed_event_score(
+            event_dates,
+            part["_net_buy_ratio"].fill_null(0.0).to_list(),
+            date_values,
+            window=20,
+        )
+        inst_score = _decayed_event_score(
+            event_dates,
+            part["_inst_net_buy_ratio"].fill_null(0.0).to_list(),
+            date_values,
+            window=20,
+        )
+        count_score = _decayed_event_score(
+            event_dates,
+            part["_event_count"].fill_null(0).cast(pl.Float64).to_list(),
+            date_values,
+            window=20,
+        )
+        for index, day in enumerate(dates):
+            if net_score[index] == 0 and inst_score[index] == 0 and count_score[index] == 0:
+                continue
+            rows.append({
+                "symbol": symbol,
+                "date": day,
+                "lhb_net_buy_ratio_20d": net_score[index],
+                "lhb_inst_net_buy_ratio_20d": inst_score[index],
+                "lhb_event_count_20d_low": -count_score[index],
+            })
+    return pl.DataFrame(rows, schema={
+        "symbol": pl.String, "date": pl.Date,
+        "lhb_net_buy_ratio_20d": pl.Float64,
+        "lhb_inst_net_buy_ratio_20d": pl.Float64,
+        "lhb_event_count_20d_low": pl.Float64,
+    })
+
+
+def _pledge_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
+    paths = sorted((DATA / "research" / "r65_pledge").glob("20*.parquet"))
+    if not paths:
+        return pl.DataFrame(schema={
+            "symbol": pl.String, "date": pl.Date,
+            "pledge_ratio_low": pl.Float64,
+            "pledge_ratio_chg_1m_low": pl.Float64,
+        })
+    instruments = pl.read_parquet(DATA / "instruments" / "instruments.parquet")
+    code_map = _stock_code_map(instruments)
+    raw = pl.concat([pl.read_parquet(path) for path in paths], how="diagonal_relaxed")
+    snapshots = (
+        raw.select([
+            pl.col("股票代码").cast(pl.String).str.extract(r"(\d{6})", 1).str.zfill(6).alias("_code6"),
+            pl.col("交易日期").cast(pl.Date, strict=False).alias("snapshot_date"),
+            pl.col("质押比例").cast(pl.Float64, strict=False).alias("_pledge_ratio"),
+        ])
+        .join(code_map, on="_code6", how="inner")
+        .filter(pl.col("symbol").is_in(symbols) & pl.col("snapshot_date").is_not_null())
+        .sort(["symbol", "snapshot_date"])
+        .with_columns([
+            pl.col("_pledge_ratio").shift(1).over("symbol").alias("_prev_ratio"),
+            (pl.col("snapshot_date") + pl.duration(days=1)).alias("effective_date"),
+        ])
+        .with_columns(
+            pl.when(pl.col("_prev_ratio").is_not_null())
+            .then(pl.col("_pledge_ratio") - pl.col("_prev_ratio"))
+            .otherwise(None)
+            .alias("_pledge_chg")
+        )
+        .unique(subset=["symbol", "effective_date"], keep="last")
+        .sort(["symbol", "effective_date"])
+    )
+    joined = _calendar_frame(dates, symbols).join_asof(
+        snapshots.select([
+            "symbol", "effective_date", "snapshot_date", "_pledge_ratio", "_pledge_chg",
+        ]),
+        left_on="date", right_on="effective_date", by="symbol", strategy="backward",
+        check_sortedness=False,
+    )
+    age = (pl.col("date") - pl.col("snapshot_date")).dt.total_days()
+    return joined.with_columns([
+        pl.when(age.is_between(1, 14, closed="both"))
+        .then(-pl.col("_pledge_ratio"))
+        .otherwise(None)
+        .alias("pledge_ratio_low"),
+        pl.when(age.is_between(1, 14, closed="both"))
+        .then(-pl.col("_pledge_chg"))
+        .otherwise(None)
+        .alias("pledge_ratio_chg_1m_low"),
+    ]).select(["symbol", "date", "pledge_ratio_low", "pledge_ratio_chg_1m_low"])
+
+
+def _event_only_daily(
+    dates: list[date],
+    symbols: list[str],
+    events: pl.DataFrame,
+    *,
+    value_column: str,
+    output_column: str,
+    window: int,
+) -> pl.DataFrame:
+    date_values = [day.toordinal() for day in dates]
+    rows: list[dict] = []
+    for symbol in symbols:
+        part = events.filter(pl.col("symbol") == symbol).sort("date")
+        if part.is_empty():
+            continue
+        score = _decayed_event_score(
+            part["date"].to_list(),
+            part[value_column].fill_null(0.0).to_list(),
+            date_values,
+            window=window,
+        )
+        for index, day in enumerate(dates):
+            if score[index] == 0:
+                continue
+            rows.append({"symbol": symbol, "date": day, output_column: score[index]})
+    return pl.DataFrame(rows, schema={
+        "symbol": pl.String, "date": pl.Date, output_column: pl.Float64,
+    })
+
+
+def _repurchase_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
+    path = DATA / "research" / "external_r39" / "repurchase.parquet"
+    if not path.exists():
+        return pl.DataFrame(schema={
+            "symbol": pl.String, "date": pl.Date, "repurchase_event_60d": pl.Float64,
+        })
+    instruments = pl.read_parquet(DATA / "instruments" / "instruments.parquet")
+    code_map = _stock_code_map(instruments)
+    raw = (
+        pl.read_parquet(path)
+        .select([
+            pl.col("股票代码").cast(pl.String).str.extract(r"(\d{6})", 1).str.zfill(6).alias("_code6"),
+            pl.col("最新公告日期").cast(pl.Date, strict=False).alias("date"),
+        ])
+        .join(code_map, on="_code6", how="inner")
+        .filter(pl.col("symbol").is_in(symbols) & pl.col("date").is_not_null())
+        .group_by(["symbol", "date"]).agg(pl.lit(1.0).alias("_event"))
+        .sort(["symbol", "date"])
+    )
+    return _event_only_daily(
+        dates, symbols, raw, value_column="_event",
+        output_column="repurchase_event_60d", window=60,
+    )
+
+
+def _block_trade_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
+    paths = sorted((DATA / "research" / "external_r39").glob("dzjy_*.parquet"))
+    if not paths:
+        return pl.DataFrame(schema={
+            "symbol": pl.String, "date": pl.Date,
+            "block_trade_ratio_20d_low": pl.Float64,
+            "block_premium_20d": pl.Float64,
+        })
+    instruments = pl.read_parquet(DATA / "instruments" / "instruments.parquet")
+    code_map = _stock_code_map(instruments)
+    raw = pl.concat([pl.read_parquet(path) for path in paths], how="diagonal_relaxed")
+    events = (
+        raw.select([
+            pl.col("证券代码").cast(pl.String).str.extract(r"(\d{6})", 1).str.zfill(6).alias("_code6"),
+            pl.col("交易日期").cast(pl.Date, strict=False).alias("date"),
+            pl.col("成交额").cast(pl.Float64, strict=False).fill_null(0.0),
+            pl.col("折溢率").cast(pl.Float64, strict=False),
+            pl.col("成交额/流通市值").cast(pl.Float64, strict=False),
+        ])
+        .join(code_map, on="_code6", how="inner")
+        .filter(pl.col("symbol").is_in(symbols) & pl.col("date").is_not_null())
+        .group_by(["symbol", "date"]).agg([
+            pl.col("成交额/流通市值").sum().alias("_block_ratio"),
+            (
+                pl.when(pl.col("折溢率").is_not_null())
+                .then(pl.col("成交额") * pl.col("折溢率"))
+                .otherwise(0.0).sum()
+                / pl.when(pl.col("折溢率").is_not_null())
+                .then(pl.col("成交额"))
+                .otherwise(0.0).sum()
+            ).alias("_premium"),
+        ])
+        .sort(["symbol", "date"])
+    )
+    date_values = [day.toordinal() for day in dates]
+    rows: list[dict] = []
+    for symbol in symbols:
+        part = events.filter(pl.col("symbol") == symbol)
+        if part.is_empty():
+            continue
+        event_dates = part["date"].to_list()
+        ratio_score = _decayed_event_score(
+            event_dates, part["_block_ratio"].fill_null(0.0).to_list(), date_values, window=20
+        )
+        premium_score = _decayed_event_score(
+            event_dates, part["_premium"].fill_null(0.0).to_list(), date_values, window=20
+        )
+        for index, day in enumerate(dates):
+            if ratio_score[index] == 0 and premium_score[index] == 0:
+                continue
+            rows.append({
+                "symbol": symbol,
+                "date": day,
+                "block_trade_ratio_20d_low": -ratio_score[index],
+                "block_premium_20d": premium_score[index],
+            })
+    return pl.DataFrame(rows, schema={
+        "symbol": pl.String, "date": pl.Date,
+        "block_trade_ratio_20d_low": pl.Float64,
+        "block_premium_20d": pl.Float64,
+    })
+
+
+def _analyst_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
+    paths = sorted((DATA / "research" / "r47_analyst").glob("*.parquet"))
+    if not paths:
+        return pl.DataFrame(schema={
+            "symbol": pl.String, "date": pl.Date,
+            "analyst_rating_score_20d": pl.Float64,
+            "analyst_rating_change_20d": pl.Float64,
+        })
+    raw = pl.scan_parquet([str(path) for path in paths]).select([
+        pl.col("symbol").cast(pl.String),
+        pl.col("report_date").cast(pl.Date, strict=False).alias("report_date"),
+        pl.col("rating_score").cast(pl.Float64, strict=False),
+        pl.col("rating_change_score").cast(pl.Float64, strict=False),
+    ]).collect()
+    daily = (
+        raw.filter(pl.col("symbol").is_in(symbols) & pl.col("report_date").is_not_null())
+        .group_by(["symbol", "report_date"]).agg([
+            pl.col("rating_score").mean().alias("_rating"),
+            pl.col("rating_change_score").mean().alias("_rating_change"),
+        ])
+        .with_columns((pl.col("report_date") + pl.duration(days=1)).alias("effective_date"))
+        .sort(["symbol", "effective_date"])
+    )
+    calendar = _calendar_frame(dates, symbols)
+    level = calendar.join_asof(
+        daily.select(["symbol", "effective_date", "report_date", "_rating"]),
+        left_on="date", right_on="effective_date", by="symbol", strategy="backward",
+        check_sortedness=False,
+    ).with_columns(
+        pl.when((pl.col("date") - pl.col("report_date")).dt.total_days().is_between(0, 180))
+        .then(pl.col("_rating"))
+        .otherwise(None)
+        .alias("_rating_valid")
+    ).with_columns(
+        pl.col("_rating_valid").rolling_mean(window_size=20, min_samples=1).over("symbol")
+        .alias("analyst_rating_score_20d")
+    )
+    date_values = [day.toordinal() for day in dates]
+    change_rows: list[dict] = []
+    for symbol in symbols:
+        part = daily.filter(pl.col("symbol") == symbol)
+        if part.is_empty():
+            continue
+        score = _decayed_event_score(
+            part["effective_date"].to_list(),
+            part["_rating_change"].fill_null(0.0).to_list(),
+            date_values,
+            window=20,
+        )
+        first_effective = part["effective_date"].min()
+        for index, day in enumerate(dates):
+            if day < first_effective:
+                continue
+            change_rows.append({
+                "symbol": symbol,
+                "date": day,
+                "analyst_rating_change_20d": score[index],
+            })
+    changes = pl.DataFrame(change_rows, schema={
+        "symbol": pl.String, "date": pl.Date, "analyst_rating_change_20d": pl.Float64,
+    })
+    return level.select([
+        "symbol", "date", "analyst_rating_score_20d",
+    ]).join(changes, on=["symbol", "date"], how="left")
+
+
+def _forecast_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
+    paths = sorted((DATA / "research" / "r63_forecast").glob("*.parquet"))
+    if not paths:
+        return pl.DataFrame(schema={
+            "symbol": pl.String, "date": pl.Date, "forecast_surprise_60d": pl.Float64,
+        })
+    instruments = pl.read_parquet(DATA / "instruments" / "instruments.parquet")
+    code_map = _stock_code_map(instruments)
+    raw = pl.concat([pl.read_parquet(path) for path in paths], how="diagonal_relaxed")
+    events = (
+        raw.select([
+            pl.col("股票代码").cast(pl.String).str.extract(r"(\d{6})", 1).str.zfill(6).alias("_code6"),
+            pl.col("公告日期").cast(pl.Date, strict=False).alias("date"),
+            pl.col("预测指标").cast(pl.String),
+            pl.col("业绩变动幅度").cast(pl.Float64, strict=False),
+            pl.col("预告类型").cast(pl.String),
+        ])
+        .join(code_map, on="_code6", how="inner")
+        .filter(
+            pl.col("symbol").is_in(symbols)
+            & pl.col("date").is_not_null()
+            & pl.col("预测指标").str.contains("净利润|归属于")
+        )
+        .with_columns(
+            pl.when(pl.col("业绩变动幅度").is_not_null())
+            .then(pl.col("业绩变动幅度") / 100.0)
+            .when(pl.col("预告类型").is_in(["预增", "略增", "扭亏"]))
+            .then(0.2)
+            .when(pl.col("预告类型").is_in(["预减", "略减", "首亏", "续亏"]))
+            .then(-0.2)
+            .otherwise(0.0)
+            .alias("_surprise")
+        )
+        .group_by(["symbol", "date"]).agg(pl.col("_surprise").max().alias("_surprise"))
+        .sort(["symbol", "date"])
+    )
+    return _event_only_daily(
+        dates, symbols, events, value_column="_surprise",
+        output_column="forecast_surprise_60d", window=60,
+    )
+
+
+def _express_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
+    paths = sorted((DATA / "research" / "r64_express").glob("*.parquet"))
+    if not paths:
+        return pl.DataFrame(schema={
+            "symbol": pl.String, "date": pl.Date, "express_surprise_60d": pl.Float64,
+        })
+    instruments = pl.read_parquet(DATA / "instruments" / "instruments.parquet")
+    code_map = _stock_code_map(instruments)
+    raw = pl.concat([pl.read_parquet(path) for path in paths], how="diagonal_relaxed")
+    events = (
+        raw.select([
+            pl.col("股票代码").cast(pl.String).str.extract(r"(\d{6})", 1).str.zfill(6).alias("_code6"),
+            pl.col("公告日期").cast(pl.Date, strict=False).alias("date"),
+            pl.col("净利润-同比增长").cast(pl.Float64, strict=False).alias("_surprise"),
+        ])
+        .join(code_map, on="_code6", how="inner")
+        .filter(pl.col("symbol").is_in(symbols) & pl.col("date").is_not_null())
+        .with_columns((pl.col("_surprise") / 100.0).alias("_surprise"))
+        .group_by(["symbol", "date"]).agg(pl.col("_surprise").max().alias("_surprise"))
+        .sort(["symbol", "date"])
+    )
+    return _event_only_daily(
+        dates, symbols, events, value_column="_surprise",
+        output_column="express_surprise_60d", window=60,
+    )
+
+
 def _dividend_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
     paths = sorted((DATA / "research" / "r89_dividend_growth").glob("*.parquet"))
     frames = [
@@ -338,21 +780,37 @@ def _dividend_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
     })
 
 
+def _decayed_event_score(
+    event_dates: list[date],
+    event_values: list[float],
+    date_values: list[int],
+    *,
+    window: int,
+) -> list[float]:
+    """公告日后下一交易日生效，并在 ``window`` 个交易日内线性衰减。"""
+    score = [0.0] * len(date_values)
+    for announce, event_value in zip(event_dates, event_values, strict=True):
+        start = bisect.bisect_right(date_values, announce.toordinal())
+        for offset in range(window):
+            index = start + offset
+            if index >= len(date_values):
+                break
+            score[index] += float(event_value) * (1.0 - offset / window)
+    return score
+
+
 def _event_score(
     event_dates: list[date],
     date_values: list[int],
     *,
     window: int = 20,
 ) -> list[float]:
-    score = [0.0] * len(date_values)
-    for announce in event_dates:
-        start = bisect.bisect_right(date_values, announce.toordinal())
-        for offset in range(window):
-            index = start + offset
-            if index >= len(date_values):
-                break
-            score[index] += 1.0 - offset / window
-    return score
+    return _decayed_event_score(
+        event_dates,
+        [1.0] * len(event_dates),
+        date_values,
+        window=window,
+    )
 
 
 def _insider_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
@@ -705,6 +1163,13 @@ def main() -> int:
     holder_trade = _holder_net_buy_daily(dates, symbols)
     instruments = pl.read_parquet(DATA / "instruments" / "instruments.parquet")
     fund_holding = _fund_holding_daily(dates, symbols, instruments)
+    lhb = _lhb_daily(dates, symbols)
+    pledge = _pledge_daily(dates, symbols)
+    repurchase = _repurchase_daily(dates, symbols)
+    block_trade = _block_trade_daily(dates, symbols)
+    analyst = _analyst_daily(dates, symbols)
+    forecast = _forecast_daily(dates, symbols)
+    express = _express_daily(dates, symbols)
     margin = _margin_daily(dates, symbols)
     goodwill = _goodwill_daily(dates, symbols)
     equity_supply = _equity_supply_daily(dates, symbols)
@@ -716,6 +1181,7 @@ def main() -> int:
     base = _calendar_frame(dates, symbols)
     for frame in (
         holder, dividend, insider, holder_trade, fund_holding,
+        lhb, pledge, repurchase, block_trade, analyst, forecast, express,
         margin, goodwill, equity_supply, prices,
     ):
         base = base.join(frame, on=["symbol", "date"], how="left")
@@ -726,7 +1192,15 @@ def main() -> int:
         .then(pl.col("dividend_ttm_cash") / pl.col("raw_close"))
         .otherwise(None)
         .alias("dividend_yield")
-    ).drop("raw_close")
+    ).with_columns([
+        pl.col(name).fill_null(0.0)
+        for name in (
+            "lhb_net_buy_ratio_20d", "lhb_inst_net_buy_ratio_20d",
+            "lhb_event_count_20d_low", "repurchase_event_60d",
+            "block_trade_ratio_20d_low", "block_premium_20d",
+            "forecast_surprise_60d", "express_surprise_60d",
+        )
+    ]).drop("raw_close")
     for field in FIELDS:
         if field.name not in base.columns:
             base = base.with_columns(pl.lit(None, dtype=pl.Float64).alias(field.name))
@@ -739,7 +1213,8 @@ def main() -> int:
         fields=FIELDS,
         description=(
             "研究实验数据: 增持/减持事件、股东结构变化、基金持仓拥挤度、两融、"
-            "商誉与研发、股权融资供给、分红、ERP、信用/期限利差和市场情绪。"
+            "龙虎榜、质押、回购、大宗交易、分析师、业绩预告/快报、商誉与研发、"
+            "股权融资供给、分红、ERP、信用/期限利差和市场情绪。"
             "仅用于实验策略，不构成可部署结论。"
         ),
     )

@@ -6487,3 +6487,153 @@ uv run python ../scripts/build_alt_factor_data.py
 - `evidence/r98b_packaged_neutral_strategies.json`
 - `evidence/r99_macro_gate_historical_parameter_grid.json`
 - `evidence/r99_historical_3x_cost.json`
+
+# R100 · 事件/行为维度因子与策略批量落地 (2026-10-17) — 事前预注册
+
+## 目的
+
+R39/R43/R47/R48/R63/R64/R65/R88 等轮次主要做了事件研究或因子初筛，但其中多数没有形成可被因子库、信号和策略回测共同消费的扩展因子。R100 将这些仍有本地历史缓存的维度统一接入，并用历史沪深300逐日成分做真实策略回测。
+
+本轮不把“事件研究没过”直接等同于“策略一定没用”；也不因为某个事件方向看起来合理就直接采纳。所有结论以项目 `StrategyBacktestService` 的 T+1、成本、滑点和成交约束结果为准。
+
+## 数据与因子
+
+| 维度 | 数据 | 计划因子 | 先验方向 |
+| --- | --- | --- | --- |
+| 龙虎榜净买 | `data/research/r43_lhb/detail_*` | `lhb_net_buy_ratio_20d` | 高好 |
+| 龙虎榜机构净买 | `data/research/r43_lhb/jgmm_*` | `lhb_inst_net_buy_ratio_20d` | 高好 |
+| 龙虎榜事件拥挤 | 同上 | `lhb_event_count_20d_low` | 低好 |
+| 股权质押 | `data/research/r65_pledge/*` | `pledge_ratio_low`, `pledge_ratio_chg_1m_low` | 低好 |
+| 回购计划 | `data/research/external_r39/repurchase.parquet` | `repurchase_event_60d` | 高好 |
+| 大宗交易 | `data/research/external_r39/dzjy_*` | `block_trade_ratio_20d_low`, `block_premium_20d` | 低成交占比/高溢价 |
+| 分析师评级 | `data/research/r47_analyst/*` | `analyst_rating_score_20d`, `analyst_rating_change_20d` | 高好 |
+| 业绩预告 | `data/research/r63_forecast/*` | `forecast_surprise_60d` | 高好 |
+| 业绩快报 | `data/research/r64_express/*` | `express_surprise_60d` | 高好 |
+
+PIT 规则：
+
+- 龙虎榜、回购、大宗交易、分析师、预告、快报均按公告日之后的下一个交易日生效。
+- 质押使用月度快照的下一自然日生效，快照年龄超过 14 天不再使用。
+- 缺失不补 0；不把供应商回填值当成公告日前已知。
+
+## 计划策略
+
+- `ai_hs300_lhb_quality`
+- `ai_hs300_pledge_quality`
+- `ai_hs300_repurchase_quality`
+- `ai_hs300_block_trade_quality`
+- `ai_hs300_analyst_quality`
+- `ai_hs300_earnings_surprise_quality`
+- `ai_hs300_event_combo`
+
+每个策略至少包含一条事件/行为腿，并与质量价值、现金质量或低波动组合；不单独因为事件方向好就忽略质量与风险。
+
+## 回测门槛
+
+1. 使用逐日历史 HS300 成分，不使用当前名单替代。
+2. T 日信号、T+1 开盘成交；2× 成本主口径，3× 成本压力。
+3. 长周期 2021-06-01 至 2026-10-16，10 个起始相位。
+4. 近一年 2025-10-14 起 5 个 fresh-start 相位。
+5. 报告总收益、Sharpe、最大回撤、交易数、相位正收益、近一年正收益。
+6. 对强候选额外做行业中性化和行业+市值中性化。
+7. 同时报告当前名单与历史名单差异，明确幸存者偏差。
+8. 若数据覆盖不足、事件过稀或回测报错，记录数据缺口或负知识，不硬写结论。
+
+## 判定
+
+- 任一策略只有在历史名单、2× 成本、相位和近一年均不明显失效时，才进入下一轮风险归因。
+- 长周期好但近一年全负的，保留为实验腿，不部署。
+- 事件方向与单因子研究相反时，必须保留为负知识并检查是否只是质量/行业/市值暴露。
+
+## R100 落地结果 (2026-10-17)
+
+### 新增因子
+
+已接入扩展数据并进入因子库/信号/策略链路：
+
+- `ext_alt_hs300_lhb_net_buy_ratio_20d`
+- `ext_alt_hs300_lhb_inst_net_buy_ratio_20d`
+- `ext_alt_hs300_lhb_event_count_20d_low`
+- `ext_alt_hs300_pledge_ratio_low`
+- `ext_alt_hs300_pledge_ratio_chg_1m_low`
+- `ext_alt_hs300_repurchase_event_60d`
+- `ext_alt_hs300_block_trade_ratio_20d_low`
+- `ext_alt_hs300_block_premium_20d`
+- `ext_alt_hs300_analyst_rating_score_20d`
+- `ext_alt_hs300_analyst_rating_change_20d`
+- `ext_alt_hs300_forecast_surprise_60d`
+- `ext_alt_hs300_express_surprise_60d`
+
+扩展数据仍由 `scripts/build_alt_factor_data.py` 重建，写入 `data/ext_data/alt_hs300/`，按项目规则不提交。
+
+### 新增策略
+
+- `ai_hs300_lhb_quality`
+- `ai_hs300_pledge_quality`
+- `ai_hs300_pledge_quality_industry_neutral`
+- `ai_hs300_repurchase_quality`
+- `ai_hs300_block_trade_quality`
+- `ai_hs300_block_trade_quality_industry_neutral`
+- `ai_hs300_analyst_quality`
+- `ai_hs300_earnings_surprise_quality`
+- `ai_hs300_event_combo`
+- `ai_hs300_event_combo_industry_neutral`
+
+### 历史名单 2× 成本回测
+
+执行脚本：`scripts/backtest_r100_event_strategies.py`
+证据：`evidence/r100_event_strategy_backtests.json`
+
+| 策略 | 当前名单 p10 | 历史名单 p10 | 历史+行业中性 p10 | 历史+行业+市值中性 p10 |
+| --- | ---: | ---: | ---: | ---: |
+| 龙虎榜质量 | +171.05% / 0.78 | +27.62% / 0.31 | +21.42% / 0.28 | +44.43% / 0.40 |
+| 低质押质量 | -1.20% / 0.09 | -8.95% / -0.02 | -17.17% / -0.13 | +17.99% / 0.27 |
+| 回购质量 | +24.62% / 0.31 | -16.31% / -0.07 | -2.63% / 0.07 | -13.02% / -0.05 |
+| 大宗交易质量 | +5.45% / 0.14 | -1.79% / 0.05 | +60.56% / 0.68 | +1.02% / 0.09 |
+| 分析师质量 | +36.49% / 0.37 | -2.00% / 0.10 | -9.28% / 0.01 | -22.12% / -0.14 |
+| 业绩预期差质量 | +118.06% / 0.70 | +36.41% / 0.37 | +36.09% / 0.38 | +3.09% / 0.13 |
+| 事件行为组合 | +104.29% / 0.70 | +30.67% / 0.34 | +53.25% / 0.50 | +12.50% / 0.21 |
+
+表中为“总收益 / Sharpe”。
+
+### 10 相位与近一年
+
+| 策略(历史名单默认) | 10 相位均值 | 正收益相位 | 近一年均值 | 近一年正收益 |
+| --- | ---: | ---: | ---: | ---: |
+| 龙虎榜质量 | +17.42% | **9/10** | -8.46% | 1/5 |
+| 低质押质量 | -7.38% | 2/10 | -3.71% | 1/5 |
+| 低质押质量(行业中性) | +16.99% | **9/10** | +2.28% | 3/5 |
+| 回购质量 | +7.81% | 6/10 | -16.51% | 0/5 |
+| 大宗交易质量 | +14.42% | 5/10 | +1.97% | 3/5 |
+| 大宗交易质量(行业中性) | +48.47% | **9/10** | -1.16% | 2/5 |
+| 分析师质量 | +26.66% | 8/10 | -0.39% | 3/5 |
+| 业绩预期差质量 | +34.03% | **9/10** | -7.14% | 1/5 |
+| 事件行为组合 | +16.88% | 8/10 | -7.84% | 1/5 |
+| 事件行为组合(行业中性) | +33.07% | **9/10** | -6.00% | 1/5 |
+
+### 3× 成本复核
+
+证据：`evidence/r100b_neutral_3x_cost.json`
+
+| 策略(历史名单) | 全周期收益 | Sharpe | 最大回撤 | 10 相位正收益 | 近一年均值 | 近一年正收益 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 低质押质量(行业中性) | -20.73% | -0.18 | -36.37% | 8/10 | +1.78% | 3/5 |
+| 大宗交易质量(行业中性) | +54.09% | 0.62 | -22.37% | **9/10** | -2.45% | 2/5 |
+| 事件行为组合(行业中性) | +40.38% | 0.42 | -25.91% | **9/10** | -6.88% | 1/5 |
+
+### R100 判定
+
+- 龙虎榜、业绩预期差和事件组合在当前名单下看起来很强，但历史名单下大幅缩水，幸存者偏差明显。
+- 龙虎榜和业绩预期差长周期相位稳定，但近一年分别只有 1/5 正收益，不能部署。
+- 低质押质量默认版本在历史名单和 3× 成本下都为负；行业中性版近一年转正，但全周期仍为负，只能保留实验。
+- 大宗交易行业中性版在 3× 成本下全周期 +54.09%、9/10 相位正收益，但近一年只有 2/5 正收益，且行业+市值中性后收益几乎消失，说明仍有明显市值/行业暴露。
+- 事件行为组合行业中性版 3× 成本下全周期 +40.38%、9/10 相位正收益，但近一年仅 1/5 正收益，不能部署。
+- 本批新增的 12 个因子和 10 个策略已进入因子库/策略库；生产状态继续 `pause_production`。
+
+### R100 证据与脚本
+
+- `scripts/build_alt_factor_data.py`
+- `scripts/backtest_r100_event_strategies.py`
+- `scripts/backtest_r100b_neutral_cost.py`
+- `evidence/r100_event_strategy_backtests.json`
+- `evidence/r100b_neutral_3x_cost.json`
