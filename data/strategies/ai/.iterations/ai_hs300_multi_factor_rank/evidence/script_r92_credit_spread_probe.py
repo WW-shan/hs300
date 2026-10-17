@@ -52,7 +52,7 @@ def _ensure_cache() -> tuple[pl.DataFrame, dict]:
         "failures": failures,
         "failure_rate": round(len(failures) / (END.year - START.year + 1), 6),
         "rows": raw.height,
-        "curves": raw["曲线名称"].unique().to_list() if raw.height else [],
+        "curves": sorted(raw["曲线名称"].unique().to_list()) if raw.height else [],
         "date_min": str(raw["日期"].min()) if raw.height else None,
         "date_max": str(raw["日期"].max()) if raw.height else None,
     }
