@@ -236,3 +236,45 @@ def test_r105_unreferenced_family_strategies_load() -> None:
         assert factor in strategy.meta["scoring"]
         assert strategy.max_hold_days == 20
         assert strategy.stop_loss == -0.20
+
+
+def test_r106_fundamental_factors_are_declared() -> None:
+    expected = {
+        "cf_fundamental_growth_quality": {
+            "roe_latest": 0.15,
+            "gross_margin_latest": 0.10,
+            "net_margin_latest": 0.10,
+            "revenue_yoy_latest": 0.15,
+            "net_income_yoy_latest": 0.15,
+            "debt_ratio_latest": -0.10,
+            "ocf_ni": 0.15,
+            "accrual": -0.10,
+        },
+        "cf_fundamental_safety_cash": {
+            "debt_ratio_latest": -0.25,
+            "ocf_debt": 0.25,
+            "ocf_ni": 0.20,
+            "accrual": -0.15,
+            "gross_margin_latest": 0.15,
+        },
+    }
+    for factor_id, members in expected.items():
+        definition = json.loads((CUSTOM_FACTOR_DIR / f"{factor_id}.json").read_text())
+        assert definition["id"] == factor_id
+        assert definition["kind"] == "composite"
+        assert definition["members"] == members
+
+
+def test_r106_fundamental_strategies_load() -> None:
+    engine = StrategyEngine(strategy_dirs=[AI_DIR])
+    expected = {
+        "ai_hs300_fundamental_growth_quality": "cf_fundamental_growth_quality",
+        "ai_hs300_fundamental_safety_cash": "cf_fundamental_safety_cash",
+        "ai_hs300_fundamental_growth_safety_combo": "cf_fundamental_growth_quality",
+    }
+    for strategy_id, factor in expected.items():
+        strategy = engine.get(strategy_id)
+        assert strategy is not None
+        assert factor in strategy.meta["scoring"]
+        assert strategy.max_hold_days == 35
+        assert strategy.stop_loss is None
