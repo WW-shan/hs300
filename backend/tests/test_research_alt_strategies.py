@@ -189,3 +189,50 @@ def test_r104_stock_sentiment_strategies_load() -> None:
         assert factor in strategy.meta["scoring"]
         assert strategy.max_hold_days == 20
         assert strategy.stop_loss == -0.20
+
+
+def test_r105_unreferenced_family_factors_are_declared() -> None:
+    expected = {
+        "cf_trend_confirmation": {
+            "ma20_bias": 0.20,
+            "ma60_bias": 0.20,
+            "macd_hist_pct": 0.20,
+            "kdj_kd_diff": 0.15,
+            "distance_to_high_60d": 0.15,
+            "vol_trend_5_60": 0.10,
+        },
+        "cf_price_position": {
+            "position_240d": 0.25,
+            "distance_to_high_240d": 0.25,
+            "distance_from_low_60d": 0.15,
+            "boll_position": 0.20,
+            "vwap_bias": 0.15,
+        },
+        "cf_liquidity_structure": {
+            "amount_mean_20d": -0.25,
+            "turnover_mean_20d": -0.20,
+            "turnover_std_20d": -0.20,
+            "amihud_20d": 0.20,
+            "log_amount": -0.15,
+        },
+    }
+    for factor_id, members in expected.items():
+        definition = json.loads((CUSTOM_FACTOR_DIR / f"{factor_id}.json").read_text())
+        assert definition["id"] == factor_id
+        assert definition["kind"] == "composite"
+        assert definition["members"] == members
+
+
+def test_r105_unreferenced_family_strategies_load() -> None:
+    engine = StrategyEngine(strategy_dirs=[AI_DIR])
+    expected = {
+        "ai_hs300_trend_confirmation_quality": "cf_trend_confirmation",
+        "ai_hs300_price_position_quality": "cf_price_position",
+        "ai_hs300_liquidity_structure_quality": "cf_liquidity_structure",
+    }
+    for strategy_id, factor in expected.items():
+        strategy = engine.get(strategy_id)
+        assert strategy is not None
+        assert factor in strategy.meta["scoring"]
+        assert strategy.max_hold_days == 20
+        assert strategy.stop_loss == -0.20
