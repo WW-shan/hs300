@@ -300,9 +300,23 @@ def load_combined_prices(symbols: list[str]) -> tuple[pl.DataFrame, dict]:
     return combined, audit
 
 
+def _link_engine_dirs() -> None:
+    for name in (
+        "instruments", "financials", "kline_daily", "kline_index_daily",
+        "kline_index_enriched", "kline_etf_daily", "kline_etf_enriched",
+        "instruments_etf", "instruments_index", "adj_factor", "adj_factor_etf",
+        "regime_history", "mainline_history", "ext_data",
+    ):
+        source = DATA / name
+        destination = ENGINE_DATA / name
+        if source.exists() and not destination.exists():
+            destination.symlink_to(source, target_is_directory=True)
+
+
 def build_engine_data(combined: pl.DataFrame) -> dict:
     """写研究专用 enriched 分区 + 维表软链, 让生产回测引擎读取同一份历史面板。"""
     RUN_CACHE.mkdir(parents=True, exist_ok=True)
+    _link_engine_dirs()
     manifest_path = ENGINE_DATA / "manifest.json"
     signature = {
         "rows": combined.height,
@@ -332,16 +346,7 @@ def build_engine_data(combined: pl.DataFrame) -> dict:
         out_dir = target / f"date={day.isoformat()}"
         out_dir.mkdir(parents=True, exist_ok=True)
         group.write_parquet(out_dir / "part.parquet")
-    for name in (
-        "instruments", "financials", "kline_daily", "kline_index_daily",
-        "kline_index_enriched", "kline_etf_daily", "kline_etf_enriched",
-        "instruments_etf", "instruments_index", "adj_factor", "adj_factor_etf",
-        "regime_history", "mainline_history",
-    ):
-        source = DATA / name
-        destination = ENGINE_DATA / name
-        if source.exists() and not destination.exists():
-            destination.symlink_to(source, target_is_directory=True)
+    _link_engine_dirs()
     manifest = {"signature": signature, "engine_data": str(ENGINE_DATA)}
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=1), encoding="utf-8")
     return {"reused": False, **signature}
