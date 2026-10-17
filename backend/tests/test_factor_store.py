@@ -155,6 +155,22 @@ def test_scoring_bridge_composite_materializes_custom_members(cleanup_registry) 
     assert abs(values.mean()) < 1e-9
 
 
+def test_scoring_bridge_composite_materializes_virtual_members(cleanup_registry) -> None:
+    """复合因子引用虚拟因子时，虚拟成员必须先物化成列。"""
+    store.register_definition({
+        "id": "cf_virtual_member_combo", "kind": "composite", "version": 1,
+        "label": "虚拟成员复合",
+        "members": {"amount_ratio_5d": 0.6, "close": 0.4}, "status": "active",
+    })
+    cleanup_registry.add("cf_virtual_member_combo")
+
+    frame = scoring.materialize_scoring_columns(_panel(), {"cf_virtual_member_combo"})
+
+    assert "cf_virtual_member_combo" in frame.columns
+    values = frame.filter(pl.col("date") == date(2026, 1, 30))["cf_virtual_member_combo"]
+    assert values.is_not_null().all()
+
+
 def test_scoring_bridge_custom_materializes(cleanup_registry) -> None:
     """自定义 DSL 因子经 materialize_scoring_columns 物化 (与检验共用路径)。"""
     store.register_definition({

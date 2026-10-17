@@ -141,3 +141,51 @@ def test_r103_breadth_gate_strategy_loads() -> None:
     assert strategy is not None
     assert strategy.max_hold_days == 20
     assert strategy.stop_loss == -0.20
+
+
+def test_r104_stock_sentiment_factors_are_declared() -> None:
+    expected = {
+        "cf_reversal_sentiment": {
+            "momentum_5d": -0.30,
+            "momentum_10d": -0.15,
+            "rsi_14_delta_5d": -0.15,
+            "close_position": 0.20,
+            "turnover_z_60d": -0.10,
+            "max_ret_20d": -0.10,
+        },
+        "cf_volume_price_structure": {
+            "vol_price_corr_20d": 0.25,
+            "obv_trend_20d": 0.25,
+            "amount_ratio_5d": 0.15,
+            "vol_trend_5_10": 0.15,
+            "close_position": 0.20,
+        },
+        "cf_tail_risk_low": {
+            "downside_vol_20d": -0.30,
+            "annual_vol_20d": -0.25,
+            "ret_skew_20d": 0.20,
+            "max_ret_20d": -0.15,
+            "vol_regime_5_60": -0.10,
+        },
+    }
+    for factor_id, members in expected.items():
+        definition = json.loads((CUSTOM_FACTOR_DIR / f"{factor_id}.json").read_text())
+        assert definition["id"] == factor_id
+        assert definition["kind"] == "composite"
+        assert definition["members"] == members
+
+
+def test_r104_stock_sentiment_strategies_load() -> None:
+    engine = StrategyEngine(strategy_dirs=[AI_DIR])
+    expected = {
+        "ai_hs300_reversal_sentiment_quality": "cf_reversal_sentiment",
+        "ai_hs300_volume_price_quality": "cf_volume_price_structure",
+        "ai_hs300_tail_risk_quality": "cf_tail_risk_low",
+        "ai_hs300_sentiment_tail_combo": "cf_reversal_sentiment",
+    }
+    for strategy_id, factor in expected.items():
+        strategy = engine.get(strategy_id)
+        assert strategy is not None
+        assert factor in strategy.meta["scoring"]
+        assert strategy.max_hold_days == 20
+        assert strategy.stop_loss == -0.20

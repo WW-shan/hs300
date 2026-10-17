@@ -464,15 +464,20 @@ def materialize_scoring_columns(
 
     for name in ordered:
         spec = _registry_get_factor(str(name))
-        if spec is None or spec.kind != "custom" or name in frame.columns:
+        if spec is None or name in frame.columns or spec.kind == "composite":
             continue
-        compiled = compile_formula_cached(spec.formula_text)
-        if compiled.frame_transform is None:
-            continue
-        transformed = compiled.frame_transform(frame)
-        if transformed is None:
-            continue
-        frame = transformed.with_columns(pl.col(FACTOR_COLUMN).alias(str(name))).drop(FACTOR_COLUMN)
+        if spec.kind == "custom":
+            compiled = compile_formula_cached(spec.formula_text)
+            if compiled.frame_transform is None:
+                continue
+            transformed = compiled.frame_transform(frame)
+            if transformed is None:
+                continue
+            frame = transformed.with_columns(pl.col(FACTOR_COLUMN).alias(str(name))).drop(FACTOR_COLUMN)
+        elif spec.kind == "virtual":
+            expression = scoring_value_expr(frame.columns, str(name))
+            if expression is not None:
+                frame = frame.with_columns(expression.alias(str(name)))
     expressions = [
         expression.alias(name)
         for name in names
