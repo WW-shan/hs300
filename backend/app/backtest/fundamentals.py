@@ -261,6 +261,7 @@ def _derive_ttm_factors(snapshot: pl.DataFrame) -> pl.DataFrame:
         pl.col("_q_ocf").rolling_sum(window_size=4, min_samples=4).over("symbol").alias("_ttm_ocf"),
     ])
     return enriched.with_columns([
+        (pl.col("_ttm_net_income").is_not_null() & pl.col("_ttm_ocf").is_not_null()).alias("_ttm_complete"),
         pl.when(pl.col("_ttm_net_income") > 0)
         .then(pl.col("_ttm_ocf") / pl.col("_ttm_net_income"))
         .otherwise(None)
@@ -334,7 +335,7 @@ def load_fundamental_snapshot(data_dir: Path | None) -> pl.DataFrame | None:
         "_announce", "_announce_metrics", "_announce_balance", "_announce_cash",
         "_announce_debt_ratio", "_announce_ocf_ni", "_announce_accrual", "_announce_ocf_debt",
         *sorted({spec["column"] for spec in BASE_FUNDAMENTAL_FACTORS.values()}),
-        "ocf_ni", "accrual", "ocf_debt",
+        "ocf_ni", "accrual", "ocf_debt", "_ttm_complete",
     ]
     return snapshot.select(keep).sort(["symbol", "period_end"])
 

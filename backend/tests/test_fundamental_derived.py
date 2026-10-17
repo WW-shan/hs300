@@ -134,12 +134,14 @@ def test_snapshot_computes_ttm_factors_and_per_factor_announce_dates(tmp_path: P
     assert row["_announce_accrual"] == date(2025, 5, 3)
     assert row["_announce_ocf_debt"] == date(2025, 4, 15)
     assert row["_announce_debt_ratio"] == date(2025, 4, 15)
+    assert row["_ttm_complete"] is True
 
     # 前三季 TTM 不足 4 季: null
     early = snapshot.filter(pl.col("period_end") == date(2024, 9, 30)).row(0, named=True)
     assert early["ocf_ni"] is None
     assert early["accrual"] is None
     assert early["ocf_debt"] is None
+    assert early["_ttm_complete"] is False
 
 
 def test_attach_uses_each_factor_own_pit_date(tmp_path: Path):
@@ -218,6 +220,7 @@ def test_denominator_guards_and_quarter_gap(tmp_path: Path):
     assert q4["ocf_ni"] is None
     assert q4["accrual"] is None
     assert q4["ocf_debt"] is None
+    assert q4["_ttm_complete"] is False
 
 
 def test_matrix_matches_panel_for_derived_factors(tmp_path: Path):
