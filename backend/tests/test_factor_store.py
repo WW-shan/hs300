@@ -134,6 +134,27 @@ def test_scoring_bridge_composite(cleanup_registry) -> None:
     assert abs(values.mean()) < 1e-9
 
 
+def test_scoring_bridge_composite_materializes_custom_members(cleanup_registry) -> None:
+    """复合因子引用自定义因子时，成员必须先物化，不能静默丢掉复合腿。"""
+    store.register_definition({
+        "id": "uf_rank_close_combo_member", "kind": "custom", "version": 1,
+        "label": "复合成员价格排名", "formula": "rank(close)", "status": "active",
+    })
+    store.register_definition({
+        "id": "cf_custom_member_combo", "kind": "composite", "version": 1,
+        "label": "自定义成员复合",
+        "members": {"uf_rank_close_combo_member": 0.6, "close": 0.4}, "status": "active",
+    })
+    cleanup_registry.update({"uf_rank_close_combo_member", "cf_custom_member_combo"})
+
+    frame = scoring.materialize_scoring_columns(_panel(), {"cf_custom_member_combo"})
+
+    assert "cf_custom_member_combo" in frame.columns
+    values = frame.filter(pl.col("date") == date(2026, 1, 10))["cf_custom_member_combo"]
+    assert values.is_not_null().all()
+    assert abs(values.mean()) < 1e-9
+
+
 def test_scoring_bridge_custom_materializes(cleanup_registry) -> None:
     """自定义 DSL 因子经 materialize_scoring_columns 物化 (与检验共用路径)。"""
     store.register_definition({
@@ -159,6 +180,37 @@ def test_load_into_registry_isolated_failure(tmp_path, cleanup_registry) -> None
     loaded = store.load_into_registry(tmp_path)
     assert loaded == ["uf_good"]
     cleanup_registry.add("uf_good")
+
+
+def test_load_into_registry_syncs_ext_factors_before_composites(
+    tmp_path, cleanup_registry
+) -> None:
+    """复合因子引用扩展列时，启动加载必须先同步扩展因子注册表。"""
+    config_dir = tmp_path / "ext_data" / "demo"
+    config_dir.mkdir(parents=True)
+    (config_dir / "config.json").write_text(
+        """
+        {
+          "id": "demo",
+          "label": "演示扩展",
+          "mode": "timeseries",
+          "fields": [{"name": "signal", "dtype": "float", "label": "演示信号"}]
+        }
+        """,
+        encoding="utf-8",
+    )
+    store.save_one(tmp_path, {
+        "id": "cf_ext_demo", "kind": "composite", "version": 1,
+        "label": "扩展复合因子",
+        "members": {"ext_demo_signal": 0.6, "close": 0.4}, "status": "draft",
+    })
+
+    loaded = store.load_into_registry(tmp_path)
+    cleanup_registry.update({"ext_demo_signal", "cf_ext_demo"})
+
+    assert "cf_ext_demo" in loaded
+    assert get_factor("ext_demo_signal") is not None
+    assert get_factor("cf_ext_demo") is not None
 
 
 def test_unregister_builtin_rejected() -> None:

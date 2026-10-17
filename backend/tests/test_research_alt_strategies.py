@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from app.strategy.engine import StrategyEngine
 
 AI_DIR = Path(__file__).resolve().parents[2] / "data" / "strategies" / "ai"
+CUSTOM_FACTOR_DIR = Path(__file__).resolve().parents[2] / "data" / "user_data" / "custom_factors"
 
 
 def test_r98_research_strategies_load_with_expected_neutralization() -> None:
@@ -65,3 +67,69 @@ def test_r101_industry_market_strategies_load() -> None:
         strategy = engine.get(strategy_id)
         assert strategy is not None
         assert factor in strategy.meta["scoring"]
+
+
+def test_r102_composite_factors_are_declared() -> None:
+    expected = {
+        "cf_industry_cash_quality": {
+            "ext_alt_hs300_stock_rel_industry_20d": 0.40,
+            "uf_quality_value_defensive": 0.30,
+            "uf_cash_quality": 0.30,
+        },
+        "cf_industry_lowrisk_quality": {
+            "ext_alt_hs300_stock_rel_industry_20d": 0.45,
+            "uf_low_vol": 0.25,
+            "uf_quality_value_defensive": 0.30,
+        },
+        "cf_industry_fund_reduction": {
+            "ext_alt_hs300_stock_rel_industry_20d": 0.35,
+            "ext_alt_hs300_fund_count_chg_qoq_low": 0.20,
+            "ext_alt_hs300_fund_holding_ratio_chg_qoq_low": 0.20,
+            "uf_cash_quality": 0.15,
+            "uf_quality_value_defensive": 0.10,
+        },
+    }
+    for factor_id, members in expected.items():
+        definition = json.loads((CUSTOM_FACTOR_DIR / f"{factor_id}.json").read_text())
+        assert definition["id"] == factor_id
+        assert definition["kind"] == "composite"
+        assert definition["members"] == members
+
+
+def test_r102_composite_strategies_load() -> None:
+    engine = StrategyEngine(strategy_dirs=[AI_DIR])
+    expected = {
+        "ai_hs300_industry_cash_quality": "cf_industry_cash_quality",
+        "ai_hs300_industry_cash_quality_industry_neutral": "cf_industry_cash_quality",
+        "ai_hs300_industry_cash_macro_gate": "cf_industry_cash_quality",
+        "ai_hs300_industry_cash_breadth_gate": "cf_industry_lowrisk_quality",
+        "ai_hs300_industry_fund_reduction_combo": "cf_industry_fund_reduction",
+    }
+    for strategy_id, factor in expected.items():
+        strategy = engine.get(strategy_id)
+        assert strategy is not None
+        assert factor in strategy.meta["scoring"]
+    neutral = engine.get("ai_hs300_industry_cash_quality_industry_neutral")
+    assert neutral is not None
+    assert neutral.meta["neutralize"] == {"industry": "industry_l1", "shrink": 0.5}
+
+
+def test_r102c_optimized_hold_strategy_loads() -> None:
+    engine = StrategyEngine(strategy_dirs=[AI_DIR])
+    strategy = engine.get("ai_hs300_industry_relative_strength_quality_h20")
+    assert strategy is not None
+    assert strategy.max_hold_days == 20
+    assert strategy.meta["scoring"] == {
+        "ext_alt_hs300_stock_rel_industry_20d": 0.35,
+        "ext_alt_hs300_industry_mom_20d": 0.15,
+        "uf_quality_value_defensive": 0.30,
+        "uf_cash_quality": 0.20,
+    }
+
+
+def test_r102d_stop_loss_strategy_loads() -> None:
+    engine = StrategyEngine(strategy_dirs=[AI_DIR])
+    strategy = engine.get("ai_hs300_industry_relative_strength_quality_h20_sl20")
+    assert strategy is not None
+    assert strategy.max_hold_days == 20
+    assert strategy.stop_loss == -0.20

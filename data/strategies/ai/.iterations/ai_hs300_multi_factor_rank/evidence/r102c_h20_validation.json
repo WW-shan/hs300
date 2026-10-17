@@ -1,0 +1,2546 @@
+{
+  "purpose": "R102c 20-day holding variant full validation",
+  "strategy_id": "ai_hs300_industry_relative_strength_quality_h20",
+  "universe": "daily historical HS300 membership",
+  "max_positions": 10,
+  "periods": {
+    "full": [
+      "2021-06-01",
+      "2026-10-16"
+    ],
+    "phase_starts": [
+      "2021-06-01",
+      "2022-01-04",
+      "2022-07-01",
+      "2023-01-03",
+      "2023-07-03",
+      "2024-01-02",
+      "2024-07-01",
+      "2025-01-02",
+      "2025-07-01",
+      "2026-01-05"
+    ],
+    "recent_starts": [
+      "2025-10-14",
+      "2025-12-15",
+      "2026-02-13",
+      "2026-04-15",
+      "2026-06-15"
+    ]
+  },
+  "cost2x": {
+    "full": {
+      "start": "2021-06-01",
+      "end": "2026-10-16",
+      "cost_multiplier": 2.0,
+      "error": null,
+      "elapsed_seconds": 6.135,
+      "stats": {
+        "total_return": 0.6041,
+        "annual_return": 0.0958,
+        "max_drawdown": -0.5059,
+        "sharpe": 0.46,
+        "sortino": 0.7,
+        "calmar": 0.19,
+        "win_rate": 0.4615,
+        "profit_factor": 1.42,
+        "n_trades": 650,
+        "avg_pnl": 0.0102,
+        "avg_win": 0.1252,
+        "avg_loss": 0.0883,
+        "best": 1.3153,
+        "worst": -0.3599,
+        "median_pnl": -0.01,
+        "avg_holding_days": 20.0,
+        "final_equity": 1604120.34,
+        "initial_capital": 1000000.0,
+        "avg_exposure": 0.9557,
+        "max_exposure": 0.9905,
+        "mc_maxdd_p50": -0.9776,
+        "mc_maxdd_p95": -0.9996,
+        "execution": {
+          "buy_invalid_price": 0,
+          "buy_suspended": 0,
+          "buy_limit_up": 44,
+          "buy_no_slot": 273750,
+          "buy_cash": 0,
+          "buy_lot_size": 0,
+          "buy_same_day_reentry": 637,
+          "buy_exposure": 0,
+          "buy_score_filter": 0,
+          "sell_invalid_price": 0,
+          "sell_suspended": 4,
+          "sell_limit_down": 0,
+          "pending_exit": 1
+        },
+        "pending_exit_positions": 0,
+        "market_matrix_shape": [
+          1302,
+          450
+        ],
+        "market_matrix_bytes": 26381124,
+        "timing_ms": {
+          "load_panel": 4357.5,
+          "signals_score": 380.9,
+          "matrix_build": 295.3,
+          "simulate": 879.9,
+          "statistics": 8.4,
+          "total": 5969.1
+        },
+        "panel_rows": 382035,
+        "panel_columns": 11,
+        "feature_columns": 90,
+        "full_feature_fallback": false,
+        "execution_backend": "polars_expr",
+        "selection": {
+          "strategy_matches": 303980,
+          "entry_candidates": 303980,
+          "entry_trigger_filtered": 0,
+          "entry_trigger_enabled": false
+        },
+        "shared_market_data": false,
+        "matrix_data_cache_hit": false,
+        "matrix_data_cache_status": "none",
+        "matrix_data_cache_timing_ms": {}
+      },
+      "factor_attribution": {
+        "factors": [
+          {
+            "factor": "ext_alt_hs300_stock_rel_industry_20d",
+            "win_mean": 0.129128,
+            "lose_mean": 0.128744,
+            "win_n": 300,
+            "lose_n": 350
+          },
+          {
+            "factor": "ext_alt_hs300_industry_mom_20d",
+            "win_mean": 0.070699,
+            "lose_mean": 0.056709,
+            "win_n": 300,
+            "lose_n": 350
+          },
+          {
+            "factor": "uf_quality_value_defensive",
+            "win_mean": -0.238854,
+            "lose_mean": -0.254317,
+            "win_n": 300,
+            "lose_n": 350
+          },
+          {
+            "factor": "uf_cash_quality",
+            "win_mean": 2.910543,
+            "lose_mean": 2.776739,
+            "win_n": 247,
+            "lose_n": 283
+          }
+        ],
+        "n_win": 300,
+        "n_lose": 350
+      }
+    },
+    "phase_results": [
+      {
+        "start": "2021-06-01",
+        "end": "2026-10-16",
+        "cost_multiplier": 2.0,
+        "error": null,
+        "elapsed_seconds": 2.064,
+        "stats": {
+          "total_return": 0.6041,
+          "annual_return": 0.0958,
+          "max_drawdown": -0.5059,
+          "sharpe": 0.46,
+          "sortino": 0.7,
+          "calmar": 0.19,
+          "win_rate": 0.4615,
+          "profit_factor": 1.42,
+          "n_trades": 650,
+          "avg_pnl": 0.0102,
+          "avg_win": 0.1252,
+          "avg_loss": 0.0883,
+          "best": 1.3153,
+          "worst": -0.3599,
+          "median_pnl": -0.01,
+          "avg_holding_days": 20.0,
+          "final_equity": 1604120.34,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9557,
+          "max_exposure": 0.9905,
+          "mc_maxdd_p50": -0.9776,
+          "mc_maxdd_p95": -0.9996,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 44,
+            "buy_no_slot": 273750,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 637,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 4,
+            "sell_limit_down": 0,
+            "pending_exit": 1
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            1302,
+            450
+          ],
+          "market_matrix_bytes": 26381124,
+          "timing_ms": {
+            "load_panel": 431.9,
+            "signals_score": 319.2,
+            "matrix_build": 288.1,
+            "simulate": 848.2,
+            "statistics": 7.5,
+            "total": 1917.0
+          },
+          "panel_rows": 382035,
+          "panel_columns": 11,
+          "feature_columns": 90,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 303980,
+            "entry_candidates": 303980,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_stock_rel_industry_20d",
+              "win_mean": 0.129128,
+              "lose_mean": 0.128744,
+              "win_n": 300,
+              "lose_n": 350
+            },
+            {
+              "factor": "ext_alt_hs300_industry_mom_20d",
+              "win_mean": 0.070699,
+              "lose_mean": 0.056709,
+              "win_n": 300,
+              "lose_n": 350
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.238854,
+              "lose_mean": -0.254317,
+              "win_n": 300,
+              "lose_n": 350
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 2.910543,
+              "lose_mean": 2.776739,
+              "win_n": 247,
+              "lose_n": 283
+            }
+          ],
+          "n_win": 300,
+          "n_lose": 350
+        }
+      },
+      {
+        "start": "2022-01-04",
+        "end": "2026-10-16",
+        "cost_multiplier": 2.0,
+        "error": null,
+        "elapsed_seconds": 2.052,
+        "stats": {
+          "total_return": 0.4736,
+          "annual_return": 0.0882,
+          "max_drawdown": -0.4451,
+          "sharpe": 0.43,
+          "sortino": 0.65,
+          "calmar": 0.2,
+          "win_rate": 0.4759,
+          "profit_factor": 1.35,
+          "n_trades": 580,
+          "avg_pnl": 0.0113,
+          "avg_win": 0.1283,
+          "avg_loss": 0.095,
+          "best": 0.7976,
+          "worst": -0.4777,
+          "median_pnl": -0.0071,
+          "avg_holding_days": 19.9,
+          "final_equity": 1473608.9,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9621,
+          "max_exposure": 0.9929,
+          "mc_maxdd_p50": -0.9845,
+          "mc_maxdd_p95": -0.9998,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 41,
+            "buy_no_slot": 250598,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 567,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 0,
+            "sell_limit_down": 0,
+            "pending_exit": 0
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            1156,
+            450
+          ],
+          "market_matrix_bytes": 23422872,
+          "timing_ms": {
+            "load_panel": 613.1,
+            "signals_score": 260.5,
+            "matrix_build": 253.2,
+            "simulate": 790.1,
+            "statistics": 6.2,
+            "total": 1943.8
+          },
+          "panel_rows": 341456,
+          "panel_columns": 11,
+          "feature_columns": 90,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 275927,
+            "entry_candidates": 275927,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_stock_rel_industry_20d",
+              "win_mean": 0.114994,
+              "lose_mean": 0.119148,
+              "win_n": 276,
+              "lose_n": 304
+            },
+            {
+              "factor": "ext_alt_hs300_industry_mom_20d",
+              "win_mean": 0.063779,
+              "lose_mean": 0.056816,
+              "win_n": 276,
+              "lose_n": 304
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.242687,
+              "lose_mean": -0.247423,
+              "win_n": 276,
+              "lose_n": 304
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 2.165555,
+              "lose_mean": 2.898158,
+              "win_n": 266,
+              "lose_n": 274
+            }
+          ],
+          "n_win": 276,
+          "n_lose": 304
+        }
+      },
+      {
+        "start": "2022-07-01",
+        "end": "2026-10-16",
+        "cost_multiplier": 2.0,
+        "error": null,
+        "elapsed_seconds": 2.007,
+        "stats": {
+          "total_return": 0.7533,
+          "annual_return": 0.1459,
+          "max_drawdown": -0.3289,
+          "sharpe": 0.62,
+          "sortino": 0.94,
+          "calmar": 0.44,
+          "win_rate": 0.4442,
+          "profit_factor": 1.66,
+          "n_trades": 520,
+          "avg_pnl": 0.0144,
+          "avg_win": 0.1306,
+          "avg_loss": 0.0784,
+          "best": 0.8318,
+          "worst": -0.4137,
+          "median_pnl": -0.0076,
+          "avg_holding_days": 19.9,
+          "final_equity": 1753268.22,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9643,
+          "max_exposure": 0.9917,
+          "mc_maxdd_p50": -0.9213,
+          "mc_maxdd_p95": -0.9938,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 37,
+            "buy_no_slot": 227328,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 509,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 1,
+            "sell_limit_down": 0,
+            "pending_exit": 1
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            1039,
+            450
+          ],
+          "market_matrix_bytes": 21052218,
+          "timing_ms": {
+            "load_panel": 584.4,
+            "signals_score": 291.8,
+            "matrix_build": 224.2,
+            "simulate": 740.5,
+            "statistics": 5.4,
+            "total": 1864.7
+          },
+          "panel_rows": 308216,
+          "panel_columns": 11,
+          "feature_columns": 90,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 252549,
+            "entry_candidates": 252549,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_stock_rel_industry_20d",
+              "win_mean": 0.129025,
+              "lose_mean": 0.13105,
+              "win_n": 231,
+              "lose_n": 289
+            },
+            {
+              "factor": "ext_alt_hs300_industry_mom_20d",
+              "win_mean": 0.062616,
+              "lose_mean": 0.062772,
+              "win_n": 231,
+              "lose_n": 289
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.246908,
+              "lose_mean": -0.234497,
+              "win_n": 231,
+              "lose_n": 289
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 3.669767,
+              "lose_mean": 2.74776,
+              "win_n": 231,
+              "lose_n": 289
+            }
+          ],
+          "n_win": 231,
+          "n_lose": 289
+        }
+      },
+      {
+        "start": "2023-01-03",
+        "end": "2026-10-16",
+        "cost_multiplier": 2.0,
+        "error": null,
+        "elapsed_seconds": 1.825,
+        "stats": {
+          "total_return": 1.9505,
+          "annual_return": 0.3476,
+          "max_drawdown": -0.2985,
+          "sharpe": 1.07,
+          "sortino": 1.74,
+          "calmar": 1.16,
+          "win_rate": 0.5196,
+          "profit_factor": 1.6,
+          "n_trades": 460,
+          "avg_pnl": 0.0302,
+          "avg_win": 0.1371,
+          "avg_loss": 0.0855,
+          "best": 0.7503,
+          "worst": -0.5091,
+          "median_pnl": 0.0059,
+          "avg_holding_days": 19.8,
+          "final_equity": 2950516.45,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9725,
+          "max_exposure": 0.9941,
+          "mc_maxdd_p50": -0.8473,
+          "mc_maxdd_p95": -0.9692,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 35,
+            "buy_no_slot": 205800,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 448,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 0,
+            "sell_limit_down": 0,
+            "pending_exit": 0
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            914,
+            450
+          ],
+          "market_matrix_bytes": 18519468,
+          "timing_ms": {
+            "load_panel": 542.2,
+            "signals_score": 255.7,
+            "matrix_build": 211.5,
+            "simulate": 671.6,
+            "statistics": 4.8,
+            "total": 1707.0
+          },
+          "panel_rows": 271964,
+          "panel_columns": 11,
+          "feature_columns": 90,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 226407,
+            "entry_candidates": 226407,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_stock_rel_industry_20d",
+              "win_mean": 0.126767,
+              "lose_mean": 0.129406,
+              "win_n": 239,
+              "lose_n": 221
+            },
+            {
+              "factor": "ext_alt_hs300_industry_mom_20d",
+              "win_mean": 0.072182,
+              "lose_mean": 0.059858,
+              "win_n": 239,
+              "lose_n": 221
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.242394,
+              "lose_mean": -0.251395,
+              "win_n": 239,
+              "lose_n": 221
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 2.828857,
+              "lose_mean": 2.185788,
+              "win_n": 239,
+              "lose_n": 221
+            }
+          ],
+          "n_win": 239,
+          "n_lose": 221
+        }
+      },
+      {
+        "start": "2023-07-03",
+        "end": "2026-10-16",
+        "cost_multiplier": 2.0,
+        "error": null,
+        "elapsed_seconds": 1.714,
+        "stats": {
+          "total_return": 1.1569,
+          "annual_return": 0.2755,
+          "max_drawdown": -0.4133,
+          "sharpe": 0.91,
+          "sortino": 1.43,
+          "calmar": 0.67,
+          "win_rate": 0.5,
+          "profit_factor": 1.55,
+          "n_trades": 400,
+          "avg_pnl": 0.0252,
+          "avg_win": 0.1411,
+          "avg_loss": 0.0908,
+          "best": 0.7976,
+          "worst": -0.4777,
+          "median_pnl": -0.0004,
+          "avg_holding_days": 19.9,
+          "final_equity": 2156866.76,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9736,
+          "max_exposure": 0.9919,
+          "mc_maxdd_p50": -0.8863,
+          "mc_maxdd_p95": -0.983,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 31,
+            "buy_no_slot": 183029,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 389,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 0,
+            "sell_limit_down": 0,
+            "pending_exit": 0
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            796,
+            450
+          ],
+          "market_matrix_bytes": 16128552,
+          "timing_ms": {
+            "load_panel": 549.6,
+            "signals_score": 242.1,
+            "matrix_build": 174.7,
+            "simulate": 593.5,
+            "statistics": 5.0,
+            "total": 1584.3
+          },
+          "panel_rows": 237183,
+          "panel_columns": 11,
+          "feature_columns": 90,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 201226,
+            "entry_candidates": 201226,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_stock_rel_industry_20d",
+              "win_mean": 0.126089,
+              "lose_mean": 0.128711,
+              "win_n": 200,
+              "lose_n": 200
+            },
+            {
+              "factor": "ext_alt_hs300_industry_mom_20d",
+              "win_mean": 0.068124,
+              "lose_mean": 0.05569,
+              "win_n": 200,
+              "lose_n": 200
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.244914,
+              "lose_mean": -0.242438,
+              "win_n": 200,
+              "lose_n": 200
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 2.255164,
+              "lose_mean": 2.848856,
+              "win_n": 200,
+              "lose_n": 200
+            }
+          ],
+          "n_win": 200,
+          "n_lose": 200
+        }
+      },
+      {
+        "start": "2024-01-02",
+        "end": "2026-10-16",
+        "cost_multiplier": 2.0,
+        "error": null,
+        "elapsed_seconds": 1.507,
+        "stats": {
+          "total_return": 0.7368,
+          "annual_return": 0.23,
+          "max_drawdown": -0.4104,
+          "sharpe": 0.78,
+          "sortino": 1.19,
+          "calmar": 0.56,
+          "win_rate": 0.5,
+          "profit_factor": 1.49,
+          "n_trades": 340,
+          "avg_pnl": 0.0255,
+          "avg_win": 0.1549,
+          "avg_loss": 0.1039,
+          "best": 0.998,
+          "worst": -0.4991,
+          "median_pnl": -0.0013,
+          "avg_holding_days": 19.7,
+          "final_equity": 1736818.02,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9659,
+          "max_exposure": 0.9884,
+          "mc_maxdd_p50": -0.9253,
+          "mc_maxdd_p95": -0.9952,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 31,
+            "buy_no_slot": 158102,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 328,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 0,
+            "sell_limit_down": 0,
+            "pending_exit": 0
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            672,
+            450
+          ],
+          "market_matrix_bytes": 13616064,
+          "timing_ms": {
+            "load_panel": 507.8,
+            "signals_score": 209.5,
+            "matrix_build": 127.8,
+            "simulate": 500.7,
+            "statistics": 3.5,
+            "total": 1369.5
+          },
+          "panel_rows": 200385,
+          "panel_columns": 11,
+          "feature_columns": 90,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 173795,
+            "entry_candidates": 173795,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_stock_rel_industry_20d",
+              "win_mean": 0.143765,
+              "lose_mean": 0.144512,
+              "win_n": 170,
+              "lose_n": 170
+            },
+            {
+              "factor": "ext_alt_hs300_industry_mom_20d",
+              "win_mean": 0.073486,
+              "lose_mean": 0.085077,
+              "win_n": 170,
+              "lose_n": 170
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.251742,
+              "lose_mean": -0.231396,
+              "win_n": 170,
+              "lose_n": 170
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 3.585587,
+              "lose_mean": 3.0303,
+              "win_n": 170,
+              "lose_n": 170
+            }
+          ],
+          "n_win": 170,
+          "n_lose": 170
+        }
+      },
+      {
+        "start": "2024-07-01",
+        "end": "2026-10-16",
+        "cost_multiplier": 2.0,
+        "error": null,
+        "elapsed_seconds": 1.404,
+        "stats": {
+          "total_return": 0.9458,
+          "annual_return": 0.3529,
+          "max_drawdown": -0.3496,
+          "sharpe": 1.01,
+          "sortino": 1.58,
+          "calmar": 1.01,
+          "win_rate": 0.5143,
+          "profit_factor": 1.53,
+          "n_trades": 280,
+          "avg_pnl": 0.0326,
+          "avg_win": 0.165,
+          "avg_loss": 0.1076,
+          "best": 0.8738,
+          "worst": -0.5029,
+          "median_pnl": 0.0036,
+          "avg_holding_days": 19.8,
+          "final_equity": 1945824.87,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9729,
+          "max_exposure": 0.9917,
+          "mc_maxdd_p50": -0.8874,
+          "mc_maxdd_p95": -0.9877,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 27,
+            "buy_no_slot": 133238,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 268,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 0,
+            "sell_limit_down": 0,
+            "pending_exit": 0
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            555,
+            450
+          ],
+          "market_matrix_bytes": 11245410,
+          "timing_ms": {
+            "load_panel": 500.6,
+            "signals_score": 196.5,
+            "matrix_build": 110.8,
+            "simulate": 441.4,
+            "statistics": 3.8,
+            "total": 1272.4
+          },
+          "panel_rows": 165657,
+          "panel_columns": 11,
+          "feature_columns": 90,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 146432,
+            "entry_candidates": 146432,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_stock_rel_industry_20d",
+              "win_mean": 0.137764,
+              "lose_mean": 0.160742,
+              "win_n": 144,
+              "lose_n": 136
+            },
+            {
+              "factor": "ext_alt_hs300_industry_mom_20d",
+              "win_mean": 0.077363,
+              "lose_mean": 0.071497,
+              "win_n": 144,
+              "lose_n": 136
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.243124,
+              "lose_mean": -0.253376,
+              "win_n": 144,
+              "lose_n": 136
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 2.140131,
+              "lose_mean": 2.250969,
+              "win_n": 144,
+              "lose_n": 136
+            }
+          ],
+          "n_win": 144,
+          "n_lose": 136
+        }
+      },
+      {
+        "start": "2025-01-02",
+        "end": "2026-10-16",
+        "cost_multiplier": 2.0,
+        "error": null,
+        "elapsed_seconds": 1.322,
+        "stats": {
+          "total_return": 1.6268,
+          "annual_return": 0.7612,
+          "max_drawdown": -0.2831,
+          "sharpe": 1.88,
+          "sortino": 2.88,
+          "calmar": 2.69,
+          "win_rate": 0.5545,
+          "profit_factor": 1.74,
+          "n_trades": 220,
+          "avg_pnl": 0.053,
+          "avg_win": 0.1778,
+          "avg_loss": 0.1023,
+          "best": 1.1164,
+          "worst": -0.4119,
+          "median_pnl": 0.0252,
+          "avg_holding_days": 19.5,
+          "final_equity": 2626788.15,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9638,
+          "max_exposure": 0.9926,
+          "mc_maxdd_p50": -0.7269,
+          "mc_maxdd_p95": -0.8954,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 20,
+            "buy_no_slot": 105272,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 208,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 0,
+            "sell_limit_down": 0,
+            "pending_exit": 0
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            430,
+            450
+          ],
+          "market_matrix_bytes": 8712660,
+          "timing_ms": {
+            "load_panel": 518.9,
+            "signals_score": 196.2,
+            "matrix_build": 84.5,
+            "simulate": 364.0,
+            "statistics": 2.5,
+            "total": 1187.6
+          },
+          "panel_rows": 128588,
+          "panel_columns": 11,
+          "feature_columns": 90,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 115812,
+            "entry_candidates": 115812,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_stock_rel_industry_20d",
+              "win_mean": 0.162855,
+              "lose_mean": 0.168079,
+              "win_n": 122,
+              "lose_n": 98
+            },
+            {
+              "factor": "ext_alt_hs300_industry_mom_20d",
+              "win_mean": 0.083361,
+              "lose_mean": 0.08635,
+              "win_n": 122,
+              "lose_n": 98
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.253229,
+              "lose_mean": -0.26196,
+              "win_n": 122,
+              "lose_n": 98
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 4.043719,
+              "lose_mean": 2.327646,
+              "win_n": 122,
+              "lose_n": 98
+            }
+          ],
+          "n_win": 122,
+          "n_lose": 98
+        }
+      },
+      {
+        "start": "2025-07-01",
+        "end": "2026-10-16",
+        "cost_multiplier": 2.0,
+        "error": null,
+        "elapsed_seconds": 1.297,
+        "stats": {
+          "total_return": 1.3797,
+          "annual_return": 1.0098,
+          "max_drawdown": -0.3612,
+          "sharpe": 1.93,
+          "sortino": 3.13,
+          "calmar": 2.8,
+          "win_rate": 0.6,
+          "profit_factor": 1.58,
+          "n_trades": 160,
+          "avg_pnl": 0.0715,
+          "avg_win": 0.2063,
+          "avg_loss": 0.1307,
+          "best": 0.9802,
+          "worst": -0.4663,
+          "median_pnl": 0.043,
+          "avg_holding_days": 19.4,
+          "final_equity": 2379732.52,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9696,
+          "max_exposure": 0.9915,
+          "mc_maxdd_p50": -0.7486,
+          "mc_maxdd_p95": -0.9265,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 19,
+            "buy_no_slot": 77633,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 148,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 0,
+            "sell_limit_down": 0,
+            "pending_exit": 0
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            313,
+            450
+          ],
+          "market_matrix_bytes": 6342006,
+          "timing_ms": {
+            "load_panel": 609.5,
+            "signals_score": 178.3,
+            "matrix_build": 71.6,
+            "simulate": 280.9,
+            "statistics": 1.7,
+            "total": 1164.3
+          },
+          "panel_rows": 93775,
+          "panel_columns": 11,
+          "feature_columns": 90,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 85514,
+            "entry_candidates": 85514,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_stock_rel_industry_20d",
+              "win_mean": 0.164719,
+              "lose_mean": 0.202691,
+              "win_n": 96,
+              "lose_n": 64
+            },
+            {
+              "factor": "ext_alt_hs300_industry_mom_20d",
+              "win_mean": 0.123974,
+              "lose_mean": 0.077126,
+              "win_n": 96,
+              "lose_n": 64
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.27179,
+              "lose_mean": -0.26486,
+              "win_n": 96,
+              "lose_n": 64
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 4.799523,
+              "lose_mean": 1.584074,
+              "win_n": 96,
+              "lose_n": 64
+            }
+          ],
+          "n_win": 96,
+          "n_lose": 64
+        }
+      },
+      {
+        "start": "2026-01-05",
+        "end": "2026-10-16",
+        "cost_multiplier": 2.0,
+        "error": null,
+        "elapsed_seconds": 1.054,
+        "stats": {
+          "total_return": 0.1813,
+          "annual_return": 0.2518,
+          "max_drawdown": -0.2823,
+          "sharpe": 0.81,
+          "sortino": 1.21,
+          "calmar": 0.89,
+          "win_rate": 0.44,
+          "profit_factor": 1.71,
+          "n_trades": 100,
+          "avg_pnl": 0.0202,
+          "avg_win": 0.1786,
+          "avg_loss": 0.1042,
+          "best": 0.6643,
+          "worst": -0.4147,
+          "median_pnl": -0.0263,
+          "avg_holding_days": 18.5,
+          "final_equity": 1181337.31,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9555,
+          "max_exposure": 0.99,
+          "mc_maxdd_p50": -0.805,
+          "mc_maxdd_p95": -0.9661,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 9,
+            "buy_no_slot": 47041,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 90,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 0,
+            "sell_limit_down": 0,
+            "pending_exit": 0
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            187,
+            450
+          ],
+          "market_matrix_bytes": 3788994,
+          "timing_ms": {
+            "load_panel": 530.0,
+            "signals_score": 150.7,
+            "matrix_build": 43.8,
+            "simulate": 153.7,
+            "statistics": 1.6,
+            "total": 903.5
+          },
+          "panel_rows": 56173,
+          "panel_columns": 11,
+          "feature_columns": 90,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 52147,
+            "entry_candidates": 52147,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_stock_rel_industry_20d",
+              "win_mean": 0.188396,
+              "lose_mean": 0.180486,
+              "win_n": 44,
+              "lose_n": 56
+            },
+            {
+              "factor": "ext_alt_hs300_industry_mom_20d",
+              "win_mean": 0.08027,
+              "lose_mean": 0.069927,
+              "win_n": 44,
+              "lose_n": 56
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.284551,
+              "lose_mean": -0.263288,
+              "win_n": 44,
+              "lose_n": 56
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 1.739857,
+              "lose_mean": 7.957477,
+              "win_n": 44,
+              "lose_n": 56
+            }
+          ],
+          "n_win": 44,
+          "n_lose": 56
+        }
+      }
+    ],
+    "phase_summary": {
+      "total_return": {
+        "mean": 0.98088,
+        "median": 0.9458,
+        "min": 0.1813,
+        "max": 1.9505,
+        "positive": 10,
+        "n": 10
+      },
+      "sharpe": {
+        "mean": 0.99,
+        "median": 0.91,
+        "min": 0.43,
+        "max": 1.93,
+        "positive": 10,
+        "n": 10
+      },
+      "max_drawdown": {
+        "mean": -0.36783,
+        "median": -0.3496,
+        "min": -0.5059,
+        "max": -0.2823,
+        "positive": 0,
+        "n": 10
+      },
+      "n_trades": {
+        "mean": 371.0,
+        "median": 400.0,
+        "min": 100.0,
+        "max": 650.0,
+        "positive": 10,
+        "n": 10
+      }
+    },
+    "recent_results": [
+      {
+        "start": "2025-10-14",
+        "end": "2026-10-16",
+        "cost_multiplier": 2.0,
+        "error": null,
+        "elapsed_seconds": 1.132,
+        "stats": {
+          "total_return": 0.4208,
+          "annual_return": 0.4372,
+          "max_drawdown": -0.2574,
+          "sharpe": 1.2,
+          "sortino": 1.82,
+          "calmar": 1.7,
+          "win_rate": 0.4692,
+          "profit_factor": 1.86,
+          "n_trades": 130,
+          "avg_pnl": 0.0307,
+          "avg_win": 0.1676,
+          "avg_loss": 0.0902,
+          "best": 1.0475,
+          "worst": -0.2961,
+          "median_pnl": -0.0074,
+          "avg_holding_days": 18.6,
+          "final_equity": 1420791.21,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9615,
+          "max_exposure": 0.9875,
+          "mc_maxdd_p50": -0.7112,
+          "mc_maxdd_p95": -0.9258,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 11,
+            "buy_no_slot": 60828,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 118,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 0,
+            "sell_limit_down": 0,
+            "pending_exit": 0
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            244,
+            450
+          ],
+          "market_matrix_bytes": 4943928,
+          "timing_ms": {
+            "load_panel": 512.5,
+            "signals_score": 161.6,
+            "matrix_build": 54.7,
+            "simulate": 255.4,
+            "statistics": 2.5,
+            "total": 1011.9
+          },
+          "panel_rows": 73185,
+          "panel_columns": 11,
+          "feature_columns": 90,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 67252,
+            "entry_candidates": 67252,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_stock_rel_industry_20d",
+              "win_mean": 0.163706,
+              "lose_mean": 0.17451,
+              "win_n": 61,
+              "lose_n": 69
+            },
+            {
+              "factor": "ext_alt_hs300_industry_mom_20d",
+              "win_mean": 0.059023,
+              "lose_mean": 0.071982,
+              "win_n": 61,
+              "lose_n": 69
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.260146,
+              "lose_mean": -0.259345,
+              "win_n": 61,
+              "lose_n": 69
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 7.729244,
+              "lose_mean": 1.619511,
+              "win_n": 61,
+              "lose_n": 69
+            }
+          ],
+          "n_win": 61,
+          "n_lose": 69
+        }
+      },
+      {
+        "start": "2025-12-15",
+        "end": "2026-10-16",
+        "cost_multiplier": 2.0,
+        "error": null,
+        "elapsed_seconds": 1.145,
+        "stats": {
+          "total_return": 0.2041,
+          "annual_return": 0.2637,
+          "max_drawdown": -0.2901,
+          "sharpe": 0.82,
+          "sortino": 1.24,
+          "calmar": 0.91,
+          "win_rate": 0.47,
+          "profit_factor": 1.64,
+          "n_trades": 100,
+          "avg_pnl": 0.0255,
+          "avg_win": 0.1746,
+          "avg_loss": 0.1068,
+          "best": 0.8457,
+          "worst": -0.3599,
+          "median_pnl": -0.0192,
+          "avg_holding_days": 19.8,
+          "final_equity": 1204128.44,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9457,
+          "max_exposure": 0.9811,
+          "mc_maxdd_p50": -0.7556,
+          "mc_maxdd_p95": -0.9495,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 10,
+            "buy_no_slot": 48298,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 89,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 2,
+            "sell_limit_down": 0,
+            "pending_exit": 1
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            200,
+            450
+          ],
+          "market_matrix_bytes": 4052400,
+          "timing_ms": {
+            "load_panel": 487.6,
+            "signals_score": 170.3,
+            "matrix_build": 43.2,
+            "simulate": 289.3,
+            "statistics": 1.5,
+            "total": 1012.3
+          },
+          "panel_rows": 60056,
+          "panel_columns": 11,
+          "feature_columns": 90,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 55689,
+            "entry_candidates": 55689,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_stock_rel_industry_20d",
+              "win_mean": 0.208065,
+              "lose_mean": 0.229423,
+              "win_n": 47,
+              "lose_n": 53
+            },
+            {
+              "factor": "ext_alt_hs300_industry_mom_20d",
+              "win_mean": 0.102137,
+              "lose_mean": 0.080036,
+              "win_n": 47,
+              "lose_n": 53
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.257473,
+              "lose_mean": -0.281168,
+              "win_n": 47,
+              "lose_n": 53
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 1.709504,
+              "lose_mean": 1.532146,
+              "win_n": 47,
+              "lose_n": 53
+            }
+          ],
+          "n_win": 47,
+          "n_lose": 53
+        }
+      },
+      {
+        "start": "2026-02-13",
+        "end": "2026-10-16",
+        "cost_multiplier": 2.0,
+        "error": null,
+        "elapsed_seconds": 1.067,
+        "stats": {
+          "total_return": -0.0672,
+          "annual_return": -0.105,
+          "max_drawdown": -0.3933,
+          "sharpe": -0.07,
+          "sortino": -0.1,
+          "calmar": -0.27,
+          "win_rate": 0.375,
+          "profit_factor": 1.86,
+          "n_trades": 80,
+          "avg_pnl": 0.0105,
+          "avg_win": 0.2651,
+          "avg_loss": 0.1422,
+          "best": 0.852,
+          "worst": -0.5148,
+          "median_pnl": -0.0439,
+          "avg_holding_days": 19.5,
+          "final_equity": 932789.27,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9446,
+          "max_exposure": 0.9776,
+          "mc_maxdd_p50": -0.9604,
+          "mc_maxdd_p95": -0.9982,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 9,
+            "buy_no_slot": 39941,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 69,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 0,
+            "sell_limit_down": 0,
+            "pending_exit": 0
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            158,
+            450
+          ],
+          "market_matrix_bytes": 3201396,
+          "timing_ms": {
+            "load_panel": 604.5,
+            "signals_score": 148.0,
+            "matrix_build": 39.4,
+            "simulate": 138.2,
+            "statistics": 1.2,
+            "total": 959.4
+          },
+          "panel_rows": 47486,
+          "panel_columns": 11,
+          "feature_columns": 90,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 44230,
+            "entry_candidates": 44230,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_stock_rel_industry_20d",
+              "win_mean": 0.193433,
+              "lose_mean": 0.205493,
+              "win_n": 30,
+              "lose_n": 50
+            },
+            {
+              "factor": "ext_alt_hs300_industry_mom_20d",
+              "win_mean": 0.116548,
+              "lose_mean": 0.076191,
+              "win_n": 30,
+              "lose_n": 50
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.294621,
+              "lose_mean": -0.240849,
+              "win_n": 30,
+              "lose_n": 50
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 1.463922,
+              "lose_mean": 1.477275,
+              "win_n": 30,
+              "lose_n": 50
+            }
+          ],
+          "n_win": 30,
+          "n_lose": 50
+        }
+      },
+      {
+        "start": "2026-04-15",
+        "end": "2026-10-16",
+        "cost_multiplier": 2.0,
+        "error": null,
+        "elapsed_seconds": 1.013,
+        "stats": {
+          "total_return": 0.2235,
+          "annual_return": 0.5169,
+          "max_drawdown": -0.2421,
+          "sharpe": 1.26,
+          "sortino": 1.97,
+          "calmar": 2.14,
+          "win_rate": 0.5,
+          "profit_factor": 1.8,
+          "n_trades": 60,
+          "avg_pnl": 0.0435,
+          "avg_win": 0.1955,
+          "avg_loss": 0.1086,
+          "best": 0.8028,
+          "worst": -0.2777,
+          "median_pnl": 0.0011,
+          "avg_holding_days": 20.0,
+          "final_equity": 1223497.39,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9357,
+          "max_exposure": 0.9733,
+          "mc_maxdd_p50": -0.6043,
+          "mc_maxdd_p95": -0.8441,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 9,
+            "buy_no_slot": 30952,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 49,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 0,
+            "sell_limit_down": 0,
+            "pending_exit": 0
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            122,
+            450
+          ],
+          "market_matrix_bytes": 2471964,
+          "timing_ms": {
+            "load_panel": 558.4,
+            "signals_score": 146.4,
+            "matrix_build": 32.8,
+            "simulate": 112.5,
+            "statistics": 0.7,
+            "total": 884.5
+          },
+          "panel_rows": 36697,
+          "panel_columns": 11,
+          "feature_columns": 90,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 34363,
+            "entry_candidates": 34363,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_stock_rel_industry_20d",
+              "win_mean": 0.196626,
+              "lose_mean": 0.161785,
+              "win_n": 30,
+              "lose_n": 30
+            },
+            {
+              "factor": "ext_alt_hs300_industry_mom_20d",
+              "win_mean": 0.118683,
+              "lose_mean": 0.034608,
+              "win_n": 30,
+              "lose_n": 30
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.283798,
+              "lose_mean": -0.240273,
+              "win_n": 30,
+              "lose_n": 30
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 1.884438,
+              "lose_mean": 1.404455,
+              "win_n": 30,
+              "lose_n": 30
+            }
+          ],
+          "n_win": 30,
+          "n_lose": 30
+        }
+      },
+      {
+        "start": "2026-06-15",
+        "end": "2026-10-16",
+        "cost_multiplier": 2.0,
+        "error": null,
+        "elapsed_seconds": 0.86,
+        "stats": {
+          "total_return": -0.0963,
+          "annual_return": -0.2675,
+          "max_drawdown": -0.2642,
+          "sharpe": -0.6,
+          "sortino": -0.83,
+          "calmar": -1.01,
+          "win_rate": 0.35,
+          "profit_factor": 1.13,
+          "n_trades": 40,
+          "avg_pnl": -0.0278,
+          "avg_win": 0.1243,
+          "avg_loss": 0.1096,
+          "best": 0.3003,
+          "worst": -0.2777,
+          "median_pnl": -0.0401,
+          "avg_holding_days": 20.0,
+          "final_equity": 903674.54,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9217,
+          "max_exposure": 0.9651,
+          "mc_maxdd_p50": -0.8365,
+          "mc_maxdd_p95": -0.9476,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 5,
+            "buy_no_slot": 21009,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 30,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 0,
+            "sell_limit_down": 0,
+            "pending_exit": 0
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            82,
+            450
+          ],
+          "market_matrix_bytes": 1661484,
+          "timing_ms": {
+            "load_panel": 479.1,
+            "signals_score": 150.3,
+            "matrix_build": 21.0,
+            "simulate": 78.2,
+            "statistics": 0.8,
+            "total": 763.8
+          },
+          "panel_rows": 24707,
+          "panel_columns": 11,
+          "feature_columns": 90,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 23495,
+            "entry_candidates": 23495,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_stock_rel_industry_20d",
+              "win_mean": 0.198034,
+              "lose_mean": 0.189559,
+              "win_n": 14,
+              "lose_n": 26
+            },
+            {
+              "factor": "ext_alt_hs300_industry_mom_20d",
+              "win_mean": 0.077848,
+              "lose_mean": 0.048834,
+              "win_n": 14,
+              "lose_n": 26
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.280447,
+              "lose_mean": -0.24244,
+              "win_n": 14,
+              "lose_n": 26
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 1.832974,
+              "lose_mean": 1.20587,
+              "win_n": 14,
+              "lose_n": 26
+            }
+          ],
+          "n_win": 14,
+          "n_lose": 26
+        }
+      }
+    ],
+    "recent_summary": {
+      "total_return": {
+        "mean": 0.13698,
+        "median": 0.2041,
+        "min": -0.0963,
+        "max": 0.4208,
+        "positive": 3,
+        "n": 5
+      },
+      "sharpe": {
+        "mean": 0.522,
+        "median": 0.82,
+        "min": -0.6,
+        "max": 1.26,
+        "positive": 3,
+        "n": 5
+      },
+      "max_drawdown": {
+        "mean": -0.28942,
+        "median": -0.2642,
+        "min": -0.3933,
+        "max": -0.2421,
+        "positive": 0,
+        "n": 5
+      },
+      "n_trades": {
+        "mean": 82.0,
+        "median": 80.0,
+        "min": 40.0,
+        "max": 130.0,
+        "positive": 5,
+        "n": 5
+      }
+    }
+  },
+  "cost3x": {
+    "full": {
+      "start": "2021-06-01",
+      "end": "2026-10-16",
+      "cost_multiplier": 3.0,
+      "error": null,
+      "elapsed_seconds": 2.447,
+      "stats": {
+        "total_return": 0.5044,
+        "annual_return": 0.0823,
+        "max_drawdown": -0.5226,
+        "sharpe": 0.42,
+        "sortino": 0.63,
+        "calmar": 0.16,
+        "win_rate": 0.4569,
+        "profit_factor": 1.41,
+        "n_trades": 650,
+        "avg_pnl": 0.0088,
+        "avg_win": 0.1248,
+        "avg_loss": 0.0888,
+        "best": 1.3121,
+        "worst": -0.3608,
+        "median_pnl": -0.0113,
+        "avg_holding_days": 20.0,
+        "final_equity": 1504409.79,
+        "initial_capital": 1000000.0,
+        "avg_exposure": 0.953,
+        "max_exposure": 0.9968,
+        "mc_maxdd_p50": -0.9849,
+        "mc_maxdd_p95": -0.9998,
+        "execution": {
+          "buy_invalid_price": 0,
+          "buy_suspended": 0,
+          "buy_limit_up": 44,
+          "buy_no_slot": 273750,
+          "buy_cash": 0,
+          "buy_lot_size": 0,
+          "buy_same_day_reentry": 637,
+          "buy_exposure": 0,
+          "buy_score_filter": 0,
+          "sell_invalid_price": 0,
+          "sell_suspended": 4,
+          "sell_limit_down": 0,
+          "pending_exit": 1
+        },
+        "pending_exit_positions": 0,
+        "market_matrix_shape": [
+          1302,
+          450
+        ],
+        "market_matrix_bytes": 26381124,
+        "timing_ms": {
+          "load_panel": 833.1,
+          "signals_score": 316.6,
+          "matrix_build": 268.5,
+          "simulate": 866.1,
+          "statistics": 7.3,
+          "total": 2321.7
+        },
+        "panel_rows": 382035,
+        "panel_columns": 11,
+        "feature_columns": 90,
+        "full_feature_fallback": false,
+        "execution_backend": "polars_expr",
+        "selection": {
+          "strategy_matches": 303980,
+          "entry_candidates": 303980,
+          "entry_trigger_filtered": 0,
+          "entry_trigger_enabled": false
+        },
+        "shared_market_data": false,
+        "matrix_data_cache_hit": false,
+        "matrix_data_cache_status": "none",
+        "matrix_data_cache_timing_ms": {}
+      },
+      "factor_attribution": {
+        "factors": [
+          {
+            "factor": "ext_alt_hs300_stock_rel_industry_20d",
+            "win_mean": 0.129951,
+            "lose_mean": 0.128055,
+            "win_n": 297,
+            "lose_n": 353
+          },
+          {
+            "factor": "ext_alt_hs300_industry_mom_20d",
+            "win_mean": 0.070675,
+            "lose_mean": 0.056848,
+            "win_n": 297,
+            "lose_n": 353
+          },
+          {
+            "factor": "uf_quality_value_defensive",
+            "win_mean": -0.238448,
+            "lose_mean": -0.254527,
+            "win_n": 297,
+            "lose_n": 353
+          },
+          {
+            "factor": "uf_cash_quality",
+            "win_mean": 2.91122,
+            "lose_mean": 2.777565,
+            "win_n": 244,
+            "lose_n": 286
+          }
+        ],
+        "n_win": 297,
+        "n_lose": 353
+      }
+    },
+    "recent_results": [
+      {
+        "start": "2025-10-14",
+        "end": "2026-10-16",
+        "cost_multiplier": 3.0,
+        "error": null,
+        "elapsed_seconds": 0.892,
+        "stats": {
+          "total_return": 0.4006,
+          "annual_return": 0.4161,
+          "max_drawdown": -0.2611,
+          "sharpe": 1.16,
+          "sortino": 1.75,
+          "calmar": 1.59,
+          "win_rate": 0.4615,
+          "profit_factor": 1.87,
+          "n_trades": 130,
+          "avg_pnl": 0.0293,
+          "avg_win": 0.1687,
+          "avg_loss": 0.0902,
+          "best": 1.0447,
+          "worst": -0.297,
+          "median_pnl": -0.0087,
+          "avg_holding_days": 18.6,
+          "final_equity": 1400585.31,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9621,
+          "max_exposure": 0.9898,
+          "mc_maxdd_p50": -0.7212,
+          "mc_maxdd_p95": -0.9299,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 11,
+            "buy_no_slot": 60828,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 118,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 0,
+            "sell_limit_down": 0,
+            "pending_exit": 0
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            244,
+            450
+          ],
+          "market_matrix_bytes": 4943928,
+          "timing_ms": {
+            "load_panel": 413.0,
+            "signals_score": 140.9,
+            "matrix_build": 48.5,
+            "simulate": 190.0,
+            "statistics": 1.4,
+            "total": 809.6
+          },
+          "panel_rows": 73185,
+          "panel_columns": 11,
+          "feature_columns": 90,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 67252,
+            "entry_candidates": 67252,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_stock_rel_industry_20d",
+              "win_mean": 0.165037,
+              "lose_mean": 0.173215,
+              "win_n": 60,
+              "lose_n": 70
+            },
+            {
+              "factor": "ext_alt_hs300_industry_mom_20d",
+              "win_mean": 0.058223,
+              "lose_mean": 0.072482,
+              "win_n": 60,
+              "lose_n": 70
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.262071,
+              "lose_mean": -0.257707,
+              "win_n": 60,
+              "lose_n": 70
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 7.838675,
+              "lose_mean": 1.612995,
+              "win_n": 60,
+              "lose_n": 70
+            }
+          ],
+          "n_win": 60,
+          "n_lose": 70
+        }
+      },
+      {
+        "start": "2025-12-15",
+        "end": "2026-10-16",
+        "cost_multiplier": 3.0,
+        "error": null,
+        "elapsed_seconds": 0.829,
+        "stats": {
+          "total_return": 0.191,
+          "annual_return": 0.2463,
+          "max_drawdown": -0.2887,
+          "sharpe": 0.79,
+          "sortino": 1.18,
+          "calmar": 0.85,
+          "win_rate": 0.47,
+          "profit_factor": 1.6,
+          "n_trades": 100,
+          "avg_pnl": 0.024,
+          "avg_win": 0.173,
+          "avg_loss": 0.1081,
+          "best": 0.8431,
+          "worst": -0.3608,
+          "median_pnl": -0.0206,
+          "avg_holding_days": 19.8,
+          "final_equity": 1190978.99,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9462,
+          "max_exposure": 0.9884,
+          "mc_maxdd_p50": -0.7649,
+          "mc_maxdd_p95": -0.9531,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 10,
+            "buy_no_slot": 48298,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 89,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 2,
+            "sell_limit_down": 0,
+            "pending_exit": 1
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            200,
+            450
+          ],
+          "market_matrix_bytes": 4052400,
+          "timing_ms": {
+            "load_panel": 404.8,
+            "signals_score": 132.4,
+            "matrix_build": 36.8,
+            "simulate": 155.9,
+            "statistics": 1.3,
+            "total": 750.1
+          },
+          "panel_rows": 60056,
+          "panel_columns": 11,
+          "feature_columns": 90,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 55689,
+            "entry_candidates": 55689,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_stock_rel_industry_20d",
+              "win_mean": 0.208065,
+              "lose_mean": 0.229423,
+              "win_n": 47,
+              "lose_n": 53
+            },
+            {
+              "factor": "ext_alt_hs300_industry_mom_20d",
+              "win_mean": 0.102137,
+              "lose_mean": 0.080036,
+              "win_n": 47,
+              "lose_n": 53
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.257473,
+              "lose_mean": -0.281168,
+              "win_n": 47,
+              "lose_n": 53
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 1.709504,
+              "lose_mean": 1.532146,
+              "win_n": 47,
+              "lose_n": 53
+            }
+          ],
+          "n_win": 47,
+          "n_lose": 53
+        }
+      },
+      {
+        "start": "2026-02-13",
+        "end": "2026-10-16",
+        "cost_multiplier": 3.0,
+        "error": null,
+        "elapsed_seconds": 0.78,
+        "stats": {
+          "total_return": -0.0758,
+          "annual_return": -0.1181,
+          "max_drawdown": -0.393,
+          "sharpe": -0.11,
+          "sortino": -0.15,
+          "calmar": -0.3,
+          "win_rate": 0.375,
+          "profit_factor": 1.84,
+          "n_trades": 80,
+          "avg_pnl": 0.0091,
+          "avg_win": 0.2634,
+          "avg_loss": 0.1434,
+          "best": 0.8494,
+          "worst": -0.5154,
+          "median_pnl": -0.0452,
+          "avg_holding_days": 19.5,
+          "final_equity": 924231.07,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9439,
+          "max_exposure": 0.9811,
+          "mc_maxdd_p50": -0.9631,
+          "mc_maxdd_p95": -0.9984,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 9,
+            "buy_no_slot": 39941,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 69,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 0,
+            "sell_limit_down": 0,
+            "pending_exit": 0
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            158,
+            450
+          ],
+          "market_matrix_bytes": 3201396,
+          "timing_ms": {
+            "load_panel": 401.4,
+            "signals_score": 130.7,
+            "matrix_build": 31.6,
+            "simulate": 122.5,
+            "statistics": 1.0,
+            "total": 708.2
+          },
+          "panel_rows": 47486,
+          "panel_columns": 11,
+          "feature_columns": 90,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 44230,
+            "entry_candidates": 44230,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_stock_rel_industry_20d",
+              "win_mean": 0.193433,
+              "lose_mean": 0.205493,
+              "win_n": 30,
+              "lose_n": 50
+            },
+            {
+              "factor": "ext_alt_hs300_industry_mom_20d",
+              "win_mean": 0.116548,
+              "lose_mean": 0.076191,
+              "win_n": 30,
+              "lose_n": 50
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.294621,
+              "lose_mean": -0.240849,
+              "win_n": 30,
+              "lose_n": 50
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 1.463922,
+              "lose_mean": 1.477275,
+              "win_n": 30,
+              "lose_n": 50
+            }
+          ],
+          "n_win": 30,
+          "n_lose": 50
+        }
+      },
+      {
+        "start": "2026-04-15",
+        "end": "2026-10-16",
+        "cost_multiplier": 3.0,
+        "error": null,
+        "elapsed_seconds": 0.755,
+        "stats": {
+          "total_return": 0.2106,
+          "annual_return": 0.4841,
+          "max_drawdown": -0.2467,
+          "sharpe": 1.21,
+          "sortino": 1.88,
+          "calmar": 1.96,
+          "win_rate": 0.5,
+          "profit_factor": 1.76,
+          "n_trades": 60,
+          "avg_pnl": 0.042,
+          "avg_win": 0.1939,
+          "avg_loss": 0.1099,
+          "best": 0.8002,
+          "worst": -0.2787,
+          "median_pnl": -0.0003,
+          "avg_holding_days": 20.0,
+          "final_equity": 1210642.82,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.935,
+          "max_exposure": 0.9748,
+          "mc_maxdd_p50": -0.6119,
+          "mc_maxdd_p95": -0.851,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 9,
+            "buy_no_slot": 30952,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 49,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 0,
+            "sell_limit_down": 0,
+            "pending_exit": 0
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            122,
+            450
+          ],
+          "market_matrix_bytes": 2471964,
+          "timing_ms": {
+            "load_panel": 389.3,
+            "signals_score": 126.0,
+            "matrix_build": 26.3,
+            "simulate": 97.4,
+            "statistics": 0.7,
+            "total": 658.1
+          },
+          "panel_rows": 36697,
+          "panel_columns": 11,
+          "feature_columns": 90,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 34363,
+            "entry_candidates": 34363,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_stock_rel_industry_20d",
+              "win_mean": 0.196626,
+              "lose_mean": 0.161785,
+              "win_n": 30,
+              "lose_n": 30
+            },
+            {
+              "factor": "ext_alt_hs300_industry_mom_20d",
+              "win_mean": 0.118683,
+              "lose_mean": 0.034608,
+              "win_n": 30,
+              "lose_n": 30
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.283798,
+              "lose_mean": -0.240273,
+              "win_n": 30,
+              "lose_n": 30
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 1.884438,
+              "lose_mean": 1.404455,
+              "win_n": 30,
+              "lose_n": 30
+            }
+          ],
+          "n_win": 30,
+          "n_lose": 30
+        }
+      },
+      {
+        "start": "2026-06-15",
+        "end": "2026-10-16",
+        "cost_multiplier": 3.0,
+        "error": null,
+        "elapsed_seconds": 0.66,
+        "stats": {
+          "total_return": -0.1012,
+          "annual_return": -0.2796,
+          "max_drawdown": -0.2674,
+          "sharpe": -0.64,
+          "sortino": -0.89,
+          "calmar": -1.05,
+          "win_rate": 0.35,
+          "profit_factor": 1.11,
+          "n_trades": 40,
+          "avg_pnl": -0.0291,
+          "avg_win": 0.1227,
+          "avg_loss": 0.1109,
+          "best": 0.2985,
+          "worst": -0.2787,
+          "median_pnl": -0.0415,
+          "avg_holding_days": 20.0,
+          "final_equity": 898798.85,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9237,
+          "max_exposure": 0.9678,
+          "mc_maxdd_p50": -0.8434,
+          "mc_maxdd_p95": -0.95,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 5,
+            "buy_no_slot": 21009,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 30,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 0,
+            "sell_limit_down": 0,
+            "pending_exit": 0
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            82,
+            450
+          ],
+          "market_matrix_bytes": 1661484,
+          "timing_ms": {
+            "load_panel": 374.0,
+            "signals_score": 116.4,
+            "matrix_build": 17.6,
+            "simulate": 63.7,
+            "statistics": 0.6,
+            "total": 592.0
+          },
+          "panel_rows": 24707,
+          "panel_columns": 11,
+          "feature_columns": 90,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 23495,
+            "entry_candidates": 23495,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_stock_rel_industry_20d",
+              "win_mean": 0.198034,
+              "lose_mean": 0.189559,
+              "win_n": 14,
+              "lose_n": 26
+            },
+            {
+              "factor": "ext_alt_hs300_industry_mom_20d",
+              "win_mean": 0.077848,
+              "lose_mean": 0.048834,
+              "win_n": 14,
+              "lose_n": 26
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.280447,
+              "lose_mean": -0.24244,
+              "win_n": 14,
+              "lose_n": 26
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 1.832974,
+              "lose_mean": 1.20587,
+              "win_n": 14,
+              "lose_n": 26
+            }
+          ],
+          "n_win": 14,
+          "n_lose": 26
+        }
+      }
+    ],
+    "recent_summary": {
+      "total_return": {
+        "mean": 0.12504,
+        "median": 0.191,
+        "min": -0.1012,
+        "max": 0.4006,
+        "positive": 3,
+        "n": 5
+      },
+      "sharpe": {
+        "mean": 0.482,
+        "median": 0.79,
+        "min": -0.64,
+        "max": 1.21,
+        "positive": 3,
+        "n": 5
+      },
+      "max_drawdown": {
+        "mean": -0.29138,
+        "median": -0.2674,
+        "min": -0.393,
+        "max": -0.2467,
+        "positive": 0,
+        "n": 5
+      },
+      "n_trades": {
+        "mean": 82.0,
+        "median": 80.0,
+        "min": 40.0,
+        "max": 130.0,
+        "positive": 5,
+        "n": 5
+      }
+    }
+  },
+  "caveats": [
+    "Industry classification is a current THS snapshot backfilled into history.",
+    "The 20-day holding period was selected from a pre-registered 3x3 grid; 20/35 days at 10 positions form a plateau.",
+    "Experimental strategy; not deployment-approved."
+  ]
+}

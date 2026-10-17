@@ -443,7 +443,26 @@ def materialize_scoring_columns(
     # 与单表达式路径不同, 必须整体走帧变换 —— 与检验/试算共用同一条计算路径 (P3)。
     from app.factors.dsl import FACTOR_COLUMN, compile_formula_cached
 
-    for name in names:
+    # 复合因子的成员也可能是 custom: 先把复合树展开成“成员在前、复合在后”的
+    # 顺序，否则 _composite_value_expr 看不到成员列会返回 None，整条评分腿被
+    # 静默丢弃。seen 同时防止异常配置形成环。
+    ordered: list[str] = []
+    seen: set[str] = set()
+
+    def _visit(name: str) -> None:
+        if name in seen:
+            return
+        seen.add(name)
+        spec = _registry_get_factor(name)
+        if spec is not None and spec.kind == "composite":
+            for member_id, _weight in spec.components:
+                _visit(str(member_id))
+        ordered.append(name)
+
+    for requested in names:
+        _visit(str(requested))
+
+    for name in ordered:
         spec = _registry_get_factor(str(name))
         if spec is None or spec.kind != "custom" or name in frame.columns:
             continue

@@ -166,10 +166,15 @@ def register_definition(definition: dict) -> FactorSpec:
 def load_into_registry(data_dir: Path) -> list[str]:
     """启动期把存储中的因子注册进注册表; 单个失败只跳过并告警。
 
+    扩展因子必须先同步: 复合/自定义因子可引用 ext_* 已物化列, 若等到首次
+    all_factors() 才惰性注册, 启动期引用扩展列的因子会被误判为未知成员。
     多轮加载: composite 成员可能引用尚未加载的 custom/其他 composite (文件按
     字母序加载, cf_* 先于 uf_*), 失败的 composite 延后重试, 覆盖链式引用;
     重试用尽仍失败的只告警不阻塞启动。
     """
+    from app.factors.ext_factors import ensure_synced
+
+    ensure_synced(data_dir)
     loaded: list[str] = []
     pending = list(load_all(data_dir))
     for round_index in range(3):
