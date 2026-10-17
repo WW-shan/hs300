@@ -9,9 +9,10 @@ Usage (from the repository root):
     cd backend && uv run python ../scripts/build_alt_factor_data.py
 
 Factors written include insider buy/sell events, holder concentration and
-changes, major-shareholder net buying, margin changes, goodwill/R&D/capex,
-equity supply, dividend growth/yield/initiation, ERP and macro spreads, and
-the market emotion score.  See ``FIELDS`` for the authoritative list.
+changes, major-shareholder net buying, fund-holding crowding, margin changes,
+goodwill/R&D/capex, equity supply, dividend growth/yield/initiation, ERP and
+macro spreads, and the market emotion score.  See ``FIELDS`` for the
+authoritative list.
 
 All values are keyed by (symbol, date) and only use information whose
 announcement date is strictly before the signal date.  The output is local
@@ -42,6 +43,11 @@ FIELDS = [
     ExtField("holder_top10_share_chg_yoy", "float", "前十大流通股东持股比例同比变化"),
     ExtField("holder_net_buy_ratio_90d", "float", "重要股东90日净增持比例"),
     ExtField("holder_net_buy_count_90d", "float", "重要股东90日净增持事件数"),
+    ExtField("fund_count_low", "float", "基金持仓家数反向(低拥挤)"),
+    ExtField("fund_count_chg_qoq_low", "float", "基金持仓家数季度变化反向"),
+    ExtField("fund_holding_ratio_low", "float", "基金持股占流通股比例反向"),
+    ExtField("fund_holding_ratio_chg_qoq_low", "float", "基金持股比例季度变化反向"),
+    ExtField("fund_holding_value_chg_qoq_low", "float", "基金持股市值季度变化反向"),
     ExtField("margin_chg_1m_low", "float", "两融余额月度变化反向"),
     ExtField("goodwill_ratio_low", "float", "商誉/总资产反向"),
     ExtField("intangible_ratio_low", "float", "无形资产/总资产反向"),
@@ -159,6 +165,119 @@ def _holder_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
         by="symbol",
         strategy="backward",
     )
+
+
+def _fund_holding_frame(
+    raw: pl.DataFrame,
+    dates: list[date],
+    symbols: list[str],
+    instruments: pl.DataFrame,
+) -> pl.DataFrame:
+    """基金季报持仓 → 保守滞后 45 天可得的高方向因子。
+
+    季末数据在 ``quarter_date + 45d`` 前一律不可见。基金家数、持股比例和
+    持股市值变化都转成“低拥挤/减仓更好”的高方向列，供评分统一按降序使用。
+    历史流通股本仍使用当前维表，这是本实验因子的已知口径限制。
+    """
+    factor_schema = {
+        "symbol": pl.String,
+        "available_date": pl.Date,
+        "fund_count_low": pl.Float64,
+        "fund_count_chg_qoq_low": pl.Float64,
+        "fund_holding_ratio_low": pl.Float64,
+        "fund_holding_ratio_chg_qoq_low": pl.Float64,
+        "fund_holding_value_chg_qoq_low": pl.Float64,
+    }
+    empty_periods = pl.DataFrame(schema=factor_schema)
+    if raw.is_empty():
+        periods = empty_periods
+    else:
+        required = {
+            "symbol", "quarter_date", "fund_count", "holding_shares", "holding_value",
+        }
+        missing = required - set(raw.columns)
+        if missing:
+            raise ValueError(f"基金持仓缓存缺少字段: {sorted(missing)}")
+        shares = instruments.select(["symbol", "float_shares"]).unique(subset=["symbol"])
+        periods = (
+            raw.select([
+                pl.col("symbol").cast(pl.String),
+                pl.col("quarter_date").cast(pl.Date),
+                pl.col("fund_count").cast(pl.Float64, strict=False),
+                pl.col("holding_shares").cast(pl.Float64, strict=False),
+                pl.col("holding_value").cast(pl.Float64, strict=False),
+            ])
+            .filter(
+                pl.col("symbol").is_in(symbols)
+                & pl.col("quarter_date").is_not_null()
+                & (pl.col("holding_shares") > 0)
+            )
+            .join(shares, on="symbol", how="left")
+            .sort(["symbol", "quarter_date"])
+            .with_columns([
+                pl.col("fund_count").shift(1).over("symbol").alias("_prev_count"),
+                pl.col("holding_shares").shift(1).over("symbol").alias("_prev_shares"),
+                pl.col("holding_value").shift(1).over("symbol").alias("_prev_value"),
+                (pl.col("quarter_date") + pl.duration(days=45)).alias("available_date"),
+            ])
+            .with_columns(
+                pl.when((pl.col("float_shares") > 0) & pl.col("holding_shares").is_not_null())
+                .then(pl.col("holding_shares") / pl.col("float_shares"))
+                .otherwise(None)
+                .alias("_holding_ratio")
+            )
+            .with_columns(
+                pl.col("_holding_ratio").shift(1).over("symbol").alias("_prev_ratio")
+            )
+            .with_columns([
+                (-(pl.col("fund_count") + 1).log()).alias("fund_count_low"),
+                pl.when((pl.col("_prev_count") > 0) & (pl.col("fund_count") > 0))
+                .then(-(pl.col("fund_count") / pl.col("_prev_count") - 1.0))
+                .otherwise(None)
+                .alias("fund_count_chg_qoq_low"),
+                (-pl.col("_holding_ratio")).alias("fund_holding_ratio_low"),
+                pl.when((pl.col("_prev_ratio") > 0) & (pl.col("_holding_ratio") >= 0))
+                .then(-(pl.col("_holding_ratio") / pl.col("_prev_ratio") - 1.0))
+                .otherwise(None)
+                .alias("fund_holding_ratio_chg_qoq_low"),
+                pl.when((pl.col("_prev_value") > 0) & (pl.col("holding_value") >= 0))
+                .then(-(pl.col("holding_value") / pl.col("_prev_value") - 1.0))
+                .otherwise(None)
+                .alias("fund_holding_value_chg_qoq_low"),
+            ])
+            .select(list(factor_schema))
+            .unique(subset=["symbol", "available_date"], keep="last")
+            .sort(["symbol", "available_date"])
+        )
+    return _calendar_frame(dates, symbols).join_asof(
+        periods,
+        left_on="date",
+        right_on="available_date",
+        by="symbol",
+        strategy="backward",
+    ).drop("available_date")
+
+
+def _fund_holding_daily(
+    dates: list[date], symbols: list[str], instruments: pl.DataFrame
+) -> pl.DataFrame:
+    paths = sorted((DATA / "research" / "r60_fund_hold").glob("*.parquet"))
+    if not paths:
+        return _fund_holding_frame(pl.DataFrame(), dates, symbols, instruments)
+    raw = pl.concat(
+        [
+            pl.read_parquet(
+                path,
+                columns=[
+                    "symbol", "quarter_date", "fund_count",
+                    "holding_shares", "holding_value",
+                ],
+            )
+            for path in paths
+        ],
+        how="diagonal_relaxed",
+    )
+    return _fund_holding_frame(raw, dates, symbols, instruments)
 
 
 def _dividend_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
@@ -584,6 +703,8 @@ def main() -> int:
     dividend = _dividend_daily(dates, symbols)
     insider = _insider_daily(dates, symbols)
     holder_trade = _holder_net_buy_daily(dates, symbols)
+    instruments = pl.read_parquet(DATA / "instruments" / "instruments.parquet")
+    fund_holding = _fund_holding_daily(dates, symbols, instruments)
     margin = _margin_daily(dates, symbols)
     goodwill = _goodwill_daily(dates, symbols)
     equity_supply = _equity_supply_daily(dates, symbols)
@@ -593,7 +714,10 @@ def main() -> int:
     prices = _prices(dates, symbols)
 
     base = _calendar_frame(dates, symbols)
-    for frame in (holder, dividend, insider, holder_trade, margin, goodwill, equity_supply, prices):
+    for frame in (
+        holder, dividend, insider, holder_trade, fund_holding,
+        margin, goodwill, equity_supply, prices,
+    ):
         base = base.join(frame, on=["symbol", "date"], how="left")
     for frame in (erp, macro, emotion):
         base = base.join(frame, on="date", how="left")
@@ -614,8 +738,8 @@ def main() -> int:
         mode="timeseries",
         fields=FIELDS,
         description=(
-            "研究实验数据: 增持/减持事件、股东结构变化、两融、商誉与研发、"
-            "股权融资供给、分红、ERP、信用/期限利差和市场情绪。"
+            "研究实验数据: 增持/减持事件、股东结构变化、基金持仓拥挤度、两融、"
+            "商誉与研发、股权融资供给、分红、ERP、信用/期限利差和市场情绪。"
             "仅用于实验策略，不构成可部署结论。"
         ),
     )
