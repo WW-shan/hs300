@@ -1,0 +1,322 @@
+{
+ "window": {
+  "discovery": [
+   "2021-06-01",
+   "2023-12-31"
+  ],
+  "validation": [
+   "2024-01-01",
+   "2026-10-14"
+  ],
+  "factors": [
+   "equity_supply_ratio_180d",
+   "equity_supply_count_180d"
+  ],
+  "permutations": 1000,
+  "seed": 20261017
+ },
+ "rules": {
+  "window_days": 180,
+  "issuance_keywords": [
+   "增发新股上市",
+   "配股上市",
+   "可转债转股"
+  ],
+  "announcement_strict_before": true,
+  "winsorize": [
+   0.01,
+   0.99
+  ]
+ },
+ "data": {
+  "fetch": {
+   "symbols": 459,
+   "empty_symbols": [],
+   "failure_count": 8,
+   "failure_rate": 0.017429,
+   "failures": {
+    "000627.SZ": "KeyError: '公告日期'",
+    "000671.SZ": "KeyError: '公告日期'",
+    "000961.SZ": "KeyError: '公告日期'",
+    "600068.SH": "KeyError: '公告日期'",
+    "600297.SH": "KeyError: '公告日期'",
+    "600705.SH": "KeyError: '公告日期'",
+    "600837.SH": "KeyError: '公告日期'",
+    "601989.SH": "KeyError: '公告日期'"
+   }
+  },
+  "events": {
+   "raw_rows": 12873,
+   "normalized_rows": 12873,
+   "historical_rows": 12873,
+   "issuance_rows": 2513,
+   "events": 2513,
+   "symbols_with_events": 306,
+   "event_months": 80,
+   "announce_null_rate": 0.0,
+   "reason_null_rate": 0.0,
+   "total_shares_null_rate": 0.0,
+   "dilution_distribution": {
+    "min": 0.0,
+    "median": 0.00014995,
+    "p90": 0.05234796,
+    "max": 8.53867583
+   },
+   "announce_lag_days": {
+    "n": 2513,
+    "median": 2.0,
+    "p90": 10.0,
+    "max": 121
+   },
+   "reasons": [
+    {
+     "reason": "可转债转股",
+     "count": 1264
+    },
+    {
+     "reason": "增发新股上市,股权激励",
+     "count": 383
+    },
+    {
+     "reason": "增发新股上市",
+     "count": 245
+    },
+    {
+     "reason": "可转债转股,期权行权",
+     "count": 141
+    },
+    {
+     "reason": "增发新股上市,股权激励,期权行权",
+     "count": 89
+    },
+    {
+     "reason": "可转债转股,定期报告",
+     "count": 85
+    },
+    {
+     "reason": "定期报告,可转债转股",
+     "count": 44
+    },
+    {
+     "reason": "可转债转股,限售股份上市",
+     "count": 29
+    },
+    {
+     "reason": "股权激励,增发新股上市",
+     "count": 27
+    },
+    {
+     "reason": "期权行权,增发新股上市,股权激励",
+     "count": 21
+    },
+    {
+     "reason": "可转债转股,激励股份解禁",
+     "count": 18
+    },
+    {
+     "reason": "增发新股上市,期权行权",
+     "count": 17
+    },
+    {
+     "reason": "增发新股上市,可转债转股",
+     "count": 15
+    },
+    {
+     "reason": "期权行权,可转债转股",
+     "count": 14
+    },
+    {
+     "reason": "转增,可转债转股",
+     "count": 12
+    },
+    {
+     "reason": "增发新股上市,可转债转股,股权激励",
+     "count": 9
+    },
+    {
+     "reason": "配股上市",
+     "count": 9
+    },
+    {
+     "reason": "可转债转股,定期报告,期权行权",
+     "count": 8
+    },
+    {
+     "reason": "定期报告,期权行权,可转债转股",
+     "count": 6
+    },
+    {
+     "reason": "期权行权,股权激励,增发新股上市",
+     "count": 5
+    }
+   ]
+  }
+ },
+ "factors": {
+  "equity_supply_ratio_180d": {
+   "direction": "low",
+   "coverage_discovery": {
+    "mean": 1.0,
+    "min_valid": 298,
+    "months": 31
+   },
+   "coverage_validation": {
+    "mean": 1.0,
+    "min_valid": 298,
+    "months": 33
+   },
+   "discovery": {
+    "mean": 0.0216,
+    "ir": 0.2827,
+    "n_dates": 31,
+    "yearly": {
+     "2021": 0.0081,
+     "2022": 0.0277,
+     "2023": 0.0234
+    },
+    "perm_p": 0.11988011988011989,
+    "coverage": {
+     "mean": 1.0,
+     "min_valid": 298,
+     "months": 31
+    }
+   },
+   "validation": {
+    "mean": 0.0145,
+    "ir": 0.1451,
+    "n_dates": 33,
+    "yearly": {
+     "2024": 0.0281,
+     "2025": 0.0003,
+     "2026": 0.0155
+    },
+    "perm_p": 0.2077922077922078,
+    "coverage": {
+     "mean": 1.0,
+     "min_valid": 298,
+     "months": 33
+    }
+   },
+   "full": {
+    "mean": 0.018,
+    "ir": 0.2007,
+    "n_dates": 64,
+    "yearly": {
+     "2021": 0.0081,
+     "2022": 0.0277,
+     "2023": 0.0234,
+     "2024": 0.0281,
+     "2025": 0.0003,
+     "2026": 0.0155
+    },
+    "perm_p": 0.060939060939060936,
+    "coverage": {
+     "mean": 1.0,
+     "min_valid": 298,
+     "months": 64
+    }
+   },
+   "discovery_groups": null,
+   "validation_groups": null,
+   "corr_existing_max": 0.1113,
+   "D1": true,
+   "F1": false,
+   "F2": false,
+   "F4": true,
+   "discovery_q": 0.12687312687312688,
+   "F3": false,
+   "all_pass": false
+  },
+  "equity_supply_count_180d": {
+   "direction": "low",
+   "coverage_discovery": {
+    "mean": 1.0,
+    "min_valid": 298,
+    "months": 31
+   },
+   "coverage_validation": {
+    "mean": 1.0,
+    "min_valid": 298,
+    "months": 33
+   },
+   "discovery": {
+    "mean": 0.0192,
+    "ir": 0.2674,
+    "n_dates": 31,
+    "yearly": {
+     "2021": -0.0003,
+     "2022": 0.0237,
+     "2023": 0.0262
+    },
+    "perm_p": 0.12687312687312688,
+    "coverage": {
+     "mean": 1.0,
+     "min_valid": 298,
+     "months": 31
+    }
+   },
+   "validation": {
+    "mean": 0.0132,
+    "ir": 0.1353,
+    "n_dates": 33,
+    "yearly": {
+     "2024": 0.0293,
+     "2025": -0.0039,
+     "2026": 0.0147
+    },
+    "perm_p": 0.2077922077922078,
+    "coverage": {
+     "mean": 1.0,
+     "min_valid": 298,
+     "months": 33
+    }
+   },
+   "full": {
+    "mean": 0.0161,
+    "ir": 0.187,
+    "n_dates": 64,
+    "yearly": {
+     "2021": -0.0003,
+     "2022": 0.0237,
+     "2023": 0.0262,
+     "2024": 0.0293,
+     "2025": -0.0039,
+     "2026": 0.0147
+    },
+    "perm_p": 0.06693306693306693,
+    "coverage": {
+     "mean": 1.0,
+     "min_valid": 298,
+     "months": 64
+    }
+   },
+   "discovery_groups": null,
+   "validation_groups": null,
+   "corr_existing_max": 0.1007,
+   "D1": true,
+   "F1": false,
+   "F2": false,
+   "F4": true,
+   "discovery_q": 0.12687312687312688,
+   "F3": false,
+   "all_pass": false
+  }
+ },
+ "passed": [],
+ "adopted_for_r69": [],
+ "decision": {
+  "D1_count": 2,
+  "F1_count": 0,
+  "F2_count": 0,
+  "F3_count": 0,
+  "F4_count": 2,
+  "all_pass_count": 0
+ },
+ "recommendation": "negative knowledge; equity supply dimension closed",
+ "caveats": [
+  "只用公告日, 不使用变动日提前泄露",
+  "增发/配股/可转债转股才计供给",
+  "总股本变化包含同日其它股本事件, 可能高估",
+  "历史名单为月度快照"
+ ]
+}
