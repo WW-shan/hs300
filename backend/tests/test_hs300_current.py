@@ -112,6 +112,49 @@ def test_load_current_members_falls_back_to_cache_on_timeout(tmp_path: Path) -> 
     assert len(result.members) == 300
 
 
+def test_background_refresh_is_per_cache_path(tmp_path: Path) -> None:
+    """不同缓存路径的后台刷新不能互相阻塞 (测试隔离/多数据目录)。"""
+    cache_one = tmp_path / "one.json"
+    cache_two = tmp_path / "two.json"
+    payload = {
+        "as_of": "2026-09-30",
+        "source": "csindex",
+        "fetched_at": "2020-01-01T00:00:00+08:00",
+        "count": 1,
+        "members": [{"symbol": "000001.SZ", "name": "old"}],
+    }
+    for path in (cache_one, cache_two):
+        path.write_text(json.dumps(payload), encoding="utf-8")
+
+    first_started = threading.Event()
+    release_first = threading.Event()
+    second_called = threading.Event()
+    member = {"symbol": "600000.SH", "name": "new"}
+
+    def first_fetcher() -> current.CurrentMembers:
+        first_started.set()
+        release_first.wait(timeout=5.0)
+        return current.CurrentMembers(
+            as_of="2026-10-16", source="csindex",
+            fetched_at="2026-10-16T12:00:00+08:00", members=(member,),
+        )
+
+    def second_fetcher() -> current.CurrentMembers:
+        second_called.set()
+        return current.CurrentMembers(
+            as_of="2026-10-16", source="csindex",
+            fetched_at="2026-10-16T12:00:00+08:00", members=(member,),
+        )
+
+    try:
+        assert current.load_current_members(cache_path=cache_one, fetcher=first_fetcher).as_of == "2026-09-30"
+        assert first_started.wait(timeout=2.0)
+        assert current.load_current_members(cache_path=cache_two, fetcher=second_fetcher).as_of == "2026-09-30"
+        assert second_called.wait(timeout=2.0)
+    finally:
+        release_first.set()
+
+
 def test_load_current_members_returns_stale_cache_immediately(tmp_path: Path) -> None:
     """过期缓存应先返回, 官方刷新在后台完成, 避免前端一直 loading。"""
     cache = tmp_path / "current_members.json"

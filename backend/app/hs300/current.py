@@ -39,7 +39,7 @@ _EM_PAGE_SIZE = 100
 _EM_MAX_PAGES = 5
 _CACHE_LOCK = threading.Lock()
 _REFRESH_LOCK = threading.Lock()
-_REFRESHING = False
+_REFRESHING_PATHS: set[Path] = set()
 
 
 class CurrentMembersError(ValueError):
@@ -291,15 +291,14 @@ def _start_background_refresh(
     path: Path,
     fetcher: Callable[[], CurrentMembers],
 ) -> None:
-    """过期缓存先返回, 官方源在后台刷新; 同一进程最多一个刷新任务。"""
-    global _REFRESHING
+    """过期缓存先返回, 官方源在后台刷新; 同一缓存路径最多一个刷新任务。"""
+    cache_key = path.resolve()
     with _REFRESH_LOCK:
-        if _REFRESHING:
+        if cache_key in _REFRESHING_PATHS:
             return
-        _REFRESHING = True
+        _REFRESHING_PATHS.add(cache_key)
 
     def run() -> None:
-        global _REFRESHING
         try:
             result = fetcher()
             _write_cache(path, result)
@@ -307,7 +306,7 @@ def _start_background_refresh(
             logger.warning("HS300 当前成分后台刷新失败: %s", exc)
         finally:
             with _REFRESH_LOCK:
-                _REFRESHING = False
+                _REFRESHING_PATHS.discard(cache_key)
 
     threading.Thread(
         target=run,
