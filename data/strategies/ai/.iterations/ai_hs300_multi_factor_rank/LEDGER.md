@@ -2890,3 +2890,43 @@ C1 当前对照通过 (Sharpe ≥1.05, 年化 ≥18%); 与 R33 的差异可由 0
 - 当前没有任何长仓组合通过历史官方成分压力测试, 不应进入模拟盘/实盘;
 - 限制同 R40: 月度名单快照替代逐日调样流水、行业快照仍有前视、财务字段有重述风险; 但当前/历史两套使用同一价格仓和同一引擎, 差异来自成员选择而不是接线;
 - **下一步 R42**: 在历史官方成员宇宙上重新做因子筛选, 使用时间切分 + 多重检验修正 + 成本后多空, 不允许把本轮表现差的参数硬调回来。
+
+---
+
+# R42 · 历史有效宇宙因子重筛 (discovery → validation, FDR) — 事前预注册
+
+**动机**: R40/R41 证明当前 B80/C6_IND/P2/V20 的高收益主要来自当前名单回填, 不能继续在幸存者宇宙上调参。R42 在 R40 的 459 只历史官方成员面板上重新筛因子, 先找历史上真正跨期有效、可解释的候选, 不直接组合。
+
+**数据**: 复用 R40 历史名单/459 只价格仓; PIT 财务快照; 当前行业仅用于报告, 不作为本轮的筛选字段。月度调仓, 下一个调仓日收盘收益为 `fwd`; 所有因子只使用 T 日可得数据。
+
+**时间切分**:
+- Discovery: 2021-06-01 ~ 2023-12-31;
+- Validation: 2024-01-01 ~ 2026-10-14;
+- 不在 validation 上改方向/窗口/阈值。
+
+**固定候选与方向 (26 个, 先写后跑)**:
+
+| 维度 | 因子 (方向) |
+| --- | --- |
+| 价值/质量 | `pb_latest` 低; `roe_latest` 高; `gross_margin_latest` 高; `net_margin_latest` 高; `ocf_ni` 高; `accrual` 低; `ocf_debt` 高 |
+| 成长 | `revenue_yoy_latest` 高; `net_income_yoy_latest` 高 |
+| 安全 | `debt_ratio_latest` 低 |
+| 动量/趋势 | `overnight_ret_20d` 高; `amplitude_trend_20_60` 高; `momentum_20d` 高; `momentum_60d` 高 |
+| 反转 | `momentum_5d` 低; `rsi_14_delta_5d` 低; `kdj_kd_diff` 低 |
+| 波动/尾部 | `annual_vol_20d` 低; `downside_vol_20d` 低; `max_ret_20d` 低; `beta_60d` 低 |
+| 情绪/交易结构 | `close_position` 高; `vol_ratio_5d` 低; `turnover_z_60d` 低 |
+| 流动性/规模 | `amount` 低; `float_mv` 低 |
+
+`beta_60d` = 60 日个股收益对 HS300 指数收益的滚动 beta; `float_mv` = 原始收盘价 × instruments 流通股本 (历史股本缺失时报告覆盖限制)。
+
+**门槛**:
+| # | 阈值 |
+| --- | --- |
+| D1 覆盖 | discovery/validation 平均有效覆盖均 ≥70%; 每月参与截面 ≥80 只 |
+| F1 IC | 方向调整后 discovery mean IC ≥0.03, validation mean IC ≥0.02 且同号; 逐年同号 ≥4/5 |
+| F2 分组 | discovery/validation 五组单调 rho ≥0.7; 2× 成本后年化多空 spread >0 |
+| F3 显著 | discovery 1000 次符号翻转置换, BH-FDR q≤0.10 (26 个候选, seed=20261017); validation 单侧置换 p≤0.05 |
+| F4 报告 | 与 V20/D1_IND/D4 腿的最大截面相关, 不设门槛, 留给 R43 组合增量检验 |
+| 采纳 | 任一因子过 D1+F1+F2+F3 → 进入 R43; 全部不过 → 记负知识, 不再围绕本轮候选调参 |
+
+**报告项**: HS300 指数与历史成员等权基准同 7 相位指标; 因子逐月 IC 序列摘要; 通过因子的 discovery/validation 分组收益; beta/float_mv 数据覆盖。**纪律**: 不新增候选、不反向拟合、不因 validation 差改 discovery 门槛; 不把单因子 IC 当作可直接部署策略。
