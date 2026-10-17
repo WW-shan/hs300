@@ -1,0 +1,245 @@
+{
+ "post_hoc": true,
+ "clean_holdout": false,
+ "window": {
+  "discovery": [
+   "2021-06-01",
+   "2023-12-31"
+  ],
+  "validation": [
+   "2024-01-01",
+   "2026-10-14"
+  ],
+  "factors": [
+   "pledge_ratio_latest",
+   "pledge_ratio_chg_1m"
+  ],
+  "permutations": 1000,
+  "seed": 20261017
+ },
+ "rules": {
+  "snapshot_age_days": [
+   1,
+   14
+  ],
+  "zero_fill_missing_vendor_rows": true,
+  "winsorize": [
+   0.01,
+   0.99
+  ]
+ },
+ "data": {
+  "fetch": {
+   "planned_snapshots": 66,
+   "empty_snapshots": [],
+   "failure_count": 0,
+   "failure_rate": 0.0,
+   "failures": {}
+  },
+  "snapshots": {
+   "raw_rows": 153478,
+   "active_member_pairs": 29616,
+   "vendor_rows_matched": 16588,
+   "zero_filled_rows": 13034,
+   "zero_fill_rate": 0.4401,
+   "symbols": 459,
+   "snapshots": 66,
+   "snapshot_min": "2021-05-28",
+   "snapshot_max": "2026-10-09",
+   "change_nonnull_rate": 0.968598,
+   "ratio_distribution": {
+    "min": 0.0,
+    "median": 0.07,
+    "p90": 13.91,
+    "max": 76.13
+   }
+  }
+ },
+ "factors": {
+  "pledge_ratio_latest": {
+   "direction": "low",
+   "coverage_discovery": {
+    "mean": 0.999892,
+    "min_valid": 298,
+    "months": 31,
+    "months_ge_min": 31,
+    "min_month": 80
+   },
+   "coverage_validation": {
+    "mean": 0.999798,
+    "min_valid": 298,
+    "months": 33,
+    "months_ge_min": 33,
+    "min_month": 80
+   },
+   "discovery": {
+    "mean": 0.0398,
+    "ir": 0.4514,
+    "n_dates": 31,
+    "yearly": {
+     "2021": 0.0183,
+     "2022": 0.0559,
+     "2023": 0.0363
+    },
+    "perm_p": 0.015984015984015984,
+    "coverage": {
+     "mean": 0.999892,
+     "min_valid": 298,
+     "months": 31
+    }
+   },
+   "validation": {
+    "mean": 0.0118,
+    "ir": 0.1231,
+    "n_dates": 33,
+    "yearly": {
+     "2024": 0.034,
+     "2025": 0.001,
+     "2026": -0.0033
+    },
+    "perm_p": 0.22277722277722278,
+    "coverage": {
+     "mean": 0.999798,
+     "min_valid": 298,
+     "months": 33
+    }
+   },
+   "full": {
+    "mean": 0.0254,
+    "ir": 0.2718,
+    "n_dates": 64,
+    "yearly": {
+     "2021": 0.0183,
+     "2022": 0.0559,
+     "2023": 0.0363,
+     "2024": 0.034,
+     "2025": 0.001,
+     "2026": -0.0033
+    },
+    "perm_p": 0.016983016983016984,
+    "coverage": {
+     "mean": 0.999844,
+     "min_valid": 298,
+     "months": 64
+    }
+   },
+   "discovery_groups": null,
+   "validation_groups": {
+    "group_monthly": [
+     0.00726,
+     0.01046,
+     0.01407,
+     0.01152,
+     0.02816
+    ],
+    "monotonic_rho": 0.9,
+    "spread_month": 0.0209,
+    "spread_annual_net2x": 0.2172
+   },
+   "corr_existing_max": 0.0821,
+   "D1": true,
+   "F1": false,
+   "F2": false,
+   "F4": true,
+   "discovery_q": 0.03196803196803197,
+   "F3": false,
+   "all_pass": false
+  },
+  "pledge_ratio_chg_1m": {
+   "direction": "low",
+   "coverage_discovery": {
+    "mean": 0.967419,
+    "min_valid": 0,
+    "months": 31,
+    "months_ge_min": 30,
+    "min_month": 60
+   },
+   "coverage_validation": {
+    "mean": 0.998483,
+    "min_valid": 296,
+    "months": 33,
+    "months_ge_min": 33,
+    "min_month": 60
+   },
+   "discovery": {
+    "mean": -0.0211,
+    "ir": -0.3185,
+    "n_dates": 30,
+    "yearly": {
+     "2021": -0.025,
+     "2022": -0.0365,
+     "2023": -0.0037
+    },
+    "perm_p": 0.09490509490509491,
+    "coverage": {
+     "mean": 0.999667,
+     "min_valid": 298,
+     "months": 30
+    }
+   },
+   "validation": {
+    "mean": -0.009,
+    "ir": -0.1191,
+    "n_dates": 33,
+    "yearly": {
+     "2024": -0.0093,
+     "2025": -0.0044,
+     "2026": -0.0146
+    },
+    "perm_p": 0.7252747252747253,
+    "coverage": {
+     "mean": 0.998483,
+     "min_valid": 296,
+     "months": 33
+    }
+   },
+   "full": {
+    "mean": -0.0148,
+    "ir": -0.2066,
+    "n_dates": 63,
+    "yearly": {
+     "2021": -0.025,
+     "2022": -0.0365,
+     "2023": -0.0037,
+     "2024": -0.0093,
+     "2025": -0.0044,
+     "2026": -0.0146
+    },
+    "perm_p": 0.9410589410589411,
+    "coverage": {
+     "mean": 0.983437,
+     "min_valid": 0,
+     "months": 64
+    }
+   },
+   "discovery_groups": null,
+   "validation_groups": null,
+   "corr_existing_max": 0.0691,
+   "D1": true,
+   "F1": false,
+   "F2": false,
+   "F4": true,
+   "discovery_q": 0.09490509490509491,
+   "F3": false,
+   "all_pass": false
+  }
+ },
+ "passed": [],
+ "adopted_for_r66": [],
+ "candidate_post_hoc": [],
+ "decision": {
+  "D1_count": 2,
+  "F1_count": 0,
+  "F2_count": 0,
+  "F3_count": 0,
+  "F4_count": 2,
+  "all_pass_count": 0
+ },
+ "recommendation": "negative knowledge; pledge dimension closed",
+ "caveats": [
+  "R65 已看过结果, 本口径不是独立样本外",
+  "只对当天有交易行的历史成员补零",
+  "未上市/退市/停牌不补零",
+  "历史名单为月度快照"
+ ]
+}
