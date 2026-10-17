@@ -60,6 +60,30 @@ FIELDS = [
     ExtField("analyst_rating_change_20d", "float", "分析师评级调整20日衰减"),
     ExtField("forecast_surprise_60d", "float", "业绩预告预期差60日衰减"),
     ExtField("express_surprise_60d", "float", "业绩快报净利润同比预期差60日衰减"),
+    ExtField("industry_mom_20d", "float", "一级行业20日等权动量"),
+    ExtField("industry_mom_60d", "float", "一级行业60日等权动量"),
+    ExtField("industry_rps_20d", "float", "一级行业20日动量截面分位"),
+    ExtField("industry_breadth_20d", "float", "一级行业站上MA20比例"),
+    ExtField("stock_rel_industry_20d", "float", "个股相对行业20日强弱"),
+    ExtField("mainline_top1_flag", "float", "所属行业是否为当日主线第一"),
+    ExtField("mainline_strength", "float", "主线行业涨停强度"),
+    ExtField("mainline_leader_flag", "float", "是否为当日主线龙头"),
+    ExtField("etf_share_chg_1m", "float", "510300份额月度变化"),
+    ExtField("etf_share_chg_3m", "float", "510300份额三月变化"),
+    ExtField("qvix_z_252", "float", "300ETF QVIX 252日z-score"),
+    ExtField("m1_m2_scissors", "float", "M1-M2同比剪刀差"),
+    ExtField("m1_m2_scissors_chg_1m", "float", "M1-M2剪刀差月度变化"),
+    ExtField("m2_yoy", "float", "M2同比"),
+    ExtField("shibor_3m", "float", "SHIBOR 3M"),
+    ExtField("shibor_3m_chg_20d", "float", "SHIBOR 3M 20日变化"),
+    ExtField("pmi", "float", "制造业PMI"),
+    ExtField("cpi_yoy", "float", "CPI同比"),
+    ExtField("ppi_yoy", "float", "PPI同比"),
+    ExtField("market_breadth_above_ma20", "float", "市场站上MA20比例"),
+    ExtField("market_profit_score", "float", "市场赚钱效应分数"),
+    ExtField("market_trend_score", "float", "市场趋势分数"),
+    ExtField("market_speculation_score", "float", "市场投机分数"),
+    ExtField("northbound_net_buy_20d", "float", "北向20日净买额"),
     ExtField("margin_chg_1m_low", "float", "两融余额月度变化反向"),
     ExtField("goodwill_ratio_low", "float", "商誉/总资产反向"),
     ExtField("intangible_ratio_low", "float", "无形资产/总资产反向"),
@@ -722,6 +746,291 @@ def _express_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
     )
 
 
+def _industry_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
+    from app.services.industry_map import load_industry_l1
+
+    industry = load_industry_l1(DATA)
+    paths = sorted((DATA / "kline_daily_enriched").glob("date=*/part.parquet"))
+    panel = (
+        pl.scan_parquet([str(path) for path in paths])
+        .filter(pl.col("symbol").is_in(symbols) & pl.col("date").is_in(dates))
+        .select(["symbol", "date", "close"])
+        .collect()
+        .sort(["symbol", "date"])
+        .with_columns([
+            (pl.col("close") / pl.col("close").shift(20).over("symbol") - 1.0).alias("_ret20"),
+            (pl.col("close") / pl.col("close").shift(60).over("symbol") - 1.0).alias("_ret60"),
+            (pl.col("close") > pl.col("close").rolling_mean(20).over("symbol"))
+            .cast(pl.Float64).alias("_above_ma20"),
+        ])
+        .join(industry, on="symbol", how="left")
+    )
+    grouped = (
+        panel.filter(pl.col("industry_l1").is_not_null())
+        .group_by(["date", "industry_l1"]).agg([
+            pl.col("_ret20").mean().alias("industry_mom_20d"),
+            pl.col("_ret60").mean().alias("industry_mom_60d"),
+            pl.col("_above_ma20").mean().alias("industry_breadth_20d"),
+            pl.len().alias("_industry_count"),
+        ])
+        .with_columns(
+            (pl.col("industry_mom_20d").rank("ordinal").over("date") / pl.len().over("date"))
+            .alias("industry_rps_20d")
+        )
+    )
+    return (
+        panel.join(grouped, on=["date", "industry_l1"], how="left")
+        .with_columns(
+            (pl.col("_ret20") - pl.col("industry_mom_20d")).alias("stock_rel_industry_20d")
+        )
+        .select([
+            "symbol", "date", "industry_mom_20d", "industry_mom_60d",
+            "industry_rps_20d", "industry_breadth_20d", "stock_rel_industry_20d",
+        ])
+    )
+
+
+def _mainline_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
+    from app.services.industry_map import load_industry_l1
+
+    path = DATA / "mainline_history" / "part.parquet"
+    if not path.exists():
+        return pl.DataFrame(schema={
+            "symbol": pl.String, "date": pl.Date,
+            "mainline_top1_flag": pl.Float64,
+            "mainline_strength": pl.Float64,
+            "mainline_leader_flag": pl.Float64,
+        })
+    industry = load_industry_l1(DATA)
+    mainline = (
+        pl.read_parquet(path)
+        .filter((pl.col("kind") == "industry") & (pl.col("rank") == 1))
+        .select([
+            pl.col("date").cast(pl.Date),
+            pl.col("member").cast(pl.String).str.split("-").list.first().alias("industry_l1"),
+            (pl.col("limit_up_count").cast(pl.Float64) + pl.col("rungs_filled").cast(pl.Float64))
+            .alias("mainline_strength"),
+            pl.col("leader_symbol").cast(pl.String),
+            pl.lit(True).alias("_matched"),
+        ])
+        .unique(subset=["date"], keep="last")
+    )
+    base = _calendar_frame(dates, symbols).join(industry, on="symbol", how="left")
+    joined = base.join(mainline, on=["date", "industry_l1"], how="left")
+    return joined.select([
+        "symbol", "date",
+        pl.when(pl.col("_matched").is_not_null()).then(1.0).otherwise(0.0)
+        .alias("mainline_top1_flag"),
+        pl.col("mainline_strength").fill_null(0.0),
+        pl.when(pl.col("symbol") == pl.col("leader_symbol")).then(1.0).otherwise(0.0)
+        .alias("mainline_leader_flag"),
+    ])
+
+
+def _etf_flow_daily(dates: list[date]) -> pl.DataFrame:
+    paths = sorted((DATA / "research" / "r74_etf_flow").glob("*.parquet"))
+    if not paths:
+        return pl.DataFrame(schema={
+            "date": pl.Date, "etf_share_chg_1m": pl.Float64, "etf_share_chg_3m": pl.Float64,
+        })
+    raw = pl.concat([pl.read_parquet(path) for path in paths], how="diagonal_relaxed")
+    shares = (
+        raw.filter(pl.col("基金代码").cast(pl.String) == "510300")
+        .select([
+            pl.col("统计日期").cast(pl.Date, strict=False).alias("snapshot_date"),
+            pl.col("基金份额").cast(pl.Float64, strict=False).alias("_shares"),
+        ])
+        .filter(pl.col("snapshot_date").is_not_null() & (pl.col("_shares") > 0))
+        .unique(subset=["snapshot_date"], keep="last")
+        .sort("snapshot_date")
+        .with_columns([
+            (pl.col("_shares") / pl.col("_shares").shift(1) - 1.0).alias("etf_share_chg_1m"),
+            (pl.col("_shares") / pl.col("_shares").shift(3) - 1.0).alias("etf_share_chg_3m"),
+            (pl.col("snapshot_date") + pl.duration(days=1)).alias("effective_date"),
+        ])
+    )
+    joined = pl.DataFrame({"date": dates}).sort("date").join_asof(
+        shares.select(["effective_date", "etf_share_chg_1m", "etf_share_chg_3m"]),
+        left_on="date", right_on="effective_date", strategy="backward",
+        check_sortedness=False,
+    )
+    age = (pl.col("date") - pl.col("effective_date")).dt.total_days()
+    return joined.with_columns([
+        pl.when(age <= 45).then(pl.col("etf_share_chg_1m")).otherwise(None)
+        .alias("etf_share_chg_1m"),
+        pl.when(age <= 45).then(pl.col("etf_share_chg_3m")).otherwise(None)
+        .alias("etf_share_chg_3m"),
+    ]).drop("effective_date")
+
+
+def _qvix_daily(dates: list[date]) -> pl.DataFrame:
+    path = DATA / "research" / "r75_qvix" / "qvix_300etf.parquet"
+    if not path.exists():
+        return pl.DataFrame(schema={"date": pl.Date, "qvix_z_252": pl.Float64})
+    qvix = (
+        pl.read_parquet(path)
+        .select(["date", "close"])
+        .filter(pl.col("close").is_not_null())
+        .unique(subset=["date"], keep="last")
+        .sort("date")
+        .with_columns([
+            pl.col("close").rolling_mean(252).alias("_mean"),
+            pl.col("close").rolling_std(252).alias("_std"),
+        ])
+        .with_columns(
+            pl.when(pl.col("_std") > 0)
+            .then((pl.col("close") - pl.col("_mean")) / pl.col("_std"))
+            .otherwise(None)
+            .alias("qvix_z_252")
+        )
+        .select(["date", "qvix_z_252"])
+    )
+    return pl.DataFrame({"date": dates}).sort("date").join_asof(
+        qvix, on="date", strategy="backward", check_sortedness=False,
+    )
+
+
+def _macro_extra_daily(dates: list[date]) -> pl.DataFrame:
+    base = pl.DataFrame({"date": dates}).sort("date")
+    macro_dir = DATA / "research" / "macro"
+
+    def series(path: Path, value_col: str, output_col: str) -> pl.DataFrame:
+        return (
+            pl.read_parquet(path)
+            .select([
+                pl.col("日期").cast(pl.Date, strict=False).alias("available_date"),
+                pl.col(value_col).cast(pl.Float64, strict=False).alias(output_col),
+            ])
+            .filter(pl.col("available_date").is_not_null() & pl.col(output_col).is_not_null())
+            .unique(subset=["available_date"], keep="last")
+            .sort("available_date")
+        )
+
+    out = base
+    for name, output_col in (("pmi", "pmi"), ("cpi", "cpi_yoy"), ("ppi", "ppi_yoy")):
+        path = macro_dir / f"{name}.parquet"
+        if path.exists():
+            source = series(path, "今值", output_col)
+            out = out.join_asof(
+                source, left_on="date", right_on="available_date", strategy="backward",
+                check_sortedness=False,
+            )
+            age = (pl.col("date") - pl.col("available_date")).dt.total_days()
+            out = out.with_columns(
+                pl.when(age <= 60).then(pl.col(output_col)).otherwise(None).alias(output_col)
+            ).drop("available_date")
+
+    money_path = macro_dir / "money_supply.parquet"
+    if money_path.exists():
+        money = (
+            pl.read_parquet(money_path)
+            .select([
+                pl.concat_str([
+                    pl.col("月份").cast(pl.String).str.replace("年", "-").str.replace("月份", ""),
+                    pl.lit("-01"),
+                ]).str.strptime(pl.Date, "%Y-%m-%d", strict=False).alias("month_date"),
+                pl.col("货币(M1)-同比增长").cast(pl.Float64, strict=False).alias("_m1"),
+                pl.col("货币和准货币(M2)-同比增长").cast(pl.Float64, strict=False).alias("m2_yoy"),
+            ])
+            .filter(pl.col("month_date").is_not_null())
+            .with_columns([
+                (pl.col("_m1") - pl.col("m2_yoy")).alias("m1_m2_scissors"),
+                (pl.col("month_date") + pl.duration(days=45)).alias("effective_date"),
+            ])
+            .with_columns(
+                (pl.col("m1_m2_scissors") - pl.col("m1_m2_scissors").shift(1))
+                .alias("m1_m2_scissors_chg_1m")
+            )
+            .sort("effective_date")
+        )
+        out = out.join_asof(
+            money.select([
+                "effective_date", "m1_m2_scissors", "m1_m2_scissors_chg_1m", "m2_yoy",
+            ]),
+            left_on="date", right_on="effective_date", strategy="backward",
+            check_sortedness=False,
+        )
+        age = (pl.col("date") - pl.col("effective_date")).dt.total_days()
+        out = out.with_columns([
+            pl.when(age <= 60).then(pl.col("m1_m2_scissors")).otherwise(None)
+            .alias("m1_m2_scissors"),
+            pl.when(age <= 60).then(pl.col("m1_m2_scissors_chg_1m")).otherwise(None)
+            .alias("m1_m2_scissors_chg_1m"),
+            pl.when(age <= 60).then(pl.col("m2_yoy")).otherwise(None).alias("m2_yoy"),
+        ]).drop("effective_date")
+
+    shibor_path = macro_dir / "shibor.parquet"
+    if shibor_path.exists():
+        shibor = (
+            pl.read_parquet(shibor_path)
+            .select([
+                pl.col("日期").cast(pl.Date, strict=False).alias("date"),
+                pl.col("3M-定价").cast(pl.Float64, strict=False).alias("shibor_3m"),
+            ])
+            .filter(pl.col("date").is_not_null() & pl.col("shibor_3m").is_not_null())
+            .unique(subset=["date"], keep="last")
+            .sort("date")
+            .with_columns(
+                (pl.col("shibor_3m") - pl.col("shibor_3m").shift(20))
+                .alias("shibor_3m_chg_20d")
+            )
+        )
+        out = out.join_asof(
+            shibor, on="date", strategy="backward", check_sortedness=False,
+        )
+    return out
+
+
+def _regime_extra_daily(dates: list[date]) -> pl.DataFrame:
+    path = DATA / "regime_history" / "part.parquet"
+    if not path.exists():
+        return pl.DataFrame(schema={"date": pl.Date})
+    raw = (
+        pl.read_parquet(path)
+        .select([
+            pl.col("date").cast(pl.Date),
+            pl.col("above_ma20_pct").cast(pl.Float64).alias("market_breadth_above_ma20"),
+            pl.col("profit_score").cast(pl.Float64).alias("market_profit_score"),
+            pl.col("trend_score").cast(pl.Float64).alias("market_trend_score"),
+            pl.col("speculation_score").cast(pl.Float64).alias("market_speculation_score"),
+        ])
+        .unique(subset=["date"], keep="last")
+        .sort("date")
+    )
+    return pl.DataFrame({"date": dates}).sort("date").join_asof(
+        raw, on="date", strategy="backward", check_sortedness=False,
+    )
+
+
+def _northbound_daily(dates: list[date]) -> pl.DataFrame:
+    path = DATA / "research" / "macro" / "northbound.parquet"
+    if not path.exists():
+        return pl.DataFrame(schema={"date": pl.Date, "northbound_net_buy_20d": pl.Float64})
+    raw = (
+        pl.read_parquet(path)
+        .select([
+            pl.col("日期").cast(pl.Date, strict=False).alias("available_date"),
+            pl.col("当日成交净买额").cast(pl.Float64, strict=False).alias("_net_buy"),
+        ])
+        .filter(pl.col("available_date").is_not_null())
+        .unique(subset=["available_date"], keep="last")
+        .sort("available_date")
+        .with_columns(
+            pl.col("_net_buy").rolling_sum(20, min_samples=20).alias("northbound_net_buy_20d")
+        )
+        .select(["available_date", "northbound_net_buy_20d"])
+    )
+    joined = pl.DataFrame({"date": dates}).sort("date").join_asof(
+        raw, left_on="date", right_on="available_date", strategy="backward",
+        check_sortedness=False,
+    )
+    age = (pl.col("date") - pl.col("available_date")).dt.total_days()
+    return joined.with_columns(
+        pl.when(age <= 30).then(pl.col("northbound_net_buy_20d")).otherwise(None)
+        .alias("northbound_net_buy_20d")
+    ).drop("available_date")
+
+
 def _dividend_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
     paths = sorted((DATA / "research" / "r89_dividend_growth").glob("*.parquet"))
     frames = [
@@ -1170,6 +1479,13 @@ def main() -> int:
     analyst = _analyst_daily(dates, symbols)
     forecast = _forecast_daily(dates, symbols)
     express = _express_daily(dates, symbols)
+    industry = _industry_daily(dates, symbols)
+    mainline = _mainline_daily(dates, symbols)
+    etf_flow = _etf_flow_daily(dates)
+    qvix = _qvix_daily(dates)
+    macro_extra = _macro_extra_daily(dates)
+    regime_extra = _regime_extra_daily(dates)
+    northbound = _northbound_daily(dates)
     margin = _margin_daily(dates, symbols)
     goodwill = _goodwill_daily(dates, symbols)
     equity_supply = _equity_supply_daily(dates, symbols)
@@ -1182,10 +1498,10 @@ def main() -> int:
     for frame in (
         holder, dividend, insider, holder_trade, fund_holding,
         lhb, pledge, repurchase, block_trade, analyst, forecast, express,
-        margin, goodwill, equity_supply, prices,
+        industry, mainline, margin, goodwill, equity_supply, prices,
     ):
         base = base.join(frame, on=["symbol", "date"], how="left")
-    for frame in (erp, macro, emotion):
+    for frame in (erp, macro, emotion, etf_flow, qvix, macro_extra, regime_extra, northbound):
         base = base.join(frame, on="date", how="left")
     base = base.with_columns(
         pl.when((pl.col("raw_close") > 0) & pl.col("dividend_ttm_cash").is_not_null())
@@ -1199,6 +1515,7 @@ def main() -> int:
             "lhb_event_count_20d_low", "repurchase_event_60d",
             "block_trade_ratio_20d_low", "block_premium_20d",
             "forecast_surprise_60d", "express_surprise_60d",
+            "mainline_top1_flag", "mainline_strength", "mainline_leader_flag",
         )
     ]).drop("raw_close")
     for field in FIELDS:

@@ -6637,3 +6637,163 @@ PIT 规则：
 - `scripts/backtest_r100b_neutral_cost.py`
 - `evidence/r100_event_strategy_backtests.json`
 - `evidence/r100b_neutral_3x_cost.json`
+
+# R101 · 行业/主线 + 市场级择时因子策略化 (2026-10-17) — 事前预注册
+
+## 目的
+
+R26/R27/R56/R74/R75 等轮次已经研究过行业动量、宏观分层、ETF 份额、QVIX 和趋势择时，但多数只做了研究表，没有形成可被因子库和策略回测共同消费的因子。R101 把这些仍有本地缓存的维度全部接入扩展数据，并跑真实策略回测。
+
+本轮不重复调参寻找单点最优；重点看“行业/主线/市场状态”作为选股腿或闸门时，是否在历史名单、2×/3× 成本和近一年 fresh-start 下仍有稳定表现。
+
+## 计划因子
+
+| 维度 | 数据 | 因子 | 先验方向 |
+| --- | --- | --- | --- |
+| 行业动量 | enriched 日K + 当前行业快照 | `industry_mom_20d`, `industry_mom_60d`, `industry_rps_20d` | 高好 |
+| 行业宽度 | enriched 日K + 行业 | `industry_breadth_20d` | 高好 |
+| 行业内相对强弱 | 个股收益 - 行业均值 | `stock_rel_industry_20d` | 高好 |
+| 主线行业 | `mainline_history` | `mainline_top1_flag`, `mainline_strength` | 高好 |
+| 主线龙头 | `mainline_history` | `mainline_leader_flag` | 高好 |
+| ETF 份额 | `r74_etf_flow` | `etf_share_chg_1m`, `etf_share_chg_3m` | 高好 |
+| 隐含波动率 | `r75_qvix` | `qvix_z_252` | 观察项 |
+| 流动性/宏观 | M1/M2、SHIBOR、PMI、CPI、PPI | `m1_m2_scissors`, `m1_m2_scissors_chg_1m`, `m2_yoy`, `shibor_3m`, `shibor_3m_chg_20d`, `pmi`, `cpi_yoy`, `ppi_yoy` | 观察项 |
+| 市场宽度/情绪 | `regime_history` | `market_breadth_above_ma20`, `market_profit_score`, `market_trend_score`, `market_speculation_score` | 观察项 |
+| 北向 | `macro/northbound` | `northbound_net_buy_20d` | 高好/数据缺口 |
+
+PIT 规则：
+
+- 行业分类使用当前 `ext_hy_ths` 快照回填历史，必须标注行业回填偏差。
+- 行业收益、宽度、相对强弱只使用 T 日及以前收盘数据，T+1 开盘成交。
+- 主线数据只在有记录的日期生效；没有记录的日期不补造。
+- ETF 份额、M1/M2、PMI/CPI/PPI 按发布日期或保守滞后对齐；北向停更后保持 null。
+- QVIX 用 252 日滚动 z-score，至少 252 个有效交易日才输出。
+
+## 计划策略
+
+- `ai_hs300_industry_momentum_quality`
+- `ai_hs300_industry_relative_strength_quality`
+- `ai_hs300_mainline_quality`
+- `ai_hs300_macro_liquidity_quality`
+- `ai_hs300_risk_appetite_quality`
+- `ai_hs300_industry_macro_combo`
+
+## 回测门槛
+
+1. 历史逐日 HS300 成分；T+1 开盘；2× 成本主口径，3× 压力。
+2. 长周期 2021-06-01 至 2026-10-16，10 个起始相位。
+3. 近一年 2025-10-14 起 5 个 fresh-start 相位。
+4. 报告当前名单 vs 历史名单、行业中性、行业+市值中性。
+5. 主线数据不足或行业快照回填偏差必须写入 caveat。
+6. 只有长周期、相位和近一年同时不明显失效的策略，才进入下一轮风险归因。
+
+## 判定
+
+- 行业动量若只在当前名单有效、历史名单衰减，则不采纳。
+- 市场级闸门如果只减少暴露而没有提高 Sharpe/回撤，不算 alpha。
+- 主线策略若只在 127 天样本里有效，只能保留实验。
+- 数据停更的宏观/北向因子保留为历史研究腿，不进入当前部署。
+
+## R101 落地结果 (2026-10-17)
+
+### 新增因子
+
+已接入扩展数据并进入因子库/信号/策略链路：
+
+- `ext_alt_hs300_industry_mom_20d`
+- `ext_alt_hs300_industry_mom_60d`
+- `ext_alt_hs300_industry_rps_20d`
+- `ext_alt_hs300_industry_breadth_20d`
+- `ext_alt_hs300_stock_rel_industry_20d`
+- `ext_alt_hs300_mainline_top1_flag`
+- `ext_alt_hs300_mainline_strength`
+- `ext_alt_hs300_mainline_leader_flag`
+- `ext_alt_hs300_etf_share_chg_1m`
+- `ext_alt_hs300_etf_share_chg_3m`
+- `ext_alt_hs300_qvix_z_252`
+- `ext_alt_hs300_m1_m2_scissors`
+- `ext_alt_hs300_m1_m2_scissors_chg_1m`
+- `ext_alt_hs300_m2_yoy`
+- `ext_alt_hs300_shibor_3m`
+- `ext_alt_hs300_shibor_3m_chg_20d`
+- `ext_alt_hs300_pmi`
+- `ext_alt_hs300_cpi_yoy`
+- `ext_alt_hs300_ppi_yoy`
+- `ext_alt_hs300_market_breadth_above_ma20`
+- `ext_alt_hs300_market_profit_score`
+- `ext_alt_hs300_market_trend_score`
+- `ext_alt_hs300_market_speculation_score`
+- `ext_alt_hs300_northbound_net_buy_20d`
+
+数据口径：
+
+- 行业分类使用当前同花顺行业快照回填历史，存在行业回填偏差。
+- mainline_history 只有 127 个有记录交易日，缺失日期不补造。
+- PMI/CPI/PPI 和北向在停更后不向前填充；ETF 份额、M1/M2 按保守滞后和年龄上限处理。
+
+### 新增策略
+
+- `ai_hs300_industry_momentum_quality`
+- `ai_hs300_industry_relative_strength_quality`
+- `ai_hs300_mainline_quality`
+- `ai_hs300_macro_liquidity_quality`
+- `ai_hs300_risk_appetite_quality`
+- `ai_hs300_industry_macro_combo`
+
+### 历史名单 2× 成本回测
+
+执行脚本：`scripts/backtest_r101_industry_market_strategies.py`
+证据：`evidence/r101_industry_market_strategy_backtests.json`
+
+| 策略 | 当前名单 p10 | 历史名单 p10 | 历史+行业中性 p10 | 历史+行业+市值中性 p10 |
+| --- | ---: | ---: | ---: | ---: |
+| 行业动量质量 | +79.44% / 0.56 | +5.31% / 0.16 | +10.43% / 0.20 | +37.71% / 0.42 |
+| 行业内相对强弱质量 | +176.58% / 0.76 | +43.45% / 0.39 | +0.71% / 0.12 | -19.75% / -0.13 |
+| 主线质量 | +17.33% / 0.25 | -10.33% / -0.00 | -10.33% / -0.00 | -17.55% / -0.08 |
+| 宏观流动性质量 | -22.28% / -0.19 | -6.03% / 0.01 | +5.22% / 0.14 | -16.69% / -0.12 |
+| 风险偏好质量 | +16.89% / 0.27 | -12.87% / -0.11 | +28.03% / 0.43 | -5.85% / -0.01 |
+| 行业宏观组合 | +87.80% / 0.63 | +40.06% / 0.41 | -5.81% / 0.01 | -31.90% / -0.33 |
+
+### 10 相位与近一年
+
+| 策略(历史名单默认) | 10 相位均值 | 正收益相位 | 近一年均值 | 近一年正收益 |
+| --- | ---: | ---: | ---: | ---: |
+| 行业动量质量 | +24.30% | 8/10 | +0.28% | 3/5 |
+| 行业动量质量(行业中性) | +24.82% | **10/10** | -7.39% | 1/5 |
+| 行业内相对强弱质量 | +77.72% | **10/10** | +8.65% | 4/5 |
+| 行业内相对强弱质量(行业中性) | +13.10% | 8/10 | -18.80% | 0/5 |
+| 主线质量 | -1.24% | 3/10 | +3.03% | 3/5 |
+| 宏观流动性质量 | -5.96% | 2/10 | -2.37% | 1/5 |
+| 宏观流动性质量(行业中性) | +17.79% | **10/10** | +12.79% | 3/5 |
+| 风险偏好质量 | -6.11% | 1/10 | -7.17% | 0/5 |
+| 风险偏好质量(行业中性) | +13.66% | 9/10 | -1.58% | 1/5 |
+| 行业宏观组合 | +50.03% | **10/10** | +30.65% | 4/5 |
+| 行业宏观组合(行业中性) | +10.68% | 8/10 | +5.50% | 4/5 |
+
+### 3× 成本复核
+
+证据：`evidence/r101b_neutral_3x_cost.json`
+
+| 策略(历史名单) | 全周期收益 | Sharpe | 最大回撤 | 10 相位正收益 | 近一年均值 | 近一年正收益 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 行业内相对强弱质量(默认) | +38.64% | 0.36 | -44.43% | **10/10** | +8.00% | 3/5 |
+| 行业宏观组合(默认) | +31.61% | 0.36 | -40.36% | **10/10** | +29.35% | 4/5 |
+| 宏观流动性质量(行业中性) | +0.91% | 0.09 | -33.42% | **10/10** | +12.20% | 3/5 |
+| 风险偏好质量(行业中性) | +24.10% | 0.38 | -18.95% | 8/10 | -1.89% | 1/5 |
+| 行业宏观组合(行业中性) | -9.29% | -0.04 | -35.03% | 8/10 | +4.79% | 4/5 |
+
+### R101 判定
+
+- 行业内相对强弱质量和行业宏观组合是当前最强的历史名单候选：2× 和 3× 成本下都保持正收益，10/10 相位正收益，近一年也正。
+- 但两者在行业中性化后明显衰减：行业内相对强弱从 +43.45% 降到 +0.71%，行业宏观组合从 +40.06% 降到 -5.81%。这说明收益主要来自行业/风格暴露，不是纯行业内 alpha。
+- 宏观流动性行业中性版 3× 成本下 10/10 相位正收益、近一年 +12.20%，但全周期只有 +0.91%，且最大回撤 -33.42%，只能作为防守型实验腿。
+- 主线质量、风险偏好默认版和宏观流动性默认版未通过；主线数据仅 127 天且已停更，不能据此部署。
+- 当前仍没有满足部署门槛的策略；生产状态保持 `pause_production`。
+
+### R101 证据与脚本
+
+- `scripts/build_alt_factor_data.py`
+- `scripts/backtest_r101_industry_market_strategies.py`
+- `scripts/backtest_r101b_neutral_cost.py`
+- `evidence/r101_industry_market_strategy_backtests.json`
+- `evidence/r101b_neutral_3x_cost.json`

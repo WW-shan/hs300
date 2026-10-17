@@ -49,3 +49,19 @@ def test_r100_event_strategies_load() -> None:
         assert factor in strategy.meta["scoring"]
         if strategy_id.endswith("_industry_neutral"):
             assert strategy.meta["neutralize"] == {"industry": "industry_l1", "shrink": 1.0}
+
+
+def test_r101_industry_market_strategies_load() -> None:
+    engine = StrategyEngine(strategy_dirs=[AI_DIR])
+    expected = {
+        "ai_hs300_industry_momentum_quality": "ext_alt_hs300_industry_mom_20d",
+        "ai_hs300_industry_relative_strength_quality": "ext_alt_hs300_stock_rel_industry_20d",
+        "ai_hs300_mainline_quality": "ext_alt_hs300_mainline_top1_flag",
+        "ai_hs300_macro_liquidity_quality": "ext_alt_hs300_m1_m2_scissors_chg_1m",
+        "ai_hs300_risk_appetite_quality": "ext_alt_hs300_etf_share_chg_1m",
+        "ai_hs300_industry_macro_combo": "ext_alt_hs300_industry_rps_20d",
+    }
+    for strategy_id, factor in expected.items():
+        strategy = engine.get(strategy_id)
+        assert strategy is not None
+        assert factor in strategy.meta["scoring"]
