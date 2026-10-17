@@ -278,3 +278,45 @@ def test_r106_fundamental_strategies_load() -> None:
         assert factor in strategy.meta["scoring"]
         assert strategy.max_hold_days == 35
         assert strategy.stop_loss is None
+
+
+def test_r108_final_coverage_factors_are_declared() -> None:
+    expected = {
+        "cf_medium_term_trend": {
+            "momentum_30d": 0.20,
+            "ma5_bias": 0.10,
+            "ma30_bias": 0.20,
+            "ema20_bias": 0.15,
+            "ema30_bias": 0.10,
+            "ema60_bias": 0.10,
+            "macd_dif_pct": 0.15,
+        },
+        "cf_short_term_risk_reversal": {
+            "rsi_6": -0.15,
+            "rsi_24": -0.15,
+            "kdj_d": -0.15,
+            "ema5_bias": -0.15,
+            "atr_14": -0.10,
+            "atr_pct": -0.10,
+            "macd_dea_pct": -0.20,
+        },
+    }
+    for factor_id, members in expected.items():
+        definition = json.loads((CUSTOM_FACTOR_DIR / f"{factor_id}.json").read_text())
+        assert definition["id"] == factor_id
+        assert definition["kind"] == "composite"
+        assert definition["members"] == members
+
+
+def test_r108_final_coverage_strategies_load() -> None:
+    engine = StrategyEngine(strategy_dirs=[AI_DIR])
+    expected = {
+        "ai_hs300_medium_term_trend_quality": "cf_medium_term_trend",
+        "ai_hs300_short_term_risk_reversal_quality": "cf_short_term_risk_reversal",
+    }
+    for strategy_id, factor in expected.items():
+        strategy = engine.get(strategy_id)
+        assert strategy is not None
+        assert factor in strategy.meta["scoring"]
+        assert strategy.max_hold_days == 20
+        assert strategy.stop_loss == -0.20

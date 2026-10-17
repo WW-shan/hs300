@@ -7153,3 +7153,67 @@ R22/R23/R96 主要使用合成后的 `uf_quality_value_defensive`、`uf_cash_qua
 
 - `scripts/backtest_r106_fundamental_composites.py`
 - `evidence/r106_fundamental_composite_backtests.json`
+
+# R107 · 因子/策略覆盖审计 (2026-10-17)
+
+## 目的
+
+把当前因子目录与全部策略评分做机器审计，区分直接使用、仅作为复合成员、已退役、台账已研究但未直接进策略、以及真正未覆盖的因子，给后续轮次一个可复核的覆盖清单。
+
+## 输出
+
+- 因子总数、策略总数
+- 每个因子的直接策略引用次数
+- 复合因子成员引用关系
+- 已退役自定义因子
+- 台账是否提及
+- 仍未覆盖清单
+
+## R108 · 最后 14 个未覆盖因子的策略化 (2026-10-17) — 事前预注册
+
+R107 审计剩余 14 个未覆盖因子：`momentum_30d`、MA/EMA 多窗口乖离、RSI6/24、KDJ D、MACD DIF/DEA、ATR 原值/相对值。R108 将它们组成两个复合因子和两个策略，完成后重新运行覆盖审计，目标剩余未覆盖数为 0。
+
+新增：
+
+- `cf_medium_term_trend`：30日动量 + MA5/MA30 + EMA20/30/60 + MACD DIF
+- `cf_short_term_risk_reversal`：RSI6/24 + KDJ D + EMA5 + ATR + MACD DEA，统一取反向/低风险方向
+- `ai_hs300_medium_term_trend_quality`
+- `ai_hs300_short_term_risk_reversal_quality`
+
+统一：20日持有、-20%止损、历史名单、T+1、2×/3×成本。判定同 R104/R105。
+
+## R107 审计结果 (2026-10-17)
+
+首次审计：
+
+- 85 个策略、166 个因子
+- 69 个因子被策略直接引用
+- 45 个因子作为复合成员引用
+- 5 个已退役
+- 138 个因子在台账中被提及
+- 剩余未覆盖 14 个：`momentum_30d`、`ma5_bias`、`ma30_bias`、`ema5_bias`、`ema20_bias`、`ema30_bias`、`ema60_bias`、`rsi_6`、`rsi_24`、`macd_dif_pct`、`macd_dea_pct`、`kdj_d`、`atr_14`、`atr_pct`
+
+## R108 落地结果 (2026-10-17) — 覆盖完成，中期趋势候选待风控
+
+| 策略 | 全周期收益 | Sharpe | MDD | 10相位正收益 | 近一年均值 | 近一年正收益 | 3×收益 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 中期趋势质量 | +18.08% | 0.26 | -49.65% | 9/10 | +2.10% | 3/5 | +5.34% |
+| 短期风险反转质量 | -4.91% | 0.07 | -35.63% | 5/10 | -13.54% | 0/5 | -13.22% |
+
+判定：
+
+- 中期趋势质量按预注册门槛（Sharpe≥0.25、9/10、近一年均值>0、3/5、3×正收益）通过，但 MDD -49.65% 不可接受，进入 R109 风控参数检验。
+- 短期风险反转质量失败，反转/超买超卖族收官。
+
+重新审计：
+
+- 87 个策略、168 个因子
+- 71 个因子直接引用、59 个复合成员引用、5 个退役、141 个台账提及
+- **剩余未覆盖 0**
+
+### R107/R108 证据与脚本
+
+- `scripts/audit_factor_strategy_coverage.py`
+- `scripts/backtest_r108_final_coverage.py`
+- `evidence/r107_factor_strategy_coverage.json`
+- `evidence/r108_final_coverage_backtests.json`
