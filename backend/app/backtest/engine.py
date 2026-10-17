@@ -422,6 +422,16 @@ class BacktestEngine:
         if df.is_empty():
             return df
 
+        # 扩展表因子（ext_*）不在 enriched parquet 中，必须从扩展数据按
+        # (symbol, date) 时序对齐后注入，才能被 polars_expr 策略的 filter/scoring
+        # 真正消费。历史回测固定 include_snapshot=False，避免把最新快照带入过去。
+        from app.factors.ext_factors import attach_ext_columns, ext_factor_ids
+
+        data_dir = self.repo.store.data_dir if self.repo is not None else None
+        ext_names = set(getattr(feature_plan, "ext_columns", frozenset())) & ext_factor_ids(data_dir)
+        if ext_names:
+            df = attach_ext_columns(df, include_snapshot=False, data_dir=data_dir)
+
         from app.backtest.fundamentals import (
             attach_fundamental_factors,
             load_fundamental_snapshot,

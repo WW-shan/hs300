@@ -98,6 +98,9 @@ class ResolvedFeaturePlan:
     execution_backend: str = "polars_expr"
     # 财务因子列不落 enriched 存储, 由 engine 在加载口按公告日门控附加。
     fundamental_columns: frozenset[str] = frozenset()
+    # 扩展数据因子列不落 enriched 存储, 由 engine 在加载口按 (symbol, date)
+    # 时序对齐附加；只允许历史路径，快照不得进入回测。
+    ext_columns: frozenset[str] = frozenset()
 
 
 def _merge_resolved_feature_plans(
@@ -112,7 +115,7 @@ def _merge_resolved_feature_plans(
     def _union(field: str) -> frozenset[str]:
         merged: set[str] = set()
         for plan in plans:
-            merged.update(getattr(plan, field))
+            merged.update(getattr(plan, field, frozenset()))
         return frozenset(merged)
 
     return ResolvedFeaturePlan(
@@ -126,6 +129,7 @@ def _merge_resolved_feature_plans(
         full_feature_fallback=any(plan.full_feature_fallback for plan in plans),
         execution_backend="matrix_native",
         fundamental_columns=_union("fundamental_columns"),
+        ext_columns=_union("ext_columns"),
     )
 
 
@@ -248,6 +252,9 @@ class StrategyDependencyResolver:
         for signal in required_signals:
             required_features.update(signal_dependencies.get(signal, ()))
 
+        from app.factors.ext_factors import ext_factor_ids
+
+        ext_columns = frozenset(required_features & ext_factor_ids())
         indicator_columns = frozenset(required_features & set(INDICATOR_COLUMNS))
         base_columns = _resolve_base_columns(required_features | set(_EXECUTION_COLUMNS))
         # 涨跌停族: 显式请求连板/判定价列, 或引用了判定价的自定义信号
@@ -285,6 +292,7 @@ class StrategyDependencyResolver:
             fundamental_columns=frozenset(
                 required_features & FUNDAMENTAL_FACTOR_NAMES
             ),
+            ext_columns=ext_columns,
         )
 
     @staticmethod
@@ -325,6 +333,9 @@ class StrategyDependencyResolver:
         # 回测矩阵 fields, 供入场掩码 intersect 时按 (时间, 标的) 评估。
         overlay_fields = _overlay_numeric_fields(overrides)
 
+        from app.factors.ext_factors import ext_factor_ids
+
+        ext_columns = frozenset(required_features & ext_factor_ids())
         base_columns = _resolve_base_columns(required_features | set(_EXECUTION_COLUMNS))
         base_columns = frozenset(set(base_columns) | set(_LIMIT_BASE_COLUMNS))
         instrument_columns = frozenset(required_features & set(_INSTRUMENT_COLUMNS))
@@ -352,6 +363,7 @@ class StrategyDependencyResolver:
             fundamental_columns=frozenset(
                 required_features & FUNDAMENTAL_FACTOR_NAMES
             ),
+            ext_columns=ext_columns,
         )
 
 
@@ -411,9 +423,10 @@ def build_matrix_cache_profile(
         raise ValueError(f"no matrix-native cache profile available for asset_type={asset_type!r}")
     merged = _merge_resolved_feature_plans(plans)
     fields = frozenset(
-        set(merged.base_columns)
-        | set(merged.instrument_columns)
-        | set(merged.matrix_columns)
+        (set(merged.base_columns)
+         | set(merged.instrument_columns)
+         | set(merged.matrix_columns))
+        - set(merged.ext_columns)
     )
     generation_payload = json.dumps(
         {
