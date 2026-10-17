@@ -298,6 +298,19 @@ _CATALOG: tuple[FactorSpec, ...] = (
         "KDJ K值 - D值, 正值代表快线在慢线上方",
         deps=frozenset({"kdj_k", "kdj_d"}),
     ),
+    # --- 多表 TTM 财务 (点时, 仅股票; 追加在末尾避免扰动既有因子顺序) ---
+    _financial(
+        "ocf_ni", "经营现金流/净利润(TTM)",
+        "TTM 经营现金流 / TTM 净利润; 净利润<=0 或数据缺失时为空",
+    ),
+    _financial(
+        "accrual", "应计项(TTM)",
+        "(TTM 净利润 - TTM 经营现金流) / 总资产; 低值代表盈利现金含量高",
+    ),
+    _financial(
+        "ocf_debt", "经营现金流/总负债(TTM)",
+        "TTM 经营现金流 / 总负债; 分母<=0 或数据缺失时为空",
+    ),
 )
 
 _REGISTRY: dict[str, FactorSpec] = {}

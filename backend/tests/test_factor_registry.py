@@ -99,6 +99,10 @@ GOLDEN_COLUMNS: list[dict] = [
     {"id": "position_240d", "label": "一年价格位置", "group": "价格位置", "desc": "收盘价在近240个交易日最低价到最高价之间的位置 (0~1)"},
     {"id": "distance_to_high_240d", "label": "距一年高点", "group": "价格位置", "desc": "收盘价 / 240日最高收盘价 - 1, 接近0代表贴近一年新高"},
     {"id": "kdj_kd_diff", "label": "KDJ K-D差", "group": "趋势", "desc": "KDJ K值 - D值, 正值代表快线在慢线上方"},
+    # --- 多表 TTM 财务 (追加于目录尾部, 前 48 项挖掘调度顺序不变) ---
+    {"id": "ocf_ni", "label": "经营现金流/净利润(TTM)", "group": "财务", "desc": "TTM 经营现金流 / TTM 净利润; 净利润<=0 或数据缺失时为空"},
+    {"id": "accrual", "label": "应计项(TTM)", "group": "财务", "desc": "(TTM 净利润 - TTM 经营现金流) / 总资产; 低值代表盈利现金含量高"},
+    {"id": "ocf_debt", "label": "经营现金流/总负债(TTM)", "group": "财务", "desc": "TTM 经营现金流 / 总负债; 分母<=0 或数据缺失时为空"},
 ]
 
 GOLDEN_VIRTUAL_DEPS: dict[str, frozenset[str]] = {
@@ -230,12 +234,12 @@ def test_scoring_warmup_snapshot() -> None:
 
 def test_catalog_counts_and_kinds() -> None:
     specs = all_factors()
-    assert len(specs) == 77
-    assert len({spec.id for spec in specs}) == 77  # id 唯一
+    assert len(specs) == 80
+    assert len({spec.id for spec in specs}) == 80  # id 唯一
     virtual = [spec for spec in specs if spec.kind == "virtual"]
     assert len(virtual) == 52  # ma/ema 10 + 原有 26 + 扩充批次 16
     financial = [spec for spec in specs if spec.pit]
-    assert len(financial) == 7
+    assert len(financial) == 10
     assert all(spec.pit_source == "financial_announce" for spec in financial)
     assert all(spec.asset_types == frozenset({"stock"}) for spec in financial)
 
@@ -261,7 +265,7 @@ def test_get_factor_and_dependencies() -> None:
 def test_asset_type_filter() -> None:
     stock = all_factors(asset_type="stock")
     etf = all_factors(asset_type="etf")
-    assert len(stock) == 77
+    assert len(stock) == 80
     assert len(etf) == 70  # 财务 7 项仅股票
 
 
@@ -309,7 +313,7 @@ def test_factors_api_contract() -> None:
     assert response.status_code == 200
     payload = response.json()
     factors = payload["factors"]
-    assert len(factors) == 77
+    assert len(factors) == 80
     first = factors[0]
     assert first["id"] == "momentum_5d"
     assert first["kind"] == "base"
