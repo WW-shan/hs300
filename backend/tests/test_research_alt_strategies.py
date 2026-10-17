@@ -133,3 +133,11 @@ def test_r102d_stop_loss_strategy_loads() -> None:
     assert strategy is not None
     assert strategy.max_hold_days == 20
     assert strategy.stop_loss == -0.20
+
+
+def test_r103_breadth_gate_strategy_loads() -> None:
+    engine = StrategyEngine(strategy_dirs=[AI_DIR])
+    strategy = engine.get("ai_hs300_industry_relative_strength_quality_h20_sl20_breadth45")
+    assert strategy is not None
+    assert strategy.max_hold_days == 20
+    assert strategy.stop_loss == -0.20
