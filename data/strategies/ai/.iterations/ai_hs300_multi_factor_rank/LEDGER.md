@@ -4893,3 +4893,38 @@ C1 当前对照通过 (Sharpe ≥1.05, 年化 ≥18%); 与 R33 的差异可由 0
 - 在生产侧保持 B80/C6_IND 暂停，直到历史官方成员、PIT 数据和执行成本链路再次通过完整终审。
 
 **总结**: 这轮研究没有找到可直接部署的新策略，但完成了维度覆盖和负知识沉淀；最重要的可用成果是明确知道哪些方向不能继续在样本内优化。
+# R77 · PIT 历史股本 + 申万行业变动后的中性化复筛 — 事前预注册
+
+**动机**: R69 使用当前 float_shares 和当前行业快照，存在回填偏差。R68 已缓存逐股股本变动，申万个股行业分类变动表可下载，因此可以对关键因子做一次真正的 PIT 数据修复复筛。
+
+**PIT 数据构造**:
+- 股本：读取 R68 逐股 `公告日期/变动日期/总股本/已流通股份`；可用日 = `max(announce_date, change_date)`，月度/日度 T 只使用 available_date < T 的最近记录；`已流通股份` 单位为万股，乘 10000 转为股；
+- 行业：下载申万 `StockClassifyUse_stock.xls`，使用 `start_date <= T` 的最近行业记录，取行业代码前 2 位作为行业组；缺失不补造；
+- 重算 `float_mv_pit = raw_close * pit_float_shares`；`turnover_rate_pit = volume * 10000 / pit_float_shares`（volume 为手）；`turnover_z_60d_pit` 使用前 60 日 shift(1) 均值和标准差，公式与引擎一致。
+
+**候选**:
+| 因子 | 方向 | 处理 |
+| --- | --- | --- |
+| `annual_vol_20d` | 低 | PIT 中性化 |
+| `turnover_z_60d_pit` | 低 | PIT 中性化 |
+| `amount` | 低 | PIT 中性化 |
+| `momentum_20d` | 高 | PIT 中性化 |
+| `pb_latest` | 低 | PIT 中性化 |
+| `ocf_ni` | 高 | PIT 中性化 |
+| `float_mv_pit` | 低 | 原始小市值对照, 不做自身中性化 |
+
+**中性化**: `signed_factor ~ 1 + log(float_mv_pit) + PIT industry dummies`，残差月内 rank；不调行业层级/回归变量。
+
+**时间切分**: Discovery 2021-06~2023-12; Validation 2024-01~2026-10.
+
+**门槛**:
+| # | 阈值 |
+| --- | --- |
+| R77-D1 | 股本覆盖 ≥95%; 行业覆盖 ≥90%; 每段可用月 ≥24, 合计 ≥48; 每月有效 ≥80 |
+| R77-F1 | Discovery IC ≥0.03, Validation IC ≥0.02, 同号; 逐年同号 ≥4/5 |
+| R77-F2 | Discovery/Validation 五组单调 rho ≥0.7; 2× 成本后年化多空 spread >0 |
+| R77-F3 | Discovery 1000 次符号翻转置换, 7 个候选 BH-FDR q≤0.10; Validation 单侧 p≤0.05 |
+| R77-F4 | 中性化因子与 log(float_mv_pit) 月均绝对相关 <0.10, 与原始因子相关 <0.95；小市值对照 N/A |
+| 采纳 | 任一因子全过 D1+F1~F4 → 进入 R78 组合/风控；否则 PIT 修复复筛也收官 |
+
+**报告项**: 当前 vs PIT 市值差异、换手差异、行业覆盖、原始/中性化 IC、与 R69 对照、年度、Q1~Q5. **纪律**: 不调 PIT 可用日/行业层级; 不把申万代码前两位当官方一级名称; 不用修复后结果改写历史失败结论.
