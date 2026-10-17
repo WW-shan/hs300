@@ -156,7 +156,7 @@ def _ensure_cache() -> tuple[pl.DataFrame, dict]:
     frames = [
         pl.read_parquet(path)
         for path in sorted(CACHE.glob("*.parquet"))
-        if path.stat().st_size > 0
+        if path.name.startswith(("buy_", "sell_")) and path.stat().st_size > 0
     ]
     raw = pl.concat(frames, how="diagonal_relaxed") if frames else pl.DataFrame()
     expected = len(periods) * 2
