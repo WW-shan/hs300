@@ -1,0 +1,113 @@
+{
+    "round": "R232",
+    "captured_at": "2026-10-19T20:37:19.920907+00:00",
+    "api_base": "http://127.0.0.1:3018",
+    "reload": {
+        "method": "POST",
+        "endpoint": "/api/strategies/reload",
+        "ok": true,
+        "count": 114
+    },
+    "factors": {
+        "endpoint": "/api/factors",
+        "count": 210,
+        "composite_kind": "strategy_level_composite (no new ext field)",
+        "component_factors_present": true,
+        "registered_components": [
+            {
+                "id": "ext_alt_hs300_sga_ratio_4q_low",
+                "label": "HS300另类因子·销售+管理费用/营收4季费用率反向",
+                "group": "扩展数据",
+                "kind": "base",
+                "version": 1,
+                "formula": "扩展表「HS300另类因子」字段 sga_ratio_4q_low (时序·按交易日对齐)",
+                "direction": "none",
+                "pit": false
+            },
+            {
+                "id": "ext_alt_hs300_ocf_margin_4q",
+                "label": "HS300另类因子·TTM经营现金流/营收(高好)",
+                "group": "扩展数据",
+                "kind": "base",
+                "version": 1,
+                "formula": "扩展表「HS300另类因子」字段 ocf_margin_4q (时序·按交易日对齐)",
+                "direction": "none",
+                "pit": false
+            },
+            {
+                "id": "ext_alt_hs300_gross_margin_yoy_improvement_q",
+                "label": "HS300另类因子·毛利率单季同比改善(高好)",
+                "group": "扩展数据",
+                "kind": "base",
+                "version": 1,
+                "formula": "扩展表「HS300另类因子」字段 gross_margin_yoy_improvement_q (时序·按交易日对齐)",
+                "direction": "none",
+                "pit": false
+            }
+        ]
+    },
+    "strategies": {
+        "endpoint": "/api/strategies?include_research=true",
+        "count": 165,
+        "load_error_count": 0,
+        "load_errors": [],
+        "registered": [
+            {
+                "id": "ai_hs300_sga_ocf_gm_trend_composite_control",
+                "name": "HS300非金融成本现金趋势复合匹配对照",
+                "description": "与R232候选使用相同非金融股票池、三组件可用性过滤和执行口径，但三个组件都不计入评分。",
+                "tags": [
+                    "质量",
+                    "现金质量",
+                    "匹配对照",
+                    "沪深300",
+                    "非金融",
+                    "实验",
+                    "R232"
+                ],
+                "source": "ai",
+                "research_only": true,
+                "execution_backend": "polars_expr",
+                "scoring": {
+                    "uf_quality_value_defensive": 0.545,
+                    "uf_cash_quality": 0.455
+                },
+                "stop_loss": -0.2,
+                "max_hold_days": 20,
+                "limit": 30
+            },
+            {
+                "id": "ai_hs300_sga_ocf_gm_trend_composite_h20_sl20",
+                "name": "HS300非金融成本现金趋势复合",
+                "description": "历史沪深300剔除银行和非银金融；SG&A费用率水平、OCF利润率与毛利率同比改善各1/3等权因子袖，叠加质量价值防守与现金质量；30只、20日持有、-20%止损（R232实验）。",
+                "tags": [
+                    "SG&A",
+                    "OCF",
+                    "毛利率",
+                    "趋势",
+                    "复合因子",
+                    "成本质量",
+                    "质量",
+                    "现金质量",
+                    "沪深300",
+                    "非金融",
+                    "实验",
+                    "R232"
+                ],
+                "source": "ai",
+                "research_only": true,
+                "execution_backend": "polars_expr",
+                "scoring": {
+                    "ext_alt_hs300_sga_ratio_4q_low": 0.15,
+                    "ext_alt_hs300_ocf_margin_4q": 0.15,
+                    "ext_alt_hs300_gross_margin_yoy_improvement_q": 0.15,
+                    "uf_quality_value_defensive": 0.3,
+                    "uf_cash_quality": 0.25
+                },
+                "stop_loss": -0.2,
+                "max_hold_days": 20,
+                "limit": 30
+            }
+        ]
+    }
+}
