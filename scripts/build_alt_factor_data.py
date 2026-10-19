@@ -99,6 +99,7 @@ FIELDS = [
     ExtField("margin_safety_chg_20d", "float", "两融维持担保比例20日变化(方向正)"),
     ExtField("nh_nl_diff_z", "float", "HS300新高减新低比例扩张z-score(方向正)"),
     ExtField("nh_nl_diff_20d", "float", "HS300新高减新低比例20日滚动均值(方向正)"),
+    ExtField("shibor_tightness_z", "float", "SHIBOR 3M扩张z-score(方向负)"),
     ExtField("goodwill_ratio_low", "float", "商誉/总资产反向"),
     ExtField("intangible_ratio_low", "float", "无形资产/总资产反向"),
     ExtField("rd_intensity", "float", "研发费用/营业收入"),
@@ -1478,6 +1479,32 @@ def _breadth_daily(dates: list[date]) -> pl.DataFrame:
     ]).select(["date", "nh_nl_diff_z", "nh_nl_diff_20d"])
 
 
+def _shibor_tightness_daily(dates: list[date]) -> pl.DataFrame:
+    """Market-level SHIBOR 3M tightness z-score, direction negative.
+
+    Reads evidence/r198_shibor_scan.json monthly_records (built by
+    scripts/backtest_r198_shibor_scan.py). Signal is broadcast daily with a
+    45-day freshness cap; values are PIT month-end figures.
+    """
+    evidence = DATA / "strategies" / "ai" / ".iterations" / "ai_hs300_multi_factor_rank" / "evidence" / "r198_shibor_scan.json"
+    if not evidence.exists():
+        raise RuntimeError("R198 SHIBOR scan missing")
+    payload = json.loads(evidence.read_text(encoding="utf-8"))
+    records = payload.get("monthly_records") or []
+    if not records:
+        raise RuntimeError("R198 SHIBOR scan has no monthly records")
+    frame = pl.DataFrame(records).with_columns(pl.col("date").str.to_date()).sort("date")
+    signal = frame.select(["date", "shibor_tightness_z"]).with_columns(
+        (pl.col("date") + pl.duration(days=1)).alias("effective_date")
+    ).select(["effective_date", "shibor_tightness_z"])
+    daily = pl.DataFrame({"date": dates}).sort("date").join_asof(
+        signal, left_on="date", right_on="effective_date", strategy="backward",
+    ).with_columns((pl.col("date") - pl.col("effective_date")).dt.total_days().alias("_age"))
+    return daily.with_columns(
+        pl.when(pl.col("_age").is_between(0, 45, closed="both")).then(pl.col("shibor_tightness_z")).otherwise(None).alias("shibor_tightness_z")
+    ).select(["date", "shibor_tightness_z"])
+
+
 def _goodwill_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
     paths = sorted((DATA / "research" / "r86_intangible").glob("*.parquet"))
     frames = [pl.read_parquet(path) for path in paths]
@@ -1722,6 +1749,7 @@ def main() -> int:
     hk_risk = _hk_risk_daily(dates)
     margin_safety = _margin_safety_daily(dates)
     breadth = _breadth_daily(dates)
+    shibor_tightness = _shibor_tightness_daily(dates)
     goodwill = _goodwill_daily(dates, symbols)
     equity_supply = _equity_supply_daily(dates, symbols)
     erp = _erp_daily(dates)
@@ -1736,7 +1764,7 @@ def main() -> int:
         industry, mainline, margin, short_ratio, goodwill, equity_supply, prices,
     ):
         base = base.join(frame, on=["symbol", "date"], how="left")
-    for frame in (erp, macro, emotion, etf_flow, qvix, macro_extra, regime_extra, northbound, if_position, bond_momentum, ah_premium, hk_risk, margin_safety, breadth):
+    for frame in (erp, macro, emotion, etf_flow, qvix, macro_extra, regime_extra, northbound, if_position, bond_momentum, ah_premium, hk_risk, margin_safety, breadth, shibor_tightness):
         base = base.join(frame, on="date", how="left")
     base = base.with_columns(
         pl.when((pl.col("raw_close") > 0) & pl.col("dividend_ttm_cash").is_not_null())

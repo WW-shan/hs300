@@ -1,0 +1,170 @@
+{
+  "purpose": "R198 SHIBOR 3M liquidity timing strategy",
+  "strategy": "ai_hs300_shibor_liquidity_gate",
+  "strategy_stats": {
+    "2021-06-01": {
+      "total_return": -0.145462,
+      "annual": -0.029966,
+      "sharpe": -0.4829,
+      "mdd": -0.225815,
+      "days": 1303
+    },
+    "2022-01-04": {
+      "total_return": -0.137239,
+      "annual": -0.031667,
+      "sharpe": -0.5138,
+      "mdd": -0.210311,
+      "days": 1157
+    },
+    "2022-07-01": {
+      "total_return": -0.096926,
+      "annual": -0.024424,
+      "sharpe": -0.4138,
+      "mdd": -0.17576,
+      "days": 1040
+    },
+    "2023-01-03": {
+      "total_return": -0.053177,
+      "annual": -0.014953,
+      "sharpe": -0.2374,
+      "mdd": -0.153614,
+      "days": 915
+    },
+    "2023-07-03": {
+      "total_return": -0.068045,
+      "annual": -0.022063,
+      "sharpe": -0.3615,
+      "mdd": -0.144127,
+      "days": 797
+    },
+    "2024-01-02": {
+      "total_return": -0.012391,
+      "annual": -0.004665,
+      "sharpe": -0.0458,
+      "mdd": -0.151392,
+      "days": 673
+    },
+    "2024-07-01": {
+      "total_return": -0.05494,
+      "annual": -0.025331,
+      "sharpe": -0.4011,
+      "mdd": -0.1302,
+      "days": 556
+    },
+    "2025-01-02": {
+      "total_return": 0.046212,
+      "annual": 0.026829,
+      "sharpe": 0.5056,
+      "mdd": -0.053406,
+      "days": 431
+    },
+    "2025-07-01": {
+      "total_return": 0.030503,
+      "annual": 0.024486,
+      "sharpe": 0.5396,
+      "mdd": -0.035205,
+      "days": 314
+    },
+    "2026-01-05": {
+      "total_return": -0.020115,
+      "annual": -0.027012,
+      "sharpe": -0.5745,
+      "mdd": -0.032917,
+      "days": 188
+    },
+    "2025-10-14": {
+      "total_return": -0.027711,
+      "annual": -0.028606,
+      "sharpe": -0.5928,
+      "mdd": -0.041167,
+      "days": 245
+    },
+    "2025-12-15": {
+      "total_return": -0.01406,
+      "annual": -0.017684,
+      "sharpe": -0.3426,
+      "mdd": -0.034041,
+      "days": 201
+    },
+    "2026-02-13": {
+      "total_return": -0.020115,
+      "annual": -0.03189,
+      "sharpe": -0.6251,
+      "mdd": -0.032917,
+      "days": 159
+    },
+    "2026-04-15": {
+      "total_return": -0.022522,
+      "annual": -0.045963,
+      "sharpe": -0.8913,
+      "mdd": -0.032965,
+      "days": 123
+    },
+    "2026-06-15": {
+      "total_return": -0.001157,
+      "annual": -0.003551,
+      "sharpe": -0.0342,
+      "mdd": -0.033331,
+      "days": 83
+    }
+  },
+  "rolling_12m": {
+    "windows": 4927,
+    "positive_rate": 0.4274,
+    "return_p05": -0.1081,
+    "return_median": -0.0177,
+    "return_worst": -0.141,
+    "mdd_p05": -0.1363,
+    "mdd_worst": -0.1514
+  },
+  "recent_12m": 0.005104,
+  "main_phase": {
+    "window": [
+      "2021-06-01",
+      "2026-10-16"
+    ],
+    "strategy_total": -0.145462,
+    "benchmark_total": -0.219232,
+    "strategy_mdd": -0.225815,
+    "benchmark_mdd": -0.408567,
+    "validation_total": -0.001951,
+    "validation_benchmark_total": 0.231595
+  },
+  "combo_with_dual_sleeve": {
+    "windows": 4927,
+    "positive_rate": 0.8604,
+    "return_p05": -0.0361,
+    "return_median": 0.181,
+    "return_worst": -0.1282,
+    "mdd_p05": -0.1634,
+    "mdd_worst": -0.1667
+  },
+  "combo_recent_12m": 0.183868,
+  "reference_r131": {
+    "windows": 4927,
+    "positive_rate": 0.8604,
+    "return_p05": -0.0361,
+    "return_p10": -0.0137,
+    "return_median": 0.181,
+    "return_worst": -0.1282,
+    "return_best": 0.7182,
+    "mdd_p05": -0.1634,
+    "mdd_median": -0.0995,
+    "mdd_worst": -0.1667
+  },
+  "decision": {
+    "D1": true,
+    "G1": true,
+    "G2": false,
+    "G3": true,
+    "G4": true,
+    "G5": false,
+    "G6": false,
+    "all_pass": false
+  },
+  "caveats": [
+    "The gate is a market-level monthly signal broadcast to all names; the strategy holds an equal-weight basket of up to 300 names.",
+    "The 0.05% per-switch cost is applied at the portfolio level in the combination test.",
+    "Only 8 holdout months exist (2026-01..2026-08)."
+  ]
+}

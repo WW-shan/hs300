@@ -1,0 +1,1191 @@
+{
+  "purpose": "R198 SHIBOR 3M liquidity timing scan",
+  "generated_at": "2026-10-19T21:53:00",
+  "data": {
+    "source": "data/research/macro/shibor.parquet (AkShare shibor)",
+    "months": 102,
+    "start": "2018-02-28",
+    "end": "2026-08-31"
+  },
+  "method": {
+    "factors": {
+      "shibor_tightness_z": "expanding z-score of SHIBOR 3M, direction negative",
+      "shibor_3m_chg_20d": "20d change of SHIBOR 3M, direction negative"
+    },
+    "long_cash": "signal < 0 holds HS300 index, else cash; 0.05% per switch",
+    "forward_return": "T+1 open to T+21 open on 000300.SH",
+    "splits": {
+      "discovery": [
+        "2018-02-01",
+        "2022-12-31"
+      ],
+      "validation": [
+        "2023-01-01",
+        "2024-12-31"
+      ],
+      "holdout": [
+        "2025-01-01",
+        "2026-08-31"
+      ]
+    }
+  },
+  "summary": {
+    "discovery": {
+      "months": 58,
+      "shibor_tightness_z": {
+        "ic": 0.126742,
+        "hit_rate": 0.4828,
+        "long_cash": {
+          "months": 58,
+          "strategy_total": 0.069944,
+          "benchmark_total": 0.032905,
+          "strategy_mdd": -0.346235,
+          "benchmark_mdd": -0.346235,
+          "switches": 1
+        },
+        "max_control_corr": 0.629003,
+        "residual_ic": 0.025685
+      },
+      "shibor_3m_chg_20d": {
+        "ic": -0.032917,
+        "hit_rate": 0.5345,
+        "long_cash": {
+          "months": 58,
+          "strategy_total": 0.082636,
+          "benchmark_total": 0.032905,
+          "strategy_mdd": -0.158396,
+          "benchmark_mdd": -0.346235,
+          "switches": 20
+        },
+        "max_control_corr": 0.001907,
+        "residual_ic": -0.038482
+      }
+    },
+    "validation": {
+      "months": 24,
+      "shibor_tightness_z": {
+        "ic": 0.007826,
+        "hit_rate": 0.2917,
+        "long_cash": {
+          "months": 24,
+          "strategy_total": -0.131491,
+          "benchmark_total": -0.131046,
+          "strategy_mdd": -0.221401,
+          "benchmark_mdd": -0.221001,
+          "switches": 1
+        },
+        "max_control_corr": 0.144348,
+        "residual_ic": 0.093043
+      },
+      "shibor_3m_chg_20d": {
+        "ic": -0.029565,
+        "hit_rate": 0.5417,
+        "long_cash": {
+          "months": 24,
+          "strategy_total": -0.016618,
+          "benchmark_total": -0.131046,
+          "strategy_mdd": -0.121012,
+          "benchmark_mdd": -0.221001,
+          "switches": 7
+        },
+        "max_control_corr": 0.098261,
+        "residual_ic": 0.013043
+      }
+    },
+    "holdout": {
+      "months": 20,
+      "shibor_tightness_z": {
+        "ic": 0.200827,
+        "hit_rate": 0.65,
+        "long_cash": {
+          "months": 20,
+          "strategy_total": 0.06481,
+          "benchmark_total": 0.065337,
+          "strategy_mdd": -0.130774,
+          "benchmark_mdd": -0.130774,
+          "switches": 1
+        },
+        "max_control_corr": 0.555096,
+        "residual_ic": 0.586466
+      },
+      "shibor_3m_chg_20d": {
+        "ic": 0.644603,
+        "hit_rate": 0.7,
+        "long_cash": {
+          "months": 20,
+          "strategy_total": 0.233167,
+          "benchmark_total": 0.065337,
+          "strategy_mdd": -0.052992,
+          "benchmark_mdd": -0.130774,
+          "switches": 8
+        },
+        "max_control_corr": 0.255735,
+        "residual_ic": 0.547368
+      }
+    }
+  },
+  "recent_12m_long_cash": {
+    "shibor_tightness_z": {
+      "months": 12,
+      "strategy_total": -0.103806,
+      "benchmark_total": -0.103356,
+      "strategy_mdd": -0.130774,
+      "benchmark_mdd": -0.130774,
+      "switches": 1
+    },
+    "shibor_3m_chg_20d": {
+      "months": 12,
+      "strategy_total": 0.052294,
+      "benchmark_total": -0.103356,
+      "strategy_mdd": -0.052992,
+      "benchmark_mdd": -0.130774,
+      "switches": 6
+    }
+  },
+  "decision": {
+    "shibor_tightness_z": {
+      "D1": true,
+      "G1": false,
+      "G2": false,
+      "G3": false,
+      "G4": true,
+      "G5": true,
+      "all_pass": false
+    },
+    "shibor_3m_chg_20d": {
+      "D1": true,
+      "G1": false,
+      "G2": false,
+      "G3": true,
+      "G4": true,
+      "G5": false,
+      "all_pass": false
+    }
+  },
+  "monthly_records": [
+    {
+      "date": "2018-02-28",
+      "forward_return": -0.035114543180264524,
+      "shibor_3m": 4.7131,
+      "shibor_tightness_z": 0.9058170363608439,
+      "shibor_3m_chg_20d": -0.01609999999999978,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.2619529745042497,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-03-30",
+      "forward_return": -0.028916822021013644,
+      "shibor_3m": 4.4615,
+      "shibor_tightness_z": -0.012643108056839391,
+      "shibor_3m_chg_20d": -0.25760000000000005,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.738731563201197,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-04-27",
+      "forward_return": -0.00391227942200445,
+      "shibor_3m": 4.4615,
+      "shibor_tightness_z": -0.012643108056839391,
+      "shibor_3m_chg_20d": -0.25760000000000005,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.212893563579278,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-05-31",
+      "forward_return": -0.07526113077860042,
+      "shibor_3m": 4.329,
+      "shibor_tightness_z": -0.3627504287480281,
+      "shibor_3m_chg_20d": 0.33599999999999985,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.35522749003984,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-07-31",
+      "forward_return": -0.038803352946009007,
+      "shibor_3m": 3.174,
+      "shibor_tightness_z": -3.018600745027165,
+      "shibor_3m_chg_20d": -0.8204000000000002,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.901029673093044,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-08-31",
+      "forward_return": -0.009190559793296083,
+      "shibor_3m": 2.894,
+      "shibor_tightness_z": -2.7634289715804656,
+      "shibor_3m_chg_20d": -0.10899999999999999,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.442032551848512,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-09-28",
+      "forward_return": -0.027394729647761795,
+      "shibor_3m": 2.894,
+      "shibor_tightness_z": -2.7634289715804656,
+      "shibor_3m_chg_20d": -0.10899999999999999,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.020278583765112,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-10-31",
+      "forward_return": 0.004277279745523055,
+      "shibor_3m": 2.963,
+      "shibor_tightness_z": -1.8961679182551774,
+      "shibor_3m_chg_20d": 0.1200000000000001,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.9253622641509445,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-11-30",
+      "forward_return": -0.07471403256860676,
+      "shibor_3m": 3.113,
+      "shibor_tightness_z": -1.5238904550149615,
+      "shibor_3m_chg_20d": 0.13200000000000012,
+      "qvix_z_252": null,
+      "equity_risk_premium": 6.2235440613026825,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-12-28",
+      "forward_return": 0.054552318526569055,
+      "shibor_3m": 3.113,
+      "shibor_tightness_z": -1.5238904550149615,
+      "shibor_3m_chg_20d": 0.13200000000000012,
+      "qvix_z_252": null,
+      "equity_risk_premium": 6.679302775024777,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-01-31",
+      "forward_return": 0.15366053121553125,
+      "shibor_3m": 2.9,
+      "shibor_tightness_z": -1.6493933823369908,
+      "shibor_3m_chg_20d": -0.3460000000000001,
+      "qvix_z_252": null,
+      "equity_risk_premium": 6.20728696461825,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-02-28",
+      "forward_return": 0.010963944792626412,
+      "shibor_3m": 2.751,
+      "shibor_tightness_z": -1.716807955006076,
+      "shibor_3m_chg_20d": -0.1499999999999999,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.118773963515755,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-03-29",
+      "forward_return": -0.0035861036560826953,
+      "shibor_3m": 2.801,
+      "shibor_tightness_z": -1.5357964178924715,
+      "shibor_3m_chg_20d": 0.051000000000000156,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.9317,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-04-30",
+      "forward_return": -0.03561887611828851,
+      "shibor_3m": 2.93,
+      "shibor_tightness_z": -1.2892449666722705,
+      "shibor_3m_chg_20d": 0.14400000000000013,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.76305925020375,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-05-31",
+      "forward_return": 0.07977667497204455,
+      "shibor_3m": 2.912,
+      "shibor_tightness_z": -1.2520334439092826,
+      "shibor_3m_chg_20d": -0.02300000000000013,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.435701393728223,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-06-28",
+      "forward_return": -0.010615154240560809,
+      "shibor_3m": 2.708,
+      "shibor_tightness_z": -1.4427678987246184,
+      "shibor_3m_chg_20d": -0.20799999999999974,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.957906055646481,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-07-31",
+      "forward_return": -0.0036210596430152897,
+      "shibor_3m": 2.644,
+      "shibor_tightness_z": -1.446153246173161,
+      "shibor_3m_chg_20d": 0.0030000000000001137,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.082032289950576,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-08-30",
+      "forward_return": 0.003917249806700829,
+      "shibor_3m": 2.701,
+      "shibor_tightness_z": -1.3111048551053053,
+      "shibor_3m_chg_20d": 0.052000000000000046,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.489708547008547,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-09-30",
+      "forward_return": 0.04282393313341659,
+      "shibor_3m": 2.728,
+      "shibor_tightness_z": -1.2258153372534424,
+      "shibor_3m_chg_20d": 0.028000000000000025,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.391323208191126,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-10-31",
+      "forward_return": -0.00685409783387847,
+      "shibor_3m": 2.887,
+      "shibor_tightness_z": -0.9939874958167346,
+      "shibor_3m_chg_20d": 0.16000000000000014,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.28098029134533,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-11-29",
+      "forward_return": 0.046931662074929825,
+      "shibor_3m": 3.017,
+      "shibor_tightness_z": -0.8096720354464523,
+      "shibor_3m_chg_20d": 0.1200000000000001,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.561003490401396,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-12-31",
+      "forward_return": -0.05866913964335474,
+      "shibor_3m": 3.02,
+      "shibor_tightness_z": -0.7870084219808099,
+      "shibor_3m_chg_20d": 0.004999999999999893,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.993581300813007,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-01-23",
+      "forward_return": 0.09036901746719495,
+      "shibor_3m": 2.858,
+      "shibor_tightness_z": -0.9662421259143265,
+      "shibor_3m_chg_20d": -0.1745000000000001,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.368004013377925,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-02-28",
+      "forward_return": -0.0784565984452904,
+      "shibor_3m": 2.429,
+      "shibor_tightness_z": -1.4481083344020849,
+      "shibor_3m_chg_20d": -0.42900000000000027,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.905442350907519,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-03-31",
+      "forward_return": 0.05380120071792138,
+      "shibor_3m": 1.933,
+      "shibor_tightness_z": -1.936166413674983,
+      "shibor_3m_chg_20d": -0.44199999999999995,
+      "qvix_z_252": null,
+      "equity_risk_premium": 6.626689861751153,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-04-30",
+      "forward_return": 0.03462710927817336,
+      "shibor_3m": 1.4,
+      "shibor_tightness_z": -2.3521919144112817,
+      "shibor_3m_chg_20d": -0.518,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.958176720475786,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-05-29",
+      "forward_return": 0.0694351679231191,
+      "shibor_3m": 1.453,
+      "shibor_tightness_z": -2.128107620875069,
+      "shibor_3m_chg_20d": 0.05500000000000016,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.915389655172415,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-06-30",
+      "forward_return": 0.09263193616132503,
+      "shibor_3m": 2.126,
+      "shibor_tightness_z": -1.356016065154795,
+      "shibor_3m_chg_20d": 0.6699999999999999,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.254544426494345,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-07-31",
+      "forward_return": 0.02851306584029767,
+      "shibor_3m": 2.593,
+      "shibor_tightness_z": -0.8425108226327359,
+      "shibor_3m_chg_20d": 0.488,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.348888953913679,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-08-31",
+      "forward_return": -0.04061692237485515,
+      "shibor_3m": 2.636,
+      "shibor_tightness_z": -0.7816396268920085,
+      "shibor_3m_chg_20d": 0.040999999999999925,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.902715224913495,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-09-30",
+      "forward_return": 0.05018001076419343,
+      "shibor_3m": 2.691,
+      "shibor_tightness_z": -0.7103262468283397,
+      "shibor_3m_chg_20d": 0.03699999999999992,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.0616053352559485,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-10-30",
+      "forward_return": 0.061955291653004396,
+      "shibor_3m": 2.972,
+      "shibor_tightness_z": -0.4026770292026938,
+      "shibor_3m_chg_20d": 0.30100000000000016,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.002908045977011,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-11-30",
+      "forward_return": 0.021824735600316725,
+      "shibor_3m": 3.123,
+      "shibor_tightness_z": -0.23591865572024134,
+      "shibor_3m_chg_20d": 0.14100000000000001,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.548096532970768,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-12-31",
+      "forward_return": 0.027608844237531738,
+      "shibor_3m": 2.756,
+      "shibor_tightness_z": -0.6291240912949196,
+      "shibor_3m_chg_20d": -0.3330000000000002,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.2427960408684546,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-01-29",
+      "forward_return": -0.010652334373869476,
+      "shibor_3m": 2.765,
+      "shibor_tightness_z": -0.6102672852626929,
+      "shibor_3m_chg_20d": 0.009000000000000341,
+      "qvix_z_252": -0.003826321244805273,
+      "equity_risk_premium": 3.090992476489028,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-02-26",
+      "forward_return": -0.06252947998330005,
+      "shibor_3m": 2.833,
+      "shibor_tightness_z": -0.5276454708822756,
+      "shibor_3m_chg_20d": 0.24400000000000022,
+      "qvix_z_252": 0.41556367110221565,
+      "equity_risk_premium": 3.02139722747322,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-03-31",
+      "forward_return": 0.019055576987535128,
+      "shibor_3m": 2.635,
+      "shibor_tightness_z": -0.7377492963477824,
+      "shibor_3m_chg_20d": -0.15900000000000025,
+      "qvix_z_252": -0.7812761802058417,
+      "equity_risk_premium": 3.6559269678302533,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-04-30",
+      "forward_return": 0.03665744162205975,
+      "shibor_3m": 2.58,
+      "shibor_tightness_z": -0.7868348562083982,
+      "shibor_3m_chg_20d": -0.053999999999999826,
+      "qvix_z_252": -0.9552969012078784,
+      "equity_risk_premium": 4.232449704142011,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-05-31",
+      "forward_return": -0.024639717318472587,
+      "shibor_3m": 2.479,
+      "shibor_tightness_z": -0.8853023263045204,
+      "shibor_3m_chg_20d": -0.10599999999999987,
+      "qvix_z_252": -0.06528614098631615,
+      "equity_risk_premium": 4.052232079488999,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-06-30",
+      "forward_return": -0.07544907620462771,
+      "shibor_3m": 2.458,
+      "shibor_tightness_z": -0.8935072531532774,
+      "shibor_3m_chg_20d": -0.020000000000000018,
+      "qvix_z_252": -1.1936101506808987,
+      "equity_risk_premium": 3.905440223463687,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-07-30",
+      "forward_return": 0.01089008782187606,
+      "shibor_3m": 2.401,
+      "shibor_tightness_z": -0.9412367935426214,
+      "shibor_3m_chg_20d": -0.04800000000000004,
+      "qvix_z_252": -0.7030298708816007,
+      "equity_risk_premium": 4.785651219512195,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-08-31",
+      "forward_return": 0.023111812093443707,
+      "shibor_3m": 2.357,
+      "shibor_tightness_z": -0.9734492212642833,
+      "shibor_3m_chg_20d": -0.03699999999999992,
+      "qvix_z_252": -0.8363949435506125,
+      "equity_risk_premium": 5.213017727639,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-09-30",
+      "forward_return": -0.011561047583767303,
+      "shibor_3m": 2.431,
+      "shibor_tightness_z": -0.8753276777407824,
+      "shibor_3m_chg_20d": 0.07500000000000018,
+      "qvix_z_252": -0.2626974971915402,
+      "equity_risk_premium": 5.052614115781126,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-10-29",
+      "forward_return": -0.011915021500050749,
+      "shibor_3m": 2.449,
+      "shibor_tightness_z": -0.8419467328792771,
+      "shibor_3m_chg_20d": 0.040999999999999925,
+      "qvix_z_252": -1.2388195210490145,
+      "equity_risk_premium": 4.919459826361484,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-11-30",
+      "forward_return": 0.02623342547811003,
+      "shibor_3m": 2.492,
+      "shibor_tightness_z": -0.781835639022945,
+      "shibor_3m_chg_20d": 0.041999999999999815,
+      "qvix_z_252": -1.548671253119142,
+      "equity_risk_premium": 5.338265306122449,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-12-31",
+      "forward_return": -0.06687133318703742,
+      "shibor_3m": 2.5,
+      "shibor_tightness_z": -0.7622622611401674,
+      "shibor_3m_chg_20d": 0.0009999999999998899,
+      "qvix_z_252": -1.2706464299094646,
+      "equity_risk_premium": 4.704031563201196,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-01-28",
+      "forward_return": -0.03795519097998845,
+      "shibor_3m": 2.5,
+      "shibor_tightness_z": -0.7622622611401674,
+      "shibor_3m_chg_20d": 0.0009999999999998899,
+      "qvix_z_252": 1.2455530180940388,
+      "equity_risk_premium": 5.336485209003216,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-02-28",
+      "forward_return": -0.0962268275097844,
+      "shibor_3m": 2.37,
+      "shibor_tightness_z": -0.8872714651690272,
+      "shibor_3m_chg_20d": -0.08999999999999986,
+      "qvix_z_252": -0.9762998027645763,
+      "equity_risk_premium": 5.180449482895783,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-03-31",
+      "forward_return": -0.06429522206125116,
+      "shibor_3m": 2.373,
+      "shibor_tightness_z": -0.8711850107572772,
+      "shibor_3m_chg_20d": 0.010000000000000231,
+      "qvix_z_252": 1.227067510790391,
+      "equity_risk_premium": 5.744623208191126,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-04-29",
+      "forward_return": 0.01718171085258291,
+      "shibor_3m": 2.217,
+      "shibor_tightness_z": -1.0339905549911608,
+      "shibor_3m_chg_20d": -0.1549999999999998,
+      "qvix_z_252": 1.385806499085776,
+      "equity_risk_premium": 6.082006601248885,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-05-31",
+      "forward_return": 0.08110569669100465,
+      "shibor_3m": 1.998,
+      "shibor_tightness_z": -1.2605137425991888,
+      "shibor_3m_chg_20d": -0.21900000000000008,
+      "qvix_z_252": 0.971743770558053,
+      "equity_risk_premium": 6.0913222614841,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-06-30",
+      "forward_return": -0.05860203317949364,
+      "shibor_3m": 2.0,
+      "shibor_tightness_z": -1.2335683570345228,
+      "shibor_3m_chg_20d": 0.0020000000000000018,
+      "qvix_z_252": 1.30764628509048,
+      "equity_risk_premium": 5.3029768480909825,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-07-29",
+      "forward_return": -0.02325719455238706,
+      "shibor_3m": 1.846,
+      "shibor_tightness_z": -1.3784061088868804,
+      "shibor_3m_chg_20d": -0.15399999999999991,
+      "qvix_z_252": 0.3645585362986045,
+      "equity_risk_premium": 5.9852587412587415,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-08-31",
+      "forward_return": -0.05726175407082856,
+      "shibor_3m": 1.6,
+      "shibor_tightness_z": -1.6126217344841003,
+      "shibor_3m_chg_20d": -0.16699999999999982,
+      "qvix_z_252": -0.7682200309603323,
+      "equity_risk_premium": 6.451910163339383,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-09-30",
+      "forward_return": -0.013670348030767832,
+      "shibor_3m": 1.673,
+      "shibor_tightness_z": -1.4939353121185959,
+      "shibor_3m_chg_20d": 0.07299999999999995,
+      "qvix_z_252": -0.23092854279196537,
+      "equity_risk_premium": 6.790998376313276,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-10-31",
+      "forward_return": 0.07010392869856585,
+      "shibor_3m": 1.745,
+      "shibor_tightness_z": -1.3837677304050986,
+      "shibor_3m_chg_20d": 0.0930000000000002,
+      "qvix_z_252": 1.9345512018794266,
+      "equity_risk_premium": 7.76252726326743,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-11-30",
+      "forward_return": -0.017101238238898198,
+      "shibor_3m": 2.193,
+      "shibor_tightness_z": -0.8782496449940617,
+      "shibor_3m_chg_20d": 0.44100000000000006,
+      "qvix_z_252": 0.826509486923497,
+      "equity_risk_premium": 6.575737937559129,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-12-30",
+      "forward_return": 0.060410325302289625,
+      "shibor_3m": 2.422,
+      "shibor_tightness_z": -0.6191200981979446,
+      "shibor_3m_chg_20d": 0.22199999999999998,
+      "qvix_z_252": -1.7592141007845772,
+      "equity_risk_premium": 6.607570632672333,
+      "split": "discovery"
+    },
+    {
+      "date": "2023-01-31",
+      "forward_return": -0.024315537253976505,
+      "shibor_3m": 2.364,
+      "shibor_tightness_z": -0.6765259392943698,
+      "shibor_3m_chg_20d": -0.052000000000000046,
+      "qvix_z_252": -1.123400417042329,
+      "equity_risk_premium": 5.983294671403197,
+      "split": "validation"
+    },
+    {
+      "date": "2023-02-28",
+      "forward_return": -0.013552130356059289,
+      "shibor_3m": 2.437,
+      "shibor_tightness_z": -0.5896959365230817,
+      "shibor_3m_chg_20d": 0.07299999999999995,
+      "qvix_z_252": -1.1687777729691902,
+      "equity_risk_premium": 6.050851477170994,
+      "split": "validation"
+    },
+    {
+      "date": "2023-03-31",
+      "forward_return": -0.007027253515905385,
+      "shibor_3m": 2.448,
+      "shibor_tightness_z": -0.5721868181272965,
+      "shibor_3m_chg_20d": -0.018000000000000238,
+      "qvix_z_252": -1.9650821201552082,
+      "equity_risk_premium": 6.020314463176575,
+      "split": "validation"
+    },
+    {
+      "date": "2023-04-28",
+      "forward_return": -0.05603154974833502,
+      "shibor_3m": 2.428,
+      "shibor_tightness_z": -0.5893002112486695,
+      "shibor_3m_chg_20d": -0.020000000000000018,
+      "qvix_z_252": -1.926140567265916,
+      "equity_risk_premium": 5.939595815170009,
+      "split": "validation"
+    },
+    {
+      "date": "2023-05-31",
+      "forward_return": 0.017078121411923552,
+      "shibor_3m": 2.219,
+      "shibor_tightness_z": -0.8161343246108627,
+      "shibor_3m_chg_20d": -0.19500000000000028,
+      "qvix_z_252": -1.0840007671895107,
+      "equity_risk_premium": 6.4641308325709055,
+      "split": "validation"
+    },
+    {
+      "date": "2023-06-30",
+      "forward_return": 0.04297572050080811,
+      "shibor_3m": 2.168,
+      "shibor_tightness_z": -0.8638647753835523,
+      "shibor_3m_chg_20d": -0.04499999999999993,
+      "qvix_z_252": -1.9050217021772748,
+      "equity_risk_premium": 6.4806702825888785,
+      "split": "validation"
+    },
+    {
+      "date": "2023-07-31",
+      "forward_return": -0.06638010786736348,
+      "shibor_3m": 2.097,
+      "shibor_tightness_z": -0.9329249028195369,
+      "shibor_3m_chg_20d": -0.06800000000000006,
+      "qvix_z_252": -0.22696316957758933,
+      "equity_risk_premium": 6.143116901408452,
+      "split": "validation"
+    },
+    {
+      "date": "2023-08-31",
+      "forward_return": -0.02645840219131801,
+      "shibor_3m": 2.043,
+      "shibor_tightness_z": -0.9817255100299959,
+      "shibor_3m_chg_20d": -0.04899999999999993,
+      "qvix_z_252": 0.190503171637676,
+      "equity_risk_premium": 6.541681073703367,
+      "split": "validation"
+    },
+    {
+      "date": "2023-09-28",
+      "forward_return": -0.019193085813833388,
+      "shibor_3m": 2.302,
+      "shibor_tightness_z": -0.6816534580653322,
+      "shibor_3m_chg_20d": 0.2589999999999999,
+      "qvix_z_252": -0.26441399054229053,
+      "equity_risk_premium": 6.524532014719412,
+      "split": "validation"
+    },
+    {
+      "date": "2023-10-31",
+      "forward_return": -0.024093131042072113,
+      "shibor_3m": 2.415,
+      "shibor_tightness_z": -0.5486061642987892,
+      "shibor_3m_chg_20d": 0.1120000000000001,
+      "qvix_z_252": -0.4636943664693569,
+      "equity_risk_premium": 6.704696240601503,
+      "split": "validation"
+    },
+    {
+      "date": "2023-11-30",
+      "forward_return": -0.023786117829342923,
+      "shibor_3m": 2.493,
+      "shibor_tightness_z": -0.45606469098287533,
+      "shibor_3m_chg_20d": 0.06699999999999973,
+      "qvix_z_252": -0.8355822459484874,
+      "equity_risk_premium": 6.873984732824426,
+      "split": "validation"
+    },
+    {
+      "date": "2023-12-29",
+      "forward_return": -0.0415524996877068,
+      "shibor_3m": 2.53,
+      "shibor_tightness_z": -0.4106507250946172,
+      "shibor_3m_chg_20d": 0.02699999999999969,
+      "qvix_z_252": -0.22574586329608703,
+      "equity_risk_premium": 7.078611368015413,
+      "split": "validation"
+    },
+    {
+      "date": "2024-01-31",
+      "forward_return": 0.10220763112006037,
+      "shibor_3m": 2.388,
+      "shibor_tightness_z": -0.5700020135013587,
+      "shibor_3m_chg_20d": -0.03500000000000014,
+      "qvix_z_252": 3.116611526866801,
+      "equity_risk_premium": 7.4095196850393705,
+      "split": "validation"
+    },
+    {
+      "date": "2024-02-29",
+      "forward_return": 0.0005189102089038222,
+      "shibor_3m": 2.193,
+      "shibor_tightness_z": -0.7883558317443392,
+      "shibor_3m_chg_20d": -0.20699999999999985,
+      "qvix_z_252": 1.3871027812064483,
+      "equity_risk_premium": 6.828402841429881,
+      "split": "validation"
+    },
+    {
+      "date": "2024-03-29",
+      "forward_return": 0.02885108664251601,
+      "shibor_3m": 2.156,
+      "shibor_tightness_z": -0.8231807866607079,
+      "shibor_3m_chg_20d": -0.0259999999999998,
+      "qvix_z_252": -0.5015316104638003,
+      "equity_risk_premium": 6.630506601248885,
+      "split": "validation"
+    },
+    {
+      "date": "2024-04-30",
+      "forward_return": -0.0209819299084385,
+      "shibor_3m": 2.002,
+      "shibor_tightness_z": -0.9908906087144184,
+      "shibor_3m_chg_20d": -0.14900000000000002,
+      "qvix_z_252": -0.4772080089882472,
+      "equity_risk_premium": 6.295652278589854,
+      "split": "validation"
+    },
+    {
+      "date": "2024-05-31",
+      "forward_return": -0.029330683349266806,
+      "shibor_3m": 1.955,
+      "shibor_tightness_z": -1.033225467208296,
+      "shibor_3m_chg_20d": -0.04599999999999982,
+      "qvix_z_252": -1.1008444917317906,
+      "equity_risk_premium": 6.350442350907519,
+      "split": "validation"
+    },
+    {
+      "date": "2024-06-28",
+      "forward_return": -0.015585276312045648,
+      "shibor_3m": 1.918,
+      "shibor_tightness_z": -1.0632996271360566,
+      "shibor_3m_chg_20d": -0.039000000000000146,
+      "qvix_z_252": -1.5306551943082152,
+      "equity_risk_premium": 6.505001393728223,
+      "split": "validation"
+    },
+    {
+      "date": "2024-07-31",
+      "forward_return": -0.04925707348524888,
+      "shibor_3m": 1.86,
+      "shibor_tightness_z": -1.116502928701434,
+      "shibor_3m_chg_20d": -0.053999999999999826,
+      "qvix_z_252": -0.9837110188895456,
+      "equity_risk_premium": 6.6845222614841,
+      "split": "validation"
+    },
+    {
+      "date": "2024-08-30",
+      "forward_return": 0.2604050801455944,
+      "shibor_3m": 1.85,
+      "shibor_tightness_z": -1.1141284630729489,
+      "shibor_3m_chg_20d": -0.0029999999999998916,
+      "qvix_z_252": -1.4508865618136149,
+      "equity_risk_premium": 7.037703130755065,
+      "split": "validation"
+    },
+    {
+      "date": "2024-09-30",
+      "forward_return": -0.11521406769058207,
+      "shibor_3m": 1.84,
+      "shibor_tightness_z": -1.1119497721161689,
+      "shibor_3m_chg_20d": -0.010000000000000009,
+      "qvix_z_252": 9.171753938475163,
+      "equity_risk_premium": 5.753338339920948,
+      "split": "validation"
+    },
+    {
+      "date": "2024-10-31",
+      "forward_return": -0.0032371245226606726,
+      "shibor_3m": 1.884,
+      "shibor_tightness_z": -1.0489826057373801,
+      "shibor_3m_chg_20d": 0.04799999999999982,
+      "qvix_z_252": 2.945341606312174,
+      "equity_risk_premium": 6.436090987124462,
+      "split": "validation"
+    },
+    {
+      "date": "2024-11-29",
+      "forward_return": 0.01713608424987778,
+      "shibor_3m": 1.852,
+      "shibor_tightness_z": -1.073485459457149,
+      "shibor_3m_chg_20d": -0.026999999999999913,
+      "qvix_z_252": 0.9956848003726647,
+      "equity_risk_premium": 6.49003829787234,
+      "split": "validation"
+    },
+    {
+      "date": "2024-12-31",
+      "forward_return": -0.022320220478272645,
+      "shibor_3m": 1.6855,
+      "shibor_tightness_z": -1.248705229279056,
+      "shibor_3m_chg_20d": -0.10949999999999993,
+      "qvix_z_252": 0.022024858058300612,
+      "equity_risk_premium": 6.528245447087777,
+      "split": "validation"
+    },
+    {
+      "date": "2025-01-27",
+      "forward_return": 0.011209977371446467,
+      "shibor_3m": 1.702,
+      "shibor_tightness_z": -1.213754900782557,
+      "shibor_3m_chg_20d": 0.016999999999999904,
+      "qvix_z_252": -0.13689429096468922,
+      "equity_risk_premium": 6.887987563884157,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-02-28",
+      "forward_return": 0.0016119205189326635,
+      "shibor_3m": 1.922,
+      "shibor_tightness_z": -0.951497078100294,
+      "shibor_3m_chg_20d": 0.22249999999999992,
+      "qvix_z_252": -0.13219243392689975,
+      "equity_risk_premium": 6.745036886632826,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-03-31",
+      "forward_return": -0.030042291124155796,
+      "shibor_3m": 1.912,
+      "shibor_tightness_z": -0.9535649611564034,
+      "shibor_3m_chg_20d": -0.03400000000000003,
+      "qvix_z_252": -0.5097076196495111,
+      "equity_risk_premium": 6.676064346349746,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-04-30",
+      "forward_return": 0.01610594205740279,
+      "shibor_3m": 1.75,
+      "shibor_tightness_z": -1.126717457463902,
+      "shibor_3m_chg_20d": -0.1519999999999999,
+      "qvix_z_252": -0.09523794583723195,
+      "equity_risk_premium": 7.078920191470845,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-05-30",
+      "forward_return": 0.026725217805960044,
+      "shibor_3m": 1.652,
+      "shibor_tightness_z": -1.2236786422059542,
+      "shibor_3m_chg_20d": -0.09800000000000009,
+      "qvix_z_252": -0.6200110554810692,
+      "equity_risk_premium": 6.853949190110828,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-06-30",
+      "forward_return": 0.04999481695202235,
+      "shibor_3m": 1.63,
+      "shibor_tightness_z": -1.2331925540627333,
+      "shibor_3m_chg_20d": -0.02200000000000002,
+      "qvix_z_252": -0.6943558379185459,
+      "equity_risk_premium": 6.456827714748783,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-07-31",
+      "forward_return": 0.09481206656142294,
+      "shibor_3m": 1.566,
+      "shibor_tightness_z": -1.2891388382609419,
+      "shibor_3m_chg_20d": -0.040000000000000036,
+      "qvix_z_252": -0.30879311790774255,
+      "equity_risk_premium": 6.334185209003216,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-08-29",
+      "forward_return": 0.00844720436389812,
+      "shibor_3m": 1.55,
+      "shibor_tightness_z": -1.2903297671025273,
+      "shibor_3m_chg_20d": -0.0129999999999999,
+      "qvix_z_252": 0.6691103703568474,
+      "equity_risk_premium": 5.720678987150415,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-09-30",
+      "forward_return": -0.004311778800728305,
+      "shibor_3m": 1.58,
+      "shibor_tightness_z": -1.2408573250663768,
+      "shibor_3m_chg_20d": 0.030000000000000027,
+      "qvix_z_252": -0.3758584458702924,
+      "equity_risk_premium": 5.6470075075075075,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-10-31",
+      "forward_return": -0.02103723053219375,
+      "shibor_3m": 1.596,
+      "shibor_tightness_z": -1.2083435363111599,
+      "shibor_3m_chg_20d": 0.016000000000000014,
+      "qvix_z_252": -0.16552223153729365,
+      "equity_risk_premium": 5.786101137225171,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-11-28",
+      "forward_return": 0.026233106009268647,
+      "shibor_3m": 1.58,
+      "shibor_tightness_z": -1.21203948754459,
+      "shibor_3m_chg_20d": -0.016000000000000014,
+      "qvix_z_252": -0.0818867616284629,
+      "equity_risk_premium": 5.827511656441718,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-12-31",
+      "forward_return": 0.0027157964105151144,
+      "shibor_3m": 1.6,
+      "shibor_tightness_z": -1.1761895104378486,
+      "shibor_3m_chg_20d": 0.020000000000000018,
+      "qvix_z_252": -0.6977932084410805,
+      "equity_risk_premium": 5.648951874062969,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-01-30",
+      "forward_return": -0.0054534648788390205,
+      "shibor_3m": 1.589,
+      "shibor_tightness_z": -1.1753787572404346,
+      "shibor_3m_chg_20d": -0.009000000000000119,
+      "qvix_z_252": 0.02464279900202096,
+      "equity_risk_premium": 5.668231563201196,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-02-27",
+      "forward_return": -0.04684391031515822,
+      "shibor_3m": 1.589,
+      "shibor_tightness_z": -1.1753787572404346,
+      "shibor_3m_chg_20d": -0.009000000000000119,
+      "qvix_z_252": -1.1409137207624467,
+      "equity_risk_premium": 5.714175468867217,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-03-31",
+      "forward_return": 0.0672308419771932,
+      "shibor_3m": 1.507,
+      "shibor_tightness_z": -1.239417218731779,
+      "shibor_3m_chg_20d": -0.05800000000000005,
+      "qvix_z_252": -0.06884311692030474,
+      "equity_risk_premium": 5.701696992481203,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-04-30",
+      "forward_return": 0.01311147315144301,
+      "shibor_3m": 1.416,
+      "shibor_tightness_z": -1.3243391135773883,
+      "shibor_3m_chg_20d": -0.08800000000000008,
+      "qvix_z_252": -0.6273023055881936,
+      "equity_risk_premium": 5.472916606498195,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-05-29",
+      "forward_return": 0.003388393018473046,
+      "shibor_3m": 1.4075,
+      "shibor_tightness_z": -1.3174121514813455,
+      "shibor_3m_chg_20d": -0.01200000000000001,
+      "qvix_z_252": 0.5688122636662017,
+      "equity_risk_premium": 5.537376811594202,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-06-30",
+      "forward_return": -0.0785483999411184,
+      "shibor_3m": 1.438,
+      "shibor_tightness_z": -1.2686657047613268,
+      "shibor_3m_chg_20d": 0.03149999999999986,
+      "qvix_z_252": 1.3316577885508325,
+      "equity_risk_premium": 5.529164124909222,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-07-31",
+      "forward_return": 3.704664172188288e-05,
+      "shibor_3m": 1.43,
+      "shibor_tightness_z": -1.2628934830189735,
+      "shibor_3m_chg_20d": -0.0050000000000001155,
+      "qvix_z_252": 1.098953780934216,
+      "equity_risk_premium": 5.595841520467836,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-08-31",
+      "forward_return": -0.05671207737877959,
+      "shibor_3m": 1.43,
+      "shibor_tightness_z": -1.2487611263118452,
+      "shibor_3m_chg_20d": 0.0,
+      "qvix_z_252": -0.44333643296956005,
+      "equity_risk_premium": 5.980411656441718,
+      "split": "holdout"
+    }
+  ],
+  "limitations": [
+    "SHIBOR is a bank-interbank rate, not the equity funding rate; transmission to HS300 may be indirect.",
+    "The expanding z-score uses the full pre-2018 history, so the study window has no warmup gap."
+  ]
+}
