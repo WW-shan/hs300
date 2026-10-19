@@ -108,6 +108,7 @@ FIELDS = [
     ExtField("hs300_turnover_z_ext2017", "float", "HS300 turnover 20d expanding z-score with 2017 history (direction negative)"),
     ExtField("hs300_turnover_chg_20d_ext2017", "float", "HS300 turnover 20d mean 20d change with 2017 history (direction negative)"),
     ExtField("hs300_turnover_gate_flag_ext2017", "float", "HS300 turnover 20d expanding z-score < 0 gate flag with 2017 history"),
+    ExtField("idio_vol_60d_low", "float", "HS300市场模型60日残差波动率反向"),
     ExtField("goodwill_ratio_low", "float", "商誉/总资产反向"),
     ExtField("intangible_ratio_low", "float", "无形资产/总资产反向"),
     ExtField("rd_intensity", "float", "研发费用/营业收入"),
@@ -1827,13 +1828,77 @@ def _erp_daily(dates: list[date]) -> pl.DataFrame:
     return daily
 
 
+def _residual_volatility_frame(
+    stock_panel: pl.DataFrame,
+    market_panel: pl.DataFrame,
+    *,
+    window_size: int = 60,
+) -> pl.DataFrame:
+    """Compute negative annualized HS300 market-model residual volatility.
+
+    The zero-intercept residual variance over a rolling window is
+    ``var(y) - cov(x, y)^2 / var(x)``.  The output is negated so that a
+    higher score always means lower idiosyncratic volatility.
+    """
+    stocks = (
+        stock_panel.select(["symbol", "date", "close"])
+        .sort(["symbol", "date"])
+        .with_columns(
+            (pl.col("close") / pl.col("close").shift(1).over("symbol") - 1.0).alias("_ret")
+        )
+    )
+    market = (
+        market_panel.select(["date", "close"])
+        .unique(subset=["date"], keep="last")
+        .sort("date")
+        .with_columns(
+            (pl.col("close") / pl.col("close").shift(1) - 1.0).alias("_market_ret")
+        )
+        .select(["date", "_market_ret"])
+    )
+    return (
+        stocks.join(market, on="date", how="left")
+        .with_columns([
+            pl.rolling_cov(
+                "_ret", "_market_ret", window_size=window_size, min_samples=window_size
+            ).over("symbol").alias("_cov"),
+            pl.col("_ret").rolling_var(window_size, min_samples=window_size).over("symbol").alias("_var_y"),
+            pl.col("_market_ret").rolling_var(window_size, min_samples=window_size).over("symbol").alias("_var_m"),
+        ])
+        .with_columns(
+            pl.when((pl.col("_var_m") > 0.0) & pl.col("_cov").is_not_null())
+            .then((pl.col("_var_y") - pl.col("_cov").pow(2) / pl.col("_var_m")).clip(lower_bound=0.0))
+            .otherwise(None)
+            .alias("_residual_var")
+        )
+        .with_columns(
+            (-pl.col("_residual_var").sqrt() * math.sqrt(252.0)).alias("idio_vol_60d_low")
+        )
+        .select(["symbol", "date", "idio_vol_60d_low"])
+    )
+
+
+def _idio_vol_daily(prices: pl.DataFrame) -> pl.DataFrame:
+    index_paths = sorted((DATA / "kline_index_daily").glob("date=*/part.parquet"))
+    if not index_paths:
+        raise RuntimeError("kline_index_daily 为空，无法计算 HS300 残差波动率")
+    market = (
+        pl.scan_parquet([str(path) for path in index_paths])
+        .filter(pl.col("symbol") == "000300.SH")
+        .select(["date", "close"])
+        .collect()
+    )
+    return _residual_volatility_frame(prices, market)
+
+
 def _prices(dates: list[date], symbols: list[str]) -> pl.DataFrame:
     paths = sorted((DATA / "kline_daily_enriched").glob("date=*/part.parquet"))
     return (
         pl.scan_parquet([str(path) for path in paths])
         .filter(pl.col("symbol").is_in(symbols) & pl.col("date").is_in(dates))
-        .select(["symbol", "date", "raw_close"])
+        .select(["symbol", "date", "close", "raw_close"])
         .collect()
+        .sort(["symbol", "date"])
     )
 
 
@@ -1895,12 +1960,13 @@ def main() -> int:
     macro = _macro_daily(dates)
     emotion = _emotion_daily(dates)
     prices = _prices(dates, symbols)
+    idio_vol = _idio_vol_daily(prices)
 
     base = _calendar_frame(dates, symbols)
     for frame in (
         holder, dividend, insider, holder_trade, fund_holding,
         lhb, pledge, repurchase, block_trade, analyst, forecast, express,
-        industry, mainline, margin, short_ratio, goodwill, equity_supply, prices,
+        industry, mainline, margin, short_ratio, goodwill, equity_supply, prices, idio_vol,
     ):
         base = base.join(frame, on=["symbol", "date"], how="left")
     for frame in (erp, macro, emotion, etf_flow, qvix, macro_extra, regime_extra, northbound, if_position, bond_momentum, ah_premium, hk_risk, margin_safety, breadth, shibor_tightness, concentration, turnover_level, turnover_extended):
@@ -1933,7 +1999,7 @@ def main() -> int:
         description=(
             "研究实验数据: 增持/减持事件、股东结构变化、基金持仓拥挤度、两融、"
             "龙虎榜、质押、回购、大宗交易、分析师、业绩预告/快报、商誉与研发、"
-            "股权融资供给、分红、ERP、信用/期限利差和市场情绪。"
+            "股权融资供给、分红、ERP、信用/期限利差、市场情绪和HS300残差波动率。"
             "仅用于实验策略，不构成可部署结论。"
         ),
     )
