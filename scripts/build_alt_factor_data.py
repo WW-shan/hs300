@@ -120,6 +120,7 @@ FIELDS = [
     ExtField("cash_flow_stability_4q_low", "float", "经营现金流/总资产4季稳定性反向"),
     ExtField("net_financing_4q_low", "float", "净筹资现金流/总资产4季强度反向"),
     ExtField("sga_ratio_4q_low", "float", "销售+管理费用/营收4季费用率反向"),
+    ExtField("sga_ratio_4q_industry_neutral", "float", "销售+管理费用率4季行业内分位(高好)"),
     ExtField("sga_ratio_4q_qoq_improvement", "float", "销售+管理费用率TTM环比改善(高好)"),
     ExtField("management_expense_ratio_4q_low", "float", "管理费用/营收4季费用率反向"),
     ExtField("sga_ratio_stability_4q_low", "float", "销售+管理费用率4季稳定性反向"),
@@ -908,7 +909,8 @@ def _mainline_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
         ])
         .unique(subset=["date"], keep="last")
     )
-    base = _calendar_frame(dates, symbols).join(industry, on="symbol", how="left")
+    base = _calendar_frame(dates, symbols)
+    base = base.join(industry, on="symbol", how="left")
     joined = base.join(mainline, on=["date", "industry_l1"], how="left")
     return joined.select([
         "symbol", "date",
@@ -2650,6 +2652,29 @@ def _gross_margin_yoy_improvement_q_daily(dates: list[date], symbols: list[str])
         .select(["symbol", "date", "gross_margin_yoy_improvement_q"])
     )
 
+def _sga_ratio_4q_industry_neutral_frame(frame: pl.DataFrame) -> pl.DataFrame:
+    """Rank the SG&A level factor within current industry groups for each date."""
+    grouped = (
+        frame.select(["symbol", "date", "industry_l1", "sga_ratio_4q_low"])
+        .with_columns([
+            pl.col("sga_ratio_4q_low").rank("average").over(["date", "industry_l1"]).alias("_rank"),
+            pl.col("sga_ratio_4q_low").is_not_null().sum().over(["date", "industry_l1"]).alias("_valid_count"),
+        ])
+    )
+    return (
+        grouped.with_columns(
+            pl.when(
+                pl.col("industry_l1").is_not_null()
+                & pl.col("sga_ratio_4q_low").is_not_null()
+                & (pl.col("_valid_count") >= 5)
+            )
+            .then((pl.col("_rank") - 1.0) / (pl.col("_valid_count") - 1.0))
+            .otherwise(None)
+            .alias("sga_ratio_4q_industry_neutral")
+        )
+        .select(["symbol", "date", "sga_ratio_4q_industry_neutral"])
+    )
+
 def _gross_margin_stability_4q_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
     """Compute negative standard deviation of the latest four single-quarter gross margins."""
     from app.backtest.fundamentals import _statutory_deadline
@@ -3058,6 +3083,7 @@ def main() -> int:
     gross_margin_yoy_improvement = _gross_margin_yoy_improvement_q_daily(dates, symbols)
     sga_stability = _sga_ratio_stability_4q_daily(dates, symbols)
 
+    from app.services.industry_map import load_industry_l1
     base = _calendar_frame(dates, symbols)
     for frame in (
         holder, dividend, insider, holder_trade, fund_holding,
@@ -3065,6 +3091,9 @@ def main() -> int:
         industry, mainline, margin, short_ratio, goodwill, equity_supply, prices, idio_vol, price_delay, cs_spread, vol_of_vol, market_down_beta, beta_asymmetry, trend_efficiency, risk_adjusted_momentum, cash_flow_stability, net_financing, sga_ratio, management_expense_ratio, gross_margin_stability, gross_margin_yoy_improvement, sga_stability,
     ):
         base = base.join(frame, on=["symbol", "date"], how="left")
+    industry_snapshot = load_industry_l1(DATA).select(["symbol", "industry_l1"])
+    sga_industry_neutral = _sga_ratio_4q_industry_neutral_frame(base.join(industry_snapshot, on="symbol", how="left"))
+    base = base.join(sga_industry_neutral, on=["symbol", "date"], how="left")
     for frame in (erp, macro, emotion, etf_flow, qvix, macro_extra, regime_extra, northbound, if_position, bond_momentum, ah_premium, hk_risk, margin_safety, breadth, shibor_tightness, concentration, turnover_level, turnover_extended, market_skew):
         base = base.join(frame, on="date", how="left")
     base = base.with_columns(
@@ -3095,7 +3124,7 @@ def main() -> int:
         description=(
             "研究实验数据: 增持/减持事件、股东结构变化、基金持仓拥挤度、两融、"
             "龙虎榜、质押、回购、大宗交易、分析师、业绩预告/快报、商誉与研发、"
-            "股权融资供给、分红、ERP、信用/期限利差、市场情绪、HS300残差波动率、价格延迟、Corwin-Schultz价差、波动率稳定性、市场下跌条件beta、beta不对称性、趋势效率、风险调整动量、市场已实现偏度、现金流稳定性、净筹资强度、SG&A费用率、SG&A费用率环比改善、SG&A费用率稳定性、管理费用率、毛利率稳定性和毛利率同比改善。"
+            "股权融资供给、分红、ERP、信用/期限利差、市场情绪、HS300残差波动率、价格延迟、Corwin-Schultz价差、波动率稳定性、市场下跌条件beta、beta不对称性、趋势效率、风险调整动量、市场已实现偏度、现金流稳定性、净筹资强度、SG&A费用率、SG&A费用率环比改善、SG&A费用率稳定性、管理费用率、毛利率稳定性、毛利率同比改善和SG&A行业内分位。"
             "仅用于实验策略，不构成可部署结论。"
         ),
     )
