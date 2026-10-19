@@ -90,7 +90,7 @@ def test_r102_composite_factors_are_declared() -> None:
         },
     }
     for factor_id, members in expected.items():
-        definition = json.loads((CUSTOM_FACTOR_DIR / f"{factor_id}.json").read_text())
+        definition = json.loads((CUSTOM_FACTOR_DIR / f"{factor_id}.json").read_text(encoding="utf-8"))
         assert definition["id"] == factor_id
         assert definition["kind"] == "composite"
         assert definition["members"] == members
@@ -169,7 +169,7 @@ def test_r104_stock_sentiment_factors_are_declared() -> None:
         },
     }
     for factor_id, members in expected.items():
-        definition = json.loads((CUSTOM_FACTOR_DIR / f"{factor_id}.json").read_text())
+        definition = json.loads((CUSTOM_FACTOR_DIR / f"{factor_id}.json").read_text(encoding="utf-8"))
         assert definition["id"] == factor_id
         assert definition["kind"] == "composite"
         assert definition["members"] == members
@@ -217,7 +217,7 @@ def test_r105_unreferenced_family_factors_are_declared() -> None:
         },
     }
     for factor_id, members in expected.items():
-        definition = json.loads((CUSTOM_FACTOR_DIR / f"{factor_id}.json").read_text())
+        definition = json.loads((CUSTOM_FACTOR_DIR / f"{factor_id}.json").read_text(encoding="utf-8"))
         assert definition["id"] == factor_id
         assert definition["kind"] == "composite"
         assert definition["members"] == members
@@ -259,7 +259,7 @@ def test_r106_fundamental_factors_are_declared() -> None:
         },
     }
     for factor_id, members in expected.items():
-        definition = json.loads((CUSTOM_FACTOR_DIR / f"{factor_id}.json").read_text())
+        definition = json.loads((CUSTOM_FACTOR_DIR / f"{factor_id}.json").read_text(encoding="utf-8"))
         assert definition["id"] == factor_id
         assert definition["kind"] == "composite"
         assert definition["members"] == members
@@ -302,7 +302,7 @@ def test_r108_final_coverage_factors_are_declared() -> None:
         },
     }
     for factor_id, members in expected.items():
-        definition = json.loads((CUSTOM_FACTOR_DIR / f"{factor_id}.json").read_text())
+        definition = json.loads((CUSTOM_FACTOR_DIR / f"{factor_id}.json").read_text(encoding="utf-8"))
         assert definition["id"] == factor_id
         assert definition["kind"] == "composite"
         assert definition["members"] == members
