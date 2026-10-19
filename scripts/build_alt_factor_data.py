@@ -118,6 +118,7 @@ FIELDS = [
     ExtField("risk_adjusted_momentum_60d", "float", "60日风险调整动量（收益/年化波动率）"),
     ExtField("market_skew_60d_low", "float", "HS300 60日已实现偏度反向"),
     ExtField("cash_flow_stability_4q_low", "float", "经营现金流/总资产4季稳定性反向"),
+    ExtField("ocf_margin_4q", "float", "TTM经营现金流/营收(高好)"),
     ExtField("net_financing_4q_low", "float", "净筹资现金流/总资产4季强度反向"),
     ExtField("sga_ratio_4q_low", "float", "销售+管理费用/营收4季费用率反向"),
     ExtField("sga_ratio_4q_industry_neutral", "float", "销售+管理费用率4季行业内分位(高好)"),
@@ -2379,6 +2380,92 @@ def _cash_flow_stability_daily(dates: list[date], symbols: list[str]) -> pl.Data
     )
 
 
+def _ocf_margin_4q_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
+    """Compute trailing-four-quarter operating cash flow divided by revenue."""
+    from app.backtest.fundamentals import _statutory_deadline
+
+    income = pl.read_parquet(DATA / "financials" / "income" / "part.parquet").select([
+        pl.col("symbol").cast(pl.String),
+        pl.col("period_end").cast(pl.Date),
+        pl.col("revenue").cast(pl.Float64),
+    ])
+    cash = pl.read_parquet(DATA / "financials" / "cash_flow" / "part.parquet").select([
+        pl.col("symbol").cast(pl.String),
+        pl.col("period_end").cast(pl.Date),
+        pl.col("net_operating_cash_flow").cast(pl.Float64),
+    ])
+    financial = (
+        income.join(cash, on=["symbol", "period_end"], how="inner")
+        .unique(subset=["symbol", "period_end"], keep="last")
+        .sort(["symbol", "period_end"])
+        .with_columns(
+            pl.col("period_end")
+            .map_elements(_statutory_deadline, return_dtype=pl.Date)
+            .dt.offset_by("3d")
+            .alias("_deadline")
+        )
+        .with_columns([
+            (pl.col("period_end").dt.year() * 4 + pl.col("period_end").dt.quarter()).alias("_period_index"),
+            pl.col("period_end").shift(1).over("symbol").alias("_previous_period"),
+            pl.col("revenue").shift(1).over("symbol").alias("_previous_revenue"),
+            pl.col("net_operating_cash_flow").shift(1).over("symbol").alias("_previous_ocf"),
+        ])
+        .with_columns(
+            (
+                pl.col("_period_index")
+                - (pl.col("_previous_period").dt.year() * 4 + pl.col("_previous_period").dt.quarter())
+            ).alias("_quarter_gap")
+        )
+        .with_columns([
+            pl.when(pl.col("period_end").dt.quarter() == 1)
+            .then(pl.col("revenue"))
+            .when((pl.col("_quarter_gap") == 1) & pl.col("_previous_revenue").is_not_null())
+            .then(pl.col("revenue") - pl.col("_previous_revenue"))
+            .otherwise(None)
+            .alias("_quarter_revenue"),
+            pl.when(pl.col("period_end").dt.quarter() == 1)
+            .then(pl.col("net_operating_cash_flow"))
+            .when((pl.col("_quarter_gap") == 1) & pl.col("_previous_ocf").is_not_null())
+            .then(pl.col("net_operating_cash_flow") - pl.col("_previous_ocf"))
+            .otherwise(None)
+            .alias("_quarter_ocf"),
+        ])
+        .with_columns([
+            pl.col("_quarter_revenue").rolling_sum(4, min_samples=4).over("symbol").alias("_ttm_revenue"),
+            pl.col("_quarter_ocf").rolling_sum(4, min_samples=4).over("symbol").alias("_ttm_ocf"),
+            pl.col("_quarter_ocf").is_not_null().cast(pl.Int32).rolling_sum(4, min_samples=4).over("symbol").alias("_count4"),
+            pl.col("_period_index").shift(3).over("symbol").alias("_period_index_lag3"),
+            pl.col("_deadline").cast(pl.Int64).rolling_max(4, min_samples=4).over("symbol").cast(pl.Date).alias("_deadline4"),
+        ])
+        .with_columns(
+            pl.when(
+                (pl.col("_period_index") - pl.col("_period_index_lag3") == 3)
+                & (pl.col("_count4") == 4)
+                & (pl.col("_ttm_revenue") > 0)
+                & pl.col("_ttm_ocf").is_not_null()
+            )
+            .then(pl.col("_ttm_ocf") / pl.col("_ttm_revenue"))
+            .otherwise(None)
+            .alias("ocf_margin_4q")
+        )
+        .filter(pl.col("ocf_margin_4q").is_not_null())
+        .with_columns((pl.col("_deadline4") + pl.duration(days=1)).alias("effective_date"))
+        .select(["symbol", "effective_date", "ocf_margin_4q"])
+        .sort(["symbol", "effective_date"])
+    )
+    daily = _calendar_frame(dates, symbols).select(["symbol", "date"]).sort(["symbol", "date"])
+    return (
+        daily.join_asof(
+            financial.rename({"effective_date": "_effective"}),
+            left_on="date",
+            right_on="_effective",
+            by="symbol",
+            strategy="backward",
+            check_sortedness=False,
+        )
+        .select(["symbol", "date", "ocf_margin_4q"])
+    )
+
 def _net_financing_4q_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
     """Compute negative trailing-four-quarter net financing scaled by assets."""
     from app.backtest.fundamentals import _statutory_deadline
@@ -3076,6 +3163,7 @@ def main() -> int:
     risk_adjusted_momentum = _risk_adjusted_momentum_frame(prices)
     market_skew = _market_skew_daily(dates)
     cash_flow_stability = _cash_flow_stability_daily(dates, symbols)
+    ocf_margin = _ocf_margin_4q_daily(dates, symbols)
     net_financing = _net_financing_4q_daily(dates, symbols)
     sga_ratio = _sga_ratio_4q_daily(dates, symbols)
     management_expense_ratio = _management_expense_ratio_4q_daily(dates, symbols)
@@ -3088,7 +3176,7 @@ def main() -> int:
     for frame in (
         holder, dividend, insider, holder_trade, fund_holding,
         lhb, pledge, repurchase, block_trade, analyst, forecast, express,
-        industry, mainline, margin, short_ratio, goodwill, equity_supply, prices, idio_vol, price_delay, cs_spread, vol_of_vol, market_down_beta, beta_asymmetry, trend_efficiency, risk_adjusted_momentum, cash_flow_stability, net_financing, sga_ratio, management_expense_ratio, gross_margin_stability, gross_margin_yoy_improvement, sga_stability,
+        industry, mainline, margin, short_ratio, goodwill, equity_supply, prices, idio_vol, price_delay, cs_spread, vol_of_vol, market_down_beta, beta_asymmetry, trend_efficiency, risk_adjusted_momentum, cash_flow_stability, ocf_margin, net_financing, sga_ratio, management_expense_ratio, gross_margin_stability, gross_margin_yoy_improvement, sga_stability,
     ):
         base = base.join(frame, on=["symbol", "date"], how="left")
     industry_snapshot = load_industry_l1(DATA).select(["symbol", "industry_l1"])
@@ -3124,7 +3212,7 @@ def main() -> int:
         description=(
             "研究实验数据: 增持/减持事件、股东结构变化、基金持仓拥挤度、两融、"
             "龙虎榜、质押、回购、大宗交易、分析师、业绩预告/快报、商誉与研发、"
-            "股权融资供给、分红、ERP、信用/期限利差、市场情绪、HS300残差波动率、价格延迟、Corwin-Schultz价差、波动率稳定性、市场下跌条件beta、beta不对称性、趋势效率、风险调整动量、市场已实现偏度、现金流稳定性、净筹资强度、SG&A费用率、SG&A费用率环比改善、SG&A费用率稳定性、管理费用率、毛利率稳定性、毛利率同比改善和SG&A行业内分位。"
+            "股权融资供给、分红、ERP、信用/期限利差、市场情绪、HS300残差波动率、价格延迟、Corwin-Schultz价差、波动率稳定性、市场下跌条件beta、beta不对称性、趋势效率、风险调整动量、市场已实现偏度、现金流稳定性、OCF利润率、净筹资强度、SG&A费用率、SG&A费用率环比改善、SG&A费用率稳定性、管理费用率、毛利率稳定性、毛利率同比改善和SG&A行业内分位。"
             "仅用于实验策略，不构成可部署结论。"
         ),
     )
