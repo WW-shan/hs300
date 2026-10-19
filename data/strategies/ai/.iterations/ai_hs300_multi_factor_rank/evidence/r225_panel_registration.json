@@ -1,0 +1,88 @@
+{
+    "round":  "R225",
+    "captured_at":  "2026-10-19T19:00:40.4579083+00:00",
+    "api_base":  "http://127.0.0.1:3018",
+    "reload":  {
+                   "method":  "POST",
+                   "endpoint":  "/api/strategies/reload",
+                   "ok":  true,
+                   "count":  114
+               },
+    "factors":  {
+                    "endpoint":  "/api/factors",
+                    "count":  206,
+                    "candidate_factor_present":  true,
+                    "registered":  {
+                                       "id":  "ext_alt_hs300_sga_ratio_stability_4q_low",
+                                       "label":  "HS300另类因子·销售+管理费用率4季稳定性反向",
+                                       "group":  "扩展数据",
+                                       "kind":  "base",
+                                       "version":  1,
+                                       "formula":  "扩展表「HS300另类因子」字段 sga_ratio_stability_4q_low (时序·按交易日对齐)",
+                                       "direction":  "none",
+                                       "pit":  false
+                                   }
+                },
+    "strategies":  {
+                       "endpoint":  "/api/strategies?include_research=true",
+                       "count":  151,
+                       "load_error_count":  0,
+                       "load_errors":  [
+
+                                       ],
+                       "registered":  [
+                                          {
+                                              "id":  "ai_hs300_sga_stability_control",
+                                              "name":  "HS300非金融费用率稳定性匹配对照",
+                                              "description":  "与R225候选使用相同非金融股票池、SG\u0026A费用率稳定性因子可用性过滤和执行口径，但不把稳定性计入评分",
+                                              "tags":  [
+                                                           "质量",
+                                                           "现金质量",
+                                                           "匹配对照",
+                                                           "沪深300",
+                                                           "非金融",
+                                                           "实验",
+                                                           "R225"
+                                                       ],
+                                              "source":  "ai",
+                                              "research_only":  true,
+                                              "execution_backend":  "polars_expr",
+                                              "scoring":  {
+                                                              "uf_quality_value_defensive":  0.545,
+                                                              "uf_cash_quality":  0.455
+                                                          },
+                                              "stop_loss":  -0.2,
+                                              "max_hold_days":  20,
+                                              "limit":  30
+                                          },
+                                          {
+                                              "id":  "ai_hs300_sga_stability_h20_sl20",
+                                              "name":  "HS300非金融费用率稳定性",
+                                              "description":  "历史沪深300剔除银行和非银金融；4季单季SG\u0026A费用率稳定性、质量价值防守与现金质量复合；20日持有、-20%止损（R225实验）",
+                                              "tags":  [
+                                                           "SG\u0026A",
+                                                           "费用率",
+                                                           "稳定性",
+                                                           "成本纪律",
+                                                           "质量",
+                                                           "现金质量",
+                                                           "沪深300",
+                                                           "非金融",
+                                                           "实验",
+                                                           "R225"
+                                                       ],
+                                              "source":  "ai",
+                                              "research_only":  true,
+                                              "execution_backend":  "polars_expr",
+                                              "scoring":  {
+                                                              "ext_alt_hs300_sga_ratio_stability_4q_low":  0.45,
+                                                              "uf_quality_value_defensive":  0.3,
+                                                              "uf_cash_quality":  0.25
+                                                          },
+                                              "stop_loss":  -0.2,
+                                              "max_hold_days":  20,
+                                              "limit":  30
+                                          }
+                                      ]
+                   }
+}
