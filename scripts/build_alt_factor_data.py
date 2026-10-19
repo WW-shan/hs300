@@ -113,6 +113,7 @@ FIELDS = [
     ExtField("cs_spread_60d", "float", "Corwin-Schultz高低价估计买卖价差60日均值"),
     ExtField("vol_of_vol_60d_low", "float", "20日波动率的60日稳定性反向"),
     ExtField("market_down_beta_60d_low", "float", "HS300市场下跌日条件beta反向"),
+    ExtField("beta_asymmetry_120d", "float", "HS300上行beta减下行beta（高好）"),
     ExtField("trend_efficiency_60d", "float", "60日趋势效率（净对数收益/绝对路径和）"),
     ExtField("risk_adjusted_momentum_60d", "float", "60日风险调整动量（收益/年化波动率）"),
     ExtField("market_skew_60d_low", "float", "HS300 60日已实现偏度反向"),
@@ -2074,6 +2075,110 @@ def _market_down_beta_daily(prices: pl.DataFrame) -> pl.DataFrame:
     return _market_down_beta_frame(prices, market)
 
 
+def _beta_asymmetry_frame(
+    stock_panel: pl.DataFrame,
+    market_panel: pl.DataFrame,
+    *,
+    window_size: int = 120,
+    min_up_days: int = 20,
+    min_down_days: int = 20,
+) -> pl.DataFrame:
+    """Compute conditional HS300 up-beta minus down-beta over a rolling window."""
+    stocks = (
+        stock_panel.select(["symbol", "date", "close"])
+        .sort(["symbol", "date"])
+        .with_columns(
+            (pl.col("close") / pl.col("close").shift(1).over("symbol") - 1.0).alias("_ret")
+        )
+    )
+    market = (
+        market_panel.select(["date", "close"])
+        .unique(subset=["date"], keep="last")
+        .sort("date")
+        .with_columns(
+            (pl.col("close") / pl.col("close").shift(1) - 1.0).alias("_market_ret")
+        )
+        .select(["date", "_market_ret"])
+    )
+    return (
+        stocks.join(market, on="date", how="left")
+        .with_columns([
+            (pl.col("_market_ret") > 0.0).cast(pl.Float64).alias("_up_mask"),
+            (pl.col("_market_ret") < 0.0).cast(pl.Float64).alias("_down_mask"),
+            pl.col("_market_ret").pow(2).alias("_market_sq"),
+            (pl.col("_ret") * pl.col("_market_ret")).alias("_ret_market"),
+            pl.col("_market_ret").is_not_null().cast(pl.Int32).alias("_valid_market"),
+        ])
+        .with_columns([
+            (pl.col("_market_ret") * pl.col("_up_mask")).alias("_up_x"),
+            (pl.col("_ret") * pl.col("_up_mask")).alias("_up_y"),
+            (pl.col("_market_sq") * pl.col("_up_mask")).alias("_up_xx"),
+            (pl.col("_ret_market") * pl.col("_up_mask")).alias("_up_xy"),
+            (pl.col("_market_ret") * pl.col("_down_mask")).alias("_down_x"),
+            (pl.col("_ret") * pl.col("_down_mask")).alias("_down_y"),
+            (pl.col("_market_sq") * pl.col("_down_mask")).alias("_down_xx"),
+            (pl.col("_ret_market") * pl.col("_down_mask")).alias("_down_xy"),
+        ])
+        .with_columns([
+            pl.col("_valid_market").rolling_sum(window_size, min_samples=window_size).over("symbol").alias("_valid_window"),
+            pl.col("_up_mask").rolling_sum(window_size, min_samples=window_size).over("symbol").alias("_n_up"),
+            pl.col("_up_x").rolling_sum(window_size, min_samples=window_size).over("symbol").alias("_sx_up"),
+            pl.col("_up_y").rolling_sum(window_size, min_samples=window_size).over("symbol").alias("_sy_up"),
+            pl.col("_up_xx").rolling_sum(window_size, min_samples=window_size).over("symbol").alias("_sxx_up"),
+            pl.col("_up_xy").rolling_sum(window_size, min_samples=window_size).over("symbol").alias("_sxy_up"),
+            pl.col("_down_mask").rolling_sum(window_size, min_samples=window_size).over("symbol").alias("_n_down"),
+            pl.col("_down_x").rolling_sum(window_size, min_samples=window_size).over("symbol").alias("_sx_down"),
+            pl.col("_down_y").rolling_sum(window_size, min_samples=window_size).over("symbol").alias("_sy_down"),
+            pl.col("_down_xx").rolling_sum(window_size, min_samples=window_size).over("symbol").alias("_sxx_down"),
+            pl.col("_down_xy").rolling_sum(window_size, min_samples=window_size).over("symbol").alias("_sxy_down"),
+        ])
+        .with_columns([
+            pl.when(
+                (pl.col("_valid_window") == window_size)
+                & (pl.col("_n_up") >= min_up_days)
+                & ((pl.col("_n_up") * pl.col("_sxx_up") - pl.col("_sx_up").pow(2)) > 1e-12)
+            )
+            .then(
+                (pl.col("_n_up") * pl.col("_sxy_up") - pl.col("_sx_up") * pl.col("_sy_up"))
+                / (pl.col("_n_up") * pl.col("_sxx_up") - pl.col("_sx_up").pow(2))
+            )
+            .otherwise(None)
+            .alias("_up_beta"),
+            pl.when(
+                (pl.col("_valid_window") == window_size)
+                & (pl.col("_n_down") >= min_down_days)
+                & ((pl.col("_n_down") * pl.col("_sxx_down") - pl.col("_sx_down").pow(2)) > 1e-12)
+            )
+            .then(
+                (pl.col("_n_down") * pl.col("_sxy_down") - pl.col("_sx_down") * pl.col("_sy_down"))
+                / (pl.col("_n_down") * pl.col("_sxx_down") - pl.col("_sx_down").pow(2))
+            )
+            .otherwise(None)
+            .alias("_down_beta"),
+        ])
+        .with_columns(
+            pl.when(pl.col("_up_beta").is_not_null() & pl.col("_down_beta").is_not_null())
+            .then(pl.col("_up_beta") - pl.col("_down_beta"))
+            .otherwise(None)
+            .alias("beta_asymmetry_120d")
+        )
+        .select(["symbol", "date", "beta_asymmetry_120d"])
+    )
+
+
+def _beta_asymmetry_daily(prices: pl.DataFrame) -> pl.DataFrame:
+    index_paths = sorted((DATA / "kline_index_daily").glob("date=*/part.parquet"))
+    if not index_paths:
+        raise RuntimeError("kline_index_daily 为空，无法计算 HS300 beta 不对称性")
+    market = (
+        pl.scan_parquet([str(path) for path in index_paths])
+        .filter(pl.col("symbol") == "000300.SH")
+        .select(["date", "close"])
+        .collect()
+    )
+    return _beta_asymmetry_frame(prices, market)
+
+
 def _trend_efficiency_frame(
     stock_panel: pl.DataFrame,
     *,
@@ -2392,6 +2497,7 @@ def main() -> int:
     cs_spread = _corwin_schultz_spread_frame(prices)
     vol_of_vol = _vol_of_vol_daily(prices)
     market_down_beta = _market_down_beta_daily(prices)
+    beta_asymmetry = _beta_asymmetry_daily(prices)
     trend_efficiency = _trend_efficiency_frame(prices)
     risk_adjusted_momentum = _risk_adjusted_momentum_frame(prices)
     market_skew = _market_skew_daily(dates)
@@ -2401,7 +2507,7 @@ def main() -> int:
     for frame in (
         holder, dividend, insider, holder_trade, fund_holding,
         lhb, pledge, repurchase, block_trade, analyst, forecast, express,
-        industry, mainline, margin, short_ratio, goodwill, equity_supply, prices, idio_vol, price_delay, cs_spread, vol_of_vol, market_down_beta, trend_efficiency, risk_adjusted_momentum, cash_flow_stability,
+        industry, mainline, margin, short_ratio, goodwill, equity_supply, prices, idio_vol, price_delay, cs_spread, vol_of_vol, market_down_beta, beta_asymmetry, trend_efficiency, risk_adjusted_momentum, cash_flow_stability,
     ):
         base = base.join(frame, on=["symbol", "date"], how="left")
     for frame in (erp, macro, emotion, etf_flow, qvix, macro_extra, regime_extra, northbound, if_position, bond_momentum, ah_premium, hk_risk, margin_safety, breadth, shibor_tightness, concentration, turnover_level, turnover_extended, market_skew):
@@ -2434,7 +2540,7 @@ def main() -> int:
         description=(
             "研究实验数据: 增持/减持事件、股东结构变化、基金持仓拥挤度、两融、"
             "龙虎榜、质押、回购、大宗交易、分析师、业绩预告/快报、商誉与研发、"
-            "股权融资供给、分红、ERP、信用/期限利差、市场情绪、HS300残差波动率、价格延迟、Corwin-Schultz价差、波动率稳定性、市场下跌条件beta、趋势效率、风险调整动量、市场已实现偏度和现金流稳定性。"
+            "股权融资供给、分红、ERP、信用/期限利差、市场情绪、HS300残差波动率、价格延迟、Corwin-Schultz价差、波动率稳定性、市场下跌条件beta、beta不对称性、趋势效率、风险调整动量、市场已实现偏度和现金流稳定性。"
             "仅用于实验策略，不构成可部署结论。"
         ),
     )
