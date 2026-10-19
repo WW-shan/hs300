@@ -1,0 +1,1191 @@
+{
+  "purpose": "R201 HS300 turnover-rate level timing scan",
+  "generated_at": "2026-10-19T22:15:05",
+  "data": {
+    "source": "kline_daily_enriched turnover_rate + r157/r78 PIT membership",
+    "months": 102,
+    "start": "2018-02-28",
+    "end": "2026-08-31"
+  },
+  "method": {
+    "factors": {
+      "hs300_turnover_z": "expanding z-score of 20d median turnover rate, direction negative",
+      "hs300_turnover_chg_20d": "20d change of 20d median turnover rate, direction negative"
+    },
+    "long_cash": "signal < 0 holds HS300 index, else cash; 0.05% per switch",
+    "forward_return": "T+1 open to T+21 open on 000300.SH",
+    "splits": {
+      "discovery": [
+        "2018-02-01",
+        "2022-12-31"
+      ],
+      "validation": [
+        "2023-01-01",
+        "2024-12-31"
+      ],
+      "holdout": [
+        "2025-01-01",
+        "2026-08-31"
+      ]
+    }
+  },
+  "summary": {
+    "discovery": {
+      "months": 58,
+      "hs300_turnover_z": {
+        "ic": 0.281327,
+        "hit_rate": 0.551,
+        "long_cash": {
+          "months": 49,
+          "strategy_total": 0.494397,
+          "benchmark_total": 0.390411,
+          "strategy_mdd": -0.180864,
+          "benchmark_mdd": -0.346235,
+          "switches": 15
+        },
+        "max_control_corr": 0.481837,
+        "residual_ic": 0.176735
+      },
+      "hs300_turnover_chg_20d": {
+        "ic": 0.064567,
+        "hit_rate": 0.431,
+        "long_cash": {
+          "months": 58,
+          "strategy_total": -0.095126,
+          "benchmark_total": 0.032905,
+          "strategy_mdd": -0.261438,
+          "benchmark_mdd": -0.346235,
+          "switches": 25
+        },
+        "max_control_corr": 0.02304,
+        "residual_ic": 0.052201
+      }
+    },
+    "validation": {
+      "months": 24,
+      "hs300_turnover_z": {
+        "ic": -0.11913,
+        "hit_rate": 0.4167,
+        "long_cash": {
+          "months": 24,
+          "strategy_total": 0.069758,
+          "benchmark_total": -0.131046,
+          "strategy_mdd": -0.18599,
+          "benchmark_mdd": -0.221001,
+          "switches": 6
+        },
+        "max_control_corr": 0.391304,
+        "residual_ic": -0.364348
+      },
+      "hs300_turnover_chg_20d": {
+        "ic": 0.233913,
+        "hit_rate": 0.5417,
+        "long_cash": {
+          "months": 24,
+          "strategy_total": 0.051971,
+          "benchmark_total": -0.131046,
+          "strategy_mdd": -0.18705,
+          "benchmark_mdd": -0.221001,
+          "switches": 11
+        },
+        "max_control_corr": 0.24087,
+        "residual_ic": -0.01913
+      }
+    },
+    "holdout": {
+      "months": 20,
+      "hs300_turnover_z": {
+        "ic": 0.485714,
+        "hit_rate": 0.5,
+        "long_cash": {
+          "months": 20,
+          "strategy_total": 0.087983,
+          "benchmark_total": 0.065337,
+          "strategy_mdd": -0.0005,
+          "benchmark_mdd": -0.130774,
+          "switches": 4
+        },
+        "max_control_corr": 0.733835,
+        "residual_ic": 0.308271
+      },
+      "hs300_turnover_chg_20d": {
+        "ic": 0.076692,
+        "hit_rate": 0.5,
+        "long_cash": {
+          "months": 20,
+          "strategy_total": 0.02462,
+          "benchmark_total": 0.065337,
+          "strategy_mdd": -0.05762,
+          "benchmark_mdd": -0.130774,
+          "switches": 11
+        },
+        "max_control_corr": 0.216541,
+        "residual_ic": -0.057143
+      }
+    }
+  },
+  "recent_12m_long_cash": {
+    "hs300_turnover_z": {
+      "months": 12,
+      "strategy_total": 0.0,
+      "benchmark_total": -0.103356,
+      "strategy_mdd": 0.0,
+      "benchmark_mdd": -0.130774,
+      "switches": 0
+    },
+    "hs300_turnover_chg_20d": {
+      "months": 12,
+      "strategy_total": 0.020507,
+      "benchmark_total": -0.103356,
+      "strategy_mdd": -0.05762,
+      "benchmark_mdd": -0.130774,
+      "switches": 5
+    }
+  },
+  "decision": {
+    "hs300_turnover_z": {
+      "D1": true,
+      "G1": true,
+      "G2": false,
+      "G3": false,
+      "G4": true,
+      "G5": false,
+      "all_pass": false
+    },
+    "hs300_turnover_chg_20d": {
+      "D1": true,
+      "G1": false,
+      "G2": true,
+      "G3": false,
+      "G4": false,
+      "G5": false,
+      "all_pass": false
+    }
+  },
+  "monthly_records": [
+    {
+      "date": "2018-02-28",
+      "forward_return": -0.035114543180264524,
+      "turnover_20d": 0.5828925068794655,
+      "hs300_turnover_z": null,
+      "hs300_turnover_chg_20d": -0.04395436840113687,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.2619529745042497,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-03-30",
+      "forward_return": -0.028916822021013644,
+      "turnover_20d": 0.4904375496329042,
+      "hs300_turnover_z": null,
+      "hs300_turnover_chg_20d": -0.06740882101464296,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.738731563201197,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-04-27",
+      "forward_return": -0.00391227942200445,
+      "turnover_20d": 0.42899877680432164,
+      "hs300_turnover_z": null,
+      "hs300_turnover_chg_20d": -0.05511842749943319,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.212893563579278,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-05-31",
+      "forward_return": -0.07526113077860042,
+      "turnover_20d": 0.38393689410795845,
+      "hs300_turnover_z": null,
+      "hs300_turnover_chg_20d": -0.037606316496512526,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.35522749003984,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-07-31",
+      "forward_return": -0.038803352946009007,
+      "turnover_20d": 0.3979756378069007,
+      "hs300_turnover_z": null,
+      "hs300_turnover_chg_20d": -0.0047433412593774205,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.901029673093044,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-08-31",
+      "forward_return": -0.009190559793296083,
+      "turnover_20d": 0.35354132970500785,
+      "hs300_turnover_z": null,
+      "hs300_turnover_chg_20d": -0.05121196836532255,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.442032551848512,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-09-28",
+      "forward_return": -0.027394729647761795,
+      "turnover_20d": 0.3395945885883046,
+      "hs300_turnover_z": null,
+      "hs300_turnover_chg_20d": -0.01553867029123801,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.020278583765112,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-10-31",
+      "forward_return": 0.004277279745523055,
+      "turnover_20d": 0.44729314994758945,
+      "hs300_turnover_z": null,
+      "hs300_turnover_chg_20d": 0.11251286669602739,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.9253622641509445,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-11-30",
+      "forward_return": -0.07471403256860676,
+      "turnover_20d": 0.4339857565781068,
+      "hs300_turnover_z": null,
+      "hs300_turnover_chg_20d": -0.05014529975800314,
+      "qvix_z_252": null,
+      "equity_risk_premium": 6.2235440613026825,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-12-28",
+      "forward_return": 0.054552318526569055,
+      "turnover_20d": 0.3413563046141662,
+      "hs300_turnover_z": -1.0628814117935959,
+      "hs300_turnover_chg_20d": -0.09262945196394057,
+      "qvix_z_252": null,
+      "equity_risk_premium": 6.679302775024777,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-01-31",
+      "forward_return": 0.15366053121553125,
+      "turnover_20d": 0.37901596772554685,
+      "hs300_turnover_z": -0.6054037538506211,
+      "hs300_turnover_chg_20d": 0.05560400220026779,
+      "qvix_z_252": null,
+      "equity_risk_premium": 6.20728696461825,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-02-28",
+      "forward_return": 0.010963944792626412,
+      "turnover_20d": 0.6709162490975988,
+      "hs300_turnover_z": 2.137245410254465,
+      "hs300_turnover_chg_20d": 0.3037204593032201,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.118773963515755,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-03-29",
+      "forward_return": -0.0035861036560826953,
+      "turnover_20d": 0.9821724370610662,
+      "hs300_turnover_z": 2.9864126634058388,
+      "hs300_turnover_chg_20d": 0.2876395755518012,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.9317,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-04-30",
+      "forward_return": -0.03561887611828851,
+      "turnover_20d": 0.8106640253050076,
+      "hs300_turnover_z": 1.7025524867002537,
+      "hs300_turnover_chg_20d": -0.16595290342110147,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.76305925020375,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-05-31",
+      "forward_return": 0.07977667497204455,
+      "turnover_20d": 0.5039906527332905,
+      "hs300_turnover_z": -0.0037042908515516047,
+      "hs300_turnover_chg_20d": -0.3066733725717171,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.435701393728223,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-06-28",
+      "forward_return": -0.010615154240560809,
+      "turnover_20d": 0.43123955385170853,
+      "hs300_turnover_z": -0.4070995496971325,
+      "hs300_turnover_chg_20d": -0.08252506739242815,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.957906055646481,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-07-31",
+      "forward_return": -0.0036210596430152897,
+      "turnover_20d": 0.37183166304626497,
+      "hs300_turnover_z": -0.7250042115097388,
+      "hs300_turnover_chg_20d": -0.08437904266608331,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.082032289950576,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-08-30",
+      "forward_return": 0.003917249806700829,
+      "turnover_20d": 0.4249253188314056,
+      "hs300_turnover_z": -0.3973364993775148,
+      "hs300_turnover_chg_20d": 0.054685112077696885,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.489708547008547,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-09-30",
+      "forward_return": 0.04282393313341659,
+      "turnover_20d": 0.4861560858148663,
+      "hs300_turnover_z": -0.024805563453775922,
+      "hs300_turnover_chg_20d": 0.061230766983460694,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.391323208191126,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-10-31",
+      "forward_return": -0.00685409783387847,
+      "turnover_20d": 0.36910596358864634,
+      "hs300_turnover_z": -0.7266858367610768,
+      "hs300_turnover_chg_20d": -0.13121416253606633,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.28098029134533,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-11-29",
+      "forward_return": 0.046931662074929825,
+      "turnover_20d": 0.3913851116662873,
+      "hs300_turnover_z": -0.5694185439556344,
+      "hs300_turnover_chg_20d": 0.015560888432000763,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.561003490401396,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-12-31",
+      "forward_return": -0.05866913964335474,
+      "turnover_20d": 0.4749242242864097,
+      "hs300_turnover_z": -0.03537688018559277,
+      "hs300_turnover_chg_20d": 0.09897125862672934,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.993581300813007,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-01-23",
+      "forward_return": 0.09036901746719495,
+      "turnover_20d": 0.5920721429798721,
+      "hs300_turnover_z": 0.7063342347430703,
+      "hs300_turnover_chg_20d": 0.1617449900528226,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.368004013377925,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-02-28",
+      "forward_return": -0.0784565984452904,
+      "turnover_20d": 0.8063051302150708,
+      "hs300_turnover_z": 1.9173683055094914,
+      "hs300_turnover_chg_20d": 0.21423298723519868,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.905442350907519,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-03-31",
+      "forward_return": 0.05380120071792138,
+      "turnover_20d": 0.7172996007733766,
+      "hs300_turnover_z": 1.2957945653249678,
+      "hs300_turnover_chg_20d": -0.09828868654081468,
+      "qvix_z_252": null,
+      "equity_risk_premium": 6.626689861751153,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-04-30",
+      "forward_return": 0.03462710927817336,
+      "turnover_20d": 0.47980387928399126,
+      "hs300_turnover_z": -0.15320441446903846,
+      "hs300_turnover_chg_20d": -0.22362739902138185,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.958176720475786,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-05-29",
+      "forward_return": 0.0694351679231191,
+      "turnover_20d": 0.48181964343241124,
+      "hs300_turnover_z": -0.13816722280399107,
+      "hs300_turnover_chg_20d": 0.005987831237134422,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.915389655172415,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-06-30",
+      "forward_return": 0.09263193616132503,
+      "turnover_20d": 0.5624943221652807,
+      "hs300_turnover_z": 0.36545679336298276,
+      "hs300_turnover_chg_20d": 0.08067467873286949,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.254544426494345,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-07-31",
+      "forward_return": 0.02851306584029767,
+      "turnover_20d": 1.190000539733211,
+      "hs300_turnover_z": 3.3944214249183404,
+      "hs300_turnover_chg_20d": 0.5475335397688572,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.348888953913679,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-08-31",
+      "forward_return": -0.04061692237485515,
+      "turnover_20d": 0.8206053906220259,
+      "hs300_turnover_z": 1.428165824076877,
+      "hs300_turnover_chg_20d": -0.3367372010099232,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.902715224913495,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-09-30",
+      "forward_return": 0.05018001076419343,
+      "turnover_20d": 0.5788418909530787,
+      "hs300_turnover_z": 0.2080353451308345,
+      "hs300_turnover_chg_20d": -0.21650701049082466,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.0616053352559485,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-10-30",
+      "forward_return": 0.061955291653004396,
+      "turnover_20d": 0.5226841166419429,
+      "hs300_turnover_z": -0.07761255935060869,
+      "hs300_turnover_chg_20d": -0.12461490188741087,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.002908045977011,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-11-30",
+      "forward_return": 0.021824735600316725,
+      "turnover_20d": 0.6701704425701538,
+      "hs300_turnover_z": 0.6725202991299682,
+      "hs300_turnover_chg_20d": 0.13478546988460083,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.548096532970768,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-12-31",
+      "forward_return": 0.027608844237531738,
+      "turnover_20d": 0.6214091298677207,
+      "hs300_turnover_z": 0.41093582235155124,
+      "hs300_turnover_chg_20d": -0.06521856487235045,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.2427960408684546,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-01-29",
+      "forward_return": -0.010652334373869476,
+      "turnover_20d": 0.9486894606835341,
+      "hs300_turnover_z": 1.9919322599443057,
+      "hs300_turnover_chg_20d": 0.3272803308158134,
+      "qvix_z_252": -0.003826321244805273,
+      "equity_risk_premium": 3.090992476489028,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-02-26",
+      "forward_return": -0.06252947998330005,
+      "turnover_20d": 0.8421687110401583,
+      "hs300_turnover_z": 1.3959733968140828,
+      "hs300_turnover_chg_20d": -0.061114930197638584,
+      "qvix_z_252": 0.41556367110221565,
+      "equity_risk_premium": 3.02139722747322,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-03-31",
+      "forward_return": 0.019055576987535128,
+      "turnover_20d": 0.6664211903918279,
+      "hs300_turnover_z": 0.5112609446183409,
+      "hs300_turnover_chg_20d": -0.1585002046328785,
+      "qvix_z_252": -0.7812761802058417,
+      "equity_risk_premium": 3.6559269678302533,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-04-30",
+      "forward_return": 0.03665744162205975,
+      "turnover_20d": 0.538227502596633,
+      "hs300_turnover_z": -0.13229351842537787,
+      "hs300_turnover_chg_20d": -0.11259489731500505,
+      "qvix_z_252": -0.9552969012078784,
+      "equity_risk_premium": 4.232449704142011,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-05-31",
+      "forward_return": -0.024639717318472587,
+      "turnover_20d": 0.629253339651142,
+      "hs300_turnover_z": 0.3271152421148854,
+      "hs300_turnover_chg_20d": 0.10575547875859836,
+      "qvix_z_252": -0.06528614098631615,
+      "equity_risk_premium": 4.052232079488999,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-06-30",
+      "forward_return": -0.07544907620462771,
+      "turnover_20d": 0.6448599898502076,
+      "hs300_turnover_z": 0.40186078500531136,
+      "hs300_turnover_chg_20d": 0.01329070695836998,
+      "qvix_z_252": -1.1936101506808987,
+      "equity_risk_premium": 3.905440223463687,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-07-30",
+      "forward_return": 0.01089008782187606,
+      "turnover_20d": 0.757192144012797,
+      "hs300_turnover_z": 0.964173257848898,
+      "hs300_turnover_chg_20d": 0.11277156802892785,
+      "qvix_z_252": -0.7030298708816007,
+      "equity_risk_premium": 4.785651219512195,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-08-31",
+      "forward_return": 0.023111812093443707,
+      "turnover_20d": 0.8240229935756543,
+      "hs300_turnover_z": 1.2725757675141278,
+      "hs300_turnover_chg_20d": 0.026487977424610176,
+      "qvix_z_252": -0.8363949435506125,
+      "equity_risk_premium": 5.213017727639,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-09-30",
+      "forward_return": -0.011561047583767303,
+      "turnover_20d": 0.9008819226755864,
+      "hs300_turnover_z": 1.6022458310878729,
+      "hs300_turnover_chg_20d": 0.07685892909993208,
+      "qvix_z_252": -0.2626974971915402,
+      "equity_risk_premium": 5.052614115781126,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-10-29",
+      "forward_return": -0.011915021500050749,
+      "turnover_20d": 0.6935651385912913,
+      "hs300_turnover_z": 0.542969888012384,
+      "hs300_turnover_chg_20d": -0.23258674666433898,
+      "qvix_z_252": -1.2388195210490145,
+      "equity_risk_premium": 4.919459826361484,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-11-30",
+      "forward_return": 0.02623342547811003,
+      "turnover_20d": 0.6262768476763443,
+      "hs300_turnover_z": 0.19684630339292308,
+      "hs300_turnover_chg_20d": -0.07033041996907696,
+      "qvix_z_252": -1.548671253119142,
+      "equity_risk_premium": 5.338265306122449,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-12-31",
+      "forward_return": -0.06687133318703742,
+      "turnover_20d": 0.6630557363522993,
+      "hs300_turnover_z": 0.3821309022824138,
+      "hs300_turnover_chg_20d": 0.03913686560840368,
+      "qvix_z_252": -1.2706464299094646,
+      "equity_risk_premium": 4.704031563201196,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-01-28",
+      "forward_return": -0.03795519097998845,
+      "turnover_20d": 0.665663394469472,
+      "hs300_turnover_z": 0.39103535628632824,
+      "hs300_turnover_chg_20d": 0.00011889634336226251,
+      "qvix_z_252": 1.2455530180940388,
+      "equity_risk_premium": 5.336485209003216,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-02-28",
+      "forward_return": -0.0962268275097844,
+      "turnover_20d": 0.5766702670038586,
+      "hs300_turnover_z": -0.07595789194389872,
+      "hs300_turnover_chg_20d": -0.09347825127820042,
+      "qvix_z_252": -0.9762998027645763,
+      "equity_risk_premium": 5.180449482895783,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-03-31",
+      "forward_return": -0.06429522206125116,
+      "turnover_20d": 0.6924860271171072,
+      "hs300_turnover_z": 0.5321183321071697,
+      "hs300_turnover_chg_20d": 0.12152947461592267,
+      "qvix_z_252": 1.227067510790391,
+      "equity_risk_premium": 5.744623208191126,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-04-29",
+      "forward_return": 0.01718171085258291,
+      "turnover_20d": 0.665838075620373,
+      "hs300_turnover_z": 0.38530731924144507,
+      "hs300_turnover_chg_20d": -0.025791396771757347,
+      "qvix_z_252": 1.385806499085776,
+      "equity_risk_premium": 6.082006601248885,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-05-31",
+      "forward_return": 0.08110569669100465,
+      "turnover_20d": 0.6227537379672754,
+      "hs300_turnover_z": 0.15154631771723265,
+      "hs300_turnover_chg_20d": -0.031894375142619835,
+      "qvix_z_252": 0.971743770558053,
+      "equity_risk_premium": 6.0913222614841,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-06-30",
+      "forward_return": -0.05860203317949364,
+      "turnover_20d": 0.7939059868064369,
+      "hs300_turnover_z": 1.061353606866201,
+      "hs300_turnover_chg_20d": 0.1842255150772414,
+      "qvix_z_252": 1.30764628509048,
+      "equity_risk_premium": 5.3029768480909825,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-07-29",
+      "forward_return": -0.02325719455238706,
+      "turnover_20d": 0.5962228143235573,
+      "hs300_turnover_z": -0.012742587070428066,
+      "hs300_turnover_chg_20d": -0.20257589881128357,
+      "qvix_z_252": 0.3645585362986045,
+      "equity_risk_premium": 5.9852587412587415,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-08-31",
+      "forward_return": -0.05726175407082856,
+      "turnover_20d": 0.5390987916684264,
+      "hs300_turnover_z": -0.32278587384833113,
+      "hs300_turnover_chg_20d": -0.03786375619201743,
+      "qvix_z_252": -0.7682200309603323,
+      "equity_risk_premium": 6.451910163339383,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-09-30",
+      "forward_return": -0.013670348030767832,
+      "turnover_20d": 0.4959777069646757,
+      "hs300_turnover_z": -0.5547052397619583,
+      "hs300_turnover_chg_20d": -0.047542346401009516,
+      "qvix_z_252": -0.23092854279196537,
+      "equity_risk_premium": 6.790998376313276,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-10-31",
+      "forward_return": 0.07010392869856585,
+      "turnover_20d": 0.5389421678155548,
+      "hs300_turnover_z": -0.3127227495769328,
+      "hs300_turnover_chg_20d": 0.021760324325392544,
+      "qvix_z_252": 1.9345512018794266,
+      "equity_risk_premium": 7.76252726326743,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-11-30",
+      "forward_return": -0.017101238238898198,
+      "turnover_20d": 0.6105029353414608,
+      "hs300_turnover_z": 0.08769134973101665,
+      "hs300_turnover_chg_20d": 0.039851330799963836,
+      "qvix_z_252": 0.826509486923497,
+      "equity_risk_premium": 6.575737937559129,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-12-30",
+      "forward_return": 0.060410325302289625,
+      "turnover_20d": 0.49606244736994576,
+      "hs300_turnover_z": -0.5532099417371351,
+      "hs300_turnover_chg_20d": -0.1105158259145218,
+      "qvix_z_252": -1.7592141007845772,
+      "equity_risk_premium": 6.607570632672333,
+      "split": "discovery"
+    },
+    {
+      "date": "2023-01-31",
+      "forward_return": -0.024315537253976505,
+      "turnover_20d": 0.5121451748360614,
+      "hs300_turnover_z": -0.4571536316392552,
+      "hs300_turnover_chg_20d": -0.03873637502066052,
+      "qvix_z_252": -1.123400417042329,
+      "equity_risk_premium": 5.983294671403197,
+      "split": "validation"
+    },
+    {
+      "date": "2023-02-28",
+      "forward_return": -0.013552130356059289,
+      "turnover_20d": 0.5219949383402078,
+      "hs300_turnover_z": -0.3970155139632359,
+      "hs300_turnover_chg_20d": 0.009849763504146458,
+      "qvix_z_252": -1.1687777729691902,
+      "equity_risk_premium": 6.050851477170994,
+      "split": "validation"
+    },
+    {
+      "date": "2023-03-31",
+      "forward_return": -0.007027253515905385,
+      "turnover_20d": 0.5512094253022661,
+      "hs300_turnover_z": -0.2267317933812747,
+      "hs300_turnover_chg_20d": 0.04791685789357647,
+      "qvix_z_252": -1.9650821201552082,
+      "equity_risk_premium": 6.020314463176575,
+      "split": "validation"
+    },
+    {
+      "date": "2023-04-28",
+      "forward_return": -0.05603154974833502,
+      "turnover_20d": 0.6297341151091727,
+      "hs300_turnover_z": 0.22737280915438762,
+      "hs300_turnover_chg_20d": 0.08576626581251834,
+      "qvix_z_252": -1.926140567265916,
+      "equity_risk_premium": 5.939595815170009,
+      "split": "validation"
+    },
+    {
+      "date": "2023-05-31",
+      "forward_return": 0.017078121411923552,
+      "turnover_20d": 0.5329722451769607,
+      "hs300_turnover_z": -0.3358248825042342,
+      "hs300_turnover_chg_20d": -0.09676186993221192,
+      "qvix_z_252": -1.0840007671895107,
+      "equity_risk_premium": 6.4641308325709055,
+      "split": "validation"
+    },
+    {
+      "date": "2023-06-30",
+      "forward_return": 0.04297572050080811,
+      "turnover_20d": 0.505190893424278,
+      "hs300_turnover_z": -0.49474886275455526,
+      "hs300_turnover_chg_20d": -0.027781351752682704,
+      "qvix_z_252": -1.9050217021772748,
+      "equity_risk_premium": 6.4806702825888785,
+      "split": "validation"
+    },
+    {
+      "date": "2023-07-31",
+      "forward_return": -0.06638010786736348,
+      "turnover_20d": 0.4471057504913555,
+      "hs300_turnover_z": -0.8282711241900075,
+      "hs300_turnover_chg_20d": -0.058355660192923264,
+      "qvix_z_252": -0.22696316957758933,
+      "equity_risk_premium": 6.143116901408452,
+      "split": "validation"
+    },
+    {
+      "date": "2023-08-31",
+      "forward_return": -0.02645840219131801,
+      "turnover_20d": 0.46590736854829895,
+      "hs300_turnover_z": -0.7086591179960285,
+      "hs300_turnover_chg_20d": 0.007635049814200712,
+      "qvix_z_252": 0.190503171637676,
+      "equity_risk_premium": 6.541681073703367,
+      "split": "validation"
+    },
+    {
+      "date": "2023-09-28",
+      "forward_return": -0.019193085813833388,
+      "turnover_20d": 0.39113325771704843,
+      "hs300_turnover_z": -1.135020712102802,
+      "hs300_turnover_chg_20d": -0.07477411083125052,
+      "qvix_z_252": -0.26441399054229053,
+      "equity_risk_premium": 6.524532014719412,
+      "split": "validation"
+    },
+    {
+      "date": "2023-10-31",
+      "forward_return": -0.024093131042072113,
+      "turnover_20d": 0.4185308666736855,
+      "hs300_turnover_z": -0.9586789084493231,
+      "hs300_turnover_chg_20d": -0.003575247980973306,
+      "qvix_z_252": -0.4636943664693569,
+      "equity_risk_premium": 6.704696240601503,
+      "split": "validation"
+    },
+    {
+      "date": "2023-11-30",
+      "forward_return": -0.023786117829342923,
+      "turnover_20d": 0.40436116564391733,
+      "hs300_turnover_z": -1.0277680461591683,
+      "hs300_turnover_chg_20d": -0.01798125569612402,
+      "qvix_z_252": -0.8355822459484874,
+      "equity_risk_premium": 6.873984732824426,
+      "split": "validation"
+    },
+    {
+      "date": "2023-12-29",
+      "forward_return": -0.0415524996877068,
+      "turnover_20d": 0.42061322328847045,
+      "hs300_turnover_z": -0.919118666794959,
+      "hs300_turnover_chg_20d": 0.014730110335030744,
+      "qvix_z_252": -0.22574586329608703,
+      "equity_risk_premium": 7.078611368015413,
+      "split": "validation"
+    },
+    {
+      "date": "2024-01-31",
+      "forward_return": 0.10220763112006037,
+      "turnover_20d": 0.5326728947074904,
+      "hs300_turnover_z": -0.2502386715769744,
+      "hs300_turnover_chg_20d": 0.10850114433438801,
+      "qvix_z_252": 3.116611526866801,
+      "equity_risk_premium": 7.4095196850393705,
+      "split": "validation"
+    },
+    {
+      "date": "2024-02-29",
+      "forward_return": 0.0005189102089038222,
+      "turnover_20d": 0.6965899456572041,
+      "hs300_turnover_z": 0.7242302798315271,
+      "hs300_turnover_chg_20d": 0.20588194960717154,
+      "qvix_z_252": 1.3871027812064483,
+      "equity_risk_premium": 6.828402841429881,
+      "split": "validation"
+    },
+    {
+      "date": "2024-03-29",
+      "forward_return": 0.02885108664251601,
+      "turnover_20d": 0.5789604255037195,
+      "hs300_turnover_z": 0.017125756529512662,
+      "hs300_turnover_chg_20d": -0.11217655595984888,
+      "qvix_z_252": -0.5015316104638003,
+      "equity_risk_premium": 6.630506601248885,
+      "split": "validation"
+    },
+    {
+      "date": "2024-04-30",
+      "forward_return": -0.0209819299084385,
+      "turnover_20d": 0.6246113832877906,
+      "hs300_turnover_z": 0.2912478506301444,
+      "hs300_turnover_chg_20d": 0.04565095778407113,
+      "qvix_z_252": -0.4772080089882472,
+      "equity_risk_premium": 6.295652278589854,
+      "split": "validation"
+    },
+    {
+      "date": "2024-05-31",
+      "forward_return": -0.029330683349266806,
+      "turnover_20d": 0.5856586589678898,
+      "hs300_turnover_z": 0.05376854507903941,
+      "hs300_turnover_chg_20d": -0.03895272431990082,
+      "qvix_z_252": -1.1008444917317906,
+      "equity_risk_premium": 6.350442350907519,
+      "split": "validation"
+    },
+    {
+      "date": "2024-06-28",
+      "forward_return": -0.015585276312045648,
+      "turnover_20d": 0.510141261410277,
+      "hs300_turnover_z": -0.4058864267059542,
+      "hs300_turnover_chg_20d": -0.09139756668795285,
+      "qvix_z_252": -1.5306551943082152,
+      "equity_risk_premium": 6.505001393728223,
+      "split": "validation"
+    },
+    {
+      "date": "2024-07-31",
+      "forward_return": -0.04925707348524888,
+      "turnover_20d": 0.4985826826722655,
+      "hs300_turnover_z": -0.47338108180249344,
+      "hs300_turnover_chg_20d": -0.0016706417944964413,
+      "qvix_z_252": -0.9837110188895456,
+      "equity_risk_premium": 6.6845222614841,
+      "split": "validation"
+    },
+    {
+      "date": "2024-08-30",
+      "forward_return": 0.2604050801455944,
+      "turnover_20d": 0.4123348186720506,
+      "hs300_turnover_z": -0.9947234291190667,
+      "hs300_turnover_chg_20d": -0.09223219883578704,
+      "qvix_z_252": -1.4508865618136149,
+      "equity_risk_premium": 7.037703130755065,
+      "split": "validation"
+    },
+    {
+      "date": "2024-09-30",
+      "forward_return": -0.11521406769058207,
+      "turnover_20d": 0.6457507748407764,
+      "hs300_turnover_z": 0.44695126017018033,
+      "hs300_turnover_chg_20d": 0.24820759434151762,
+      "qvix_z_252": 9.171753938475163,
+      "equity_risk_premium": 5.753338339920948,
+      "split": "validation"
+    },
+    {
+      "date": "2024-10-31",
+      "forward_return": -0.0032371245226606726,
+      "turnover_20d": 1.187310632432423,
+      "hs300_turnover_z": 3.495234676570931,
+      "hs300_turnover_chg_20d": 0.6577565489245636,
+      "qvix_z_252": 2.945341606312174,
+      "equity_risk_premium": 6.436090987124462,
+      "split": "validation"
+    },
+    {
+      "date": "2024-11-29",
+      "forward_return": 0.01713608424987778,
+      "turnover_20d": 0.8830348316906006,
+      "hs300_turnover_z": 1.6988023055330572,
+      "hs300_turnover_chg_20d": -0.29812613048861125,
+      "qvix_z_252": 0.9956848003726647,
+      "equity_risk_premium": 6.49003829787234,
+      "split": "validation"
+    },
+    {
+      "date": "2024-12-31",
+      "forward_return": -0.022320220478272645,
+      "turnover_20d": 0.6539350737252855,
+      "hs300_turnover_z": 0.39011230808545766,
+      "hs300_turnover_chg_20d": -0.19938164712012973,
+      "qvix_z_252": 0.022024858058300612,
+      "equity_risk_premium": 6.528245447087777,
+      "split": "validation"
+    },
+    {
+      "date": "2025-01-27",
+      "forward_return": 0.011209977371446467,
+      "turnover_20d": 0.574296799640601,
+      "hs300_turnover_z": -0.06578250863252434,
+      "hs300_turnover_chg_20d": -0.08347091464422995,
+      "qvix_z_252": -0.13689429096468922,
+      "equity_risk_premium": 6.887987563884157,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-02-28",
+      "forward_return": 0.0016119205189326635,
+      "turnover_20d": 0.685102731750134,
+      "hs300_turnover_z": 0.568407099613448,
+      "hs300_turnover_chg_20d": 0.10450138967640088,
+      "qvix_z_252": -0.13219243392689975,
+      "equity_risk_premium": 6.745036886632826,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-03-31",
+      "forward_return": -0.030042291124155796,
+      "turnover_20d": 0.627510179867141,
+      "hs300_turnover_z": 0.2337398006941539,
+      "hs300_turnover_chg_20d": -0.06471662194008998,
+      "qvix_z_252": -0.5097076196495111,
+      "equity_risk_premium": 6.676064346349746,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-04-30",
+      "forward_return": 0.01610594205740279,
+      "turnover_20d": 0.6397920416445112,
+      "hs300_turnover_z": 0.3032939460040326,
+      "hs300_turnover_chg_20d": 0.011326034592717193,
+      "qvix_z_252": -0.09523794583723195,
+      "equity_risk_premium": 7.078920191470845,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-05-30",
+      "forward_return": 0.026725217805960044,
+      "turnover_20d": 0.5149581263213088,
+      "hs300_turnover_z": -0.4239049576786236,
+      "hs300_turnover_chg_20d": -0.12336889805015261,
+      "qvix_z_252": -0.6200110554810692,
+      "equity_risk_premium": 6.853949190110828,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-06-30",
+      "forward_return": 0.04999481695202235,
+      "turnover_20d": 0.5500777147181047,
+      "hs300_turnover_z": -0.2163017657757329,
+      "hs300_turnover_chg_20d": 0.035119588396795964,
+      "qvix_z_252": -0.6943558379185459,
+      "equity_risk_premium": 6.456827714748783,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-07-31",
+      "forward_return": 0.09481206656142294,
+      "turnover_20d": 0.750458947479714,
+      "hs300_turnover_z": 0.9570236324288558,
+      "hs300_turnover_chg_20d": 0.19731622625382828,
+      "qvix_z_252": -0.30879311790774255,
+      "equity_risk_premium": 6.334185209003216,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-08-29",
+      "forward_return": 0.00844720436389812,
+      "turnover_20d": 0.9398661317374728,
+      "hs300_turnover_z": 2.018171327356655,
+      "hs300_turnover_chg_20d": 0.18693813580491003,
+      "qvix_z_252": 0.6691103703568474,
+      "equity_risk_premium": 5.720678987150415,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-09-30",
+      "forward_return": -0.004311778800728305,
+      "turnover_20d": 0.9435897076989226,
+      "hs300_turnover_z": 1.9848820335421615,
+      "hs300_turnover_chg_20d": -0.05320744466972771,
+      "qvix_z_252": -0.3758584458702924,
+      "equity_risk_premium": 5.6470075075075075,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-10-31",
+      "forward_return": -0.02103723053219375,
+      "turnover_20d": 0.9390873067614613,
+      "hs300_turnover_z": 1.9101077450520623,
+      "hs300_turnover_chg_20d": -0.05750443797708249,
+      "qvix_z_252": -0.16552223153729365,
+      "equity_risk_premium": 5.786101137225171,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-11-28",
+      "forward_return": 0.026233106009268647,
+      "turnover_20d": 0.6796912932701599,
+      "hs300_turnover_z": 0.4471627377342509,
+      "hs300_turnover_chg_20d": -0.2593960134913015,
+      "qvix_z_252": -0.0818867616284629,
+      "equity_risk_premium": 5.827511656441718,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-12-31",
+      "forward_return": 0.0027157964105151144,
+      "turnover_20d": 0.6406653978543375,
+      "hs300_turnover_z": 0.22531923825294364,
+      "hs300_turnover_chg_20d": -0.019051028507759193,
+      "qvix_z_252": -0.6977932084410805,
+      "equity_risk_premium": 5.648951874062969,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-01-30",
+      "forward_return": -0.0054534648788390205,
+      "turnover_20d": 1.1224103787282131,
+      "hs300_turnover_z": 2.821860440740206,
+      "hs300_turnover_chg_20d": 0.48174498087387563,
+      "qvix_z_252": 0.02464279900202096,
+      "equity_risk_premium": 5.668231563201196,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-02-27",
+      "forward_return": -0.04684391031515822,
+      "turnover_20d": 0.9763885974537636,
+      "hs300_turnover_z": 1.9722351187778564,
+      "hs300_turnover_chg_20d": 0.055614728649587164,
+      "qvix_z_252": -1.1409137207624467,
+      "equity_risk_premium": 5.714175468867217,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-03-31",
+      "forward_return": 0.0672308419771932,
+      "turnover_20d": 0.8565707788197061,
+      "hs300_turnover_z": 1.308690772181503,
+      "hs300_turnover_chg_20d": -0.11246838114046098,
+      "qvix_z_252": -0.06884311692030474,
+      "equity_risk_premium": 5.701696992481203,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-04-30",
+      "forward_return": 0.01311147315144301,
+      "turnover_20d": 0.8223177074261215,
+      "hs300_turnover_z": 1.1122668627402192,
+      "hs300_turnover_chg_20d": -0.024391342333852428,
+      "qvix_z_252": -0.6273023055881936,
+      "equity_risk_premium": 5.472916606498195,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-05-29",
+      "forward_return": 0.003388393018473046,
+      "turnover_20d": 1.0441952980819285,
+      "hs300_turnover_z": 2.2319689360113166,
+      "hs300_turnover_chg_20d": 0.24207566866424346,
+      "qvix_z_252": 0.5688122636662017,
+      "equity_risk_premium": 5.537376811594202,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-06-30",
+      "forward_return": -0.0785483999411184,
+      "turnover_20d": 1.1245540259880875,
+      "hs300_turnover_z": 2.5540444096910053,
+      "hs300_turnover_chg_20d": 0.07929931360666864,
+      "qvix_z_252": 1.3316577885508325,
+      "equity_risk_premium": 5.529164124909222,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-07-31",
+      "forward_return": 3.704664172188288e-05,
+      "turnover_20d": 1.0829412176669435,
+      "hs300_turnover_z": 2.270682560235834,
+      "hs300_turnover_chg_20d": -0.09112229284302198,
+      "qvix_z_252": 1.098953780934216,
+      "equity_risk_premium": 5.595841520467836,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-08-31",
+      "forward_return": -0.05671207737877959,
+      "turnover_20d": 0.8309179216784013,
+      "hs300_turnover_z": 1.0018841208877425,
+      "hs300_turnover_chg_20d": -0.2408166175486277,
+      "qvix_z_252": -0.44333643296956005,
+      "equity_risk_premium": 5.980411656441718,
+      "split": "holdout"
+    }
+  ],
+  "limitations": [
+    "Turnover is computed on PIT HS300 members only, not the full A-share market.",
+    "Turnover rate is mechanically related to volatility and free-float; the z-score does not fully remove this."
+  ]
+}
