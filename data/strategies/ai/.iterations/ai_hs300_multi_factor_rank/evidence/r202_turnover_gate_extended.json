@@ -1,0 +1,65 @@
+{
+  "purpose": "R202 turnover gate independent-sample validation (2018-2020)",
+  "generated_at": "2026-10-19T22:32:04",
+  "candidate_source": "r163_cache A/B sleeves, 3x cost, 15% vol target",
+  "signal": "R201 hs300_turnover_z < 0 -> long; null -> no gate",
+  "switch_cost": 0.0005,
+  "coverage": {
+    "indep_2018_2020": 0.6879,
+    "full_2018_2026": 0.8863
+  },
+  "independent_2018_2020": {
+    "ungated": {
+      "days": 708,
+      "total_return": 0.055025,
+      "mdd": -0.145781,
+      "rolling_1y_windows": 457,
+      "rolling_1y_positive_rate": 0.6718,
+      "rolling_1y_median": 0.0142,
+      "rolling_1y_worst": -0.0863
+    },
+    "gated": {
+      "days": 708,
+      "total_return": 0.137546,
+      "mdd": -0.059138,
+      "rolling_1y_windows": 457,
+      "rolling_1y_positive_rate": 0.954,
+      "rolling_1y_median": 0.0636,
+      "rolling_1y_worst": -0.0155
+    },
+    "switches": 23
+  },
+  "full_2018_2026": {
+    "ungated": {
+      "days": 2129,
+      "total_return": 0.645251,
+      "mdd": -0.15707,
+      "rolling_1y_windows": 1878,
+      "rolling_1y_positive_rate": 0.681,
+      "rolling_1y_median": 0.0253,
+      "rolling_1y_worst": -0.111
+    },
+    "gated": {
+      "days": 2129,
+      "total_return": 0.825676,
+      "mdd": -0.120444,
+      "rolling_1y_windows": 1878,
+      "rolling_1y_positive_rate": 0.8562,
+      "rolling_1y_median": 0.0654,
+      "rolling_1y_worst": -0.0898
+    }
+  },
+  "decision": {
+    "D1": false,
+    "G1": true,
+    "G2": true,
+    "G3": true,
+    "G4": true,
+    "G5": true,
+    "all_pass": false
+  },
+  "caveats": [
+    "2018-2020 has only ~35 months; the z-score warmup leaves ~10 months ungated.",
+    "The gate was discovered on 2021-2026; this is the first independent test."
+  ]
+}
