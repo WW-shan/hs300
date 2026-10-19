@@ -1,0 +1,715 @@
+{
+  "purpose": "R233 non-financial HS300 four-factor quality composite versus a matched quality-cash control",
+  "preregistration": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r233_preregistration.json",
+  "window": [
+    "2022-07-01",
+    "2026-10-16"
+  ],
+  "universe": {
+    "industry_source": "current ext_hy_ths industry snapshot; not historical PIT",
+    "excluded_industries": [
+      "银行",
+      "非银金融"
+    ],
+    "member_snapshot_rows": 430500,
+    "nonfinancial_member_rows": 353797,
+    "excluded_financial_member_rows": 73251,
+    "industry_missing_member_rows": 3452,
+    "nonfinancial_symbols": 469,
+    "excluded_financial_symbols": 80,
+    "industry_missing_symbols": 15
+  },
+  "factor": {
+    "id": "research_composite_sga_ocf_gm_trend_stability",
+    "components": {
+      "ext_alt_hs300_sga_ratio_4q_low": 0.25,
+      "ext_alt_hs300_ocf_margin_4q": 0.25,
+      "ext_alt_hs300_gross_margin_yoy_improvement_q": 0.25,
+      "ext_alt_hs300_gross_margin_stability_4q_low": 0.25
+    },
+    "formula": "1/4 ext_alt_hs300_sga_ratio_4q_low + 1/4 ext_alt_hs300_ocf_margin_4q + 1/4 ext_alt_hs300_gross_margin_yoy_improvement_q + 1/4 ext_alt_hs300_gross_margin_stability_4q_low; all four components must be non-null",
+    "effective_date": "each component keeps its own effective date; both use the maximum statutory disclosure deadline of four quarters plus four calendar days",
+    "first_valid_date_scope": "all factor history through END before applying the START coverage window",
+    "includes": "TTM selling-plus-management expense ratio (inverted), TTM operating cash flow over revenue, single-quarter gross-margin YoY improvement, and four-quarter gross-margin stability",
+    "coverage": {
+      "eligible_member_rows": 260035,
+      "valid_member_rows": 255995,
+      "coverage_2022_2026": 0.984464,
+      "recent_member_rows": 62630,
+      "recent_valid_rows": 61673,
+      "recent_12m_coverage": 0.98472,
+      "first_valid_date": "2022-05-05",
+      "factor_min": -16.031776,
+      "factor_median": 0.137265,
+      "factor_max": 7.718033,
+      "independence": {
+        "method": "daily cross-sectional Spearman rank correlation averaged within each calendar month, then mean absolute monthly correlation",
+        "pairs": {
+          "sga_ratio_4q_low vs ocf_margin_4q": {
+            "months": 52,
+            "overlap_member_rows": 255995,
+            "mean_abs_monthly_spearman": 0.116942,
+            "mean_signed_monthly_spearman": -0.116942,
+            "min_monthly_spearman": -0.224555,
+            "max_monthly_spearman": -0.013616
+          },
+          "sga_ratio_4q_low vs gross_margin_yoy_improvement_q": {
+            "months": 52,
+            "overlap_member_rows": 255995,
+            "mean_abs_monthly_spearman": 0.094296,
+            "mean_signed_monthly_spearman": 0.03354,
+            "min_monthly_spearman": -0.232847,
+            "max_monthly_spearman": 0.195883
+          },
+          "sga_ratio_4q_low vs gross_margin_stability_4q_low": {
+            "months": 52,
+            "overlap_member_rows": 255995,
+            "mean_abs_monthly_spearman": 0.056021,
+            "mean_signed_monthly_spearman": -0.006402,
+            "min_monthly_spearman": -0.144176,
+            "max_monthly_spearman": 0.088998
+          },
+          "ocf_margin_4q vs gross_margin_yoy_improvement_q": {
+            "months": 52,
+            "overlap_member_rows": 260035,
+            "mean_abs_monthly_spearman": 0.118635,
+            "mean_signed_monthly_spearman": 0.118615,
+            "min_monthly_spearman": -0.000532,
+            "max_monthly_spearman": 0.198696
+          },
+          "ocf_margin_4q vs gross_margin_stability_4q_low": {
+            "months": 52,
+            "overlap_member_rows": 260035,
+            "mean_abs_monthly_spearman": 0.19742,
+            "mean_signed_monthly_spearman": -0.19742,
+            "min_monthly_spearman": -0.267159,
+            "max_monthly_spearman": -0.103562
+          },
+          "gross_margin_yoy_improvement_q vs gross_margin_stability_4q_low": {
+            "months": 52,
+            "overlap_member_rows": 260035,
+            "mean_abs_monthly_spearman": 0.112877,
+            "mean_signed_monthly_spearman": 0.101985,
+            "min_monthly_spearman": -0.098324,
+            "max_monthly_spearman": 0.327212
+          }
+        }
+      }
+    }
+  },
+  "samples": {
+    "discovery": [
+      "2022-07-01",
+      "2024-12-31"
+    ],
+    "validation": [
+      "2025-01-02",
+      "2026-10-16"
+    ],
+    "rolling_1y": "252-trading-day rolling compounded return over the stitched 2022-2026 curve",
+    "recent_12m": "last 252 trading-day returns of the stitched 2022-2026 curve"
+  },
+  "execution": {
+    "engine": "StrategyBacktestService",
+    "matching": "open_t+1",
+    "cost": "3x: 6bp commission + 15bp slippage + 10bp stamp tax",
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "holding_days": 20,
+    "stop_loss": -0.2,
+    "universe": "historical HS300 membership excluding banks and non-bank financials; current industry snapshot applied to history",
+    "segments": [
+      [
+        "2022-07-01",
+        "2024-12-31"
+      ],
+      [
+        "2025-01-02",
+        "2026-10-16"
+      ]
+    ],
+    "stitching": "two segment returns compounded into one curve; first day of each later segment skipped"
+  },
+  "related_benchmark": {
+    "strategy_id": "ai_hs300_sga_nonfin_quality_h20_sl20",
+    "source_evidence": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r221_sga_nonfin_quality.json",
+    "full_total_return": 0.091198,
+    "g9_threshold": 0.041198
+  },
+  "strategies": {
+    "candidate": "ai_hs300_sga_ocf_gm_trend_stability_composite_h20_sl20",
+    "control": "ai_hs300_sga_ocf_gm_trend_stability_composite_control"
+  },
+  "runs": {
+    "candidate": [
+      {
+        "start": "2022-07-01",
+        "end": "2024-12-31",
+        "cached": false,
+        "days": 609,
+        "curve_stats": {
+          "total_return": -0.242562,
+          "annual": -0.108764,
+          "sharpe": -0.3852,
+          "mdd": -0.425532,
+          "days": 609
+        },
+        "result_stats": {
+          "total_return": -0.2426,
+          "annual_return": -0.1086,
+          "max_drawdown": -0.4255,
+          "sharpe": -0.39,
+          "sortino": -0.57,
+          "calmar": -0.26,
+          "win_rate": 0.3903,
+          "profit_factor": 1.33,
+          "n_trades": 310,
+          "avg_pnl": -0.0069,
+          "avg_win": 0.1001,
+          "avg_loss": 0.0755,
+          "best": 0.9923,
+          "worst": -0.3476,
+          "median_pnl": -0.0201,
+          "avg_holding_days": 19.5,
+          "final_equity": 757438.3,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9532,
+          "max_exposure": 0.9948,
+          "mc_maxdd_p50": -0.994,
+          "mc_maxdd_p95": -0.9997,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 15,
+            "buy_no_slot": 108617,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 299,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 1,
+            "sell_limit_down": 0,
+            "pending_exit": 1
+          },
+          "pending_exit_positions": 1,
+          "market_matrix_shape": [
+            609,
+            467
+          ],
+          "market_matrix_bytes": 12805443,
+          "timing_ms": {
+            "load_panel": 12406.9,
+            "signals_score": 468.8,
+            "matrix_build": 350.5,
+            "simulate": 1069.3,
+            "statistics": 7.9,
+            "total": 14463.9
+          },
+          "panel_rows": 282735,
+          "panel_columns": 11,
+          "feature_columns": 133,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 146520,
+            "entry_candidates": 146520,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_sga_ratio_4q_low",
+              "win_mean": -0.084472,
+              "lose_mean": -0.077355,
+              "win_n": 121,
+              "lose_n": 189
+            },
+            {
+              "factor": "ext_alt_hs300_ocf_margin_4q",
+              "win_mean": 0.38975,
+              "lose_mean": 0.420859,
+              "win_n": 121,
+              "lose_n": 189
+            },
+            {
+              "factor": "ext_alt_hs300_gross_margin_yoy_improvement_q",
+              "win_mean": 0.012803,
+              "lose_mean": 0.014536,
+              "win_n": 121,
+              "lose_n": 189
+            },
+            {
+              "factor": "ext_alt_hs300_gross_margin_stability_4q_low",
+              "win_mean": -0.029686,
+              "lose_mean": -0.030845,
+              "win_n": 121,
+              "lose_n": 189
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.127853,
+              "lose_mean": -0.150342,
+              "win_n": 121,
+              "lose_n": 189
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 256.654988,
+              "lose_mean": 483.755658,
+              "win_n": 121,
+              "lose_n": 189
+            }
+          ],
+          "n_win": 121,
+          "n_lose": 189
+        },
+        "elapsed_seconds": 14.969
+      },
+      {
+        "start": "2025-01-02",
+        "end": "2026-10-16",
+        "cached": false,
+        "days": 431,
+        "curve_stats": {
+          "total_return": 0.351121,
+          "annual": 0.19287,
+          "sharpe": 0.8682,
+          "mdd": -0.151718,
+          "days": 431
+        },
+        "result_stats": {
+          "total_return": 0.3511,
+          "annual_return": 0.1924,
+          "max_drawdown": -0.1517,
+          "sharpe": 0.87,
+          "sortino": 1.24,
+          "calmar": 1.27,
+          "win_rate": 0.4956,
+          "profit_factor": 1.41,
+          "n_trades": 226,
+          "avg_pnl": 0.0157,
+          "avg_win": 0.1142,
+          "avg_loss": 0.0811,
+          "best": 0.5373,
+          "worst": -0.2532,
+          "median_pnl": -0.0025,
+          "avg_holding_days": 19.0,
+          "final_equity": 1351121.45,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9699,
+          "max_exposure": 0.9985,
+          "mc_maxdd_p50": -0.7981,
+          "mc_maxdd_p95": -0.9601,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 22,
+            "buy_no_slot": 79225,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 213,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 0,
+            "sell_limit_down": 0,
+            "pending_exit": 0
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            431,
+            469
+          ],
+          "market_matrix_bytes": 9101427,
+          "timing_ms": {
+            "load_panel": 2121.6,
+            "signals_score": 346.5,
+            "matrix_build": 343.8,
+            "simulate": 945.8,
+            "statistics": 7.9,
+            "total": 3813.0
+          },
+          "panel_rows": 201573,
+          "panel_columns": 11,
+          "feature_columns": 133,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 102517,
+            "entry_candidates": 102517,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_sga_ratio_4q_low",
+              "win_mean": -0.09361,
+              "lose_mean": -0.087091,
+              "win_n": 112,
+              "lose_n": 114
+            },
+            {
+              "factor": "ext_alt_hs300_ocf_margin_4q",
+              "win_mean": 0.386589,
+              "lose_mean": 0.335105,
+              "win_n": 112,
+              "lose_n": 114
+            },
+            {
+              "factor": "ext_alt_hs300_gross_margin_yoy_improvement_q",
+              "win_mean": 0.038919,
+              "lose_mean": 0.026091,
+              "win_n": 112,
+              "lose_n": 114
+            },
+            {
+              "factor": "ext_alt_hs300_gross_margin_stability_4q_low",
+              "win_mean": -0.030509,
+              "lose_mean": -0.02878,
+              "win_n": 112,
+              "lose_n": 114
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.130017,
+              "lose_mean": -0.142241,
+              "win_n": 112,
+              "lose_n": 114
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 7.193952,
+              "lose_mean": 9.323326,
+              "win_n": 112,
+              "lose_n": 114
+            }
+          ],
+          "n_win": 112,
+          "n_lose": 114
+        },
+        "elapsed_seconds": 4.299
+      }
+    ],
+    "control": [
+      {
+        "start": "2022-07-01",
+        "end": "2024-12-31",
+        "cached": false,
+        "days": 609,
+        "curve_stats": {
+          "total_return": -0.198399,
+          "annual": -0.087583,
+          "sharpe": -0.2553,
+          "mdd": -0.420895,
+          "days": 609
+        },
+        "result_stats": {
+          "total_return": -0.1984,
+          "annual_return": -0.0874,
+          "max_drawdown": -0.4209,
+          "sharpe": -0.26,
+          "sortino": -0.4,
+          "calmar": -0.21,
+          "win_rate": 0.4679,
+          "profit_factor": 1.0,
+          "n_trades": 312,
+          "avg_pnl": -0.0051,
+          "avg_win": 0.0809,
+          "avg_loss": 0.0807,
+          "best": 0.6799,
+          "worst": -0.3476,
+          "median_pnl": -0.0063,
+          "avg_holding_days": 19.4,
+          "final_equity": 801600.99,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9582,
+          "max_exposure": 0.9998,
+          "mc_maxdd_p50": -0.9884,
+          "mc_maxdd_p95": -0.9994,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 16,
+            "buy_no_slot": 106562,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 299,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 1,
+            "sell_limit_down": 0,
+            "pending_exit": 1
+          },
+          "pending_exit_positions": 1,
+          "market_matrix_shape": [
+            609,
+            467
+          ],
+          "market_matrix_bytes": 12805443,
+          "timing_ms": {
+            "load_panel": 1854.1,
+            "signals_score": 417.8,
+            "matrix_build": 349.6,
+            "simulate": 1243.5,
+            "statistics": 6.8,
+            "total": 3941.9
+          },
+          "panel_rows": 282735,
+          "panel_columns": 11,
+          "feature_columns": 133,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 146520,
+            "entry_candidates": 146520,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.144819,
+              "lose_mean": -0.118688,
+              "win_n": 146,
+              "lose_n": 166
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 422.335106,
+              "lose_mean": 368.008736,
+              "win_n": 146,
+              "lose_n": 166
+            }
+          ],
+          "n_win": 146,
+          "n_lose": 166
+        },
+        "elapsed_seconds": 4.422
+      },
+      {
+        "start": "2025-01-02",
+        "end": "2026-10-16",
+        "cached": false,
+        "days": 431,
+        "curve_stats": {
+          "total_return": 0.086728,
+          "annual": 0.04995,
+          "sharpe": 0.3419,
+          "mdd": -0.242314,
+          "days": 431
+        },
+        "result_stats": {
+          "total_return": 0.0867,
+          "annual_return": 0.0498,
+          "max_drawdown": -0.2423,
+          "sharpe": 0.34,
+          "sortino": 0.48,
+          "calmar": 0.21,
+          "win_rate": 0.4529,
+          "profit_factor": 1.38,
+          "n_trades": 223,
+          "avg_pnl": 0.0059,
+          "avg_win": 0.1023,
+          "avg_loss": 0.0739,
+          "best": 0.8719,
+          "worst": -0.2532,
+          "median_pnl": -0.0102,
+          "avg_holding_days": 19.2,
+          "final_equity": 1086727.76,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9665,
+          "max_exposure": 0.9991,
+          "mc_maxdd_p50": -0.8706,
+          "mc_maxdd_p95": -0.9832,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 21,
+            "buy_no_slot": 81038,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 209,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 0,
+            "sell_limit_down": 0,
+            "pending_exit": 0
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            431,
+            469
+          ],
+          "market_matrix_bytes": 9101427,
+          "timing_ms": {
+            "load_panel": 1571.4,
+            "signals_score": 338.9,
+            "matrix_build": 222.4,
+            "simulate": 750.7,
+            "statistics": 7.2,
+            "total": 2943.8
+          },
+          "panel_rows": 201573,
+          "panel_columns": 11,
+          "feature_columns": 133,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 102517,
+            "entry_candidates": 102517,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.12039,
+              "lose_mean": -0.119247,
+              "win_n": 101,
+              "lose_n": 122
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 8.107779,
+              "lose_mean": 5.652365,
+              "win_n": 101,
+              "lose_n": 122
+            }
+          ],
+          "n_win": 101,
+          "n_lose": 122
+        },
+        "elapsed_seconds": 3.38
+      }
+    ]
+  },
+  "results": {
+    "candidate": {
+      "full": {
+        "total_return": 0.023391,
+        "annual": 0.005629,
+        "sharpe": 0.1401,
+        "mdd": -0.425532,
+        "days": 1039
+      },
+      "discovery_2022_2024": {
+        "total_return": -0.242562,
+        "annual": -0.108764,
+        "sharpe": -0.3852,
+        "mdd": -0.425532,
+        "days": 609
+      },
+      "validation_2025_2026": {
+        "total_return": 0.373493,
+        "annual": 0.204928,
+        "sharpe": 0.9113,
+        "mdd": -0.151718,
+        "days": 430
+      },
+      "rolling_1y": {
+        "windows": 788,
+        "positive_rate": 0.5558,
+        "return_p05": -0.2503,
+        "return_median": 0.1565,
+        "return_worst": -0.3359,
+        "mdd_p05": -0.3587,
+        "mdd_worst": -0.3601
+      },
+      "recent_12m": {
+        "total_return": 0.079974,
+        "mdd": -0.151718
+      }
+    },
+    "control": {
+      "full": {
+        "total_return": -0.128878,
+        "annual": -0.032942,
+        "sharpe": -0.0339,
+        "mdd": -0.420895,
+        "days": 1039
+      },
+      "discovery_2022_2024": {
+        "total_return": -0.198399,
+        "annual": -0.087583,
+        "sharpe": -0.2553,
+        "mdd": -0.420895,
+        "days": 609
+      },
+      "validation_2025_2026": {
+        "total_return": 0.107797,
+        "annual": 0.06198,
+        "sharpe": 0.3983,
+        "mdd": -0.242314,
+        "days": 430
+      },
+      "rolling_1y": {
+        "windows": 788,
+        "positive_rate": 0.5812,
+        "return_p05": -0.236,
+        "return_median": 0.0686,
+        "return_worst": -0.3158,
+        "mdd_p05": -0.3396,
+        "mdd_worst": -0.3396
+      },
+      "recent_12m": {
+        "total_return": -0.136293,
+        "mdd": -0.242314
+      }
+    }
+  },
+  "decision": {
+    "D1": true,
+    "D2": true,
+    "D3": true,
+    "G1": false,
+    "G2": true,
+    "G3": true,
+    "G4": false,
+    "G5": true,
+    "G6": true,
+    "G7": true,
+    "G8": true,
+    "G9": false,
+    "all_pass": false
+  },
+  "caveats": [
+    "The clean point-in-time sample starts in 2022; 2018-2020 financial data are excluded because reliable first-disclosure dates are unavailable.",
+    "The factor uses statutory disclosure deadlines as a fallback because provider announcement dates are not reliable first-disclosure timestamps.",
+    "Local financial tables are current snapshots, so restatement risk remains and is not fully eliminated.",
+    "Equal component weights are a fixed prior, not an optimized allocation.",
+    "The full curve is stitched from two system-engine segments because the combined matrix exceeded memory; segment boundaries can reset an open position.",
+    "The factor is research-only until every preregistered gate passes.",
+    "Candidate and control share the same non-financial HS300 universe, four-component availability filter, and execution; the control excludes all four components from scoring.",
+    "Banks and non-bank financials are excluded because SG&A, operating cash flow and gross-margin definitions are not economically comparable for those firms.",
+    "Industry classification is a current snapshot applied to history, not a point-in-time industry series.",
+    "D3 checks every pairwise average monthly cross-sectional rank correlation among the four components; the audited maximum before preregistration was 0.19742 over 52 months.",
+    "All four components must be non-null; no filling and no fallback to any single factor or subset is used."
+  ]
+}
