@@ -1,0 +1,518 @@
+{
+  "purpose": "R205 partial B-leg exposure when the extended turnover gate is off",
+  "window": [
+    "2018-01-02",
+    "2026-10-16"
+  ],
+  "method": {
+    "segments": [
+      [
+        "2018-01-02",
+        "2020-12-31"
+      ],
+      [
+        "2021-01-04",
+        "2024-12-31"
+      ],
+      [
+        "2025-01-02",
+        "2026-10-16"
+      ]
+    ],
+    "stitching": "system-engine segment returns compounded into one curve; first day of each later segment skipped",
+    "partial_rule": "gate on -> full B sleeve; gate off -> only HS300 relative-strength top 3"
+  },
+  "execution": {
+    "matching": "open_t+1",
+    "cost": "3x: 6bp commission + 15bp slippage + 10bp stamp tax",
+    "max_positions": 10,
+    "holding_days": 20,
+    "stop_loss": -0.2,
+    "universe": "historical HS300 membership; monthly 2018-2020, daily 2020-2026"
+  },
+  "data_check": {
+    "membership_snapshots_2017": 12,
+    "daily_2017_coverage": 1.0,
+    "signal_coverage_2018_2026": 1.0
+  },
+  "runs": {
+    "partial_b_leg": [
+      {
+        "start": "2018-01-02",
+        "end": "2020-12-31",
+        "cached": false,
+        "days": 731,
+        "curve_stats": {
+          "total_return": 0.333164,
+          "annual": 0.10436,
+          "sharpe": 0.4907,
+          "mdd": -0.299637,
+          "days": 731
+        },
+        "result_stats": {
+          "total_return": 0.3332,
+          "annual_return": 0.1042,
+          "max_drawdown": -0.2996,
+          "sharpe": 0.49,
+          "sortino": 0.7,
+          "calmar": 0.35,
+          "win_rate": 0.494,
+          "profit_factor": 1.3,
+          "n_trades": 334,
+          "avg_pnl": 0.0128,
+          "avg_win": 0.1207,
+          "avg_loss": 0.0925,
+          "best": 1.0113,
+          "worst": -0.2486,
+          "median_pnl": -0.0013,
+          "avg_holding_days": 19.1,
+          "final_equity": 1333164.25,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.8593,
+          "max_exposure": 0.9999,
+          "mc_maxdd_p50": -0.9162,
+          "mc_maxdd_p95": -0.9927,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 13,
+            "buy_no_slot": 78843,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 225,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 11,
+            "sell_limit_down": 0,
+            "pending_exit": 2
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            731,
+            516
+          ],
+          "market_matrix_bytes": 16982592,
+          "timing_ms": {
+            "load_panel": 24492.2,
+            "signals_score": 463.7,
+            "matrix_build": 455.7,
+            "simulate": 872.1,
+            "statistics": 7.2,
+            "total": 26419.7
+          },
+          "panel_rows": 345754,
+          "panel_columns": 11,
+          "feature_columns": 112,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 114938,
+            "entry_candidates": 114938,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        }
+      },
+      {
+        "start": "2021-01-04",
+        "end": "2024-12-31",
+        "cached": false,
+        "days": 969,
+        "curve_stats": {
+          "total_return": -0.610476,
+          "annual": -0.217646,
+          "sharpe": -0.799,
+          "mdd": -0.72596,
+          "days": 969
+        },
+        "result_stats": {
+          "total_return": -0.6105,
+          "annual_return": -0.2174,
+          "max_drawdown": -0.726,
+          "sharpe": -0.8,
+          "sortino": -1.14,
+          "calmar": -0.3,
+          "win_rate": 0.4053,
+          "profit_factor": 1.04,
+          "n_trades": 486,
+          "avg_pnl": -0.0181,
+          "avg_win": 0.1095,
+          "avg_loss": 0.1051,
+          "best": 0.6529,
+          "worst": -0.2855,
+          "median_pnl": -0.0312,
+          "avg_holding_days": 18.9,
+          "final_equity": 389523.51,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.8904,
+          "max_exposure": 0.9993,
+          "mc_maxdd_p50": -1.0,
+          "mc_maxdd_p95": -1.0,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 21,
+            "buy_no_slot": 75654,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 254,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 0,
+            "sell_limit_down": 0,
+            "pending_exit": 0
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            969,
+            546
+          ],
+          "market_matrix_bytes": 23819958,
+          "timing_ms": {
+            "load_panel": 2865.2,
+            "signals_score": 576.1,
+            "matrix_build": 718.4,
+            "simulate": 1095.2,
+            "statistics": 9.9,
+            "total": 5341.7
+          },
+          "panel_rows": 519317,
+          "panel_columns": 11,
+          "feature_columns": 112,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 140940,
+            "entry_candidates": 140940,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        }
+      },
+      {
+        "start": "2025-01-02",
+        "end": "2026-10-16",
+        "cached": false,
+        "days": 431,
+        "curve_stats": {
+          "total_return": 0.283775,
+          "annual": 0.157656,
+          "sharpe": 0.6083,
+          "mdd": -0.352476,
+          "days": 431
+        },
+        "result_stats": {
+          "total_return": 0.2838,
+          "annual_return": 0.1573,
+          "max_drawdown": -0.3525,
+          "sharpe": 0.61,
+          "sortino": 0.91,
+          "calmar": 0.45,
+          "win_rate": 0.4293,
+          "profit_factor": 1.65,
+          "n_trades": 205,
+          "avg_pnl": 0.0157,
+          "avg_win": 0.1877,
+          "avg_loss": 0.1137,
+          "best": 0.855,
+          "worst": -0.4095,
+          "median_pnl": -0.0255,
+          "avg_holding_days": 18.6,
+          "final_equity": 1283775.29,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.853,
+          "max_exposure": 0.9999,
+          "mc_maxdd_p50": -0.9416,
+          "mc_maxdd_p95": -0.9965,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 5,
+            "buy_no_slot": 10043,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 37,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 3,
+            "sell_limit_down": 1,
+            "pending_exit": 2
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            431,
+            549
+          ],
+          "market_matrix_bytes": 10653027,
+          "timing_ms": {
+            "load_panel": 2181.9,
+            "signals_score": 383.2,
+            "matrix_build": 306.3,
+            "simulate": 185.6,
+            "statistics": 5.5,
+            "total": 3114.8
+          },
+          "panel_rows": 235743,
+          "panel_columns": 11,
+          "feature_columns": 112,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 18965,
+            "entry_candidates": 18965,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        }
+      }
+    ],
+    "gated_b_leg": [
+      {
+        "start": "2018-01-02",
+        "end": "2020-12-31",
+        "source": "r204_cache",
+        "days": 731,
+        "curve_stats": {
+          "total_return": 0.433951,
+          "annual": 0.132495,
+          "sharpe": 0.6498,
+          "mdd": -0.270011,
+          "days": 731
+        }
+      },
+      {
+        "start": "2021-01-04",
+        "end": "2024-12-31",
+        "source": "r204_cache",
+        "days": 969,
+        "curve_stats": {
+          "total_return": -0.381652,
+          "annual": -0.117628,
+          "sharpe": -0.4841,
+          "mdd": -0.571051,
+          "days": 969
+        }
+      },
+      {
+        "start": "2025-01-02",
+        "end": "2026-10-16",
+        "source": "r204_cache",
+        "days": 431,
+        "curve_stats": {
+          "total_return": 0.472558,
+          "annual": 0.25458,
+          "sharpe": 1.8353,
+          "mdd": -0.067562,
+          "days": 431
+        }
+      }
+    ],
+    "base_b_leg": [
+      {
+        "start": "2018-01-02",
+        "end": "2020-12-31",
+        "source": "r204_cache",
+        "days": 731,
+        "curve_stats": {
+          "total_return": 0.332848,
+          "annual": 0.104269,
+          "sharpe": 0.4802,
+          "mdd": -0.270011,
+          "days": 731
+        }
+      },
+      {
+        "start": "2021-01-04",
+        "end": "2024-12-31",
+        "source": "r204_cache",
+        "days": 969,
+        "curve_stats": {
+          "total_return": -0.643675,
+          "annual": -0.23558,
+          "sharpe": -0.8571,
+          "mdd": -0.723465,
+          "days": 969
+        }
+      },
+      {
+        "start": "2025-01-02",
+        "end": "2026-10-16",
+        "source": "r204_cache",
+        "days": 431,
+        "curve_stats": {
+          "total_return": 0.963166,
+          "annual": 0.484863,
+          "sharpe": 1.3032,
+          "mdd": -0.311964,
+          "days": 431
+        }
+      }
+    ]
+  },
+  "results": {
+    "partial_b_leg": {
+      "strategy_id": "ai_hs300_industry_relative_strength_quality_h20_sl20_turnover_budget",
+      "full": {
+        "total_return": -0.333337,
+        "annual": -0.046882,
+        "sharpe": -0.025,
+        "mdd": -0.72596,
+        "days": 2129
+      },
+      "independent_2018_2020": {
+        "total_return": 0.333164,
+        "annual": 0.10436,
+        "sharpe": 0.4907,
+        "mdd": -0.299637,
+        "days": 731
+      },
+      "validation_2021_2024": {
+        "total_return": -0.611434,
+        "annual": -0.218346,
+        "sharpe": -0.8018,
+        "mdd": -0.72596,
+        "days": 968
+      },
+      "holdout_2025_2026": {
+        "total_return": 0.29464,
+        "annual": 0.163798,
+        "sharpe": 0.624,
+        "mdd": -0.352476,
+        "days": 430
+      },
+      "rolling_1y": {
+        "windows": 1878,
+        "positive_rate": 0.4782,
+        "return_p05": -0.483,
+        "return_median": -0.0176,
+        "return_worst": -0.5866,
+        "mdd_p05": -0.5272,
+        "mdd_worst": -0.5866
+      },
+      "recent_12m": {
+        "total_return": -0.188623,
+        "mdd": -0.352476
+      }
+    },
+    "gated_b_leg": {
+      "strategy_id": "ai_hs300_industry_relative_strength_quality_h20_sl20_turnover_gate",
+      "full": {
+        "total_return": 0.305688,
+        "annual": 0.032091,
+        "sharpe": 0.2554,
+        "mdd": -0.571051,
+        "days": 2129
+      },
+      "independent_2018_2020": {
+        "total_return": 0.433951,
+        "annual": 0.132495,
+        "sharpe": 0.6498,
+        "mdd": -0.270011,
+        "days": 731
+      },
+      "validation_2021_2024": {
+        "total_return": -0.381652,
+        "annual": -0.117743,
+        "sharpe": -0.4843,
+        "mdd": -0.571051,
+        "days": 968
+      },
+      "holdout_2025_2026": {
+        "total_return": 0.472558,
+        "annual": 0.255243,
+        "sharpe": 1.8375,
+        "mdd": -0.067562,
+        "days": 430
+      },
+      "rolling_1y": {
+        "windows": 1878,
+        "positive_rate": 0.6198,
+        "return_p05": -0.335,
+        "return_median": 0.0983,
+        "return_worst": -0.3769,
+        "mdd_p05": -0.3479,
+        "mdd_worst": -0.3769
+      },
+      "recent_12m": {
+        "total_return": 0.0,
+        "mdd": 0.0
+      }
+    },
+    "base_b_leg": {
+      "strategy_id": "ai_hs300_industry_relative_strength_quality_h20_sl20",
+      "full": {
+        "total_return": -0.06764,
+        "annual": -0.008259,
+        "sharpe": 0.1219,
+        "mdd": -0.723465,
+        "days": 2129
+      },
+      "independent_2018_2020": {
+        "total_return": 0.332848,
+        "annual": 0.104269,
+        "sharpe": 0.4802,
+        "mdd": -0.270011,
+        "days": 731
+      },
+      "validation_2021_2024": {
+        "total_return": -0.653235,
+        "annual": -0.24119,
+        "sharpe": -0.8854,
+        "mdd": -0.723465,
+        "days": 968
+      },
+      "holdout_2025_2026": {
+        "total_return": 0.999157,
+        "annual": 0.502177,
+        "sharpe": 1.3362,
+        "mdd": -0.311964,
+        "days": 430
+      },
+      "rolling_1y": {
+        "windows": 1878,
+        "positive_rate": 0.4398,
+        "return_p05": -0.4175,
+        "return_median": -0.0395,
+        "return_worst": -0.4952,
+        "mdd_p05": -0.4807,
+        "mdd_worst": -0.5193
+      },
+      "recent_12m": {
+        "total_return": 0.084397,
+        "mdd": -0.311964
+      }
+    }
+  },
+  "decision": {
+    "D1": true,
+    "D2": true,
+    "G1": false,
+    "G2": false,
+    "G3": true,
+    "G4": true,
+    "G5": false,
+    "G6": false,
+    "all_pass": false
+  },
+  "caveats": [
+    "The partial rule changes the number of eligible names, not the stock score or stop-loss.",
+    "The full curve is stitched from three system-engine segments because a single 8-year matrix exceeded memory.",
+    "Segment boundaries can reset an open position; the three segments are reported separately and the full curve is descriptive.",
+    "The 2017 membership snapshots are monthly; intra-month index changes are not modeled."
+  ]
+}

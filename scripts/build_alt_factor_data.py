@@ -66,6 +66,7 @@ FIELDS = [
     ExtField("industry_rps_20d", "float", "一级行业20日动量截面分位"),
     ExtField("industry_breadth_20d", "float", "一级行业站上MA20比例"),
     ExtField("stock_rel_industry_20d", "float", "个股相对行业20日强弱"),
+    ExtField("hs300_stock_rel_industry_top3_flag", "float", "HS300???????20????3???"),
     ExtField("mainline_top1_flag", "float", "所属行业是否为当日主线第一"),
     ExtField("mainline_strength", "float", "主线行业涨停强度"),
     ExtField("mainline_leader_flag", "float", "是否为当日主线龙头"),
@@ -777,6 +778,33 @@ def _express_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
     )
 
 
+def _hs300_membership_flags(dates: list[date], symbols: list[str]) -> pl.DataFrame:
+    """Map each symbol-date to the latest historical HS300 snapshot."""
+    monthly = pl.read_parquet(DATA / "research" / "r157_membership" / "monthly_snapshots.parquet")
+    daily = pl.read_parquet(DATA / "research" / "r78_daily_membership" / "daily_snapshots.parquet")
+    membership = (
+        pl.concat([monthly, daily], how="diagonal_relaxed")
+        .select([
+            pl.col("query_date").cast(pl.Date).alias("snapshot_date"),
+            pl.col("symbol").cast(pl.String),
+        ])
+        .unique(subset=["snapshot_date", "symbol"], keep="last")
+        .sort(["snapshot_date", "symbol"])
+    )
+    snapshots = membership.select("snapshot_date").unique().sort("snapshot_date")
+    date_map = (
+        pl.DataFrame({"date": dates})
+        .sort("date")
+        .join_asof(snapshots, left_on="date", right_on="snapshot_date", strategy="backward")
+    )
+    members = date_map.join(membership, on="snapshot_date", how="inner").select([
+        "symbol", "date", pl.lit(1.0).alias("_hs300_member"),
+    ])
+    return _calendar_frame(dates, symbols).join(members, on=["symbol", "date"], how="left").with_columns(
+        pl.col("_hs300_member").fill_null(0.0)
+    )
+
+
 def _industry_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
     from app.services.industry_map import load_industry_l1
 
@@ -809,14 +837,31 @@ def _industry_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
             .alias("industry_rps_20d")
         )
     )
+    flags = _hs300_membership_flags(dates, symbols)
     return (
         panel.join(grouped, on=["date", "industry_l1"], how="left")
+        .join(flags, on=["symbol", "date"], how="left")
         .with_columns(
             (pl.col("_ret20") - pl.col("industry_mom_20d")).alias("stock_rel_industry_20d")
+        )
+        .with_columns(
+            pl.when(pl.col("_hs300_member") == 1)
+            .then(pl.col("stock_rel_industry_20d"))
+            .otherwise(None)
+            .rank("ordinal", descending=True)
+            .over("date")
+            .alias("_stock_rel_rank")
+        )
+        .with_columns(
+            pl.when((pl.col("_hs300_member") == 1) & (pl.col("_stock_rel_rank") <= 3))
+            .then(1.0)
+            .otherwise(0.0)
+            .alias("hs300_stock_rel_industry_top3_flag")
         )
         .select([
             "symbol", "date", "industry_mom_20d", "industry_mom_60d",
             "industry_rps_20d", "industry_breadth_20d", "stock_rel_industry_20d",
+            "hs300_stock_rel_industry_top3_flag",
         ])
     )
 
