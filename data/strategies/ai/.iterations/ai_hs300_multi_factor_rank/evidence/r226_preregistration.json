@@ -1,0 +1,106 @@
+{
+    "round":  "R226",
+    "registered_at":  "2026-10-20",
+    "status":  "pre_registered_before_factor_build_and_strategy_backtest",
+    "hypothesis":  "Year-over-year single-quarter gross-margin expansion measures improving pricing power and cost efficiency. Unlike the failed gross-margin stability factor, it captures the direction of change rather than the absence of variation, and may add information beyond the R221 SG\u0026A level factor.",
+    "factor":  {
+                   "id":  "ext_alt_hs300_gross_margin_yoy_improvement_q",
+                   "raw_field":  "gross_margin_yoy_improvement_q",
+                   "formula":  "current single-quarter gross margin minus the same quarter one year earlier; higher means gross margin expanded",
+                   "quarterization":  "Q1 uses reported cumulative values; later quarters subtract the prior cumulative quarter; current and year-ago quarters require revenue \u003e 0 and non-null operating costs",
+                   "window":  "current quarter versus same quarter four fiscal quarters earlier",
+                   "effective_date":  "current quarter statutory disclosure deadline plus four calendar days",
+                   "point_in_time":  "statutory-deadline fallback; local 2021Q1-2026Q2 financial snapshots; no 2018-2020 restated data used",
+                   "missing_policy":  "no filling, no zero substitution, no fallback to SG\u0026A level, SG\u0026A stability or gross-margin stability factors"
+               },
+    "universe":  {
+                     "rule":  "historical HS300 members excluding industry_l1 in {银行, 非银金融}",
+                     "industry_source":  "current ext_hy_ths industry snapshot; not historical PIT"
+                 },
+    "candidate_strategy":  {
+                               "id":  "ai_hs300_gross_margin_trend_h20_sl20",
+                               "scoring":  {
+                                               "ext_alt_hs300_gross_margin_yoy_improvement_q":  0.45,
+                                               "uf_quality_value_defensive":  0.3,
+                                               "uf_cash_quality":  0.25
+                                           },
+                               "limit":  30,
+                               "max_hold_days":  20,
+                               "stop_loss":  -0.2
+                           },
+    "control_strategy":  {
+                             "id":  "ai_hs300_gross_margin_trend_control",
+                             "purpose":  "Same non-financial universe, gross-margin-trend availability filter and execution; trend is not a score component.",
+                             "scoring":  {
+                                             "uf_quality_value_defensive":  0.545,
+                                             "uf_cash_quality":  0.455
+                                         },
+                             "limit":  30,
+                             "max_hold_days":  20,
+                             "stop_loss":  -0.2
+                         },
+    "related_benchmarks":  [
+                               {
+                                   "strategy_id":  "ai_hs300_sga_nonfin_quality_h20_sl20",
+                                   "factor_id":  "ext_alt_hs300_sga_ratio_4q_low",
+                                   "source_evidence":  "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r221_sga_nonfin_quality.json",
+                                   "use":  "D3 correlation and G9 full-sample relative-performance gate"
+                               },
+                               {
+                                   "factor_id":  "ext_alt_hs300_gross_margin_stability_4q_low",
+                                   "source_evidence":  "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r223_gross_margin_stability.json",
+                                   "use":  "D3 correlation only"
+                               }
+                           ],
+    "execution":  {
+                      "engine":  "StrategyBacktestService",
+                      "matching":  "open_t+1",
+                      "cost":  "3x: 6bp commission + 15bp slippage + 10bp stamp tax",
+                      "max_positions":  10,
+                      "position_sizing":  "equal",
+                      "universe":  "historical non-financial HS300 membership; daily snapshots from 2022",
+                      "segments":  [
+                                       [
+                                           "2022-07-01",
+                                           "2024-12-31"
+                                       ],
+                                       [
+                                           "2025-01-02",
+                                           "2026-10-16"
+                                       ]
+                                   ]
+                  },
+    "samples":  {
+                    "discovery":  [
+                                      "2022-07-01",
+                                      "2024-12-31"
+                                  ],
+                    "validation":  [
+                                       "2025-01-02",
+                                       "2026-10-16"
+                                   ],
+                    "recent_12m":  "last 252 trading-day returns of the stitched 2022-2026 curve",
+                    "rolling_1y":  "252-trading-day rolling compounded return over the stitched 2022-2026 curve"
+                },
+    "gates":  {
+                  "D1":  "factor coverage within historical non-financial HS300 membership over 2022-2026 is at least 90%",
+                  "D2":  "first valid value occurs by 2022-06-30 and recent-12m coverage is at least 95%",
+                  "D3":  "mean absolute monthly cross-sectional Spearman correlation is at most 0.70 against both the R221 SG\u0026A level factor and the R223 gross-margin stability factor",
+                  "G1":  "discovery 2022-2024 total return is at least control + 5pp",
+                  "G2":  "discovery 2022-2024 MDD is no worse than control by more than 2pp",
+                  "G3":  "validation 2025-2026 total return is at least control - 5pp",
+                  "G4":  "full-sample rolling-1y positive rate is at least control",
+                  "G5":  "full-sample MDD is no worse than control by more than 2pp",
+                  "G6":  "full-sample total return is at least control - 5pp",
+                  "G7":  "recent 12m total return is positive and recent 12m MDD is no worse than control by more than 2pp",
+                  "G8":  "full-sample total return is positive",
+                  "G9":  "candidate full-sample total return is at least the R221 SG\u0026A-level candidate full-sample total return minus 5pp"
+              },
+    "decision_rule":  "All D and G gates must pass. The factor definition, non-financial universe, scoring weights, holding period and stop loss are frozen before factor construction. No post-result relaxation, filling, industry redefinition, or substitution with prior factors is allowed.",
+    "known_limitations":  [
+                              "The industry classification is a current snapshot, not a historical PIT industry series.",
+                              "Financial tables are current snapshots; statutory deadlines are used because provider announcement dates are not reliable first-disclosure timestamps.",
+                              "Gross-margin expansion can reflect accounting classification changes or one-off cost shocks rather than durable pricing power.",
+                              "The factor is research-only until every pre-registered gate passes."
+                          ]
+}
