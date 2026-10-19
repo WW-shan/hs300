@@ -1,0 +1,218 @@
+{
+  "purpose": "R216 cash-flow stability quality score versus a matched quality-cash control",
+  "preregistration": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r216_preregistration.json",
+  "window": [
+    "2022-07-01",
+    "2026-10-16"
+  ],
+  "factor": {
+    "id": "ext_alt_hs300_cash_flow_stability_4q_low",
+    "column": "cash_flow_stability_4q_low",
+    "formula": "negative population standard deviation of four quarterly operating-cash-flow/assets ratios; higher is better",
+    "std_ddof": 0,
+    "effective_date": "maximum statutory disclosure deadline of the four quarters plus four calendar days",
+    "first_valid_date_scope": "all factor history through END before applying the START coverage window",
+    "coverage": {
+      "eligible_member_rows": 312000,
+      "valid_member_rows": 310418,
+      "coverage_2022_2026": 0.994929,
+      "recent_member_rows": 75600,
+      "recent_valid_rows": 75542,
+      "recent_12m_coverage": 0.999233,
+      "first_valid_date": "2022-05-05",
+      "factor_min": -1.103943,
+      "factor_median": -0.016439,
+      "factor_max": -0.000241
+    }
+  },
+  "samples": {
+    "discovery": [
+      "2022-07-01",
+      "2024-12-31"
+    ],
+    "validation": [
+      "2025-01-02",
+      "2026-10-16"
+    ],
+    "rolling_1y": "252-trading-day rolling compounded return over the stitched 2022-2026 curve",
+    "recent_12m": "last 252 trading-day returns of the stitched 2022-2026 curve"
+  },
+  "execution": {
+    "engine": "StrategyBacktestService",
+    "matching": "open_t+1",
+    "cost": "3x: 6bp commission + 15bp slippage + 10bp stamp tax",
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "holding_days": 20,
+    "stop_loss": -0.2,
+    "universe": "historical HS300 membership; daily snapshots from 2022",
+    "segments": [
+      [
+        "2022-07-01",
+        "2024-12-31"
+      ],
+      [
+        "2025-01-02",
+        "2026-10-16"
+      ]
+    ],
+    "stitching": "two segment returns compounded into one curve; first day of each later segment skipped"
+  },
+  "strategies": {
+    "candidate": "ai_hs300_cash_flow_stability_quality_h20_sl20",
+    "control": "ai_hs300_cash_flow_stability_quality_control"
+  },
+  "runs": {
+    "candidate": [
+      {
+        "start": "2022-07-01",
+        "end": "2024-12-31",
+        "cached": true,
+        "days": 609,
+        "curve_stats": {
+          "total_return": -0.203837,
+          "annual": -0.090154,
+          "sharpe": -0.2418,
+          "mdd": -0.419794,
+          "days": 609
+        }
+      },
+      {
+        "start": "2025-01-02",
+        "end": "2026-10-16",
+        "cached": true,
+        "days": 431,
+        "curve_stats": {
+          "total_return": -0.01378,
+          "annual": -0.008099,
+          "sharpe": 0.0561,
+          "mdd": -0.214665,
+          "days": 431
+        }
+      }
+    ],
+    "control": [
+      {
+        "start": "2022-07-01",
+        "end": "2024-12-31",
+        "cached": true,
+        "days": 609,
+        "curve_stats": {
+          "total_return": -0.168787,
+          "annual": -0.073761,
+          "sharpe": -0.1994,
+          "mdd": -0.415848,
+          "days": 609
+        }
+      },
+      {
+        "start": "2025-01-02",
+        "end": "2026-10-16",
+        "cached": true,
+        "days": 431,
+        "curve_stats": {
+          "total_return": 0.153688,
+          "annual": 0.087393,
+          "sharpe": 0.508,
+          "mdd": -0.229102,
+          "days": 431
+        }
+      }
+    ]
+  },
+  "results": {
+    "candidate": {
+      "full": {
+        "total_return": -0.214808,
+        "annual": -0.057019,
+        "sharpe": -0.1368,
+        "mdd": -0.419794,
+        "days": 1039
+      },
+      "discovery_2022_2024": {
+        "total_return": -0.203837,
+        "annual": -0.090154,
+        "sharpe": -0.2418,
+        "mdd": -0.419794,
+        "days": 609
+      },
+      "validation_2025_2026": {
+        "total_return": 0.004249,
+        "annual": 0.002494,
+        "sharpe": 0.1107,
+        "mdd": -0.214665,
+        "days": 430
+      },
+      "rolling_1y": {
+        "windows": 788,
+        "positive_rate": 0.547,
+        "return_p05": -0.3075,
+        "return_median": 0.0349,
+        "return_worst": -0.3559,
+        "mdd_p05": -0.3483,
+        "mdd_worst": -0.3559
+      },
+      "recent_12m": {
+        "total_return": -0.157393,
+        "mdd": -0.214665
+      }
+    },
+    "control": {
+      "full": {
+        "total_return": -0.041039,
+        "annual": -0.010122,
+        "sharpe": 0.0681,
+        "mdd": -0.415848,
+        "days": 1039
+      },
+      "discovery_2022_2024": {
+        "total_return": -0.168787,
+        "annual": -0.073761,
+        "sharpe": -0.1994,
+        "mdd": -0.415848,
+        "days": 609
+      },
+      "validation_2025_2026": {
+        "total_return": 0.176055,
+        "annual": 0.099943,
+        "sharpe": 0.5639,
+        "mdd": -0.229102,
+        "days": 430
+      },
+      "rolling_1y": {
+        "windows": 788,
+        "positive_rate": 0.5926,
+        "return_p05": -0.2313,
+        "return_median": 0.1341,
+        "return_worst": -0.3275,
+        "mdd_p05": -0.3525,
+        "mdd_worst": -0.3525
+      },
+      "recent_12m": {
+        "total_return": -0.130424,
+        "mdd": -0.229102
+      }
+    }
+  },
+  "decision": {
+    "D1": true,
+    "D2": true,
+    "G1": false,
+    "G2": true,
+    "G3": false,
+    "G4": false,
+    "G5": true,
+    "G6": false,
+    "G7": false,
+    "G8": false,
+    "all_pass": false
+  },
+  "caveats": [
+    "The clean point-in-time sample starts in 2022; 2018-2020 financial data are excluded because reliable first-disclosure dates are unavailable.",
+    "The factor uses statutory disclosure deadlines as a fallback because provider announcement dates are not reliable first-disclosure timestamps.",
+    "Local financial tables are current snapshots, so restatement risk remains and is not fully eliminated.",
+    "The full curve is stitched from two system-engine segments because the combined matrix exceeded memory; segment boundaries can reset an open position.",
+    "The factor is research-only until every preregistered gate passes.",
+    "Candidate and control share the same HS300 universe, factor-availability filter, and execution; the control excludes cash-flow stability from scoring."
+  ]
+}

@@ -116,6 +116,7 @@ FIELDS = [
     ExtField("trend_efficiency_60d", "float", "60日趋势效率（净对数收益/绝对路径和）"),
     ExtField("risk_adjusted_momentum_60d", "float", "60日风险调整动量（收益/年化波动率）"),
     ExtField("market_skew_60d_low", "float", "HS300 60日已实现偏度反向"),
+    ExtField("cash_flow_stability_4q_low", "float", "经营现金流/总资产4季稳定性反向"),
     ExtField("goodwill_ratio_low", "float", "商誉/总资产反向"),
     ExtField("intangible_ratio_low", "float", "无形资产/总资产反向"),
     ExtField("rd_intensity", "float", "研发费用/营业收入"),
@@ -2180,6 +2181,90 @@ def _market_skew_daily(dates: list[date]) -> pl.DataFrame:
     return _market_skew_frame(market)
 
 
+def _cash_flow_stability_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
+    """Compute negative 4-quarter stability of operating cash flow over assets."""
+    from app.backtest.fundamentals import _statutory_deadline
+
+    balance = pl.read_parquet(DATA / "financials" / "balance_sheet" / "part.parquet").select([
+        pl.col("symbol").cast(pl.String),
+        pl.col("period_end").cast(pl.Date),
+        pl.col("total_assets").cast(pl.Float64),
+    ])
+    cash = pl.read_parquet(DATA / "financials" / "cash_flow" / "part.parquet").select([
+        pl.col("symbol").cast(pl.String),
+        pl.col("period_end").cast(pl.Date),
+        pl.col("net_operating_cash_flow").cast(pl.Float64),
+    ])
+    financial = (
+        balance.join(cash, on=["symbol", "period_end"], how="inner")
+        .unique(subset=["symbol", "period_end"], keep="last")
+        .sort(["symbol", "period_end"])
+        .with_columns(
+            pl.col("period_end")
+            .map_elements(_statutory_deadline, return_dtype=pl.Date)
+            .dt.offset_by("3d")
+            .alias("_deadline")
+        )
+        .with_columns([
+            (pl.col("period_end").dt.year() * 4 + pl.col("period_end").dt.quarter()).alias("_period_index"),
+            pl.col("period_end").shift(1).over("symbol").alias("_previous_period"),
+            pl.col("net_operating_cash_flow").shift(1).over("symbol").alias("_previous_ocf"),
+        ])
+        .with_columns(
+            (
+                pl.col("_period_index")
+                - (pl.col("_previous_period").dt.year() * 4 + pl.col("_previous_period").dt.quarter())
+            ).alias("_quarter_gap")
+        )
+        .with_columns(
+            pl.when(pl.col("period_end").dt.quarter() == 1)
+            .then(pl.col("net_operating_cash_flow"))
+            .when((pl.col("_quarter_gap") == 1) & pl.col("_previous_ocf").is_not_null())
+            .then(pl.col("net_operating_cash_flow") - pl.col("_previous_ocf"))
+            .otherwise(None)
+            .alias("_quarter_ocf")
+        )
+        .with_columns(
+            pl.when(pl.col("total_assets") > 0)
+            .then(pl.col("_quarter_ocf") / pl.col("total_assets"))
+            .otherwise(None)
+            .alias("_quarter_ratio")
+        )
+        .with_columns([
+            pl.col("_quarter_ratio").rolling_std(4, min_samples=4, ddof=0).over("symbol").alias("_std4"),
+            pl.col("_quarter_ratio").is_not_null().cast(pl.Int32).rolling_sum(4, min_samples=4).over("symbol").alias("_count4"),
+            pl.col("_period_index").shift(3).over("symbol").alias("_period_index_lag3"),
+            pl.col("_deadline").cast(pl.Int64).rolling_max(4, min_samples=4).over("symbol").cast(pl.Date).alias("_deadline4"),
+        ])
+        .with_columns(
+            pl.when(
+                (pl.col("_period_index") - pl.col("_period_index_lag3") == 3)
+                & (pl.col("_count4") == 4)
+                & (pl.col("_std4") >= 0.0)
+            )
+            .then(-pl.col("_std4"))
+            .otherwise(None)
+            .alias("cash_flow_stability_4q_low")
+        )
+        .filter(pl.col("cash_flow_stability_4q_low").is_not_null())
+        .with_columns((pl.col("_deadline4") + pl.duration(days=1)).alias("effective_date"))
+        .select(["symbol", "effective_date", "cash_flow_stability_4q_low"])
+        .sort(["symbol", "effective_date"])
+    )
+    daily = _calendar_frame(dates, symbols).select(["symbol", "date"]).sort(["symbol", "date"])
+    return (
+        daily.join_asof(
+            financial.rename({"effective_date": "_effective"}),
+            left_on="date",
+            right_on="_effective",
+            by="symbol",
+            strategy="backward",
+            check_sortedness=False,
+        )
+        .select(["symbol", "date", "cash_flow_stability_4q_low"])
+    )
+
+
 def _corwin_schultz_spread_frame(
     stock_panel: pl.DataFrame,
     *,
@@ -2310,12 +2395,13 @@ def main() -> int:
     trend_efficiency = _trend_efficiency_frame(prices)
     risk_adjusted_momentum = _risk_adjusted_momentum_frame(prices)
     market_skew = _market_skew_daily(dates)
+    cash_flow_stability = _cash_flow_stability_daily(dates, symbols)
 
     base = _calendar_frame(dates, symbols)
     for frame in (
         holder, dividend, insider, holder_trade, fund_holding,
         lhb, pledge, repurchase, block_trade, analyst, forecast, express,
-        industry, mainline, margin, short_ratio, goodwill, equity_supply, prices, idio_vol, price_delay, cs_spread, vol_of_vol, market_down_beta, trend_efficiency, risk_adjusted_momentum,
+        industry, mainline, margin, short_ratio, goodwill, equity_supply, prices, idio_vol, price_delay, cs_spread, vol_of_vol, market_down_beta, trend_efficiency, risk_adjusted_momentum, cash_flow_stability,
     ):
         base = base.join(frame, on=["symbol", "date"], how="left")
     for frame in (erp, macro, emotion, etf_flow, qvix, macro_extra, regime_extra, northbound, if_position, bond_momentum, ah_premium, hk_risk, margin_safety, breadth, shibor_tightness, concentration, turnover_level, turnover_extended, market_skew):
@@ -2348,7 +2434,7 @@ def main() -> int:
         description=(
             "研究实验数据: 增持/减持事件、股东结构变化、基金持仓拥挤度、两融、"
             "龙虎榜、质押、回购、大宗交易、分析师、业绩预告/快报、商誉与研发、"
-            "股权融资供给、分红、ERP、信用/期限利差、市场情绪、HS300残差波动率、价格延迟、Corwin-Schultz价差、波动率稳定性、市场下跌条件beta、趋势效率、风险调整动量和市场已实现偏度。"
+            "股权融资供给、分红、ERP、信用/期限利差、市场情绪、HS300残差波动率、价格延迟、Corwin-Schultz价差、波动率稳定性、市场下跌条件beta、趋势效率、风险调整动量、市场已实现偏度和现金流稳定性。"
             "仅用于实验策略，不构成可部署结论。"
         ),
     )
