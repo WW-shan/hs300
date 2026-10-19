@@ -111,6 +111,7 @@ FIELDS = [
     ExtField("idio_vol_60d_low", "float", "HS300市场模型60日残差波动率反向"),
     ExtField("price_delay_60d", "float", "HS300市场信息60日价格延迟"),
     ExtField("cs_spread_60d", "float", "Corwin-Schultz高低价估计买卖价差60日均值"),
+    ExtField("vol_of_vol_60d_low", "float", "20日波动率的60日稳定性反向"),
     ExtField("goodwill_ratio_low", "float", "商誉/总资产反向"),
     ExtField("intangible_ratio_low", "float", "无形资产/总资产反向"),
     ExtField("rd_intensity", "float", "研发费用/营业收入"),
@@ -1961,6 +1962,39 @@ def _price_delay_daily(prices: pl.DataFrame) -> pl.DataFrame:
     return _price_delay_frame(prices, market)
 
 
+def _vol_of_vol_frame(
+    stock_panel: pl.DataFrame,
+    *,
+    vol_window: int = 20,
+    stability_window: int = 60,
+) -> pl.DataFrame:
+    """Compute negative 60-day stability of 20-day realized volatility."""
+    return (
+        stock_panel.select(["symbol", "date", "close"])
+        .sort(["symbol", "date"])
+        .with_columns(
+            (pl.col("close") / pl.col("close").shift(1).over("symbol") - 1.0).alias("_ret")
+        )
+        .with_columns(
+            (
+                pl.col("_ret").rolling_std(vol_window, min_samples=vol_window).over("symbol")
+                * math.sqrt(252.0)
+            ).alias("_rv20")
+        )
+        .with_columns(
+            pl.col("_rv20").rolling_std(stability_window, min_samples=stability_window).over("symbol").alias("_vol_of_vol")
+        )
+        .with_columns(
+            (-pl.col("_vol_of_vol")).alias("vol_of_vol_60d_low")
+        )
+        .select(["symbol", "date", "vol_of_vol_60d_low"])
+    )
+
+
+def _vol_of_vol_daily(prices: pl.DataFrame) -> pl.DataFrame:
+    return _vol_of_vol_frame(prices)
+
+
 def _corwin_schultz_spread_frame(
     stock_panel: pl.DataFrame,
     *,
@@ -2086,12 +2120,13 @@ def main() -> int:
     idio_vol = _idio_vol_daily(prices)
     price_delay = _price_delay_daily(prices)
     cs_spread = _corwin_schultz_spread_frame(prices)
+    vol_of_vol = _vol_of_vol_daily(prices)
 
     base = _calendar_frame(dates, symbols)
     for frame in (
         holder, dividend, insider, holder_trade, fund_holding,
         lhb, pledge, repurchase, block_trade, analyst, forecast, express,
-        industry, mainline, margin, short_ratio, goodwill, equity_supply, prices, idio_vol, price_delay, cs_spread,
+        industry, mainline, margin, short_ratio, goodwill, equity_supply, prices, idio_vol, price_delay, cs_spread, vol_of_vol,
     ):
         base = base.join(frame, on=["symbol", "date"], how="left")
     for frame in (erp, macro, emotion, etf_flow, qvix, macro_extra, regime_extra, northbound, if_position, bond_momentum, ah_premium, hk_risk, margin_safety, breadth, shibor_tightness, concentration, turnover_level, turnover_extended):
@@ -2124,7 +2159,7 @@ def main() -> int:
         description=(
             "研究实验数据: 增持/减持事件、股东结构变化、基金持仓拥挤度、两融、"
             "龙虎榜、质押、回购、大宗交易、分析师、业绩预告/快报、商誉与研发、"
-            "股权融资供给、分红、ERP、信用/期限利差、市场情绪、HS300残差波动率、价格延迟和Corwin-Schultz价差。"
+            "股权融资供给、分红、ERP、信用/期限利差、市场情绪、HS300残差波动率、价格延迟、Corwin-Schultz价差和波动率稳定性。"
             "仅用于实验策略，不构成可部署结论。"
         ),
     )
