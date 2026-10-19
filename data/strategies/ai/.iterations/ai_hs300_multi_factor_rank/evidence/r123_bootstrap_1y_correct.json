@@ -1,0 +1,85 @@
+{
+  "purpose": "R123 correct 1-year bootstrap with per-path volatility overlay",
+  "universe": "R119 PIT Shenwan industry B-sleeve cache",
+  "method": {
+    "block_days": 20,
+    "path_days": 252,
+    "paths": 1000,
+    "seed": 20261019,
+    "month_days": 21,
+    "target_volatility": 0.15,
+    "weight_bounds": [
+      0.2,
+      1.0
+    ],
+    "round_trip_cost": 0.0052,
+    "return_days": 1302
+  },
+  "baseline_B_pit_industry": {
+    "positive_rate": 0.567,
+    "return_p05": -0.3365,
+    "return_p25": -0.1419,
+    "return_median": 0.0491,
+    "return_p75": 0.2818,
+    "return_p95": 0.7636,
+    "mdd_p05": -0.4201,
+    "mdd_median": -0.2542,
+    "sharpe_median": 0.3205,
+    "sharpe_p05": -1.4944
+  },
+  "candidate_vol_target_15pct": {
+    "positive_rate": 0.576,
+    "return_p05": -0.2065,
+    "return_p25": -0.0742,
+    "return_median": 0.0362,
+    "return_p75": 0.1582,
+    "return_p95": 0.3552,
+    "mdd_p05": -0.273,
+    "mdd_median": -0.1466,
+    "sharpe_median": 0.3063,
+    "sharpe_p05": -1.4686
+  },
+  "r122_approximation": {
+    "baseline": {
+      "positive_rate": 0.567,
+      "return_p05": -0.3365,
+      "return_p25": -0.1419,
+      "return_median": 0.0491,
+      "return_p75": 0.2818,
+      "return_p95": 0.7636,
+      "mdd_p05": -0.4201,
+      "mdd_median": -0.2542,
+      "sharpe_median": 0.3205,
+      "sharpe_p05": -1.4944
+    },
+    "candidate": {
+      "positive_rate": 0.59,
+      "return_p05": -0.1993,
+      "return_p25": -0.072,
+      "return_median": 0.0434,
+      "return_p75": 0.1644,
+      "return_p95": 0.4135,
+      "mdd_p05": -0.2629,
+      "mdd_median": -0.148,
+      "sharpe_median": 0.3588,
+      "sharpe_p05": -1.4802
+    }
+  },
+  "decision": {
+    "D1": true,
+    "G1": false,
+    "G2": false,
+    "G3": false,
+    "G4": true,
+    "G5": false,
+    "G6": true,
+    "all_pass": false
+  },
+  "final_recommendation": null,
+  "caveats": [
+    "Block bootstrap reuses the same historical path; it is not new out-of-sample data.",
+    "Synthetic months are 21 trading days; the real overlay uses calendar months.",
+    "The overlay was calibrated on this sample (R114/R115 follow-up), so the bootstrap cannot remove calibration bias.",
+    "SW industry code first 2 digits is a proxy for L1, not official name."
+  ]
+}
