@@ -191,8 +191,8 @@ def _holder_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
             "holder_top10_share_chg_qoq": pl.Float64,
             "holder_top10_share_chg_yoy": pl.Float64,
         })
-        .sort(["symbol", "effective_date"])
         .unique(subset=["symbol", "effective_date"], keep="last")
+        .sort(["symbol", "effective_date"])
     )
     return _calendar_frame(dates, symbols).join_asof(
         periods,
