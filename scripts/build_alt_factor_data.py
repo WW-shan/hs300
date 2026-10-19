@@ -21,6 +21,7 @@ research data; it is intentionally ignored by Git.
 from __future__ import annotations
 
 import bisect
+import json
 import math
 from datetime import date, timedelta
 from pathlib import Path
@@ -86,6 +87,7 @@ FIELDS = [
     ExtField("northbound_net_buy_20d", "float", "北向20日净买额"),
     ExtField("margin_chg_1m_low", "float", "两融余额月度变化反向"),
     ExtField("short_ratio_low", "float", "融券余量占流通股本比例反向(低空头拥挤)"),
+    ExtField("if_net_short_chg_1m", "float", "IF前20席位净空头占比月度变化(方向负)"),
     ExtField("goodwill_ratio_low", "float", "商誉/总资产反向"),
     ExtField("intangible_ratio_low", "float", "无形资产/总资产反向"),
     ExtField("rd_intensity", "float", "研发费用/营业收入"),
@@ -1293,6 +1295,37 @@ def _short_ratio_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
     ).select(["symbol", "date", "short_ratio_low"])
 
 
+def _if_position_daily(dates: list[date]) -> pl.DataFrame:
+    """IF top-20 member net-short ratio monthly change, direction negative.
+
+    Source: evidence/r187_cffex_probe.json monthly_records (net_short_ratio).
+    available_date = month_end + 1 day; the signal is a market-level column
+    broadcast to all symbols.
+    """
+    evidence = DATA / "strategies" / "ai" / ".iterations" / "ai_hs300_multi_factor_rank" / "evidence" / "r187_cffex_probe.json"
+    if not evidence.exists():
+        raise RuntimeError("R187 CFFEX 探针结果缺失")
+    payload = json.loads(evidence.read_text(encoding="utf-8"))
+    records = payload.get("monthly_records") or []
+    if not records:
+        raise RuntimeError("R187 探针没有月度记录")
+    frame = pl.DataFrame(records).with_columns(pl.col("date").str.to_date()).sort("date")
+    frame = frame.with_columns(
+        pl.col("net_short_ratio").shift(1).alias("_prev")
+    ).with_columns(
+        (pl.col("net_short_ratio") - pl.col("_prev")).alias("_chg"),
+        (pl.col("date") + pl.duration(days=1)).alias("effective_date"),
+    ).filter(pl.col("_chg").is_not_null())
+    signal = frame.select(["effective_date", "_chg"]).sort("effective_date")
+    daily = pl.DataFrame({"date": dates}).sort("date").join_asof(
+        signal, left_on="date", right_on="effective_date", strategy="backward",
+    ).with_columns((pl.col("date") - pl.col("effective_date")).dt.total_days().alias("_age"))
+    return daily.with_columns(
+        pl.when(pl.col("_age").is_between(0, 45, closed="both"))
+        .then(-pl.col("_chg")).otherwise(None).alias("if_net_short_chg_1m")
+    ).select(["date", "if_net_short_chg_1m"])
+
+
 def _goodwill_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
     paths = sorted((DATA / "research" / "r86_intangible").glob("*.parquet"))
     frames = [pl.read_parquet(path) for path in paths]
@@ -1531,6 +1564,7 @@ def main() -> int:
     northbound = _northbound_daily(dates)
     margin = _margin_daily(dates, symbols)
     short_ratio = _short_ratio_daily(dates, symbols)
+    if_position = _if_position_daily(dates)
     goodwill = _goodwill_daily(dates, symbols)
     equity_supply = _equity_supply_daily(dates, symbols)
     erp = _erp_daily(dates)
@@ -1545,7 +1579,7 @@ def main() -> int:
         industry, mainline, margin, short_ratio, goodwill, equity_supply, prices,
     ):
         base = base.join(frame, on=["symbol", "date"], how="left")
-    for frame in (erp, macro, emotion, etf_flow, qvix, macro_extra, regime_extra, northbound):
+    for frame in (erp, macro, emotion, etf_flow, qvix, macro_extra, regime_extra, northbound, if_position):
         base = base.join(frame, on="date", how="left")
     base = base.with_columns(
         pl.when((pl.col("raw_close") > 0) & pl.col("dividend_ttm_cash").is_not_null())
