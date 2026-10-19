@@ -115,6 +115,7 @@ FIELDS = [
     ExtField("market_down_beta_60d_low", "float", "HS300市场下跌日条件beta反向"),
     ExtField("trend_efficiency_60d", "float", "60日趋势效率（净对数收益/绝对路径和）"),
     ExtField("risk_adjusted_momentum_60d", "float", "60日风险调整动量（收益/年化波动率）"),
+    ExtField("market_skew_60d_low", "float", "HS300 60日已实现偏度反向"),
     ExtField("goodwill_ratio_low", "float", "商誉/总资产反向"),
     ExtField("intangible_ratio_low", "float", "无形资产/总资产反向"),
     ExtField("rd_intensity", "float", "研发费用/营业收入"),
@@ -2126,6 +2127,59 @@ def _risk_adjusted_momentum_frame(
         .select(["symbol", "date", "risk_adjusted_momentum_60d"])
     )
 
+
+def _market_skew_frame(
+    market_panel: pl.DataFrame,
+    *,
+    window_size: int = 60,
+) -> pl.DataFrame:
+    """Compute negative 60-day skewness of HS300 daily returns."""
+    returns = (
+        market_panel.select(["date", "close"])
+        .unique(subset=["date"], keep="last")
+        .sort("date")
+        .with_columns(
+            (pl.col("close") / pl.col("close").shift(1) - 1.0).alias("_ret")
+        )
+        .with_columns([
+            pl.col("_ret").rolling_sum(window_size, min_samples=window_size).alias("_s1"),
+            pl.col("_ret").pow(2).rolling_sum(window_size, min_samples=window_size).alias("_s2"),
+            pl.col("_ret").pow(3).rolling_sum(window_size, min_samples=window_size).alias("_s3"),
+        ])
+        .with_columns([
+            (pl.col("_s1") / window_size).alias("_mean"),
+            (pl.col("_s2") / window_size - (pl.col("_s1") / window_size).pow(2)).alias("_m2"),
+            (
+                pl.col("_s3") / window_size
+                - 3.0 * (pl.col("_s1") / window_size) * (pl.col("_s2") / window_size)
+                + 2.0 * (pl.col("_s1") / window_size).pow(3)
+            ).alias("_m3"),
+        ])
+        .with_columns(
+            pl.when(pl.col("_m2") > 1e-12)
+            .then(-pl.col("_m3") / pl.col("_m2").pow(1.5))
+            .otherwise(None)
+            .alias("market_skew_60d_low")
+        )
+        .select(["date", "market_skew_60d_low"])
+    )
+    return returns
+
+
+def _market_skew_daily(dates: list[date]) -> pl.DataFrame:
+    del dates
+    index_paths = sorted((DATA / "kline_index_daily").glob("date=*/part.parquet"))
+    if not index_paths:
+        raise RuntimeError("kline_index_daily 为空，无法计算 HS300 已实现偏度")
+    market = (
+        pl.scan_parquet([str(path) for path in index_paths])
+        .filter(pl.col("symbol") == "000300.SH")
+        .select(["date", "close"])
+        .collect()
+    )
+    return _market_skew_frame(market)
+
+
 def _corwin_schultz_spread_frame(
     stock_panel: pl.DataFrame,
     *,
@@ -2255,6 +2309,7 @@ def main() -> int:
     market_down_beta = _market_down_beta_daily(prices)
     trend_efficiency = _trend_efficiency_frame(prices)
     risk_adjusted_momentum = _risk_adjusted_momentum_frame(prices)
+    market_skew = _market_skew_daily(dates)
 
     base = _calendar_frame(dates, symbols)
     for frame in (
@@ -2263,7 +2318,7 @@ def main() -> int:
         industry, mainline, margin, short_ratio, goodwill, equity_supply, prices, idio_vol, price_delay, cs_spread, vol_of_vol, market_down_beta, trend_efficiency, risk_adjusted_momentum,
     ):
         base = base.join(frame, on=["symbol", "date"], how="left")
-    for frame in (erp, macro, emotion, etf_flow, qvix, macro_extra, regime_extra, northbound, if_position, bond_momentum, ah_premium, hk_risk, margin_safety, breadth, shibor_tightness, concentration, turnover_level, turnover_extended):
+    for frame in (erp, macro, emotion, etf_flow, qvix, macro_extra, regime_extra, northbound, if_position, bond_momentum, ah_premium, hk_risk, margin_safety, breadth, shibor_tightness, concentration, turnover_level, turnover_extended, market_skew):
         base = base.join(frame, on="date", how="left")
     base = base.with_columns(
         pl.when((pl.col("raw_close") > 0) & pl.col("dividend_ttm_cash").is_not_null())
@@ -2293,7 +2348,7 @@ def main() -> int:
         description=(
             "研究实验数据: 增持/减持事件、股东结构变化、基金持仓拥挤度、两融、"
             "龙虎榜、质押、回购、大宗交易、分析师、业绩预告/快报、商誉与研发、"
-            "股权融资供给、分红、ERP、信用/期限利差、市场情绪、HS300残差波动率、价格延迟、Corwin-Schultz价差、波动率稳定性、市场下跌条件beta、趋势效率和风险调整动量。"
+            "股权融资供给、分红、ERP、信用/期限利差、市场情绪、HS300残差波动率、价格延迟、Corwin-Schultz价差、波动率稳定性、市场下跌条件beta、趋势效率、风险调整动量和市场已实现偏度。"
             "仅用于实验策略，不构成可部署结论。"
         ),
     )
