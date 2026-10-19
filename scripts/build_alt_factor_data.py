@@ -92,6 +92,9 @@ FIELDS = [
     ExtField("bond_tf_mom_20d", "float", "TF0(5Y国债期货)20日动量(方向负)"),
     ExtField("ah_premium_z", "float", "A-H溢价20日中位数扩张z-score(方向负)"),
     ExtField("ah_premium_chg_1m", "float", "A-H溢价20日中位数月度变化(方向负)"),
+    ExtField("hsi_mom_20d", "float", "恒生指数20日动量(方向正)"),
+    ExtField("hsciei_mom_20d", "float", "恒生国企指数20日动量(方向正)"),
+    ExtField("hsi_rel_hs300_20d", "float", "恒指20日动量减沪深30020日动量(方向正)"),
     ExtField("goodwill_ratio_low", "float", "商誉/总资产反向"),
     ExtField("intangible_ratio_low", "float", "无形资产/总资产反向"),
     ExtField("rd_intensity", "float", "研发费用/营业收入"),
@@ -1381,6 +1384,42 @@ def _ah_premium_daily(dates: list[date]) -> pl.DataFrame:
     ]).select(["date", "ah_premium_z", "ah_premium_chg_1m"])
 
 
+def _hk_risk_daily(dates: list[date]) -> pl.DataFrame:
+    """Hong Kong index momentum factors, direction positive.
+
+    HSI/HSCEI close at 16:00 HK time, after the A-share close; the asof join
+    keeps the signal PIT (last HK close on or before the A-share date).
+    """
+    cache = DATA / "research" / "r195_hk"
+    frames = []
+    for symbol, col in [("HSI", "hsi_mom_20d"), ("HSCEI", "hsciei_mom_20d")]:
+        path = cache / f"{symbol}.parquet"
+        if not path.exists():
+            raise RuntimeError(f"R195 港股指数缓存缺失: {path}")
+        frame = pl.read_parquet(path).sort("date")
+        frame = frame.with_columns(
+            (pl.col("close") / pl.col("close").shift(20) - 1.0).alias(col)
+        ).select(["date", col]).filter(pl.col(col).is_not_null())
+        frames.append(frame)
+    paths = sorted((DATA / "kline_index_daily").glob("date=*/part.parquet"))
+    hs300 = (
+        pl.scan_parquet([str(p) for p in paths])
+        .filter(pl.col("symbol") == "000300.SH")
+        .select(["date", "close"])
+        .collect()
+        .sort("date")
+        .with_columns((pl.col("close") / pl.col("close").shift(20) - 1.0).alias("hs300_mom_20d"))
+        .select(["date", "hs300_mom_20d"])
+    )
+    daily = pl.DataFrame({"date": dates}).sort("date")
+    for frame in frames:
+        daily = daily.join_asof(frame, on="date", strategy="backward")
+    daily = daily.join(hs300, on="date", how="left")
+    return daily.with_columns(
+        (pl.col("hsi_mom_20d") - pl.col("hs300_mom_20d")).alias("hsi_rel_hs300_20d")
+    ).select(["date", "hsi_mom_20d", "hsciei_mom_20d", "hsi_rel_hs300_20d"])
+
+
 def _goodwill_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
     paths = sorted((DATA / "research" / "r86_intangible").glob("*.parquet"))
     frames = [pl.read_parquet(path) for path in paths]
@@ -1622,6 +1661,7 @@ def main() -> int:
     if_position = _if_position_daily(dates)
     bond_momentum = _bond_momentum_daily(dates)
     ah_premium = _ah_premium_daily(dates)
+    hk_risk = _hk_risk_daily(dates)
     goodwill = _goodwill_daily(dates, symbols)
     equity_supply = _equity_supply_daily(dates, symbols)
     erp = _erp_daily(dates)
@@ -1636,7 +1676,7 @@ def main() -> int:
         industry, mainline, margin, short_ratio, goodwill, equity_supply, prices,
     ):
         base = base.join(frame, on=["symbol", "date"], how="left")
-    for frame in (erp, macro, emotion, etf_flow, qvix, macro_extra, regime_extra, northbound, if_position, bond_momentum, ah_premium):
+    for frame in (erp, macro, emotion, etf_flow, qvix, macro_extra, regime_extra, northbound, if_position, bond_momentum, ah_premium, hk_risk):
         base = base.join(frame, on="date", how="left")
     base = base.with_columns(
         pl.when((pl.col("raw_close") > 0) & pl.col("dividend_ttm_cash").is_not_null())
