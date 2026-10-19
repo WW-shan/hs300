@@ -1,0 +1,99 @@
+{
+  "purpose": "R190 IF delivery-week calendar effect on HS300 index",
+  "generated_at": "2026-10-19T19:35:57",
+  "data": {
+    "index": "data/kline_index_daily 000300.SH",
+    "days": 2129,
+    "delivery_dates": 104,
+    "start": "2018-01-03",
+    "end": "2026-10-16"
+  },
+  "method": {
+    "delivery_date": "third Friday of each month, rolled forward to the next trading day",
+    "delivery_week": "delivery date and prior 3 trading days",
+    "post_delivery": "4 trading days after the delivery date",
+    "test": "Welch t-test on daily return difference; BH-FDR over 2 discovery tests"
+  },
+  "discovery": {
+    "delivery_week": {
+      "mean": -0.0007866892712619672,
+      "t": -1.0264002797465697,
+      "n": 240
+    },
+    "post_delivery": {
+      "mean": -0.0001910242836063424,
+      "t": -0.2358433245807467,
+      "n": 240
+    },
+    "other": {
+      "mean": 0.0003864649103790612,
+      "t": 0.7734427934446593,
+      "n": 734
+    },
+    "diff_vs_other": -0.0011731541816410284,
+    "t_diff_vs_other": -1.2822151821843284,
+    "diff_vs_post": -0.0005956649876556248,
+    "t_diff_vs_post": -0.5341712823708602
+  },
+  "validation": {
+    "delivery_week": {
+      "mean": -0.0009938948697173753,
+      "t": -1.4178077758511372,
+      "n": 176
+    },
+    "post_delivery": {
+      "mean": 0.0011183955204088498,
+      "t": 1.4408204203921928,
+      "n": 176
+    },
+    "other": {
+      "mean": 0.0001906531286768784,
+      "t": 0.38950758754966025,
+      "n": 563
+    },
+    "diff_vs_other": -0.0011845479983942538,
+    "t_diff_vs_other": -1.385464204694842,
+    "diff_vs_post": -0.002112290390126225,
+    "t_diff_vs_post": -2.019567886571794
+  },
+  "full": {
+    "delivery_week": {
+      "mean": -0.0008743531783007937,
+      "t": -1.6439434848678585,
+      "n": 416
+    },
+    "post_delivery": {
+      "mean": 0.00036296101809239273,
+      "t": 0.6352388170516459,
+      "n": 416
+    },
+    "other": {
+      "mean": 0.00030146719788998725,
+      "t": 0.8526153838724592,
+      "n": 1297
+    },
+    "diff_vs_other": -0.001175820376190781,
+    "t_diff_vs_other": -1.841050804566529,
+    "diff_vs_post": -0.0012373141963931864,
+    "t_diff_vs_post": -1.585062527792705
+  },
+  "fdr": {
+    "p_vs_other": 0.19976717180990464,
+    "p_vs_post": 0.5932230357946535,
+    "q_vs_other": 0.3995343436198093,
+    "q_vs_post": 0.5932230357946535
+  },
+  "decision": {
+    "D1": true,
+    "G1": false,
+    "G2": false,
+    "G3": false,
+    "G4": true,
+    "G5": false,
+    "all_pass": false
+  },
+  "limitations": [
+    "Normal-approximation p-values; daily returns are not i.i.d. but the sample is large.",
+    "Delivery dates are derived from the local trading calendar, not an official CFFEX calendar."
+  ]
+}
