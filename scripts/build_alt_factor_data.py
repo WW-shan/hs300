@@ -85,6 +85,7 @@ FIELDS = [
     ExtField("market_speculation_score", "float", "市场投机分数"),
     ExtField("northbound_net_buy_20d", "float", "北向20日净买额"),
     ExtField("margin_chg_1m_low", "float", "两融余额月度变化反向"),
+    ExtField("short_ratio_low", "float", "融券余量占流通股本比例反向(低空头拥挤)"),
     ExtField("goodwill_ratio_low", "float", "商誉/总资产反向"),
     ExtField("intangible_ratio_low", "float", "无形资产/总资产反向"),
     ExtField("rd_intensity", "float", "研发费用/营业收入"),
@@ -1259,6 +1260,39 @@ def _margin_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
     ).select(["symbol", "date", "margin_chg_1m_low"])
 
 
+def _short_ratio_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
+    paths = sorted((DATA / "research" / "r50_margin").glob("*.parquet"))
+    frames = [pl.read_parquet(path) for path in paths]
+    if not frames:
+        raise RuntimeError("两融缓存缺失")
+    inst = (
+        pl.read_parquet(DATA / "instruments" / "instruments.parquet")
+        .select(["symbol", "float_shares"])
+        .unique(subset=["symbol"])
+    )
+    margins = (
+        pl.concat(frames, how="diagonal_relaxed")
+        .group_by(["symbol", "snapshot_date"])
+        .agg(pl.col("short_qty").max().alias("short_qty"))
+        .sort(["symbol", "snapshot_date"])
+        .filter(pl.col("symbol").is_in(symbols))
+        .join(inst, on="symbol", how="left")
+        .with_columns([
+            pl.when((pl.col("float_shares") > 0) & (pl.col("short_qty") >= 0))
+            .then(pl.col("short_qty") / pl.col("float_shares")).otherwise(None).alias("_ratio"),
+            (pl.col("snapshot_date") + pl.duration(days=1)).alias("effective_date"),
+        ])
+    )
+    joined = _calendar_frame(dates, symbols).join_asof(
+        margins.select(["symbol", "effective_date", "_ratio"]).sort(["symbol", "effective_date"]),
+        left_on="date", right_on="effective_date", by="symbol", strategy="backward",
+    )
+    return joined.with_columns(
+        pl.when((pl.col("date") - pl.col("effective_date")).dt.total_days().is_between(0, 45, closed="both"))
+        .then(-pl.col("_ratio")).otherwise(None).alias("short_ratio_low")
+    ).select(["symbol", "date", "short_ratio_low"])
+
+
 def _goodwill_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
     paths = sorted((DATA / "research" / "r86_intangible").glob("*.parquet"))
     frames = [pl.read_parquet(path) for path in paths]
@@ -1496,6 +1530,7 @@ def main() -> int:
     regime_extra = _regime_extra_daily(dates)
     northbound = _northbound_daily(dates)
     margin = _margin_daily(dates, symbols)
+    short_ratio = _short_ratio_daily(dates, symbols)
     goodwill = _goodwill_daily(dates, symbols)
     equity_supply = _equity_supply_daily(dates, symbols)
     erp = _erp_daily(dates)
@@ -1507,7 +1542,7 @@ def main() -> int:
     for frame in (
         holder, dividend, insider, holder_trade, fund_holding,
         lhb, pledge, repurchase, block_trade, analyst, forecast, express,
-        industry, mainline, margin, goodwill, equity_supply, prices,
+        industry, mainline, margin, short_ratio, goodwill, equity_supply, prices,
     ):
         base = base.join(frame, on=["symbol", "date"], how="left")
     for frame in (erp, macro, emotion, etf_flow, qvix, macro_extra, regime_extra, northbound):
