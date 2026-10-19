@@ -106,6 +106,7 @@ FIELDS = [
     ExtField("hs300_turnover_chg_20d", "float", "HS300换手率20日均值20日变化(方向负)"),
     ExtField("hs300_turnover_z_ext2017", "float", "HS300 turnover 20d expanding z-score with 2017 history (direction negative)"),
     ExtField("hs300_turnover_chg_20d_ext2017", "float", "HS300 turnover 20d mean 20d change with 2017 history (direction negative)"),
+    ExtField("hs300_turnover_gate_flag_ext2017", "float", "HS300 turnover 20d expanding z-score < 0 gate flag with 2017 history"),
     ExtField("goodwill_ratio_low", "float", "商誉/总资产反向"),
     ExtField("intangible_ratio_low", "float", "无形资产/总资产反向"),
     ExtField("rd_intensity", "float", "研发费用/营业收入"),
@@ -1589,7 +1590,10 @@ def _turnover_extended_daily(dates: list[date]) -> pl.DataFrame:
     return daily.with_columns([
         pl.when(pl.col("_age").is_between(0, 45, closed="both")).then(pl.col("hs300_turnover_z_ext2017")).otherwise(None).alias("hs300_turnover_z_ext2017"),
         pl.when(pl.col("_age").is_between(0, 45, closed="both")).then(pl.col("hs300_turnover_chg_20d")).otherwise(None).alias("hs300_turnover_chg_20d_ext2017"),
-    ]).select(["date", "hs300_turnover_z_ext2017", "hs300_turnover_chg_20d_ext2017"])
+    ]).with_columns(
+        pl.when(pl.col("hs300_turnover_z_ext2017").is_not_null() & (pl.col("hs300_turnover_z_ext2017") < 0))
+        .then(1.0).otherwise(0.0).alias("hs300_turnover_gate_flag_ext2017")
+    ).select(["date", "hs300_turnover_z_ext2017", "hs300_turnover_chg_20d_ext2017", "hs300_turnover_gate_flag_ext2017"])
 
 
 def _goodwill_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
