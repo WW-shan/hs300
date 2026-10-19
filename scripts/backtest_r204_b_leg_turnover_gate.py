@@ -84,7 +84,7 @@ def _run_segment(service, membership: pl.DataFrame, r112, sid: str, start: date,
     with r112._patched_membership(membership):
         result = service.run(cfg)
     if result.error:
-        if "???????" in str(result.error):
+        if "\u672a\u4ea7\u751f\u4e70\u5165\u4fe1\u53f7" in str(result.error):
             frame = pl.DataFrame({"date": _benchmark_dates(start, end)}).with_columns(pl.lit(1_000_000.0).alias("value"))
         else:
             raise RuntimeError(f"{sid} {start}~{end}: {result.error}")

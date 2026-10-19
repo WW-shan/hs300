@@ -66,7 +66,7 @@ FIELDS = [
     ExtField("industry_rps_20d", "float", "一级行业20日动量截面分位"),
     ExtField("industry_breadth_20d", "float", "一级行业站上MA20比例"),
     ExtField("stock_rel_industry_20d", "float", "个股相对行业20日强弱"),
-    ExtField("hs300_stock_rel_industry_top3_flag", "float", "HS300???????20????3???"),
+    ExtField("hs300_stock_rel_industry_top3_flag", "float", "HS300 top-3 relative industry strength flag"),
     ExtField("mainline_top1_flag", "float", "所属行业是否为当日主线第一"),
     ExtField("mainline_strength", "float", "主线行业涨停强度"),
     ExtField("mainline_leader_flag", "float", "是否为当日主线龙头"),
