@@ -1,0 +1,94 @@
+{
+  "round": "R212",
+  "registered_at": "2026-10-20",
+  "status": "pre_registered_before_factor_generation_and_backtest",
+  "hypothesis": "HS300 stocks with lower sensitivity to HS300 down days may provide better crash protection; combining low market-down beta with defensive quality and cash quality can improve drawdown and recent-year outcomes.",
+  "factor": {
+    "id": "ext_alt_hs300_market_down_beta_60d_low",
+    "raw_field": "market_down_beta_60d_low",
+    "formula": "negative conditional OLS beta of stock daily returns on HS300 daily returns over a 60-return window, using only days when HS300 return < 0; require at least 12 down days",
+    "returns": "adjusted close-to-close returns from kline_daily_enriched; HS300 uses 000300.SH close from kline_index_daily",
+    "window": 60,
+    "min_down_days": 12,
+    "direction": "higher is better (lower market-down beta)",
+    "point_in_time": "signal date t uses returns through close t; execution remains T+1 open"
+  },
+  "candidate_strategy": {
+    "id": "ai_hs300_market_down_beta_quality_h20_sl20",
+    "scoring": {
+      "ext_alt_hs300_market_down_beta_60d_low": 0.45,
+      "uf_quality_value_defensive": 0.3,
+      "uf_cash_quality": 0.25
+    },
+    "limit": 30,
+    "max_hold_days": 20,
+    "stop_loss": -0.2
+  },
+  "control_strategy": {
+    "id": "ai_hs300_market_down_beta_quality_control",
+    "purpose": "Matched universe and execution; market-down beta is an availability filter only, not a score component.",
+    "scoring": {
+      "uf_quality_value_defensive": 0.545,
+      "uf_cash_quality": 0.455
+    },
+    "limit": 30,
+    "max_hold_days": 20,
+    "stop_loss": -0.2
+  },
+  "execution": {
+    "engine": "StrategyBacktestService",
+    "matching": "open_t+1",
+    "cost": "3x: 6bp commission + 15bp slippage + 10bp stamp tax",
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "universe": "historical HS300 membership; monthly snapshots for 2018-2020 and daily snapshots from 2021",
+    "segments": [
+      [
+        "2018-01-02",
+        "2020-12-31"
+      ],
+      [
+        "2021-01-04",
+        "2024-12-31"
+      ],
+      [
+        "2025-01-02",
+        "2026-10-16"
+      ]
+    ]
+  },
+  "samples": {
+    "independent": [
+      "2018-01-02",
+      "2020-12-31"
+    ],
+    "validation": [
+      "2021-01-04",
+      "2024-12-31"
+    ],
+    "holdout": [
+      "2025-01-02",
+      "2026-10-16"
+    ],
+    "recent_12m": "last 252 trading-day returns of the stitched 2018-2026 curve",
+    "rolling_1y": "252-trading-day rolling compounded return over the stitched 2018-2026 curve"
+  },
+  "gates": {
+    "D1": "factor coverage within historical HS300 membership over 2018-2026 is at least 90%",
+    "D2": "first valid value occurs after at least 60 return observations and recent-12m coverage is at least 95%",
+    "G1": "independent 2018-2020 total return is at least control + 5pp",
+    "G2": "independent 2018-2020 MDD is no worse than control by more than 2pp",
+    "G3": "validation 2021-2024 total return is at least control - 5pp",
+    "G4": "full-sample rolling-1y positive rate is at least control",
+    "G5": "full-sample MDD is no worse than control by more than 2pp",
+    "G6": "full-sample total return is at least control - 5pp",
+    "G7": "recent 12m total return is positive and recent 12m MDD is no worse than control by more than 2pp",
+    "G8": "full-sample total return is positive"
+  },
+  "decision_rule": "All D and G gates must pass. Thresholds may not be relaxed after results. Any failed gate means the candidate remains research-only and is not a deployable factor.",
+  "known_limitations": [
+    "R53 labeled a similar factor as market-down beta, but its implementation masked stock-down days; R212 explicitly fixes that definition rather than reusing the old result.",
+    "The conditional beta uses a 60-return rolling window and requires at least 12 HS300 down days; windows with fewer down days are null.",
+    "2018-2020 HS300 membership uses monthly snapshots, so intra-month index changes are not modeled."
+  ]
+}
