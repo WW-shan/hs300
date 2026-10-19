@@ -1,0 +1,81 @@
+{
+  "round": "R224",
+  "captured_at": "2026-10-19T18:43:08.443889+00:00",
+  "api_base": "http://127.0.0.1:3018",
+  "reload": {
+    "method": "POST",
+    "endpoint": "/api/strategies/reload",
+    "ok": true,
+    "count": 114
+  },
+  "factors": {
+    "endpoint": "/api/factors",
+    "count": 205,
+    "component_factors_present": {
+      "ext_alt_hs300_sga_ratio_4q_low": true,
+      "ext_alt_hs300_gross_margin_stability_4q_low": true
+    }
+  },
+  "strategies": {
+    "endpoint": "/api/strategies?include_research=true",
+    "count": 149,
+    "load_error_count": 0,
+    "load_errors": [],
+    "registered": [
+      {
+        "id": "ai_hs300_sga_gm_stability_composite_h20_sl20",
+        "name": "HS300非金融成本质量复合",
+        "description": "历史沪深300剔除银行和非银金融；SG&A费用率水平与毛利率稳定性等权构成45%因子袖，叠加质量价值防守与现金质量；20日持有、-20%止损（R224实验）",
+        "tags": [
+          "SG&A",
+          "毛利率",
+          "稳定性",
+          "成本质量",
+          "复合因子",
+          "质量",
+          "现金质量",
+          "沪深300",
+          "非金融",
+          "实验",
+          "R224"
+        ],
+        "source": "ai",
+        "research_only": true,
+        "execution_backend": "polars_expr",
+        "scoring": {
+          "ext_alt_hs300_sga_ratio_4q_low": 0.225,
+          "ext_alt_hs300_gross_margin_stability_4q_low": 0.225,
+          "uf_quality_value_defensive": 0.3,
+          "uf_cash_quality": 0.25
+        },
+        "stop_loss": -0.2,
+        "max_hold_days": 20,
+        "limit": 30
+      },
+      {
+        "id": "ai_hs300_sga_gm_stability_composite_control",
+        "name": "HS300非金融成本质量复合匹配对照",
+        "description": "与R224候选使用相同非金融股票池、双因子可用性过滤和执行口径，但不把SG&A或毛利率稳定性计入评分",
+        "tags": [
+          "质量",
+          "现金质量",
+          "匹配对照",
+          "沪深300",
+          "非金融",
+          "实验",
+          "R224"
+        ],
+        "source": "ai",
+        "research_only": true,
+        "execution_backend": "polars_expr",
+        "scoring": {
+          "uf_quality_value_defensive": 0.545,
+          "uf_cash_quality": 0.455
+        },
+        "stop_loss": -0.2,
+        "max_hold_days": 20,
+        "limit": 30
+      }
+    ]
+  }
+}
