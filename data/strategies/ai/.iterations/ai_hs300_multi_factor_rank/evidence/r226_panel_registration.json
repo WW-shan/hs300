@@ -1,0 +1,88 @@
+{
+    "round":  "R226",
+    "captured_at":  "2026-10-19T19:12:04.8643197+00:00",
+    "api_base":  "http://127.0.0.1:3018",
+    "reload":  {
+                   "method":  "POST",
+                   "endpoint":  "/api/strategies/reload",
+                   "ok":  true,
+                   "count":  114
+               },
+    "factors":  {
+                    "endpoint":  "/api/factors",
+                    "count":  207,
+                    "candidate_factor_present":  true,
+                    "registered":  {
+                                       "id":  "ext_alt_hs300_gross_margin_yoy_improvement_q",
+                                       "label":  "HS300另类因子·毛利率单季同比改善(高好)",
+                                       "group":  "扩展数据",
+                                       "kind":  "base",
+                                       "version":  1,
+                                       "formula":  "扩展表「HS300另类因子」字段 gross_margin_yoy_improvement_q (时序·按交易日对齐)",
+                                       "direction":  "none",
+                                       "pit":  false
+                                   }
+                },
+    "strategies":  {
+                       "endpoint":  "/api/strategies?include_research=true",
+                       "count":  153,
+                       "load_error_count":  0,
+                       "load_errors":  [
+
+                                       ],
+                       "registered":  [
+                                          {
+                                              "id":  "ai_hs300_gross_margin_trend_control",
+                                              "name":  "HS300非金融毛利率同比改善匹配对照",
+                                              "description":  "与R226候选使用相同非金融股票池、毛利率同比改善因子可用性过滤和执行口径，但不把毛利率变化计入评分",
+                                              "tags":  [
+                                                           "质量",
+                                                           "现金质量",
+                                                           "匹配对照",
+                                                           "沪深300",
+                                                           "非金融",
+                                                           "实验",
+                                                           "R226"
+                                                       ],
+                                              "source":  "ai",
+                                              "research_only":  true,
+                                              "execution_backend":  "polars_expr",
+                                              "scoring":  {
+                                                              "uf_quality_value_defensive":  0.545,
+                                                              "uf_cash_quality":  0.455
+                                                          },
+                                              "stop_loss":  -0.2,
+                                              "max_hold_days":  20,
+                                              "limit":  30
+                                          },
+                                          {
+                                              "id":  "ai_hs300_gross_margin_trend_h20_sl20",
+                                              "name":  "HS300非金融毛利率同比改善",
+                                              "description":  "历史沪深300剔除银行和非银金融；单季毛利率同比改善、质量价值防守与现金质量复合；20日持有、-20%止损（R226实验）",
+                                              "tags":  [
+                                                           "毛利率",
+                                                           "同比改善",
+                                                           "定价权",
+                                                           "成本效率",
+                                                           "质量",
+                                                           "现金质量",
+                                                           "沪深300",
+                                                           "非金融",
+                                                           "实验",
+                                                           "R226"
+                                                       ],
+                                              "source":  "ai",
+                                              "research_only":  true,
+                                              "execution_backend":  "polars_expr",
+                                              "scoring":  {
+                                                              "ext_alt_hs300_gross_margin_yoy_improvement_q":  0.45,
+                                                              "uf_quality_value_defensive":  0.3,
+                                                              "uf_cash_quality":  0.25
+                                                          },
+                                              "stop_loss":  -0.2,
+                                              "max_hold_days":  20,
+                                              "limit":  30
+                                          }
+                                      ]
+                   }
+}
