@@ -1,0 +1,79 @@
+{
+    "round": "R237",
+    "registered_at": "2026-10-20",
+    "status": "pre_registered_before_stress_backtest",
+    "hypothesis": "R221 is the only candidate so far that passed every pre-registered D/G gate (full +9.12%, discovery -14.68%, validation +28.96%, recent 12m +8.02%, rolling-1y positive 61.80%). Before treating it as a paper-trading candidate, it must survive cost and position-count stress. This round freezes the R221 factor and strategy and tests a pre-specified cost/capacity matrix: costs 3x/4x/5x/6x and max positions 5/10/20. The hypothesis is that R221 remains positive at 4x and 5x costs and across position counts, rather than depending on a single configuration.",
+    "factor": {
+        "id": "ext_alt_hs300_sga_ratio_4q_low",
+        "definition": "frozen from R221; TTM selling-plus-management expense ratio inverted, four consecutive quarters",
+        "source_evidence": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r221_sga_nonfin_quality.json",
+        "coverage_2022_2026": 0.984464,
+        "recent_12m_coverage": 0.98472,
+        "first_valid_date": "2022-05-05",
+        "independence_mean_abs_monthly_spearman": 0.562022
+    },
+    "strategy": {
+        "candidate": "ai_hs300_sga_nonfin_quality_h20_sl20",
+        "control": "ai_hs300_sga_nonfin_quality_control",
+        "scoring_frozen": {
+            "ext_alt_hs300_sga_ratio_4q_low": 0.45,
+            "uf_quality_value_defensive": 0.3,
+            "uf_cash_quality": 0.25
+        },
+        "holding_days": 20,
+        "stop_loss": -0.2,
+        "position_sizing": "equal"
+    },
+    "stress_matrix": {
+        "cost_multipliers": [
+            3.0,
+            4.0,
+            5.0,
+            6.0
+        ],
+        "max_positions": [
+            5,
+            10,
+            20
+        ],
+        "baseline": {
+            "cost_multiplier": 3.0,
+            "max_positions": 10
+        },
+        "cost_definition": "3x baseline: 6bp fees + 6bp commission + 15bp slippage + 10bp stamp tax; higher multipliers scale all four cost components proportionally"
+    },
+    "execution": {
+        "engine": "StrategyBacktestService",
+        "matching": "open_t+1",
+        "universe": "historical non-financial HS300 membership; daily snapshots from 2022",
+        "segments": [
+            [
+                "2022-07-01",
+                "2024-12-31"
+            ],
+            [
+                "2025-01-02",
+                "2026-10-16"
+            ]
+        ]
+    },
+    "gates": {
+        "R1": "baseline 3x / max_positions 10 full-sample total return reproduces R221 evidence within 0.5pp",
+        "R2": "4x / max_positions 10 full-sample total return is positive",
+        "R3": "5x / max_positions 10 full-sample total return is positive",
+        "R4": "4x / max_positions 10 recent-12m total return is positive",
+        "R5": "all 3x max_positions variants (5/10/20) have positive full-sample total return",
+        "R6": "all 3x max_positions variants (5/10/20) have positive recent-12m total return",
+        "R7": "worst full-sample total return across 3x and 4x variants is greater than -5%",
+        "R8": "worst full-sample MDD across 3x and 4x variants is no worse than -45%",
+        "R9": "baseline rolling-1y positive rate is at least 55% and its 5th-percentile rolling return is greater than -20%"
+    },
+    "decision_rule": "All R gates must pass. The factor definition, scoring weights, universe, holding period and stop loss are frozen. Any failed gate rejects the deployment claim; no post-result tuning of cost, position count, universe or weights is allowed.",
+    "known_limitations": [
+        "This is a stress test of an existing factor, not an independent new alpha discovery.",
+        "The cost multipliers are proportional scaling of the baseline 3x cost model, not a full market-impact model.",
+        "Position count changes concentration but does not model capacity in yuan.",
+        "R221's full-sample MDD is already -32.97%; the stress test only rejects if MDD worsens beyond -45%.",
+        "The result remains research-only; passing stress gates would justify paper trading, not production deployment."
+    ]
+}
