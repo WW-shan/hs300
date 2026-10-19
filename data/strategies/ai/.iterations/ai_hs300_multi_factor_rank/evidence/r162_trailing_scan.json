@@ -1,0 +1,94 @@
+{
+  "purpose": "R162 trailing stop / take-profit scan for the B sleeve",
+  "variants": {
+    "V0_fixed20": {},
+    "V1_trail10": {
+      "stop_loss": null,
+      "trailing_stop": -0.1
+    },
+    "V2_trail15": {
+      "stop_loss": null,
+      "trailing_stop": -0.15
+    },
+    "V3_tp15_8": {
+      "trailing_take_profit_activate": 0.15,
+      "trailing_take_profit_drawdown": 0.08
+    },
+    "V4_tp25_10": {
+      "trailing_take_profit_activate": 0.25,
+      "trailing_take_profit_drawdown": 0.1
+    },
+    "V5_sl20_tp20_8": {
+      "trailing_take_profit_activate": 0.2,
+      "trailing_take_profit_drawdown": 0.08
+    }
+  },
+  "results": {
+    "V0_fixed20": {
+      "windows": 4927,
+      "positive_rate": 0.6921,
+      "return_p05": -0.2174,
+      "return_median": 0.1848,
+      "return_worst": -0.3595,
+      "mdd_p05": -0.3427,
+      "mdd_worst": -0.4065
+    },
+    "V1_trail10": {
+      "windows": 4927,
+      "positive_rate": 0.4404,
+      "return_p05": -0.3541,
+      "return_median": -0.0735,
+      "return_worst": -0.5632,
+      "mdd_p05": -0.3882,
+      "mdd_worst": -0.5643
+    },
+    "V2_trail15": {
+      "windows": 4927,
+      "positive_rate": 0.6144,
+      "return_p05": -0.2787,
+      "return_median": 0.0798,
+      "return_worst": -0.472,
+      "mdd_p05": -0.3422,
+      "mdd_worst": -0.4731
+    },
+    "V3_tp15_8": {
+      "windows": 4927,
+      "positive_rate": 0.6014,
+      "return_p05": -0.2793,
+      "return_median": 0.0886,
+      "return_worst": -0.4526,
+      "mdd_p05": -0.3576,
+      "mdd_worst": -0.4622
+    },
+    "V4_tp25_10": {
+      "windows": 4927,
+      "positive_rate": 0.6393,
+      "return_p05": -0.2402,
+      "return_median": 0.1666,
+      "return_worst": -0.3794,
+      "mdd_p05": -0.3377,
+      "mdd_worst": -0.4032
+    },
+    "V5_sl20_tp20_8": {
+      "windows": 4927,
+      "positive_rate": 0.6012,
+      "return_p05": -0.2055,
+      "return_median": 0.0736,
+      "return_worst": -0.4083,
+      "mdd_p05": -0.3355,
+      "mdd_worst": -0.4136
+    }
+  },
+  "best": "V4_tp25_10",
+  "decision": {
+    "D1": true,
+    "G1": false,
+    "G2": false,
+    "G3": true,
+    "G4": true,
+    "all_pass": false
+  },
+  "caveats": [
+    "Turnover not measured in this scan."
+  ]
+}
