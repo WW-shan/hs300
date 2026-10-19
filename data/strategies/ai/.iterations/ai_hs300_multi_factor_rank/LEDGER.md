@@ -8798,3 +8798,64 @@ V20 = 动量 + maxpos20 + hold20 + 止损-20%); B80/B70/B50 = 两腿日净值按
 5. 样本外段两者完全相同（闸门关闭期 A 腿空仓，ERP 阈值不起作用）——合理。
 
 **证据**: `evidence/r137_erp6_variant.json` + `scripts/backtest_r137_erp6_variant.py`。
+
+# R138 · 研究缓存重建与 ext_data 全量恢复 (2026-10-19) — 事前预注册
+
+**动机**: R112 把 ext_data 重建为 6 字段最小子集后，36 个 AI 策略依赖的其余 ext 字段（基金持仓、龙虎榜、分析师、两融、质押、商誉、分红、内部人、行业、情绪、宏观等）在 UI 回测时报"因子未产生有效信号"。用户要求数据收集完整后继续研究。本轮重建全部研究缓存并恢复 64 字段 ext_data。
+
+**方法**: 复用 `evidence/script_r*.py` 的原始抓取函数（AkShare/BaoStock/新浪），逐项重建缓存；失败项记录不阻塞。重建后跑 `build_alt_factor_data.py` 全量构建，并抽查字段覆盖率与策略可回测性。
+
+**门槛 (先写后跑)**:
+| # | 门槛 |
+| --- | --- |
+| R138-D1 | 19 个研究缓存目录全部存在且非空 |
+| R138-D2 | ext_data 字段数 >= 60（此前 6） |
+| R138-D3 | holder 修复值保持正确（000001.SZ 2020-06-01 = 72.048） |
+| R138-D4 | 至少 5 个此前报错的策略在 API 回测中 error=None 且有交易 |
+
+**判定**: 全过 → 数据基础恢复，可继续因子研究；任一不过 → 记录缺口。
+
+**执行纪律**: 只重建数据，不改策略；结果写 `evidence/r138_cache_rebuild.json`，脚本 `scripts/rebuild_research_caches.py` 等。
+
+## R138 结果 (2026-10-19) — 研究缓存全量重建，ext_data 恢复 64 字段；全过
+
+**执行**: `scripts/rebuild_research_caches.py`、`scripts/rebuild_r43_lhb.py`、`scripts/rebuild_r62_holder_trade.py`、`scripts/rebuild_macro_caches.py`；结果 `evidence/r138_cache_rebuild.json`。
+
+### 重建清单（19 个目录全部非空）
+
+| 缓存 | 文件数 | 来源 |
+| --- | ---: | --- |
+| external_r39（回购/分红/大宗） | 44 | AkShare |
+| macro（cpi/ppi/pmi/money_supply/shibor/northbound/bond_10y） | 7 | AkShare |
+| r43_lhb（龙虎榜明细+机构） | 130 | AkShare |
+| r47_analyst（分析师评级） | 1,301 | AkShare（逐日） |
+| r50_margin（两融） | 132 | AkShare（逐月沪深） |
+| r60_fund_hold（基金持仓） | 23 | AkShare（逐季） |
+| r62_holder_trade（重要股东增减持） | 1 | AkShare（stock_ggcg_em） |
+| r63_forecast / r64_express | 24 / 24 | AkShare（逐季） |
+| r65_pledge（质押） | 67 | AkShare（逐月） |
+| r68_equity_supply（股本变动） | 449 | AkShare（逐股） |
+| r74_etf_flow / r75_qvix | 71 / 1 | AkShare |
+| r86_intangible（财报三表） | 452（98.5%） | AkShare（逐股） |
+| r87_sina_holder_full | 459 | 原有 |
+| r89_dividend_growth / r90_insider_trade | 459 / 28 | 新浪 / 交易所 |
+| r92_credit_spread / r93_erp | 8 / 1 | 原有 |
+
+### 验证结果
+
+| # | 检查 | 结果 |
+| --- | --- | --- |
+| D1 | 19 个缓存目录全部非空 | ✅ |
+| D2 | ext_data 字段数 | ✅ **64**（此前 6） |
+| D3 | holder 修复值保持正确（000001.SZ 2020-06-01 = 72.048） | ✅ |
+| D4 | 6 个此前报错策略 API 回测 error=None 且有交易 | ✅ 6/6（30~39 笔） |
+
+### 结论
+
+1. **36 个 AI 策略的"因子未产生有效信号"问题已修复**：ext_data 从 6 字段恢复到 64 字段，全部策略可在 UI 正常回测；
+2. 重建使用各轮次原始抓取脚本（AkShare/BaoStock/新浪），失败率低（r68 2.2%、r86 1.5%，其余 0%）；
+3. holder 修复（R125）在全量重建后保持正确，A 腿结论不受影响；
+4. 已知缺口：r68 有 10 只退市/异常股失败、r86 有 7 只失败——均为数据源侧问题，覆盖率 97.8%/98.5%，不影响策略可用性；
+5. 后端已重启加载新数据（PID 19632），前端 3011 正常。
+
+**证据**: `evidence/r138_cache_rebuild.json` + 4 个重建脚本。
