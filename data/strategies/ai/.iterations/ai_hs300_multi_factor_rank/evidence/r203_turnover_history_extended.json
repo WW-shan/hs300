@@ -1,0 +1,285 @@
+{
+  "purpose": "R203 system-engine test of 2017-extended turnover gate",
+  "window": [
+    "2018-01-02",
+    "2026-10-16"
+  ],
+  "execution": {
+    "matching": "open_t+1",
+    "cost": "3x: 6bp commission + 15bp slippage + 10bp stamp tax",
+    "max_positions": 300,
+    "holding_days": 20,
+    "universe": "historical HS300 membership; monthly 2018-2020, daily 2020-2026"
+  },
+  "data_check": {
+    "membership_snapshots_2017": 12,
+    "daily_2017_coverage": 1.0,
+    "signal_coverage_2018_2026": 1.0
+  },
+  "runs": {
+    "extended_2017": {
+      "cached": false,
+      "days": 2131,
+      "curve_stats": {
+        "total_return": -0.094265,
+        "annual": -0.011645,
+        "sharpe": -0.1566,
+        "mdd": -0.204747,
+        "days": 2131
+      },
+      "result_stats": {
+        "total_return": -0.0943,
+        "annual_return": -0.0116,
+        "max_drawdown": -0.2047,
+        "sharpe": -0.16,
+        "sortino": -0.22,
+        "calmar": -0.06,
+        "win_rate": 0.4132,
+        "profit_factor": 1.27,
+        "n_trades": 5811,
+        "avg_pnl": -0.0046,
+        "avg_win": 0.0909,
+        "avg_loss": 0.0718,
+        "best": 1.2902,
+        "worst": -0.3814,
+        "median_pnl": -0.0171,
+        "avg_holding_days": 20.1,
+        "final_equity": 905735.01,
+        "initial_capital": 1000000.0,
+        "avg_exposure": 0.1515,
+        "max_exposure": 0.7213,
+        "mc_maxdd_p50": -1.0,
+        "mc_maxdd_p95": -1.0,
+        "execution": {
+          "buy_invalid_price": 0,
+          "buy_suspended": 0,
+          "buy_limit_up": 6,
+          "buy_no_slot": 0,
+          "buy_cash": 0,
+          "buy_lot_size": 2920,
+          "buy_same_day_reentry": 162,
+          "buy_exposure": 0,
+          "buy_score_filter": 0,
+          "sell_invalid_price": 0,
+          "sell_suspended": 382,
+          "sell_limit_down": 5,
+          "pending_exit": 215
+        },
+        "pending_exit_positions": 0,
+        "market_matrix_shape": [
+          2131,
+          549
+        ],
+        "market_matrix_bytes": 52671927,
+        "timing_ms": {
+          "load_panel": 28328.7,
+          "signals_score": 913.2,
+          "matrix_build": 2231.9,
+          "simulate": 1818.0,
+          "statistics": 49.1,
+          "total": 33434.3
+        },
+        "panel_rows": 1100814,
+        "panel_columns": 11,
+        "feature_columns": 102,
+        "full_feature_fallback": false,
+        "execution_backend": "polars_expr",
+        "selection": {
+          "strategy_matches": 9723,
+          "entry_candidates": 9723,
+          "entry_trigger_filtered": 0,
+          "entry_trigger_enabled": false
+        },
+        "shared_market_data": false,
+        "matrix_data_cache_hit": false,
+        "matrix_data_cache_status": "none",
+        "matrix_data_cache_timing_ms": {}
+      }
+    },
+    "baseline_r201": {
+      "cached": false,
+      "days": 2131,
+      "curve_stats": {
+        "total_return": 0.040042,
+        "annual": 0.004656,
+        "sharpe": 0.109,
+        "mdd": -0.222296,
+        "days": 2131
+      },
+      "result_stats": {
+        "total_return": 0.04,
+        "annual_return": 0.0047,
+        "max_drawdown": -0.2223,
+        "sharpe": 0.11,
+        "sortino": 0.15,
+        "calmar": 0.02,
+        "win_rate": 0.4452,
+        "profit_factor": 1.39,
+        "n_trades": 4798,
+        "avg_pnl": 0.0046,
+        "avg_win": 0.0991,
+        "avg_loss": 0.0712,
+        "best": 1.2902,
+        "worst": -0.3558,
+        "median_pnl": -0.0099,
+        "avg_holding_days": 20.0,
+        "final_equity": 1040042.17,
+        "initial_capital": 1000000.0,
+        "avg_exposure": 0.1253,
+        "max_exposure": 0.7517,
+        "mc_maxdd_p50": -1.0,
+        "mc_maxdd_p95": -1.0,
+        "execution": {
+          "buy_invalid_price": 0,
+          "buy_suspended": 0,
+          "buy_limit_up": 6,
+          "buy_no_slot": 0,
+          "buy_cash": 0,
+          "buy_lot_size": 2334,
+          "buy_same_day_reentry": 173,
+          "buy_exposure": 0,
+          "buy_score_filter": 0,
+          "sell_invalid_price": 0,
+          "sell_suspended": 5,
+          "sell_limit_down": 0,
+          "pending_exit": 1
+        },
+        "pending_exit_positions": 0,
+        "market_matrix_shape": [
+          2131,
+          549
+        ],
+        "market_matrix_bytes": 52671927,
+        "timing_ms": {
+          "load_panel": 2383.7,
+          "signals_score": 1142.3,
+          "matrix_build": 2046.6,
+          "simulate": 1537.9,
+          "statistics": 45.7,
+          "total": 7146.0
+        },
+        "panel_rows": 1100814,
+        "panel_columns": 11,
+        "feature_columns": 102,
+        "full_feature_fallback": false,
+        "execution_backend": "polars_expr",
+        "selection": {
+          "strategy_matches": 8181,
+          "entry_candidates": 8181,
+          "entry_trigger_filtered": 0,
+          "entry_trigger_enabled": false
+        },
+        "shared_market_data": false,
+        "matrix_data_cache_hit": false,
+        "matrix_data_cache_status": "none",
+        "matrix_data_cache_timing_ms": {}
+      }
+    }
+  },
+  "results": {
+    "extended_2017": {
+      "strategy_id": "ai_hs300_turnover_level_gate_ext2017",
+      "full": {
+        "total_return": -0.094265,
+        "annual": -0.011645,
+        "sharpe": -0.1566,
+        "mdd": -0.204747,
+        "days": 2131
+      },
+      "independent_2018_2020": {
+        "total_return": -0.00867,
+        "annual": -0.003001,
+        "sharpe": 0.0102,
+        "mdd": -0.130896,
+        "days": 731
+      },
+      "validation_2021_2024": {
+        "total_return": -0.136373,
+        "annual": -0.037449,
+        "sharpe": -0.7392,
+        "mdd": -0.150904,
+        "days": 969
+      },
+      "holdout_2025_2026": {
+        "total_return": 0.057929,
+        "annual": 0.033553,
+        "sharpe": 1.6324,
+        "mdd": -0.010636,
+        "days": 431
+      },
+      "rolling_1y": {
+        "windows": 1880,
+        "positive_rate": 0.4351,
+        "return_p05": -0.0809,
+        "return_median": -0.0123,
+        "return_worst": -0.1265,
+        "mdd_p05": -0.1309,
+        "mdd_worst": -0.1309
+      },
+      "recent_12m": {
+        "total_return": 0.0,
+        "mdd": 0.0
+      }
+    },
+    "baseline_r201": {
+      "strategy_id": "ai_hs300_turnover_level_gate",
+      "full": {
+        "total_return": 0.040042,
+        "annual": 0.004656,
+        "sharpe": 0.109,
+        "mdd": -0.222296,
+        "days": 2131
+      },
+      "independent_2018_2020": {
+        "total_return": 0.15037,
+        "annual": 0.049546,
+        "sharpe": 0.6765,
+        "mdd": -0.091585,
+        "days": 731
+      },
+      "validation_2021_2024": {
+        "total_return": -0.150687,
+        "annual": -0.041628,
+        "sharpe": -0.7637,
+        "mdd": -0.16716,
+        "days": 969
+      },
+      "holdout_2025_2026": {
+        "total_return": 0.0645,
+        "annual": 0.03731,
+        "sharpe": 1.688,
+        "mdd": -0.012555,
+        "days": 431
+      },
+      "rolling_1y": {
+        "windows": 1880,
+        "positive_rate": 0.4431,
+        "return_p05": -0.0837,
+        "return_median": -0.0115,
+        "return_worst": -0.0894,
+        "mdd_p05": -0.1093,
+        "mdd_worst": -0.1093
+      },
+      "recent_12m": {
+        "total_return": 0.0,
+        "mdd": 0.0
+      }
+    }
+  },
+  "decision": {
+    "D1": true,
+    "D2": true,
+    "G1": false,
+    "G2": false,
+    "G3": false,
+    "G4": true,
+    "G5": false,
+    "G6": false,
+    "all_pass": false
+  },
+  "caveats": [
+    "The extended factor changes only the warmup history; the z-score formula and threshold are unchanged.",
+    "The 2017 membership snapshots are monthly; intra-month index changes are not modeled.",
+    "The strategy is an experimental equal-weight basket, not the R131 dual-sleeve portfolio."
+  ]
+}

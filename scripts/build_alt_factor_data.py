@@ -104,6 +104,8 @@ FIELDS = [
     ExtField("top30_amount_share_z", "float", "HS300前30成交额占比扩张z-score(方向负)"),
     ExtField("hs300_turnover_z", "float", "HS300换手率20日均值扩张z-score(方向负)"),
     ExtField("hs300_turnover_chg_20d", "float", "HS300换手率20日均值20日变化(方向负)"),
+    ExtField("hs300_turnover_z_ext2017", "float", "HS300 turnover 20d expanding z-score with 2017 history (direction negative)"),
+    ExtField("hs300_turnover_chg_20d_ext2017", "float", "HS300 turnover 20d mean 20d change with 2017 history (direction negative)"),
     ExtField("goodwill_ratio_low", "float", "商誉/总资产反向"),
     ExtField("intangible_ratio_low", "float", "无形资产/总资产反向"),
     ExtField("rd_intensity", "float", "研发费用/营业收入"),
@@ -1563,6 +1565,33 @@ def _turnover_level_daily(dates: list[date]) -> pl.DataFrame:
     ]).select(["date", "hs300_turnover_z", "hs300_turnover_chg_20d"])
 
 
+def _turnover_extended_daily(dates: list[date]) -> pl.DataFrame:
+    """Market-level HS300 turnover with 2017 history, direction negative.
+
+    Reads evidence/r203_turnover_scan.json, which extends the R201 monthly
+    turnover history through 2017. The signal is broadcast daily with the same
+    45-day freshness cap used by the R201 factor.
+    """
+    evidence = DATA / "strategies" / "ai" / ".iterations" / "ai_hs300_multi_factor_rank" / "evidence" / "r203_turnover_scan.json"
+    if not evidence.exists():
+        raise RuntimeError("R203 turnover scan missing")
+    payload = json.loads(evidence.read_text(encoding="utf-8"))
+    records = payload.get("monthly_records") or []
+    if not records:
+        raise RuntimeError("R203 turnover scan has no monthly records")
+    frame = pl.DataFrame(records).with_columns(pl.col("date").str.to_date()).sort("date")
+    signal = frame.select(["date", "hs300_turnover_z_ext2017", "hs300_turnover_chg_20d"]).with_columns(
+        (pl.col("date") + pl.duration(days=1)).alias("effective_date")
+    ).select(["effective_date", "hs300_turnover_z_ext2017", "hs300_turnover_chg_20d"])
+    daily = pl.DataFrame({"date": dates}).sort("date").join_asof(
+        signal, left_on="date", right_on="effective_date", strategy="backward",
+    ).with_columns((pl.col("date") - pl.col("effective_date")).dt.total_days().alias("_age"))
+    return daily.with_columns([
+        pl.when(pl.col("_age").is_between(0, 45, closed="both")).then(pl.col("hs300_turnover_z_ext2017")).otherwise(None).alias("hs300_turnover_z_ext2017"),
+        pl.when(pl.col("_age").is_between(0, 45, closed="both")).then(pl.col("hs300_turnover_chg_20d")).otherwise(None).alias("hs300_turnover_chg_20d_ext2017"),
+    ]).select(["date", "hs300_turnover_z_ext2017", "hs300_turnover_chg_20d_ext2017"])
+
+
 def _goodwill_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
     paths = sorted((DATA / "research" / "r86_intangible").glob("*.parquet"))
     frames = [pl.read_parquet(path) for path in paths]
@@ -1810,6 +1839,7 @@ def main() -> int:
     shibor_tightness = _shibor_tightness_daily(dates)
     concentration = _concentration_daily(dates)
     turnover_level = _turnover_level_daily(dates)
+    turnover_extended = _turnover_extended_daily(dates)
     goodwill = _goodwill_daily(dates, symbols)
     equity_supply = _equity_supply_daily(dates, symbols)
     erp = _erp_daily(dates)
@@ -1824,7 +1854,7 @@ def main() -> int:
         industry, mainline, margin, short_ratio, goodwill, equity_supply, prices,
     ):
         base = base.join(frame, on=["symbol", "date"], how="left")
-    for frame in (erp, macro, emotion, etf_flow, qvix, macro_extra, regime_extra, northbound, if_position, bond_momentum, ah_premium, hk_risk, margin_safety, breadth, shibor_tightness, concentration, turnover_level):
+    for frame in (erp, macro, emotion, etf_flow, qvix, macro_extra, regime_extra, northbound, if_position, bond_momentum, ah_premium, hk_risk, margin_safety, breadth, shibor_tightness, concentration, turnover_level, turnover_extended):
         base = base.join(frame, on="date", how="left")
     base = base.with_columns(
         pl.when((pl.col("raw_close") > 0) & pl.col("dividend_ttm_cash").is_not_null())
