@@ -109,6 +109,7 @@ FIELDS = [
     ExtField("hs300_turnover_chg_20d_ext2017", "float", "HS300 turnover 20d mean 20d change with 2017 history (direction negative)"),
     ExtField("hs300_turnover_gate_flag_ext2017", "float", "HS300 turnover 20d expanding z-score < 0 gate flag with 2017 history"),
     ExtField("idio_vol_60d_low", "float", "HS300市场模型60日残差波动率反向"),
+    ExtField("price_delay_60d", "float", "HS300市场信息60日价格延迟"),
     ExtField("goodwill_ratio_low", "float", "商誉/总资产反向"),
     ExtField("intangible_ratio_low", "float", "无形资产/总资产反向"),
     ExtField("rd_intensity", "float", "研发费用/营业收入"),
@@ -1891,6 +1892,74 @@ def _idio_vol_daily(prices: pl.DataFrame) -> pl.DataFrame:
     return _residual_volatility_frame(prices, market)
 
 
+def _price_delay_frame(
+    stock_panel: pl.DataFrame,
+    market_panel: pl.DataFrame,
+    *,
+    window_size: int = 60,
+) -> pl.DataFrame:
+    """Compute the one-lag HS300 price-delay ratio.
+
+    The factor compares the stock's response to lagged market returns with
+    its contemporaneous and lagged market response.  A higher positive value
+    means that more of the stock's market response arrives with a delay.
+    """
+    stocks = (
+        stock_panel.select(["symbol", "date", "close"])
+        .sort(["symbol", "date"])
+        .with_columns(
+            (pl.col("close") / pl.col("close").shift(1).over("symbol") - 1.0).alias("_ret")
+        )
+    )
+    market = (
+        market_panel.select(["date", "close"])
+        .unique(subset=["date"], keep="last")
+        .sort("date")
+        .with_columns(
+            (pl.col("close") / pl.col("close").shift(1) - 1.0).alias("_market_ret")
+        )
+        .with_columns(pl.col("_market_ret").shift(1).alias("_market_ret_lag1"))
+        .select(["date", "_market_ret", "_market_ret_lag1"])
+    )
+    return (
+        stocks.join(market, on="date", how="left")
+        .with_columns([
+            pl.rolling_cov(
+                "_ret", "_market_ret", window_size=window_size, min_samples=window_size
+            ).over("symbol").alias("_cov0"),
+            pl.col("_market_ret").rolling_var(window_size, min_samples=window_size).over("symbol").alias("_var0"),
+            pl.rolling_cov(
+                "_ret", "_market_ret_lag1", window_size=window_size, min_samples=window_size
+            ).over("symbol").alias("_cov1"),
+            pl.col("_market_ret_lag1").rolling_var(window_size, min_samples=window_size).over("symbol").alias("_var1"),
+        ])
+        .with_columns([
+            pl.when(pl.col("_var0") > 0.0).then(pl.col("_cov0") / pl.col("_var0")).otherwise(None).alias("_beta0"),
+            pl.when(pl.col("_var1") > 0.0).then(pl.col("_cov1") / pl.col("_var1")).otherwise(None).alias("_beta1"),
+        ])
+        .with_columns(
+            pl.when(pl.col("_beta0").is_not_null() & pl.col("_beta1").is_not_null())
+            .then(pl.col("_beta1") / (pl.col("_beta0").abs() + pl.col("_beta1").abs() + 1e-6))
+            .otherwise(None)
+            .alias("price_delay_60d")
+        )
+        .select(["symbol", "date", "price_delay_60d"])
+    )
+
+
+def _price_delay_daily(prices: pl.DataFrame) -> pl.DataFrame:
+    index_paths = sorted((DATA / "kline_index_daily").glob("date=*/part.parquet"))
+    if not index_paths:
+        raise RuntimeError("kline_index_daily 为空，无法计算 HS300 价格延迟")
+    market = (
+        pl.scan_parquet([str(path) for path in index_paths])
+        .filter(pl.col("symbol") == "000300.SH")
+        .select(["date", "close"])
+        .collect()
+    )
+    return _price_delay_frame(prices, market)
+
+
 def _prices(dates: list[date], symbols: list[str]) -> pl.DataFrame:
     paths = sorted((DATA / "kline_daily_enriched").glob("date=*/part.parquet"))
     return (
@@ -1961,12 +2030,13 @@ def main() -> int:
     emotion = _emotion_daily(dates)
     prices = _prices(dates, symbols)
     idio_vol = _idio_vol_daily(prices)
+    price_delay = _price_delay_daily(prices)
 
     base = _calendar_frame(dates, symbols)
     for frame in (
         holder, dividend, insider, holder_trade, fund_holding,
         lhb, pledge, repurchase, block_trade, analyst, forecast, express,
-        industry, mainline, margin, short_ratio, goodwill, equity_supply, prices, idio_vol,
+        industry, mainline, margin, short_ratio, goodwill, equity_supply, prices, idio_vol, price_delay,
     ):
         base = base.join(frame, on=["symbol", "date"], how="left")
     for frame in (erp, macro, emotion, etf_flow, qvix, macro_extra, regime_extra, northbound, if_position, bond_momentum, ah_premium, hk_risk, margin_safety, breadth, shibor_tightness, concentration, turnover_level, turnover_extended):
@@ -1999,7 +2069,7 @@ def main() -> int:
         description=(
             "研究实验数据: 增持/减持事件、股东结构变化、基金持仓拥挤度、两融、"
             "龙虎榜、质押、回购、大宗交易、分析师、业绩预告/快报、商誉与研发、"
-            "股权融资供给、分红、ERP、信用/期限利差、市场情绪和HS300残差波动率。"
+            "股权融资供给、分红、ERP、信用/期限利差、市场情绪、HS300残差波动率和价格延迟。"
             "仅用于实验策略，不构成可部署结论。"
         ),
     )
