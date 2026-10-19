@@ -7,7 +7,7 @@
         "id": "ext_alt_hs300_cash_to_assets",
         "raw_field": "cash_to_assets",
         "formula": "cash and cash equivalents divided by total assets; higher means a larger liquidity buffer",
-        "point_in_time": "statutory-deadline fallback via financial_pit_date; local 2021Q1-2026Q2 balance-sheet snapshots; no 2018-2020 restated data used",
+        "point_in_time": "statutory disclosure deadline plus three calendar days; provider announce dates are ignored because they are last-update timestamps and mixing them with statutory fallbacks makes effective dates non-monotonic; when two period ends share one effective date, the later period end wins",
         "missing_policy": "no filling, no zero substitution, no fallback to debt ratio, ocf_ni, accrual or cash-flow stability factors",
         "effective_date": "balance-sheet PIT effective date (announce date when valid, otherwise statutory deadline plus three calendar days)"
     },
@@ -103,5 +103,13 @@
         "Cash intensity can reflect pre-announced capex or acquisitions rather than pure defensive strength; it is not a measure of cash quality or profitability.",
         "Financial firms are excluded because cash and leverage definitions are not economically comparable.",
         "The factor is research-only until every pre-registered gate passes."
-    ]
+    ],
+    "revision_note": {
+        "recorded_at": "2026-10-20",
+        "recorded_before_any_strategy_backtest": true,
+        "original_point_in_time": "financial_pit_date (announce date when valid, otherwise statutory deadline plus three calendar days)",
+        "reason": "Mixing provider announce dates with statutory fallbacks produced non-monotonic effective dates: 25208 of 111313 balance-sheet rows had an effective date later than the next quarter's effective date, which would let an older annual report overwrite a newer quarterly report in join_asof.",
+        "change": "Use statutory disclosure deadline plus three calendar days, matching the R216/R218/R219/R229 builder family; on a shared effective date keep the later period end.",
+        "scope": "No gate, direction, weight, position count, holding period or stop-loss was changed."
+    }
 }

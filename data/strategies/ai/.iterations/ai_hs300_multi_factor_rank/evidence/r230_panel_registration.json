@@ -1,0 +1,84 @@
+{
+    "round": "R230",
+    "captured_at": "2026-10-19T20:25:37.933337+00:00",
+    "api_base": "http://127.0.0.1:3018",
+    "reload": {
+        "method": "POST",
+        "endpoint": "/api/strategies/reload",
+        "ok": true,
+        "count": 114
+    },
+    "factors": {
+        "endpoint": "/api/factors",
+        "count": 210,
+        "candidate_factor_present": true,
+        "registered": {
+            "id": "ext_alt_hs300_cash_to_assets",
+            "label": "HS300另类因子·现金及等价物/总资产(高好)",
+            "group": "扩展数据",
+            "kind": "base",
+            "version": 1,
+            "formula": "扩展表「HS300另类因子」字段 cash_to_assets (时序·按交易日对齐)",
+            "direction": "none",
+            "pit": false
+        }
+    },
+    "strategies": {
+        "endpoint": "/api/strategies?include_research=true",
+        "count": 161,
+        "load_error_count": 0,
+        "load_errors": [],
+        "registered": [
+            {
+                "id": "ai_hs300_cash_to_assets_quality_control",
+                "name": "HS300非金融现金资产比匹配对照",
+                "description": "与R230候选使用相同非金融股票池、现金资产比可用性过滤和执行口径，但不把现金资产比计入评分。",
+                "tags": [
+                    "质量",
+                    "现金质量",
+                    "匹配对照",
+                    "沪深300",
+                    "非金融",
+                    "实验",
+                    "R230"
+                ],
+                "source": "ai",
+                "research_only": true,
+                "execution_backend": "polars_expr",
+                "scoring": {
+                    "uf_quality_value_defensive": 0.545,
+                    "uf_cash_quality": 0.455
+                },
+                "stop_loss": -0.2,
+                "max_hold_days": 20,
+                "limit": 30
+            },
+            {
+                "id": "ai_hs300_cash_to_assets_quality_h20_sl20",
+                "name": "HS300非金融现金资产比",
+                "description": "历史沪深300剔除银行和非银金融；现金及等价物/总资产、质量价值防守与现金质量复合；30只、20日持有、-20%止损（R230实验）。",
+                "tags": [
+                    "现金",
+                    "流动性",
+                    "资产负债表",
+                    "质量",
+                    "沪深300",
+                    "非金融",
+                    "实验",
+                    "R230"
+                ],
+                "source": "ai",
+                "research_only": true,
+                "execution_backend": "polars_expr",
+                "scoring": {
+                    "ext_alt_hs300_cash_to_assets": 0.45,
+                    "uf_quality_value_defensive": 0.3,
+                    "uf_cash_quality": 0.25
+                },
+                "stop_loss": -0.2,
+                "max_hold_days": 20,
+                "limit": 30
+            }
+        ]
+    }
+}

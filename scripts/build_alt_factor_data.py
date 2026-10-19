@@ -119,6 +119,7 @@ FIELDS = [
     ExtField("market_skew_60d_low", "float", "HS300 60日已实现偏度反向"),
     ExtField("cash_flow_stability_4q_low", "float", "经营现金流/总资产4季稳定性反向"),
     ExtField("ocf_margin_4q", "float", "TTM经营现金流/营收(高好)"),
+    ExtField("cash_to_assets", "float", "现金及等价物/总资产(高好)"),
     ExtField("net_financing_4q_low", "float", "净筹资现金流/总资产4季强度反向"),
     ExtField("sga_ratio_4q_low", "float", "销售+管理费用/营收4季费用率反向"),
     ExtField("sga_ratio_4q_industry_neutral", "float", "销售+管理费用率4季行业内分位(高好)"),
@@ -2380,6 +2381,59 @@ def _cash_flow_stability_daily(dates: list[date], symbols: list[str]) -> pl.Data
     )
 
 
+def _cash_to_assets_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
+    """Compute cash and cash equivalents divided by total assets.
+
+    Effective date is the statutory disclosure deadline plus three calendar
+    days, matching the R216/R218/R219/R229 builders. Provider announce dates
+    are not used because they are last-update timestamps, and mixing them with
+    statutory fallbacks makes effective dates non-monotonic across quarters.
+    When two period ends share the same deadline (annual report and Q1), the
+    later period end wins.
+    """
+    from app.backtest.fundamentals import _statutory_deadline
+
+    balance = pl.read_parquet(DATA / "financials" / "balance_sheet" / "part.parquet").select([
+        pl.col("symbol").cast(pl.String),
+        pl.col("period_end").cast(pl.Date),
+        pl.col("cash_and_equivalents").cast(pl.Float64),
+        pl.col("total_assets").cast(pl.Float64),
+    ])
+    financial = (
+        balance
+        .unique(subset=["symbol", "period_end"], keep="last")
+        .with_columns(
+            pl.col("period_end")
+            .map_elements(_statutory_deadline, return_dtype=pl.Date)
+            .dt.offset_by("3d")
+            .alias("effective_date")
+        )
+        .with_columns(
+            pl.when(pl.col("total_assets") > 0)
+            .then(pl.col("cash_and_equivalents") / pl.col("total_assets"))
+            .otherwise(None)
+            .alias("cash_to_assets")
+        )
+        .filter(pl.col("cash_to_assets").is_not_null())
+        .sort(["symbol", "effective_date", "period_end"])
+        .unique(subset=["symbol", "effective_date"], keep="last")
+        .select(["symbol", "effective_date", "cash_to_assets"])
+        .sort(["symbol", "effective_date"])
+    )
+    daily = _calendar_frame(dates, symbols).select(["symbol", "date"]).sort(["symbol", "date"])
+    return (
+        daily.join_asof(
+            financial.rename({"effective_date": "_effective"}),
+            left_on="date",
+            right_on="_effective",
+            by="symbol",
+            strategy="backward",
+            check_sortedness=False,
+        )
+        .select(["symbol", "date", "cash_to_assets"])
+    )
+
+
 def _ocf_margin_4q_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
     """Compute trailing-four-quarter operating cash flow divided by revenue."""
     from app.backtest.fundamentals import _statutory_deadline
@@ -3164,6 +3218,7 @@ def main() -> int:
     market_skew = _market_skew_daily(dates)
     cash_flow_stability = _cash_flow_stability_daily(dates, symbols)
     ocf_margin = _ocf_margin_4q_daily(dates, symbols)
+    cash_to_assets = _cash_to_assets_daily(dates, symbols)
     net_financing = _net_financing_4q_daily(dates, symbols)
     sga_ratio = _sga_ratio_4q_daily(dates, symbols)
     management_expense_ratio = _management_expense_ratio_4q_daily(dates, symbols)
@@ -3176,7 +3231,7 @@ def main() -> int:
     for frame in (
         holder, dividend, insider, holder_trade, fund_holding,
         lhb, pledge, repurchase, block_trade, analyst, forecast, express,
-        industry, mainline, margin, short_ratio, goodwill, equity_supply, prices, idio_vol, price_delay, cs_spread, vol_of_vol, market_down_beta, beta_asymmetry, trend_efficiency, risk_adjusted_momentum, cash_flow_stability, ocf_margin, net_financing, sga_ratio, management_expense_ratio, gross_margin_stability, gross_margin_yoy_improvement, sga_stability,
+        industry, mainline, margin, short_ratio, goodwill, equity_supply, prices, idio_vol, price_delay, cs_spread, vol_of_vol, market_down_beta, beta_asymmetry, trend_efficiency, risk_adjusted_momentum, cash_flow_stability, ocf_margin, cash_to_assets, net_financing, sga_ratio, management_expense_ratio, gross_margin_stability, gross_margin_yoy_improvement, sga_stability,
     ):
         base = base.join(frame, on=["symbol", "date"], how="left")
     industry_snapshot = load_industry_l1(DATA).select(["symbol", "industry_l1"])
@@ -3212,7 +3267,7 @@ def main() -> int:
         description=(
             "研究实验数据: 增持/减持事件、股东结构变化、基金持仓拥挤度、两融、"
             "龙虎榜、质押、回购、大宗交易、分析师、业绩预告/快报、商誉与研发、"
-            "股权融资供给、分红、ERP、信用/期限利差、市场情绪、HS300残差波动率、价格延迟、Corwin-Schultz价差、波动率稳定性、市场下跌条件beta、beta不对称性、趋势效率、风险调整动量、市场已实现偏度、现金流稳定性、OCF利润率、净筹资强度、SG&A费用率、SG&A费用率环比改善、SG&A费用率稳定性、管理费用率、毛利率稳定性、毛利率同比改善和SG&A行业内分位。"
+            "股权融资供给、分红、ERP、信用/期限利差、市场情绪、HS300残差波动率、价格延迟、Corwin-Schultz价差、波动率稳定性、市场下跌条件beta、beta不对称性、趋势效率、风险调整动量、市场已实现偏度、现金流稳定性、OCF利润率、现金/总资产、净筹资强度、SG&A费用率、SG&A费用率环比改善、SG&A费用率稳定性、管理费用率、毛利率稳定性、毛利率同比改善和SG&A行业内分位。"
             "仅用于实验策略，不构成可部署结论。"
         ),
     )
