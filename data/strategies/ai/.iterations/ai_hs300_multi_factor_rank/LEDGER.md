@@ -8859,3 +8859,61 @@ V20 = 动量 + maxpos20 + hold20 + 止损-20%); B80/B70/B50 = 两腿日净值按
 5. 后端已重启加载新数据（PID 19632），前端 3011 正常。
 
 **证据**: `evidence/r138_cache_rebuild.json` + 4 个重建脚本。
+
+# R139 · 全量 64 字段因子 IC 扫描（修复数据） (2026-10-19) — 事前预注册
+
+**动机**: R138 恢复了 64 字段 ext_data；R125 修复了 holder 错位。此前 R96/R97 的因子筛选是在污染数据上做的（holder 错位 + 部分字段缺失）。本轮用修复后的数据对全部 ext 因子做统一 IC 扫描，找出真正有横截面预测力的因子，作为后续策略组合的输入。
+
+**数据**: 修复后 ext_data 64 字段（2021-06-01~2026-10-16，日频 459 只）+ kline_daily_enriched。
+
+**方法**:
+- 对每个 ext 字段计算月度横截面 Spearman IC（月频调仓对齐，T+1 可交易）；
+- Discovery（2021-06~2023-12）与 Validation（2024-01~2026-10）分段；
+- 门槛：Discovery |IC| >= 0.02 且 Validation 同号且 |IC| >= 0.015，覆盖月数 >= 24；
+- 同时报告因子间相关性与方向（正/负向）。
+
+**门槛 (先写后跑)**:
+| # | 门槛 |
+| --- | --- |
+| R139-D1 | 扫描 >= 60 个字段；每字段有效月数 >= 12 |
+| R139-G1 | 至少 3 个字段通过 Discovery+Validation 双段 IC 门槛 |
+| R139-G2 | 通过的字段中至少 1 个与现有策略评分字段（holder_top10、stock_rel_industry、fund_*、margin_*）不同 |
+| R139-G3 | 通过字段的 Discovery/Validation IC 同号率 100%（无符号翻转） |
+
+**判定**: 全过 → 记录候选因子清单，进入独立策略构建轮次；任一不过 → 记录 IC 分布，说明当前字段集无新 alpha。
+
+**执行纪律**: 纯扫描，不建策略；结果写 `evidence/r139_full_ic_scan.json`，脚本 `scripts/backtest_r139_full_ic_scan.py`。
+
+## R139 结果 (2026-10-19) — 64 字段 IC 扫描：仅 1 字段双段稳定；多数字段符号翻转
+
+**执行**: `scripts/backtest_r139_full_ic_scan.py`；结果 `evidence/r139_full_ic_scan.json`。64 字段、月频横截面 Spearman IC、Discovery 2021-06~2023-12（31 月）vs Validation 2024-01~2026-10（32 月）。
+
+### 通过双段门槛（|IC_disc| >= 0.02 且 |IC_val| >= 0.015 且同号）
+
+| 字段 | Disc IC | Val IC | 方向 |
+| --- | ---: | ---: | --- |
+| lhb_event_count_20d_low | +0.0439 | +0.0249 | 高（龙虎榜事件少 → 未来收益高） |
+
+仅 1 个字段通过（G1 需 >= 3，**未过**）。
+
+### 关键观察（IC 符号翻转的字段）
+
+| 字段 | Disc IC | Val IC | 说明 |
+| --- | ---: | ---: | --- |
+| rd_intensity | -0.0394 | **+0.0584** | 完全翻转 |
+| forecast_surprise_60d | -0.0202 | **+0.0293** | 翻转 |
+| industry_mom_60d | -0.0519 | **+0.0290** | 翻转 |
+| dividend_growth_ttm | -0.0395 | **+0.0240** | 翻转 |
+| holder_top10_free_float_share | +0.0499 | **-0.0245** | 翻转（A 腿核心字段！） |
+| dividend_yield | +0.0962 | +0.0102 | 衰减 90% |
+| fund_holding_ratio_low | +0.0736 | +0.0082 | 衰减 89% |
+
+### 判定与结论
+
+- D1/G2/G3 通过；**G1 未过**（1 < 3）。总体未过。
+- **重要负面知识 1**：64 个字段中，多数在 Discovery 的 IC 无法在 Validation 保持——包括 A 腿核心字段 `holder_top10_free_float_share`（+0.0499 → -0.0245，符号翻转）。这解释了为什么 A 腿的价值不在单因子 IC，而在**宏观闸门 + 多因子组合**（R125~R137 的结论）。
+- **重要负面知识 2**：`dividend_yield`（+0.0962 → +0.0102）和 `fund_holding_ratio_low`（+0.0736 → +0.0082）在 Discovery 极强但 Validation 衰减 90%——与 R98 的"当前名单高估"结论一致。
+- **唯一稳定字段** `lhb_event_count_20d_low`：龙虎榜事件数量少（低关注度）→ 未来收益高，两段同号且量级稳定（+0.044/+0.025）。这是本轮唯一可进入策略构建的候选。
+- 不据此调整任何现有策略；`lhb_event_count_20d_low` 进入独立策略轮次（需先预注册）。
+
+**证据**: `evidence/r139_full_ic_scan.json` + `scripts/backtest_r139_full_ic_scan.py`。
