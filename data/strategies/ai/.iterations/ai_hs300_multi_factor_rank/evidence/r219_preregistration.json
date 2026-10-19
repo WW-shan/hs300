@@ -1,0 +1,75 @@
+{
+  "round": "R219",
+  "registered_at": "2026-10-20",
+  "status": "pre_registered_before_factor_generation_and_backtest",
+  "hypothesis": "Firms with lower selling and administrative expense intensity may have better cost discipline and operating efficiency. A low trailing-four-quarter selling-plus-management expense ratio may therefore add independent quality information when combined with defensive quality and cash quality.",
+  "factor": {
+    "id": "ext_alt_hs300_sga_ratio_4q_low",
+    "raw_field": "sga_ratio_4q_low",
+    "formula": "negative trailing-four-quarter (selling expenses + management expenses) divided by trailing-four-quarter revenue; higher is better (lower expense intensity)",
+    "quarterly_flows": "de-cumulated from year-to-date selling expenses, management expenses, and revenue; Q1 uses the reported cumulative value and later quarters subtract the immediately preceding quarter",
+    "effective_date": "maximum statutory disclosure deadline of the four quarters plus four calendar days; no signal before that date",
+    "direction": "higher is better",
+    "point_in_time": "statutory-deadline fallback; local 2021Q1-2026Q2 financial snapshots; no 2018-2020 restated data used"
+  },
+  "candidate_strategy": {
+    "id": "ai_hs300_sga_efficiency_quality_h20_sl20",
+    "scoring": {
+      "ext_alt_hs300_sga_ratio_4q_low": 0.45,
+      "uf_quality_value_defensive": 0.3,
+      "uf_cash_quality": 0.25
+    },
+    "limit": 30,
+    "max_hold_days": 20,
+    "stop_loss": -0.2
+  },
+  "control_strategy": {
+    "id": "ai_hs300_sga_efficiency_quality_control",
+    "purpose": "Matched universe, factor availability filter, and execution; SG&A efficiency is not a score component.",
+    "scoring": {
+      "uf_quality_value_defensive": 0.545,
+      "uf_cash_quality": 0.455
+    },
+    "limit": 30,
+    "max_hold_days": 20,
+    "stop_loss": -0.2
+  },
+  "execution": {
+    "engine": "StrategyBacktestService",
+    "matching": "open_t+1",
+    "cost": "3x: 6bp commission + 15bp slippage + 10bp stamp tax",
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "universe": "historical HS300 membership; daily snapshots from 2022",
+    "segments": [
+      ["2022-07-01", "2024-12-31"],
+      ["2025-01-02", "2026-10-16"]
+    ]
+  },
+  "samples": {
+    "discovery": ["2022-07-01", "2024-12-31"],
+    "validation": ["2025-01-02", "2026-10-16"],
+    "recent_12m": "last 252 trading-day returns of the stitched 2022-2026 curve",
+    "rolling_1y": "252-trading-day rolling compounded return over the stitched 2022-2026 curve",
+    "excluded_early_sample": "2018-2020 is excluded because the available 2017-2020 financial cache lacks reliable first-disclosure dates and would mix restated values into the signal."
+  },
+  "gates": {
+    "D1": "factor coverage within historical HS300 membership over 2022-2026 is at least 90%",
+    "D2": "first valid value occurs by 2022-06-30 and recent-12m coverage is at least 95%",
+    "G1": "discovery 2022-2024 total return is at least control + 5pp",
+    "G2": "discovery 2022-2024 MDD is no worse than control by more than 2pp",
+    "G3": "validation 2025-2026 total return is at least control - 5pp",
+    "G4": "full-sample rolling-1y positive rate is at least control",
+    "G5": "full-sample MDD is no worse than control by more than 2pp",
+    "G6": "full-sample total return is at least control - 5pp",
+    "G7": "recent 12m total return is positive and recent 12m MDD is no worse than control by more than 2pp",
+    "G8": "full-sample total return is positive"
+  },
+  "decision_rule": "All D and G gates must pass. The four-quarter window, statutory-deadline fallback, direction, score weights, stock count, holding period, and stop loss are frozen before results; no post-result relaxation is allowed.",
+  "known_limitations": [
+    "Selling and management expense classifications and revenue definitions vary across firms, especially financial companies.",
+    "The local financial tables are current snapshots; statutory deadlines are used because provider announcement dates are not reliable first-disclosure timestamps.",
+    "Restatement risk remains and is not fully eliminated. The 2018-2020 R83 cross-sections are deliberately not used in the decision sample.",
+    "The factor is research-only until every pre-registered gate passes."
+  ]
+}
