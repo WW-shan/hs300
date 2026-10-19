@@ -6,10 +6,10 @@
   "factor": {
     "id": "ext_alt_hs300_trend_efficiency_60d",
     "raw_field": "trend_efficiency_60d",
-    "formula": "net simple return over 60 returns divided by the sum of absolute daily simple returns over the same 60 returns; null when the path sum is non-positive",
-    "returns": "adjusted close-to-close returns from kline_daily_enriched",
+    "formula": "net log return over 60 returns divided by the sum of absolute daily log returns over the same 60 returns; null when the path sum is non-positive",
+    "returns": "adjusted close-to-close log returns from kline_daily_enriched",
     "window": 60,
-    "direction": "higher is better",
+    "direction": "higher is better; values are bounded by [-1, 1]",
     "point_in_time": "signal date t uses returns through close t; execution remains T+1 open",
     "rationale": "Kaufman-style trend efficiency rewards a persistent directional path and penalizes noisy round trips; it is not a raw return, volatility, skew, or volume factor."
   },
@@ -90,5 +90,6 @@
     "Trend efficiency is a price-path statistic and may correlate with momentum or low volatility; the matched control isolates the score contribution but does not prove an orthogonal risk premium.",
     "2018-2020 HS300 membership uses monthly snapshots, so intra-month index changes are not modeled.",
     "The factor is research-only until every preregistered gate passes."
-  ]
+  ],
+  "revision_note": "The initial draft specified simple returns and incorrectly stated a [-1,1] bound. Before factor generation or market backtesting, the definition was corrected to daily log returns so net log return divided by absolute log-return path is strictly bounded by one. Formula, gates, weights and sample split are otherwise unchanged."
 }
