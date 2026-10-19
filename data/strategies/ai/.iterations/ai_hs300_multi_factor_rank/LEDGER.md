@@ -8917,3 +8917,59 @@ V20 = 动量 + maxpos20 + hold20 + 止损-20%); B80/B70/B50 = 两腿日净值按
 - 不据此调整任何现有策略；`lhb_event_count_20d_low` 进入独立策略轮次（需先预注册）。
 
 **证据**: `evidence/r139_full_ic_scan.json` + `scripts/backtest_r139_full_ic_scan.py`。
+
+# R140 · 事件/行为策略批次在修复数据上的复验 (2026-10-19) — 事前预注册
+
+**动机**: R100/R101/R105/R106 批次的事件/行为策略（龙虎榜、两融、质押、回购、大宗、分析师、业绩预告、商誉、内部人、股息、基金、供给、主线、情绪、风险偏好、宏观流动性、行业动量）都在 holder 错位 + ext 字段缺失的污染数据上回测。R138 恢复 64 字段后必须复验：哪些策略在干净数据上依然有效，哪些是数据缺陷的假象。
+
+**数据**: 修复后 ext_data 64 字段 + 日频历史 HS300 成分 + 3x 成本。
+
+**方法**: 对 18 个事件/行为策略各跑全周期（2021-06-01~2026-10-16，max_positions=10，T+1 开盘成交），记录收益/Sharpe/MDD/交易数；与各策略在 LEDGER 中的历史记录对比，标注"改善/持平/恶化"。
+
+**门槛 (先写后跑)**:
+| # | 门槛 |
+| --- | --- |
+| R140-D1 | 18 个策略全部产出（无 error） |
+| R140-G1 | 至少 3 个策略全周期 Sharpe >= 0.5 |
+| R140-G2 | 至少 1 个策略 Sharpe >= 0.7 且 MDD >= -25% |
+| R140-G3 | 龙虎榜质量（唯一稳定 IC 字段所属策略）Sharpe >= 0.5 |
+
+**判定**: 全过 → 记录修复数据下的有效策略清单，进入相位验证；任一不过 → 记录实际表现，说明事件维度无有效策略。
+
+**执行纪律**: 只跑回测不改策略；结果写 `evidence/r140_event_batch_fixed.json`，脚本 `scripts/backtest_r140_event_batch_fixed.py`。
+
+## R140 结果 (2026-10-19) — 事件/行为策略批次在修复数据上全军未过；最高 Sharpe 0.28
+
+**执行**: `scripts/backtest_r140_event_batch_fixed.py`；结果 `evidence/r140_event_batch_fixed.json`。18 个策略、全周期 2021-06-01~2026-10-16、3x 成本、日频历史成分、T+1。
+
+| 策略 | 收益 | Sharpe | MDD | 交易数 |
+| --- | ---: | ---: | ---: | ---: |
+| goodwill_quality | +21.8% | **0.28** | -36.9% | 380 |
+| earnings_surprise_quality | +16.4% | 0.24 | -36.6% | 652 |
+| dividend_yield_quality | +14.0% | 0.23 | -19.3% | 379 |
+| lhb_quality | +9.0% | 0.19 | -34.3% | 451 |
+| industry_momentum_quality | +8.2% | 0.19 | -52.2% | 380 |
+| fund_reduction_quality | +6.7% | 0.17 | -31.6% | 380 |
+| low_fund_crowding_quality | -2.5% | 0.07 | -32.6% | 379 |
+| margin_quality | -9.9% | -0.01 | -29.1% | 380 |
+| analyst_quality | -15.7% | -0.03 | -44.4% | 380 |
+| insider_net_quality | -6.8% | -0.04 | -23.4% | 402 |
+| block_trade_quality | -9.0% | -0.05 | -26.5% | 380 |
+| pledge_quality | -16.7% | -0.12 | -32.5% | 330 |
+| repurchase_quality | -22.7% | -0.15 | -39.7% | 543 |
+| supply_quality | -20.4% | -0.15 | -30.5% | 380 |
+| macro_liquidity_quality | -18.3% | -0.16 | -32.2% | 290 |
+| risk_appetite_quality | -16.4% | -0.17 | -28.2% | 240 |
+| mainline_quality | -18.4% | -0.19 | -27.9% | 204 |
+| emotion_quality | -28.8% | -0.29 | -36.5% | 370 |
+
+**判定**: D1 通过（18/18 无 error）；**G1/G2/G3 全部未过**（无一策略 Sharpe >= 0.5；最高 0.28；龙虎榜 0.19 < 0.5）。
+
+**结论**:
+1. **事件/行为维度在干净数据上确认无效**：18 个策略全部 Sharpe < 0.3，一半为负；此前 R100/R101 批次的部分正收益是数据缺陷（holder 错位 + ext 字段缺失导致的信号稀疏）造成的假象；
+2. 与 R139 一致：唯一稳定 IC 字段 `lhb_event_count_20d_low` 所属的 lhb_quality 仅 Sharpe 0.19、MDD -34.3%，单因子稳定 IC 不足以支撑策略；
+3. 最好的三个（goodwill/earnings_surprise/dividend_yield）Sharpe 也仅 0.23~0.28，且 MDD 深（-19%~-37%），远不及双袖候选（Sharpe 0.88、MDD -16.7%）；
+4. **负面知识**：事件驱动、资金行为、分析师、情绪、主线、宏观流动性等维度均不能作为独立 alpha 来源；双袖候选（宏观闸门质量 + 行业相对强弱 + 波动率目标）仍是唯一通过全部检验的形态；
+5. 不据此调整任何策略；事件维度关闭，不再投入。
+
+**证据**: `evidence/r140_event_batch_fixed.json` + `scripts/backtest_r140_event_batch_fixed.py`。
