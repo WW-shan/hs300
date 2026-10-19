@@ -1,0 +1,247 @@
+{
+  "purpose": "R212 market-down-beta quality candidate versus a matched quality-cash control",
+  "preregistration": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r212_preregistration.json",
+  "window": [
+    "2018-01-02",
+    "2026-10-16"
+  ],
+  "factor": {
+    "id": "ext_alt_hs300_market_down_beta_60d_low",
+    "column": "market_down_beta_60d_low",
+    "formula": "negative conditional OLS beta of stock returns on HS300 down-day returns over 60 returns, with at least 12 down days",
+    "coverage": {
+      "eligible_member_rows": 639300,
+      "valid_member_rows": 607299,
+      "coverage_2018_2026": 0.949944,
+      "recent_member_rows": 75600,
+      "recent_valid_rows": 75471,
+      "recent_12m_coverage": 0.998294,
+      "first_valid_date": "2018-04-03",
+      "required_trading_date": "2018-04-03",
+      "factor_min": -10.627397,
+      "factor_median": -1.003798,
+      "factor_max": 7.233191
+    }
+  },
+  "execution": {
+    "engine": "StrategyBacktestService",
+    "matching": "open_t+1",
+    "cost": "3x: 6bp commission + 15bp slippage + 10bp stamp tax",
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "holding_days": 20,
+    "stop_loss": -0.2,
+    "universe": "historical HS300 membership; monthly 2018-2020, daily 2021-2026",
+    "segments": [
+      [
+        "2018-01-02",
+        "2020-12-31"
+      ],
+      [
+        "2021-01-04",
+        "2024-12-31"
+      ],
+      [
+        "2025-01-02",
+        "2026-10-16"
+      ]
+    ],
+    "stitching": "segment returns compounded into one curve; first day of each later segment skipped"
+  },
+  "strategies": {
+    "candidate": "ai_hs300_market_down_beta_quality_h20_sl20",
+    "control": "ai_hs300_market_down_beta_quality_control"
+  },
+  "runs": {
+    "candidate": [
+      {
+        "start": "2018-01-02",
+        "end": "2020-12-31",
+        "cached": true,
+        "days": 731,
+        "curve_stats": {
+          "total_return": 0.105033,
+          "annual": 0.035079,
+          "sharpe": 0.2654,
+          "mdd": -0.334187,
+          "days": 731
+        }
+      },
+      {
+        "start": "2021-01-04",
+        "end": "2024-12-31",
+        "cached": true,
+        "days": 969,
+        "curve_stats": {
+          "total_return": -0.628518,
+          "annual": -0.227245,
+          "sharpe": -1.0766,
+          "mdd": -0.72452,
+          "days": 969
+        }
+      },
+      {
+        "start": "2025-01-02",
+        "end": "2026-10-16",
+        "cached": true,
+        "days": 431,
+        "curve_stats": {
+          "total_return": -0.010639,
+          "annual": -0.006249,
+          "sharpe": 0.0792,
+          "mdd": -0.373607,
+          "days": 431
+        }
+      }
+    ],
+    "control": [
+      {
+        "start": "2018-01-02",
+        "end": "2020-12-31",
+        "cached": true,
+        "days": 731,
+        "curve_stats": {
+          "total_return": 0.016093,
+          "annual": 0.005527,
+          "sharpe": 0.1451,
+          "mdd": -0.373921,
+          "days": 731
+        }
+      },
+      {
+        "start": "2021-01-04",
+        "end": "2024-12-31",
+        "cached": true,
+        "days": 969,
+        "curve_stats": {
+          "total_return": -0.405813,
+          "annual": -0.126736,
+          "sharpe": -0.433,
+          "mdd": -0.644471,
+          "days": 969
+        }
+      },
+      {
+        "start": "2025-01-02",
+        "end": "2026-10-16",
+        "cached": true,
+        "days": 431,
+        "curve_stats": {
+          "total_return": 0.084945,
+          "annual": 0.04894,
+          "sharpe": 0.3398,
+          "mdd": -0.24631,
+          "days": 431
+        }
+      }
+    ]
+  },
+  "results": {
+    "candidate": {
+      "full": {
+        "total_return": -0.593867,
+        "annual": -0.10121,
+        "sharpe": -0.3706,
+        "mdd": -0.72452,
+        "days": 2129
+      },
+      "independent_2018_2020": {
+        "total_return": 0.105033,
+        "annual": 0.035079,
+        "sharpe": 0.2654,
+        "mdd": -0.334187,
+        "days": 731
+      },
+      "validation_2021_2024": {
+        "total_return": -0.634436,
+        "annual": -0.230678,
+        "sharpe": -1.0975,
+        "mdd": -0.72452,
+        "days": 968
+      },
+      "holdout_2025_2026": {
+        "total_return": -0.004254,
+        "annual": -0.002501,
+        "sharpe": 0.0965,
+        "mdd": -0.373607,
+        "days": 430
+      },
+      "rolling_1y": {
+        "windows": 1878,
+        "positive_rate": 0.3616,
+        "return_p05": -0.4314,
+        "return_median": -0.0556,
+        "return_worst": -0.4879,
+        "mdd_p05": -0.4593,
+        "mdd_worst": -0.5025
+      },
+      "recent_12m": {
+        "total_return": -0.32033,
+        "mdd": -0.373607
+      }
+    },
+    "control": {
+      "full": {
+        "total_return": -0.344965,
+        "annual": -0.048866,
+        "sharpe": -0.0947,
+        "mdd": -0.644471,
+        "days": 2129
+      },
+      "independent_2018_2020": {
+        "total_return": 0.016093,
+        "annual": 0.005527,
+        "sharpe": 0.1451,
+        "mdd": -0.373921,
+        "days": 731
+      },
+      "validation_2021_2024": {
+        "total_return": -0.415212,
+        "annual": -0.130479,
+        "sharpe": -0.4507,
+        "mdd": -0.644471,
+        "days": 968
+      },
+      "holdout_2025_2026": {
+        "total_return": 0.105979,
+        "annual": 0.060957,
+        "sharpe": 0.3974,
+        "mdd": -0.24631,
+        "days": 430
+      },
+      "rolling_1y": {
+        "windows": 1878,
+        "positive_rate": 0.5186,
+        "return_p05": -0.3629,
+        "return_median": 0.0287,
+        "return_worst": -0.4293,
+        "mdd_p05": -0.4359,
+        "mdd_worst": -0.4532
+      },
+      "recent_12m": {
+        "total_return": -0.137709,
+        "mdd": -0.24631
+      }
+    }
+  },
+  "decision": {
+    "D1": true,
+    "D2": true,
+    "G1": true,
+    "G2": true,
+    "G3": false,
+    "G4": false,
+    "G5": false,
+    "G6": false,
+    "G7": false,
+    "G8": false,
+    "all_pass": false
+  },
+  "caveats": [
+    "The full curve is stitched from three system-engine segments because a single 8-year matrix exceeded memory.",
+    "Segment boundaries can reset an open position; each segment is also reported independently.",
+    "The 2018-2020 membership snapshots are monthly; intra-month index changes are not modeled.",
+    "The factor is research-only until every preregistered gate passes.",
+    "R53 used a stock-down-day mask despite labeling the factor market-down beta; this round uses an explicit HS300-down-day mask."
+  ]
+}
