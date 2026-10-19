@@ -120,6 +120,7 @@ FIELDS = [
     ExtField("cash_flow_stability_4q_low", "float", "经营现金流/总资产4季稳定性反向"),
     ExtField("net_financing_4q_low", "float", "净筹资现金流/总资产4季强度反向"),
     ExtField("sga_ratio_4q_low", "float", "销售+管理费用/营收4季费用率反向"),
+    ExtField("sga_ratio_4q_qoq_improvement", "float", "销售+管理费用率TTM环比改善(高好)"),
     ExtField("management_expense_ratio_4q_low", "float", "管理费用/营收4季费用率反向"),
     ExtField("goodwill_ratio_low", "float", "商誉/总资产反向"),
     ExtField("intangible_ratio_low", "float", "无形资产/总资产反向"),
@@ -2524,9 +2525,26 @@ def _sga_ratio_4q_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
             .otherwise(None)
             .alias("sga_ratio_4q_low")
         )
+        .with_columns([
+            pl.col("sga_ratio_4q_low").shift(1).over("symbol").alias("_sga_ratio_4q_lag1"),
+            pl.col("_period_index").shift(1).over("symbol").alias("_period_index_lag1"),
+        ])
+        .with_columns(
+            pl.when(
+                (pl.col("_period_index") - pl.col("_period_index_lag1") == 1)
+                & pl.col("sga_ratio_4q_low").is_not_null()
+                & pl.col("_sga_ratio_4q_lag1").is_not_null()
+            )
+            .then(pl.col("sga_ratio_4q_low") - pl.col("_sga_ratio_4q_lag1"))
+            .otherwise(None)
+            .alias("sga_ratio_4q_qoq_improvement")
+        )
         .filter(pl.col("sga_ratio_4q_low").is_not_null())
         .with_columns((pl.col("_deadline4") + pl.duration(days=1)).alias("effective_date"))
-        .select(["symbol", "effective_date", "sga_ratio_4q_low"])
+        .select([
+            "symbol", "effective_date", "sga_ratio_4q_low",
+            "sga_ratio_4q_qoq_improvement",
+        ])
         .sort(["symbol", "effective_date"])
     )
     daily = _calendar_frame(dates, symbols).select(["symbol", "date"]).sort(["symbol", "date"])
@@ -2539,7 +2557,10 @@ def _sga_ratio_4q_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
             strategy="backward",
             check_sortedness=False,
         )
-        .select(["symbol", "date", "sga_ratio_4q_low"])
+        .select([
+            "symbol", "date", "sga_ratio_4q_low",
+            "sga_ratio_4q_qoq_improvement",
+        ])
     )
 
 
@@ -2798,7 +2819,7 @@ def main() -> int:
         description=(
             "研究实验数据: 增持/减持事件、股东结构变化、基金持仓拥挤度、两融、"
             "龙虎榜、质押、回购、大宗交易、分析师、业绩预告/快报、商誉与研发、"
-            "股权融资供给、分红、ERP、信用/期限利差、市场情绪、HS300残差波动率、价格延迟、Corwin-Schultz价差、波动率稳定性、市场下跌条件beta、beta不对称性、趋势效率、风险调整动量、市场已实现偏度、现金流稳定性、净筹资强度、SG&A费用率和管理费用率。"
+            "股权融资供给、分红、ERP、信用/期限利差、市场情绪、HS300残差波动率、价格延迟、Corwin-Schultz价差、波动率稳定性、市场下跌条件beta、beta不对称性、趋势效率、风险调整动量、市场已实现偏度、现金流稳定性、净筹资强度、SG&A费用率、SG&A费用率环比改善和管理费用率。"
             "仅用于实验策略，不构成可部署结论。"
         ),
     )
