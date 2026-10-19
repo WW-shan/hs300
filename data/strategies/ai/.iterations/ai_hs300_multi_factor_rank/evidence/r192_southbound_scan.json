@@ -1,0 +1,1191 @@
+{
+  "purpose": "R192 southbound fund flow timing scan",
+  "generated_at": "2026-10-19T19:54:11",
+  "data": {
+    "source": "stock_hsgt_hist_em(symbol=南向资金) via AkShare",
+    "months": 102,
+    "start": "2018-02-28",
+    "end": "2026-08-31"
+  },
+  "method": {
+    "factors": {
+      "sb_net_20d_z": "expanding z-score of 20d southbound net buy, direction negative",
+      "sb_net_chg_1m": "monthly change of 20d southbound net buy, direction negative"
+    },
+    "long_cash": "signal < 0 holds HS300 index, else cash; 0.05% per switch",
+    "forward_return": "T+1 open to T+21 open on 000300.SH",
+    "splits": {
+      "discovery": [
+        "2018-02-01",
+        "2022-12-31"
+      ],
+      "validation": [
+        "2023-01-01",
+        "2024-12-31"
+      ],
+      "holdout": [
+        "2025-01-01",
+        "2026-08-31"
+      ]
+    }
+  },
+  "summary": {
+    "discovery": {
+      "months": 58,
+      "sb_net_20d_z": {
+        "ic": -0.111815,
+        "hit_rate": 0.5,
+        "long_cash": {
+          "months": 58,
+          "strategy_total": -0.140784,
+          "benchmark_total": 0.032905,
+          "strategy_mdd": -0.230483,
+          "benchmark_mdd": -0.346235,
+          "switches": 15
+        },
+        "max_control_corr": 0.147313,
+        "residual_ic": -0.17266
+      },
+      "sb_net_chg_1m": {
+        "ic": -0.128918,
+        "hit_rate": 0.5172,
+        "long_cash": {
+          "months": 58,
+          "strategy_total": 0.049991,
+          "benchmark_total": 0.032905,
+          "strategy_mdd": -0.246515,
+          "benchmark_mdd": -0.346235,
+          "switches": 35
+        },
+        "max_control_corr": 0.108739,
+        "residual_ic": -0.104802
+      }
+    },
+    "validation": {
+      "months": 24,
+      "sb_net_20d_z": {
+        "ic": -0.026087,
+        "hit_rate": 0.6667,
+        "long_cash": {
+          "months": 24,
+          "strategy_total": -0.019441,
+          "benchmark_total": -0.131046,
+          "strategy_mdd": -0.127343,
+          "benchmark_mdd": -0.221001,
+          "switches": 6
+        },
+        "max_control_corr": 0.216522,
+        "residual_ic": -0.16087
+      },
+      "sb_net_chg_1m": {
+        "ic": -0.192174,
+        "hit_rate": 0.4167,
+        "long_cash": {
+          "months": 24,
+          "strategy_total": -0.020584,
+          "benchmark_total": -0.131046,
+          "strategy_mdd": -0.204391,
+          "benchmark_mdd": -0.221001,
+          "switches": 11
+        },
+        "max_control_corr": 0.305217,
+        "residual_ic": -0.361739
+      }
+    },
+    "holdout": {
+      "months": 20,
+      "sb_net_20d_z": {
+        "ic": -0.111278,
+        "hit_rate": 0.4,
+        "long_cash": {
+          "months": 20,
+          "strategy_total": -0.069956,
+          "benchmark_total": 0.065337,
+          "strategy_mdd": -0.131701,
+          "benchmark_mdd": -0.130774,
+          "switches": 7
+        },
+        "max_control_corr": 0.553383,
+        "residual_ic": 0.099248
+      },
+      "sb_net_chg_1m": {
+        "ic": -0.022556,
+        "hit_rate": 0.5,
+        "long_cash": {
+          "months": 20,
+          "strategy_total": 0.015303,
+          "benchmark_total": 0.065337,
+          "strategy_mdd": -0.057683,
+          "benchmark_mdd": -0.130774,
+          "switches": 13
+        },
+        "max_control_corr": 0.093233,
+        "residual_ic": -0.016541
+      }
+    }
+  },
+  "recent_12m_long_cash": {
+    "sb_net_20d_z": {
+      "months": 12,
+      "strategy_total": -0.069956,
+      "benchmark_total": -0.103356,
+      "strategy_mdd": -0.131701,
+      "benchmark_mdd": -0.130774,
+      "switches": 7
+    },
+    "sb_net_chg_1m": {
+      "months": 12,
+      "strategy_total": 0.014,
+      "benchmark_total": -0.103356,
+      "strategy_mdd": -0.057683,
+      "benchmark_mdd": -0.130774,
+      "switches": 7
+    }
+  },
+  "decision": {
+    "sb_net_20d_z": {
+      "D1": true,
+      "G1": false,
+      "G2": false,
+      "G3": false,
+      "G4": false,
+      "G5": false,
+      "all_pass": false
+    },
+    "sb_net_chg_1m": {
+      "D1": true,
+      "G1": false,
+      "G2": false,
+      "G3": false,
+      "G4": false,
+      "G5": false,
+      "all_pass": false
+    }
+  },
+  "monthly_records": [
+    {
+      "date": "2018-02-28",
+      "forward_return": -0.035114543180264524,
+      "sb_net_20d": 596.5649,
+      "sb_net_20d_z": 1.9137612018645744,
+      "sb_net_chg_1m": -112.30570000000012,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.2619529745042497,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-03-30",
+      "forward_return": -0.028916822021013644,
+      "sb_net_20d": 74.7727,
+      "sb_net_20d_z": -0.788051298200138,
+      "sb_net_chg_1m": -521.7922,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.738731563201197,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-04-27",
+      "forward_return": -0.00391227942200445,
+      "sb_net_20d": -127.79390000000001,
+      "sb_net_20d_z": -1.7558285118506598,
+      "sb_net_chg_1m": -202.5666,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.212893563579278,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-05-31",
+      "forward_return": -0.07526113077860042,
+      "sb_net_20d": -44.89269999999998,
+      "sb_net_20d_z": -1.2915930740615988,
+      "sb_net_chg_1m": 82.90120000000003,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.35522749003984,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-07-31",
+      "forward_return": -0.038803352946009007,
+      "sb_net_20d": 46.97340000000003,
+      "sb_net_20d_z": -0.7635302916782678,
+      "sb_net_chg_1m": 156.33620000000002,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.901029673093044,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-08-31",
+      "forward_return": -0.009190559793296083,
+      "sb_net_20d": -218.0632,
+      "sb_net_20d_z": -1.9710380441853526,
+      "sb_net_chg_1m": -265.0366,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.442032551848512,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-09-28",
+      "forward_return": -0.027394729647761795,
+      "sb_net_20d": 33.697500000000005,
+      "sb_net_20d_z": -0.7454038018814945,
+      "sb_net_chg_1m": 251.76069999999999,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.020278583765112,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-10-31",
+      "forward_return": 0.004277279745523055,
+      "sb_net_20d": 131.48409999999998,
+      "sb_net_20d_z": -0.2690029927987242,
+      "sb_net_chg_1m": 97.78659999999998,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.9253622641509445,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-11-30",
+      "forward_return": -0.07471403256860676,
+      "sb_net_20d": -69.3163,
+      "sb_net_20d_z": -1.218408417244066,
+      "sb_net_chg_1m": -200.80039999999997,
+      "qvix_z_252": null,
+      "equity_risk_premium": 6.2235440613026825,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-12-28",
+      "forward_return": 0.054552318526569055,
+      "sb_net_20d": -4.590299999999999,
+      "sb_net_20d_z": -0.8874267327535126,
+      "sb_net_chg_1m": 64.726,
+      "qvix_z_252": null,
+      "equity_risk_premium": 6.679302775024777,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-01-31",
+      "forward_return": 0.15366053121553125,
+      "sb_net_20d": -19.390999999999995,
+      "sb_net_20d_z": -0.9416127235832212,
+      "sb_net_chg_1m": -14.800699999999996,
+      "qvix_z_252": null,
+      "equity_risk_premium": 6.20728696461825,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-02-28",
+      "forward_return": 0.010963944792626412,
+      "sb_net_20d": -83.7452,
+      "sb_net_20d_z": -1.2248581806138905,
+      "sb_net_chg_1m": -64.3542,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.118773963515755,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-03-29",
+      "forward_return": -0.0035861036560826953,
+      "sb_net_20d": 207.8245,
+      "sb_net_20d_z": 0.18760857654727803,
+      "sb_net_chg_1m": 291.5697,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.9317,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-04-30",
+      "forward_return": -0.03561887611828851,
+      "sb_net_20d": 178.2791,
+      "sb_net_20d_z": 0.042568825263827395,
+      "sb_net_chg_1m": -29.5454,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.76305925020375,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-05-31",
+      "forward_return": 0.07977667497204455,
+      "sb_net_20d": 222.7851,
+      "sb_net_20d_z": 0.259929756653688,
+      "sb_net_chg_1m": 44.506,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.435701393728223,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-06-28",
+      "forward_return": -0.010615154240560809,
+      "sb_net_20d": 282.4824,
+      "sb_net_20d_z": 0.5509230393183608,
+      "sb_net_chg_1m": 59.697299999999984,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.957906055646481,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-07-31",
+      "forward_return": -0.0036210596430152897,
+      "sb_net_20d": 176.5278,
+      "sb_net_20d_z": 0.01938751512722067,
+      "sb_net_chg_1m": -105.95459999999997,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.082032289950576,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-08-30",
+      "forward_return": 0.003917249806700829,
+      "sb_net_20d": 543.7126999999999,
+      "sb_net_20d_z": 1.8068530678293437,
+      "sb_net_chg_1m": 367.1848999999999,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.489708547008547,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-09-30",
+      "forward_return": 0.04282393313341659,
+      "sb_net_20d": 167.20509999999996,
+      "sb_net_20d_z": -0.05840568682841795,
+      "sb_net_chg_1m": -376.50759999999997,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.391323208191126,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-10-31",
+      "forward_return": -0.00685409783387847,
+      "sb_net_20d": 208.6964,
+      "sb_net_20d_z": 0.14768701686991578,
+      "sb_net_chg_1m": 41.49130000000005,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.28098029134533,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-11-29",
+      "forward_return": 0.046931662074929825,
+      "sb_net_20d": 294.0678,
+      "sb_net_20d_z": 0.5715614321005956,
+      "sb_net_chg_1m": 85.37139999999997,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.561003490401396,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-12-31",
+      "forward_return": -0.05866913964335474,
+      "sb_net_20d": 413.4898,
+      "sb_net_20d_z": 1.1543322051255833,
+      "sb_net_chg_1m": 119.42200000000003,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.993581300813007,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-01-23",
+      "forward_return": 0.09036901746719495,
+      "sb_net_20d": 366.5826,
+      "sb_net_20d_z": 0.904015359583537,
+      "sb_net_chg_1m": -46.90719999999999,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.368004013377925,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-02-28",
+      "forward_return": -0.0784565984452904,
+      "sb_net_20d": 606.9843000000001,
+      "sb_net_20d_z": 2.0334246548178636,
+      "sb_net_chg_1m": 240.40170000000006,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.905442350907519,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-03-31",
+      "forward_return": 0.05380120071792138,
+      "sb_net_20d": 1328.6833,
+      "sb_net_20d_z": 4.558715800623614,
+      "sb_net_chg_1m": 721.6989999999998,
+      "qvix_z_252": null,
+      "equity_risk_premium": 6.626689861751153,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-04-30",
+      "forward_return": 0.03462710927817336,
+      "sb_net_20d": 374.8711,
+      "sb_net_20d_z": 0.6580091583257757,
+      "sb_net_chg_1m": -953.8121999999998,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.958176720475786,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-05-29",
+      "forward_return": 0.0694351679231191,
+      "sb_net_20d": 278.7955,
+      "sb_net_20d_z": 0.2620283389564465,
+      "sb_net_chg_1m": -96.07560000000001,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.915389655172415,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-06-30",
+      "forward_return": 0.09263193616132503,
+      "sb_net_20d": 252.53929999999997,
+      "sb_net_20d_z": 0.15247373165742026,
+      "sb_net_chg_1m": -26.256200000000035,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.254544426494345,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-07-31",
+      "forward_return": 0.02851306584029767,
+      "sb_net_20d": 824.6504,
+      "sb_net_20d_z": 2.4039201111504824,
+      "sb_net_chg_1m": 572.1111000000001,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.348888953913679,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-08-31",
+      "forward_return": -0.04061692237485515,
+      "sb_net_20d": 332.5202,
+      "sb_net_20d_z": 0.4283699210414903,
+      "sb_net_chg_1m": -492.1302,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.902715224913495,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-09-30",
+      "forward_return": 0.05018001076419343,
+      "sb_net_20d": 417.1691,
+      "sb_net_20d_z": 0.7609328400260725,
+      "sb_net_chg_1m": 84.64890000000003,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.0616053352559485,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-10-30",
+      "forward_return": 0.061955291653004396,
+      "sb_net_20d": 782.8923,
+      "sb_net_20d_z": 2.1500647957125842,
+      "sb_net_chg_1m": 365.72319999999996,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.002908045977011,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-11-30",
+      "forward_return": 0.021824735600316725,
+      "sb_net_20d": 632.6659000000001,
+      "sb_net_20d_z": 1.522940815891151,
+      "sb_net_chg_1m": -150.2263999999999,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.548096532970768,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-12-31",
+      "forward_return": 0.027608844237531738,
+      "sb_net_20d": 508.96000000000004,
+      "sb_net_20d_z": 1.0261054084903845,
+      "sb_net_chg_1m": -123.70590000000004,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.2427960408684546,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-01-29",
+      "forward_return": -0.010652334373869476,
+      "sb_net_20d": 3106.2372,
+      "sb_net_20d_z": 6.793243967055882,
+      "sb_net_chg_1m": 2597.2772,
+      "qvix_z_252": -0.003826321244805273,
+      "equity_risk_premium": 3.090992476489028,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-02-26",
+      "forward_return": -0.06252947998330005,
+      "sb_net_20d": 1799.7274,
+      "sb_net_20d_z": 3.3435400082401183,
+      "sb_net_chg_1m": -1306.5098,
+      "qvix_z_252": 0.41556367110221565,
+      "equity_risk_premium": 3.02139722747322,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-03-31",
+      "forward_return": 0.019055576987535128,
+      "sb_net_20d": -167.0563,
+      "sb_net_20d_z": -1.0379370516277853,
+      "sb_net_chg_1m": -1966.7837,
+      "qvix_z_252": -0.7812761802058417,
+      "equity_risk_premium": 3.6559269678302533,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-04-30",
+      "forward_return": 0.03665744162205975,
+      "sb_net_20d": 487.82529999999997,
+      "sb_net_20d_z": 0.4216244247098114,
+      "sb_net_chg_1m": 654.8815999999999,
+      "qvix_z_252": -0.9552969012078784,
+      "equity_risk_premium": 4.232449704142011,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-05-31",
+      "forward_return": -0.024639717318472587,
+      "sb_net_20d": 472.25800000000004,
+      "sb_net_20d_z": 0.3838496517181814,
+      "sb_net_chg_1m": -15.567299999999932,
+      "qvix_z_252": -0.06528614098631615,
+      "equity_risk_premium": 4.052232079488999,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-06-30",
+      "forward_return": -0.07544907620462771,
+      "sb_net_20d": -2.5815999999999866,
+      "sb_net_20d_z": -0.681880261849525,
+      "sb_net_chg_1m": -474.8396,
+      "qvix_z_252": -1.1936101506808987,
+      "equity_risk_premium": 3.905440223463687,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-07-30",
+      "forward_return": 0.01089008782187606,
+      "sb_net_20d": -564.5733,
+      "sb_net_20d_z": -1.8985699108629681,
+      "sb_net_chg_1m": -561.9917,
+      "qvix_z_252": -0.7030298708816007,
+      "equity_risk_premium": 4.785651219512195,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-08-31",
+      "forward_return": 0.023111812093443707,
+      "sb_net_20d": -139.72550000000004,
+      "sb_net_20d_z": -0.9412283487030323,
+      "sb_net_chg_1m": 424.8478,
+      "qvix_z_252": -0.8363949435506125,
+      "equity_risk_premium": 5.213017727639,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-09-30",
+      "forward_return": -0.011561047583767303,
+      "sb_net_20d": -1.896700000000017,
+      "sb_net_20d_z": -0.6286744675183938,
+      "sb_net_chg_1m": 137.82880000000003,
+      "qvix_z_252": -0.2626974971915402,
+      "equity_risk_premium": 5.052614115781126,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-10-29",
+      "forward_return": -0.011915021500050749,
+      "sb_net_20d": 222.33370000000005,
+      "sb_net_20d_z": -0.12629860027554324,
+      "sb_net_chg_1m": 224.23040000000006,
+      "qvix_z_252": -1.2388195210490145,
+      "equity_risk_premium": 4.919459826361484,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-11-30",
+      "forward_return": 0.02623342547811003,
+      "sb_net_20d": -44.99209999999997,
+      "sb_net_20d_z": -0.7213039755758456,
+      "sb_net_chg_1m": -267.3258,
+      "qvix_z_252": -1.548671253119142,
+      "equity_risk_premium": 5.338265306122449,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-12-31",
+      "forward_return": -0.06687133318703742,
+      "sb_net_20d": 510.3548,
+      "sb_net_20d_z": 0.5279010767122867,
+      "sb_net_chg_1m": 555.3469,
+      "qvix_z_252": -1.2706464299094646,
+      "equity_risk_premium": 4.704031563201196,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-01-28",
+      "forward_return": -0.03795519097998845,
+      "sb_net_20d": 453.0575,
+      "sb_net_20d_z": 0.39540705549700345,
+      "sb_net_chg_1m": -57.29730000000001,
+      "qvix_z_252": 1.2455530180940388,
+      "equity_risk_premium": 5.336485209003216,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-02-28",
+      "forward_return": -0.0962268275097844,
+      "sb_net_20d": 162.78580000000002,
+      "sb_net_20d_z": -0.2639619353057273,
+      "sb_net_chg_1m": -290.2717,
+      "qvix_z_252": -0.9762998027645763,
+      "equity_risk_premium": 5.180449482895783,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-03-31",
+      "forward_return": -0.06429522206125116,
+      "sb_net_20d": 446.66149999999993,
+      "sb_net_20d_z": 0.38341085043174267,
+      "sb_net_chg_1m": 283.87569999999994,
+      "qvix_z_252": 1.227067510790391,
+      "equity_risk_premium": 5.744623208191126,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-04-29",
+      "forward_return": 0.01718171085258291,
+      "sb_net_20d": 70.82469999999995,
+      "sb_net_20d_z": -0.47783753390977995,
+      "sb_net_chg_1m": -375.8368,
+      "qvix_z_252": 1.385806499085776,
+      "equity_risk_premium": 6.082006601248885,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-05-31",
+      "forward_return": 0.08110569669100465,
+      "sb_net_20d": 493.355,
+      "sb_net_20d_z": 0.494885507271698,
+      "sb_net_chg_1m": 422.53030000000007,
+      "qvix_z_252": 0.971743770558053,
+      "equity_risk_premium": 6.0913222614841,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-06-30",
+      "forward_return": -0.05860203317949364,
+      "sb_net_20d": 523.1575,
+      "sb_net_20d_z": 0.5599823465528788,
+      "sb_net_chg_1m": 29.80250000000001,
+      "qvix_z_252": 1.30764628509048,
+      "equity_risk_premium": 5.3029768480909825,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-07-29",
+      "forward_return": -0.02325719455238706,
+      "sb_net_20d": 20.154500000000006,
+      "sb_net_20d_z": -0.6067762032209326,
+      "sb_net_chg_1m": -503.00300000000004,
+      "qvix_z_252": 0.3645585362986045,
+      "equity_risk_premium": 5.9852587412587415,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-08-31",
+      "forward_return": -0.05726175407082856,
+      "sb_net_20d": 20.767299999999988,
+      "sb_net_20d_z": -0.6009456765733425,
+      "sb_net_chg_1m": 0.6127999999999822,
+      "qvix_z_252": -0.7682200309603323,
+      "equity_risk_premium": 6.451910163339383,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-09-30",
+      "forward_return": -0.013670348030767832,
+      "sb_net_20d": 352.88379999999995,
+      "sb_net_20d_z": 0.1767187393574425,
+      "sb_net_chg_1m": 332.1165,
+      "qvix_z_252": -0.23092854279196537,
+      "equity_risk_premium": 6.790998376313276,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-10-31",
+      "forward_return": 0.07010392869856585,
+      "sb_net_20d": 831.5769999999999,
+      "sb_net_20d_z": 1.286587656634565,
+      "sb_net_chg_1m": 478.69319999999993,
+      "qvix_z_252": 1.9345512018794266,
+      "equity_risk_premium": 7.76252726326743,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-11-30",
+      "forward_return": -0.017101238238898198,
+      "sb_net_20d": 350.5478,
+      "sb_net_20d_z": 0.15623206796635852,
+      "sb_net_chg_1m": -481.0291999999999,
+      "qvix_z_252": 0.826509486923497,
+      "equity_risk_premium": 6.575737937559129,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-12-30",
+      "forward_return": 0.060410325302289625,
+      "sb_net_20d": 94.1864,
+      "sb_net_20d_z": -0.446036932271393,
+      "sb_net_chg_1m": -256.3614,
+      "qvix_z_252": -1.7592141007845772,
+      "equity_risk_premium": 6.607570632672333,
+      "split": "discovery"
+    },
+    {
+      "date": "2023-01-31",
+      "forward_return": -0.024315537253976505,
+      "sb_net_20d": 101.64999999999998,
+      "sb_net_20d_z": -0.42578688923529684,
+      "sb_net_chg_1m": 7.463599999999971,
+      "qvix_z_252": -1.123400417042329,
+      "equity_risk_premium": 5.983294671403197,
+      "split": "validation"
+    },
+    {
+      "date": "2023-02-28",
+      "forward_return": -0.013552130356059289,
+      "sb_net_20d": 82.26509999999993,
+      "sb_net_20d_z": -0.4690275977862722,
+      "sb_net_chg_1m": -19.384900000000044,
+      "qvix_z_252": -1.1687777729691902,
+      "equity_risk_premium": 6.050851477170994,
+      "split": "validation"
+    },
+    {
+      "date": "2023-03-31",
+      "forward_return": -0.007027253515905385,
+      "sb_net_20d": 541.8099000000001,
+      "sb_net_20d_z": 0.6244481234098098,
+      "sb_net_chg_1m": 459.5448000000001,
+      "qvix_z_252": -1.9650821201552082,
+      "equity_risk_premium": 6.020314463176575,
+      "split": "validation"
+    },
+    {
+      "date": "2023-04-28",
+      "forward_return": -0.05603154974833502,
+      "sb_net_20d": 370.92999999999995,
+      "sb_net_20d_z": 0.2138888147817546,
+      "sb_net_chg_1m": -170.87990000000013,
+      "qvix_z_252": -1.926140567265916,
+      "equity_risk_premium": 5.939595815170009,
+      "split": "validation"
+    },
+    {
+      "date": "2023-05-31",
+      "forward_return": 0.017078121411923552,
+      "sb_net_20d": 231.27989999999994,
+      "sb_net_20d_z": -0.12170644988051382,
+      "sb_net_chg_1m": -139.6501,
+      "qvix_z_252": -1.0840007671895107,
+      "equity_risk_premium": 6.4641308325709055,
+      "split": "validation"
+    },
+    {
+      "date": "2023-06-30",
+      "forward_return": 0.04297572050080811,
+      "sb_net_20d": -58.47730000000003,
+      "sb_net_20d_z": -0.8160246553954644,
+      "sb_net_chg_1m": -289.75719999999995,
+      "qvix_z_252": -1.9050217021772748,
+      "equity_risk_premium": 6.4806702825888785,
+      "split": "validation"
+    },
+    {
+      "date": "2023-07-31",
+      "forward_return": -0.06638010786736348,
+      "sb_net_20d": 158.00189999999998,
+      "sb_net_20d_z": -0.2900123500354609,
+      "sb_net_chg_1m": 216.4792,
+      "qvix_z_252": -0.22696316957758933,
+      "equity_risk_premium": 6.143116901408452,
+      "split": "validation"
+    },
+    {
+      "date": "2023-08-31",
+      "forward_return": -0.02645840219131801,
+      "sb_net_20d": 622.2592999999999,
+      "sb_net_20d_z": 0.8330291629559515,
+      "sb_net_chg_1m": 464.25739999999996,
+      "qvix_z_252": 0.190503171637676,
+      "equity_risk_premium": 6.541681073703367,
+      "split": "validation"
+    },
+    {
+      "date": "2023-09-28",
+      "forward_return": -0.019193085813833388,
+      "sb_net_20d": 618.8453999999999,
+      "sb_net_20d_z": 0.8182502246412309,
+      "sb_net_chg_1m": -3.4139000000000124,
+      "qvix_z_252": -0.26441399054229053,
+      "equity_risk_premium": 6.524532014719412,
+      "split": "validation"
+    },
+    {
+      "date": "2023-10-31",
+      "forward_return": -0.024093131042072113,
+      "sb_net_20d": 371.5841,
+      "sb_net_20d_z": 0.21371529077256463,
+      "sb_net_chg_1m": -247.26129999999995,
+      "qvix_z_252": -0.4636943664693569,
+      "equity_risk_premium": 6.704696240601503,
+      "split": "validation"
+    },
+    {
+      "date": "2023-11-30",
+      "forward_return": -0.023786117829342923,
+      "sb_net_20d": 152.74229999999997,
+      "sb_net_20d_z": -0.321151769097508,
+      "sb_net_chg_1m": -218.8418,
+      "qvix_z_252": -0.8355822459484874,
+      "equity_risk_premium": 6.873984732824426,
+      "split": "validation"
+    },
+    {
+      "date": "2023-12-29",
+      "forward_return": -0.0415524996877068,
+      "sb_net_20d": 96.14009999999996,
+      "sb_net_20d_z": -0.45795092543434934,
+      "sb_net_chg_1m": -56.60220000000001,
+      "qvix_z_252": -0.22574586329608703,
+      "equity_risk_premium": 7.078611368015413,
+      "split": "validation"
+    },
+    {
+      "date": "2024-01-31",
+      "forward_return": 0.10220763112006037,
+      "sb_net_20d": 119.96759999999996,
+      "sb_net_20d_z": -0.3969963184079871,
+      "sb_net_chg_1m": 23.8275,
+      "qvix_z_252": 3.116611526866801,
+      "equity_risk_premium": 7.4095196850393705,
+      "split": "validation"
+    },
+    {
+      "date": "2024-02-29",
+      "forward_return": 0.0005189102089038222,
+      "sb_net_20d": 275.7723,
+      "sb_net_20d_z": -0.01054959978167945,
+      "sb_net_chg_1m": 155.80470000000003,
+      "qvix_z_252": 1.3871027812064483,
+      "equity_risk_premium": 6.828402841429881,
+      "split": "validation"
+    },
+    {
+      "date": "2024-03-29",
+      "forward_return": 0.02885108664251601,
+      "sb_net_20d": 859.4893,
+      "sb_net_20d_z": 1.424114210296402,
+      "sb_net_chg_1m": 583.717,
+      "qvix_z_252": -0.5015316104638003,
+      "equity_risk_premium": 6.630506601248885,
+      "split": "validation"
+    },
+    {
+      "date": "2024-04-30",
+      "forward_return": -0.0209819299084385,
+      "sb_net_20d": 841.6200999999999,
+      "sb_net_20d_z": 1.36241285654669,
+      "sb_net_chg_1m": -17.86920000000009,
+      "qvix_z_252": -0.4772080089882472,
+      "equity_risk_premium": 6.295652278589854,
+      "split": "validation"
+    },
+    {
+      "date": "2024-05-31",
+      "forward_return": -0.029330683349266806,
+      "sb_net_20d": 735.3798999999999,
+      "sb_net_20d_z": 1.0894988232474725,
+      "sb_net_chg_1m": -106.24019999999996,
+      "qvix_z_252": -1.1008444917317906,
+      "equity_risk_premium": 6.350442350907519,
+      "split": "validation"
+    },
+    {
+      "date": "2024-06-28",
+      "forward_return": -0.015585276312045648,
+      "sb_net_20d": 975.5158999999999,
+      "sb_net_20d_z": 1.654774179197498,
+      "sb_net_chg_1m": 240.13599999999997,
+      "qvix_z_252": -1.5306551943082152,
+      "equity_risk_premium": 6.505001393728223,
+      "split": "validation"
+    },
+    {
+      "date": "2024-07-31",
+      "forward_return": -0.04925707348524888,
+      "sb_net_20d": 383.50919999999996,
+      "sb_net_20d_z": 0.2041561665256788,
+      "sb_net_chg_1m": -592.0066999999999,
+      "qvix_z_252": -0.9837110188895456,
+      "equity_risk_premium": 6.6845222614841,
+      "split": "validation"
+    },
+    {
+      "date": "2024-08-30",
+      "forward_return": 0.2604050801455944,
+      "sb_net_20d": 353.94509999999997,
+      "sb_net_20d_z": 0.13089361450042566,
+      "sb_net_chg_1m": -29.564099999999996,
+      "qvix_z_252": -1.4508865618136149,
+      "equity_risk_premium": 7.037703130755065,
+      "split": "validation"
+    },
+    {
+      "date": "2024-09-30",
+      "forward_return": -0.11521406769058207,
+      "sb_net_20d": 445.2313,
+      "sb_net_20d_z": 0.35460734101076596,
+      "sb_net_chg_1m": 91.28620000000001,
+      "qvix_z_252": 9.171753938475163,
+      "equity_risk_premium": 5.753338339920948,
+      "split": "validation"
+    },
+    {
+      "date": "2024-10-31",
+      "forward_return": -0.0032371245226606726,
+      "sb_net_20d": 996.2081,
+      "sb_net_20d_z": 1.6921820439337338,
+      "sb_net_chg_1m": 550.9767999999999,
+      "qvix_z_252": 2.945341606312174,
+      "equity_risk_premium": 6.436090987124462,
+      "split": "validation"
+    },
+    {
+      "date": "2024-11-29",
+      "forward_return": 0.01713608424987778,
+      "sb_net_20d": 1207.6780999999999,
+      "sb_net_20d_z": 2.1596997250617527,
+      "sb_net_chg_1m": 211.4699999999999,
+      "qvix_z_252": 0.9956848003726647,
+      "equity_risk_premium": 6.49003829787234,
+      "split": "validation"
+    },
+    {
+      "date": "2024-12-31",
+      "forward_return": -0.022320220478272645,
+      "sb_net_20d": 954.4937,
+      "sb_net_20d_z": 1.5256641723447668,
+      "sb_net_chg_1m": -253.18439999999987,
+      "qvix_z_252": 0.022024858058300612,
+      "equity_risk_premium": 6.528245447087777,
+      "split": "validation"
+    },
+    {
+      "date": "2025-01-27",
+      "forward_return": 0.011209977371446467,
+      "sb_net_20d": 1393.8437999999999,
+      "sb_net_20d_z": 2.505523615100741,
+      "sb_net_chg_1m": 439.3500999999999,
+      "qvix_z_252": -0.13689429096468922,
+      "equity_risk_premium": 6.887987563884157,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-02-28",
+      "forward_return": 0.0016119205189326635,
+      "sb_net_20d": 1584.9213999999997,
+      "sb_net_20d_z": 2.8448396054946343,
+      "sb_net_chg_1m": 191.07759999999985,
+      "qvix_z_252": -0.13219243392689975,
+      "equity_risk_premium": 6.745036886632826,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-03-31",
+      "forward_return": -0.030042291124155796,
+      "sb_net_20d": 1505.4053000000001,
+      "sb_net_20d_z": 2.580341594937495,
+      "sb_net_chg_1m": -79.5160999999996,
+      "qvix_z_252": -0.5097076196495111,
+      "equity_risk_premium": 6.676064346349746,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-04-30",
+      "forward_return": 0.01610594205740279,
+      "sb_net_20d": 1695.8653,
+      "sb_net_20d_z": 2.8914607911004597,
+      "sb_net_chg_1m": 190.4599999999998,
+      "qvix_z_252": -0.09523794583723195,
+      "equity_risk_premium": 7.078920191470845,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-05-30",
+      "forward_return": 0.026725217805960044,
+      "sb_net_20d": 512.5391999999998,
+      "sb_net_20d_z": 0.32972551400996025,
+      "sb_net_chg_1m": -1183.3261000000002,
+      "qvix_z_252": -0.6200110554810692,
+      "equity_risk_premium": 6.853949190110828,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-06-30",
+      "forward_return": 0.04999481695202235,
+      "sb_net_20d": 802.5117,
+      "sb_net_20d_z": 0.9521616516048735,
+      "sb_net_chg_1m": 289.9725000000002,
+      "qvix_z_252": -0.6943558379185459,
+      "equity_risk_premium": 6.456827714748783,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-07-31",
+      "forward_return": 0.09481206656142294,
+      "sb_net_20d": 1336.5961,
+      "sb_net_20d_z": 2.0685273457665994,
+      "sb_net_chg_1m": 534.0844,
+      "qvix_z_252": -0.30879311790774255,
+      "equity_risk_premium": 6.334185209003216,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-08-29",
+      "forward_return": 0.00844720436389812,
+      "sb_net_20d": 999.4904999999998,
+      "sb_net_20d_z": 1.3314379035678918,
+      "sb_net_chg_1m": -337.1056000000002,
+      "qvix_z_252": 0.6691103703568474,
+      "equity_risk_premium": 5.720678987150415,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-09-30",
+      "forward_return": -0.004311778800728305,
+      "sb_net_20d": 1672.9425,
+      "sb_net_20d_z": 2.682640514714781,
+      "sb_net_chg_1m": 673.4520000000003,
+      "qvix_z_252": -0.3758584458702924,
+      "equity_risk_premium": 5.6470075075075075,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-10-31",
+      "forward_return": -0.02103723053219375,
+      "sb_net_20d": 1279.1486000000002,
+      "sb_net_20d_z": 1.8305840475242847,
+      "sb_net_chg_1m": -393.7938999999999,
+      "qvix_z_252": -0.16552223153729365,
+      "equity_risk_premium": 5.786101137225171,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-11-28",
+      "forward_return": 0.026233106009268647,
+      "sb_net_20d": 1218.9452,
+      "sb_net_20d_z": 1.681466162900956,
+      "sb_net_chg_1m": -60.2034000000001,
+      "qvix_z_252": -0.0818867616284629,
+      "equity_risk_premium": 5.827511656441718,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-12-31",
+      "forward_return": 0.0027157964105151144,
+      "sb_net_20d": 207.83610000000007,
+      "sb_net_20d_z": -0.39126003127968706,
+      "sb_net_chg_1m": -1011.1091,
+      "qvix_z_252": -0.6977932084410805,
+      "equity_risk_premium": 5.648951874062969,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-01-30",
+      "forward_return": -0.0054534648788390205,
+      "sb_net_20d": 689.7058999999999,
+      "sb_net_20d_z": 0.5974707169003693,
+      "sb_net_chg_1m": 481.8697999999998,
+      "qvix_z_252": 0.02464279900202096,
+      "equity_risk_premium": 5.668231563201196,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-02-27",
+      "forward_return": -0.04684391031515822,
+      "sb_net_20d": 916.8187,
+      "sb_net_20d_z": 1.0576804998996818,
+      "sb_net_chg_1m": 227.1128000000001,
+      "qvix_z_252": -1.1409137207624467,
+      "equity_risk_premium": 5.714175468867217,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-03-31",
+      "forward_return": 0.0672308419771932,
+      "sb_net_20d": 391.04869999999994,
+      "sb_net_20d_z": -0.0264040352768606,
+      "sb_net_chg_1m": -525.7700000000001,
+      "qvix_z_252": -0.06884311692030474,
+      "equity_risk_premium": 5.701696992481203,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-04-30",
+      "forward_return": 0.01311147315144301,
+      "sb_net_20d": 572.4322999999998,
+      "sb_net_20d_z": 0.34757554036906807,
+      "sb_net_chg_1m": 181.3835999999999,
+      "qvix_z_252": -0.6273023055881936,
+      "equity_risk_premium": 5.472916606498195,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-05-29",
+      "forward_return": 0.003388393018473046,
+      "sb_net_20d": 192.09090000000046,
+      "sb_net_20d_z": -0.44021285166254004,
+      "sb_net_chg_1m": -380.34139999999934,
+      "qvix_z_252": 0.5688122636662017,
+      "equity_risk_premium": 5.537376811594202,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-06-30",
+      "forward_return": -0.0785483999411184,
+      "sb_net_20d": 224.54050000000007,
+      "sb_net_20d_z": -0.3711253203950948,
+      "sb_net_chg_1m": 32.449599999999606,
+      "qvix_z_252": 1.3316577885508325,
+      "equity_risk_premium": 5.529164124909222,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-07-31",
+      "forward_return": 3.704664172188288e-05,
+      "sb_net_20d": 603.0522,
+      "sb_net_20d_z": 0.4177423455881775,
+      "sb_net_chg_1m": 378.5116999999999,
+      "qvix_z_252": 1.098953780934216,
+      "equity_risk_premium": 5.595841520467836,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-08-31",
+      "forward_return": -0.05671207737877959,
+      "sb_net_20d": -6.513700000000128,
+      "sb_net_20d_z": -0.8539865150816159,
+      "sb_net_chg_1m": -609.5659,
+      "qvix_z_252": -0.44333643296956005,
+      "equity_risk_premium": 5.980411656441718,
+      "split": "holdout"
+    }
+  ],
+  "limitations": [
+    "Southbound flow is a daily aggregate; stock-level attribution is not used.",
+    "The 20d rolling window and expanding z-score follow the pre-registered definition."
+  ]
+}
