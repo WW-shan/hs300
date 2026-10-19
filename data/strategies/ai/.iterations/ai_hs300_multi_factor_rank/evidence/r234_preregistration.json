@@ -1,0 +1,106 @@
+{
+    "round": "R234",
+    "registered_at": "2026-10-20",
+    "status": "pre_registered_before_strategy_backtest",
+    "hypothesis": "R232 (SG&A + OCF margin + gross-margin trend) passed 11 of 12 gates and failed only G1 (discovery -20.85% vs control -19.84%). R233 showed that adding gross-margin stability to that mix made discovery worse (-24.26%), but R224 (SG&A + gross-margin stability) had a much stronger discovery (-3.70%). The difference suggests the gross-margin trend component, not stability, is the discovery drag. R231 (SG&A + OCF margin) had strong validation (+18.05%) and the best recent 12m among single-family composites at the time (-6.12%). Replacing the trend component with stability may keep the recent strength while repairing discovery. Audited pairwise correlations: SG&A vs OCF margin 0.116942, SG&A vs gross-margin stability 0.056021, OCF margin vs gross-margin stability 0.197420 (52 months).",
+    "factor": {
+        "id": "research_composite_sga_ocf_gm_stability",
+        "kind": "strategy_level_composite",
+        "formula": "1/3 ext_alt_hs300_sga_ratio_4q_low + 1/3 ext_alt_hs300_ocf_margin_4q + 1/3 ext_alt_hs300_gross_margin_stability_4q_low",
+        "components": {
+            "ext_alt_hs300_sga_ratio_4q_low": 0.3333333333333333,
+            "ext_alt_hs300_ocf_margin_4q": 0.3333333333333333,
+            "ext_alt_hs300_gross_margin_stability_4q_low": 0.3333333333333333
+        },
+        "missing_policy": "all three components must be non-null; no filling, no fallback to any single factor or pair",
+        "rationale": "SG&A level captures cost discipline; OCF margin captures revenue-to-cash efficiency; gross-margin stability captures margin predictability. Equal weights are a fixed prior, not an optimized allocation. All pairwise correlations were audited before this preregistration."
+    },
+    "universe": {
+        "rule": "historical HS300 members excluding industry_l1 in {银行, 非银金融}",
+        "industry_source": "current ext_hy_ths industry snapshot; not historical PIT"
+    },
+    "candidate_strategy": {
+        "id": "ai_hs300_sga_ocf_gm_stability_composite_h20_sl20",
+        "scoring": {
+            "ext_alt_hs300_sga_ratio_4q_low": 0.15,
+            "ext_alt_hs300_ocf_margin_4q": 0.15,
+            "ext_alt_hs300_gross_margin_stability_4q_low": 0.15,
+            "uf_quality_value_defensive": 0.3,
+            "uf_cash_quality": 0.25
+        },
+        "limit": 30,
+        "max_hold_days": 20,
+        "stop_loss": -0.2
+    },
+    "control_strategy": {
+        "id": "ai_hs300_sga_ocf_gm_stability_composite_control",
+        "purpose": "Same non-financial universe, three-component availability filter and execution; none of the three components is scored.",
+        "scoring": {
+            "uf_quality_value_defensive": 0.545,
+            "uf_cash_quality": 0.455
+        },
+        "limit": 30,
+        "max_hold_days": 20,
+        "stop_loss": -0.2
+    },
+    "related_benchmarks": [
+        {
+            "strategy_id": "ai_hs300_sga_nonfin_quality_h20_sl20",
+            "source_evidence": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r221_sga_nonfin_quality.json",
+            "use": "G9 full-sample relative-performance gate"
+        }
+    ],
+    "execution": {
+        "engine": "StrategyBacktestService",
+        "matching": "open_t+1",
+        "cost": "3x: 6bp commission + 15bp slippage + 10bp stamp tax",
+        "max_positions": 10,
+        "position_sizing": "equal",
+        "universe": "historical non-financial HS300 membership; daily snapshots from 2022",
+        "segments": [
+            [
+                "2022-07-01",
+                "2024-12-31"
+            ],
+            [
+                "2025-01-02",
+                "2026-10-16"
+            ]
+        ]
+    },
+    "samples": {
+        "discovery": [
+            "2022-07-01",
+            "2024-12-31"
+        ],
+        "validation": [
+            "2025-01-02",
+            "2026-10-16"
+        ],
+        "recent_12m": "last 252 trading-day returns of the stitched 2022-2026 curve",
+        "rolling_1y": "252-trading-day rolling compounded return over the stitched 2022-2026 curve"
+    },
+    "gates": {
+        "D1": "three-component coverage within historical non-financial HS300 membership over 2022-2026 is at least 90%",
+        "D2": "first valid three-component value occurs by 2022-06-30 and recent-12m coverage is at least 95%",
+        "D3": "mean absolute monthly cross-sectional Spearman correlation is at most 0.70 for every pair among the three components",
+        "G1": "discovery 2022-2024 total return is at least control + 5pp",
+        "G2": "discovery 2022-2024 MDD is no worse than control by more than 2pp",
+        "G3": "validation 2025-2026 total return is at least control - 5pp",
+        "G4": "full-sample rolling-1y positive rate is at least control",
+        "G5": "full-sample MDD is no worse than control by more than 2pp",
+        "G6": "full-sample total return is at least control - 5pp",
+        "G7": "recent 12m total return is positive and recent 12m MDD is no worse than control by more than 2pp",
+        "G8": "full-sample total return is positive",
+        "G9": "candidate full-sample total return is at least the R221 SG&A-level candidate full-sample total return minus 5pp"
+    },
+    "decision_rule": "All D and G gates must pass. The component set, equal weights, non-financial universe, scoring weights, holding period and stop loss are frozen before the strategy backtest. No post-result relaxation, filling, reweighting, or substitution with other factors is allowed.",
+    "known_limitations": [
+        "The industry classification is a current snapshot, not a historical PIT industry series.",
+        "Financial tables are current snapshots; statutory deadlines are used because provider announcement dates are not reliable first-disclosure timestamps.",
+        "All three components are research-only; the composite inherits their factor-construction caveats.",
+        "Equal weights are a fixed prior, not an optimized allocation.",
+        "This is the fifth composite built from the same component family; multiple-comparison risk is acknowledged and no gate is relaxed.",
+        "The factor is research-only until every pre-registered gate passes."
+    ]
+}
