@@ -102,6 +102,12 @@ FIELDS = [
 ]
 
 
+def _holder_paths() -> list[Path]:
+    r87 = sorted((DATA / "research" / "r87_sina_holder_full").glob("*.parquet"))
+    r163 = sorted((DATA / "research" / "r163_holder_batch").glob("*.parquet"))
+    return [*r87, *r163]
+
+
 def _calendar() -> tuple[list[date], list[str]]:
     paths = sorted((DATA / "kline_daily_enriched").glob("date=*/part.parquet"))
     if not paths:
@@ -114,11 +120,14 @@ def _calendar() -> tuple[list[date], list[str]]:
         .sort("date")["date"]
         .to_list()
     )
-    holder_files = sorted((DATA / "research" / "r87_sina_holder_full").glob("*.parquet"))
-    # The holder cache is the deterministic historical-HS300 sample.  The
+    r87 = sorted((DATA / "research" / "r87_sina_holder_full").glob("*.parquet"))
+    r163 = sorted((DATA / "research" / "r163_holder_batch").glob("*.parquet"))
+    # The holder caches define the deterministic historical-HS300 sample. The
     # insider cache covers the whole market, so keeping its extra symbols would
     # multiply the extension table by ~8x without helping an HS300 strategy.
-    symbols = {path.stem for path in holder_files}
+    symbols = {path.stem for path in r87}
+    for path in r163:
+        symbols.update(pl.read_parquet(path, columns=["symbol"])["symbol"].unique().to_list())
     if not symbols:
         raise RuntimeError("研究缓存中没有可用股票代码")
     return dates, sorted(symbols)
@@ -133,7 +142,7 @@ def _calendar_frame(dates: list[date], symbols: list[str]) -> pl.DataFrame:
 
 
 def _holder_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
-    paths = sorted((DATA / "research" / "r87_sina_holder_full").glob("*.parquet"))
+    paths = _holder_paths()
     frames = [
         pl.read_parquet(path, columns=[
             "symbol", "period_end", "announce_date", "holder_rank", "free_float_ratio",
