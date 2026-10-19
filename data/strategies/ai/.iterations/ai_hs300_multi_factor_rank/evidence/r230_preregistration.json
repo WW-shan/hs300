@@ -1,0 +1,107 @@
+{
+    "round": "R230",
+    "registered_at": "2026-10-20",
+    "status": "pre_registered_before_factor_build_and_strategy_backtest",
+    "hypothesis": "Cash and equivalents scaled by total assets measures balance-sheet liquidity and downside resilience. It is economically distinct from leverage, profitability, cash conversion and accrual factors: a firm can be profitable yet illiquid, and can be low-leverage while holding little cash. High cash intensity may indicate the ability to fund operations and investment without external financing during credit stress, and to survive demand shocks.",
+    "factor": {
+        "id": "ext_alt_hs300_cash_to_assets",
+        "raw_field": "cash_to_assets",
+        "formula": "cash and cash equivalents divided by total assets; higher means a larger liquidity buffer",
+        "point_in_time": "statutory-deadline fallback via financial_pit_date; local 2021Q1-2026Q2 balance-sheet snapshots; no 2018-2020 restated data used",
+        "missing_policy": "no filling, no zero substitution, no fallback to debt ratio, ocf_ni, accrual or cash-flow stability factors",
+        "effective_date": "balance-sheet PIT effective date (announce date when valid, otherwise statutory deadline plus three calendar days)"
+    },
+    "universe": {
+        "rule": "historical HS300 members excluding industry_l1 in {银行, 非银金融}",
+        "industry_source": "current ext_hy_ths industry snapshot; not historical PIT"
+    },
+    "candidate_strategy": {
+        "id": "ai_hs300_cash_to_assets_quality_h20_sl20",
+        "scoring": {
+            "ext_alt_hs300_cash_to_assets": 0.45,
+            "uf_quality_value_defensive": 0.3,
+            "uf_cash_quality": 0.25
+        },
+        "limit": 30,
+        "max_hold_days": 20,
+        "stop_loss": -0.2
+    },
+    "control_strategy": {
+        "id": "ai_hs300_cash_to_assets_quality_control",
+        "purpose": "Same non-financial universe, cash-to-assets availability filter and execution; cash-to-assets is not scored.",
+        "scoring": {
+            "uf_quality_value_defensive": 0.545,
+            "uf_cash_quality": 0.455
+        },
+        "limit": 30,
+        "max_hold_days": 20,
+        "stop_loss": -0.2
+    },
+    "related_benchmarks": [
+        {
+            "strategy_id": "ai_hs300_sga_nonfin_quality_h20_sl20",
+            "source_evidence": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r221_sga_nonfin_quality.json",
+            "use": "G9 full-sample relative-performance gate"
+        },
+        {
+            "factor_id": "debt_ratio_latest",
+            "use": "D3 correlation only"
+        },
+        {
+            "factor_id": "ocf_ni",
+            "use": "D3 correlation only"
+        }
+    ],
+    "execution": {
+        "engine": "StrategyBacktestService",
+        "matching": "open_t+1",
+        "cost": "3x: 6bp commission + 15bp slippage + 10bp stamp tax",
+        "max_positions": 10,
+        "position_sizing": "equal",
+        "universe": "historical non-financial HS300 membership; daily snapshots from 2022",
+        "segments": [
+            [
+                "2022-07-01",
+                "2024-12-31"
+            ],
+            [
+                "2025-01-02",
+                "2026-10-16"
+            ]
+        ]
+    },
+    "samples": {
+        "discovery": [
+            "2022-07-01",
+            "2024-12-31"
+        ],
+        "validation": [
+            "2025-01-02",
+            "2026-10-16"
+        ],
+        "recent_12m": "last 252 trading-day returns of the stitched 2022-2026 curve",
+        "rolling_1y": "252-trading-day rolling compounded return over the stitched 2022-2026 curve"
+    },
+    "gates": {
+        "D1": "factor coverage within historical non-financial HS300 membership over 2022-2026 is at least 90%",
+        "D2": "first valid value occurs by 2022-06-30 and recent-12m coverage is at least 95%",
+        "D3": "mean absolute monthly cross-sectional Spearman correlation is at most 0.70 against both debt_ratio_latest and ocf_ni",
+        "G1": "discovery 2022-2024 total return is at least control + 5pp",
+        "G2": "discovery 2022-2024 MDD is no worse than control by more than 2pp",
+        "G3": "validation 2025-2026 total return is at least control - 5pp",
+        "G4": "full-sample rolling-1y positive rate is at least control",
+        "G5": "full-sample MDD is no worse than control by more than 2pp",
+        "G6": "full-sample total return is at least control - 5pp",
+        "G7": "recent 12m total return is positive and recent 12m MDD is no worse than control by more than 2pp",
+        "G8": "full-sample total return is positive",
+        "G9": "candidate full-sample total return is at least the R221 SG&A-level candidate full-sample total return minus 5pp"
+    },
+    "decision_rule": "All D and G gates must pass. The factor definition, non-financial universe, scoring weights, holding period and stop loss are frozen before factor construction. No post-result relaxation, filling, industry redefinition, or substitution with prior factors is allowed.",
+    "known_limitations": [
+        "The industry classification is a current snapshot, not a historical PIT industry series.",
+        "Financial tables are current snapshots; statutory deadlines are used because provider announcement dates are not reliable first-disclosure timestamps.",
+        "Cash intensity can reflect pre-announced capex or acquisitions rather than pure defensive strength; it is not a measure of cash quality or profitability.",
+        "Financial firms are excluded because cash and leverage definitions are not economically comparable.",
+        "The factor is research-only until every pre-registered gate passes."
+    ]
+}
