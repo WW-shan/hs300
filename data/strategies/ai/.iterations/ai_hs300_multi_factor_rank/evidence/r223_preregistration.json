@@ -1,0 +1,86 @@
+{
+  "round": "R223",
+  "registered_at": "2026-10-20",
+  "status": "pre_registered_before_factor_build_and_strategy_backtest",
+  "hypothesis": "Stable gross margins can indicate pricing power, cost control and business-model resilience. For non-financial firms, lower four-quarter gross-margin volatility may identify higher-quality operating franchises not captured by SG&A expense intensity.",
+  "factor": {
+    "id": "ext_alt_hs300_gross_margin_stability_4q_low",
+    "raw_field": "gross_margin_stability_4q_low",
+    "formula": "negative population standard deviation (ddof=0) of the latest four single-quarter gross margins, where gross margin = (revenue - operating costs) / revenue; higher is better",
+    "quarterization": "Q1 uses reported cumulative values; later quarters subtract the prior cumulative quarter; each quarter requires revenue > 0 and non-null operating costs",
+    "window": "four consecutive complete quarters",
+    "effective_date": "maximum statutory disclosure deadline of the four quarters plus four calendar days",
+    "point_in_time": "statutory-deadline fallback; local 2021Q1-2026Q2 financial snapshots; no 2018-2020 restated data used",
+    "missing_policy": "no filling, no zero substitution, no fallback to gross-margin level"
+  },
+  "universe": {
+    "rule": "historical HS300 members excluding industry_l1 in {银行, 非银金融}",
+    "industry_source": "current ext_hy_ths industry snapshot; not historical PIT",
+    "coverage_probe": {
+      "non_financial_symbols": 469,
+      "symbols_with_complete_four_quarter_window": 463,
+      "symbol_coverage": 0.9872,
+      "window_checked": ["2021-03-31", "2021-12-31"]
+    }
+  },
+  "candidate_strategy": {
+    "id": "ai_hs300_gross_margin_stability_h20_sl20",
+    "scoring": {
+      "ext_alt_hs300_gross_margin_stability_4q_low": 0.45,
+      "uf_quality_value_defensive": 0.30,
+      "uf_cash_quality": 0.25
+    },
+    "limit": 30,
+    "max_hold_days": 20,
+    "stop_loss": -0.2
+  },
+  "control_strategy": {
+    "id": "ai_hs300_gross_margin_stability_control",
+    "purpose": "Same non-financial universe, gross-margin-stability availability filter and execution; stability is not a score component.",
+    "scoring": {
+      "uf_quality_value_defensive": 0.545,
+      "uf_cash_quality": 0.455
+    },
+    "limit": 30,
+    "max_hold_days": 20,
+    "stop_loss": -0.2
+  },
+  "execution": {
+    "engine": "StrategyBacktestService",
+    "matching": "open_t+1",
+    "cost": "3x: 6bp commission + 15bp slippage + 10bp stamp tax",
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "universe": "historical non-financial HS300 membership; daily snapshots from 2022",
+    "segments": [
+      ["2022-07-01", "2024-12-31"],
+      ["2025-01-02", "2026-10-16"]
+    ]
+  },
+  "samples": {
+    "discovery": ["2022-07-01", "2024-12-31"],
+    "validation": ["2025-01-02", "2026-10-16"],
+    "recent_12m": "last 252 trading-day returns of the stitched 2022-2026 curve",
+    "rolling_1y": "252-trading-day rolling compounded return over the stitched 2022-2026 curve"
+  },
+  "gates": {
+    "D1": "factor coverage within historical non-financial HS300 membership over 2022-2026 is at least 90%",
+    "D2": "first valid value occurs by 2022-06-30 and recent-12m coverage is at least 95%",
+    "D3": "mean absolute monthly cross-sectional Spearman correlation with the R221 SG&A level factor is at most 0.70",
+    "G1": "discovery 2022-2024 total return is at least control + 5pp",
+    "G2": "discovery 2022-2024 MDD is no worse than control by more than 2pp",
+    "G3": "validation 2025-2026 total return is at least control - 5pp",
+    "G4": "full-sample rolling-1y positive rate is at least control",
+    "G5": "full-sample MDD is no worse than control by more than 2pp",
+    "G6": "full-sample total return is at least control - 5pp",
+    "G7": "recent 12m total return is positive and recent 12m MDD is no worse than control by more than 2pp",
+    "G8": "full-sample total return is positive"
+  },
+  "decision_rule": "All D and G gates must pass. The factor definition, non-financial universe, scoring weights, holding period and stop loss are frozen before factor construction. No post-result relaxation, filling, industry redefinition, or substitution with SG&A factors is allowed.",
+  "known_limitations": [
+    "The industry classification is a current snapshot, not a historical PIT industry series.",
+    "The financial tables are current snapshots; statutory deadlines are used because provider announcement dates are not reliable first-disclosure timestamps.",
+    "Gross-margin stability may be correlated with industry and business model; D3 measures correlation with the R221 SG&A level factor but does not neutralize industry exposure.",
+    "The factor is research-only until every pre-registered gate passes."
+  ]
+}
