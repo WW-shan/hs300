@@ -1,0 +1,173 @@
+{
+  "checked_at": "2026-10-20",
+  "reload": {
+    "ok": true,
+    "count": 114
+  },
+  "factor_count": 201,
+  "strategy_count": 137,
+  "load_errors": [],
+  "factor": {
+    "id": "ext_alt_hs300_net_financing_4q_low",
+    "label": "HS300另类因子·净筹资现金流/总资产4季强度反向",
+    "group": "扩展数据",
+    "kind": "base",
+    "version": 1,
+    "formula": "扩展表「HS300另类因子」字段 net_financing_4q_low (时序·按交易日对齐)",
+    "direction": "none",
+    "unit": "none",
+    "warmup_bars": 1,
+    "pit": false,
+    "asset_types": [
+      "etf",
+      "stock"
+    ],
+    "stability": "stable",
+    "scale_free": false,
+    "dependencies": []
+  },
+  "strategies": [
+    {
+      "id": "ai_hs300_net_financing_quality_control",
+      "name": "HS300净筹资强度匹配对照",
+      "description": "与R218候选使用相同股票池、净筹资因子可用性过滤和执行口径，但不把净筹资强度计入评分",
+      "tags": [
+        "质量",
+        "现金质量",
+        "匹配对照",
+        "沪深300",
+        "实验",
+        "R218"
+      ],
+      "source": "ai",
+      "research_only": true,
+      "execution_backend": "polars_expr",
+      "asset_types": [
+        "stock"
+      ],
+      "timeframes": [
+        "1d"
+      ],
+      "version": "1.0.0",
+      "basic_filter": {
+        "price_min": 3,
+        "price_max": 500,
+        "market_cap_min": 1000000000.0,
+        "float_cap_min": null,
+        "float_cap_max": null,
+        "amount_min": 20000000.0,
+        "amount_max": null,
+        "turnover_min": null,
+        "turnover_max": null,
+        "exclude_st": true,
+        "exclude_new_days": 60,
+        "boards": [
+          "沪主板",
+          "深主板",
+          "创业板",
+          "科创板",
+          "北交所"
+        ]
+      },
+      "params": [],
+      "params_defaults": {},
+      "scoring": {
+        "uf_quality_value_defensive": 0.545,
+        "uf_cash_quality": 0.455
+      },
+      "scoring_directions": {},
+      "entry_signals": [],
+      "exit_signals": [],
+      "overlay_filter": [],
+      "minute_exit_trigger_supported_signals": [
+        "signal_ma10_breakdown",
+        "signal_ma20_breakdown",
+        "signal_ma5_breakdown",
+        "signal_ma_dead_5_20"
+      ],
+      "stop_loss": -0.2,
+      "take_profit": null,
+      "trailing_stop": null,
+      "trailing_take_profit_activate": null,
+      "trailing_take_profit_drawdown": null,
+      "max_hold_days": 20,
+      "order_by": "score",
+      "descending": true,
+      "limit": 30,
+      "display_limit": null,
+      "composite_children": null
+    },
+    {
+      "id": "ai_hs300_net_financing_quality_h20_sl20",
+      "name": "HS300净筹资强度质量",
+      "description": "4季净筹资现金流/总资产反向、质量价值防守与现金质量复合；20日持有、-20%止损（R218实验）",
+      "tags": [
+        "净筹资现金流",
+        "外部融资",
+        "质量",
+        "现金质量",
+        "沪深300",
+        "实验",
+        "R218"
+      ],
+      "source": "ai",
+      "research_only": true,
+      "execution_backend": "polars_expr",
+      "asset_types": [
+        "stock"
+      ],
+      "timeframes": [
+        "1d"
+      ],
+      "version": "1.0.0",
+      "basic_filter": {
+        "price_min": 3,
+        "price_max": 500,
+        "market_cap_min": 1000000000.0,
+        "float_cap_min": null,
+        "float_cap_max": null,
+        "amount_min": 20000000.0,
+        "amount_max": null,
+        "turnover_min": null,
+        "turnover_max": null,
+        "exclude_st": true,
+        "exclude_new_days": 60,
+        "boards": [
+          "沪主板",
+          "深主板",
+          "创业板",
+          "科创板",
+          "北交所"
+        ]
+      },
+      "params": [],
+      "params_defaults": {},
+      "scoring": {
+        "ext_alt_hs300_net_financing_4q_low": 0.45,
+        "uf_quality_value_defensive": 0.3,
+        "uf_cash_quality": 0.25
+      },
+      "scoring_directions": {},
+      "entry_signals": [],
+      "exit_signals": [],
+      "overlay_filter": [],
+      "minute_exit_trigger_supported_signals": [
+        "signal_ma10_breakdown",
+        "signal_ma20_breakdown",
+        "signal_ma5_breakdown",
+        "signal_ma_dead_5_20"
+      ],
+      "stop_loss": -0.2,
+      "take_profit": null,
+      "trailing_stop": null,
+      "trailing_take_profit_activate": null,
+      "trailing_take_profit_drawdown": null,
+      "max_hold_days": 20,
+      "order_by": "score",
+      "descending": true,
+      "limit": 30,
+      "display_limit": null,
+      "composite_children": null
+    }
+  ]
+}
