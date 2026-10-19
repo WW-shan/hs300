@@ -1494,6 +1494,20 @@ class StrategyBacktestService:
             timing_ms["load_panel"] = round((time.perf_counter() - t_load) * 1000, 1)
             if panel.is_empty():
                 return _err("无数据，请检查日期范围或先运行盘后管道")
+            if "industry_l1" in s.required_features:
+                from app.services.industry_map import attach_industry_l1
+
+                data_dir = getattr(
+                    getattr(getattr(self.engine, "repo", None), "store", None),
+                    "data_dir",
+                    None,
+                )
+                try:
+                    panel = attach_industry_l1(panel, data_dir)
+                except ValueError as e:
+                    return _err(f"strategy industry data load failed: {e}")
+                if "industry_l1" not in panel.columns:
+                    return _err("strategy industry universe filter missing column: industry_l1")
             neutralize_spec = effective_neutralize(s.meta, overrides)
             if neutralize_enabled(neutralize_spec) and neutralize_spec.get("industry"):
                 from app.services.industry_map import attach_industry_l1

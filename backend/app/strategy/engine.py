@@ -1033,6 +1033,8 @@ class StrategyEngine:
                 raise ValueError(f"strategy {strategy_id} requires current data")
             df = current
 
+        df = self._attach_required_industry(df, s)
+
         if df.is_empty():
             return StrategyResult(
                 as_of=as_of,
@@ -1825,6 +1827,23 @@ class StrategyEngine:
             # 注入失败不阻断策略执行: 未注入列会由 required_features 校验兜底报错
             logger.warning("intraday signal inject failed: %s", e)
             return minute_df
+
+    def _attach_required_industry(
+        self, df: pl.DataFrame, strategy: StrategyDef
+    ) -> pl.DataFrame:
+        """Attach industry_l1 when a strategy explicitly requires it; fail closed."""
+        from app.services.industry_map import INDUSTRY_COLUMN
+
+        if INDUSTRY_COLUMN not in strategy.required_features or INDUSTRY_COLUMN in df.columns:
+            return df
+        if self._industry_loader is None:
+            raise ValueError(
+                f"strategy {strategy.meta.get('id', '<unknown>')} requires "
+                f"{INDUSTRY_COLUMN}, but industry_loader is not configured"
+            )
+        if "symbol" not in df.columns:
+            raise ValueError("industry universe filtering requires a symbol column")
+        return df.join(self._industry_loader(), on="symbol", how="left")
 
     @staticmethod
     def _join_basic_columns(df: pl.DataFrame, current: pl.DataFrame) -> pl.DataFrame:
