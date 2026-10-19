@@ -1,0 +1,1089 @@
+{
+  "purpose": "R193 treasury futures momentum timing scan",
+  "generated_at": "2026-10-19T20:59:01",
+  "data": {
+    "source": "sina futures_main_sina T0/TF0 via AkShare",
+    "months": 102,
+    "start": "2018-02-28",
+    "end": "2026-08-31"
+  },
+  "method": {
+    "factors": {
+      "bond_mom_20d": "T0 (10Y treasury futures) 20d momentum, direction negative",
+      "bond_tf_mom_20d": "TF0 (5Y treasury futures) 20d momentum, direction negative"
+    },
+    "long_cash": "signal < 0 holds HS300 index, else cash; 0.05% per switch",
+    "forward_return": "T+1 open to T+21 open on 000300.SH",
+    "splits": {
+      "discovery": [
+        "2018-02-01",
+        "2022-12-31"
+      ],
+      "validation": [
+        "2023-01-01",
+        "2024-12-31"
+      ],
+      "holdout": [
+        "2025-01-01",
+        "2026-08-31"
+      ]
+    }
+  },
+  "summary": {
+    "discovery": {
+      "months": 58,
+      "bond_mom_20d": {
+        "ic": -0.051524,
+        "hit_rate": 0.4828,
+        "long_cash": {
+          "months": 58,
+          "strategy_total": 0.078033,
+          "benchmark_total": 0.032905,
+          "strategy_mdd": -0.228314,
+          "benchmark_mdd": -0.346235,
+          "switches": 26
+        },
+        "max_control_corr": 0.109662,
+        "residual_ic": -0.024639
+      },
+      "bond_tf_mom_20d": {
+        "ic": -0.089298,
+        "hit_rate": 0.431,
+        "long_cash": {
+          "months": 58,
+          "strategy_total": -0.186279,
+          "benchmark_total": 0.032905,
+          "strategy_mdd": -0.272519,
+          "benchmark_mdd": -0.346235,
+          "switches": 28
+        },
+        "max_control_corr": 0.16134,
+        "residual_ic": -0.060691
+      }
+    },
+    "validation": {
+      "months": 24,
+      "bond_mom_20d": {
+        "ic": -0.031304,
+        "hit_rate": 0.5,
+        "long_cash": {
+          "months": 24,
+          "strategy_total": 0.020339,
+          "benchmark_total": -0.131046,
+          "strategy_mdd": -0.118519,
+          "benchmark_mdd": -0.221001,
+          "switches": 8
+        },
+        "max_control_corr": 0.250435,
+        "residual_ic": 0.01913
+      },
+      "bond_tf_mom_20d": {
+        "ic": 0.009565,
+        "hit_rate": 0.5,
+        "long_cash": {
+          "months": 24,
+          "strategy_total": 0.126738,
+          "benchmark_total": -0.131046,
+          "strategy_mdd": -0.101443,
+          "benchmark_mdd": -0.221001,
+          "switches": 12
+        },
+        "max_control_corr": 0.232174,
+        "residual_ic": 0.098261
+      }
+    },
+    "holdout": {
+      "months": 20,
+      "bond_mom_20d": {
+        "ic": 0.166917,
+        "hit_rate": 0.55,
+        "long_cash": {
+          "months": 20,
+          "strategy_total": 0.129772,
+          "benchmark_total": 0.065337,
+          "strategy_mdd": -0.057683,
+          "benchmark_mdd": -0.130774,
+          "switches": 11
+        },
+        "max_control_corr": 0.177444,
+        "residual_ic": 0.18797
+      },
+      "bond_tf_mom_20d": {
+        "ic": 0.117293,
+        "hit_rate": 0.55,
+        "long_cash": {
+          "months": 20,
+          "strategy_total": 0.064216,
+          "benchmark_total": 0.065337,
+          "strategy_mdd": -0.057683,
+          "benchmark_mdd": -0.130774,
+          "switches": 9
+        },
+        "max_control_corr": 0.360902,
+        "residual_ic": -0.010526
+      }
+    }
+  },
+  "recent_12m_long_cash": {
+    "bond_mom_20d": {
+      "months": 12,
+      "strategy_total": 0.027862,
+      "benchmark_total": -0.103356,
+      "strategy_mdd": -0.057683,
+      "benchmark_mdd": -0.130774,
+      "switches": 7
+    },
+    "bond_tf_mom_20d": {
+      "months": 12,
+      "strategy_total": -0.03081,
+      "benchmark_total": -0.103356,
+      "strategy_mdd": -0.057683,
+      "benchmark_mdd": -0.130774,
+      "switches": 3
+    }
+  },
+  "decision": {
+    "bond_mom_20d": {
+      "D1": true,
+      "G1": false,
+      "G2": false,
+      "G3": true,
+      "G4": true,
+      "G5": false,
+      "all_pass": false
+    },
+    "bond_tf_mom_20d": {
+      "D1": true,
+      "G1": false,
+      "G2": false,
+      "G3": false,
+      "G4": true,
+      "G5": true,
+      "all_pass": false
+    }
+  },
+  "monthly_records": [
+    {
+      "date": "2018-02-28",
+      "forward_return": -0.035114543180264524,
+      "bond_mom_20d": 0.009534706331044918,
+      "bond_tf_mom_20d": 0.00578939133156009,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.2619529745042497,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-03-30",
+      "forward_return": -0.028916822021013644,
+      "bond_mom_20d": 0.010795055864414094,
+      "bond_tf_mom_20d": 0.005236959452452616,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.738731563201197,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-04-27",
+      "forward_return": -0.00391227942200445,
+      "bond_mom_20d": 0.008000000000000007,
+      "bond_tf_mom_20d": 0.0073730342871873855,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.212893563579278,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-05-31",
+      "forward_return": -0.07526113077860042,
+      "bond_mom_20d": 0.002008668992493856,
+      "bond_tf_mom_20d": -0.001175508535214087,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.35522749003984,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-07-31",
+      "forward_return": -0.038803352946009007,
+      "bond_mom_20d": 0.0006782490739292157,
+      "bond_tf_mom_20d": 0.0016268429079817626,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.901029673093044,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-08-31",
+      "forward_return": -0.009190559793296083,
+      "bond_mom_20d": -0.010918165748154296,
+      "bond_tf_mom_20d": -0.0067396371744198325,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.442032551848512,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-09-28",
+      "forward_return": -0.027394729647761795,
+      "bond_mom_20d": -0.0027355463201641506,
+      "bond_tf_mom_20d": -0.0015320192013071887,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.020278583765112,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-10-31",
+      "forward_return": 0.004277279745523055,
+      "bond_mom_20d": 0.0142917637095068,
+      "bond_tf_mom_20d": 0.007786486348035249,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.9253622641509445,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-11-30",
+      "forward_return": -0.07471403256860676,
+      "bond_mom_20d": 0.012356020942408508,
+      "bond_tf_mom_20d": 0.006674819117497233,
+      "qvix_z_252": null,
+      "equity_risk_premium": 6.2235440613026825,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-12-28",
+      "forward_return": 0.054552318526569055,
+      "bond_mom_20d": 0.010912287960281208,
+      "bond_tf_mom_20d": 0.006225641544769012,
+      "qvix_z_252": null,
+      "equity_risk_premium": 6.679302775024777,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-01-31",
+      "forward_return": 0.15366053121553125,
+      "bond_mom_20d": -0.0013243683781580806,
+      "bond_tf_mom_20d": 0.00255998393735557,
+      "qvix_z_252": null,
+      "equity_risk_premium": 6.20728696461825,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-02-28",
+      "forward_return": 0.010963944792626412,
+      "bond_mom_20d": -0.008742331288343563,
+      "bond_tf_mom_20d": -0.005218787635487665,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.118773963515755,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-03-29",
+      "forward_return": -0.0035861036560826953,
+      "bond_mom_20d": 0.011989044493824652,
+      "bond_tf_mom_20d": 0.006160993839006146,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.9317,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-04-30",
+      "forward_return": -0.03561887611828851,
+      "bond_mom_20d": -0.008055413032324266,
+      "bond_tf_mom_20d": -0.0045305814246161535,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.76305925020375,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-05-31",
+      "forward_return": 0.07977667497204455,
+      "bond_mom_20d": 0.0027414265763203716,
+      "bond_tf_mom_20d": 0.0016687737041720663,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.435701393728223,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-06-28",
+      "forward_return": -0.010615154240560809,
+      "bond_mom_20d": 0.006760592454972292,
+      "bond_tf_mom_20d": 0.003989898989898988,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.957906055646481,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-07-31",
+      "forward_return": -0.0036210596430152897,
+      "bond_mom_20d": 0.0016288302962434997,
+      "bond_tf_mom_20d": 0.0012032487716835405,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.082032289950576,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-08-30",
+      "forward_return": 0.003917249806700829,
+      "bond_mom_20d": 0.002177876823338698,
+      "bond_tf_mom_20d": 0.0,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.489708547008547,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-09-30",
+      "forward_return": 0.04282393313341659,
+      "bond_mom_20d": -0.007075352504169463,
+      "bond_tf_mom_20d": -0.0021499999999999853,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.391323208191126,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-10-31",
+      "forward_return": -0.00685409783387847,
+      "bond_mom_20d": -0.007432673216922092,
+      "bond_tf_mom_20d": -0.003608841662072093,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.28098029134533,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-11-29",
+      "forward_return": 0.046931662074929825,
+      "bond_mom_20d": 0.005282051282051281,
+      "bond_tf_mom_20d": 0.0063354786806113506,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.561003490401396,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-12-31",
+      "forward_return": -0.05866913964335474,
+      "bond_mom_20d": 0.0035279680948971937,
+      "bond_tf_mom_20d": 0.003564435965661028,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.993581300813007,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-01-23",
+      "forward_return": 0.09036901746719495,
+      "bond_mom_20d": 0.015897279119535312,
+      "bond_tf_mom_20d": 0.008357103538007227,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.368004013377925,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-02-28",
+      "forward_return": -0.0784565984452904,
+      "bond_mom_20d": 0.014244156886347614,
+      "bond_tf_mom_20d": 0.007841191066997544,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.905442350907519,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-03-31",
+      "forward_return": 0.05380120071792138,
+      "bond_mom_20d": 0.011210873555235867,
+      "bond_tf_mom_20d": 0.01178500986193276,
+      "qvix_z_252": null,
+      "equity_risk_premium": 6.626689861751153,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-04-30",
+      "forward_return": 0.03462710927817336,
+      "bond_mom_20d": 0.007931068246352702,
+      "bond_tf_mom_20d": 0.023046189826544383,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.958176720475786,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-05-29",
+      "forward_return": 0.0694351679231191,
+      "bond_mom_20d": -0.02203176447801669,
+      "bond_tf_mom_20d": -0.021997423295318952,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.915389655172415,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-06-30",
+      "forward_return": 0.09263193616132503,
+      "bond_mom_20d": -0.0066346487102044716,
+      "bond_tf_mom_20d": -0.00800156128024987,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.254544426494345,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-07-31",
+      "forward_return": 0.02851306584029767,
+      "bond_mom_20d": -0.011253938878607483,
+      "bond_tf_mom_20d": -0.008172911230367896,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.348888953913679,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-08-31",
+      "forward_return": -0.04061692237485515,
+      "bond_mom_20d": -0.010346219844554305,
+      "bond_tf_mom_20d": -0.011343372300376409,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.902715224913495,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-09-30",
+      "forward_return": 0.05018001076419343,
+      "bond_mom_20d": 0.0008188750703721492,
+      "bond_tf_mom_20d": 0.0013565112540192548,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.0616053352559485,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-10-30",
+      "forward_return": 0.061955291653004396,
+      "bond_mom_20d": -0.0026437541308659274,
+      "bond_tf_mom_20d": -0.0027469783238438517,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.002908045977011,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-11-30",
+      "forward_return": 0.021824735600316725,
+      "bond_mom_20d": -0.006408952187182071,
+      "bond_tf_mom_20d": -0.0033004950742611117,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.548096532970768,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-12-31",
+      "forward_return": 0.027608844237531738,
+      "bond_mom_20d": 0.007816115596235962,
+      "bond_tf_mom_20d": 0.005287541544969132,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.2427960408684546,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-01-29",
+      "forward_return": -0.010652334373869476,
+      "bond_mom_20d": -0.002551150568906535,
+      "bond_tf_mom_20d": -0.0023042628863397807,
+      "qvix_z_252": -0.003826321244805273,
+      "equity_risk_premium": 3.090992476489028,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-02-26",
+      "forward_return": -0.06252947998330005,
+      "bond_mom_20d": -0.01947127605490584,
+      "bond_tf_mom_20d": -0.009242144177449174,
+      "qvix_z_252": 0.41556367110221565,
+      "equity_risk_premium": 3.02139722747322,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-03-31",
+      "forward_return": 0.019055576987535128,
+      "bond_mom_20d": 0.0068684156166081145,
+      "bond_tf_mom_20d": 0.0035777273872512616,
+      "qvix_z_252": -0.7812761802058417,
+      "equity_risk_premium": 3.6559269678302533,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-04-30",
+      "forward_return": 0.03665744162205975,
+      "bond_mom_20d": 0.006314168377823393,
+      "bond_tf_mom_20d": 0.004973374861850788,
+      "qvix_z_252": -0.9552969012078784,
+      "equity_risk_premium": 4.232449704142011,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-05-31",
+      "forward_return": -0.024639717318472587,
+      "bond_mom_20d": 0.007578861122490732,
+      "bond_tf_mom_20d": 0.0018029749085992641,
+      "qvix_z_252": -0.06528614098631615,
+      "equity_risk_premium": 4.052232079488999,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-06-30",
+      "forward_return": -0.07544907620462771,
+      "bond_mom_20d": 0.00015243127889852381,
+      "bond_tf_mom_20d": 0.0008996851102114345,
+      "qvix_z_252": -1.1936101506808987,
+      "equity_risk_premium": 3.905440223463687,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-07-30",
+      "forward_return": 0.01089008782187606,
+      "bond_mom_20d": 0.020178916336281327,
+      "bond_tf_mom_20d": 0.011841119160629576,
+      "qvix_z_252": -0.7030298708816007,
+      "equity_risk_premium": 4.785651219512195,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-08-31",
+      "forward_return": 0.023111812093443707,
+      "bond_mom_20d": -0.0033389813615070096,
+      "bond_tf_mom_20d": -0.0016785150078989508,
+      "qvix_z_252": -0.8363949435506125,
+      "equity_risk_premium": 5.213017727639,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-09-30",
+      "forward_return": -0.011561047583767303,
+      "bond_mom_20d": -0.0013500675033751852,
+      "bond_tf_mom_20d": -0.00039560874295330173,
+      "qvix_z_252": -0.2626974971915402,
+      "equity_risk_premium": 5.052614115781126,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-10-29",
+      "forward_return": -0.011915021500050749,
+      "bond_mom_20d": -0.007256530877789991,
+      "bond_tf_mom_20d": -0.004550400633099305,
+      "qvix_z_252": -1.2388195210490145,
+      "equity_risk_premium": 4.919459826361484,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-11-30",
+      "forward_return": 0.02623342547811003,
+      "bond_mom_20d": 0.005316481091383274,
+      "bond_tf_mom_20d": 0.0030226450621870793,
+      "qvix_z_252": -1.548671253119142,
+      "equity_risk_premium": 5.338265306122449,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-12-31",
+      "forward_return": -0.06687133318703742,
+      "bond_mom_20d": 0.009925309539325244,
+      "bond_tf_mom_20d": 0.007827982560443925,
+      "qvix_z_252": -1.2706464299094646,
+      "equity_risk_premium": 4.704031563201196,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-01-28",
+      "forward_return": -0.03795519097998845,
+      "bond_mom_20d": 0.00560237977193867,
+      "bond_tf_mom_20d": 0.007764509312496948,
+      "qvix_z_252": 1.2455530180940388,
+      "equity_risk_premium": 5.336485209003216,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-02-28",
+      "forward_return": -0.0962268275097844,
+      "bond_mom_20d": -0.012463054187192069,
+      "bond_tf_mom_20d": -0.01106022217891256,
+      "qvix_z_252": -0.9762998027645763,
+      "equity_risk_premium": 5.180449482895783,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-03-31",
+      "forward_return": -0.06429522206125116,
+      "bond_mom_20d": 0.00853499347324016,
+      "bond_tf_mom_20d": 0.005244928253339998,
+      "qvix_z_252": 1.227067510790391,
+      "equity_risk_premium": 5.744623208191126,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-04-29",
+      "forward_return": 0.01718171085258291,
+      "bond_mom_20d": -0.003625887845825404,
+      "bond_tf_mom_20d": -0.0023109450290097477,
+      "qvix_z_252": 1.385806499085776,
+      "equity_risk_premium": 6.082006601248885,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-05-31",
+      "forward_return": 0.08110569669100465,
+      "bond_mom_20d": 0.004446665001248906,
+      "bond_tf_mom_20d": 0.002023891795833732,
+      "qvix_z_252": 0.971743770558053,
+      "equity_risk_premium": 6.0913222614841,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-06-30",
+      "forward_return": -0.05860203317949364,
+      "bond_mom_20d": -0.0045296167247386165,
+      "bond_tf_mom_20d": -0.002908123028391163,
+      "qvix_z_252": 1.30764628509048,
+      "equity_risk_premium": 5.3029768480909825,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-07-29",
+      "forward_return": -0.02325719455238706,
+      "bond_mom_20d": 0.010954929718373307,
+      "bond_tf_mom_20d": 0.006575369555544386,
+      "qvix_z_252": 0.3645585362986045,
+      "equity_risk_premium": 5.9852587412587415,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-08-31",
+      "forward_return": -0.05726175407082856,
+      "bond_mom_20d": 0.0005918618988902669,
+      "bond_tf_mom_20d": -0.0020570085218925005,
+      "qvix_z_252": -0.7682200309603323,
+      "equity_risk_premium": 6.451910163339383,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-09-30",
+      "forward_return": -0.013670348030767832,
+      "bond_mom_20d": -0.010965235777155025,
+      "bond_tf_mom_20d": -0.006223354731219599,
+      "qvix_z_252": -0.23092854279196537,
+      "equity_risk_premium": 6.790998376313276,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-10-31",
+      "forward_return": 0.07010392869856585,
+      "bond_mom_20d": 0.008422512881490318,
+      "bond_tf_mom_20d": 0.00620353503027915,
+      "qvix_z_252": 1.9345512018794266,
+      "equity_risk_premium": 7.76252726326743,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-11-30",
+      "forward_return": -0.017101238238898198,
+      "bond_mom_20d": -0.021965033243043663,
+      "bond_tf_mom_20d": -0.014554542781534785,
+      "qvix_z_252": 0.826509486923497,
+      "equity_risk_premium": 6.575737937559129,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-12-30",
+      "forward_return": 0.060410325302289625,
+      "bond_mom_20d": 0.006174078907740244,
+      "bond_tf_mom_20d": 0.0023826069691252894,
+      "qvix_z_252": -1.7592141007845772,
+      "equity_risk_premium": 6.607570632672333,
+      "split": "discovery"
+    },
+    {
+      "date": "2023-01-31",
+      "forward_return": -0.024315537253976505,
+      "bond_mom_20d": -0.0006482497257405129,
+      "bond_tf_mom_20d": -0.0005444735930307809,
+      "qvix_z_252": -1.123400417042329,
+      "equity_risk_premium": 5.983294671403197,
+      "split": "validation"
+    },
+    {
+      "date": "2023-02-28",
+      "forward_return": -0.013552130356059289,
+      "bond_mom_20d": -0.0037922259368294853,
+      "bond_tf_mom_20d": -0.0036648177496036993,
+      "qvix_z_252": -1.1687777729691902,
+      "equity_risk_premium": 6.050851477170994,
+      "split": "validation"
+    },
+    {
+      "date": "2023-03-31",
+      "forward_return": -0.007027253515905385,
+      "bond_mom_20d": 0.00651269976454083,
+      "bond_tf_mom_20d": 0.004672432647380376,
+      "qvix_z_252": -1.9650821201552082,
+      "equity_risk_premium": 6.020314463176575,
+      "split": "validation"
+    },
+    {
+      "date": "2023-04-28",
+      "forward_return": -0.05603154974833502,
+      "bond_mom_20d": 0.008817375709873287,
+      "bond_tf_mom_20d": 0.004802693469327046,
+      "qvix_z_252": -1.926140567265916,
+      "equity_risk_premium": 5.939595815170009,
+      "split": "validation"
+    },
+    {
+      "date": "2023-05-31",
+      "forward_return": 0.017078121411923552,
+      "bond_mom_20d": 0.002617154708409508,
+      "bond_tf_mom_20d": 0.004434808317729466,
+      "qvix_z_252": -1.0840007671895107,
+      "equity_risk_premium": 6.4641308325709055,
+      "split": "validation"
+    },
+    {
+      "date": "2023-06-30",
+      "forward_return": 0.04297572050080811,
+      "bond_mom_20d": 0.004629629629629539,
+      "bond_tf_mom_20d": 0.0025510204081633514,
+      "qvix_z_252": -1.9050217021772748,
+      "equity_risk_premium": 6.4806702825888785,
+      "split": "validation"
+    },
+    {
+      "date": "2023-07-31",
+      "forward_return": -0.06638010786736348,
+      "bond_mom_20d": 0.0010797016097370271,
+      "bond_tf_mom_20d": 0.00019588638589618235,
+      "qvix_z_252": -0.22696316957758933,
+      "equity_risk_premium": 6.143116901408452,
+      "split": "validation"
+    },
+    {
+      "date": "2023-08-31",
+      "forward_return": -0.02645840219131801,
+      "bond_mom_20d": 0.0019076501663080059,
+      "bond_tf_mom_20d": 0.0003420975466719156,
+      "qvix_z_252": 0.190503171637676,
+      "equity_risk_premium": 6.541681073703367,
+      "split": "validation"
+    },
+    {
+      "date": "2023-09-28",
+      "forward_return": -0.019193085813833388,
+      "bond_mom_20d": -0.006151442659766748,
+      "bond_tf_mom_20d": -0.004250329766964711,
+      "qvix_z_252": -0.26441399054229053,
+      "equity_risk_premium": 6.524532014719412,
+      "split": "validation"
+    },
+    {
+      "date": "2023-10-31",
+      "forward_return": -0.024093131042072113,
+      "bond_mom_20d": 0.0032493107522646447,
+      "bond_tf_mom_20d": 0.0018675971887747167,
+      "qvix_z_252": -0.4636943664693569,
+      "equity_risk_premium": 6.704696240601503,
+      "split": "validation"
+    },
+    {
+      "date": "2023-11-30",
+      "forward_return": -0.023786117829342923,
+      "bond_mom_20d": -0.0017630638131151954,
+      "bond_tf_mom_20d": -0.0021069136165418056,
+      "qvix_z_252": -0.8355822459484874,
+      "equity_risk_premium": 6.873984732824426,
+      "split": "validation"
+    },
+    {
+      "date": "2023-12-29",
+      "forward_return": -0.0415524996877068,
+      "bond_mom_20d": 0.008580955182897032,
+      "bond_tf_mom_20d": 0.006725576828669588,
+      "qvix_z_252": -0.22574586329608703,
+      "equity_risk_premium": 7.078611368015413,
+      "split": "validation"
+    },
+    {
+      "date": "2024-01-31",
+      "forward_return": 0.10220763112006037,
+      "bond_mom_20d": 0.00734328648543503,
+      "bond_tf_mom_20d": 0.004097760866383693,
+      "qvix_z_252": 3.116611526866801,
+      "equity_risk_premium": 7.4095196850393705,
+      "split": "validation"
+    },
+    {
+      "date": "2024-02-29",
+      "forward_return": 0.0005189102089038222,
+      "bond_mom_20d": 0.009994178148651223,
+      "bond_tf_mom_20d": 0.005655226209048347,
+      "qvix_z_252": 1.3871027812064483,
+      "equity_risk_premium": 6.828402841429881,
+      "split": "validation"
+    },
+    {
+      "date": "2024-03-29",
+      "forward_return": 0.02885108664251601,
+      "bond_mom_20d": 0.004534928598996624,
+      "bond_tf_mom_20d": 0.0034516285853185558,
+      "qvix_z_252": -0.5015316104638003,
+      "equity_risk_premium": 6.630506601248885,
+      "split": "validation"
+    },
+    {
+      "date": "2024-04-30",
+      "forward_return": -0.0209819299084385,
+      "bond_mom_20d": 4.802612621257474e-05,
+      "bond_tf_mom_20d": -0.0003391308560631856,
+      "qvix_z_252": -0.4772080089882472,
+      "equity_risk_premium": 6.295652278589854,
+      "split": "validation"
+    },
+    {
+      "date": "2024-05-31",
+      "forward_return": -0.029330683349266806,
+      "bond_mom_20d": 0.002257119531287488,
+      "bond_tf_mom_20d": 0.0026655035378500003,
+      "qvix_z_252": -1.1008444917317906,
+      "equity_risk_premium": 6.350442350907519,
+      "split": "validation"
+    },
+    {
+      "date": "2024-06-28",
+      "forward_return": -0.015585276312045648,
+      "bond_mom_20d": 0.007991577738431399,
+      "bond_tf_mom_20d": 0.005073444143795847,
+      "qvix_z_252": -1.5306551943082152,
+      "equity_risk_premium": 6.505001393728223,
+      "split": "validation"
+    },
+    {
+      "date": "2024-07-31",
+      "forward_return": -0.04925707348524888,
+      "bond_mom_20d": 0.007070323621524155,
+      "bond_tf_mom_20d": 0.0048056129559326255,
+      "qvix_z_252": -0.9837110188895456,
+      "equity_risk_premium": 6.6845222614841,
+      "split": "validation"
+    },
+    {
+      "date": "2024-08-30",
+      "forward_return": 0.2604050801455944,
+      "bond_mom_20d": -0.005220581318784778,
+      "bond_tf_mom_20d": -0.0018153155305021818,
+      "qvix_z_252": -1.4508865618136149,
+      "equity_risk_premium": 7.037703130755065,
+      "split": "validation"
+    },
+    {
+      "date": "2024-09-30",
+      "forward_return": -0.11521406769058207,
+      "bond_mom_20d": -0.004393839176037084,
+      "bond_tf_mom_20d": 0.00019141503565101026,
+      "qvix_z_252": 9.171753938475163,
+      "equity_risk_premium": 5.753338339920948,
+      "split": "validation"
+    },
+    {
+      "date": "2024-10-31",
+      "forward_return": -0.0032371245226606726,
+      "bond_mom_20d": -0.006144177102387349,
+      "bond_tf_mom_20d": -0.004468955025197285,
+      "qvix_z_252": 2.945341606312174,
+      "equity_risk_premium": 6.436090987124462,
+      "split": "validation"
+    },
+    {
+      "date": "2024-11-29",
+      "forward_return": 0.01713608424987778,
+      "bond_mom_20d": 0.008427892085314914,
+      "bond_tf_mom_20d": 0.005766847774282713,
+      "qvix_z_252": 0.9956848003726647,
+      "equity_risk_premium": 6.49003829787234,
+      "split": "validation"
+    },
+    {
+      "date": "2024-12-31",
+      "forward_return": -0.022320220478272645,
+      "bond_mom_20d": 0.015144454799627116,
+      "bond_tf_mom_20d": 0.008185474331677378,
+      "qvix_z_252": 0.022024858058300612,
+      "equity_risk_premium": 6.528245447087777,
+      "split": "validation"
+    },
+    {
+      "date": "2025-01-27",
+      "forward_return": 0.011209977371446467,
+      "bond_mom_20d": 0.004409333088370326,
+      "bond_tf_mom_20d": 0.00023459860179242398,
+      "qvix_z_252": -0.13689429096468922,
+      "equity_risk_premium": 6.887987563884157,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-02-28",
+      "forward_return": 0.0016119205189326635,
+      "bond_mom_20d": -0.007790660373035219,
+      "bond_tf_mom_20d": -0.005777360263034326,
+      "qvix_z_252": -0.13219243392689975,
+      "equity_risk_premium": 6.745036886632826,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-03-31",
+      "forward_return": -0.030042291124155796,
+      "bond_mom_20d": -0.005393942188004153,
+      "bond_tf_mom_20d": -0.0035843984341837887,
+      "qvix_z_252": -0.5097076196495111,
+      "equity_risk_premium": 6.676064346349746,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-04-30",
+      "forward_return": 0.01610594205740279,
+      "bond_mom_20d": 0.011507052709725185,
+      "bond_tf_mom_20d": 0.005020365634176294,
+      "qvix_z_252": -0.09523794583723195,
+      "equity_risk_premium": 7.078920191470845,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-05-30",
+      "forward_return": 0.026725217805960044,
+      "bond_mom_20d": -0.0036198680351906543,
+      "bond_tf_mom_20d": -0.0004713868200244553,
+      "qvix_z_252": -0.6200110554810692,
+      "equity_risk_premium": 6.853949190110828,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-06-30",
+      "forward_return": 0.04999481695202235,
+      "bond_mom_20d": 0.0015635778339848638,
+      "bond_tf_mom_20d": 0.0013205055649876396,
+      "qvix_z_252": -0.6943558379185459,
+      "equity_risk_premium": 6.456827714748783,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-07-31",
+      "forward_return": 0.09481206656142294,
+      "bond_mom_20d": -0.0056825993309197464,
+      "bond_tf_mom_20d": -0.004988000564679296,
+      "qvix_z_252": -0.30879311790774255,
+      "equity_risk_premium": 6.334185209003216,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-08-29",
+      "forward_return": 0.00844720436389812,
+      "bond_mom_20d": -0.005763821644303002,
+      "bond_tf_mom_20d": -0.0019390843738176233,
+      "qvix_z_252": 0.6691103703568474,
+      "equity_risk_premium": 5.720678987150415,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-09-30",
+      "forward_return": -0.004311778800728305,
+      "bond_mom_20d": -0.0010189430781344377,
+      "bond_tf_mom_20d": 0.0005683432793406329,
+      "qvix_z_252": -0.3758584458702924,
+      "equity_risk_premium": 5.6470075075075075,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-10-31",
+      "forward_return": -0.02103723053219375,
+      "bond_mom_20d": 0.009943313818418398,
+      "bond_tf_mom_20d": 0.0051172707889124425,
+      "qvix_z_252": -0.16552223153729365,
+      "equity_risk_premium": 5.786101137225171,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-11-28",
+      "forward_return": 0.026233106009268647,
+      "bond_mom_20d": -0.006808980493191119,
+      "bond_tf_mom_20d": -0.003017017866402627,
+      "qvix_z_252": -0.0818867616284629,
+      "equity_risk_premium": 5.827511656441718,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-12-31",
+      "forward_return": 0.0027157964105151144,
+      "bond_mom_20d": -0.0016660496112551604,
+      "bond_tf_mom_20d": -0.0008502598016059126,
+      "qvix_z_252": -0.6977932084410805,
+      "equity_risk_premium": 5.648951874062969,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-01-30",
+      "forward_return": -0.0054534648788390205,
+      "bond_mom_20d": 0.004172074911922952,
+      "bond_tf_mom_20d": 0.0012291981845689026,
+      "qvix_z_252": 0.02464279900202096,
+      "equity_risk_premium": 5.668231563201196,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-02-27",
+      "forward_return": -0.04684391031515822,
+      "bond_mom_20d": 0.002265372168284596,
+      "bond_tf_mom_20d": 0.0016062739169462326,
+      "qvix_z_252": -1.1409137207624467,
+      "equity_risk_premium": 5.714175468867217,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-03-31",
+      "forward_return": 0.0672308419771932,
+      "bond_mom_20d": -0.0009216589861750224,
+      "bond_tf_mom_20d": 0.00037712723330041165,
+      "qvix_z_252": -0.06884311692030474,
+      "equity_risk_premium": 5.701696992481203,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-04-30",
+      "forward_return": 0.01311147315144301,
+      "bond_mom_20d": 0.003788928934479463,
+      "bond_tf_mom_20d": 0.002311866006133645,
+      "qvix_z_252": -0.6273023055881936,
+      "equity_risk_premium": 5.472916606498195,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-05-29",
+      "forward_return": 0.003388393018473046,
+      "bond_mom_20d": 0.005387236393774586,
+      "bond_tf_mom_20d": 0.002260206243819729,
+      "qvix_z_252": 0.5688122636662017,
+      "equity_risk_premium": 5.537376811594202,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-06-30",
+      "forward_return": -0.0785483999411184,
+      "bond_mom_20d": 0.00013735634815259523,
+      "bond_tf_mom_20d": 0.000281915143541589,
+      "qvix_z_252": 1.3316577885508325,
+      "equity_risk_premium": 5.529164124909222,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-07-31",
+      "forward_return": 3.704664172188288e-05,
+      "bond_mom_20d": 0.0033475489521714863,
+      "bond_tf_mom_20d": 0.0019277788226443882,
+      "qvix_z_252": 1.098953780934216,
+      "equity_risk_premium": 5.595841520467836,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-08-31",
+      "forward_return": -0.05671207737877959,
+      "bond_mom_20d": -9.145365585994103e-05,
+      "bond_tf_mom_20d": -0.0004226542688081647,
+      "qvix_z_252": -0.44333643296956005,
+      "equity_risk_premium": 5.980411656441718,
+      "split": "holdout"
+    }
+  ],
+  "limitations": [
+    "Main continuous contract (T0/TF0) has roll gaps; 20d momentum mitigates but does not eliminate.",
+    "Treasury futures and A-share calendars are both domestic; asof alignment uses the last available close."
+  ]
+}

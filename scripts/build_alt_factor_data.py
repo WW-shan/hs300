@@ -88,6 +88,8 @@ FIELDS = [
     ExtField("margin_chg_1m_low", "float", "两融余额月度变化反向"),
     ExtField("short_ratio_low", "float", "融券余量占流通股本比例反向(低空头拥挤)"),
     ExtField("if_net_short_chg_1m", "float", "IF前20席位净空头占比月度变化(方向负)"),
+    ExtField("bond_mom_20d", "float", "T0(10Y国债期货)20日动量(方向负)"),
+    ExtField("bond_tf_mom_20d", "float", "TF0(5Y国债期货)20日动量(方向负)"),
     ExtField("goodwill_ratio_low", "float", "商誉/总资产反向"),
     ExtField("intangible_ratio_low", "float", "无形资产/总资产反向"),
     ExtField("rd_intensity", "float", "研发费用/营业收入"),
@@ -1326,6 +1328,29 @@ def _if_position_daily(dates: list[date]) -> pl.DataFrame:
     ).select(["date", "if_net_short_chg_1m"])
 
 
+def _bond_momentum_daily(dates: list[date]) -> pl.DataFrame:
+    """Treasury futures 20d momentum, market-level, direction negative.
+
+    Source: local caches from scripts/probe_r193_treasury.py
+    (sina futures_main_sina T0/TF0).  Both futures and A-shares use the
+    domestic trading calendar; asof join keeps the signal PIT.
+    """
+    frames = []
+    for symbol, col in [("T0", "bond_mom_20d"), ("TF0", "bond_tf_mom_20d")]:
+        path = DATA / "research" / "r193_treasury" / f"{symbol}.parquet"
+        if not path.exists():
+            raise RuntimeError(f"R193 国债期货缓存缺失: {path}")
+        frame = pl.read_parquet(path).sort("date")
+        frame = frame.with_columns(pl.col("close").shift(20).alias("_prev")).with_columns(
+            (pl.col("close") / pl.col("_prev") - 1.0).alias(col)
+        ).select(["date", col]).filter(pl.col(col).is_not_null())
+        frames.append(frame)
+    daily = pl.DataFrame({"date": dates}).sort("date")
+    for frame in frames:
+        daily = daily.join_asof(frame, on="date", strategy="backward")
+    return daily.select(["date", "bond_mom_20d", "bond_tf_mom_20d"])
+
+
 def _goodwill_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
     paths = sorted((DATA / "research" / "r86_intangible").glob("*.parquet"))
     frames = [pl.read_parquet(path) for path in paths]
@@ -1565,6 +1590,7 @@ def main() -> int:
     margin = _margin_daily(dates, symbols)
     short_ratio = _short_ratio_daily(dates, symbols)
     if_position = _if_position_daily(dates)
+    bond_momentum = _bond_momentum_daily(dates)
     goodwill = _goodwill_daily(dates, symbols)
     equity_supply = _equity_supply_daily(dates, symbols)
     erp = _erp_daily(dates)
@@ -1579,7 +1605,7 @@ def main() -> int:
         industry, mainline, margin, short_ratio, goodwill, equity_supply, prices,
     ):
         base = base.join(frame, on=["symbol", "date"], how="left")
-    for frame in (erp, macro, emotion, etf_flow, qvix, macro_extra, regime_extra, northbound, if_position):
+    for frame in (erp, macro, emotion, etf_flow, qvix, macro_extra, regime_extra, northbound, if_position, bond_momentum):
         base = base.join(frame, on="date", how="left")
     base = base.with_columns(
         pl.when((pl.col("raw_close") > 0) & pl.col("dividend_ttm_cash").is_not_null())
