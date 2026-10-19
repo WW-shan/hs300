@@ -1,0 +1,95 @@
+{
+  "round": "R210",
+  "registered_at": "2026-10-20",
+  "status": "pre_registered_before_factor_generation_and_backtest",
+  "hypothesis": "HS300 stocks with wider high-low bid-ask spread estimates may earn an illiquidity premium; combining high Corwin-Schultz spread with defensive quality and cash quality can improve returns without worsening drawdown.",
+  "factor": {
+    "id": "ext_alt_hs300_cs_spread_60d",
+    "raw_field": "cs_spread_60d",
+    "formula": "60-day rolling mean of the Corwin-Schultz two-day high-low spread estimate, using the estimate from t-1/t assigned to t to avoid lookahead; negative estimates clipped to zero",
+    "returns": "adjusted high and low from kline_daily_enriched",
+    "window": 60,
+    "min_samples": 60,
+    "direction": "higher is better (wider estimated effective spread / higher illiquidity premium)",
+    "point_in_time": "the spread estimate available on date t uses only high/low through close t; execution remains T+1 open"
+  },
+  "candidate_strategy": {
+    "id": "ai_hs300_cs_spread_quality_h20_sl20",
+    "scoring": {
+      "ext_alt_hs300_cs_spread_60d": 0.45,
+      "uf_quality_value_defensive": 0.3,
+      "uf_cash_quality": 0.25
+    },
+    "limit": 30,
+    "max_hold_days": 20,
+    "stop_loss": -0.2
+  },
+  "control_strategy": {
+    "id": "ai_hs300_cs_spread_quality_control",
+    "purpose": "Matched universe and execution; Corwin-Schultz spread is an availability filter only, not a score component.",
+    "scoring": {
+      "uf_quality_value_defensive": 0.545,
+      "uf_cash_quality": 0.455
+    },
+    "limit": 30,
+    "max_hold_days": 20,
+    "stop_loss": -0.2
+  },
+  "execution": {
+    "engine": "StrategyBacktestService",
+    "matching": "open_t+1",
+    "cost": "3x: 6bp commission + 15bp slippage + 10bp stamp tax",
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "universe": "historical HS300 membership; monthly snapshots for 2018-2020 and daily snapshots from 2021",
+    "segments": [
+      [
+        "2018-01-02",
+        "2020-12-31"
+      ],
+      [
+        "2021-01-04",
+        "2024-12-31"
+      ],
+      [
+        "2025-01-02",
+        "2026-10-16"
+      ]
+    ]
+  },
+  "samples": {
+    "independent": [
+      "2018-01-02",
+      "2020-12-31"
+    ],
+    "validation": [
+      "2021-01-04",
+      "2024-12-31"
+    ],
+    "holdout": [
+      "2025-01-02",
+      "2026-10-16"
+    ],
+    "recent_12m": "last 252 trading-day returns of the stitched 2018-2026 curve",
+    "rolling_1y": "252-trading-day rolling compounded return over the stitched 2018-2026 curve"
+  },
+  "gates": {
+    "D1": "factor coverage within historical HS300 membership over 2018-2026 is at least 90%",
+    "D2": "factor has at least 60 available spread observations before its first valid value and recent-12m coverage is at least 95%",
+    "G1": "independent 2018-2020 total return is at least control + 5pp",
+    "G2": "independent 2018-2020 MDD is no worse than control by more than 2pp",
+    "G3": "validation 2021-2024 total return is at least control - 5pp",
+    "G4": "full-sample rolling-1y positive rate is at least control",
+    "G5": "full-sample MDD is no worse than control by more than 2pp",
+    "G6": "full-sample total return is at least control - 5pp",
+    "G7": "recent 12m total return is positive and recent 12m MDD is no worse than control by more than 2pp",
+    "G8": "full-sample total return is positive"
+  },
+  "decision_rule": "All D and G gates must pass. Thresholds may not be relaxed after results. Any failed gate means the candidate remains research-only and is not a deployable factor.",
+  "known_limitations": [
+    "The Corwin-Schultz estimator is inferred from daily high/low ranges rather than quoted bid-ask spreads.",
+    "The estimate is lagged one day to avoid using next-day high/low at signal time.",
+    "Adjusted high/low history is used; corporate actions are handled by the enriched pipeline.",
+    "2018-2020 HS300 membership uses monthly snapshots, so intra-month index changes are not modeled."
+  ]
+}
