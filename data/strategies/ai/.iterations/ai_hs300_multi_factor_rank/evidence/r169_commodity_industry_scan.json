@@ -1,0 +1,2907 @@
+{
+  "purpose": "R169 commodity main-contract momentum mapped to HS300 upstream industries",
+  "generated_at": "2026-10-19T15:59:19",
+  "data": {
+    "source": "AkShare futures_main_sina",
+    "cache": "data\\research\\r169_commodity_main",
+    "commodities": [
+      {
+        "symbol": "CU0",
+        "source": "cache",
+        "rows": 2129,
+        "start": "2018-01-02",
+        "end": "2026-10-16",
+        "missing_close": 0,
+        "zero_close": 0
+      },
+      {
+        "symbol": "AL0",
+        "source": "cache",
+        "rows": 2129,
+        "start": "2018-01-02",
+        "end": "2026-10-16",
+        "missing_close": 0,
+        "zero_close": 0
+      },
+      {
+        "symbol": "AU0",
+        "source": "cache",
+        "rows": 2129,
+        "start": "2018-01-02",
+        "end": "2026-10-16",
+        "missing_close": 0,
+        "zero_close": 0
+      },
+      {
+        "symbol": "RB0",
+        "source": "cache",
+        "rows": 2129,
+        "start": "2018-01-02",
+        "end": "2026-10-16",
+        "missing_close": 0,
+        "zero_close": 0
+      },
+      {
+        "symbol": "I0",
+        "source": "cache",
+        "rows": 2129,
+        "start": "2018-01-02",
+        "end": "2026-10-16",
+        "missing_close": 0,
+        "zero_close": 0
+      },
+      {
+        "symbol": "SC0",
+        "source": "cache",
+        "rows": 2075,
+        "start": "2018-03-26",
+        "end": "2026-10-16",
+        "missing_close": 0,
+        "zero_close": 0
+      },
+      {
+        "symbol": "TA0",
+        "source": "cache",
+        "rows": 2128,
+        "start": "2018-01-02",
+        "end": "2026-10-16",
+        "missing_close": 0,
+        "zero_close": 0
+      },
+      {
+        "symbol": "FG0",
+        "source": "cache",
+        "rows": 2127,
+        "start": "2018-01-02",
+        "end": "2026-10-16",
+        "missing_close": 0,
+        "zero_close": 0
+      },
+      {
+        "symbol": "JM0",
+        "source": "cache",
+        "rows": 2129,
+        "start": "2018-01-02",
+        "end": "2026-10-16",
+        "missing_close": 0,
+        "zero_close": 0
+      },
+      {
+        "symbol": "M0",
+        "source": "cache",
+        "rows": 2129,
+        "start": "2018-01-02",
+        "end": "2026-10-16",
+        "missing_close": 0,
+        "zero_close": 0
+      },
+      {
+        "symbol": "SR0",
+        "source": "cache",
+        "rows": 2128,
+        "start": "2018-01-02",
+        "end": "2026-10-16",
+        "missing_close": 0,
+        "zero_close": 0
+      }
+    ],
+    "industry_map": {
+      "有色金属": [
+        "CU0",
+        "AL0",
+        "AU0"
+      ],
+      "钢铁": [
+        "RB0",
+        "I0"
+      ],
+      "石油石化": [
+        "SC0"
+      ],
+      "基础化工": [
+        "TA0"
+      ],
+      "建筑材料": [
+        "FG0"
+      ],
+      "煤炭": [
+        "JM0"
+      ],
+      "农林牧渔": [
+        "M0",
+        "SR0"
+      ]
+    },
+    "industry_source": "data/ext_data/ext_hy_ths/part.parquet (static current classification)",
+    "membership_source": "monthly r157 snapshots before 2020-12-31; daily r78 snapshots thereafter"
+  },
+  "method": {
+    "daily_return_clip": [
+      -0.12,
+      0.12
+    ],
+    "momentum_window": 60,
+    "zscore_window": 252,
+    "zscore_min_observations": 120,
+    "factor": "equal-weight commodity momentum z-score within mapped industry",
+    "forward_return": "T+1 open to T+21 open",
+    "ic": "monthly cross-sectional Spearman rank IC among mapped HS300 members",
+    "long_short": "industry equal-weight top3 minus bottom3, 0.30% round-trip cost",
+    "splits": {
+      "discovery": [
+        "2019-01-01",
+        "2021-12-31"
+      ],
+      "validation": [
+        "2022-01-01",
+        "2023-12-31"
+      ],
+      "holdout": [
+        "2024-01-01",
+        "2026-08-31"
+      ]
+    }
+  },
+  "summary": {
+    "discovery": {
+      "months": 23,
+      "ic_mean": 0.014689,
+      "ic_win_rate": 0.3913,
+      "coverage_mean": 1.0,
+      "industry_mom_corr_mean": 0.1806,
+      "residual_ic_mean": 0.033032,
+      "long_short": {
+        "months": 36,
+        "mean": -0.008058,
+        "positive_rate": 0.4444,
+        "p05": -0.088222,
+        "worst": -0.21504
+      },
+      "long_short_compound": -0.305194,
+      "long_short_mdd": -0.410576
+    },
+    "validation": {
+      "months": 24,
+      "ic_mean": -0.038041,
+      "ic_win_rate": 0.4583,
+      "coverage_mean": 1.0,
+      "industry_mom_corr_mean": 0.1967,
+      "residual_ic_mean": -0.008718,
+      "long_short": {
+        "months": 24,
+        "mean": -0.010492,
+        "positive_rate": 0.4167,
+        "p05": -0.087712,
+        "worst": -0.113169
+      },
+      "long_short_compound": -0.240362,
+      "long_short_mdd": -0.27591
+    },
+    "holdout": {
+      "months": 32,
+      "ic_mean": -0.004316,
+      "ic_win_rate": 0.5312,
+      "coverage_mean": 1.0,
+      "industry_mom_corr_mean": 0.3498,
+      "residual_ic_mean": 0.062611,
+      "long_short": {
+        "months": 32,
+        "mean": -0.009508,
+        "positive_rate": 0.4062,
+        "p05": -0.087616,
+        "worst": -0.100583
+      },
+      "long_short_compound": -0.289823,
+      "long_short_mdd": -0.398873
+    }
+  },
+  "recent_12m_long_short": -0.12355,
+  "decision": {
+    "D1": false,
+    "G1": false,
+    "G2": false,
+    "G3": false,
+    "G4": false,
+    "G5": false,
+    "all_pass": false
+  },
+  "monthly_records": [
+    {
+      "date": "2019-01-31",
+      "split": "discovery",
+      "mapped_names": 51,
+      "factor_names": 51,
+      "membership_source": "monthly",
+      "coverage": 1.0,
+      "ic": 0.394757,
+      "industry_mom_corr": 0.288626,
+      "residual_ic": 0.350194
+    },
+    {
+      "date": "2019-02-28",
+      "split": "discovery",
+      "mapped_names": 51,
+      "factor_names": 51,
+      "membership_source": "monthly",
+      "coverage": 1.0,
+      "ic": -0.056544,
+      "industry_mom_corr": 0.235152,
+      "residual_ic": -0.123388
+    },
+    {
+      "date": "2019-03-29",
+      "split": "discovery",
+      "mapped_names": 51,
+      "factor_names": 51,
+      "membership_source": "monthly",
+      "coverage": 1.0,
+      "ic": 0.517724,
+      "industry_mom_corr": -0.113303,
+      "residual_ic": 0.517724
+    },
+    {
+      "date": "2019-04-30",
+      "split": "discovery",
+      "mapped_names": 51,
+      "factor_names": 51,
+      "membership_source": "monthly",
+      "coverage": 1.0,
+      "ic": -0.039938,
+      "industry_mom_corr": -0.985974,
+      "residual_ic": -0.019759
+    },
+    {
+      "date": "2019-05-31",
+      "split": "discovery",
+      "mapped_names": 51,
+      "factor_names": 51,
+      "membership_source": "monthly",
+      "coverage": 1.0,
+      "ic": 0.027326,
+      "industry_mom_corr": 0.144861,
+      "residual_ic": 0.226596
+    },
+    {
+      "date": "2019-06-28",
+      "split": "discovery",
+      "mapped_names": 51,
+      "factor_names": 51,
+      "membership_source": "monthly",
+      "coverage": 1.0,
+      "ic": -0.085341,
+      "industry_mom_corr": 0.971948,
+      "residual_ic": 0.106782
+    },
+    {
+      "date": "2019-07-31",
+      "split": "discovery",
+      "mapped_names": 50,
+      "factor_names": 50,
+      "membership_source": "monthly",
+      "coverage": 1.0,
+      "ic": 0.448303,
+      "industry_mom_corr": 0.59799,
+      "residual_ic": 0.313097
+    },
+    {
+      "date": "2019-08-30",
+      "split": "discovery",
+      "mapped_names": 50,
+      "factor_names": 50,
+      "membership_source": "monthly",
+      "coverage": 1.0,
+      "ic": -0.294177,
+      "industry_mom_corr": 0.451543,
+      "residual_ic": -0.077755
+    },
+    {
+      "date": "2019-09-30",
+      "split": "discovery",
+      "mapped_names": 50,
+      "factor_names": 50,
+      "membership_source": "monthly",
+      "coverage": 1.0,
+      "ic": -0.016843,
+      "industry_mom_corr": -0.590811,
+      "residual_ic": -0.016843
+    },
+    {
+      "date": "2019-10-31",
+      "split": "discovery",
+      "mapped_names": 50,
+      "factor_names": 50,
+      "membership_source": "monthly",
+      "coverage": 1.0,
+      "ic": -0.226113,
+      "industry_mom_corr": 0.517588,
+      "residual_ic": -0.122747
+    },
+    {
+      "date": "2019-11-29",
+      "split": "discovery",
+      "mapped_names": 50,
+      "factor_names": 50,
+      "membership_source": "monthly",
+      "coverage": 1.0,
+      "ic": -0.128515,
+      "industry_mom_corr": 0.577889,
+      "residual_ic": -0.253569
+    },
+    {
+      "date": "2019-12-31",
+      "split": "discovery",
+      "mapped_names": 50,
+      "factor_names": 50,
+      "membership_source": "monthly",
+      "coverage": 1.0,
+      "ic": 0.195195,
+      "industry_mom_corr": null,
+      "residual_ic": null
+    },
+    {
+      "date": "2020-01-23",
+      "split": "discovery",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "monthly",
+      "coverage": 1.0,
+      "ic": -0.077294,
+      "industry_mom_corr": 0.509452,
+      "residual_ic": -0.069449
+    },
+    {
+      "date": "2020-02-28",
+      "split": "discovery",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "monthly",
+      "coverage": 1.0,
+      "ic": 0.103366,
+      "industry_mom_corr": -0.064848,
+      "residual_ic": 0.103366
+    },
+    {
+      "date": "2020-03-31",
+      "split": "discovery",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "monthly",
+      "coverage": 1.0,
+      "ic": -0.197503,
+      "industry_mom_corr": 0.233309,
+      "residual_ic": -0.221498
+    },
+    {
+      "date": "2020-04-30",
+      "split": "discovery",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "monthly",
+      "coverage": 1.0,
+      "ic": 0.243879,
+      "industry_mom_corr": 0.042355,
+      "residual_ic": 0.170507
+    },
+    {
+      "date": "2020-05-29",
+      "split": "discovery",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "monthly",
+      "coverage": 1.0,
+      "ic": -0.014305,
+      "industry_mom_corr": -0.123235,
+      "residual_ic": 0.027687
+    },
+    {
+      "date": "2020-06-30",
+      "split": "discovery",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "monthly",
+      "coverage": 1.0,
+      "ic": 0.396851,
+      "industry_mom_corr": 0.859296,
+      "residual_ic": 0.252877
+    },
+    {
+      "date": "2020-07-31",
+      "split": "discovery",
+      "mapped_names": 47,
+      "factor_names": 47,
+      "membership_source": "monthly",
+      "coverage": 1.0,
+      "ic": -0.136489,
+      "industry_mom_corr": -0.287129,
+      "residual_ic": -0.150687
+    },
+    {
+      "date": "2020-08-31",
+      "split": "discovery",
+      "mapped_names": 47,
+      "factor_names": 47,
+      "membership_source": "monthly",
+      "coverage": 1.0,
+      "ic": 0.25855,
+      "industry_mom_corr": 0.07355,
+      "residual_ic": 0.338244
+    },
+    {
+      "date": "2020-09-30",
+      "split": "discovery",
+      "mapped_names": 47,
+      "factor_names": 47,
+      "membership_source": "monthly",
+      "coverage": 1.0,
+      "ic": -0.350306,
+      "industry_mom_corr": null,
+      "residual_ic": null
+    },
+    {
+      "date": "2020-10-30",
+      "split": "discovery",
+      "mapped_names": 47,
+      "factor_names": 47,
+      "membership_source": "monthly",
+      "coverage": 1.0,
+      "ic": -0.334122,
+      "industry_mom_corr": 0.329562,
+      "residual_ic": -0.367099
+    },
+    {
+      "date": "2020-11-30",
+      "split": "discovery",
+      "mapped_names": 47,
+      "factor_names": 47,
+      "membership_source": "monthly",
+      "coverage": 1.0,
+      "ic": -0.290611,
+      "industry_mom_corr": 0.125413,
+      "residual_ic": -0.290611
+    },
+    {
+      "date": "2020-12-31",
+      "split": "discovery",
+      "mapped_names": 36,
+      "factor_names": 36,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": null,
+      "industry_mom_corr": null,
+      "residual_ic": null
+    },
+    {
+      "date": "2021-01-29",
+      "split": "discovery",
+      "mapped_names": 36,
+      "factor_names": 36,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": null,
+      "industry_mom_corr": null,
+      "residual_ic": null
+    },
+    {
+      "date": "2021-02-26",
+      "split": "discovery",
+      "mapped_names": 36,
+      "factor_names": 36,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": null,
+      "industry_mom_corr": null,
+      "residual_ic": null
+    },
+    {
+      "date": "2021-03-31",
+      "split": "discovery",
+      "mapped_names": 36,
+      "factor_names": 36,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": null,
+      "industry_mom_corr": null,
+      "residual_ic": null
+    },
+    {
+      "date": "2021-04-30",
+      "split": "discovery",
+      "mapped_names": 36,
+      "factor_names": 36,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": null,
+      "industry_mom_corr": null,
+      "residual_ic": null
+    },
+    {
+      "date": "2021-05-31",
+      "split": "discovery",
+      "mapped_names": 36,
+      "factor_names": 36,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": null,
+      "industry_mom_corr": null,
+      "residual_ic": null
+    },
+    {
+      "date": "2021-06-30",
+      "split": "discovery",
+      "mapped_names": 36,
+      "factor_names": 36,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": null,
+      "industry_mom_corr": null,
+      "residual_ic": null
+    },
+    {
+      "date": "2021-07-30",
+      "split": "discovery",
+      "mapped_names": 37,
+      "factor_names": 37,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": null,
+      "industry_mom_corr": null,
+      "residual_ic": null
+    },
+    {
+      "date": "2021-08-31",
+      "split": "discovery",
+      "mapped_names": 37,
+      "factor_names": 37,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": null,
+      "industry_mom_corr": null,
+      "residual_ic": null
+    },
+    {
+      "date": "2021-09-30",
+      "split": "discovery",
+      "mapped_names": 37,
+      "factor_names": 37,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": null,
+      "industry_mom_corr": null,
+      "residual_ic": null
+    },
+    {
+      "date": "2021-10-29",
+      "split": "discovery",
+      "mapped_names": 37,
+      "factor_names": 37,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": null,
+      "industry_mom_corr": null,
+      "residual_ic": null
+    },
+    {
+      "date": "2021-11-30",
+      "split": "discovery",
+      "mapped_names": 37,
+      "factor_names": 37,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": null,
+      "industry_mom_corr": null,
+      "residual_ic": null
+    },
+    {
+      "date": "2021-12-31",
+      "split": "discovery",
+      "mapped_names": 37,
+      "factor_names": 37,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": null,
+      "industry_mom_corr": null,
+      "residual_ic": null
+    },
+    {
+      "date": "2022-01-28",
+      "split": "validation",
+      "mapped_names": 43,
+      "factor_names": 43,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.074611,
+      "industry_mom_corr": 0.221239,
+      "residual_ic": 0.051527
+    },
+    {
+      "date": "2022-02-28",
+      "split": "validation",
+      "mapped_names": 43,
+      "factor_names": 43,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.260315,
+      "industry_mom_corr": 0.17067,
+      "residual_ic": -0.445812
+    },
+    {
+      "date": "2022-03-31",
+      "split": "validation",
+      "mapped_names": 43,
+      "factor_names": 43,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.255574,
+      "industry_mom_corr": -0.510324,
+      "residual_ic": 0.255574
+    },
+    {
+      "date": "2022-04-29",
+      "split": "validation",
+      "mapped_names": 43,
+      "factor_names": 43,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.051321,
+      "industry_mom_corr": 0.348083,
+      "residual_ic": 0.051321
+    },
+    {
+      "date": "2022-05-31",
+      "split": "validation",
+      "mapped_names": 43,
+      "factor_names": 43,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.009893,
+      "industry_mom_corr": -0.268015,
+      "residual_ic": -0.037099
+    },
+    {
+      "date": "2022-06-30",
+      "split": "validation",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.003943,
+      "industry_mom_corr": 0.362599,
+      "residual_ic": 0.003943
+    },
+    {
+      "date": "2022-07-29",
+      "split": "validation",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.036279,
+      "industry_mom_corr": -0.666532,
+      "residual_ic": -0.143011
+    },
+    {
+      "date": "2022-08-31",
+      "split": "validation",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.439286,
+      "industry_mom_corr": -0.764801,
+      "residual_ic": -0.095165
+    },
+    {
+      "date": "2022-09-30",
+      "split": "validation",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.419832,
+      "industry_mom_corr": -0.458719,
+      "residual_ic": 0.376192
+    },
+    {
+      "date": "2022-10-31",
+      "split": "validation",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.068482,
+      "industry_mom_corr": 0.46758,
+      "residual_ic": -0.068482
+    },
+    {
+      "date": "2022-11-30",
+      "split": "validation",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.31494,
+      "industry_mom_corr": 0.308901,
+      "residual_ic": -0.110939
+    },
+    {
+      "date": "2022-12-30",
+      "split": "validation",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.261179,
+      "industry_mom_corr": 0.812324,
+      "residual_ic": -0.397881
+    },
+    {
+      "date": "2023-01-31",
+      "split": "validation",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.053103,
+      "industry_mom_corr": 0.846422,
+      "residual_ic": 0.108836
+    },
+    {
+      "date": "2023-02-28",
+      "split": "validation",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.479376,
+      "industry_mom_corr": 0.915693,
+      "residual_ic": -0.375272
+    },
+    {
+      "date": "2023-03-31",
+      "split": "validation",
+      "mapped_names": 46,
+      "factor_names": 46,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.279485,
+      "industry_mom_corr": -0.080303,
+      "residual_ic": 0.004282
+    },
+    {
+      "date": "2023-04-28",
+      "split": "validation",
+      "mapped_names": 46,
+      "factor_names": 46,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.11148,
+      "industry_mom_corr": 0.038406,
+      "residual_ic": 0.011276
+    },
+    {
+      "date": "2023-05-31",
+      "split": "validation",
+      "mapped_names": 46,
+      "factor_names": 46,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.221675,
+      "industry_mom_corr": 0.14053,
+      "residual_ic": -0.12033
+    },
+    {
+      "date": "2023-06-30",
+      "split": "validation",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.02812,
+      "industry_mom_corr": 0.208903,
+      "residual_ic": -0.044107
+    },
+    {
+      "date": "2023-07-31",
+      "split": "validation",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.283054,
+      "industry_mom_corr": 0.466104,
+      "residual_ic": 0.304465
+    },
+    {
+      "date": "2023-08-31",
+      "split": "validation",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.278058,
+      "industry_mom_corr": 0.743381,
+      "residual_ic": 0.332299
+    },
+    {
+      "date": "2023-09-28",
+      "split": "validation",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.310174,
+      "industry_mom_corr": 0.95112,
+      "residual_ic": 0.176284
+    },
+    {
+      "date": "2023-10-31",
+      "split": "validation",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.110766,
+      "industry_mom_corr": 0.541752,
+      "residual_ic": -0.167862
+    },
+    {
+      "date": "2023-11-30",
+      "split": "validation",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.168148,
+      "industry_mom_corr": 0.092523,
+      "residual_ic": -0.111052
+    },
+    {
+      "date": "2023-12-29",
+      "split": "validation",
+      "mapped_names": 46,
+      "factor_names": 46,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.023227,
+      "industry_mom_corr": -0.166667,
+      "residual_ic": 0.231785
+    },
+    {
+      "date": "2024-01-31",
+      "split": "holdout",
+      "mapped_names": 46,
+      "factor_names": 46,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.219929,
+      "industry_mom_corr": -0.801235,
+      "residual_ic": 0.091698
+    },
+    {
+      "date": "2024-02-29",
+      "split": "holdout",
+      "mapped_names": 46,
+      "factor_names": 46,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.141297,
+      "industry_mom_corr": 0.462222,
+      "residual_ic": 0.141297
+    },
+    {
+      "date": "2024-03-29",
+      "split": "holdout",
+      "mapped_names": 46,
+      "factor_names": 46,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.255495,
+      "industry_mom_corr": 0.665432,
+      "residual_ic": -0.08323
+    },
+    {
+      "date": "2024-04-30",
+      "split": "holdout",
+      "mapped_names": 46,
+      "factor_names": 46,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.001694,
+      "industry_mom_corr": 0.651852,
+      "residual_ic": 0.337515
+    },
+    {
+      "date": "2024-05-31",
+      "split": "holdout",
+      "mapped_names": 46,
+      "factor_names": 46,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.253318,
+      "industry_mom_corr": 0.853333,
+      "residual_ic": 0.012823
+    },
+    {
+      "date": "2024-06-28",
+      "split": "holdout",
+      "mapped_names": 45,
+      "factor_names": 45,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.193157,
+      "industry_mom_corr": -0.470528,
+      "residual_ic": 0.168089
+    },
+    {
+      "date": "2024-07-31",
+      "split": "holdout",
+      "mapped_names": 45,
+      "factor_names": 45,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.272165,
+      "industry_mom_corr": -0.203846,
+      "residual_ic": -0.03984
+    },
+    {
+      "date": "2024-08-30",
+      "split": "holdout",
+      "mapped_names": 45,
+      "factor_names": 45,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.344459,
+      "industry_mom_corr": 0.833123,
+      "residual_ic": 0.086395
+    },
+    {
+      "date": "2024-09-30",
+      "split": "holdout",
+      "mapped_names": 45,
+      "factor_names": 45,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.157346,
+      "industry_mom_corr": 0.478311,
+      "residual_ic": -0.000224
+    },
+    {
+      "date": "2024-10-31",
+      "split": "holdout",
+      "mapped_names": 45,
+      "factor_names": 45,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.090088,
+      "industry_mom_corr": 0.544924,
+      "residual_ic": 0.045324
+    },
+    {
+      "date": "2024-11-29",
+      "split": "holdout",
+      "mapped_names": 45,
+      "factor_names": 45,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.008393,
+      "industry_mom_corr": 0.488841,
+      "residual_ic": 0.219232
+    },
+    {
+      "date": "2024-12-31",
+      "split": "holdout",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.199884,
+      "industry_mom_corr": 0.376896,
+      "residual_ic": -0.002684
+    },
+    {
+      "date": "2025-01-27",
+      "split": "holdout",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.046258,
+      "industry_mom_corr": 0.907361,
+      "residual_ic": -0.181184
+    },
+    {
+      "date": "2025-02-28",
+      "split": "holdout",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.255715,
+      "industry_mom_corr": 0.684588,
+      "residual_ic": -0.008411
+    },
+    {
+      "date": "2025-03-31",
+      "split": "holdout",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.060395,
+      "industry_mom_corr": 0.588825,
+      "residual_ic": 0.165616
+    },
+    {
+      "date": "2025-04-30",
+      "split": "holdout",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.122221,
+      "industry_mom_corr": 0.718224,
+      "residual_ic": 0.233884
+    },
+    {
+      "date": "2025-05-30",
+      "split": "holdout",
+      "mapped_names": 48,
+      "factor_names": 48,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.531025,
+      "industry_mom_corr": 0.281867,
+      "residual_ic": 0.531025
+    },
+    {
+      "date": "2025-06-30",
+      "split": "holdout",
+      "mapped_names": 47,
+      "factor_names": 47,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.088042,
+      "industry_mom_corr": 0.144196,
+      "residual_ic": -0.088042
+    },
+    {
+      "date": "2025-07-31",
+      "split": "holdout",
+      "mapped_names": 47,
+      "factor_names": 47,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.485483,
+      "industry_mom_corr": -0.55335,
+      "residual_ic": -0.39261
+    },
+    {
+      "date": "2025-08-29",
+      "split": "holdout",
+      "mapped_names": 47,
+      "factor_names": 47,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.383752,
+      "industry_mom_corr": -0.700947,
+      "residual_ic": -0.070595
+    },
+    {
+      "date": "2025-09-30",
+      "split": "holdout",
+      "mapped_names": 47,
+      "factor_names": 47,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.179573,
+      "industry_mom_corr": 0.354839,
+      "residual_ic": 0.276921
+    },
+    {
+      "date": "2025-10-31",
+      "split": "holdout",
+      "mapped_names": 47,
+      "factor_names": 47,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.090054,
+      "industry_mom_corr": 0.866643,
+      "residual_ic": -0.349946
+    },
+    {
+      "date": "2025-11-28",
+      "split": "holdout",
+      "mapped_names": 47,
+      "factor_names": 47,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.727216,
+      "industry_mom_corr": 0.815685,
+      "residual_ic": 0.196454
+    },
+    {
+      "date": "2025-12-31",
+      "split": "holdout",
+      "mapped_names": 46,
+      "factor_names": 46,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.176224,
+      "industry_mom_corr": 0.456617,
+      "residual_ic": 0.045804
+    },
+    {
+      "date": "2026-01-30",
+      "split": "holdout",
+      "mapped_names": 46,
+      "factor_names": 46,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.320441,
+      "industry_mom_corr": 0.958805,
+      "residual_ic": 0.094255
+    },
+    {
+      "date": "2026-02-27",
+      "split": "holdout",
+      "mapped_names": 46,
+      "factor_names": 46,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.430951,
+      "industry_mom_corr": 0.910015,
+      "residual_ic": -0.03377
+    },
+    {
+      "date": "2026-03-31",
+      "split": "holdout",
+      "mapped_names": 46,
+      "factor_names": 46,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.105911,
+      "industry_mom_corr": -0.543641,
+      "residual_ic": 0.105911
+    },
+    {
+      "date": "2026-04-30",
+      "split": "holdout",
+      "mapped_names": 46,
+      "factor_names": 46,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": -0.244206,
+      "industry_mom_corr": 0.620752,
+      "residual_ic": -0.344131
+    },
+    {
+      "date": "2026-05-29",
+      "split": "holdout",
+      "mapped_names": 46,
+      "factor_names": 46,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.16167,
+      "industry_mom_corr": 0.600412,
+      "residual_ic": 0.273188
+    },
+    {
+      "date": "2026-06-30",
+      "split": "holdout",
+      "mapped_names": 45,
+      "factor_names": 45,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.133238,
+      "industry_mom_corr": 0.028791,
+      "residual_ic": 0.041812
+    },
+    {
+      "date": "2026-07-31",
+      "split": "holdout",
+      "mapped_names": 45,
+      "factor_names": 45,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.269762,
+      "industry_mom_corr": 0.174238,
+      "residual_ic": 0.170124
+    },
+    {
+      "date": "2026-08-31",
+      "split": "holdout",
+      "mapped_names": 45,
+      "factor_names": 45,
+      "membership_source": "daily",
+      "coverage": 1.0,
+      "ic": 0.344011,
+      "industry_mom_corr": -0.001066,
+      "residual_ic": 0.360845
+    }
+  ],
+  "industry_long_short": [
+    {
+      "date": "2019-01-31",
+      "long_industries": [
+        "建筑材料",
+        "钢铁",
+        "有色金属"
+      ],
+      "short_industries": [
+        "基础化工",
+        "煤炭",
+        "石油石化"
+      ],
+      "long_return": 0.20135890428085043,
+      "short_return": 0.13552197740008307,
+      "net_return": 0.06283692688076736,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-02-28",
+      "long_industries": [
+        "钢铁",
+        "农林牧渔",
+        "有色金属"
+      ],
+      "short_industries": [
+        "煤炭",
+        "石油石化",
+        "基础化工"
+      ],
+      "long_return": 0.030361499961725723,
+      "short_return": 0.004207738955310486,
+      "net_return": 0.02315376100641524,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-03-29",
+      "long_industries": [
+        "石油石化",
+        "钢铁",
+        "农林牧渔"
+      ],
+      "short_industries": [
+        "建筑材料",
+        "基础化工",
+        "有色金属"
+      ],
+      "long_return": -0.027383221019338388,
+      "short_return": -0.07357528392079421,
+      "net_return": 0.043192062901455816,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-04-30",
+      "long_industries": [
+        "煤炭",
+        "有色金属",
+        "石油石化"
+      ],
+      "short_industries": [
+        "建筑材料",
+        "农林牧渔",
+        "基础化工"
+      ],
+      "long_return": -0.006293947050347072,
+      "short_return": 0.0003183055554024002,
+      "net_return": -0.009612252605749473,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-05-31",
+      "long_industries": [
+        "建筑材料",
+        "农林牧渔",
+        "煤炭"
+      ],
+      "short_industries": [
+        "有色金属",
+        "石油石化",
+        "基础化工"
+      ],
+      "long_return": 0.032186730418320354,
+      "short_return": 0.031058483967918594,
+      "net_return": -0.0018717535495982396,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-06-28",
+      "long_industries": [
+        "建筑材料",
+        "钢铁",
+        "煤炭"
+      ],
+      "short_industries": [
+        "农林牧渔",
+        "石油石化",
+        "基础化工"
+      ],
+      "long_return": -0.04281738986936585,
+      "short_return": 0.005552353649320561,
+      "net_return": -0.05136974351868641,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-07-31",
+      "long_industries": [
+        "建筑材料",
+        "农林牧渔",
+        "有色金属"
+      ],
+      "short_industries": [
+        "煤炭",
+        "基础化工",
+        "石油石化"
+      ],
+      "long_return": 0.01860277021332839,
+      "short_return": -0.03511570335698099,
+      "net_return": 0.05071847357030938,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-08-30",
+      "long_industries": [
+        "有色金属",
+        "农林牧渔",
+        "石油石化"
+      ],
+      "short_industries": [
+        "建筑材料",
+        "煤炭",
+        "钢铁"
+      ],
+      "long_return": -0.018642957573448502,
+      "short_return": 0.006977741660351182,
+      "net_return": -0.028620699233799684,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-09-30",
+      "long_industries": [
+        "有色金属",
+        "农林牧渔",
+        "石油石化"
+      ],
+      "short_industries": [
+        "基础化工",
+        "钢铁",
+        "煤炭"
+      ],
+      "long_return": 0.047911077553468046,
+      "short_return": -0.025306862621648208,
+      "net_return": 0.07021794017511625,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-10-31",
+      "long_industries": [
+        "农林牧渔",
+        "石油石化",
+        "有色金属"
+      ],
+      "short_industries": [
+        "基础化工",
+        "钢铁",
+        "煤炭"
+      ],
+      "long_return": -0.014005731779220027,
+      "short_return": -0.00877007423629175,
+      "net_return": -0.008235657542928279,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-11-29",
+      "long_industries": [
+        "钢铁",
+        "建筑材料",
+        "石油石化"
+      ],
+      "short_industries": [
+        "农林牧渔",
+        "有色金属",
+        "煤炭"
+      ],
+      "long_return": 0.07972659923864434,
+      "short_return": 0.05761981804480323,
+      "net_return": 0.01910678119384111,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-12-31",
+      "long_industries": [
+        "石油石化",
+        "有色金属",
+        "基础化工"
+      ],
+      "short_industries": [
+        "建筑材料",
+        "农林牧渔",
+        "煤炭"
+      ],
+      "long_return": -0.098774014678361,
+      "short_return": -0.10546562017627421,
+      "net_return": 0.003691605497913214,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-01-23",
+      "long_industries": [
+        "基础化工",
+        "有色金属",
+        "钢铁"
+      ],
+      "short_industries": [
+        "煤炭",
+        "建筑材料",
+        "农林牧渔"
+      ],
+      "long_return": 0.07470666250923519,
+      "short_return": 0.1531045958031892,
+      "net_return": -0.081397933293954,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-02-28",
+      "long_industries": [
+        "煤炭",
+        "农林牧渔",
+        "基础化工"
+      ],
+      "short_industries": [
+        "有色金属",
+        "建筑材料",
+        "石油石化"
+      ],
+      "long_return": -0.05843968011179857,
+      "short_return": -0.08386535723149507,
+      "net_return": 0.022425677119696504,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-03-31",
+      "long_industries": [
+        "煤炭",
+        "农林牧渔",
+        "钢铁"
+      ],
+      "short_industries": [
+        "有色金属",
+        "石油石化",
+        "基础化工"
+      ],
+      "long_return": -0.021451641750641307,
+      "short_return": 0.013208330954701591,
+      "net_return": -0.0376599727053429,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-04-30",
+      "long_industries": [
+        "钢铁",
+        "有色金属",
+        "建筑材料"
+      ],
+      "short_industries": [
+        "农林牧渔",
+        "煤炭",
+        "石油石化"
+      ],
+      "long_return": 0.03618193450786659,
+      "short_return": 0.003408104666981694,
+      "net_return": 0.029773829840884895,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-05-29",
+      "long_industries": [
+        "钢铁",
+        "有色金属",
+        "建筑材料"
+      ],
+      "short_industries": [
+        "石油石化",
+        "煤炭",
+        "农林牧渔"
+      ],
+      "long_return": 0.012031597783316784,
+      "short_return": 0.031670886289761634,
+      "net_return": -0.02263928850644485,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-06-30",
+      "long_industries": [
+        "基础化工",
+        "有色金属",
+        "建筑材料"
+      ],
+      "short_industries": [
+        "钢铁",
+        "煤炭",
+        "农林牧渔"
+      ],
+      "long_return": 0.20197416453040762,
+      "short_return": 0.11083521700687593,
+      "net_return": 0.08813894752353169,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-07-31",
+      "long_industries": [
+        "建筑材料",
+        "煤炭",
+        "钢铁"
+      ],
+      "short_industries": [
+        "石油石化",
+        "基础化工",
+        "农林牧渔"
+      ],
+      "long_return": 0.006670328356624045,
+      "short_return": 0.07814556691923598,
+      "net_return": -0.07447523856261194,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-08-31",
+      "long_industries": [
+        "建筑材料",
+        "煤炭",
+        "基础化工"
+      ],
+      "short_industries": [
+        "农林牧渔",
+        "钢铁",
+        "石油石化"
+      ],
+      "long_return": -0.02634094780609286,
+      "short_return": -0.08554479602981731,
+      "net_return": 0.05620384822372444,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-09-30",
+      "long_industries": [
+        "煤炭",
+        "建筑材料",
+        "农林牧渔"
+      ],
+      "short_industries": [
+        "钢铁",
+        "有色金属",
+        "石油石化"
+      ],
+      "long_return": 0.0034178142311048487,
+      "short_return": 0.08864030831633433,
+      "net_return": -0.08822249408522949,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-10-30",
+      "long_industries": [
+        "煤炭",
+        "农林牧渔",
+        "基础化工"
+      ],
+      "short_industries": [
+        "钢铁",
+        "石油石化",
+        "有色金属"
+      ],
+      "long_return": 0.13841017786599255,
+      "short_return": 0.21916148701163926,
+      "net_return": -0.08375130914564671,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-11-30",
+      "long_industries": [
+        "煤炭",
+        "农林牧渔",
+        "钢铁"
+      ],
+      "short_industries": [
+        "基础化工",
+        "有色金属",
+        "建筑材料"
+      ],
+      "long_return": -0.013043339570011114,
+      "short_return": 0.05555300303558693,
+      "net_return": -0.07159634260559805,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-12-31",
+      "long_industries": [
+        "煤炭",
+        "钢铁",
+        "基础化工"
+      ],
+      "short_industries": [
+        "农林牧渔",
+        "有色金属",
+        "建筑材料"
+      ],
+      "long_return": 0.15601358547364316,
+      "short_return": 0.038545023849211976,
+      "net_return": 0.11446856162443118,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-01-29",
+      "long_industries": [
+        "基础化工",
+        "石油石化",
+        "钢铁"
+      ],
+      "short_industries": [
+        "农林牧渔",
+        "建筑材料",
+        "有色金属"
+      ],
+      "long_return": 0.1455377677316048,
+      "short_return": 0.08688947992527557,
+      "net_return": 0.055648287806329216,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-02-26",
+      "long_industries": [
+        "基础化工",
+        "石油石化",
+        "钢铁"
+      ],
+      "short_industries": [
+        "有色金属",
+        "建筑材料",
+        "煤炭"
+      ],
+      "long_return": -0.08383924674172322,
+      "short_return": -0.05321727308669452,
+      "net_return": -0.0336219736550287,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-03-31",
+      "long_industries": [
+        "石油石化",
+        "基础化工",
+        "建筑材料"
+      ],
+      "short_industries": [
+        "有色金属",
+        "煤炭",
+        "农林牧渔"
+      ],
+      "long_return": 0.0013912363205317673,
+      "short_return": 0.04908144565228684,
+      "net_return": -0.050690209331755075,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-04-30",
+      "long_industries": [
+        "建筑材料",
+        "基础化工",
+        "有色金属"
+      ],
+      "short_industries": [
+        "石油石化",
+        "煤炭",
+        "农林牧渔"
+      ],
+      "long_return": 0.03636137071245174,
+      "short_return": 0.008585146275456215,
+      "net_return": 0.024776224436995526,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-05-31",
+      "long_industries": [
+        "建筑材料",
+        "煤炭",
+        "有色金属"
+      ],
+      "short_industries": [
+        "石油石化",
+        "基础化工",
+        "钢铁"
+      ],
+      "long_return": -0.05321099794999171,
+      "short_return": -0.010781579492670593,
+      "net_return": -0.045429418457321125,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-06-30",
+      "long_industries": [
+        "建筑材料",
+        "农林牧渔",
+        "基础化工"
+      ],
+      "short_industries": [
+        "石油石化",
+        "有色金属",
+        "钢铁"
+      ],
+      "long_return": -0.07419378771535012,
+      "short_return": 0.13784578869417483,
+      "net_return": -0.21503957640952495,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-07-30",
+      "long_industries": [
+        "煤炭",
+        "基础化工",
+        "建筑材料"
+      ],
+      "short_industries": [
+        "有色金属",
+        "农林牧渔",
+        "钢铁"
+      ],
+      "long_return": 0.0998855497986255,
+      "short_return": 0.08766163230379036,
+      "net_return": 0.009223917494835147,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-08-31",
+      "long_industries": [
+        "煤炭",
+        "有色金属",
+        "农林牧渔"
+      ],
+      "short_industries": [
+        "石油石化",
+        "钢铁",
+        "建筑材料"
+      ],
+      "long_return": 0.04486284444553514,
+      "short_return": -0.013428396302282783,
+      "net_return": 0.055291240747817924,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-09-30",
+      "long_industries": [
+        "煤炭",
+        "有色金属",
+        "石油石化"
+      ],
+      "short_industries": [
+        "钢铁",
+        "基础化工",
+        "建筑材料"
+      ],
+      "long_return": -0.1306007145211168,
+      "short_return": -0.09977201769487808,
+      "net_return": -0.03382869682623872,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-10-29",
+      "long_industries": [
+        "石油石化",
+        "农林牧渔",
+        "有色金属"
+      ],
+      "short_industries": [
+        "基础化工",
+        "钢铁",
+        "建筑材料"
+      ],
+      "long_return": -0.03378081495660619,
+      "short_return": -0.029300197899056146,
+      "net_return": -0.007480617057550044,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-11-30",
+      "long_industries": [
+        "有色金属",
+        "石油石化",
+        "农林牧渔"
+      ],
+      "short_industries": [
+        "建筑材料",
+        "基础化工",
+        "煤炭"
+      ],
+      "long_return": 0.04882145693089863,
+      "short_return": 0.0866218095626316,
+      "net_return": -0.040800352631732976,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-12-31",
+      "long_industries": [
+        "有色金属",
+        "农林牧渔",
+        "钢铁"
+      ],
+      "short_industries": [
+        "石油石化",
+        "基础化工",
+        "煤炭"
+      ],
+      "long_return": -0.006981523849770151,
+      "short_return": 0.02264349391249308,
+      "net_return": -0.03262501776226323,
+      "n_industries": 7,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-01-28",
+      "long_industries": [
+        "钢铁",
+        "建筑材料",
+        "基础化工"
+      ],
+      "short_industries": [
+        "农林牧渔",
+        "煤炭",
+        "石油石化"
+      ],
+      "long_return": 0.059801381574304896,
+      "short_return": 0.06987683647631719,
+      "net_return": -0.013075454902012295,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2022-02-28",
+      "long_industries": [
+        "钢铁",
+        "基础化工",
+        "石油石化"
+      ],
+      "short_industries": [
+        "有色金属",
+        "农林牧渔",
+        "建筑材料"
+      ],
+      "long_return": -0.1491592374095221,
+      "short_return": -0.08320464989595654,
+      "net_return": -0.06895458751356558,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2022-03-31",
+      "long_industries": [
+        "石油石化",
+        "基础化工",
+        "钢铁"
+      ],
+      "short_industries": [
+        "农林牧渔",
+        "有色金属",
+        "建筑材料"
+      ],
+      "long_return": -0.06854643656243636,
+      "short_return": -0.05693135879814215,
+      "net_return": -0.014615077764294212,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2022-04-29",
+      "long_industries": [
+        "基础化工",
+        "农林牧渔",
+        "石油石化"
+      ],
+      "short_industries": [
+        "钢铁",
+        "有色金属",
+        "建筑材料"
+      ],
+      "long_return": 0.05130688954543239,
+      "short_return": 0.03437914637199218,
+      "net_return": 0.01392774317344021,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2022-05-31",
+      "long_industries": [
+        "基础化工",
+        "农林牧渔",
+        "石油石化"
+      ],
+      "short_industries": [
+        "建筑材料",
+        "有色金属",
+        "煤炭"
+      ],
+      "long_return": 0.06496343492050945,
+      "short_return": 0.056131659525289535,
+      "net_return": 0.005831775395219912,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2022-06-30",
+      "long_industries": [
+        "基础化工",
+        "农林牧渔",
+        "石油石化"
+      ],
+      "short_industries": [
+        "建筑材料",
+        "煤炭",
+        "有色金属"
+      ],
+      "long_return": -0.016757488497513694,
+      "short_return": -0.06069509071798208,
+      "net_return": 0.04093760222046838,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2022-07-29",
+      "long_industries": [
+        "农林牧渔",
+        "建筑材料",
+        "钢铁"
+      ],
+      "short_industries": [
+        "煤炭",
+        "基础化工",
+        "有色金属"
+      ],
+      "long_return": -0.03618180627978464,
+      "short_return": 0.07398689733531441,
+      "net_return": -0.11316870361509905,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2022-08-31",
+      "long_industries": [
+        "建筑材料",
+        "有色金属",
+        "石油石化"
+      ],
+      "short_industries": [
+        "煤炭",
+        "农林牧渔",
+        "基础化工"
+      ],
+      "long_return": -0.07042118527392086,
+      "short_return": -0.01977645813297154,
+      "net_return": -0.05364472714094932,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2022-09-30",
+      "long_industries": [
+        "有色金属",
+        "建筑材料",
+        "钢铁"
+      ],
+      "short_industries": [
+        "农林牧渔",
+        "石油石化",
+        "基础化工"
+      ],
+      "long_return": -0.007618676581636064,
+      "short_return": -0.06589801290859881,
+      "net_return": 0.05527933632696275,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2022-10-31",
+      "long_industries": [
+        "有色金属",
+        "建筑材料",
+        "煤炭"
+      ],
+      "short_industries": [
+        "石油石化",
+        "钢铁",
+        "基础化工"
+      ],
+      "long_return": 0.09900181132853014,
+      "short_return": 0.10754503468875258,
+      "net_return": -0.011543223360222437,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2022-11-30",
+      "long_industries": [
+        "煤炭",
+        "有色金属",
+        "农林牧渔"
+      ],
+      "short_industries": [
+        "建筑材料",
+        "基础化工",
+        "石油石化"
+      ],
+      "long_return": -0.04588799683613808,
+      "short_return": -0.04861481235569006,
+      "net_return": -0.00027318448044802175,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2022-12-30",
+      "long_industries": [
+        "建筑材料",
+        "钢铁",
+        "有色金属"
+      ],
+      "short_industries": [
+        "基础化工",
+        "煤炭",
+        "石油石化"
+      ],
+      "long_return": 0.09154728962511323,
+      "short_return": 0.06792230425519105,
+      "net_return": 0.020624985369922178,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2023-01-31",
+      "long_industries": [
+        "钢铁",
+        "建筑材料",
+        "有色金属"
+      ],
+      "short_industries": [
+        "农林牧渔",
+        "煤炭",
+        "石油石化"
+      ],
+      "long_return": 0.02485223081246073,
+      "short_return": 0.010064875252888227,
+      "net_return": 0.011787355559572502,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2023-02-28",
+      "long_industries": [
+        "建筑材料",
+        "钢铁",
+        "基础化工"
+      ],
+      "short_industries": [
+        "有色金属",
+        "煤炭",
+        "石油石化"
+      ],
+      "long_return": -0.07894659135354735,
+      "short_return": 0.005765734468233236,
+      "net_return": -0.0877123258217806,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2023-03-31",
+      "long_industries": [
+        "基础化工",
+        "有色金属",
+        "农林牧渔"
+      ],
+      "short_industries": [
+        "钢铁",
+        "煤炭",
+        "石油石化"
+      ],
+      "long_return": -0.03593680414223321,
+      "short_return": 0.018127616728694246,
+      "net_return": -0.05706442087092746,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2023-04-28",
+      "long_industries": [
+        "建筑材料",
+        "农林牧渔",
+        "有色金属"
+      ],
+      "short_industries": [
+        "基础化工",
+        "钢铁",
+        "煤炭"
+      ],
+      "long_return": -0.0911775479937204,
+      "short_return": -0.07948606108465786,
+      "net_return": -0.014691486909062534,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2023-05-31",
+      "long_industries": [
+        "有色金属",
+        "农林牧渔",
+        "建筑材料"
+      ],
+      "short_industries": [
+        "石油石化",
+        "钢铁",
+        "煤炭"
+      ],
+      "long_return": 0.02877101943898108,
+      "short_return": 0.029366142406228007,
+      "net_return": -0.0035951229672469285,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2023-06-30",
+      "long_industries": [
+        "石油石化",
+        "农林牧渔",
+        "有色金属"
+      ],
+      "short_industries": [
+        "建筑材料",
+        "基础化工",
+        "煤炭"
+      ],
+      "long_return": 0.05083225284429865,
+      "short_return": 0.06088132556220336,
+      "net_return": -0.013049072717904706,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2023-07-31",
+      "long_industries": [
+        "石油石化",
+        "基础化工",
+        "煤炭"
+      ],
+      "short_industries": [
+        "农林牧渔",
+        "建筑材料",
+        "有色金属"
+      ],
+      "long_return": -0.037428612843298605,
+      "short_return": -0.08246482069937304,
+      "net_return": 0.04203620785607443,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2023-08-31",
+      "long_industries": [
+        "石油石化",
+        "建筑材料",
+        "煤炭"
+      ],
+      "short_industries": [
+        "农林牧渔",
+        "有色金属",
+        "钢铁"
+      ],
+      "long_return": 0.03280595576269316,
+      "short_return": -0.018571524903796505,
+      "net_return": 0.04837748066648967,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2023-09-28",
+      "long_industries": [
+        "煤炭",
+        "石油石化",
+        "基础化工"
+      ],
+      "short_industries": [
+        "有色金属",
+        "钢铁",
+        "农林牧渔"
+      ],
+      "long_return": -0.027336934542682406,
+      "short_return": -0.0059468202516243145,
+      "net_return": -0.024390114291058092,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2023-10-31",
+      "long_industries": [
+        "煤炭",
+        "石油石化",
+        "有色金属"
+      ],
+      "short_industries": [
+        "基础化工",
+        "农林牧渔",
+        "建筑材料"
+      ],
+      "long_return": -0.010899857179269418,
+      "short_return": -0.01853908216496328,
+      "net_return": 0.004639224985693863,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2023-11-30",
+      "long_industries": [
+        "煤炭",
+        "钢铁",
+        "建筑材料"
+      ],
+      "short_industries": [
+        "有色金属",
+        "农林牧渔",
+        "基础化工"
+      ],
+      "long_return": -0.030300906415043783,
+      "short_return": 0.005697261590680978,
+      "net_return": -0.03899816800572477,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2023-12-29",
+      "long_industries": [
+        "建筑材料",
+        "钢铁",
+        "有色金属"
+      ],
+      "short_industries": [
+        "基础化工",
+        "农林牧渔",
+        "石油石化"
+      ],
+      "long_return": -0.018505452540398575,
+      "short_return": -0.041043028196279835,
+      "net_return": 0.01953757565588126,
+      "n_industries": 7,
+      "split": "validation"
+    },
+    {
+      "date": "2024-01-31",
+      "long_industries": [
+        "建筑材料",
+        "基础化工",
+        "钢铁"
+      ],
+      "short_industries": [
+        "石油石化",
+        "煤炭",
+        "农林牧渔"
+      ],
+      "long_return": 0.1171873558229282,
+      "short_return": 0.1088818861652424,
+      "net_return": 0.005305469657685804,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2024-02-29",
+      "long_industries": [
+        "基础化工",
+        "石油石化",
+        "有色金属"
+      ],
+      "short_industries": [
+        "煤炭",
+        "农林牧渔",
+        "建筑材料"
+      ],
+      "long_return": 0.04913220662565045,
+      "short_return": -0.02428022449055713,
+      "net_return": 0.07041243111620758,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2024-03-29",
+      "long_industries": [
+        "有色金属",
+        "石油石化",
+        "农林牧渔"
+      ],
+      "short_industries": [
+        "煤炭",
+        "钢铁",
+        "建筑材料"
+      ],
+      "long_return": 0.028890191800785888,
+      "short_return": 0.04302464852872567,
+      "net_return": -0.017134456727939784,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2024-04-30",
+      "long_industries": [
+        "有色金属",
+        "石油石化",
+        "农林牧渔"
+      ],
+      "short_industries": [
+        "基础化工",
+        "钢铁",
+        "建筑材料"
+      ],
+      "long_return": -0.003439915557518309,
+      "short_return": -0.017998482499222482,
+      "net_return": 0.011558566941704172,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2024-05-31",
+      "long_industries": [
+        "有色金属",
+        "农林牧渔",
+        "建筑材料"
+      ],
+      "short_industries": [
+        "钢铁",
+        "石油石化",
+        "煤炭"
+      ],
+      "long_return": -0.0379798919277389,
+      "short_return": -0.0013345623876860082,
+      "net_return": -0.0396453295400529,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2024-06-28",
+      "long_industries": [
+        "建筑材料",
+        "钢铁",
+        "有色金属"
+      ],
+      "short_industries": [
+        "农林牧渔",
+        "煤炭",
+        "石油石化"
+      ],
+      "long_return": -0.016384258249499614,
+      "short_return": -0.045576643453370695,
+      "net_return": 0.026192385203871082,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2024-07-31",
+      "long_industries": [
+        "农林牧渔",
+        "基础化工",
+        "石油石化"
+      ],
+      "short_industries": [
+        "有色金属",
+        "煤炭",
+        "钢铁"
+      ],
+      "long_return": -0.065537941962463,
+      "short_return": -0.03382285435116143,
+      "net_return": -0.03471508761130157,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2024-08-30",
+      "long_industries": [
+        "石油石化",
+        "煤炭",
+        "钢铁"
+      ],
+      "short_industries": [
+        "农林牧渔",
+        "基础化工",
+        "建筑材料"
+      ],
+      "long_return": 0.14004697815677883,
+      "short_return": 0.2246632442366363,
+      "net_return": -0.08761626607985748,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2024-09-30",
+      "long_industries": [
+        "钢铁",
+        "有色金属",
+        "农林牧渔"
+      ],
+      "short_industries": [
+        "石油石化",
+        "建筑材料",
+        "基础化工"
+      ],
+      "long_return": -0.12905084145400228,
+      "short_return": -0.13543250787684544,
+      "net_return": 0.0033816664228431574,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2024-10-31",
+      "long_industries": [
+        "有色金属",
+        "钢铁",
+        "建筑材料"
+      ],
+      "short_industries": [
+        "煤炭",
+        "石油石化",
+        "基础化工"
+      ],
+      "long_return": 0.004881402392563984,
+      "short_return": -0.004477424796088558,
+      "net_return": 0.0063588271886525416,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2024-11-29",
+      "long_industries": [
+        "农林牧渔",
+        "钢铁",
+        "建筑材料"
+      ],
+      "short_industries": [
+        "石油石化",
+        "煤炭",
+        "基础化工"
+      ],
+      "long_return": -0.007575767865685528,
+      "short_return": -0.0004342853057031579,
+      "net_return": -0.01014148255998237,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2024-12-31",
+      "long_industries": [
+        "建筑材料",
+        "农林牧渔",
+        "石油石化"
+      ],
+      "short_industries": [
+        "基础化工",
+        "有色金属",
+        "煤炭"
+      ],
+      "long_return": -0.029331197129560116,
+      "short_return": -0.006242738696227619,
+      "net_return": -0.026088458433332497,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-01-27",
+      "long_industries": [
+        "石油石化",
+        "基础化工",
+        "钢铁"
+      ],
+      "short_industries": [
+        "农林牧渔",
+        "煤炭",
+        "有色金属"
+      ],
+      "long_return": 0.010061207992760017,
+      "short_return": -0.021410797633802877,
+      "net_return": 0.028472005626562897,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-02-28",
+      "long_industries": [
+        "基础化工",
+        "钢铁",
+        "农林牧渔"
+      ],
+      "short_industries": [
+        "石油石化",
+        "有色金属",
+        "煤炭"
+      ],
+      "long_return": 0.016656208558150764,
+      "short_return": 0.027947456079383426,
+      "net_return": -0.014291247521232661,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-03-31",
+      "long_industries": [
+        "农林牧渔",
+        "有色金属",
+        "基础化工"
+      ],
+      "short_industries": [
+        "石油石化",
+        "煤炭",
+        "建筑材料"
+      ],
+      "long_return": -0.02204051506709571,
+      "short_return": -0.023691325102506485,
+      "net_return": -0.001349189964589226,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-04-30",
+      "long_industries": [
+        "农林牧渔",
+        "有色金属",
+        "基础化工"
+      ],
+      "short_industries": [
+        "钢铁",
+        "建筑材料",
+        "石油石化"
+      ],
+      "long_return": 0.012352252240065831,
+      "short_return": -0.015769546383610746,
+      "net_return": 0.02512179862367658,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-05-30",
+      "long_industries": [
+        "有色金属",
+        "农林牧渔",
+        "基础化工"
+      ],
+      "short_industries": [
+        "钢铁",
+        "石油石化",
+        "煤炭"
+      ],
+      "long_return": 0.04943502676873527,
+      "short_return": 0.009051781208181524,
+      "net_return": 0.037383245560553745,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-06-30",
+      "long_industries": [
+        "基础化工",
+        "有色金属",
+        "农林牧渔"
+      ],
+      "short_industries": [
+        "煤炭",
+        "钢铁",
+        "建筑材料"
+      ],
+      "long_return": 0.07585122338902772,
+      "short_return": 0.13238934450548265,
+      "net_return": -0.05953812111645493,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-07-31",
+      "long_industries": [
+        "煤炭",
+        "石油石化",
+        "基础化工"
+      ],
+      "short_industries": [
+        "建筑材料",
+        "农林牧渔",
+        "有色金属"
+      ],
+      "long_return": 0.05651689994089487,
+      "short_return": 0.13853258728447196,
+      "net_return": -0.08501568734357709,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-08-29",
+      "long_industries": [
+        "煤炭",
+        "建筑材料",
+        "钢铁"
+      ],
+      "short_industries": [
+        "石油石化",
+        "农林牧渔",
+        "有色金属"
+      ],
+      "long_return": -0.014129090640762886,
+      "short_return": 0.01531579281341317,
+      "net_return": -0.03244488345417606,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-09-30",
+      "long_industries": [
+        "煤炭",
+        "建筑材料",
+        "有色金属"
+      ],
+      "short_industries": [
+        "基础化工",
+        "石油石化",
+        "农林牧渔"
+      ],
+      "long_return": 0.04814537578850008,
+      "short_return": -0.008192022699585291,
+      "net_return": 0.05333739848808537,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-10-31",
+      "long_industries": [
+        "有色金属",
+        "煤炭",
+        "钢铁"
+      ],
+      "short_industries": [
+        "基础化工",
+        "农林牧渔",
+        "石油石化"
+      ],
+      "long_return": -0.02201853233625822,
+      "short_return": 0.011798991607334044,
+      "net_return": -0.036817523943592265,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-11-28",
+      "long_industries": [
+        "有色金属",
+        "基础化工",
+        "钢铁"
+      ],
+      "short_industries": [
+        "煤炭",
+        "建筑材料",
+        "农林牧渔"
+      ],
+      "long_return": 0.07801047873149568,
+      "short_return": -0.026257147375792794,
+      "net_return": 0.10126762610728847,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-12-31",
+      "long_industries": [
+        "基础化工",
+        "有色金属",
+        "钢铁"
+      ],
+      "short_industries": [
+        "建筑材料",
+        "石油石化",
+        "农林牧渔"
+      ],
+      "long_return": 0.0636391057701748,
+      "short_return": 0.07082567931175844,
+      "net_return": -0.01018657354158364,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-01-30",
+      "long_industries": [
+        "有色金属",
+        "基础化工",
+        "钢铁"
+      ],
+      "short_industries": [
+        "建筑材料",
+        "煤炭",
+        "农林牧渔"
+      ],
+      "long_return": 0.057614881597565476,
+      "short_return": 0.09901040463554926,
+      "net_return": -0.04439552303798379,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-02-27",
+      "long_industries": [
+        "有色金属",
+        "石油石化",
+        "基础化工"
+      ],
+      "short_industries": [
+        "煤炭",
+        "农林牧渔",
+        "钢铁"
+      ],
+      "long_return": -0.10794558707636322,
+      "short_return": -0.027675451256397015,
+      "net_return": -0.0832701358199662,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-03-31",
+      "long_industries": [
+        "石油石化",
+        "基础化工",
+        "农林牧渔"
+      ],
+      "short_industries": [
+        "建筑材料",
+        "煤炭",
+        "有色金属"
+      ],
+      "long_return": 0.04034167108812046,
+      "short_return": 0.06836647944706198,
+      "net_return": -0.03102480835894152,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-04-30",
+      "long_industries": [
+        "石油石化",
+        "农林牧渔",
+        "基础化工"
+      ],
+      "short_industries": [
+        "煤炭",
+        "建筑材料",
+        "有色金属"
+      ],
+      "long_return": -0.13216938948472862,
+      "short_return": -0.034586622568318744,
+      "net_return": -0.10058276691640988,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-05-29",
+      "long_industries": [
+        "农林牧渔",
+        "钢铁",
+        "煤炭"
+      ],
+      "short_industries": [
+        "基础化工",
+        "石油石化",
+        "有色金属"
+      ],
+      "long_return": -0.10646013707742419,
+      "short_return": -0.05516786844231538,
+      "net_return": -0.05429226863510881,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-06-30",
+      "long_industries": [
+        "煤炭",
+        "农林牧渔",
+        "建筑材料"
+      ],
+      "short_industries": [
+        "有色金属",
+        "石油石化",
+        "基础化工"
+      ],
+      "long_return": 0.02800273184835561,
+      "short_return": 0.025225013269522995,
+      "net_return": -0.00022228142116738434,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-07-31",
+      "long_industries": [
+        "农林牧渔",
+        "石油石化",
+        "煤炭"
+      ],
+      "short_industries": [
+        "基础化工",
+        "建筑材料",
+        "钢铁"
+      ],
+      "long_return": 0.08689798697649675,
+      "short_return": 0.0244993458711714,
+      "net_return": 0.05939864110532535,
+      "n_industries": 7,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-08-31",
+      "long_industries": [
+        "农林牧渔",
+        "煤炭",
+        "石油石化"
+      ],
+      "short_industries": [
+        "建筑材料",
+        "有色金属",
+        "基础化工"
+      ],
+      "long_return": -0.07276594490979284,
+      "short_return": -0.11208026437720613,
+      "net_return": 0.036314319467413286,
+      "n_industries": 7,
+      "split": "holdout"
+    }
+  ],
+  "limitations": [
+    "Sina main-continuous prices contain roll gaps; no per-contract back-adjustment was performed.",
+    "Industry mapping is static current THS L1 classification, not a point-in-time historical classification.",
+    "Only 7 upstream industries and about 15% of HS300 names are mapped.",
+    "Stock-level IC uses repeated industry signals; month-level win rate is the primary stability check.",
+    "Commodity inventory history starts around 2020-10-28 and was not used."
+  ]
+}
