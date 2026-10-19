@@ -1,0 +1,970 @@
+{
+  "purpose": "R186 300ETF option PCR timing scan",
+  "generated_at": "2026-10-19T19:07:52",
+  "data": {
+    "source": "SSE option_daily_stats_sse via local r171 cache",
+    "months": 80,
+    "start": "2020-01-23",
+    "end": "2026-08-31"
+  },
+  "method": {
+    "factors": {
+      "pcr_volume_z": "expanding z-score of put/call volume ratio, min 12 months, direction positive",
+      "pcr_volume_chg_1m": "monthly change of put/call volume ratio, direction positive"
+    },
+    "long_cash": "signal > 0 holds HS300 index, else cash; 0.05% per switch",
+    "forward_return": "T+1 open to T+21 open on 000300.SH",
+    "splits": {
+      "discovery": [
+        "2020-02-01",
+        "2022-12-31"
+      ],
+      "validation": [
+        "2023-01-01",
+        "2024-12-31"
+      ],
+      "holdout": [
+        "2025-01-01",
+        "2026-08-31"
+      ]
+    }
+  },
+  "summary": {
+    "discovery": {
+      "months": 35,
+      "pcr_volume_z": {
+        "ic": 0.084615,
+        "hit_rate": 0.56,
+        "long_cash": {
+          "months": 25,
+          "strategy_total": -0.159579,
+          "benchmark_total": -0.250696,
+          "strategy_mdd": -0.242547,
+          "benchmark_mdd": -0.346235,
+          "strategy_mean": -0.006095,
+          "switches": 8
+        },
+        "qvix_corr": 0.093043,
+        "residual_ic": 0.164348
+      },
+      "pcr_volume_chg_1m": {
+        "ic": 0.082353,
+        "hit_rate": 0.4857,
+        "long_cash": {
+          "months": 35,
+          "strategy_total": 0.009525,
+          "benchmark_total": -0.01078,
+          "strategy_mdd": -0.23847,
+          "benchmark_mdd": -0.346235,
+          "strategy_mean": 0.001066,
+          "switches": 21
+        },
+        "qvix_corr": -0.026087,
+        "residual_ic": 0.218261
+      }
+    },
+    "validation": {
+      "months": 24,
+      "pcr_volume_z": {
+        "ic": 0.018261,
+        "hit_rate": 0.75,
+        "long_cash": {
+          "months": 24,
+          "strategy_total": 0.089687,
+          "benchmark_total": -0.131046,
+          "strategy_mdd": -0.052918,
+          "benchmark_mdd": -0.221001,
+          "strategy_mean": 0.003833,
+          "switches": 9
+        },
+        "qvix_corr": 0.022609,
+        "residual_ic": 0.133913
+      },
+      "pcr_volume_chg_1m": {
+        "ic": -0.133043,
+        "hit_rate": 0.5417,
+        "long_cash": {
+          "months": 24,
+          "strategy_total": -0.156529,
+          "benchmark_total": -0.131046,
+          "strategy_mdd": -0.156529,
+          "benchmark_mdd": -0.221001,
+          "strategy_mean": -0.006417,
+          "switches": 17
+        },
+        "qvix_corr": 0.203478,
+        "residual_ic": -0.06
+      }
+    },
+    "holdout": {
+      "months": 20,
+      "pcr_volume_z": {
+        "ic": 0.105263,
+        "hit_rate": 0.4,
+        "long_cash": {
+          "months": 20,
+          "strategy_total": 0.081407,
+          "benchmark_total": 0.065337,
+          "strategy_mdd": -0.079969,
+          "benchmark_mdd": -0.130774,
+          "strategy_mean": 0.004471,
+          "switches": 10
+        },
+        "qvix_corr": 0.019549,
+        "residual_ic": 0.084211
+      },
+      "pcr_volume_chg_1m": {
+        "ic": -0.007519,
+        "hit_rate": 0.4,
+        "long_cash": {
+          "months": 20,
+          "strategy_total": 0.067887,
+          "benchmark_total": 0.065337,
+          "strategy_mdd": -0.079969,
+          "benchmark_mdd": -0.130774,
+          "strategy_mean": 0.003834,
+          "switches": 12
+        },
+        "qvix_corr": 0.097744,
+        "residual_ic": -0.025564
+      }
+    }
+  },
+  "recent_12m_long_cash": {
+    "pcr_volume_z": {
+      "months": 12,
+      "strategy_total": -0.021951,
+      "benchmark_total": -0.103356,
+      "strategy_mdd": -0.079969,
+      "benchmark_mdd": -0.130774,
+      "strategy_mean": -0.001348,
+      "switches": 6
+    },
+    "pcr_volume_chg_1m": {
+      "months": 12,
+      "strategy_total": -0.019252,
+      "benchmark_total": -0.103356,
+      "strategy_mdd": -0.079969,
+      "benchmark_mdd": -0.130774,
+      "strategy_mean": -0.001119,
+      "switches": 6
+    }
+  },
+  "decision": {
+    "pcr_volume_z": {
+      "D1": false,
+      "G1": false,
+      "G2": false,
+      "G3": false,
+      "G4": true,
+      "G5": true,
+      "all_pass": false
+    },
+    "pcr_volume_chg_1m": {
+      "D1": true,
+      "G1": false,
+      "G2": false,
+      "G3": false,
+      "G4": false,
+      "G5": false,
+      "all_pass": false
+    }
+  },
+  "monthly_records": [
+    {
+      "date": "2020-02-28",
+      "forward_return": -0.0784565984452904,
+      "pcr_volume": 1.2622,
+      "pcr_oi": 0.8827013850339104,
+      "pcr_volume_z": null,
+      "pcr_volume_chg_1m": 0.27190000000000003,
+      "qvix_z_252": null,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-03-31",
+      "forward_return": 0.05380120071792138,
+      "pcr_volume": 0.828,
+      "pcr_oi": 0.7674397421964809,
+      "pcr_volume_z": null,
+      "pcr_volume_chg_1m": -0.43420000000000003,
+      "qvix_z_252": null,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-04-30",
+      "forward_return": 0.03462710927817336,
+      "pcr_volume": 0.7051000000000001,
+      "pcr_oi": 1.1344307880399211,
+      "pcr_volume_z": null,
+      "pcr_volume_chg_1m": -0.1228999999999999,
+      "qvix_z_252": null,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-05-29",
+      "forward_return": 0.0694351679231191,
+      "pcr_volume": 1.1948999999999999,
+      "pcr_oi": 1.1704161360007994,
+      "pcr_volume_z": null,
+      "pcr_volume_chg_1m": 0.4897999999999998,
+      "qvix_z_252": null,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-06-30",
+      "forward_return": 0.09263193616132503,
+      "pcr_volume": 1.0359,
+      "pcr_oi": 1.4129663296214012,
+      "pcr_volume_z": null,
+      "pcr_volume_chg_1m": -0.1589999999999998,
+      "qvix_z_252": null,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-07-31",
+      "forward_return": 0.02851306584029767,
+      "pcr_volume": 0.7762,
+      "pcr_oi": 1.0715857382822627,
+      "pcr_volume_z": null,
+      "pcr_volume_chg_1m": -0.25970000000000004,
+      "qvix_z_252": null,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-08-31",
+      "forward_return": -0.04061692237485515,
+      "pcr_volume": 0.6433,
+      "pcr_oi": 1.1363606192954785,
+      "pcr_volume_z": null,
+      "pcr_volume_chg_1m": -0.13290000000000002,
+      "qvix_z_252": null,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-09-30",
+      "forward_return": 0.05018001076419343,
+      "pcr_volume": 0.7957,
+      "pcr_oi": 0.7749111090449152,
+      "pcr_volume_z": null,
+      "pcr_volume_chg_1m": 0.15239999999999998,
+      "qvix_z_252": null,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-10-30",
+      "forward_return": 0.061955291653004396,
+      "pcr_volume": 1.0263,
+      "pcr_oi": 0.9437077140927815,
+      "pcr_volume_z": null,
+      "pcr_volume_chg_1m": 0.23060000000000003,
+      "qvix_z_252": null,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-11-30",
+      "forward_return": 0.021824735600316725,
+      "pcr_volume": 0.6322,
+      "pcr_oi": 0.9528815130900455,
+      "pcr_volume_z": null,
+      "pcr_volume_chg_1m": -0.3941,
+      "qvix_z_252": null,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-12-31",
+      "forward_return": 0.027608844237531738,
+      "pcr_volume": 0.6556000000000001,
+      "pcr_oi": 1.0276485765491745,
+      "pcr_volume_z": -1.0701421536113578,
+      "pcr_volume_chg_1m": 0.023400000000000087,
+      "qvix_z_252": null,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-01-29",
+      "forward_return": -0.010652334373869476,
+      "pcr_volume": 1.0225,
+      "pcr_oi": 0.950383400046549,
+      "pcr_volume_z": 0.6501227654310283,
+      "pcr_volume_chg_1m": 0.3668999999999999,
+      "qvix_z_252": -0.003826321244805273,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-02-26",
+      "forward_return": -0.06252947998330005,
+      "pcr_volume": 1.2455,
+      "pcr_oi": 0.9317866275585598,
+      "pcr_volume_z": 1.5226136753254507,
+      "pcr_volume_chg_1m": 0.2230000000000001,
+      "qvix_z_252": 0.41556367110221565,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-03-31",
+      "forward_return": 0.019055576987535128,
+      "pcr_volume": 0.9756999999999999,
+      "pcr_oi": 0.8744256670582221,
+      "pcr_volume_z": 0.2685076066910468,
+      "pcr_volume_chg_1m": -0.26980000000000015,
+      "qvix_z_252": -0.7812761802058417,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-04-30",
+      "forward_return": 0.03665744162205975,
+      "pcr_volume": 0.97,
+      "pcr_oi": 0.9447655078538066,
+      "pcr_volume_z": 0.23328541349818485,
+      "pcr_volume_chg_1m": -0.005699999999999927,
+      "qvix_z_252": -0.9552969012078784,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-05-31",
+      "forward_return": -0.024639717318472587,
+      "pcr_volume": 0.7291,
+      "pcr_oi": 0.8662294806117489,
+      "pcr_volume_z": -0.8971226729704458,
+      "pcr_volume_chg_1m": -0.2409,
+      "qvix_z_252": -0.06528614098631615,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-06-30",
+      "forward_return": -0.07544907620462771,
+      "pcr_volume": 0.7434000000000001,
+      "pcr_oi": 0.8801909489439801,
+      "pcr_volume_z": -0.7885125005602602,
+      "pcr_volume_chg_1m": 0.01430000000000009,
+      "qvix_z_252": -1.1936101506808987,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-07-30",
+      "forward_return": 0.01089008782187606,
+      "pcr_volume": 1.2286,
+      "pcr_oi": 0.8361263602603235,
+      "pcr_volume_z": 1.4838061786513155,
+      "pcr_volume_chg_1m": 0.48519999999999985,
+      "qvix_z_252": -0.7030298708816007,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-08-31",
+      "forward_return": 0.023111812093443707,
+      "pcr_volume": 1.0802,
+      "pcr_oi": 0.9354473324273234,
+      "pcr_volume_z": 0.7420794440397536,
+      "pcr_volume_chg_1m": -0.14839999999999987,
+      "qvix_z_252": -0.8363949435506125,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-09-30",
+      "forward_return": -0.011561047583767303,
+      "pcr_volume": 0.8887,
+      "pcr_oi": 1.0064237666746596,
+      "pcr_volume_z": -0.18110701528628023,
+      "pcr_volume_chg_1m": -0.1915,
+      "qvix_z_252": -0.2626974971915402,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-10-29",
+      "forward_return": -0.011915021500050749,
+      "pcr_volume": 0.9140999999999999,
+      "pcr_oi": 0.9383667851960718,
+      "pcr_volume_z": -0.05383849131051978,
+      "pcr_volume_chg_1m": 0.025399999999999867,
+      "qvix_z_252": -1.2388195210490145,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-11-30",
+      "forward_return": 0.02623342547811003,
+      "pcr_volume": 1.1423,
+      "pcr_oi": 0.9718704770352825,
+      "pcr_volume_z": 1.0528617546313435,
+      "pcr_volume_chg_1m": 0.22820000000000018,
+      "qvix_z_252": -1.548671253119142,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-12-31",
+      "forward_return": -0.06687133318703742,
+      "pcr_volume": 0.9440000000000001,
+      "pcr_oi": 0.9235158361070198,
+      "pcr_volume_z": 0.04869981995202445,
+      "pcr_volume_chg_1m": -0.19830000000000003,
+      "qvix_z_252": -1.2706464299094646,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-01-28",
+      "forward_return": -0.03795519097998845,
+      "pcr_volume": 1.1593,
+      "pcr_oi": 0.9428555760537455,
+      "pcr_volume_z": 1.1082213077761855,
+      "pcr_volume_chg_1m": 0.21529999999999994,
+      "qvix_z_252": 1.2455530180940388,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-02-28",
+      "forward_return": -0.0962268275097844,
+      "pcr_volume": 1.2304000000000002,
+      "pcr_oi": 1.030024555398467,
+      "pcr_volume_z": 1.3880522574713965,
+      "pcr_volume_chg_1m": 0.07110000000000016,
+      "qvix_z_252": -0.9762998027645763,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-03-31",
+      "forward_return": -0.06429522206125116,
+      "pcr_volume": 0.9902,
+      "pcr_oi": 0.9571138721694816,
+      "pcr_volume_z": 0.17573130588413766,
+      "pcr_volume_chg_1m": -0.2402000000000002,
+      "qvix_z_252": 1.227067510790391,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-04-29",
+      "forward_return": 0.01718171085258291,
+      "pcr_volume": 0.9767,
+      "pcr_oi": 0.9296283669257285,
+      "pcr_volume_z": 0.10459511399841004,
+      "pcr_volume_chg_1m": -0.013499999999999956,
+      "qvix_z_252": 1.385806499085776,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-05-31",
+      "forward_return": 0.08110569669100465,
+      "pcr_volume": 1.0611,
+      "pcr_oi": 1.1540466746923388,
+      "pcr_volume_z": 0.5328407372144127,
+      "pcr_volume_chg_1m": 0.08439999999999992,
+      "qvix_z_252": 0.971743770558053,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-06-30",
+      "forward_return": -0.05860203317949364,
+      "pcr_volume": 0.8639,
+      "pcr_oi": 1.348899146923721,
+      "pcr_volume_z": -0.49844727285202256,
+      "pcr_volume_chg_1m": -0.19719999999999993,
+      "qvix_z_252": 1.30764628509048,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-07-29",
+      "forward_return": -0.02325719455238706,
+      "pcr_volume": 1.0586,
+      "pcr_oi": 0.8468035622059071,
+      "pcr_volume_z": 0.532067854806967,
+      "pcr_volume_chg_1m": 0.19469999999999998,
+      "qvix_z_252": 0.3645585362986045,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-08-31",
+      "forward_return": -0.05726175407082856,
+      "pcr_volume": 0.9956999999999999,
+      "pcr_oi": 0.914899801344531,
+      "pcr_volume_z": 0.18840676566617812,
+      "pcr_volume_chg_1m": -0.06290000000000007,
+      "qvix_z_252": -0.7682200309603323,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-09-30",
+      "forward_return": -0.013670348030767832,
+      "pcr_volume": 1.0215,
+      "pcr_oi": 0.8086882820278517,
+      "pcr_volume_z": 0.324661947945886,
+      "pcr_volume_chg_1m": 0.025800000000000156,
+      "qvix_z_252": -0.23092854279196537,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-10-31",
+      "forward_return": 0.07010392869856585,
+      "pcr_volume": 1.1039,
+      "pcr_oi": 0.7437258946619982,
+      "pcr_volume_z": 0.7654139654781245,
+      "pcr_volume_chg_1m": 0.08240000000000003,
+      "qvix_z_252": 1.9345512018794266,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-11-30",
+      "forward_return": -0.017101238238898198,
+      "pcr_volume": 0.8495999999999999,
+      "pcr_oi": 1.090792107520732,
+      "pcr_volume_z": -0.6468809025166923,
+      "pcr_volume_chg_1m": -0.2543000000000002,
+      "qvix_z_252": 0.826509486923497,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-12-30",
+      "forward_return": 0.060410325302289625,
+      "pcr_volume": 0.9320999999999999,
+      "pcr_oi": 1.057163327857544,
+      "pcr_volume_z": -0.17785729919783352,
+      "pcr_volume_chg_1m": 0.08250000000000002,
+      "qvix_z_252": -1.7592141007845772,
+      "split": "discovery"
+    },
+    {
+      "date": "2023-01-31",
+      "forward_return": -0.024315537253976505,
+      "pcr_volume": 0.8898,
+      "pcr_oi": 1.0119653052946866,
+      "pcr_volume_z": -0.4135812815675666,
+      "pcr_volume_chg_1m": -0.04229999999999989,
+      "qvix_z_252": -1.123400417042329,
+      "split": "validation"
+    },
+    {
+      "date": "2023-02-28",
+      "forward_return": -0.013552130356059289,
+      "pcr_volume": 0.9116,
+      "pcr_oi": 0.9863740883377771,
+      "pcr_volume_z": -0.28310812869908725,
+      "pcr_volume_chg_1m": 0.02179999999999993,
+      "qvix_z_252": -1.1687777729691902,
+      "split": "validation"
+    },
+    {
+      "date": "2023-03-31",
+      "forward_return": -0.007027253515905385,
+      "pcr_volume": 0.8812000000000001,
+      "pcr_oi": 1.122631673557433,
+      "pcr_volume_z": -0.4542969425325864,
+      "pcr_volume_chg_1m": -0.03039999999999987,
+      "qvix_z_252": -1.9650821201552082,
+      "split": "validation"
+    },
+    {
+      "date": "2023-04-28",
+      "forward_return": -0.05603154974833502,
+      "pcr_volume": 0.8933,
+      "pcr_oi": 0.9940279811711497,
+      "pcr_volume_z": -0.3770619553378344,
+      "pcr_volume_chg_1m": 0.012099999999999889,
+      "qvix_z_252": -1.926140567265916,
+      "split": "validation"
+    },
+    {
+      "date": "2023-05-31",
+      "forward_return": 0.017078121411923552,
+      "pcr_volume": 1.0155,
+      "pcr_oi": 0.8559176651320775,
+      "pcr_volume_z": 0.35037923065058607,
+      "pcr_volume_chg_1m": 0.12220000000000009,
+      "qvix_z_252": -1.0840007671895107,
+      "split": "validation"
+    },
+    {
+      "date": "2023-06-30",
+      "forward_return": 0.04297572050080811,
+      "pcr_volume": 0.8402,
+      "pcr_oi": 0.9302823745534501,
+      "pcr_volume_z": -0.6988809441701609,
+      "pcr_volume_chg_1m": -0.17530000000000012,
+      "qvix_z_252": -1.9050217021772748,
+      "split": "validation"
+    },
+    {
+      "date": "2023-07-31",
+      "forward_return": -0.06638010786736348,
+      "pcr_volume": 0.6761,
+      "pcr_oi": 0.9306538955223317,
+      "pcr_volume_z": -1.6255027416135674,
+      "pcr_volume_chg_1m": -0.1640999999999999,
+      "qvix_z_252": -0.22696316957758933,
+      "split": "validation"
+    },
+    {
+      "date": "2023-08-31",
+      "forward_return": -0.02645840219131801,
+      "pcr_volume": 0.8804000000000001,
+      "pcr_oi": 0.7639639743875289,
+      "pcr_volume_z": -0.4004676651840764,
+      "pcr_volume_chg_1m": 0.20430000000000004,
+      "qvix_z_252": 0.190503171637676,
+      "split": "validation"
+    },
+    {
+      "date": "2023-09-28",
+      "forward_return": -0.019193085813833388,
+      "pcr_volume": 0.7106999999999999,
+      "pcr_oi": 0.7628910625145805,
+      "pcr_volume_z": -1.376801626383286,
+      "pcr_volume_chg_1m": -0.16970000000000018,
+      "qvix_z_252": -0.26441399054229053,
+      "split": "validation"
+    },
+    {
+      "date": "2023-10-31",
+      "forward_return": -0.024093131042072113,
+      "pcr_volume": 0.8745,
+      "pcr_oi": 0.767603056160305,
+      "pcr_volume_z": -0.39500469543014105,
+      "pcr_volume_chg_1m": 0.16380000000000017,
+      "qvix_z_252": -0.4636943664693569,
+      "split": "validation"
+    },
+    {
+      "date": "2023-11-30",
+      "forward_return": -0.023786117829342923,
+      "pcr_volume": 0.9147,
+      "pcr_oi": 0.668520062137688,
+      "pcr_volume_z": -0.15138933137228028,
+      "pcr_volume_chg_1m": 0.0401999999999999,
+      "qvix_z_252": -0.8355822459484874,
+      "split": "validation"
+    },
+    {
+      "date": "2023-12-29",
+      "forward_return": -0.0415524996877068,
+      "pcr_volume": 0.8747,
+      "pcr_oi": 0.7662611839043139,
+      "pcr_volume_z": -0.38990331236994236,
+      "pcr_volume_chg_1m": -0.039999999999999925,
+      "qvix_z_252": -0.22574586329608703,
+      "split": "validation"
+    },
+    {
+      "date": "2024-01-31",
+      "forward_return": 0.10220763112006037,
+      "pcr_volume": 1.28,
+      "pcr_oi": 0.6792850655248476,
+      "pcr_volume_z": 1.9883456940596005,
+      "pcr_volume_chg_1m": 0.4053,
+      "qvix_z_252": 3.116611526866801,
+      "split": "validation"
+    },
+    {
+      "date": "2024-02-29",
+      "forward_return": 0.0005189102089038222,
+      "pcr_volume": 0.8776,
+      "pcr_oi": 0.8533828371838797,
+      "pcr_volume_z": -0.39689649246922093,
+      "pcr_volume_chg_1m": -0.4024,
+      "qvix_z_252": 1.3871027812064483,
+      "split": "validation"
+    },
+    {
+      "date": "2024-03-29",
+      "forward_return": 0.02885108664251601,
+      "pcr_volume": 1.0170000000000001,
+      "pcr_oi": 0.859864687943928,
+      "pcr_volume_z": 0.43295235870093063,
+      "pcr_volume_chg_1m": 0.13940000000000008,
+      "qvix_z_252": -0.5015316104638003,
+      "split": "validation"
+    },
+    {
+      "date": "2024-04-30",
+      "forward_return": -0.0209819299084385,
+      "pcr_volume": 0.8062999999999999,
+      "pcr_oi": 1.0065659892762735,
+      "pcr_volume_z": -0.8255845043914868,
+      "pcr_volume_chg_1m": -0.21070000000000022,
+      "qvix_z_252": -0.4772080089882472,
+      "split": "validation"
+    },
+    {
+      "date": "2024-05-31",
+      "forward_return": -0.029330683349266806,
+      "pcr_volume": 0.9979,
+      "pcr_oi": 0.8533706755662157,
+      "pcr_volume_z": 0.3312387138899348,
+      "pcr_volume_chg_1m": 0.1916000000000001,
+      "qvix_z_252": -1.1008444917317906,
+      "split": "validation"
+    },
+    {
+      "date": "2024-06-28",
+      "forward_return": -0.015585276312045648,
+      "pcr_volume": 0.9006000000000001,
+      "pcr_oi": 0.7911279802650273,
+      "pcr_volume_z": -0.2604160195911988,
+      "pcr_volume_chg_1m": -0.09729999999999994,
+      "qvix_z_252": -1.5306551943082152,
+      "split": "validation"
+    },
+    {
+      "date": "2024-07-31",
+      "forward_return": -0.04925707348524888,
+      "pcr_volume": 0.7602,
+      "pcr_oi": 0.9120146317549307,
+      "pcr_volume_z": -1.1025188942860251,
+      "pcr_volume_chg_1m": -0.14040000000000008,
+      "qvix_z_252": -0.9837110188895456,
+      "split": "validation"
+    },
+    {
+      "date": "2024-08-30",
+      "forward_return": 0.2604050801455944,
+      "pcr_volume": 0.6767,
+      "pcr_oi": 0.7908357718290524,
+      "pcr_volume_z": -1.5652615089437198,
+      "pcr_volume_chg_1m": -0.08350000000000002,
+      "qvix_z_252": -1.4508865618136149,
+      "split": "validation"
+    },
+    {
+      "date": "2024-09-30",
+      "forward_return": -0.11521406769058207,
+      "pcr_volume": 0.9056000000000001,
+      "pcr_oi": 1.4456695214124426,
+      "pcr_volume_z": -0.1757617737504288,
+      "pcr_volume_chg_1m": 0.2289000000000001,
+      "qvix_z_252": 9.171753938475163,
+      "split": "validation"
+    },
+    {
+      "date": "2024-10-31",
+      "forward_return": -0.0032371245226606726,
+      "pcr_volume": 0.6917,
+      "pcr_oi": 0.9207257071655172,
+      "pcr_volume_z": -1.4438691580104484,
+      "pcr_volume_chg_1m": -0.2139000000000001,
+      "qvix_z_252": 2.945341606312174,
+      "split": "validation"
+    },
+    {
+      "date": "2024-11-29",
+      "forward_return": 0.01713608424987778,
+      "pcr_volume": 0.7232,
+      "pcr_oi": 0.9537124931634302,
+      "pcr_volume_z": -1.226257905875358,
+      "pcr_volume_chg_1m": 0.03149999999999997,
+      "qvix_z_252": 0.9956848003726647,
+      "split": "validation"
+    },
+    {
+      "date": "2024-12-31",
+      "forward_return": -0.022320220478272645,
+      "pcr_volume": 0.9274,
+      "pcr_oi": 0.902269117960259,
+      "pcr_volume_z": 0.004487742773798498,
+      "pcr_volume_chg_1m": 0.20420000000000005,
+      "qvix_z_252": 0.022024858058300612,
+      "split": "validation"
+    },
+    {
+      "date": "2025-01-27",
+      "forward_return": 0.011209977371446467,
+      "pcr_volume": 0.6354,
+      "pcr_oi": 0.9280435900634065,
+      "pcr_volume_z": -1.7123392713455226,
+      "pcr_volume_chg_1m": -0.29200000000000004,
+      "qvix_z_252": -0.13689429096468922,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-02-28",
+      "forward_return": 0.0016119205189326635,
+      "pcr_volume": 0.9051,
+      "pcr_oi": 0.8535936479880861,
+      "pcr_volume_z": -0.09951510586701318,
+      "pcr_volume_chg_1m": 0.26970000000000005,
+      "qvix_z_252": -0.13219243392689975,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-03-31",
+      "forward_return": -0.030042291124155796,
+      "pcr_volume": 0.9742000000000001,
+      "pcr_oi": 0.7486508054799965,
+      "pcr_volume_z": 0.3140603698526373,
+      "pcr_volume_chg_1m": 0.06910000000000005,
+      "qvix_z_252": -0.5097076196495111,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-04-30",
+      "forward_return": 0.01610594205740279,
+      "pcr_volume": 0.9283,
+      "pcr_oi": 0.8529361993167612,
+      "pcr_volume_z": 0.035219436181639335,
+      "pcr_volume_chg_1m": -0.04590000000000005,
+      "qvix_z_252": -0.09523794583723195,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-05-30",
+      "forward_return": 0.026725217805960044,
+      "pcr_volume": 1.0295999999999998,
+      "pcr_oi": 0.8076206919594079,
+      "pcr_volume_z": 0.6476623505629878,
+      "pcr_volume_chg_1m": 0.10129999999999983,
+      "qvix_z_252": -0.6200110554810692,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-06-30",
+      "forward_return": 0.04999481695202235,
+      "pcr_volume": 0.8723000000000001,
+      "pcr_oi": 0.8160992125511942,
+      "pcr_volume_z": -0.3161487357915916,
+      "pcr_volume_chg_1m": -0.15729999999999977,
+      "qvix_z_252": -0.6943558379185459,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-07-31",
+      "forward_return": 0.09481206656142294,
+      "pcr_volume": 1.0783,
+      "pcr_oi": 0.9167152280832614,
+      "pcr_volume_z": 0.9446400263583068,
+      "pcr_volume_chg_1m": 0.20599999999999996,
+      "qvix_z_252": -0.30879311790774255,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-08-29",
+      "forward_return": 0.00844720436389812,
+      "pcr_volume": 0.8109999999999999,
+      "pcr_oi": 1.2373636619901556,
+      "pcr_volume_z": -0.7023482135107918,
+      "pcr_volume_chg_1m": -0.2673000000000001,
+      "qvix_z_252": 0.6691103703568474,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-09-30",
+      "forward_return": -0.004311778800728305,
+      "pcr_volume": 1.0090999999999999,
+      "pcr_oi": 1.0243953057353692,
+      "pcr_volume_z": 0.5237280600157529,
+      "pcr_volume_chg_1m": 0.19809999999999994,
+      "qvix_z_252": -0.3758584458702924,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-10-31",
+      "forward_return": -0.02103723053219375,
+      "pcr_volume": 1.1123,
+      "pcr_oi": 1.0344583046598108,
+      "pcr_volume_z": 1.1488755319227058,
+      "pcr_volume_chg_1m": 0.10320000000000018,
+      "qvix_z_252": -0.16552223153729365,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-11-28",
+      "forward_return": 0.026233106009268647,
+      "pcr_volume": 1.1815,
+      "pcr_oi": 1.0861176035073457,
+      "pcr_volume_z": 1.5420468106590681,
+      "pcr_volume_chg_1m": 0.06919999999999993,
+      "qvix_z_252": -0.0818867616284629,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-12-31",
+      "forward_return": 0.0027157964105151144,
+      "pcr_volume": 1.0423,
+      "pcr_oi": 0.8742978385376816,
+      "pcr_volume_z": 0.6764674889664829,
+      "pcr_volume_chg_1m": -0.1392,
+      "qvix_z_252": -0.6977932084410805,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-01-30",
+      "forward_return": -0.0054534648788390205,
+      "pcr_volume": 0.9376000000000001,
+      "pcr_oi": 0.8235205831903946,
+      "pcr_volume_z": 0.028020382718399843,
+      "pcr_volume_chg_1m": -0.1046999999999999,
+      "qvix_z_252": 0.02464279900202096,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-02-27",
+      "forward_return": -0.04684391031515822,
+      "pcr_volume": 0.7746,
+      "pcr_oi": 0.8270198598434914,
+      "pcr_volume_z": -0.9750656028343402,
+      "pcr_volume_chg_1m": -0.16300000000000014,
+      "qvix_z_252": -1.1409137207624467,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-03-31",
+      "forward_return": 0.0672308419771932,
+      "pcr_volume": 0.9521,
+      "pcr_oi": 0.6540137972749892,
+      "pcr_volume_z": 0.13090798782250235,
+      "pcr_volume_chg_1m": 0.1775,
+      "qvix_z_252": -0.06884311692030474,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-04-30",
+      "forward_return": 0.01311147315144301,
+      "pcr_volume": 0.865,
+      "pcr_oi": 0.835800075619233,
+      "pcr_volume_z": -0.41261833683631555,
+      "pcr_volume_chg_1m": -0.08709999999999996,
+      "qvix_z_252": -0.6273023055881936,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-05-29",
+      "forward_return": 0.003388393018473046,
+      "pcr_volume": 0.8,
+      "pcr_oi": 0.7705913104089219,
+      "pcr_volume_z": -0.8139462318872224,
+      "pcr_volume_chg_1m": -0.06499999999999995,
+      "qvix_z_252": 0.5688122636662017,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-06-30",
+      "forward_return": -0.0785483999411184,
+      "pcr_volume": 1.2079,
+      "pcr_oi": 0.8416483231474154,
+      "pcr_volume_z": 1.720726668422441,
+      "pcr_volume_chg_1m": 0.40789999999999993,
+      "qvix_z_252": 1.3316577885508325,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-07-31",
+      "forward_return": 3.704664172188288e-05,
+      "pcr_volume": 0.7646,
+      "pcr_oi": 0.7133653132384385,
+      "pcr_volume_z": -1.0328648632575208,
+      "pcr_volume_chg_1m": -0.4433,
+      "qvix_z_252": 1.098953780934216,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-08-31",
+      "forward_return": -0.05671207737877959,
+      "pcr_volume": 0.7552,
+      "pcr_oi": 0.8264375362970698,
+      "pcr_volume_z": -1.0766845320552447,
+      "pcr_volume_chg_1m": -0.009399999999999964,
+      "qvix_z_252": -0.44333643296956005,
+      "split": "holdout"
+    }
+  ],
+  "limitations": [
+    "Only one ETF underlying (510300) and one exchange (SSE) is used.",
+    "PCR is a monthly month-end snapshot; intra-month dynamics are not modeled.",
+    "The expanding z-score uses all history up to T, so early months have fewer observations."
+  ]
+}
