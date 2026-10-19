@@ -1,0 +1,1298 @@
+{
+  "purpose": "R194 AH premium market-sentiment timing scan",
+  "generated_at": "2026-10-19T21:18:39",
+  "data": {
+    "source": "Tencent stock_zh_ah_daily + BOC HKD/CNY + local enriched A close",
+    "pairs": 152,
+    "months": 102,
+    "start": "2018-02-28",
+    "end": "2026-08-31",
+    "min_pairs": 44
+  },
+  "method": {
+    "factors": {
+      "ah_premium_z": "expanding z-score of 20d median A-H premium, direction negative",
+      "ah_premium_chg_1m": "monthly change of 20d median A-H premium, direction negative"
+    },
+    "long_cash": "signal < 0 holds HS300 index, else cash; 0.05% per switch",
+    "forward_return": "T+1 open to T+21 open on 000300.SH",
+    "splits": {
+      "discovery": [
+        "2018-02-01",
+        "2022-12-31"
+      ],
+      "validation": [
+        "2023-01-01",
+        "2024-12-31"
+      ],
+      "holdout": [
+        "2025-01-01",
+        "2026-08-31"
+      ]
+    }
+  },
+  "summary": {
+    "discovery": {
+      "months": 58,
+      "ah_premium_z": {
+        "ic": -0.170218,
+        "hit_rate": 0.5217,
+        "long_cash": {
+          "months": 46,
+          "strategy_total": 0.064001,
+          "benchmark_total": 0.130476,
+          "strategy_mdd": -0.078917,
+          "benchmark_mdd": -0.346235,
+          "switches": 3
+        },
+        "max_control_corr": 0.380524,
+        "residual_ic": -0.23984
+      },
+      "ah_premium_chg_1m": {
+        "ic": -0.013432,
+        "hit_rate": 0.4643,
+        "long_cash": {
+          "months": 56,
+          "strategy_total": 0.03749,
+          "benchmark_total": 0.102373,
+          "strategy_mdd": -0.186458,
+          "benchmark_mdd": -0.346235,
+          "switches": 25
+        },
+        "max_control_corr": 0.08739,
+        "residual_ic": -0.003281
+      },
+      "min_pairs": 44
+    },
+    "validation": {
+      "months": 24,
+      "ah_premium_z": {
+        "ic": -0.095238,
+        "hit_rate": 0.625,
+        "long_cash": {
+          "months": 24,
+          "strategy_total": -0.038512,
+          "benchmark_total": -0.131046,
+          "strategy_mdd": -0.038512,
+          "benchmark_mdd": -0.221001,
+          "switches": 2
+        },
+        "max_control_corr": 0.554468,
+        "residual_ic": 0.090435
+      },
+      "ah_premium_chg_1m": {
+        "ic": -0.049141,
+        "hit_rate": 0.5417,
+        "long_cash": {
+          "months": 24,
+          "strategy_total": 0.124412,
+          "benchmark_total": -0.131046,
+          "strategy_mdd": -0.082357,
+          "benchmark_mdd": -0.221001,
+          "switches": 15
+        },
+        "max_control_corr": 0.223092,
+        "residual_ic": 0.077391
+      },
+      "min_pairs": 130
+    },
+    "holdout": {
+      "months": 20,
+      "ah_premium_z": {
+        "ic": -0.015038,
+        "hit_rate": 0.6,
+        "long_cash": {
+          "months": 20,
+          "strategy_total": 0.053001,
+          "benchmark_total": 0.065337,
+          "strategy_mdd": -0.130774,
+          "benchmark_mdd": -0.130774,
+          "switches": 1
+        },
+        "max_control_corr": 0.461654,
+        "residual_ic": 0.231579
+      },
+      "ah_premium_chg_1m": {
+        "ic": 0.168421,
+        "hit_rate": 0.55,
+        "long_cash": {
+          "months": 20,
+          "strategy_total": 0.080115,
+          "benchmark_total": 0.065337,
+          "strategy_mdd": -0.093756,
+          "benchmark_mdd": -0.130774,
+          "switches": 11
+        },
+        "max_control_corr": 0.52782,
+        "residual_ic": 0.16391
+      },
+      "min_pairs": 78
+    }
+  },
+  "recent_12m_long_cash": {
+    "ah_premium_z": {
+      "months": 12,
+      "strategy_total": -0.103806,
+      "benchmark_total": -0.103356,
+      "strategy_mdd": -0.130774,
+      "benchmark_mdd": -0.130774,
+      "switches": 1
+    },
+    "ah_premium_chg_1m": {
+      "months": 12,
+      "strategy_total": -0.075371,
+      "benchmark_total": -0.103356,
+      "strategy_mdd": -0.093756,
+      "benchmark_mdd": -0.130774,
+      "switches": 9
+    }
+  },
+  "decision": {
+    "ah_premium_z": {
+      "D1": false,
+      "G1": false,
+      "G2": false,
+      "G3": false,
+      "G4": true,
+      "G5": true,
+      "all_pass": false
+    },
+    "ah_premium_chg_1m": {
+      "D1": true,
+      "G1": false,
+      "G2": false,
+      "G3": false,
+      "G4": true,
+      "G5": true,
+      "all_pass": false
+    }
+  },
+  "monthly_records": [
+    {
+      "date": "2018-02-28",
+      "forward_return": -0.035114543180264524,
+      "ah_premium_median_20d": 0.4828519900277983,
+      "ah_premium_z": null,
+      "ah_premium_chg_1m": null,
+      "pairs": 46,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.2619529745042497,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-03-30",
+      "forward_return": -0.028916822021013644,
+      "ah_premium_median_20d": 0.4828519900277983,
+      "ah_premium_z": null,
+      "ah_premium_chg_1m": null,
+      "pairs": 46,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.738731563201197,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-04-27",
+      "forward_return": -0.00391227942200445,
+      "ah_premium_median_20d": 0.4624655784675042,
+      "ah_premium_z": null,
+      "ah_premium_chg_1m": -0.020386411560294082,
+      "pairs": 45,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.212893563579278,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-05-31",
+      "forward_return": -0.07526113077860042,
+      "ah_premium_median_20d": 0.4214867601342984,
+      "ah_premium_z": null,
+      "ah_premium_chg_1m": -0.04097881833320577,
+      "pairs": 44,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.35522749003984,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-07-31",
+      "forward_return": -0.038803352946009007,
+      "ah_premium_median_20d": 0.3745183088864298,
+      "ah_premium_z": null,
+      "ah_premium_chg_1m": -0.04696845124786864,
+      "pairs": 44,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.901029673093044,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-08-31",
+      "forward_return": -0.009190559793296083,
+      "ah_premium_median_20d": 0.3711751649751657,
+      "ah_premium_z": null,
+      "ah_premium_chg_1m": -0.0033431439112641126,
+      "pairs": 46,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.442032551848512,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-09-28",
+      "forward_return": -0.027394729647761795,
+      "ah_premium_median_20d": 0.41400817657336975,
+      "ah_premium_z": null,
+      "ah_premium_chg_1m": 0.042833011598204074,
+      "pairs": 47,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.020278583765112,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-10-31",
+      "forward_return": 0.004277279745523055,
+      "ah_premium_median_20d": 0.40601752039404043,
+      "ah_premium_z": null,
+      "ah_premium_chg_1m": -0.007990656179329314,
+      "pairs": 48,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.9253622641509445,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-11-30",
+      "forward_return": -0.07471403256860676,
+      "ah_premium_median_20d": 0.36557350350153495,
+      "ah_premium_z": null,
+      "ah_premium_chg_1m": -0.040444016892505485,
+      "pairs": 48,
+      "qvix_z_252": null,
+      "equity_risk_premium": 6.2235440613026825,
+      "split": "discovery"
+    },
+    {
+      "date": "2018-12-28",
+      "forward_return": 0.054552318526569055,
+      "ah_premium_median_20d": 0.39107740383998274,
+      "ah_premium_z": null,
+      "ah_premium_chg_1m": 0.025503900338447794,
+      "pairs": 48,
+      "qvix_z_252": null,
+      "equity_risk_premium": 6.679302775024777,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-01-31",
+      "forward_return": 0.15366053121553125,
+      "ah_premium_median_20d": 0.3568908287480723,
+      "ah_premium_z": null,
+      "ah_premium_chg_1m": -0.03418657509191042,
+      "pairs": 100,
+      "qvix_z_252": null,
+      "equity_risk_premium": 6.20728696461825,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-02-28",
+      "forward_return": 0.010963944792626412,
+      "ah_premium_median_20d": 0.3650760498480533,
+      "ah_premium_z": null,
+      "ah_premium_chg_1m": 0.008185221099980988,
+      "pairs": 100,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.118773963515755,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-03-29",
+      "forward_return": -0.0035861036560826953,
+      "ah_premium_median_20d": 0.46836601657742793,
+      "ah_premium_z": 1.4609716096716863,
+      "ah_premium_chg_1m": 0.10328996672937463,
+      "pairs": 100,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.9317,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-04-30",
+      "forward_return": -0.03561887611828851,
+      "ah_premium_median_20d": 0.5151359815281717,
+      "ah_premium_z": 2.009476901061271,
+      "ah_premium_chg_1m": 0.046769964950743814,
+      "pairs": 102,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.76305925020375,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-05-31",
+      "forward_return": 0.07977667497204455,
+      "ah_premium_median_20d": 0.5480938753400462,
+      "ah_premium_z": 2.0946791501686426,
+      "ah_premium_chg_1m": 0.03295789381187442,
+      "pairs": 102,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.435701393728223,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-06-28",
+      "forward_return": -0.010615154240560809,
+      "ah_premium_median_20d": 0.5891395434072002,
+      "ah_premium_z": 2.187130556698524,
+      "ah_premium_chg_1m": 0.04104566806715404,
+      "pairs": 102,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.957906055646481,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-07-31",
+      "forward_return": -0.0036210596430152897,
+      "ah_premium_median_20d": 0.5683397481680681,
+      "ah_premium_z": 1.655382051471132,
+      "ah_premium_chg_1m": -0.020799795239132113,
+      "pairs": 104,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.082032289950576,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-08-30",
+      "forward_return": 0.003917249806700829,
+      "ah_premium_median_20d": 0.6148119325456617,
+      "ah_premium_z": 1.931066814895281,
+      "ah_premium_chg_1m": 0.046472184377593595,
+      "pairs": 104,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.489708547008547,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-09-30",
+      "forward_return": 0.04282393313341659,
+      "ah_premium_median_20d": 0.5530144395503863,
+      "ah_premium_z": 1.1133218187868223,
+      "ah_premium_chg_1m": -0.06179749299527537,
+      "pairs": 104,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.391323208191126,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-10-31",
+      "forward_return": -0.00685409783387847,
+      "ah_premium_median_20d": 0.5334288521109662,
+      "ah_premium_z": 0.8401011017643552,
+      "ah_premium_chg_1m": -0.01958558743942007,
+      "pairs": 104,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.28098029134533,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-11-29",
+      "forward_return": 0.046931662074929825,
+      "ah_premium_median_20d": 0.5151946293898354,
+      "ah_premium_z": 0.6003449915788709,
+      "ah_premium_chg_1m": -0.018234222721130844,
+      "pairs": 108,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.561003490401396,
+      "split": "discovery"
+    },
+    {
+      "date": "2019-12-31",
+      "forward_return": -0.05866913964335474,
+      "ah_premium_median_20d": 0.4659138205617367,
+      "ah_premium_z": 0.0009555299864087306,
+      "ah_premium_chg_1m": -0.04928080882809871,
+      "pairs": 110,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.993581300813007,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-01-23",
+      "forward_return": 0.09036901746719495,
+      "ah_premium_median_20d": 0.44757396986536735,
+      "ah_premium_z": -0.22211238155413768,
+      "ah_premium_chg_1m": -0.018339850696369342,
+      "pairs": 110,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.368004013377925,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-02-28",
+      "forward_return": -0.0784565984452904,
+      "ah_premium_median_20d": 0.45144284915877586,
+      "ah_premium_z": -0.16891108781308825,
+      "ah_premium_chg_1m": 0.0038688792934085114,
+      "pairs": 110,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.905442350907519,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-03-31",
+      "forward_return": 0.05380120071792138,
+      "ah_premium_median_20d": 0.6187018464606118,
+      "ah_premium_z": 1.81932745497924,
+      "ah_premium_chg_1m": 0.1672589973018359,
+      "pairs": 110,
+      "qvix_z_252": null,
+      "equity_risk_premium": 6.626689861751153,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-04-30",
+      "forward_return": 0.03462710927817336,
+      "ah_premium_median_20d": 0.6187018464606118,
+      "ah_premium_z": 1.81932745497924,
+      "ah_premium_chg_1m": 0.1672589973018359,
+      "pairs": 110,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.958176720475786,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-05-29",
+      "forward_return": 0.0694351679231191,
+      "ah_premium_median_20d": 0.5269884307240696,
+      "ah_premium_z": 0.6704928140054368,
+      "ah_premium_chg_1m": -0.09171341573654213,
+      "pairs": 110,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.915389655172415,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-06-30",
+      "forward_return": 0.09263193616132503,
+      "ah_premium_median_20d": 0.5653362839740982,
+      "ah_premium_z": 1.097807997720411,
+      "ah_premium_chg_1m": 0.03834785325002854,
+      "pairs": 110,
+      "qvix_z_252": null,
+      "equity_risk_premium": 5.254544426494345,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-07-31",
+      "forward_return": 0.02851306584029767,
+      "ah_premium_median_20d": 0.6469586507552069,
+      "ah_premium_z": 1.9169033644555498,
+      "ah_premium_chg_1m": 0.08162236678110868,
+      "pairs": 114,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.348888953913679,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-08-31",
+      "forward_return": -0.04061692237485515,
+      "ah_premium_median_20d": 0.6675095122580517,
+      "ah_premium_z": 1.9615036462856885,
+      "ah_premium_chg_1m": 0.020550861502844797,
+      "pairs": 116,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.902715224913495,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-09-30",
+      "forward_return": 0.05018001076419343,
+      "ah_premium_median_20d": 0.7463553304638495,
+      "ah_premium_z": 2.4619141351453364,
+      "ah_premium_chg_1m": 0.07884581820579784,
+      "pairs": 112,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.0616053352559485,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-10-30",
+      "forward_return": 0.061955291653004396,
+      "ah_premium_median_20d": 0.7652625957383699,
+      "ah_premium_z": 2.3451136380016173,
+      "ah_premium_chg_1m": 0.018907265274520357,
+      "pairs": 116,
+      "qvix_z_252": null,
+      "equity_risk_premium": 4.002908045977011,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-11-30",
+      "forward_return": 0.021824735600316725,
+      "ah_premium_median_20d": 0.7716510504362465,
+      "ah_premium_z": 2.170552192404582,
+      "ah_premium_chg_1m": 0.006388454697876633,
+      "pairs": 118,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.548096532970768,
+      "split": "discovery"
+    },
+    {
+      "date": "2020-12-31",
+      "forward_return": 0.027608844237531738,
+      "ah_premium_median_20d": 0.7779792177157799,
+      "ah_premium_z": 2.037378911085668,
+      "ah_premium_chg_1m": 0.006328167279533448,
+      "pairs": 120,
+      "qvix_z_252": null,
+      "equity_risk_premium": 3.2427960408684546,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-01-29",
+      "forward_return": -0.010652334373869476,
+      "ah_premium_median_20d": 0.6814518117704409,
+      "ah_premium_z": 1.2147225688134191,
+      "ah_premium_chg_1m": -0.09652740594533904,
+      "pairs": 120,
+      "qvix_z_252": -0.003826321244805273,
+      "equity_risk_premium": 3.090992476489028,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-02-26",
+      "forward_return": -0.06252947998330005,
+      "ah_premium_median_20d": 0.6695699437132345,
+      "ah_premium_z": 1.0837703437435577,
+      "ah_premium_chg_1m": -0.011881868057206368,
+      "pairs": 120,
+      "qvix_z_252": 0.41556367110221565,
+      "equity_risk_premium": 3.02139722747322,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-03-31",
+      "forward_return": 0.019055576987535128,
+      "ah_premium_median_20d": 0.6415617536993783,
+      "ah_premium_z": 0.8403692138314023,
+      "ah_premium_chg_1m": -0.028008190013856238,
+      "pairs": 118,
+      "qvix_z_252": -0.7812761802058417,
+      "equity_risk_premium": 3.6559269678302533,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-04-30",
+      "forward_return": 0.03665744162205975,
+      "ah_premium_median_20d": 0.5494299553243464,
+      "ah_premium_z": 0.10522204869096152,
+      "ah_premium_chg_1m": -0.09213179837503194,
+      "pairs": 120,
+      "qvix_z_252": -0.9552969012078784,
+      "equity_risk_premium": 4.232449704142011,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-05-31",
+      "forward_return": -0.024639717318472587,
+      "ah_premium_median_20d": 0.5618928002571659,
+      "ah_premium_z": 0.20293739352658213,
+      "ah_premium_chg_1m": 0.012462844932819572,
+      "pairs": 120,
+      "qvix_z_252": -0.06528614098631615,
+      "equity_risk_premium": 4.052232079488999,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-06-30",
+      "forward_return": -0.07544907620462771,
+      "ah_premium_median_20d": 0.5876763964941439,
+      "ah_premium_z": 0.40748092196984753,
+      "ah_premium_chg_1m": 0.025783596236978013,
+      "pairs": 120,
+      "qvix_z_252": -1.1936101506808987,
+      "equity_risk_premium": 3.905440223463687,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-07-30",
+      "forward_return": 0.01089008782187606,
+      "ah_premium_median_20d": 0.64141357778348,
+      "ah_premium_z": 0.8333068672503033,
+      "ah_premium_chg_1m": 0.05373718128933602,
+      "pairs": 120,
+      "qvix_z_252": -0.7030298708816007,
+      "equity_risk_premium": 4.785651219512195,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-08-31",
+      "forward_return": 0.023111812093443707,
+      "ah_premium_median_20d": 0.6163544825132434,
+      "ah_premium_z": 0.6143642141468241,
+      "ah_premium_chg_1m": -0.02505909527023653,
+      "pairs": 122,
+      "qvix_z_252": -0.8363949435506125,
+      "equity_risk_premium": 5.213017727639,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-09-30",
+      "forward_return": -0.011561047583767303,
+      "ah_premium_median_20d": 0.6802530428414812,
+      "ah_premium_z": 1.1171642088592353,
+      "ah_premium_chg_1m": 0.06389856032823782,
+      "pairs": 122,
+      "qvix_z_252": -0.2626974971915402,
+      "equity_risk_premium": 5.052614115781126,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-10-29",
+      "forward_return": -0.011915021500050749,
+      "ah_premium_median_20d": 0.6779096025923327,
+      "ah_premium_z": 1.0692483212264976,
+      "ah_premium_chg_1m": -0.002343440249148565,
+      "pairs": 122,
+      "qvix_z_252": -1.2388195210490145,
+      "equity_risk_premium": 4.919459826361484,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-11-30",
+      "forward_return": 0.02623342547811003,
+      "ah_premium_median_20d": 0.6546291078123649,
+      "ah_premium_z": 0.8576573170358228,
+      "ah_premium_chg_1m": -0.023280494779967742,
+      "pairs": 122,
+      "qvix_z_252": -1.548671253119142,
+      "equity_risk_premium": 5.338265306122449,
+      "split": "discovery"
+    },
+    {
+      "date": "2021-12-31",
+      "forward_return": -0.06687133318703742,
+      "ah_premium_median_20d": 0.7326640124506424,
+      "ah_premium_z": 1.4545620729869908,
+      "ah_premium_chg_1m": 0.07803490463827745,
+      "pairs": 124,
+      "qvix_z_252": -1.2706464299094646,
+      "equity_risk_premium": 4.704031563201196,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-01-28",
+      "forward_return": -0.03795519097998845,
+      "ah_premium_median_20d": 0.6561156833835486,
+      "ah_premium_z": 0.8090735385177342,
+      "ah_premium_chg_1m": -0.07654832906709375,
+      "pairs": 128,
+      "qvix_z_252": 1.2455530180940388,
+      "equity_risk_premium": 5.336485209003216,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-02-28",
+      "forward_return": -0.0962268275097844,
+      "ah_premium_median_20d": 0.6283059503207142,
+      "ah_premium_z": 0.5708597933554396,
+      "ah_premium_chg_1m": -0.027809733062834407,
+      "pairs": 128,
+      "qvix_z_252": -0.9762998027645763,
+      "equity_risk_premium": 5.180449482895783,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-03-31",
+      "forward_return": -0.06429522206125116,
+      "ah_premium_median_20d": 0.6764451245004692,
+      "ah_premium_z": 0.9516908587428041,
+      "ah_premium_chg_1m": 0.048139174179754995,
+      "pairs": 128,
+      "qvix_z_252": 1.227067510790391,
+      "equity_risk_premium": 5.744623208191126,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-04-29",
+      "forward_return": 0.01718171085258291,
+      "ah_premium_median_20d": 0.6141633265650707,
+      "ah_premium_z": 0.4274430397418163,
+      "ah_premium_chg_1m": -0.062281797935398564,
+      "pairs": 128,
+      "qvix_z_252": 1.385806499085776,
+      "equity_risk_premium": 6.082006601248885,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-05-31",
+      "forward_return": 0.08110569669100465,
+      "ah_premium_median_20d": 0.5810371390714092,
+      "ah_premium_z": 0.14752153572125204,
+      "ah_premium_chg_1m": -0.033126187493661474,
+      "pairs": 128,
+      "qvix_z_252": 0.971743770558053,
+      "equity_risk_premium": 6.0913222614841,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-06-30",
+      "forward_return": -0.05860203317949364,
+      "ah_premium_median_20d": 0.6380543075952185,
+      "ah_premium_z": 0.6226664404364798,
+      "ah_premium_chg_1m": 0.057017168523809336,
+      "pairs": 128,
+      "qvix_z_252": 1.30764628509048,
+      "equity_risk_premium": 5.3029768480909825,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-07-29",
+      "forward_return": -0.02325719455238706,
+      "ah_premium_median_20d": 0.6569667603002834,
+      "ah_premium_z": 0.7718195972392777,
+      "ah_premium_chg_1m": 0.01891245270506492,
+      "pairs": 130,
+      "qvix_z_252": 0.3645585362986045,
+      "equity_risk_premium": 5.9852587412587415,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-08-31",
+      "forward_return": -0.05726175407082856,
+      "ah_premium_median_20d": 0.6511670805127476,
+      "ah_premium_z": 0.7115589154823734,
+      "ah_premium_chg_1m": -0.005799679787535816,
+      "pairs": 132,
+      "qvix_z_252": -0.7682200309603323,
+      "equity_risk_premium": 6.451910163339383,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-09-30",
+      "forward_return": -0.013670348030767832,
+      "ah_premium_median_20d": 0.6463378044170527,
+      "ah_premium_z": 0.6608151890030193,
+      "ah_premium_chg_1m": -0.004829276095694945,
+      "pairs": 132,
+      "qvix_z_252": -0.23092854279196537,
+      "equity_risk_premium": 6.790998376313276,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-10-31",
+      "forward_return": 0.07010392869856585,
+      "ah_premium_median_20d": 0.6830422477674665,
+      "ah_premium_z": 0.9610920302662143,
+      "ah_premium_chg_1m": 0.036704443350413785,
+      "pairs": 132,
+      "qvix_z_252": 1.9345512018794266,
+      "equity_risk_premium": 7.76252726326743,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-11-30",
+      "forward_return": -0.017101238238898198,
+      "ah_premium_median_20d": 0.6063530530711926,
+      "ah_premium_z": 0.2936374610814422,
+      "ah_premium_chg_1m": -0.07668919469627389,
+      "pairs": 132,
+      "qvix_z_252": 0.826509486923497,
+      "equity_risk_premium": 6.575737937559129,
+      "split": "discovery"
+    },
+    {
+      "date": "2022-12-30",
+      "forward_return": 0.060410325302289625,
+      "ah_premium_median_20d": 0.5663540010057577,
+      "ah_premium_z": -0.05536649897020402,
+      "ah_premium_chg_1m": -0.03999905206543486,
+      "pairs": 132,
+      "qvix_z_252": -1.7592141007845772,
+      "equity_risk_premium": 6.607570632672333,
+      "split": "discovery"
+    },
+    {
+      "date": "2023-01-31",
+      "forward_return": -0.024315537253976505,
+      "ah_premium_median_20d": 0.536771850623437,
+      "ah_premium_z": -0.3131232562759901,
+      "ah_premium_chg_1m": -0.029582150382320704,
+      "pairs": 132,
+      "qvix_z_252": -1.123400417042329,
+      "equity_risk_premium": 5.983294671403197,
+      "split": "validation"
+    },
+    {
+      "date": "2023-02-28",
+      "forward_return": -0.013552130356059289,
+      "ah_premium_median_20d": 0.5706374945663548,
+      "ah_premium_z": -0.01204440990509387,
+      "ah_premium_chg_1m": 0.0338656439429178,
+      "pairs": 132,
+      "qvix_z_252": -1.1687777729691902,
+      "equity_risk_premium": 6.050851477170994,
+      "split": "validation"
+    },
+    {
+      "date": "2023-03-31",
+      "forward_return": -0.007027253515905385,
+      "ah_premium_median_20d": 0.6067636438250079,
+      "ah_premium_z": 0.3089143689041937,
+      "ah_premium_chg_1m": 0.036126149258653095,
+      "pairs": 132,
+      "qvix_z_252": -1.9650821201552082,
+      "equity_risk_premium": 6.020314463176575,
+      "split": "validation"
+    },
+    {
+      "date": "2023-04-28",
+      "forward_return": -0.05603154974833502,
+      "ah_premium_median_20d": 0.6135399100774467,
+      "ah_premium_z": 0.36661818172607946,
+      "ah_premium_chg_1m": 0.006776266252438767,
+      "pairs": 132,
+      "qvix_z_252": -1.926140567265916,
+      "equity_risk_premium": 5.939595815170009,
+      "split": "validation"
+    },
+    {
+      "date": "2023-05-31",
+      "forward_return": 0.017078121411923552,
+      "ah_premium_median_20d": 0.5814782143562403,
+      "ah_premium_z": 0.07422886395310774,
+      "ah_premium_chg_1m": -0.03206169572120643,
+      "pairs": 132,
+      "qvix_z_252": -1.0840007671895107,
+      "equity_risk_premium": 6.4641308325709055,
+      "split": "validation"
+    },
+    {
+      "date": "2023-06-30",
+      "forward_return": 0.04297572050080811,
+      "ah_premium_median_20d": 0.5939652924623118,
+      "ah_premium_z": 0.1872197471386988,
+      "ah_premium_chg_1m": 0.012487078106071525,
+      "pairs": 130,
+      "qvix_z_252": -1.9050217021772748,
+      "equity_risk_premium": 6.4806702825888785,
+      "split": "validation"
+    },
+    {
+      "date": "2023-07-31",
+      "forward_return": -0.06638010786736348,
+      "ah_premium_median_20d": 0.6170291688476736,
+      "ah_premium_z": 0.39680926698555735,
+      "ah_premium_chg_1m": 0.02306387638536178,
+      "pairs": 132,
+      "qvix_z_252": -0.22696316957758933,
+      "equity_risk_premium": 6.143116901408452,
+      "split": "validation"
+    },
+    {
+      "date": "2023-08-31",
+      "forward_return": -0.02645840219131801,
+      "ah_premium_median_20d": 0.6500665583114076,
+      "ah_premium_z": 0.6961707227224173,
+      "ah_premium_chg_1m": 0.033037389463734024,
+      "pairs": 132,
+      "qvix_z_252": 0.190503171637676,
+      "equity_risk_premium": 6.541681073703367,
+      "split": "validation"
+    },
+    {
+      "date": "2023-09-28",
+      "forward_return": -0.019193085813833388,
+      "ah_premium_median_20d": 0.6411547794368134,
+      "ah_premium_z": 0.6063859296793376,
+      "ah_premium_chg_1m": -0.008911778874594156,
+      "pairs": 132,
+      "qvix_z_252": -0.26441399054229053,
+      "equity_risk_premium": 6.524532014719412,
+      "split": "validation"
+    },
+    {
+      "date": "2023-10-31",
+      "forward_return": -0.024093131042072113,
+      "ah_premium_median_20d": 0.6485706239677997,
+      "ah_premium_z": 0.6685918321933784,
+      "ah_premium_chg_1m": 0.007415844530986315,
+      "pairs": 132,
+      "qvix_z_252": -0.4636943664693569,
+      "equity_risk_premium": 6.704696240601503,
+      "split": "validation"
+    },
+    {
+      "date": "2023-11-30",
+      "forward_return": -0.023786117829342923,
+      "ah_premium_median_20d": 0.627030061974019,
+      "ah_premium_z": 0.46117938365827904,
+      "ah_premium_chg_1m": -0.021540561993780738,
+      "pairs": 132,
+      "qvix_z_252": -0.8355822459484874,
+      "equity_risk_premium": 6.873984732824426,
+      "split": "validation"
+    },
+    {
+      "date": "2023-12-29",
+      "forward_return": -0.0415524996877068,
+      "ah_premium_median_20d": 0.6679624195097331,
+      "ah_premium_z": 0.8388504667242754,
+      "ah_premium_chg_1m": 0.040932357535714115,
+      "pairs": 132,
+      "qvix_z_252": -0.22574586329608703,
+      "equity_risk_premium": 7.078611368015413,
+      "split": "validation"
+    },
+    {
+      "date": "2024-01-31",
+      "forward_return": 0.10220763112006037,
+      "ah_premium_median_20d": 0.7032646629327707,
+      "ah_premium_z": 1.154498782071605,
+      "ah_premium_chg_1m": 0.03530224342303756,
+      "pairs": 132,
+      "qvix_z_252": 3.116611526866801,
+      "equity_risk_premium": 7.4095196850393705,
+      "split": "validation"
+    },
+    {
+      "date": "2024-02-29",
+      "forward_return": 0.0005189102089038222,
+      "ah_premium_median_20d": 0.7341053603962547,
+      "ah_premium_z": 1.4156010815252906,
+      "ah_premium_chg_1m": 0.030840697463484057,
+      "pairs": 132,
+      "qvix_z_252": 1.3871027812064483,
+      "equity_risk_premium": 6.828402841429881,
+      "split": "validation"
+    },
+    {
+      "date": "2024-03-29",
+      "forward_return": 0.02885108664251601,
+      "ah_premium_median_20d": 0.7341053603962547,
+      "ah_premium_z": 1.4156010815252906,
+      "ah_premium_chg_1m": 0.030840697463484057,
+      "pairs": 132,
+      "qvix_z_252": -0.5015316104638003,
+      "equity_risk_premium": 6.630506601248885,
+      "split": "validation"
+    },
+    {
+      "date": "2024-04-30",
+      "forward_return": -0.0209819299084385,
+      "ah_premium_median_20d": 0.7370101343078261,
+      "ah_premium_z": 1.4121884094008121,
+      "ah_premium_chg_1m": 0.002904773911571401,
+      "pairs": 130,
+      "qvix_z_252": -0.4772080089882472,
+      "equity_risk_premium": 6.295652278589854,
+      "split": "validation"
+    },
+    {
+      "date": "2024-05-31",
+      "forward_return": -0.029330683349266806,
+      "ah_premium_median_20d": 0.6042762209778101,
+      "ah_premium_z": 0.17073835050611605,
+      "ah_premium_chg_1m": -0.13273391333001605,
+      "pairs": 132,
+      "qvix_z_252": -1.1008444917317906,
+      "equity_risk_premium": 6.350442350907519,
+      "split": "validation"
+    },
+    {
+      "date": "2024-06-28",
+      "forward_return": -0.015585276312045648,
+      "ah_premium_median_20d": 0.6158142748146557,
+      "ah_premium_z": 0.27721239095640376,
+      "ah_premium_chg_1m": 0.011538053836845585,
+      "pairs": 132,
+      "qvix_z_252": -1.5306551943082152,
+      "equity_risk_premium": 6.505001393728223,
+      "split": "validation"
+    },
+    {
+      "date": "2024-07-31",
+      "forward_return": -0.04925707348524888,
+      "ah_premium_median_20d": 0.6971117399777489,
+      "ah_premium_z": 1.0321682605797298,
+      "ah_premium_chg_1m": 0.08129746516309322,
+      "pairs": 132,
+      "qvix_z_252": -0.9837110188895456,
+      "equity_risk_premium": 6.6845222614841,
+      "split": "validation"
+    },
+    {
+      "date": "2024-08-30",
+      "forward_return": 0.2604050801455944,
+      "ah_premium_median_20d": 0.680671701470672,
+      "ah_premium_z": 0.8663200042529697,
+      "ah_premium_chg_1m": -0.01644003850707687,
+      "pairs": 132,
+      "qvix_z_252": -1.4508865618136149,
+      "equity_risk_premium": 7.037703130755065,
+      "split": "validation"
+    },
+    {
+      "date": "2024-09-30",
+      "forward_return": -0.11521406769058207,
+      "ah_premium_median_20d": 0.6906427241287317,
+      "ah_premium_z": 0.9487326930399795,
+      "ah_premium_chg_1m": 0.009971022658059714,
+      "pairs": 134,
+      "qvix_z_252": 9.171753938475163,
+      "equity_risk_premium": 5.753338339920948,
+      "split": "validation"
+    },
+    {
+      "date": "2024-10-31",
+      "forward_return": -0.0032371245226606726,
+      "ah_premium_median_20d": 0.6211876249919575,
+      "ah_premium_z": 0.2880448041390171,
+      "ah_premium_chg_1m": -0.06945509913677428,
+      "pairs": 134,
+      "qvix_z_252": 2.945341606312174,
+      "equity_risk_premium": 6.436090987124462,
+      "split": "validation"
+    },
+    {
+      "date": "2024-11-29",
+      "forward_return": 0.01713608424987778,
+      "ah_premium_median_20d": 0.6876207133886744,
+      "ah_premium_z": 0.9109360926244581,
+      "ah_premium_chg_1m": 0.06643308839671691,
+      "pairs": 136,
+      "qvix_z_252": 0.9956848003726647,
+      "equity_risk_premium": 6.49003829787234,
+      "split": "validation"
+    },
+    {
+      "date": "2024-12-31",
+      "forward_return": -0.022320220478272645,
+      "ah_premium_median_20d": 0.6495378691137239,
+      "ah_premium_z": 0.5427495885524074,
+      "ah_premium_chg_1m": -0.038082844274950456,
+      "pairs": 136,
+      "qvix_z_252": 0.022024858058300612,
+      "equity_risk_premium": 6.528245447087777,
+      "split": "validation"
+    },
+    {
+      "date": "2025-01-27",
+      "forward_return": 0.011209977371446467,
+      "ah_premium_median_20d": 0.6452466961342654,
+      "ah_premium_z": 0.4976590954073405,
+      "ah_premium_chg_1m": -0.0042911729794584685,
+      "pairs": 136,
+      "qvix_z_252": -0.13689429096468922,
+      "equity_risk_premium": 6.887987563884157,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-02-28",
+      "forward_return": 0.0016119205189326635,
+      "ah_premium_median_20d": 0.5901627097812343,
+      "ah_premium_z": -0.03303698337645617,
+      "ah_premium_chg_1m": -0.055083986353031134,
+      "pairs": 136,
+      "qvix_z_252": -0.13219243392689975,
+      "equity_risk_premium": 6.745036886632826,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-03-31",
+      "forward_return": -0.030042291124155796,
+      "ah_premium_median_20d": 0.5176285991149161,
+      "ah_premium_z": -0.7295618310243227,
+      "ah_premium_chg_1m": -0.07253411066631821,
+      "pairs": 136,
+      "qvix_z_252": -0.5097076196495111,
+      "equity_risk_premium": 6.676064346349746,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-04-30",
+      "forward_return": 0.01610594205740279,
+      "ah_premium_median_20d": 0.5754608360434604,
+      "ah_premium_z": -0.1660708657005022,
+      "ah_premium_chg_1m": 0.057832236928544334,
+      "pairs": 136,
+      "qvix_z_252": -0.09523794583723195,
+      "equity_risk_premium": 7.078920191470845,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-05-30",
+      "forward_return": 0.026725217805960044,
+      "ah_premium_median_20d": 0.5058164226133732,
+      "ah_premium_z": -0.8387708422627054,
+      "ah_premium_chg_1m": -0.0696444134300872,
+      "pairs": 140,
+      "qvix_z_252": -0.6200110554810692,
+      "equity_risk_premium": 6.853949190110828,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-06-30",
+      "forward_return": 0.04999481695202235,
+      "ah_premium_median_20d": 0.42882251276241945,
+      "ah_premium_z": -1.560777819041982,
+      "ah_premium_chg_1m": -0.07699390985095378,
+      "pairs": 144,
+      "qvix_z_252": -0.6943558379185459,
+      "equity_risk_premium": 6.456827714748783,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-07-31",
+      "forward_return": 0.09481206656142294,
+      "ah_premium_median_20d": 0.3510342392959539,
+      "ah_premium_z": -2.234274181574782,
+      "ah_premium_chg_1m": -0.07778827346646555,
+      "pairs": 146,
+      "qvix_z_252": -0.30879311790774255,
+      "equity_risk_premium": 6.334185209003216,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-08-29",
+      "forward_return": 0.00844720436389812,
+      "ah_premium_median_20d": 0.3210972394287513,
+      "ah_premium_z": -2.417031019372079,
+      "ah_premium_chg_1m": -0.029936999867202607,
+      "pairs": 146,
+      "qvix_z_252": 0.6691103703568474,
+      "equity_risk_premium": 5.720678987150415,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-09-30",
+      "forward_return": -0.004311778800728305,
+      "ah_premium_median_20d": 0.2847780917465391,
+      "ah_premium_z": -2.625102832096231,
+      "ah_premium_chg_1m": -0.03631914768221217,
+      "pairs": 146,
+      "qvix_z_252": -0.3758584458702924,
+      "equity_risk_premium": 5.6470075075075075,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-10-31",
+      "forward_return": -0.02103723053219375,
+      "ah_premium_median_20d": 0.30759564539565254,
+      "ah_premium_z": -2.333063036827352,
+      "ah_premium_chg_1m": 0.02281755364911342,
+      "pairs": 148,
+      "qvix_z_252": -0.16552223153729365,
+      "equity_risk_premium": 5.786101137225171,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-11-28",
+      "forward_return": 0.026233106009268647,
+      "ah_premium_median_20d": 0.30069875364539916,
+      "ah_premium_z": -2.30716266351509,
+      "ah_premium_chg_1m": -0.0068968917502533755,
+      "pairs": 150,
+      "qvix_z_252": -0.0818867616284629,
+      "equity_risk_premium": 5.827511656441718,
+      "split": "holdout"
+    },
+    {
+      "date": "2025-12-31",
+      "forward_return": 0.0027157964105151144,
+      "ah_premium_median_20d": 0.32746426579945276,
+      "ah_premium_z": -2.022281779451321,
+      "ah_premium_chg_1m": 0.026765512154053595,
+      "pairs": 152,
+      "qvix_z_252": -0.6977932084410805,
+      "equity_risk_premium": 5.648951874062969,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-01-30",
+      "forward_return": -0.0054534648788390205,
+      "ah_premium_median_20d": 0.31669833185563495,
+      "ah_premium_z": -2.05091020705562,
+      "ah_premium_chg_1m": -0.010765933943817807,
+      "pairs": 78,
+      "qvix_z_252": 0.02464279900202096,
+      "equity_risk_premium": 5.668231563201196,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-02-27",
+      "forward_return": -0.04684391031515822,
+      "ah_premium_median_20d": 0.30519960760160886,
+      "ah_premium_z": -2.0820892111241682,
+      "ah_premium_chg_1m": -0.011498724254026094,
+      "pairs": 82,
+      "qvix_z_252": -1.1409137207624467,
+      "equity_risk_premium": 5.714175468867217,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-03-31",
+      "forward_return": 0.0672308419771932,
+      "ah_premium_median_20d": 0.3524887557720713,
+      "ah_premium_z": -1.669610541667649,
+      "ah_premium_chg_1m": 0.047289148170462425,
+      "pairs": 82,
+      "qvix_z_252": -0.06884311692030474,
+      "equity_risk_premium": 5.701696992481203,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-04-30",
+      "forward_return": 0.01311147315144301,
+      "ah_premium_median_20d": 0.3210227523341939,
+      "ah_premium_z": -1.8724681157067002,
+      "ah_premium_chg_1m": -0.031466003437877366,
+      "pairs": 83,
+      "qvix_z_252": -0.6273023055881936,
+      "equity_risk_premium": 5.472916606498195,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-05-29",
+      "forward_return": 0.003388393018473046,
+      "ah_premium_median_20d": 0.3151394344824113,
+      "ah_premium_z": -1.8727970616828384,
+      "ah_premium_chg_1m": -0.0058833178517826434,
+      "pairs": 84,
+      "qvix_z_252": 0.5688122636662017,
+      "equity_risk_premium": 5.537376811594202,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-06-30",
+      "forward_return": -0.0785483999411184,
+      "ah_premium_median_20d": 0.37404342931428997,
+      "ah_premium_z": -1.3976075881817573,
+      "ah_premium_chg_1m": 0.05890399483187869,
+      "pairs": 86,
+      "qvix_z_252": 1.3316577885508325,
+      "equity_risk_premium": 5.529164124909222,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-07-31",
+      "forward_return": 3.704664172188288e-05,
+      "ah_premium_median_20d": 0.4033718179867501,
+      "ah_premium_z": -1.1588922395120609,
+      "ah_premium_chg_1m": 0.029328388672460126,
+      "pairs": 90,
+      "qvix_z_252": 1.098953780934216,
+      "equity_risk_premium": 5.595841520467836,
+      "split": "holdout"
+    },
+    {
+      "date": "2026-08-31",
+      "forward_return": -0.05671207737877959,
+      "ah_premium_median_20d": 0.36376960726281726,
+      "ah_premium_z": -1.438781234431152,
+      "ah_premium_chg_1m": -0.03960221072393283,
+      "pairs": 91,
+      "qvix_z_252": -0.44333643296956005,
+      "equity_risk_premium": 5.980411656441718,
+      "split": "holdout"
+    }
+  ],
+  "limitations": [
+    "Only 92 A-H pairs are available; HS300 membership is matched by name and may miss renamed companies.",
+    "H-share close and A-share close are same-day but HKD/CNY uses the BOC central parity, not intraday FX."
+  ]
+}
