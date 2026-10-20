@@ -1,0 +1,96 @@
+{
+  "round": "R249",
+  "registered_at": "2026-10-20",
+  "status": "pre_registered_before_factor_table_strategy_implementation_and_backtest",
+  "hypothesis": "Non-financial HS300 stocks with lower trailing 60-day return skewness should earn higher future returns than stocks with high positive lottery-like skewness.",
+  "selection_basis": "R215 tested market-level realized skewness, not stock-level lottery preference. R248 showed revenue acceleration can improve executable returns but failed validation IC and concentration gates. R249 tests a distinct behavioral risk mechanism: the cross-sectional low-skew anomaly. The design was frozen after a no-forward-return coverage and independence audit. Evidence: data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r249_data_feasibility.json",
+  "factor": {
+    "id": "ext_alt_hs300_skew_stock_skew_60d_low",
+    "config_id": "alt_hs300_skew",
+    "column": "stock_skew_60d_low",
+    "direction": "high",
+    "formula": "stock_skew_60d_low = -skewness(r_t, ..., r_t_minus_59), where r_t = close_t / close_t_minus_1 - 1 using adjusted close",
+    "interpretation": "Higher means lower or more negative trailing stock-return skewness, avoiding lottery-like right-tail return distributions.",
+    "pit_rule": "The factor on date t uses only close-to-close returns through date t close. Strategy execution is T+1 open. Missing returns remain null.",
+    "missing_data_rule": "Require 60 valid daily returns and nondegenerate finite skewness. No zero fill, interpolation or cross-sectional substitution.",
+    "universe": "historical HS300 membership excluding banks and non-bank financials using the current industry snapshot"
+  },
+  "strategies": {
+    "candidate": {
+      "id": "ai_hs300_low_stock_skew_quality_h20_sl20",
+      "scoring": {
+        "ext_alt_hs300_skew_stock_skew_60d_low": 0.45,
+        "uf_quality_value_defensive": 0.3,
+        "uf_cash_quality": 0.25
+      }
+    },
+    "control": {
+      "id": "ai_hs300_low_stock_skew_quality_control",
+      "scoring": {
+        "uf_quality_value_defensive": 0.545,
+        "uf_cash_quality": 0.455
+      }
+    },
+    "weight_rationale": "The low-skew score receives the same fixed 45% research weight used in recent rounds. The remaining quality and cash weights preserve the 54.5/45.5 quality-cash ratio of the matched control. No weight was selected using forward returns.",
+    "matched_requirements": "Both strategies use the same non-financial HS300 universe, 60-day factor-availability filter, 30-name score limit, top 10 equal-weight positions, 20-day holding period, -20% stop loss, T+1 open execution and cost model."
+  },
+  "execution": {
+    "engine": "StrategyBacktestService",
+    "matching": "open_t+1",
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "score_limit": 30,
+    "holding_days": 20,
+    "stop_loss": -0.2,
+    "asset_type": "stock",
+    "cost_3x": "6bp fees + 6bp commission + 15bp slippage + 10bp stamp tax",
+    "cost_stress": "4x and 5x scale all four cost components proportionally",
+    "segments": {
+      "discovery": [
+        "2022-07-01",
+        "2024-12-31"
+      ],
+      "validation": [
+        "2025-01-02",
+        "2026-10-16"
+      ],
+      "stitching": "compound two independently run segment curves; skip the first return of each later segment"
+    }
+  },
+  "factor_ic": {
+    "method": "month-end factor value versus T+1 open to T+21 open forward return within historical non-financial HS300 members; cross-sectional Spearman rank IC",
+    "minimum_names": 30
+  },
+  "gates": {
+    "D1": "full-period non-financial member-row factor coverage from 2022-07-01 onward >= 0.99",
+    "D2": "recent 252-trading-day non-financial member-row factor coverage >= 0.99",
+    "D3": "rolling 60-return formula and no-lookahead audit pass; missing and nonfinite skewness remain null",
+    "D4": "maximum mean absolute monthly rank correlation with the preregistered stock-level existing-factor set <= 0.70",
+    "I1": "discovery mean rank IC >= 0.02 with at least 24 month-end observations",
+    "I2": "validation mean rank IC >= 0.01 with at least 18 month-end observations and the same positive sign",
+    "G1": "discovery candidate return >= control return + 5pp",
+    "G2": "discovery candidate MDD is no worse than control MDD by more than 5pp",
+    "G3": "validation candidate return >= control return",
+    "G4": "full-sample candidate return > 0 and >= control return",
+    "G5": "full-sample candidate MDD <= 40% in absolute value and no worse than control by more than 5pp",
+    "G6": "rolling 1-year positive rate >= 60% and no worse than control by more than 2pp",
+    "G7": "recent 12-month candidate return > 0 and MDD no worse than control by more than 5pp",
+    "G8": "full-sample candidate return at 4x cost is positive",
+    "G9": "full-sample candidate return at 5x cost is positive",
+    "C1": "at least 30 distinct symbols are traded across the full sample",
+    "C2": "the largest symbol's share of net P&L is <= 25%",
+    "C3": "the top three symbols' share of net P&L is <= 55%",
+    "C4": "the top five symbols' share of net P&L is <= 75%",
+    "C5": "at least 8 distinct symbols have positive P&L in the validation segment",
+    "C6": "the largest industry's share of gross profit is <= 45%",
+    "C7": "the largest single-symbol loss is <= 20% of gross profit in absolute value"
+  },
+  "decision_rule": "All D, I, G and C gates must pass. Any failure means the factor is not accepted and cannot be rescued by changing the window, return transformation, weights, holding period, stop loss, universe, costs or gates after seeing results.",
+  "known_limitations": [
+    "Simple raw-return skewness is not residual idiosyncratic skewness and is sensitive to outliers.",
+    "A 60-trading-day window may be noisy and can overlap materially across consecutive dates.",
+    "The factor can correlate with volatility, momentum and trend efficiency; the independence gate constrains but does not eliminate this.",
+    "Financial values in the matched control are current snapshots and the industry snapshot is not historical PIT.",
+    "Passing these gates would justify further paper-trading validation, not production deployment."
+  ]
+}

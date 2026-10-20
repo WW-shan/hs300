@@ -1,0 +1,123 @@
+{
+  "status": "feasibility_only_no_forward_returns",
+  "factor": "stock_skew_60d_low",
+  "formula": "-rolling skewness of the latest 60 daily close-to-close returns",
+  "evaluation_start": "2022-07-01",
+  "evaluation_end": "2026-10-16",
+  "price_observations": {
+    "rows": 2308929,
+    "symbols": 5577,
+    "date_range": [
+      "2018-01-02",
+      "2026-10-19"
+    ]
+  },
+  "coverage": {
+    "eligible_member_rows": 260035,
+    "valid_member_rows": 259847,
+    "full_period_coverage": 0.999277,
+    "recent_member_rows": 62630,
+    "recent_valid_rows": 62575,
+    "recent_12m_coverage": 0.999122,
+    "first_valid_date": "2018-04-03",
+    "by_year": [
+      {
+        "year": 2022,
+        "member_rows": 31375,
+        "valid_rows": 31352,
+        "coverage": 0.999267
+      },
+      {
+        "year": 2023,
+        "member_rows": 60961,
+        "valid_rows": 60957,
+        "coverage": 0.999934
+      },
+      {
+        "year": 2024,
+        "member_rows": 60488,
+        "valid_rows": 60456,
+        "coverage": 0.999471
+      },
+      {
+        "year": 2025,
+        "member_rows": 60504,
+        "valid_rows": 60419,
+        "coverage": 0.998595
+      },
+      {
+        "year": 2026,
+        "member_rows": 46707,
+        "valid_rows": 46663,
+        "coverage": 0.999058
+      }
+    ]
+  },
+  "distribution": {
+    "valid_daily_rows": 1067902,
+    "valid_symbols": 549,
+    "min": -7.511177,
+    "p01": -2.228585,
+    "median": -0.284286,
+    "p99": 2.868709,
+    "max": 7.076171
+  },
+  "independence": {
+    "method": "mean absolute monthly cross-sectional Spearman correlation within historical non-financial HS300 members",
+    "fields": {
+      "idio_vol_60d_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.210455,
+        "mean_signed_correlation": 0.200891
+      },
+      "vol_of_vol_60d_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.25584,
+        "mean_signed_correlation": 0.21886
+      },
+      "market_skew_60d_low": {
+        "months": 0,
+        "mean_abs_correlation": null,
+        "mean_signed_correlation": null
+      },
+      "beta_asymmetry_120d": {
+        "months": 51,
+        "mean_abs_correlation": 0.211376,
+        "mean_signed_correlation": -0.207263
+      },
+      "risk_adjusted_momentum_60d": {
+        "months": 51,
+        "mean_abs_correlation": 0.277779,
+        "mean_signed_correlation": -0.276246
+      },
+      "trend_efficiency_60d": {
+        "months": 51,
+        "mean_abs_correlation": 0.290215,
+        "mean_signed_correlation": -0.288433
+      },
+      "market_down_beta_60d_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.122341,
+        "mean_signed_correlation": -0.085318
+      },
+      "price_delay_60d": {
+        "months": 51,
+        "mean_abs_correlation": 0.146537,
+        "mean_signed_correlation": 0.022989
+      },
+      "ocf_margin_4q": {
+        "months": 51,
+        "mean_abs_correlation": 0.076313,
+        "mean_signed_correlation": 0.015859
+      },
+      "cash_to_assets": {
+        "months": 51,
+        "mean_abs_correlation": 0.079206,
+        "mean_signed_correlation": -0.036913
+      }
+    },
+    "max_mean_abs_correlation": 0.290215
+  },
+  "pit_rule": "factor on date t uses returns through t close only; execution is T+1 open; fewer than 60 valid return observations remain null",
+  "missing_data_rule": "require 60 valid daily returns and nondegenerate rolling skewness; no zero fill"
+}
