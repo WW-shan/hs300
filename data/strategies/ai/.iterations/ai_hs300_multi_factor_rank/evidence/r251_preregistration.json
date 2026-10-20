@@ -1,0 +1,98 @@
+{
+  "round": "R251",
+  "registered_at": "2026-10-20",
+  "status": "pre_registered_before_factor_table_strategy_implementation_and_backtest",
+  "hypothesis": "Non-financial HS300 firms whose annual capital expenditure relative to revenue declined versus the prior year should earn higher future returns than firms whose investment intensity increased or remained high.",
+  "selection_basis": "A review of the existing factor catalog found repeated tests of the capex-to-revenue level but no standalone executable strategy for the year-over-year improvement in that intensity. R251 therefore tests a distinct capital-discipline hypothesis: capex_t-1/revenue_t-1 minus capex_t/revenue_t. The factor was frozen after a no-forward-return coverage and independence audit. Full-period and recent coverage were both 100%, and the maximum mean absolute monthly correlation with the audited existing factors was 0.203377 versus capex_intensity_low. Evidence: r251_data_feasibility.json.",
+  "factor": {
+    "id": "ext_alt_hs300_capexyoy_capex_intensity_improvement_yoy",
+    "config_id": "alt_hs300_capexyoy",
+    "column": "capex_intensity_improvement_yoy",
+    "direction": "high",
+    "formula": "capex_intensity_improvement_yoy = capex_t_minus_1 / revenue_t_minus_1 - capex_t / revenue_t; positive means capital intensity declined versus the prior annual report",
+    "interpretation": "Higher means a larger year-over-year reduction in capital expenditure as a share of revenue, interpreted as improving investment discipline.",
+    "pit_rule": "Annual capex and revenue reports only. Effective date = max(vendor notice_date + 1 calendar day, statutory reporting deadline + 3 calendar days). The latest annual report expires after 500 calendar days.",
+    "missing_data_rule": "Require two consecutive annual reports, positive revenue in both years and non-null capex in both years. Any missing component makes the factor null; no partial score, zero fill, interpolation or industry fallback.",
+    "universe": "historical HS300 membership excluding banks and non-bank financials using the current industry snapshot"
+  },
+  "strategies": {
+    "candidate": {
+      "id": "ai_hs300_capex_improvement_quality_h20_sl20",
+      "scoring": {
+        "ext_alt_hs300_capexyoy_capex_intensity_improvement_yoy": 0.45,
+        "uf_quality_value_defensive": 0.3,
+        "uf_cash_quality": 0.25
+      }
+    },
+    "control": {
+      "id": "ai_hs300_capex_improvement_quality_control",
+      "scoring": {
+        "uf_quality_value_defensive": 0.545,
+        "uf_cash_quality": 0.455
+      }
+    },
+    "weight_rationale": "The capital-intensity-improvement score receives the fixed 45% research weight used in recent rounds. The remaining quality and cash weights preserve the 54.5/45.5 quality-cash ratio of the matched control. No weight was selected using forward returns.",
+    "matched_requirements": "Both strategies use the same non-financial HS300 universe, annual factor-availability filter, 30-name score limit, top 10 equal-weight positions, 20-day holding period, -20% stop loss, T+1 open execution and cost model."
+  },
+  "execution": {
+    "engine": "StrategyBacktestService",
+    "matching": "open_t+1",
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "score_limit": 30,
+    "holding_days": 20,
+    "stop_loss": -0.2,
+    "asset_type": "stock",
+    "cost_3x": "6bp fees + 6bp commission + 15bp slippage + 10bp stamp tax",
+    "cost_stress": "4x and 5x scale all four cost components proportionally",
+    "segments": {
+      "discovery": [
+        "2023-05-04",
+        "2024-12-31"
+      ],
+      "validation": [
+        "2025-01-02",
+        "2026-10-16"
+      ],
+      "stitching": "compound two independently run segment curves; skip the first return of each later segment"
+    }
+  },
+  "factor_ic": {
+    "method": "month-end factor value versus T+1 open to T+21 open forward return within historical non-financial HS300 members; cross-sectional Spearman rank IC",
+    "minimum_names": 30
+  },
+  "gates": {
+    "D1": "full-period non-financial member-row factor coverage from 2023-05-04 onward >= 0.99",
+    "D2": "recent 252-trading-day non-financial member-row factor coverage >= 0.99",
+    "D3": "two-consecutive-annual-report formula, finite-value and PIT audit pass; partial and nonfinite values remain null",
+    "D4": "maximum mean absolute monthly rank correlation with the preregistered existing-factor set <= 0.70",
+    "I1": "discovery mean rank IC >= 0.02 with at least 18 month-end observations",
+    "I2": "validation mean rank IC >= 0.01 with at least 18 month-end observations and the same positive sign",
+    "G1": "discovery candidate return >= control return + 5pp",
+    "G2": "discovery candidate MDD is no worse than control MDD by more than 5pp",
+    "G3": "validation candidate return >= control return",
+    "G4": "full-sample candidate return > 0 and >= control return",
+    "G5": "full-sample candidate MDD <= 40% in absolute value and no worse than control by more than 5pp",
+    "G6": "rolling 1-year positive rate >= 60% and no worse than control by more than 2pp",
+    "G7": "recent 12-month candidate return > 0 and MDD no worse than control by more than 5pp",
+    "G8": "full-sample candidate return at 4x cost is positive",
+    "G9": "full-sample candidate return at 5x cost is positive",
+    "C1": "at least 30 distinct symbols are traded across the full sample",
+    "C2": "the largest symbol's share of net P&L is <= 25%",
+    "C3": "the top three symbols' share of net P&L is <= 55%",
+    "C4": "the top five symbols' share of net P&L is <= 75%",
+    "C5": "at least 8 distinct symbols have positive P&L in the validation segment",
+    "C6": "the largest industry's share of gross profit is <= 45%",
+    "C7": "the largest single-symbol loss is <= 20% of gross profit in absolute value"
+  },
+  "decision_rule": "All D, I, G and C gates must pass. Any failure means the factor is not accepted and cannot be rescued by changing the annual formula, weights, holding period, stop loss, universe, costs or gates after seeing results.",
+  "known_limitations": [
+    "Annual reports provide only one update per fiscal year, so the signal can become stale within the year.",
+    "Capital expenditure classification can differ across firms and may include maintenance or expansion spending with different economic meaning.",
+    "The factor requires two consecutive annual reports and therefore starts in 2023-05-04 in the audited local data.",
+    "Large declines from a high prior-year base can dominate the cross-section.",
+    "Financial values are current snapshots and may contain restatements.",
+    "The industry snapshot used to exclude financials is current rather than historical PIT.",
+    "Passing these gates would justify further paper-trading validation, not production deployment."
+  ]
+}
