@@ -1,0 +1,119 @@
+{
+  "round": "R245",
+  "captured_at": "2026-10-20T01:09:53.653739+00:00",
+  "api_base": "http://127.0.0.1:3018",
+  "reload": {
+    "method": "POST",
+    "endpoint": "/api/strategies/reload",
+    "ok": true,
+    "count": 114
+  },
+  "factors": {
+    "endpoint": "/api/factors",
+    "count": 214,
+    "expected_scoring_factor_count": 3,
+    "missing_scoring_factors": [],
+    "registered": [
+      {
+        "id": "uf_cash_quality",
+        "label": "现金质量",
+        "group": "财务",
+        "kind": "custom",
+        "version": 1,
+        "formula": "ocf_ni - accrual",
+        "direction": "high",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "experimental",
+        "scale_free": true,
+        "dependencies": [
+          "accrual",
+          "ocf_ni"
+        ]
+      },
+      {
+        "id": "uf_quality_value_defensive",
+        "label": "质量价值防守",
+        "group": "财务",
+        "kind": "custom",
+        "version": 1,
+        "formula": "roe_latest / (100 * pb_latest) - debt_ratio_latest / 100",
+        "direction": "high",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "experimental",
+        "scale_free": true,
+        "dependencies": [
+          "debt_ratio_latest",
+          "pb_latest",
+          "roe_latest"
+        ]
+      },
+      {
+        "id": "ext_alt_hs300_tenure_hs300_membership_tenure_low",
+        "label": "HS300成分新近度因子·HS300连续成分新近度(高好)",
+        "group": "扩展数据",
+        "kind": "base",
+        "version": 1,
+        "formula": "扩展表「HS300成分新近度因子」字段 hs300_membership_tenure_low (时序·按交易日对齐)",
+        "direction": "none",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "stable",
+        "scale_free": false,
+        "dependencies": []
+      }
+    ]
+  },
+  "strategies": {
+    "endpoint": "/api/strategies?include_research=true",
+    "count": 183,
+    "load_error_count": 0,
+    "load_errors": [],
+    "registered": [
+      {
+        "id": "ai_hs300_index_tenure_control",
+        "name": "HS300非金融成分新近度匹配对照",
+        "research_only": true,
+        "scoring": {
+          "uf_quality_value_defensive": 0.545,
+          "uf_cash_quality": 0.455
+        },
+        "stop_loss": -0.2,
+        "max_hold_days": 20,
+        "limit": 30,
+        "required_features": null
+      },
+      {
+        "id": "ai_hs300_index_tenure_h20_sl20",
+        "name": "HS300非金融成分新近度",
+        "research_only": true,
+        "scoring": {
+          "ext_alt_hs300_tenure_hs300_membership_tenure_low": 0.3,
+          "uf_quality_value_defensive": 0.3815,
+          "uf_cash_quality": 0.3185
+        },
+        "stop_loss": -0.2,
+        "max_hold_days": 20,
+        "limit": 30,
+        "required_features": null
+      }
+    ]
+  },
+  "note": "R245 factor and both candidate/control strategies are registered in the panel before the final research result is committed."
+}
