@@ -128,5 +128,89 @@
     },
     "max_mean_abs_correlation": 0.44728
   },
-  "selection_note": "Management expense is used instead of selling-plus-management expense because the latter leaves 1.54% of nonfinancial member rows uncovered. The three selected components are already materialized factors; no forward returns were read."
+  "selection_note": "Management expense is used instead of selling-plus-management expense because the latter leaves 1.54% of nonfinancial member rows uncovered. The three selected components are already materialized factors; no forward returns were read.",
+  "rank_normalization": "rank_pct = (number_of_names - descending_average_rank) / (number_of_names - 1); 1 is best and 0 is worst",
+  "pre_implementation_note": "A pre-implementation review corrected the feasibility script's provisional rank normalization before any factor table or forward return was produced. Coverage and mean absolute correlations are unchanged; the production builder follows the stated 1-best normalization.",
+  "production_direction_independence": {
+    "fields": {
+      "ocf_margin_4q": {
+        "months": 41,
+        "mean_abs_correlation": 0.364769,
+        "mean_signed_correlation": 0.364769
+      },
+      "cash_to_assets": {
+        "months": 41,
+        "mean_abs_correlation": 0.038449,
+        "mean_signed_correlation": 0.013516
+      },
+      "sga_ratio_4q_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.247672,
+        "mean_signed_correlation": 0.247672
+      },
+      "gross_margin_yoy_improvement_q": {
+        "months": 41,
+        "mean_abs_correlation": 0.517226,
+        "mean_signed_correlation": 0.517226
+      },
+      "gross_margin_stability_4q_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.133434,
+        "mean_signed_correlation": 0.133434
+      },
+      "risk_adjusted_momentum_60d": {
+        "months": 41,
+        "mean_abs_correlation": 0.156565,
+        "mean_signed_correlation": 0.113557
+      },
+      "trend_efficiency_60d": {
+        "months": 41,
+        "mean_abs_correlation": 0.157208,
+        "mean_signed_correlation": 0.115238
+      },
+      "idio_vol_60d_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.0972,
+        "mean_signed_correlation": 0.066858
+      },
+      "stock_rel_industry_20d": {
+        "months": 41,
+        "mean_abs_correlation": 0.116031,
+        "mean_signed_correlation": 0.048763
+      },
+      "capex_intensity_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.031177,
+        "mean_signed_correlation": 0.020132
+      },
+      "free_cash_flow_assets": {
+        "months": 41,
+        "mean_abs_correlation": 0.303427,
+        "mean_signed_correlation": 0.303427
+      },
+      "asset_growth_yoy_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.096295,
+        "mean_signed_correlation": -0.095742
+      },
+      "working_capital_change_yoy_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.101733,
+        "mean_signed_correlation": 0.101733
+      },
+      "gross_profitability": {
+        "months": 41,
+        "mean_abs_correlation": 0.149981,
+        "mean_signed_correlation": 0.149976
+      },
+      "piotroski7_score": {
+        "months": 41,
+        "mean_abs_correlation": 0.294887,
+        "mean_signed_correlation": 0.289285
+      }
+    },
+    "max_mean_abs_correlation": 0.517226
+  },
+  "production_max_mean_abs_correlation": 0.517226,
+  "production_correction_note": "The production min-rank uses the preregistered 1-best direction. Recomputing the 15-field independence audit on that corrected factor yields max mean absolute correlation 0.517226, still below the frozen 0.70 D4 gate. No forward returns were read before this correction."
 }
