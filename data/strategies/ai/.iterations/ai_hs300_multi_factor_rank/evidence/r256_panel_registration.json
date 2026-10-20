@@ -1,0 +1,200 @@
+{
+  "round": "R256",
+  "captured_at": "2026-10-20T04:17:58.111972+00:00",
+  "api_base": "http://127.0.0.1:3018",
+  "reload": {
+    "method": "POST",
+    "endpoint": "/api/strategies/reload",
+    "ok": true,
+    "count": 114
+  },
+  "factors": {
+    "endpoint": "/api/factors",
+    "count": 224,
+    "expected_factor_count": 5,
+    "missing_factors": [],
+    "registered": [
+      {
+        "id": "ext_alt_hs300_qfcf_cash_backed_quality_min_rank",
+        "label": "HS300现金支撑质量因子·质量与自由现金流最弱一环(高好)",
+        "group": "扩展数据",
+        "kind": "base",
+        "version": 1,
+        "formula": "扩展表「HS300现金支撑质量因子」字段 cash_backed_quality_min_rank (时序·按交易日对齐)",
+        "direction": "none",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "stable",
+        "scale_free": false,
+        "dependencies": []
+      }
+    ]
+  },
+  "strategies": {
+    "endpoint": "/api/strategies?include_research=true",
+    "count": 203,
+    "load_error_count": 0,
+    "load_errors": [],
+    "registered": [
+      {
+        "id": "ai_hs300_cash_backed_quality_h20_sl20",
+        "name": "HS300现金支撑质量最弱一环",
+        "description": "R253质量最弱一环与自由现金流/总资产再做最弱一环；30只、10仓、20日持有、-20%止损（R256实验）。",
+        "tags": [
+          "现金支撑",
+          "质量",
+          "自由现金流",
+          "最弱一环",
+          "沪深300",
+          "非金融",
+          "实验",
+          "R256"
+        ],
+        "source": "ai",
+        "research_only": true,
+        "execution_backend": "polars_expr",
+        "asset_types": [
+          "stock"
+        ],
+        "timeframes": [
+          "1d"
+        ],
+        "version": "1.0.0",
+        "basic_filter": {
+          "price_min": 3,
+          "price_max": 500,
+          "market_cap_min": 1000000000.0,
+          "float_cap_min": null,
+          "float_cap_max": null,
+          "amount_min": 20000000.0,
+          "amount_max": null,
+          "turnover_min": null,
+          "turnover_max": null,
+          "exclude_st": true,
+          "exclude_new_days": 60,
+          "boards": [
+            "沪主板",
+            "深主板",
+            "创业板",
+            "科创板",
+            "北交所"
+          ]
+        },
+        "params": [],
+        "params_defaults": {},
+        "scoring": {
+          "ext_alt_hs300_qfcf_cash_backed_quality_min_rank": 0.45,
+          "uf_quality_value_defensive": 0.3,
+          "uf_cash_quality": 0.25
+        },
+        "scoring_directions": {},
+        "entry_signals": [],
+        "exit_signals": [],
+        "overlay_filter": [],
+        "minute_exit_trigger_supported_signals": [
+          "signal_ma10_breakdown",
+          "signal_ma20_breakdown",
+          "signal_ma5_breakdown",
+          "signal_ma_dead_5_20"
+        ],
+        "stop_loss": -0.2,
+        "take_profit": null,
+        "trailing_stop": null,
+        "trailing_take_profit_activate": null,
+        "trailing_take_profit_drawdown": null,
+        "max_hold_days": 20,
+        "order_by": "score",
+        "descending": true,
+        "limit": 30,
+        "display_limit": null,
+        "composite_children": null
+      },
+      {
+        "id": "ai_hs300_cash_backed_quality_control",
+        "name": "HS300现金支撑质量匹配对照",
+        "description": "与R256候选使用相同非金融股票池和复合因子可用性过滤，但不把现金支撑质量计入评分",
+        "tags": [
+          "现金支撑",
+          "质量",
+          "自由现金流",
+          "匹配对照",
+          "沪深300",
+          "非金融",
+          "实验",
+          "R256"
+        ],
+        "source": "ai",
+        "research_only": true,
+        "execution_backend": "polars_expr",
+        "asset_types": [
+          "stock"
+        ],
+        "timeframes": [
+          "1d"
+        ],
+        "version": "1.0.0",
+        "basic_filter": {
+          "price_min": 3,
+          "price_max": 500,
+          "market_cap_min": 1000000000.0,
+          "float_cap_min": null,
+          "float_cap_max": null,
+          "amount_min": 20000000.0,
+          "amount_max": null,
+          "turnover_min": null,
+          "turnover_max": null,
+          "exclude_st": true,
+          "exclude_new_days": 60,
+          "boards": [
+            "沪主板",
+            "深主板",
+            "创业板",
+            "科创板",
+            "北交所"
+          ]
+        },
+        "params": [],
+        "params_defaults": {},
+        "scoring": {
+          "uf_quality_value_defensive": 0.545,
+          "uf_cash_quality": 0.455
+        },
+        "scoring_directions": {},
+        "entry_signals": [],
+        "exit_signals": [],
+        "overlay_filter": [],
+        "minute_exit_trigger_supported_signals": [
+          "signal_ma10_breakdown",
+          "signal_ma20_breakdown",
+          "signal_ma5_breakdown",
+          "signal_ma_dead_5_20"
+        ],
+        "stop_loss": -0.2,
+        "take_profit": null,
+        "trailing_stop": null,
+        "trailing_take_profit_activate": null,
+        "trailing_take_profit_drawdown": null,
+        "max_hold_days": 20,
+        "order_by": "score",
+        "descending": true,
+        "limit": 30,
+        "display_limit": null,
+        "composite_children": null
+      }
+    ]
+  },
+  "checks": {
+    "factor_visible": true,
+    "candidate_visible": true,
+    "control_visible": true,
+    "no_strategy_load_errors": true,
+    "all_required_factors_visible": true
+  },
+  "note": "R256 factor and candidate/control strategies are registered in the panel before final results are committed.",
+  "all_checks_pass": true
+}
