@@ -1,0 +1,43 @@
+{
+    "round": "R241",
+    "registered_at": "2026-10-20",
+    "status": "pre_registered_before_concentration_audit",
+    "hypothesis": "R232 is the closest composite candidate (11/12 gates, full +6.87%, recent 12m +17.26%) and uses 10 positions, unlike the concentrated 5-position R238. Before attempting to fix R232's G1 failure, this round audits whether its P&L is diversified across symbols and industries. If R232 is also dominated by one stock, the entire SGA/OCF/gross-margin family is too narrow and should be abandoned rather than retuned.",
+    "strategy": {
+        "id": "ai_hs300_sga_ocf_gm_trend_composite_h20_sl20",
+        "max_positions": 10,
+        "holding_days": 20,
+        "stop_loss": -0.2,
+        "cost": "3x baseline"
+    },
+    "execution": {
+        "engine": "StrategyBacktestService",
+        "matching": "open_t+1",
+        "universe": "historical non-financial HS300 membership; daily snapshots from 2022",
+        "segments": [
+            [
+                "2022-07-01",
+                "2024-12-31"
+            ],
+            [
+                "2025-01-02",
+                "2026-10-16"
+            ]
+        ]
+    },
+    "gates": {
+        "C1": "at least 30 distinct symbols are traded across the full period",
+        "C2": "the single largest symbol's share of net P&L is at most 25%",
+        "C3": "the top three symbols' share of net P&L is at most 55%",
+        "C4": "the top five symbols' share of net P&L is at most 75%",
+        "C5": "at least 8 distinct symbols have positive P&L in the validation segment",
+        "C6": "the largest industry's share of gross profit is at most 45%",
+        "C7": "the single largest symbol loss is at most 20% of gross profit in absolute value"
+    },
+    "decision_rule": "All C gates must pass. A failure means R232's P&L is too concentrated to justify further tuning; the factor family should be abandoned and the next round should move to a different data dimension.",
+    "known_limitations": [
+        "Trade P&L amounts from two segments each start from 1,000,000 notional, so shares are contribution-share diagnostics, not compounded-return decomposition.",
+        "Industry classification is a current snapshot, not historical PIT.",
+        "The audit describes concentration, not causality."
+    ]
+}
