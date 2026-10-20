@@ -3,7 +3,7 @@
   "registered_at": "2026-10-20",
   "status": "pre_registered_before_factor_table_strategy_implementation_and_backtest",
   "hypothesis": "R257's P&L concentration comes from repeatedly selected winners, but R258's hard freshness gate eliminated the candidate pool and R259's reversal min-rank destroyed returns. A bounded soft recency penalty can demote persistent top-30 names without excluding any stock.",
-  "selection_basis": "This is a result-driven follow-up informed by R257's C2/C3/C4 failure, R258's daily fresh-name median of one and R259's G1-G9 failure. It is not independent confirmation. Feasibility read no forward or strategy returns: joint coverage is 99.9211% full, 99.9646% discovery, 99.8797% validation and 99.9122% recent year; the factor-only soft Top30 overlaps the R257 Top30 by a median of 0.60 with 99.8805% of days below full overlap; the penalty lowers the R257 percentile by 0.018719 on average, affects 26.4963% of observations and is capped at 0.20; every date has at least 246 valid names. The first D7 implementation incorrectly required a constant daily member count and was corrected before any return was read; no factor definition, universe or threshold changed. Evidence: r260_data_feasibility.json.",
+  "selection_basis": "This is a result-driven follow-up informed by R257's C2/C3/C4 failure, R258's daily fresh-name median of one and R259's G1-G9 failure. It is not independent confirmation. Feasibility read no forward or strategy returns: joint coverage is 99.9211% full, 99.9646% discovery, 99.8797% validation and 99.9122% recent year; the factor-only soft Top30 overlaps the R257 Top30 by a median of 0.60 with 99.8805% of days below full overlap; the penalty lowers the R257 percentile by 0.018782 on average, affects 26.4298% of observations and is capped at 0.20; every date has at least 246 valid names. The first D7 implementation incorrectly required a constant daily member count and was corrected before any return was read; no factor definition, universe or threshold changed. Evidence: r260_data_feasibility.json.",
   "factor": {
     "id": "ext_alt_hs300_qrsrf_quality_rs_soft_fresh_rank",
     "config_id": "alt_hs300_qrsrf",
@@ -50,8 +50,14 @@
     "cost_3x": "6bp fees + 6bp commission + 15bp slippage + 10bp stamp tax",
     "cost_stress": "4x and 5x scale all four components proportionally",
     "segments": {
-      "discovery": ["2023-05-04", "2024-12-31"],
-      "validation": ["2025-01-02", "2026-10-16"],
+      "discovery": [
+        "2023-05-04",
+        "2024-12-31"
+      ],
+      "validation": [
+        "2025-01-02",
+        "2026-10-16"
+      ],
       "stitching": "compound two independently run segment curves; skip the first return of each later segment"
     }
   },
@@ -92,5 +98,6 @@
     "The nonfinancial industry snapshot is current rather than historical PIT.",
     "The full curve is stitched from two system-engine segments and segment boundaries can reset open positions.",
     "Passing these gates would justify paper-trading validation, not production deployment."
-  ]
+  ],
+  "pre_return_implementation_note": "After the specification was frozen but before any R260 return was read, production construction was found to rank the full symbol-date grid when flagging historical R257 Top30 membership. The implementation was corrected to rank only current eligible nonfinancial HS300 members with non-null R257 values, and a nonmember regression test was added. The factor formula, universe, penalty cap, lookback, strategies and gates were unchanged; feasibility statistics were regenerated from the corrected audit."
 }

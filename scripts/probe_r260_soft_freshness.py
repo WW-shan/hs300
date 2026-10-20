@@ -131,7 +131,8 @@ def main() -> int:
         .with_columns(pl.col("_member").fill_null(0).cast(pl.Int8))
     )
     current_top30 = _strict_top30(
-        history.filter(pl.col("_member") == 1), R257_FIELD
+        history.filter((pl.col("_member") == 1) & pl.col(R257_FIELD).is_not_null()),
+        R257_FIELD,
     ).with_columns(pl.lit(1).cast(pl.Int8).alias("_r257_top30"))
     history = (
         history.join(current_top30, on=["date", "symbol"], how="left")
