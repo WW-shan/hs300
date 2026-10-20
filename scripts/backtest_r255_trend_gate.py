@@ -25,6 +25,7 @@ R239_SCRIPT = ROOT / "scripts" / "backtest_r239_concentration_audit.py"
 R253_SCRIPT = ROOT / "scripts" / "backtest_r253_min_rank.py"
 R255_BUILDER = ROOT / "scripts" / "build_r255_trend_gate_factor.py"
 CACHE = DATA / "research" / "r255_cache"
+ROUND = "R255"
 START = date(2023, 5, 4)
 END = date(2026, 10, 16)
 WINDOW = 252
@@ -506,6 +507,7 @@ def main() -> int:
     decision["all_pass"] = all(decision.values())
 
     payload = {
+        "round": ROUND,
         "purpose": (
             "R255 HS300 200-day trend entry gate on the unchanged R253 nonfinancial "
             "weakest-link quality factor versus a matched quality-cash control"

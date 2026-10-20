@@ -97,6 +97,7 @@ def test_r255_backtest_contract_constants() -> None:
         "candidate": "ai_hs300_minrank_ma200_gate_quality_h20_sl20",
         "control": "ai_hs300_minrank_ma200_gate_quality_control",
     }
+    assert module.ROUND == "R255"
     assert module.OUT.name == "r255_trend_gate.json"
     assert module.CACHE.name == "r255_cache"
     assert module.GATE_WINDOW == 200

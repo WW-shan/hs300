@@ -1,0 +1,2257 @@
+{
+  "round": "R255",
+  "purpose": "R255 HS300 200-day trend entry gate on the unchanged R253 nonfinancial weakest-link quality factor versus a matched quality-cash control",
+  "preregistration": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r255_preregistration.json",
+  "window": [
+    "2023-05-04",
+    "2026-10-16"
+  ],
+  "trading_days": 837,
+  "universe": {
+    "industry_source": "current ext_hy_ths industry snapshot; not historical PIT",
+    "excluded_industries": [
+      "银行",
+      "非银金融"
+    ],
+    "member_snapshot_rows": 430500,
+    "nonfinancial_member_rows": 353797,
+    "excluded_financial_member_rows": 73251,
+    "industry_missing_member_rows": 3452,
+    "nonfinancial_symbols": 469,
+    "excluded_financial_symbols": 80,
+    "industry_missing_symbols": 15
+  },
+  "factor": {
+    "id": "ext_alt_market_regime_hs300_above_ma200",
+    "config_id": "alt_market_regime",
+    "column": "hs300_above_ma200",
+    "direction": "gate",
+    "formula": "hs300_above_ma200 = 1 if 000300.SH close_t > mean(close_{t-199}...close_t), else 0; null until 200 closes exist",
+    "pit_rule": "close and its trailing 200-trading-day mean are observable at t; execution is T+1 open",
+    "missing_data_rule": "exact-date join only; a missing gate date blocks new entries fail-closed",
+    "samples": {
+      "full": {
+        "expected_dates": 837,
+        "valid_dates": 837,
+        "coverage": 1.0,
+        "on_dates": 486,
+        "off_dates": 351,
+        "first_valid_date": "2023-05-04",
+        "last_valid_date": "2026-10-16"
+      },
+      "discovery": {
+        "expected_dates": 406,
+        "valid_dates": 406,
+        "coverage": 1.0,
+        "on_dates": 114,
+        "off_dates": 292,
+        "first_valid_date": "2023-05-04",
+        "last_valid_date": "2024-12-31"
+      },
+      "validation": {
+        "expected_dates": 431,
+        "valid_dates": 431,
+        "coverage": 1.0,
+        "on_dates": 372,
+        "off_dates": 59,
+        "first_valid_date": "2025-01-02",
+        "last_valid_date": "2026-10-16"
+      },
+      "recent_12m": {
+        "expected_dates": 252,
+        "valid_dates": 252,
+        "coverage": 1.0,
+        "on_dates": 196,
+        "off_dates": 56,
+        "first_valid_date": "2025-09-25",
+        "last_valid_date": "2026-10-16"
+      }
+    },
+    "audit": {
+      "samples": {
+        "full": {
+          "expected_dates": 837,
+          "valid_dates": 837,
+          "coverage": 1.0,
+          "on_dates": 486,
+          "off_dates": 351,
+          "first_valid_date": "2023-05-04",
+          "last_valid_date": "2026-10-16"
+        },
+        "discovery": {
+          "expected_dates": 406,
+          "valid_dates": 406,
+          "coverage": 1.0,
+          "on_dates": 114,
+          "off_dates": 292,
+          "first_valid_date": "2023-05-04",
+          "last_valid_date": "2024-12-31"
+        },
+        "validation": {
+          "expected_dates": 431,
+          "valid_dates": 431,
+          "coverage": 1.0,
+          "on_dates": 372,
+          "off_dates": 59,
+          "first_valid_date": "2025-01-02",
+          "last_valid_date": "2026-10-16"
+        },
+        "recent_12m": {
+          "expected_dates": 252,
+          "valid_dates": 252,
+          "coverage": 1.0,
+          "on_dates": 196,
+          "off_dates": 56,
+          "first_valid_date": "2025-09-25",
+          "last_valid_date": "2026-10-16"
+        }
+      },
+      "date_constant": true,
+      "binary": true,
+      "duplicate_date_symbol_rows": 0,
+      "factor_rows_checked": 1187524,
+      "valid_factor_rows": 1075567,
+      "written_rows_match_expected_asof_panel": true,
+      "missing_written_rows": 0,
+      "unexpected_written_rows": 0,
+      "value_mismatch_rows": 0,
+      "max_abs_formula_difference": 0.0,
+      "formula_audit": {
+        "index_symbol": "000300.SH",
+        "rolling_window": 200,
+        "close_only": true,
+        "expected_dates": 837,
+        "actual_dates": 837,
+        "missing_formula_dates": 0,
+        "extra_formula_dates": 0,
+        "null_mismatch_dates": 0,
+        "max_abs_difference": 0.0,
+        "formula_match": true,
+        "prefix_invariance_checks": 26,
+        "prefix_invariance_mismatches": [],
+        "no_future_index_leakage": true
+      },
+      "no_future_index_leakage": true,
+      "complete_from_start": true,
+      "pit_unit_test": "backend/tests/test_r255_trend_gate_factor.py::test_r255_gate_warmup_equal_close_and_above",
+      "all_checks_pass": true
+    }
+  },
+  "quality_factor": {
+    "id": "ext_alt_hs300_minrank_management_ocf_gm_min_rank",
+    "column": "management_ocf_gm_min_rank",
+    "formula": "management_ocf_gm_min_rank = min(rank_pct(management_expense_ratio_4q_low), rank_pct(ocf_margin_4q), rank_pct(gross_margin_yoy_improvement_q))",
+    "role": "unchanged R253 cross-sectional ranking input, tested only on gate-on month ends",
+    "conditional_ic": {
+      "discovery": {
+        "eligible_month_ends": 19,
+        "gate_on_month_ends": 6,
+        "months": 6,
+        "mean_ic": 0.051068,
+        "positive_rate": 0.5,
+        "monthly": [
+          {
+            "date": "2023-07-31",
+            "ic": 0.122265,
+            "names": 252
+          },
+          {
+            "date": "2024-04-30",
+            "ic": -0.046546,
+            "names": 250
+          },
+          {
+            "date": "2024-05-31",
+            "ic": 0.284203,
+            "names": 250
+          },
+          {
+            "date": "2024-09-30",
+            "ic": -0.257265,
+            "names": 250
+          },
+          {
+            "date": "2024-10-31",
+            "ic": -0.14801,
+            "names": 250
+          },
+          {
+            "date": "2024-11-29",
+            "ic": 0.351763,
+            "names": 249
+          }
+        ]
+      },
+      "validation": {
+        "eligible_month_ends": 20,
+        "gate_on_month_ends": 18,
+        "months": 18,
+        "mean_ic": 0.06554,
+        "positive_rate": 0.8333,
+        "monthly": [
+          {
+            "date": "2025-01-27",
+            "ic": -0.246968,
+            "names": 248
+          },
+          {
+            "date": "2025-02-28",
+            "ic": 0.22295,
+            "names": 248
+          },
+          {
+            "date": "2025-03-31",
+            "ic": 0.1013,
+            "names": 250
+          },
+          {
+            "date": "2025-04-30",
+            "ic": 0.088475,
+            "names": 248
+          },
+          {
+            "date": "2025-05-30",
+            "ic": -0.049074,
+            "names": 248
+          },
+          {
+            "date": "2025-06-30",
+            "ic": -0.13433,
+            "names": 248
+          },
+          {
+            "date": "2025-07-31",
+            "ic": 0.074939,
+            "names": 248
+          },
+          {
+            "date": "2025-08-29",
+            "ic": 0.040639,
+            "names": 247
+          },
+          {
+            "date": "2025-09-30",
+            "ic": 0.068496,
+            "names": 249
+          },
+          {
+            "date": "2025-10-31",
+            "ic": 0.173472,
+            "names": 249
+          },
+          {
+            "date": "2025-11-28",
+            "ic": 0.254965,
+            "names": 248
+          },
+          {
+            "date": "2025-12-31",
+            "ic": 0.096289,
+            "names": 247
+          },
+          {
+            "date": "2026-01-30",
+            "ic": 0.072418,
+            "names": 247
+          },
+          {
+            "date": "2026-02-27",
+            "ic": 0.058265,
+            "names": 247
+          },
+          {
+            "date": "2026-03-31",
+            "ic": 0.0574,
+            "names": 248
+          },
+          {
+            "date": "2026-04-30",
+            "ic": 0.213875,
+            "names": 248
+          },
+          {
+            "date": "2026-05-29",
+            "ic": 0.035085,
+            "names": 248
+          },
+          {
+            "date": "2026-06-30",
+            "ic": 0.051517,
+            "names": 248
+          }
+        ]
+      }
+    }
+  },
+  "samples": {
+    "discovery": [
+      "2023-05-04",
+      "2024-12-31"
+    ],
+    "validation": [
+      "2025-01-02",
+      "2026-10-16"
+    ],
+    "rolling_1y": "252-trading-day rolling compounded return over the stitched 2023-2026 curve",
+    "recent_12m": "last 252 trading-day returns of the stitched 2023-2026 curve"
+  },
+  "execution": {
+    "engine": "StrategyBacktestService",
+    "matching": "open_t+1",
+    "gate_scope": "new entries only; existing positions remain subject to holding period and stop loss",
+    "cost_3x": "6bp fees + 6bp commission + 15bp slippage + 10bp stamp tax",
+    "cost_stress": "4x and 5x scale all four components proportionally",
+    "max_positions": 10,
+    "score_limit": 30,
+    "position_sizing": "equal",
+    "holding_days": 20,
+    "stop_loss": -0.2,
+    "segments": [
+      [
+        "2023-05-04",
+        "2024-12-31"
+      ],
+      [
+        "2025-01-02",
+        "2026-10-16"
+      ]
+    ],
+    "stitching": "two segment returns compounded into one curve; first day of each later segment skipped"
+  },
+  "strategies": {
+    "candidate": "ai_hs300_minrank_ma200_gate_quality_h20_sl20",
+    "control": "ai_hs300_minrank_ma200_gate_quality_control"
+  },
+  "results": {
+    "candidate": {
+      "runs": [
+        {
+          "start": "2023-05-04",
+          "end": "2024-12-31",
+          "cached": false,
+          "days": 406,
+          "curve_stats": {
+            "total_return": -0.156046,
+            "annual": -0.100184,
+            "sharpe": -0.6269,
+            "mdd": -0.186426,
+            "days": 406
+          },
+          "result_stats": {
+            "total_return": -0.156,
+            "annual_return": -0.0999,
+            "max_drawdown": -0.1864,
+            "sharpe": -0.63,
+            "sortino": -0.96,
+            "calmar": -0.54,
+            "win_rate": 0.44,
+            "profit_factor": 0.7,
+            "n_trades": 100,
+            "avg_pnl": -0.0169,
+            "avg_win": 0.0476,
+            "avg_loss": 0.0675,
+            "best": 0.2145,
+            "worst": -0.2042,
+            "median_pnl": -0.0092,
+            "avg_holding_days": 18.2,
+            "final_equity": 843953.53,
+            "initial_capital": 1000000.0,
+            "avg_exposure": 0.4382,
+            "max_exposure": 0.989,
+            "mc_maxdd_p50": -0.8847,
+            "mc_maxdd_p95": -0.9641,
+            "execution": {
+              "buy_invalid_price": 0,
+              "buy_suspended": 0,
+              "buy_limit_up": 7,
+              "buy_no_slot": 23998,
+              "buy_cash": 0,
+              "buy_lot_size": 0,
+              "buy_same_day_reentry": 40,
+              "buy_exposure": 0,
+              "buy_score_filter": 0,
+              "sell_invalid_price": 0,
+              "sell_suspended": 0,
+              "sell_limit_down": 0,
+              "pending_exit": 0
+            },
+            "pending_exit_positions": 0,
+            "market_matrix_shape": [
+              406,
+              467
+            ],
+            "market_matrix_bytes": 8536962,
+            "timing_ms": {
+              "load_panel": 64014.2,
+              "signals_score": 305.2,
+              "matrix_build": 229.3,
+              "simulate": 217.9,
+              "statistics": 2.6,
+              "total": 65164.0
+            },
+            "panel_rows": 188969,
+            "panel_columns": 11,
+            "feature_columns": 146,
+            "full_feature_fallback": false,
+            "execution_backend": "polars_expr",
+            "selection": {
+              "strategy_matches": 27962,
+              "entry_candidates": 27962,
+              "entry_trigger_filtered": 0,
+              "entry_trigger_enabled": false
+            },
+            "shared_market_data": false,
+            "matrix_data_cache_hit": false,
+            "matrix_data_cache_status": "none",
+            "matrix_data_cache_timing_ms": {}
+          },
+          "factor_attribution": {
+            "factors": [
+              {
+                "factor": "ext_alt_hs300_minrank_management_ocf_gm_min_rank",
+                "win_mean": 0.702409,
+                "lose_mean": 0.668601,
+                "win_n": 44,
+                "lose_n": 56
+              },
+              {
+                "factor": "uf_quality_value_defensive",
+                "win_mean": -0.315716,
+                "lose_mean": -0.287121,
+                "win_n": 44,
+                "lose_n": 56
+              },
+              {
+                "factor": "uf_cash_quality",
+                "win_mean": 2.209545,
+                "lose_mean": 1.881189,
+                "win_n": 44,
+                "lose_n": 56
+              }
+            ],
+            "n_win": 44,
+            "n_lose": 56
+          },
+          "elapsed_seconds": 66.904
+        },
+        {
+          "start": "2025-01-02",
+          "end": "2026-10-16",
+          "cached": false,
+          "days": 431,
+          "curve_stats": {
+            "total_return": 0.095263,
+            "annual": 0.054775,
+            "sharpe": 0.4065,
+            "mdd": -0.133351,
+            "days": 431
+          },
+          "result_stats": {
+            "total_return": 0.0953,
+            "annual_return": 0.0546,
+            "max_drawdown": -0.1334,
+            "sharpe": 0.41,
+            "sortino": 0.56,
+            "calmar": 0.41,
+            "win_rate": 0.4461,
+            "profit_factor": 1.44,
+            "n_trades": 204,
+            "avg_pnl": 0.0057,
+            "avg_win": 0.0932,
+            "avg_loss": 0.0647,
+            "best": 0.4293,
+            "worst": -0.2042,
+            "median_pnl": -0.0064,
+            "avg_holding_days": 19.6,
+            "final_equity": 1095263.45,
+            "initial_capital": 1000000.0,
+            "avg_exposure": 0.906,
+            "max_exposure": 0.9991,
+            "mc_maxdd_p50": -0.775,
+            "mc_maxdd_p95": -0.9519,
+            "execution": {
+              "buy_invalid_price": 0,
+              "buy_suspended": 0,
+              "buy_limit_up": 19,
+              "buy_no_slot": 77385,
+              "buy_cash": 0,
+              "buy_lot_size": 0,
+              "buy_same_day_reentry": 172,
+              "buy_exposure": 0,
+              "buy_score_filter": 0,
+              "sell_invalid_price": 0,
+              "sell_suspended": 0,
+              "sell_limit_down": 0,
+              "pending_exit": 0
+            },
+            "pending_exit_positions": 0,
+            "market_matrix_shape": [
+              431,
+              469
+            ],
+            "market_matrix_bytes": 9101427,
+            "timing_ms": {
+              "load_panel": 16767.4,
+              "signals_score": 358.8,
+              "matrix_build": 222.4,
+              "simulate": 674.3,
+              "statistics": 4.8,
+              "total": 18082.1
+            },
+            "panel_rows": 201573,
+            "panel_columns": 11,
+            "feature_columns": 146,
+            "full_feature_fallback": false,
+            "execution_backend": "polars_expr",
+            "selection": {
+              "strategy_matches": 90118,
+              "entry_candidates": 90118,
+              "entry_trigger_filtered": 0,
+              "entry_trigger_enabled": false
+            },
+            "shared_market_data": false,
+            "matrix_data_cache_hit": false,
+            "matrix_data_cache_status": "none",
+            "matrix_data_cache_timing_ms": {}
+          },
+          "factor_attribution": {
+            "factors": [
+              {
+                "factor": "ext_alt_hs300_minrank_management_ocf_gm_min_rank",
+                "win_mean": 0.671958,
+                "lose_mean": 0.669805,
+                "win_n": 91,
+                "lose_n": 113
+              },
+              {
+                "factor": "uf_quality_value_defensive",
+                "win_mean": -0.324231,
+                "lose_mean": -0.329718,
+                "win_n": 91,
+                "lose_n": 113
+              },
+              {
+                "factor": "uf_cash_quality",
+                "win_mean": 2.479376,
+                "lose_mean": 6.43351,
+                "win_n": 91,
+                "lose_n": 113
+              }
+            ],
+            "n_win": 91,
+            "n_lose": 113
+          },
+          "elapsed_seconds": 18.572
+        }
+      ],
+      "result": {
+        "full": {
+          "total_return": -0.075649,
+          "annual": -0.023461,
+          "sharpe": -0.0714,
+          "mdd": -0.203899,
+          "days": 836
+        },
+        "validation_2025_2026": {
+          "total_return": 0.111905,
+          "annual": 0.064292,
+          "sharpe": 0.4614,
+          "mdd": -0.133351,
+          "days": 430
+        },
+        "rolling_1y": {
+          "windows": 585,
+          "positive_rate": 0.4718,
+          "return_p05": -0.108,
+          "return_median": -0.0263,
+          "return_worst": -0.1239,
+          "mdd_p05": -0.1782,
+          "mdd_worst": -0.1782
+        },
+        "recent_12m": {
+          "total_return": 0.062083,
+          "mdd": -0.133351
+        },
+        "discovery_2023_2024": {
+          "total_return": -0.156046,
+          "annual": -0.100184,
+          "sharpe": -0.6269,
+          "mdd": -0.186426,
+          "days": 406
+        }
+      }
+    },
+    "control": {
+      "runs": [
+        {
+          "start": "2023-05-04",
+          "end": "2024-12-31",
+          "cached": false,
+          "days": 406,
+          "curve_stats": {
+            "total_return": -0.019442,
+            "annual": -0.012142,
+            "sharpe": 0.0447,
+            "mdd": -0.201274,
+            "days": 406
+          },
+          "result_stats": {
+            "total_return": -0.0194,
+            "annual_return": -0.0121,
+            "max_drawdown": -0.2013,
+            "sharpe": 0.04,
+            "sortino": 0.08,
+            "calmar": -0.06,
+            "win_rate": 0.3535,
+            "profit_factor": 1.82,
+            "n_trades": 99,
+            "avg_pnl": -0.0002,
+            "avg_win": 0.1126,
+            "avg_loss": 0.0619,
+            "best": 0.429,
+            "worst": -0.2042,
+            "median_pnl": -0.0157,
+            "avg_holding_days": 18.2,
+            "final_equity": 980558.12,
+            "initial_capital": 1000000.0,
+            "avg_exposure": 0.4329,
+            "max_exposure": 0.9783,
+            "mc_maxdd_p50": -0.7536,
+            "mc_maxdd_p95": -0.9348,
+            "execution": {
+              "buy_invalid_price": 0,
+              "buy_suspended": 0,
+              "buy_limit_up": 6,
+              "buy_no_slot": 23776,
+              "buy_cash": 0,
+              "buy_lot_size": 0,
+              "buy_same_day_reentry": 39,
+              "buy_exposure": 0,
+              "buy_score_filter": 0,
+              "sell_invalid_price": 0,
+              "sell_suspended": 3,
+              "sell_limit_down": 0,
+              "pending_exit": 1
+            },
+            "pending_exit_positions": 1,
+            "market_matrix_shape": [
+              406,
+              467
+            ],
+            "market_matrix_bytes": 8536962,
+            "timing_ms": {
+              "load_panel": 13844.5,
+              "signals_score": 333.7,
+              "matrix_build": 230.4,
+              "simulate": 210.9,
+              "statistics": 2.3,
+              "total": 14681.9
+            },
+            "panel_rows": 188969,
+            "panel_columns": 11,
+            "feature_columns": 146,
+            "full_feature_fallback": false,
+            "execution_backend": "polars_expr",
+            "selection": {
+              "strategy_matches": 27962,
+              "entry_candidates": 27962,
+              "entry_trigger_filtered": 0,
+              "entry_trigger_enabled": false
+            },
+            "shared_market_data": false,
+            "matrix_data_cache_hit": false,
+            "matrix_data_cache_status": "none",
+            "matrix_data_cache_timing_ms": {}
+          },
+          "factor_attribution": {
+            "factors": [
+              {
+                "factor": "uf_quality_value_defensive",
+                "win_mean": -0.139149,
+                "lose_mean": -0.096516,
+                "win_n": 35,
+                "lose_n": 64
+              },
+              {
+                "factor": "uf_cash_quality",
+                "win_mean": 871.847252,
+                "lose_mean": 472.405711,
+                "win_n": 35,
+                "lose_n": 64
+              }
+            ],
+            "n_win": 35,
+            "n_lose": 64
+          },
+          "elapsed_seconds": 15.124
+        },
+        {
+          "start": "2025-01-02",
+          "end": "2026-10-16",
+          "cached": false,
+          "days": 431,
+          "curve_stats": {
+            "total_return": 0.062832,
+            "annual": 0.036357,
+            "sharpe": 0.2816,
+            "mdd": -0.168514,
+            "days": 431
+          },
+          "result_stats": {
+            "total_return": 0.0628,
+            "annual_return": 0.0363,
+            "max_drawdown": -0.1685,
+            "sharpe": 0.28,
+            "sortino": 0.39,
+            "calmar": 0.22,
+            "win_rate": 0.4069,
+            "profit_factor": 1.63,
+            "n_trades": 204,
+            "avg_pnl": 0.0047,
+            "avg_win": 0.113,
+            "avg_loss": 0.0695,
+            "best": 0.8673,
+            "worst": -0.2265,
+            "median_pnl": -0.0128,
+            "avg_holding_days": 19.6,
+            "final_equity": 1062832.28,
+            "initial_capital": 1000000.0,
+            "avg_exposure": 0.9005,
+            "max_exposure": 1.0,
+            "mc_maxdd_p50": -0.8638,
+            "mc_maxdd_p95": -0.9813,
+            "execution": {
+              "buy_invalid_price": 0,
+              "buy_suspended": 0,
+              "buy_limit_up": 19,
+              "buy_no_slot": 73473,
+              "buy_cash": 0,
+              "buy_lot_size": 0,
+              "buy_same_day_reentry": 174,
+              "buy_exposure": 0,
+              "buy_score_filter": 0,
+              "sell_invalid_price": 0,
+              "sell_suspended": 0,
+              "sell_limit_down": 0,
+              "pending_exit": 0
+            },
+            "pending_exit_positions": 0,
+            "market_matrix_shape": [
+              431,
+              469
+            ],
+            "market_matrix_bytes": 9101427,
+            "timing_ms": {
+              "load_panel": 13858.2,
+              "signals_score": 359.7,
+              "matrix_build": 217.3,
+              "simulate": 661.1,
+              "statistics": 4.8,
+              "total": 15162.0
+            },
+            "panel_rows": 201573,
+            "panel_columns": 11,
+            "feature_columns": 146,
+            "full_feature_fallback": false,
+            "execution_backend": "polars_expr",
+            "selection": {
+              "strategy_matches": 90118,
+              "entry_candidates": 90118,
+              "entry_trigger_filtered": 0,
+              "entry_trigger_enabled": false
+            },
+            "shared_market_data": false,
+            "matrix_data_cache_hit": false,
+            "matrix_data_cache_status": "none",
+            "matrix_data_cache_timing_ms": {}
+          },
+          "factor_attribution": {
+            "factors": [
+              {
+                "factor": "uf_quality_value_defensive",
+                "win_mean": -0.12047,
+                "lose_mean": -0.122618,
+                "win_n": 83,
+                "lose_n": 121
+              },
+              {
+                "factor": "uf_cash_quality",
+                "win_mean": 6.076888,
+                "lose_mean": 6.623083,
+                "win_n": 83,
+                "lose_n": 121
+              }
+            ],
+            "n_win": 83,
+            "n_lose": 121
+          },
+          "elapsed_seconds": 15.608
+        }
+      ],
+      "result": {
+        "full": {
+          "total_return": 0.042169,
+          "annual": 0.012543,
+          "sharpe": 0.1615,
+          "mdd": -0.201274,
+          "days": 836
+        },
+        "validation_2025_2026": {
+          "total_return": 0.083438,
+          "annual": 0.0482,
+          "sharpe": 0.3407,
+          "mdd": -0.168514,
+          "days": 430
+        },
+        "rolling_1y": {
+          "windows": 585,
+          "positive_rate": 0.788,
+          "return_p05": -0.1324,
+          "return_median": 0.0793,
+          "return_worst": -0.1936,
+          "mdd_p05": -0.1685,
+          "mdd_worst": -0.1936
+        },
+        "recent_12m": {
+          "total_return": -0.094222,
+          "mdd": -0.168514
+        },
+        "discovery_2023_2024": {
+          "total_return": -0.019442,
+          "annual": -0.012142,
+          "sharpe": 0.0447,
+          "mdd": -0.201274,
+          "days": 406
+        }
+      }
+    }
+  },
+  "stress": {
+    "4x": {
+      "runs": [
+        {
+          "start": "2023-05-04",
+          "end": "2024-12-31",
+          "cached": false,
+          "days": 406,
+          "curve_stats": {
+            "total_return": -0.171319,
+            "annual": -0.110351,
+            "sharpe": -0.7046,
+            "mdd": -0.19339,
+            "days": 406
+          },
+          "result_stats": {
+            "total_return": -0.1713,
+            "annual_return": -0.1101,
+            "max_drawdown": -0.1934,
+            "sharpe": -0.7,
+            "sortino": -1.07,
+            "calmar": -0.57,
+            "win_rate": 0.42,
+            "profit_factor": 0.72,
+            "n_trades": 100,
+            "avg_pnl": -0.0186,
+            "avg_win": 0.048,
+            "avg_loss": 0.0668,
+            "best": 0.2124,
+            "worst": -0.2055,
+            "median_pnl": -0.0109,
+            "avg_holding_days": 18.2,
+            "final_equity": 828681.17,
+            "initial_capital": 1000000.0,
+            "avg_exposure": 0.4378,
+            "max_exposure": 0.9838,
+            "mc_maxdd_p50": -0.9002,
+            "mc_maxdd_p95": -0.9696,
+            "execution": {
+              "buy_invalid_price": 0,
+              "buy_suspended": 0,
+              "buy_limit_up": 7,
+              "buy_no_slot": 23998,
+              "buy_cash": 0,
+              "buy_lot_size": 0,
+              "buy_same_day_reentry": 40,
+              "buy_exposure": 0,
+              "buy_score_filter": 0,
+              "sell_invalid_price": 0,
+              "sell_suspended": 0,
+              "sell_limit_down": 0,
+              "pending_exit": 0
+            },
+            "pending_exit_positions": 0,
+            "market_matrix_shape": [
+              406,
+              467
+            ],
+            "market_matrix_bytes": 8536962,
+            "timing_ms": {
+              "load_panel": 14332.6,
+              "signals_score": 334.9,
+              "matrix_build": 213.5,
+              "simulate": 211.1,
+              "statistics": 2.3,
+              "total": 15155.0
+            },
+            "panel_rows": 188969,
+            "panel_columns": 11,
+            "feature_columns": 146,
+            "full_feature_fallback": false,
+            "execution_backend": "polars_expr",
+            "selection": {
+              "strategy_matches": 27962,
+              "entry_candidates": 27962,
+              "entry_trigger_filtered": 0,
+              "entry_trigger_enabled": false
+            },
+            "shared_market_data": false,
+            "matrix_data_cache_hit": false,
+            "matrix_data_cache_status": "none",
+            "matrix_data_cache_timing_ms": {}
+          },
+          "factor_attribution": {
+            "factors": [
+              {
+                "factor": "ext_alt_hs300_minrank_management_ocf_gm_min_rank",
+                "win_mean": 0.70937,
+                "lose_mean": 0.664726,
+                "win_n": 42,
+                "lose_n": 58
+              },
+              {
+                "factor": "uf_quality_value_defensive",
+                "win_mean": -0.32176,
+                "lose_mean": -0.283731,
+                "win_n": 42,
+                "lose_n": 58
+              },
+              {
+                "factor": "uf_cash_quality",
+                "win_mean": 2.233723,
+                "lose_mean": 1.875004,
+                "win_n": 42,
+                "lose_n": 58
+              }
+            ],
+            "n_win": 42,
+            "n_lose": 58
+          },
+          "elapsed_seconds": 15.585
+        },
+        {
+          "start": "2025-01-02",
+          "end": "2026-10-16",
+          "cached": false,
+          "days": 431,
+          "curve_stats": {
+            "total_return": 0.052085,
+            "annual": 0.030203,
+            "sharpe": 0.2629,
+            "mdd": -0.139181,
+            "days": 431
+          },
+          "result_stats": {
+            "total_return": 0.0521,
+            "annual_return": 0.0301,
+            "max_drawdown": -0.1392,
+            "sharpe": 0.26,
+            "sortino": 0.36,
+            "calmar": 0.22,
+            "win_rate": 0.4412,
+            "profit_factor": 1.4,
+            "n_trades": 204,
+            "avg_pnl": 0.004,
+            "avg_win": 0.0923,
+            "avg_loss": 0.0658,
+            "best": 0.4269,
+            "worst": -0.2055,
+            "median_pnl": -0.0081,
+            "avg_holding_days": 19.6,
+            "final_equity": 1052084.92,
+            "initial_capital": 1000000.0,
+            "avg_exposure": 0.9069,
+            "max_exposure": 0.9997,
+            "mc_maxdd_p50": -0.8077,
+            "mc_maxdd_p95": -0.9631,
+            "execution": {
+              "buy_invalid_price": 0,
+              "buy_suspended": 0,
+              "buy_limit_up": 19,
+              "buy_no_slot": 77385,
+              "buy_cash": 0,
+              "buy_lot_size": 0,
+              "buy_same_day_reentry": 172,
+              "buy_exposure": 0,
+              "buy_score_filter": 0,
+              "sell_invalid_price": 0,
+              "sell_suspended": 0,
+              "sell_limit_down": 0,
+              "pending_exit": 0
+            },
+            "pending_exit_positions": 0,
+            "market_matrix_shape": [
+              431,
+              469
+            ],
+            "market_matrix_bytes": 9101427,
+            "timing_ms": {
+              "load_panel": 13718.4,
+              "signals_score": 373.4,
+              "matrix_build": 220.0,
+              "simulate": 658.9,
+              "statistics": 4.6,
+              "total": 15038.0
+            },
+            "panel_rows": 201573,
+            "panel_columns": 11,
+            "feature_columns": 146,
+            "full_feature_fallback": false,
+            "execution_backend": "polars_expr",
+            "selection": {
+              "strategy_matches": 90118,
+              "entry_candidates": 90118,
+              "entry_trigger_filtered": 0,
+              "entry_trigger_enabled": false
+            },
+            "shared_market_data": false,
+            "matrix_data_cache_hit": false,
+            "matrix_data_cache_status": "none",
+            "matrix_data_cache_timing_ms": {}
+          },
+          "factor_attribution": {
+            "factors": [
+              {
+                "factor": "ext_alt_hs300_minrank_management_ocf_gm_min_rank",
+                "win_mean": 0.672642,
+                "lose_mean": 0.669284,
+                "win_n": 90,
+                "lose_n": 114
+              },
+              {
+                "factor": "uf_quality_value_defensive",
+                "win_mean": -0.325861,
+                "lose_mean": -0.328383,
+                "win_n": 90,
+                "lose_n": 114
+              },
+              {
+                "factor": "uf_cash_quality",
+                "win_mean": 2.486661,
+                "lose_mean": 6.393074,
+                "win_n": 90,
+                "lose_n": 114
+              }
+            ],
+            "n_win": 90,
+            "n_lose": 114
+          },
+          "elapsed_seconds": 15.489
+        }
+      ],
+      "result": {
+        "full": {
+          "total_return": -0.128157,
+          "annual": -0.040545,
+          "sharpe": -0.1826,
+          "mdd": -0.221179,
+          "days": 836
+        },
+        "validation_2025_2026": {
+          "total_return": 0.068815,
+          "annual": 0.039867,
+          "sharpe": 0.3196,
+          "mdd": -0.139181,
+          "days": 430
+        },
+        "rolling_1y": {
+          "windows": 585,
+          "positive_rate": 0.4222,
+          "return_p05": -0.1188,
+          "return_median": -0.0375,
+          "return_worst": -0.1402,
+          "mdd_p05": -0.1866,
+          "mdd_worst": -0.1866
+        },
+        "recent_12m": {
+          "total_return": 0.034486,
+          "mdd": -0.139181
+        },
+        "discovery_2023_2024": {
+          "total_return": -0.171319,
+          "annual": -0.110351,
+          "sharpe": -0.7046,
+          "mdd": -0.19339,
+          "days": 406
+        }
+      }
+    },
+    "5x": {
+      "runs": [
+        {
+          "start": "2023-05-04",
+          "end": "2024-12-31",
+          "cached": false,
+          "days": 406,
+          "curve_stats": {
+            "total_return": -0.188579,
+            "annual": -0.121926,
+            "sharpe": -0.7914,
+            "mdd": -0.204874,
+            "days": 406
+          },
+          "result_stats": {
+            "total_return": -0.1886,
+            "annual_return": -0.1216,
+            "max_drawdown": -0.2049,
+            "sharpe": -0.79,
+            "sortino": -1.19,
+            "calmar": -0.59,
+            "win_rate": 0.39,
+            "profit_factor": 0.77,
+            "n_trades": 100,
+            "avg_pnl": -0.0203,
+            "avg_win": 0.0498,
+            "avg_loss": 0.0651,
+            "best": 0.2103,
+            "worst": -0.2069,
+            "median_pnl": -0.0127,
+            "avg_holding_days": 18.2,
+            "final_equity": 811420.88,
+            "initial_capital": 1000000.0,
+            "avg_exposure": 0.4376,
+            "max_exposure": 0.9855,
+            "mc_maxdd_p50": -0.915,
+            "mc_maxdd_p95": -0.9743,
+            "execution": {
+              "buy_invalid_price": 0,
+              "buy_suspended": 0,
+              "buy_limit_up": 7,
+              "buy_no_slot": 23998,
+              "buy_cash": 0,
+              "buy_lot_size": 0,
+              "buy_same_day_reentry": 40,
+              "buy_exposure": 0,
+              "buy_score_filter": 0,
+              "sell_invalid_price": 0,
+              "sell_suspended": 0,
+              "sell_limit_down": 0,
+              "pending_exit": 0
+            },
+            "pending_exit_positions": 0,
+            "market_matrix_shape": [
+              406,
+              467
+            ],
+            "market_matrix_bytes": 8536962,
+            "timing_ms": {
+              "load_panel": 15782.8,
+              "signals_score": 435.0,
+              "matrix_build": 314.8,
+              "simulate": 308.7,
+              "statistics": 2.3,
+              "total": 16907.8
+            },
+            "panel_rows": 188969,
+            "panel_columns": 11,
+            "feature_columns": 146,
+            "full_feature_fallback": false,
+            "execution_backend": "polars_expr",
+            "selection": {
+              "strategy_matches": 27962,
+              "entry_candidates": 27962,
+              "entry_trigger_filtered": 0,
+              "entry_trigger_enabled": false
+            },
+            "shared_market_data": false,
+            "matrix_data_cache_hit": false,
+            "matrix_data_cache_status": "none",
+            "matrix_data_cache_timing_ms": {}
+          },
+          "factor_attribution": {
+            "factors": [
+              {
+                "factor": "ext_alt_hs300_minrank_management_ocf_gm_min_rank",
+                "win_mean": 0.715895,
+                "lose_mean": 0.66275,
+                "win_n": 39,
+                "lose_n": 61
+              },
+              {
+                "factor": "uf_quality_value_defensive",
+                "win_mean": -0.328345,
+                "lose_mean": -0.281391,
+                "win_n": 39,
+                "lose_n": 61
+              },
+              {
+                "factor": "uf_cash_quality",
+                "win_mean": 2.299977,
+                "lose_mean": 1.850287,
+                "win_n": 39,
+                "lose_n": 61
+              }
+            ],
+            "n_win": 39,
+            "n_lose": 61
+          },
+          "elapsed_seconds": 17.431
+        },
+        {
+          "start": "2025-01-02",
+          "end": "2026-10-16",
+          "cached": false,
+          "days": 431,
+          "curve_stats": {
+            "total_return": 0.019402,
+            "annual": 0.011325,
+            "sharpe": 0.1512,
+            "mdd": -0.143219,
+            "days": 431
+          },
+          "result_stats": {
+            "total_return": 0.0194,
+            "annual_return": 0.0113,
+            "max_drawdown": -0.1432,
+            "sharpe": 0.15,
+            "sortino": 0.2,
+            "calmar": 0.08,
+            "win_rate": 0.4363,
+            "profit_factor": 1.37,
+            "n_trades": 204,
+            "avg_pnl": 0.0022,
+            "avg_win": 0.0914,
+            "avg_loss": 0.0668,
+            "best": 0.4244,
+            "worst": -0.2069,
+            "median_pnl": -0.0099,
+            "avg_holding_days": 19.6,
+            "final_equity": 1019402.24,
+            "initial_capital": 1000000.0,
+            "avg_exposure": 0.907,
+            "max_exposure": 0.9999,
+            "mc_maxdd_p50": -0.8362,
+            "mc_maxdd_p95": -0.9714,
+            "execution": {
+              "buy_invalid_price": 0,
+              "buy_suspended": 0,
+              "buy_limit_up": 19,
+              "buy_no_slot": 77385,
+              "buy_cash": 0,
+              "buy_lot_size": 0,
+              "buy_same_day_reentry": 172,
+              "buy_exposure": 0,
+              "buy_score_filter": 0,
+              "sell_invalid_price": 0,
+              "sell_suspended": 0,
+              "sell_limit_down": 0,
+              "pending_exit": 0
+            },
+            "pending_exit_positions": 0,
+            "market_matrix_shape": [
+              431,
+              469
+            ],
+            "market_matrix_bytes": 9101427,
+            "timing_ms": {
+              "load_panel": 17280.4,
+              "signals_score": 486.2,
+              "matrix_build": 367.0,
+              "simulate": 1109.2,
+              "statistics": 6.3,
+              "total": 19320.8
+            },
+            "panel_rows": 201573,
+            "panel_columns": 11,
+            "feature_columns": 146,
+            "full_feature_fallback": false,
+            "execution_backend": "polars_expr",
+            "selection": {
+              "strategy_matches": 90118,
+              "entry_candidates": 90118,
+              "entry_trigger_filtered": 0,
+              "entry_trigger_enabled": false
+            },
+            "shared_market_data": false,
+            "matrix_data_cache_hit": false,
+            "matrix_data_cache_status": "none",
+            "matrix_data_cache_timing_ms": {}
+          },
+          "factor_attribution": {
+            "factors": [
+              {
+                "factor": "ext_alt_hs300_minrank_management_ocf_gm_min_rank",
+                "win_mean": 0.672194,
+                "lose_mean": 0.66966,
+                "win_n": 89,
+                "lose_n": 115
+              },
+              {
+                "factor": "uf_quality_value_defensive",
+                "win_mean": -0.322674,
+                "lose_mean": -0.330827,
+                "win_n": 89,
+                "lose_n": 115
+              },
+              {
+                "factor": "uf_cash_quality",
+                "win_mean": 2.496497,
+                "lose_mean": 6.351493,
+                "win_n": 89,
+                "lose_n": 115
+              }
+            ],
+            "n_win": 89,
+            "n_lose": 115
+          },
+          "elapsed_seconds": 19.857
+        }
+      ],
+      "result": {
+        "full": {
+          "total_return": -0.172836,
+          "annual": -0.055658,
+          "sharpe": -0.2824,
+          "mdd": -0.240939,
+          "days": 836
+        },
+        "validation_2025_2026": {
+          "total_return": 0.036336,
+          "annual": 0.021187,
+          "sharpe": 0.2098,
+          "mdd": -0.143219,
+          "days": 430
+        },
+        "rolling_1y": {
+          "windows": 585,
+          "positive_rate": 0.3709,
+          "return_p05": -0.1361,
+          "return_median": -0.0477,
+          "return_worst": -0.1587,
+          "mdd_p05": -0.1964,
+          "mdd_worst": -0.1964
+        },
+        "recent_12m": {
+          "total_return": 0.018236,
+          "mdd": -0.143219
+        },
+        "discovery_2023_2024": {
+          "total_return": -0.188579,
+          "annual": -0.121926,
+          "sharpe": -0.7914,
+          "mdd": -0.204874,
+          "days": 406
+        }
+      }
+    }
+  },
+  "concentration": {
+    "full": {
+      "n_trades": 304,
+      "distinct_symbols": 69,
+      "total_pnl_amount": -60782.9,
+      "gross_profit": 1041882.61,
+      "gross_loss": 1102665.51,
+      "net_to_gross": -0.0583,
+      "top1_symbol": {
+        "symbol": "300308.SZ",
+        "name": "中际旭创",
+        "n_trades": 5,
+        "pnl_amount": 65512.82,
+        "wins": 4
+      },
+      "top3_symbols": [
+        {
+          "symbol": "300308.SZ",
+          "name": "中际旭创",
+          "n_trades": 5,
+          "pnl_amount": 65512.82,
+          "wins": 4
+        },
+        {
+          "symbol": "603501.SH",
+          "name": "豪威集团",
+          "n_trades": 6,
+          "pnl_amount": 51618.44,
+          "wins": 5
+        },
+        {
+          "symbol": "300502.SZ",
+          "name": "新易盛",
+          "n_trades": 3,
+          "pnl_amount": 43400.990000000005,
+          "wins": 3
+        }
+      ],
+      "top5_symbols": [
+        {
+          "symbol": "300308.SZ",
+          "name": "中际旭创",
+          "n_trades": 5,
+          "pnl_amount": 65512.82,
+          "wins": 4
+        },
+        {
+          "symbol": "603501.SH",
+          "name": "豪威集团",
+          "n_trades": 6,
+          "pnl_amount": 51618.44,
+          "wins": 5
+        },
+        {
+          "symbol": "300502.SZ",
+          "name": "新易盛",
+          "n_trades": 3,
+          "pnl_amount": 43400.990000000005,
+          "wins": 3
+        },
+        {
+          "symbol": "600176.SH",
+          "name": "XD中国巨",
+          "n_trades": 3,
+          "pnl_amount": 41446.08,
+          "wins": 2
+        },
+        {
+          "symbol": "002001.SZ",
+          "name": "新 和 成",
+          "n_trades": 10,
+          "pnl_amount": 38226.22,
+          "wins": 6
+        }
+      ],
+      "worst_symbols": [
+        {
+          "symbol": "603893.SH",
+          "name": "瑞芯微",
+          "n_trades": 5,
+          "pnl_amount": -33725.39,
+          "wins": 0
+        },
+        {
+          "symbol": "603392.SH",
+          "name": "万泰生物",
+          "n_trades": 3,
+          "pnl_amount": -32462.43,
+          "wins": 0
+        },
+        {
+          "symbol": "601808.SH",
+          "name": "中海油服",
+          "n_trades": 12,
+          "pnl_amount": -28668.559999999998,
+          "wins": 5
+        },
+        {
+          "symbol": "601865.SH",
+          "name": "福莱特",
+          "n_trades": 2,
+          "pnl_amount": -28581.739999999998,
+          "wins": 0
+        },
+        {
+          "symbol": "605117.SH",
+          "name": "德业股份",
+          "n_trades": 7,
+          "pnl_amount": -25687.65,
+          "wins": 2
+        }
+      ],
+      "top1_net_share": 65512.82,
+      "top3_net_share": 160532.25,
+      "top5_net_share": 240204.55,
+      "top1_gross_share": 0.062879,
+      "top3_gross_share": 0.154079,
+      "top5_gross_share": 0.230549,
+      "max_symbol_loss_abs": 33725.39,
+      "max_symbol_loss_to_gross": 0.03237,
+      "industries": [
+        {
+          "industry": "通信",
+          "gross_profit": 238718.21000000002
+        },
+        {
+          "industry": "有色金属",
+          "gross_profit": 160031.4
+        },
+        {
+          "industry": "电子",
+          "gross_profit": 138789.86000000004
+        },
+        {
+          "industry": "医药生物",
+          "gross_profit": 82585.44000000002
+        },
+        {
+          "industry": "公用事业",
+          "gross_profit": 60580.50000000001
+        },
+        {
+          "industry": "电力设备",
+          "gross_profit": 56575.23
+        },
+        {
+          "industry": "食品饮料",
+          "gross_profit": 55334.51
+        },
+        {
+          "industry": "基础化工",
+          "gross_profit": 51916.770000000004
+        },
+        {
+          "industry": "建筑材料",
+          "gross_profit": 47722.11
+        },
+        {
+          "industry": "交通运输",
+          "gross_profit": 35582.780000000006
+        },
+        {
+          "industry": "石油石化",
+          "gross_profit": 34742.44
+        },
+        {
+          "industry": "传媒",
+          "gross_profit": 27269.64
+        },
+        {
+          "industry": "计算机",
+          "gross_profit": 14429.75
+        },
+        {
+          "industry": "农林牧渔",
+          "gross_profit": 12172.85
+        },
+        {
+          "industry": "煤炭",
+          "gross_profit": 10869.129999999997
+        },
+        {
+          "industry": "美容护理",
+          "gross_profit": 7746.08
+        },
+        {
+          "industry": "商贸零售",
+          "gross_profit": 3824.23
+        },
+        {
+          "industry": "纺织服饰",
+          "gross_profit": 2991.68
+        }
+      ],
+      "top_industry_gross_share": 0.229122
+    },
+    "validation": {
+      "n_trades": 204,
+      "distinct_symbols": 53,
+      "total_pnl_amount": 95263.5,
+      "gross_profit": 863400.7,
+      "gross_loss": 768137.2,
+      "net_to_gross": 0.1103,
+      "top1_symbol": {
+        "symbol": "300308.SZ",
+        "name": "中际旭创",
+        "n_trades": 4,
+        "pnl_amount": 46315.0,
+        "wins": 3
+      },
+      "top3_symbols": [
+        {
+          "symbol": "300308.SZ",
+          "name": "中际旭创",
+          "n_trades": 4,
+          "pnl_amount": 46315.0,
+          "wins": 3
+        },
+        {
+          "symbol": "300502.SZ",
+          "name": "新易盛",
+          "n_trades": 3,
+          "pnl_amount": 43400.990000000005,
+          "wins": 3
+        },
+        {
+          "symbol": "600176.SH",
+          "name": "XD中国巨",
+          "n_trades": 3,
+          "pnl_amount": 41446.08,
+          "wins": 2
+        }
+      ],
+      "top5_symbols": [
+        {
+          "symbol": "300308.SZ",
+          "name": "中际旭创",
+          "n_trades": 4,
+          "pnl_amount": 46315.0,
+          "wins": 3
+        },
+        {
+          "symbol": "300502.SZ",
+          "name": "新易盛",
+          "n_trades": 3,
+          "pnl_amount": 43400.990000000005,
+          "wins": 3
+        },
+        {
+          "symbol": "600176.SH",
+          "name": "XD中国巨",
+          "n_trades": 3,
+          "pnl_amount": 41446.08,
+          "wins": 2
+        },
+        {
+          "symbol": "002001.SZ",
+          "name": "新 和 成",
+          "n_trades": 9,
+          "pnl_amount": 37228.43000000001,
+          "wins": 5
+        },
+        {
+          "symbol": "603501.SH",
+          "name": "豪威集团",
+          "n_trades": 3,
+          "pnl_amount": 28306.4,
+          "wins": 2
+        }
+      ],
+      "worst_symbols": [
+        {
+          "symbol": "603893.SH",
+          "name": "瑞芯微",
+          "n_trades": 5,
+          "pnl_amount": -33725.39,
+          "wins": 0
+        },
+        {
+          "symbol": "605117.SH",
+          "name": "德业股份",
+          "n_trades": 6,
+          "pnl_amount": -26608.590000000004,
+          "wins": 1
+        },
+        {
+          "symbol": "600027.SH",
+          "name": "华电国际",
+          "n_trades": 3,
+          "pnl_amount": -22189.53,
+          "wins": 0
+        },
+        {
+          "symbol": "603288.SH",
+          "name": "海天味业",
+          "n_trades": 14,
+          "pnl_amount": -20375.96,
+          "wins": 5
+        },
+        {
+          "symbol": "601111.SH",
+          "name": "中国国航",
+          "n_trades": 3,
+          "pnl_amount": -19410.11,
+          "wins": 0
+        }
+      ],
+      "top1_net_share": 0.486178,
+      "top3_net_share": 1.376834,
+      "top5_net_share": 2.064767,
+      "top1_gross_share": 0.053643,
+      "top3_gross_share": 0.151913,
+      "top5_gross_share": 0.227816,
+      "max_symbol_loss_abs": 33725.39,
+      "max_symbol_loss_to_gross": 0.039061,
+      "industries": [
+        {
+          "industry": "通信",
+          "gross_profit": 200971.95
+        },
+        {
+          "industry": "有色金属",
+          "gross_profit": 159690.96
+        },
+        {
+          "industry": "电子",
+          "gross_profit": 85539.61
+        },
+        {
+          "industry": "医药生物",
+          "gross_profit": 81587.65000000001
+        },
+        {
+          "industry": "食品饮料",
+          "gross_profit": 49508.76
+        },
+        {
+          "industry": "基础化工",
+          "gross_profit": 47878.200000000004
+        },
+        {
+          "industry": "建筑材料",
+          "gross_profit": 47722.11
+        },
+        {
+          "industry": "电力设备",
+          "gross_profit": 46787.3
+        },
+        {
+          "industry": "公用事业",
+          "gross_profit": 40903.880000000005
+        },
+        {
+          "industry": "传媒",
+          "gross_profit": 27269.64
+        },
+        {
+          "industry": "交通运输",
+          "gross_profit": 25350.73
+        },
+        {
+          "industry": "计算机",
+          "gross_profit": 12383.21
+        },
+        {
+          "industry": "农林牧渔",
+          "gross_profit": 12172.85
+        },
+        {
+          "industry": "石油石化",
+          "gross_profit": 9194.67
+        },
+        {
+          "industry": "美容护理",
+          "gross_profit": 7746.08
+        },
+        {
+          "industry": "煤炭",
+          "gross_profit": 4952.16
+        },
+        {
+          "industry": "商贸零售",
+          "gross_profit": 3740.94
+        }
+      ],
+      "top_industry_gross_share": 0.232768
+    },
+    "validation_positive_symbols": 27,
+    "per_symbol_full": [
+      {
+        "symbol": "300308.SZ",
+        "name": "中际旭创",
+        "n_trades": 5,
+        "pnl_amount": 65512.82,
+        "wins": 4
+      },
+      {
+        "symbol": "603501.SH",
+        "name": "豪威集团",
+        "n_trades": 6,
+        "pnl_amount": 51618.44,
+        "wins": 5
+      },
+      {
+        "symbol": "300502.SZ",
+        "name": "新易盛",
+        "n_trades": 3,
+        "pnl_amount": 43400.990000000005,
+        "wins": 3
+      },
+      {
+        "symbol": "600176.SH",
+        "name": "XD中国巨",
+        "n_trades": 3,
+        "pnl_amount": 41446.08,
+        "wins": 2
+      },
+      {
+        "symbol": "002001.SZ",
+        "name": "新 和 成",
+        "n_trades": 10,
+        "pnl_amount": 38226.22,
+        "wins": 6
+      },
+      {
+        "symbol": "300661.SZ",
+        "name": "圣邦股份",
+        "n_trades": 5,
+        "pnl_amount": 27893.5,
+        "wins": 3
+      },
+      {
+        "symbol": "601899.SH",
+        "name": "紫金矿业",
+        "n_trades": 3,
+        "pnl_amount": 18423.170000000002,
+        "wins": 2
+      },
+      {
+        "symbol": "000807.SZ",
+        "name": "云铝股份",
+        "n_trades": 4,
+        "pnl_amount": 18011.87,
+        "wins": 2
+      },
+      {
+        "symbol": "300274.SZ",
+        "name": "阳光电源",
+        "n_trades": 3,
+        "pnl_amount": 15368.97,
+        "wins": 2
+      },
+      {
+        "symbol": "002463.SZ",
+        "name": "沪电股份",
+        "n_trades": 5,
+        "pnl_amount": 15318.05,
+        "wins": 3
+      },
+      {
+        "symbol": "600989.SH",
+        "name": "宝丰能源",
+        "n_trades": 10,
+        "pnl_amount": 14813.490000000002,
+        "wins": 7
+      },
+      {
+        "symbol": "000725.SZ",
+        "name": "京东方Ａ",
+        "n_trades": 3,
+        "pnl_amount": 14352.150000000001,
+        "wins": 2
+      },
+      {
+        "symbol": "002532.SZ",
+        "name": "天山铝业",
+        "n_trades": 2,
+        "pnl_amount": 14293.75,
+        "wins": 1
+      },
+      {
+        "symbol": "300251.SZ",
+        "name": "光线传媒",
+        "n_trades": 3,
+        "pnl_amount": 13859.09,
+        "wins": 2
+      },
+      {
+        "symbol": "002648.SZ",
+        "name": "卫星化学",
+        "n_trades": 3,
+        "pnl_amount": 12687.59,
+        "wins": 3
+      },
+      {
+        "symbol": "002415.SZ",
+        "name": "海康威视",
+        "n_trades": 2,
+        "pnl_amount": 10881.41,
+        "wins": 1
+      },
+      {
+        "symbol": "000568.SZ",
+        "name": "泸州老窖",
+        "n_trades": 2,
+        "pnl_amount": 10113.5,
+        "wins": 1
+      },
+      {
+        "symbol": "002714.SZ",
+        "name": "牧原股份",
+        "n_trades": 3,
+        "pnl_amount": 9535.19,
+        "wins": 2
+      },
+      {
+        "symbol": "600025.SH",
+        "name": "华能水电",
+        "n_trades": 6,
+        "pnl_amount": 9221.89,
+        "wins": 4
+      },
+      {
+        "symbol": "300628.SZ",
+        "name": "亿联网络",
+        "n_trades": 16,
+        "pnl_amount": 7164.469999999998,
+        "wins": 9
+      },
+      {
+        "symbol": "600900.SH",
+        "name": "长江电力",
+        "n_trades": 12,
+        "pnl_amount": 4965.0599999999995,
+        "wins": 6
+      },
+      {
+        "symbol": "300832.SZ",
+        "name": "新产业",
+        "n_trades": 4,
+        "pnl_amount": 4342.429999999999,
+        "wins": 2
+      },
+      {
+        "symbol": "002493.SZ",
+        "name": "荣盛石化",
+        "n_trades": 1,
+        "pnl_amount": 3859.08,
+        "wins": 1
+      },
+      {
+        "symbol": "688303.SH",
+        "name": "大全能源",
+        "n_trades": 3,
+        "pnl_amount": 3190.39,
+        "wins": 2
+      },
+      {
+        "symbol": "300979.SZ",
+        "name": "华利集团",
+        "n_trades": 1,
+        "pnl_amount": 2991.68,
+        "wins": 1
+      },
+      {
+        "symbol": "600795.SH",
+        "name": "国电电力",
+        "n_trades": 5,
+        "pnl_amount": 2568.1999999999994,
+        "wins": 3
+      },
+      {
+        "symbol": "601006.SH",
+        "name": "大秦铁路",
+        "n_trades": 3,
+        "pnl_amount": 794.2300000000005,
+        "wins": 2
+      },
+      {
+        "symbol": "300750.SZ",
+        "name": "宁德时代",
+        "n_trades": 2,
+        "pnl_amount": 579.49,
+        "wins": 1
+      },
+      {
+        "symbol": "605499.SH",
+        "name": "东鹏饮料",
+        "n_trades": 1,
+        "pnl_amount": 244.9,
+        "wins": 1
+      },
+      {
+        "symbol": "600406.SH",
+        "name": "国电南瑞",
+        "n_trades": 1,
+        "pnl_amount": -694.0,
+        "wins": 0
+      },
+      {
+        "symbol": "601857.SH",
+        "name": "中国石油",
+        "n_trades": 1,
+        "pnl_amount": -1107.45,
+        "wins": 0
+      },
+      {
+        "symbol": "603019.SH",
+        "name": "中科曙光",
+        "n_trades": 2,
+        "pnl_amount": -1528.48,
+        "wins": 1
+      },
+      {
+        "symbol": "600377.SH",
+        "name": "宁沪高速",
+        "n_trades": 10,
+        "pnl_amount": -1531.0,
+        "wins": 6
+      },
+      {
+        "symbol": "000100.SZ",
+        "name": "TCL科技",
+        "n_trades": 2,
+        "pnl_amount": -2146.99,
+        "wins": 1
+      },
+      {
+        "symbol": "601088.SH",
+        "name": "中国神华",
+        "n_trades": 5,
+        "pnl_amount": -2387.27,
+        "wins": 3
+      },
+      {
+        "symbol": "688169.SH",
+        "name": "石头科技",
+        "n_trades": 1,
+        "pnl_amount": -3229.68,
+        "wins": 0
+      },
+      {
+        "symbol": "600115.SH",
+        "name": "中国东航",
+        "n_trades": 1,
+        "pnl_amount": -3866.52,
+        "wins": 0
+      },
+      {
+        "symbol": "600011.SH",
+        "name": "华能国际",
+        "n_trades": 1,
+        "pnl_amount": -4589.63,
+        "wins": 0
+      },
+      {
+        "symbol": "300223.SZ",
+        "name": "君正股份",
+        "n_trades": 1,
+        "pnl_amount": -4954.18,
+        "wins": 0
+      },
+      {
+        "symbol": "600029.SH",
+        "name": "南方航空",
+        "n_trades": 1,
+        "pnl_amount": -5288.71,
+        "wins": 0
+      },
+      {
+        "symbol": "601888.SH",
+        "name": "中国中免",
+        "n_trades": 4,
+        "pnl_amount": -6160.919999999998,
+        "wins": 3
+      },
+      {
+        "symbol": "600219.SH",
+        "name": "南山铝业",
+        "n_trades": 9,
+        "pnl_amount": -8030.969999999999,
+        "wins": 5
+      },
+      {
+        "symbol": "600938.SH",
+        "name": "XD中国海",
+        "n_trades": 9,
+        "pnl_amount": -8448.5,
+        "wins": 3
+      },
+      {
+        "symbol": "002938.SZ",
+        "name": "鹏鼎控股",
+        "n_trades": 1,
+        "pnl_amount": -8855.21,
+        "wins": 0
+      },
+      {
+        "symbol": "300394.SZ",
+        "name": "天孚通信",
+        "n_trades": 5,
+        "pnl_amount": -9388.749999999996,
+        "wins": 2
+      },
+      {
+        "symbol": "601898.SH",
+        "name": "中煤能源",
+        "n_trades": 4,
+        "pnl_amount": -9539.12,
+        "wins": 1
+      },
+      {
+        "symbol": "688036.SH",
+        "name": "传音控股",
+        "n_trades": 1,
+        "pnl_amount": -9804.56,
+        "wins": 0
+      },
+      {
+        "symbol": "688041.SH",
+        "name": "海光信息",
+        "n_trades": 1,
+        "pnl_amount": -11482.63,
+        "wins": 0
+      },
+      {
+        "symbol": "600023.SH",
+        "name": "浙能电力",
+        "n_trades": 4,
+        "pnl_amount": -12781.000000000002,
+        "wins": 0
+      },
+      {
+        "symbol": "002466.SZ",
+        "name": "天齐锂业",
+        "n_trades": 3,
+        "pnl_amount": -13140.380000000001,
+        "wins": 0
+      },
+      {
+        "symbol": "001289.SZ",
+        "name": "龙源电力",
+        "n_trades": 6,
+        "pnl_amount": -13662.869999999999,
+        "wins": 1
+      },
+      {
+        "symbol": "001391.SZ",
+        "name": "国货航",
+        "n_trades": 6,
+        "pnl_amount": -13959.79,
+        "wins": 0
+      },
+      {
+        "symbol": "000975.SZ",
+        "name": "山金国际",
+        "n_trades": 8,
+        "pnl_amount": -15050.170000000006,
+        "wins": 3
+      },
+      {
+        "symbol": "600426.SH",
+        "name": "华鲁恒升",
+        "n_trades": 2,
+        "pnl_amount": -16644.22,
+        "wins": 0
+      },
+      {
+        "symbol": "600160.SH",
+        "name": "巨化股份",
+        "n_trades": 3,
+        "pnl_amount": -16951.440000000002,
+        "wins": 1
+      },
+      {
+        "symbol": "000786.SZ",
+        "name": "北新建材",
+        "n_trades": 2,
+        "pnl_amount": -17260.16,
+        "wins": 0
+      },
+      {
+        "symbol": "300896.SZ",
+        "name": "爱美客",
+        "n_trades": 7,
+        "pnl_amount": -19134.84,
+        "wins": 2
+      },
+      {
+        "symbol": "601021.SH",
+        "name": "春秋航空",
+        "n_trades": 5,
+        "pnl_amount": -19211.22,
+        "wins": 1
+      },
+      {
+        "symbol": "601111.SH",
+        "name": "中国国航",
+        "n_trades": 3,
+        "pnl_amount": -19410.11,
+        "wins": 0
+      },
+      {
+        "symbol": "601816.SH",
+        "name": "京沪高铁",
+        "n_trades": 9,
+        "pnl_amount": -19898.33,
+        "wins": 2
+      },
+      {
+        "symbol": "603288.SH",
+        "name": "海天味业",
+        "n_trades": 18,
+        "pnl_amount": -20637.189999999995,
+        "wins": 7
+      },
+      {
+        "symbol": "002756.SZ",
+        "name": "永兴材料",
+        "n_trades": 3,
+        "pnl_amount": -22052.9,
+        "wins": 1
+      },
+      {
+        "symbol": "600027.SH",
+        "name": "华电国际",
+        "n_trades": 3,
+        "pnl_amount": -22189.53,
+        "wins": 0
+      },
+      {
+        "symbol": "603806.SH",
+        "name": "福斯特",
+        "n_trades": 4,
+        "pnl_amount": -22316.510000000002,
+        "wins": 2
+      },
+      {
+        "symbol": "605117.SH",
+        "name": "德业股份",
+        "n_trades": 7,
+        "pnl_amount": -25687.65,
+        "wins": 2
+      },
+      {
+        "symbol": "601865.SH",
+        "name": "福莱特",
+        "n_trades": 2,
+        "pnl_amount": -28581.739999999998,
+        "wins": 0
+      },
+      {
+        "symbol": "601808.SH",
+        "name": "中海油服",
+        "n_trades": 12,
+        "pnl_amount": -28668.559999999998,
+        "wins": 5
+      },
+      {
+        "symbol": "603392.SH",
+        "name": "万泰生物",
+        "n_trades": 3,
+        "pnl_amount": -32462.43,
+        "wins": 0
+      },
+      {
+        "symbol": "603893.SH",
+        "name": "瑞芯微",
+        "n_trades": 5,
+        "pnl_amount": -33725.39,
+        "wins": 0
+      }
+    ]
+  },
+  "decision": {
+    "D1": true,
+    "D2": true,
+    "D3": true,
+    "D4": true,
+    "I1": true,
+    "I2": true,
+    "G1": false,
+    "G2": true,
+    "G3": true,
+    "G4": false,
+    "G5": true,
+    "G6": false,
+    "G7": true,
+    "G8": false,
+    "G9": false,
+    "C1": true,
+    "C2": false,
+    "C3": false,
+    "C4": false,
+    "C5": true,
+    "C6": true,
+    "C7": true,
+    "all_pass": false
+  },
+  "caveats": [
+    "The gate blocks new entries only and cannot prevent losses on positions already open.",
+    "The 200-day rule is a fixed prior rather than an optimized parameter and may whipsaw near the average.",
+    "The gate is date-constant and has no cross-sectional alpha interpretation.",
+    "Conditional discovery IC has only several gate-on month ends and therefore low statistical power.",
+    "The underlying R253 quality factor retains financial-snapshot, current-industry and concentration risks.",
+    "This is another attempt in the same quality family, so multiple-comparison risk remains.",
+    "The full curve is stitched from two system-engine segments; segment boundaries can reset an open position.",
+    "Trade P&L shares are contribution diagnostics from two segments each starting at 1,000,000 notional.",
+    "Passing every gate would justify paper-trading validation, not production deployment."
+  ]
+}
