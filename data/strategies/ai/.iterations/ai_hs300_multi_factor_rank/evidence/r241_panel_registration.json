@@ -1,0 +1,91 @@
+{
+    "round": "R241",
+    "captured_at": "2026-10-20T00:20:54.246783+00:00",
+    "api_base": "http://127.0.0.1:3018",
+    "reload": {
+        "method": "POST",
+        "endpoint": "/api/strategies/reload",
+        "ok": true,
+        "count": 114
+    },
+    "factors": {
+        "endpoint": "/api/factors",
+        "count": 210,
+        "expected_scoring_factor_count": 5,
+        "missing_scoring_factors": [],
+        "registered": [
+            {
+                "id": "ext_alt_hs300_gross_margin_yoy_improvement_q",
+                "label": "HS300另类因子·毛利率单季同比改善(高好)",
+                "group": "扩展数据",
+                "kind": "base",
+                "version": 1,
+                "formula": "扩展表「HS300另类因子」字段 gross_margin_yoy_improvement_q (时序·按交易日对齐)",
+                "direction": "none",
+                "pit": false
+            },
+            {
+                "id": "ext_alt_hs300_ocf_margin_4q",
+                "label": "HS300另类因子·TTM经营现金流/营收(高好)",
+                "group": "扩展数据",
+                "kind": "base",
+                "version": 1,
+                "formula": "扩展表「HS300另类因子」字段 ocf_margin_4q (时序·按交易日对齐)",
+                "direction": "none",
+                "pit": false
+            },
+            {
+                "id": "ext_alt_hs300_sga_ratio_4q_low",
+                "label": "HS300另类因子·销售+管理费用/营收4季费用率反向",
+                "group": "扩展数据",
+                "kind": "base",
+                "version": 1,
+                "formula": "扩展表「HS300另类因子」字段 sga_ratio_4q_low (时序·按交易日对齐)",
+                "direction": "none",
+                "pit": false
+            },
+            {
+                "id": "uf_cash_quality",
+                "label": "现金质量",
+                "group": "财务",
+                "kind": "custom",
+                "version": 1,
+                "formula": "ocf_ni - accrual",
+                "direction": "high",
+                "pit": false
+            },
+            {
+                "id": "uf_quality_value_defensive",
+                "label": "质量价值防守",
+                "group": "财务",
+                "kind": "custom",
+                "version": 1,
+                "formula": "roe_latest / (100 * pb_latest) - debt_ratio_latest / 100",
+                "direction": "high",
+                "pit": false
+            }
+        ]
+    },
+    "strategies": {
+        "endpoint": "/api/strategies?include_research=true",
+        "count": 175,
+        "load_error_count": 0,
+        "load_errors": [],
+        "audited_strategy": {
+            "id": "ai_hs300_sga_ocf_gm_trend_composite_h20_sl20",
+            "name": "HS300非金融成本现金趋势复合",
+            "research_only": true,
+            "scoring": {
+                "ext_alt_hs300_sga_ratio_4q_low": 0.15,
+                "ext_alt_hs300_ocf_margin_4q": 0.15,
+                "ext_alt_hs300_gross_margin_yoy_improvement_q": 0.15,
+                "uf_quality_value_defensive": 0.3,
+                "uf_cash_quality": 0.25
+            },
+            "stop_loss": -0.2,
+            "max_hold_days": 20,
+            "limit": 30
+        }
+    },
+    "note": "R241 audits an existing strategy; no factor or strategy id was introduced in this round."
+}

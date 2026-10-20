@@ -1,0 +1,6418 @@
+{
+  "purpose": "R241 concentration audit of the R232 three-factor composite",
+  "preregistration": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r241_preregistration.json",
+  "strategy": "ai_hs300_sga_ocf_gm_trend_composite_h20_sl20",
+  "execution": {
+    "engine": "StrategyBacktestService",
+    "matching": "open_t+1",
+    "max_positions": 10,
+    "holding_days": 20,
+    "stop_loss": -0.2,
+    "cost": "3x baseline"
+  },
+  "runs": [
+    {
+      "label": "discovery",
+      "start": "2022-07-01",
+      "end": "2024-12-31",
+      "stats": {
+        "total_return": -0.2085,
+        "annual_return": -0.0922,
+        "max_drawdown": -0.4327,
+        "sharpe": -0.32,
+        "sortino": -0.49,
+        "calmar": -0.21,
+        "win_rate": 0.3955,
+        "profit_factor": 1.33,
+        "n_trades": 311,
+        "avg_pnl": -0.0057,
+        "avg_win": 0.0988,
+        "avg_loss": 0.0741,
+        "best": 0.9923,
+        "worst": -0.3476,
+        "median_pnl": -0.0185,
+        "avg_holding_days": 19.5,
+        "final_equity": 791464.65,
+        "initial_capital": 1000000.0,
+        "avg_exposure": 0.9554,
+        "max_exposure": 0.9947,
+        "mc_maxdd_p50": -0.9912,
+        "mc_maxdd_p95": -0.9995,
+        "execution": {
+          "buy_invalid_price": 0,
+          "buy_suspended": 0,
+          "buy_limit_up": 15,
+          "buy_no_slot": 111611,
+          "buy_cash": 0,
+          "buy_lot_size": 0,
+          "buy_same_day_reentry": 301,
+          "buy_exposure": 0,
+          "buy_score_filter": 0,
+          "sell_invalid_price": 0,
+          "sell_suspended": 1,
+          "sell_limit_down": 0,
+          "pending_exit": 1
+        },
+        "pending_exit_positions": 1,
+        "market_matrix_shape": [
+          609,
+          467
+        ],
+        "market_matrix_bytes": 12805443,
+        "timing_ms": {
+          "load_panel": 12138.0,
+          "signals_score": 438.6,
+          "matrix_build": 332.2,
+          "simulate": 1044.9,
+          "statistics": 6.6,
+          "total": 14121.1
+        },
+        "panel_rows": 282735,
+        "panel_columns": 11,
+        "feature_columns": 133,
+        "full_feature_fallback": false,
+        "execution_backend": "polars_expr",
+        "selection": {
+          "strategy_matches": 146520,
+          "entry_candidates": 146520,
+          "entry_trigger_filtered": 0,
+          "entry_trigger_enabled": false
+        },
+        "shared_market_data": false,
+        "matrix_data_cache_hit": false,
+        "matrix_data_cache_status": "none",
+        "matrix_data_cache_timing_ms": {}
+      },
+      "elapsed_seconds": 14.559
+    },
+    {
+      "label": "validation",
+      "start": "2025-01-02",
+      "end": "2026-10-16",
+      "stats": {
+        "total_return": 0.3502,
+        "annual_return": 0.1919,
+        "max_drawdown": -0.2175,
+        "sharpe": 0.86,
+        "sortino": 1.2,
+        "calmar": 0.88,
+        "win_rate": 0.4934,
+        "profit_factor": 1.45,
+        "n_trades": 227,
+        "avg_pnl": 0.0164,
+        "avg_win": 0.115,
+        "avg_loss": 0.0796,
+        "best": 0.7064,
+        "worst": -0.2168,
+        "median_pnl": -0.0028,
+        "avg_holding_days": 18.9,
+        "final_equity": 1350218.66,
+        "initial_capital": 1000000.0,
+        "avg_exposure": 0.9679,
+        "max_exposure": 0.9998,
+        "mc_maxdd_p50": -0.7815,
+        "mc_maxdd_p95": -0.95,
+        "execution": {
+          "buy_invalid_price": 0,
+          "buy_suspended": 0,
+          "buy_limit_up": 22,
+          "buy_no_slot": 81036,
+          "buy_cash": 0,
+          "buy_lot_size": 0,
+          "buy_same_day_reentry": 215,
+          "buy_exposure": 0,
+          "buy_score_filter": 0,
+          "sell_invalid_price": 0,
+          "sell_suspended": 0,
+          "sell_limit_down": 0,
+          "pending_exit": 0
+        },
+        "pending_exit_positions": 0,
+        "market_matrix_shape": [
+          431,
+          469
+        ],
+        "market_matrix_bytes": 9101427,
+        "timing_ms": {
+          "load_panel": 1943.5,
+          "signals_score": 347.2,
+          "matrix_build": 225.1,
+          "simulate": 728.2,
+          "statistics": 4.9,
+          "total": 3294.9
+        },
+        "panel_rows": 201573,
+        "panel_columns": 11,
+        "feature_columns": 133,
+        "full_feature_fallback": false,
+        "execution_backend": "polars_expr",
+        "selection": {
+          "strategy_matches": 102517,
+          "entry_candidates": 102517,
+          "entry_trigger_filtered": 0,
+          "entry_trigger_enabled": false
+        },
+        "shared_market_data": false,
+        "matrix_data_cache_hit": false,
+        "matrix_data_cache_status": "none",
+        "matrix_data_cache_timing_ms": {}
+      },
+      "elapsed_seconds": 3.713
+    }
+  ],
+  "summary": {
+    "full": {
+      "n_trades": 538,
+      "distinct_symbols": 65,
+      "total_pnl_amount": 144086.52,
+      "gross_profit": 2351554.25,
+      "gross_loss": 2207467.73,
+      "net_to_gross": 0.0613,
+      "top1_symbol": {
+        "symbol": "000975.SZ",
+        "name": "山金国际",
+        "n_trades": 11,
+        "pnl_amount": 128706.94999999998,
+        "wins": 6
+      },
+      "top3_symbols": [
+        {
+          "symbol": "000975.SZ",
+          "name": "山金国际",
+          "n_trades": 11,
+          "pnl_amount": 128706.94999999998,
+          "wins": 6
+        },
+        {
+          "symbol": "300394.SZ",
+          "name": "天孚通信",
+          "n_trades": 14,
+          "pnl_amount": 117691.29,
+          "wins": 8
+        },
+        {
+          "symbol": "688008.SH",
+          "name": "澜起科技",
+          "n_trades": 35,
+          "pnl_amount": 74254.24000000002,
+          "wins": 18
+        }
+      ],
+      "top5_symbols": [
+        {
+          "symbol": "000975.SZ",
+          "name": "山金国际",
+          "n_trades": 11,
+          "pnl_amount": 128706.94999999998,
+          "wins": 6
+        },
+        {
+          "symbol": "300394.SZ",
+          "name": "天孚通信",
+          "n_trades": 14,
+          "pnl_amount": 117691.29,
+          "wins": 8
+        },
+        {
+          "symbol": "688008.SH",
+          "name": "澜起科技",
+          "n_trades": 35,
+          "pnl_amount": 74254.24000000002,
+          "wins": 18
+        },
+        {
+          "symbol": "600219.SH",
+          "name": "南山铝业",
+          "n_trades": 11,
+          "pnl_amount": 72675.06,
+          "wins": 7
+        },
+        {
+          "symbol": "601698.SH",
+          "name": "中国卫通",
+          "n_trades": 35,
+          "pnl_amount": 64974.73,
+          "wins": 16
+        }
+      ],
+      "worst_symbols": [
+        {
+          "symbol": "300896.SZ",
+          "name": "爱美客",
+          "n_trades": 35,
+          "pnl_amount": -104095.99999999999,
+          "wins": 9
+        },
+        {
+          "symbol": "001391.SZ",
+          "name": "国货航",
+          "n_trades": 10,
+          "pnl_amount": -55299.15,
+          "wins": 2
+        },
+        {
+          "symbol": "300628.SZ",
+          "name": "亿联网络",
+          "n_trades": 35,
+          "pnl_amount": -50042.130000000005,
+          "wins": 16
+        },
+        {
+          "symbol": "688065.SH",
+          "name": "凯赛生物",
+          "n_trades": 4,
+          "pnl_amount": -42293.92,
+          "wins": 1
+        },
+        {
+          "symbol": "600161.SH",
+          "name": "天坛生物",
+          "n_trades": 7,
+          "pnl_amount": -34872.729999999996,
+          "wins": 2
+        }
+      ],
+      "top1_net_share": 0.893262,
+      "top3_net_share": 2.225416,
+      "top5_net_share": 3.180744,
+      "top1_gross_share": 0.054733,
+      "top3_gross_share": 0.136358,
+      "top5_gross_share": 0.194893,
+      "max_symbol_loss_abs": 104096.0,
+      "max_symbol_loss_to_gross": 0.044267,
+      "industries": [
+        {
+          "industry": "电子",
+          "gross_profit": 609912.96
+        },
+        {
+          "industry": "有色金属",
+          "gross_profit": 404276.48999999993
+        },
+        {
+          "industry": "通信",
+          "gross_profit": 346823.92
+        },
+        {
+          "industry": "基础化工",
+          "gross_profit": 285430.81
+        },
+        {
+          "industry": "国防军工",
+          "gross_profit": 219188.57
+        },
+        {
+          "industry": "医药生物",
+          "gross_profit": 123769.61999999998
+        },
+        {
+          "industry": "美容护理",
+          "gross_profit": 89931.50000000001
+        },
+        {
+          "industry": "煤炭",
+          "gross_profit": 55128.479999999996
+        },
+        {
+          "industry": "交通运输",
+          "gross_profit": 53475.33
+        },
+        {
+          "industry": "石油石化",
+          "gross_profit": 25640.239999999998
+        },
+        {
+          "industry": "电力设备",
+          "gross_profit": 23629.34
+        },
+        {
+          "industry": "农林牧渔",
+          "gross_profit": 19643.64
+        },
+        {
+          "industry": "计算机",
+          "gross_profit": 17861.79
+        },
+        {
+          "industry": "汽车",
+          "gross_profit": 17780.94
+        },
+        {
+          "industry": "食品饮料",
+          "gross_profit": 15807.579999999998
+        },
+        {
+          "industry": "传媒",
+          "gross_profit": 15266.810000000001
+        },
+        {
+          "industry": "建筑材料",
+          "gross_profit": 13089.1
+        },
+        {
+          "industry": "房地产",
+          "gross_profit": 9168.04
+        },
+        {
+          "industry": "公用事业",
+          "gross_profit": 3112.95
+        },
+        {
+          "industry": "商贸零售",
+          "gross_profit": 1380.37
+        },
+        {
+          "industry": "社会服务",
+          "gross_profit": 1235.77
+        }
+      ],
+      "top_industry_gross_share": 0.259366
+    },
+    "validation": {
+      "n_trades": 227,
+      "distinct_symbols": 40,
+      "total_pnl_amount": 350218.57,
+      "gross_profit": 1542693.48,
+      "gross_loss": 1192474.91,
+      "net_to_gross": 0.227,
+      "top1_symbol": {
+        "symbol": "000975.SZ",
+        "name": "山金国际",
+        "n_trades": 11,
+        "pnl_amount": 128706.94999999998,
+        "wins": 6
+      },
+      "top3_symbols": [
+        {
+          "symbol": "000975.SZ",
+          "name": "山金国际",
+          "n_trades": 11,
+          "pnl_amount": 128706.94999999998,
+          "wins": 6
+        },
+        {
+          "symbol": "300394.SZ",
+          "name": "天孚通信",
+          "n_trades": 13,
+          "pnl_amount": 120185.20999999998,
+          "wins": 8
+        },
+        {
+          "symbol": "603986.SH",
+          "name": "兆易创新",
+          "n_trades": 11,
+          "pnl_amount": 71388.67000000001,
+          "wins": 6
+        }
+      ],
+      "top5_symbols": [
+        {
+          "symbol": "000975.SZ",
+          "name": "山金国际",
+          "n_trades": 11,
+          "pnl_amount": 128706.94999999998,
+          "wins": 6
+        },
+        {
+          "symbol": "300394.SZ",
+          "name": "天孚通信",
+          "n_trades": 13,
+          "pnl_amount": 120185.20999999998,
+          "wins": 8
+        },
+        {
+          "symbol": "603986.SH",
+          "name": "兆易创新",
+          "n_trades": 11,
+          "pnl_amount": 71388.67000000001,
+          "wins": 6
+        },
+        {
+          "symbol": "600219.SH",
+          "name": "南山铝业",
+          "n_trades": 9,
+          "pnl_amount": 70325.88,
+          "wins": 6
+        },
+        {
+          "symbol": "688008.SH",
+          "name": "澜起科技",
+          "n_trades": 17,
+          "pnl_amount": 66743.98000000001,
+          "wins": 10
+        }
+      ],
+      "worst_symbols": [
+        {
+          "symbol": "300896.SZ",
+          "name": "爱美客",
+          "n_trades": 12,
+          "pnl_amount": -81607.22,
+          "wins": 2
+        },
+        {
+          "symbol": "001391.SZ",
+          "name": "国货航",
+          "n_trades": 10,
+          "pnl_amount": -55299.15,
+          "wins": 2
+        },
+        {
+          "symbol": "600161.SH",
+          "name": "天坛生物",
+          "n_trades": 3,
+          "pnl_amount": -31955.32,
+          "wins": 0
+        },
+        {
+          "symbol": "601111.SH",
+          "name": "中国国航",
+          "n_trades": 3,
+          "pnl_amount": -27714.410000000003,
+          "wins": 1
+        },
+        {
+          "symbol": "002466.SZ",
+          "name": "天齐锂业",
+          "n_trades": 1,
+          "pnl_amount": -19128.81,
+          "wins": 0
+        }
+      ],
+      "top1_net_share": 0.367505,
+      "top3_net_share": 0.914517,
+      "top5_net_share": 1.305901,
+      "top1_gross_share": 0.08343,
+      "top3_gross_share": 0.207611,
+      "top5_gross_share": 0.296462,
+      "max_symbol_loss_abs": 81607.22,
+      "max_symbol_loss_to_gross": 0.052899,
+      "industries": [
+        {
+          "industry": "电子",
+          "gross_profit": 378449.5
+        },
+        {
+          "industry": "有色金属",
+          "gross_profit": 361765.87999999995
+        },
+        {
+          "industry": "通信",
+          "gross_profit": 292277.58
+        },
+        {
+          "industry": "基础化工",
+          "gross_profit": 219397.98999999996
+        },
+        {
+          "industry": "国防军工",
+          "gross_profit": 104525.82
+        },
+        {
+          "industry": "医药生物",
+          "gross_profit": 53796.58
+        },
+        {
+          "industry": "交通运输",
+          "gross_profit": 35423.54
+        },
+        {
+          "industry": "石油石化",
+          "gross_profit": 19680.48
+        },
+        {
+          "industry": "煤炭",
+          "gross_profit": 16759.850000000002
+        },
+        {
+          "industry": "传媒",
+          "gross_profit": 15266.810000000001
+        },
+        {
+          "industry": "电力设备",
+          "gross_profit": 13107.279999999999
+        },
+        {
+          "industry": "食品饮料",
+          "gross_profit": 10220.16
+        },
+        {
+          "industry": "房地产",
+          "gross_profit": 9168.04
+        },
+        {
+          "industry": "建筑材料",
+          "gross_profit": 5429.33
+        },
+        {
+          "industry": "美容护理",
+          "gross_profit": 3249.79
+        },
+        {
+          "industry": "汽车",
+          "gross_profit": 2794.48
+        },
+        {
+          "industry": "商贸零售",
+          "gross_profit": 1380.37
+        }
+      ],
+      "top_industry_gross_share": 0.245317
+    },
+    "validation_positive_symbols": 24
+  },
+  "per_symbol": [
+    {
+      "symbol": "000975.SZ",
+      "name": "山金国际",
+      "n_trades": 11,
+      "pnl_amount": 128706.94999999998,
+      "wins": 6
+    },
+    {
+      "symbol": "300394.SZ",
+      "name": "天孚通信",
+      "n_trades": 14,
+      "pnl_amount": 117691.29,
+      "wins": 8
+    },
+    {
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "n_trades": 35,
+      "pnl_amount": 74254.24000000002,
+      "wins": 18
+    },
+    {
+      "symbol": "600219.SH",
+      "name": "南山铝业",
+      "n_trades": 11,
+      "pnl_amount": 72675.06,
+      "wins": 7
+    },
+    {
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "n_trades": 35,
+      "pnl_amount": 64974.73,
+      "wins": 16
+    },
+    {
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "n_trades": 23,
+      "pnl_amount": 40083.51,
+      "wins": 11
+    },
+    {
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "n_trades": 35,
+      "pnl_amount": 35618.670000000006,
+      "wins": 17
+    },
+    {
+      "symbol": "300408.SZ",
+      "name": "三环集团",
+      "n_trades": 14,
+      "pnl_amount": 21998.619999999995,
+      "wins": 7
+    },
+    {
+      "symbol": "688041.SH",
+      "name": "海光信息",
+      "n_trades": 8,
+      "pnl_amount": 20189.32,
+      "wins": 5
+    },
+    {
+      "symbol": "002493.SZ",
+      "name": "荣盛石化",
+      "n_trades": 1,
+      "pnl_amount": 19680.48,
+      "wins": 1
+    },
+    {
+      "symbol": "300223.SZ",
+      "name": "君正股份",
+      "n_trades": 5,
+      "pnl_amount": 18927.379999999997,
+      "wins": 1
+    },
+    {
+      "symbol": "601699.SH",
+      "name": "潞安环能",
+      "n_trades": 2,
+      "pnl_amount": 16636.79,
+      "wins": 2
+    },
+    {
+      "symbol": "603806.SH",
+      "name": "福斯特",
+      "n_trades": 2,
+      "pnl_amount": 13107.279999999999,
+      "wins": 2
+    },
+    {
+      "symbol": "603259.SH",
+      "name": "药明康德",
+      "n_trades": 3,
+      "pnl_amount": 12081.37,
+      "wins": 2
+    },
+    {
+      "symbol": "300251.SZ",
+      "name": "光线传媒",
+      "n_trades": 3,
+      "pnl_amount": 11299.95,
+      "wins": 2
+    },
+    {
+      "symbol": "300498.SZ",
+      "name": "温氏股份",
+      "n_trades": 4,
+      "pnl_amount": 10231.4,
+      "wins": 2
+    },
+    {
+      "symbol": "601088.SH",
+      "name": "中国神华",
+      "n_trades": 10,
+      "pnl_amount": 10143.2,
+      "wins": 5
+    },
+    {
+      "symbol": "600585.SH",
+      "name": "海螺水泥",
+      "n_trades": 5,
+      "pnl_amount": 9945.83,
+      "wins": 3
+    },
+    {
+      "symbol": "688396.SH",
+      "name": "华润微",
+      "n_trades": 5,
+      "pnl_amount": 9627.59,
+      "wins": 3
+    },
+    {
+      "symbol": "001979.SZ",
+      "name": "招商蛇口",
+      "n_trades": 1,
+      "pnl_amount": 9168.04,
+      "wins": 1
+    },
+    {
+      "symbol": "000725.SZ",
+      "name": "京东方Ａ",
+      "n_trades": 1,
+      "pnl_amount": 7363.13,
+      "wins": 1
+    },
+    {
+      "symbol": "300496.SZ",
+      "name": "中科创达",
+      "n_trades": 2,
+      "pnl_amount": 7155.239999999999,
+      "wins": 1
+    },
+    {
+      "symbol": "600050.SH",
+      "name": "中国联通",
+      "n_trades": 1,
+      "pnl_amount": 6880.14,
+      "wins": 1
+    },
+    {
+      "symbol": "601006.SH",
+      "name": "大秦铁路",
+      "n_trades": 10,
+      "pnl_amount": 5276.95,
+      "wins": 5
+    },
+    {
+      "symbol": "000876.SZ",
+      "name": "新 希 望",
+      "n_trades": 4,
+      "pnl_amount": 2112.99,
+      "wins": 2
+    },
+    {
+      "symbol": "300832.SZ",
+      "name": "新产业",
+      "n_trades": 9,
+      "pnl_amount": 1510.92,
+      "wins": 3
+    },
+    {
+      "symbol": "600415.SH",
+      "name": "小商品城",
+      "n_trades": 1,
+      "pnl_amount": 1380.37,
+      "wins": 1
+    },
+    {
+      "symbol": "601238.SH",
+      "name": "广汽集团",
+      "n_trades": 4,
+      "pnl_amount": 573.8099999999995,
+      "wins": 2
+    },
+    {
+      "symbol": "002001.SZ",
+      "name": "新 和 成",
+      "n_trades": 1,
+      "pnl_amount": 398.56,
+      "wins": 1
+    },
+    {
+      "symbol": "002027.SZ",
+      "name": "分众传媒",
+      "n_trades": 1,
+      "pnl_amount": -577.27,
+      "wins": 0
+    },
+    {
+      "symbol": "002460.SZ",
+      "name": "赣锋锂业",
+      "n_trades": 1,
+      "pnl_amount": -771.14,
+      "wins": 0
+    },
+    {
+      "symbol": "603288.SH",
+      "name": "海天味业",
+      "n_trades": 4,
+      "pnl_amount": -1275.21,
+      "wins": 1
+    },
+    {
+      "symbol": "000069.SZ",
+      "name": "华侨城Ａ",
+      "n_trades": 3,
+      "pnl_amount": -2063.0,
+      "wins": 1
+    },
+    {
+      "symbol": "600436.SH",
+      "name": "XD片仔癀",
+      "n_trades": 12,
+      "pnl_amount": -2077.750000000001,
+      "wins": 5
+    },
+    {
+      "symbol": "600900.SH",
+      "name": "长江电力",
+      "n_trades": 2,
+      "pnl_amount": -2717.57,
+      "wins": 1
+    },
+    {
+      "symbol": "601298.SH",
+      "name": "青岛港",
+      "n_trades": 1,
+      "pnl_amount": -3097.01,
+      "wins": 0
+    },
+    {
+      "symbol": "600029.SH",
+      "name": "南方航空",
+      "n_trades": 1,
+      "pnl_amount": -3119.4,
+      "wins": 0
+    },
+    {
+      "symbol": "600426.SH",
+      "name": "华鲁恒升",
+      "n_trades": 2,
+      "pnl_amount": -3939.4800000000005,
+      "wins": 1
+    },
+    {
+      "symbol": "000066.SZ",
+      "name": "中国长城",
+      "n_trades": 2,
+      "pnl_amount": -4368.24,
+      "wins": 1
+    },
+    {
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "n_trades": 23,
+      "pnl_amount": -4724.53999999999,
+      "wins": 11
+    },
+    {
+      "symbol": "300033.SZ",
+      "name": "同花顺",
+      "n_trades": 1,
+      "pnl_amount": -5123.88,
+      "wins": 0
+    },
+    {
+      "symbol": "600795.SH",
+      "name": "国电电力",
+      "n_trades": 5,
+      "pnl_amount": -5423.22,
+      "wins": 1
+    },
+    {
+      "symbol": "000807.SZ",
+      "name": "云铝股份",
+      "n_trades": 7,
+      "pnl_amount": -5865.85,
+      "wins": 4
+    },
+    {
+      "symbol": "603893.SH",
+      "name": "瑞芯微",
+      "n_trades": 3,
+      "pnl_amount": -7412.750000000002,
+      "wins": 1
+    },
+    {
+      "symbol": "300661.SZ",
+      "name": "圣邦股份",
+      "n_trades": 2,
+      "pnl_amount": -8486.41,
+      "wins": 1
+    },
+    {
+      "symbol": "688303.SH",
+      "name": "大全能源",
+      "n_trades": 9,
+      "pnl_amount": -8527.310000000001,
+      "wins": 2
+    },
+    {
+      "symbol": "000858.SZ",
+      "name": "五 粮 液",
+      "n_trades": 6,
+      "pnl_amount": -9303.649999999998,
+      "wins": 3
+    },
+    {
+      "symbol": "688981.SH",
+      "name": "中芯国际",
+      "n_trades": 6,
+      "pnl_amount": -11839.4,
+      "wins": 2
+    },
+    {
+      "symbol": "600938.SH",
+      "name": "XD中国海",
+      "n_trades": 4,
+      "pnl_amount": -12358.68,
+      "wins": 1
+    },
+    {
+      "symbol": "000768.SZ",
+      "name": "中航西飞",
+      "n_trades": 6,
+      "pnl_amount": -13010.14,
+      "wins": 0
+    },
+    {
+      "symbol": "600104.SH",
+      "name": "上汽集团",
+      "n_trades": 2,
+      "pnl_amount": -13488.82,
+      "wins": 0
+    },
+    {
+      "symbol": "601919.SH",
+      "name": "中远海控",
+      "n_trades": 10,
+      "pnl_amount": -14569.9,
+      "wins": 4
+    },
+    {
+      "symbol": "002756.SZ",
+      "name": "永兴材料",
+      "n_trades": 6,
+      "pnl_amount": -15149.59,
+      "wins": 2
+    },
+    {
+      "symbol": "002252.SZ",
+      "name": "上海莱士",
+      "n_trades": 20,
+      "pnl_amount": -16252.409999999998,
+      "wins": 10
+    },
+    {
+      "symbol": "601225.SH",
+      "name": "陕西煤业",
+      "n_trades": 4,
+      "pnl_amount": -17645.71,
+      "wins": 1
+    },
+    {
+      "symbol": "603290.SH",
+      "name": "斯达半导",
+      "n_trades": 5,
+      "pnl_amount": -19911.730000000003,
+      "wins": 1
+    },
+    {
+      "symbol": "300782.SZ",
+      "name": "卓胜微",
+      "n_trades": 14,
+      "pnl_amount": -23811.939999999995,
+      "wins": 6
+    },
+    {
+      "symbol": "002821.SZ",
+      "name": "凯莱英",
+      "n_trades": 11,
+      "pnl_amount": -25769.24,
+      "wins": 3
+    },
+    {
+      "symbol": "601111.SH",
+      "name": "中国国航",
+      "n_trades": 3,
+      "pnl_amount": -27714.410000000003,
+      "wins": 1
+    },
+    {
+      "symbol": "002466.SZ",
+      "name": "天齐锂业",
+      "n_trades": 11,
+      "pnl_amount": -28607.710000000003,
+      "wins": 5
+    },
+    {
+      "symbol": "600161.SH",
+      "name": "天坛生物",
+      "n_trades": 7,
+      "pnl_amount": -34872.729999999996,
+      "wins": 2
+    },
+    {
+      "symbol": "688065.SH",
+      "name": "凯赛生物",
+      "n_trades": 4,
+      "pnl_amount": -42293.92,
+      "wins": 1
+    },
+    {
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "n_trades": 35,
+      "pnl_amount": -50042.130000000005,
+      "wins": 16
+    },
+    {
+      "symbol": "001391.SZ",
+      "name": "国货航",
+      "n_trades": 10,
+      "pnl_amount": -55299.15,
+      "wins": 2
+    },
+    {
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "n_trades": 35,
+      "pnl_amount": -104095.99999999999,
+      "wins": 9
+    }
+  ],
+  "trades": [
+    {
+      "segment": "discovery",
+      "symbol": "300782.SZ",
+      "name": "卓胜微",
+      "pnl_amount": -19619.22,
+      "pnl_pct": -0.204151,
+      "entry_date": "2022-07-04",
+      "exit_date": "2022-07-13",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688065.SH",
+      "name": "凯赛生物",
+      "pnl_amount": -32602.85,
+      "pnl_pct": -0.347591,
+      "entry_date": "2022-07-04",
+      "exit_date": "2022-07-20",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": -5846.96,
+      "pnl_pct": -0.058734,
+      "entry_date": "2022-07-04",
+      "exit_date": "2022-08-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": -1487.74,
+      "pnl_pct": -0.01489,
+      "entry_date": "2022-07-04",
+      "exit_date": "2022-08-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -1643.57,
+      "pnl_pct": -0.020692,
+      "entry_date": "2022-07-04",
+      "exit_date": "2022-08-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "603290.SH",
+      "name": "斯达半导",
+      "pnl_amount": 2491.04,
+      "pnl_pct": 0.033144,
+      "entry_date": "2022-07-04",
+      "exit_date": "2022-08-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688981.SH",
+      "name": "中芯国际",
+      "pnl_amount": -9938.27,
+      "pnl_pct": -0.101599,
+      "entry_date": "2022-07-04",
+      "exit_date": "2022-08-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "pnl_amount": -12260.34,
+      "pnl_pct": -0.131364,
+      "entry_date": "2022-07-04",
+      "exit_date": "2022-08-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": 1605.51,
+      "pnl_pct": 0.016455,
+      "entry_date": "2022-07-04",
+      "exit_date": "2022-08-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002252.SZ",
+      "name": "上海莱士",
+      "pnl_amount": -4514.01,
+      "pnl_pct": -0.045181,
+      "entry_date": "2022-07-04",
+      "exit_date": "2022-08-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300661.SZ",
+      "name": "圣邦股份",
+      "pnl_amount": 3006.64,
+      "pnl_pct": 0.032955,
+      "entry_date": "2022-07-13",
+      "exit_date": "2022-08-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300782.SZ",
+      "name": "卓胜微",
+      "pnl_amount": -6289.02,
+      "pnl_pct": -0.074984,
+      "entry_date": "2022-07-20",
+      "exit_date": "2022-08-17",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688065.SH",
+      "name": "凯赛生物",
+      "pnl_amount": -10515.24,
+      "pnl_pct": -0.127903,
+      "entry_date": "2022-08-01",
+      "exit_date": "2022-08-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600585.SH",
+      "name": "海螺水泥",
+      "pnl_amount": -2871.3,
+      "pnl_pct": -0.032184,
+      "entry_date": "2022-08-01",
+      "exit_date": "2022-08-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300223.SZ",
+      "name": "君正股份",
+      "pnl_amount": -7584.14,
+      "pnl_pct": -0.086248,
+      "entry_date": "2022-08-01",
+      "exit_date": "2022-08-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600426.SH",
+      "name": "华鲁恒升",
+      "pnl_amount": 2612.74,
+      "pnl_pct": 0.029297,
+      "entry_date": "2022-08-01",
+      "exit_date": "2022-08-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688396.SH",
+      "name": "华润微",
+      "pnl_amount": 2273.28,
+      "pnl_pct": 0.025329,
+      "entry_date": "2022-08-01",
+      "exit_date": "2022-08-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601088.SH",
+      "name": "中国神华",
+      "pnl_amount": 8189.06,
+      "pnl_pct": 0.092487,
+      "entry_date": "2022-08-01",
+      "exit_date": "2022-08-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002460.SZ",
+      "name": "赣锋锂业",
+      "pnl_amount": -771.14,
+      "pnl_pct": -0.009092,
+      "entry_date": "2022-08-01",
+      "exit_date": "2022-08-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": -8054.54,
+      "pnl_pct": -0.089831,
+      "entry_date": "2022-08-01",
+      "exit_date": "2022-08-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": -4515.76,
+      "pnl_pct": -0.048226,
+      "entry_date": "2022-08-10",
+      "exit_date": "2022-09-07",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": 3628.26,
+      "pnl_pct": 0.039182,
+      "entry_date": "2022-08-17",
+      "exit_date": "2022-09-15",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -8961.41,
+      "pnl_pct": -0.120978,
+      "entry_date": "2022-08-29",
+      "exit_date": "2022-09-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "603290.SH",
+      "name": "斯达半导",
+      "pnl_amount": -8141.46,
+      "pnl_pct": -0.104696,
+      "entry_date": "2022-08-29",
+      "exit_date": "2022-09-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688981.SH",
+      "name": "中芯国际",
+      "pnl_amount": -5940.55,
+      "pnl_pct": -0.067365,
+      "entry_date": "2022-08-29",
+      "exit_date": "2022-09-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300782.SZ",
+      "name": "卓胜微",
+      "pnl_amount": 786.29,
+      "pnl_pct": 0.009602,
+      "entry_date": "2022-08-29",
+      "exit_date": "2022-09-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "pnl_amount": -11302.4,
+      "pnl_pct": -0.142717,
+      "entry_date": "2022-08-29",
+      "exit_date": "2022-09-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": -9682.43,
+      "pnl_pct": -0.113931,
+      "entry_date": "2022-08-29",
+      "exit_date": "2022-09-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002252.SZ",
+      "name": "上海莱士",
+      "pnl_amount": -8287.71,
+      "pnl_pct": -0.093887,
+      "entry_date": "2022-08-29",
+      "exit_date": "2022-09-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300661.SZ",
+      "name": "圣邦股份",
+      "pnl_amount": -11493.05,
+      "pnl_pct": -0.138181,
+      "entry_date": "2022-08-29",
+      "exit_date": "2022-09-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601919.SH",
+      "name": "中远海控",
+      "pnl_amount": -14258.75,
+      "pnl_pct": -0.157029,
+      "entry_date": "2022-09-07",
+      "exit_date": "2022-10-13",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": -9757.29,
+      "pnl_pct": -0.111158,
+      "entry_date": "2022-09-15",
+      "exit_date": "2022-10-20",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000768.SZ",
+      "name": "中航西飞",
+      "pnl_amount": -3675.9,
+      "pnl_pct": -0.045643,
+      "entry_date": "2022-09-27",
+      "exit_date": "2022-11-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": 11941.85,
+      "pnl_pct": 0.148909,
+      "entry_date": "2022-09-27",
+      "exit_date": "2022-11-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600436.SH",
+      "name": "XD片仔癀",
+      "pnl_amount": -5706.24,
+      "pnl_pct": -0.081045,
+      "entry_date": "2022-09-27",
+      "exit_date": "2022-11-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600426.SH",
+      "name": "华鲁恒升",
+      "pnl_amount": -6552.22,
+      "pnl_pct": -0.081901,
+      "entry_date": "2022-09-27",
+      "exit_date": "2022-11-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688065.SH",
+      "name": "凯赛生物",
+      "pnl_amount": 2769.11,
+      "pnl_pct": 0.036933,
+      "entry_date": "2022-09-27",
+      "exit_date": "2022-11-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601225.SH",
+      "name": "陕西煤业",
+      "pnl_amount": -10023.71,
+      "pnl_pct": -0.125184,
+      "entry_date": "2022-09-27",
+      "exit_date": "2022-11-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688396.SH",
+      "name": "华润微",
+      "pnl_amount": 5520.2,
+      "pnl_pct": 0.069975,
+      "entry_date": "2022-09-27",
+      "exit_date": "2022-11-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601088.SH",
+      "name": "中国神华",
+      "pnl_amount": -7370.75,
+      "pnl_pct": -0.091792,
+      "entry_date": "2022-09-27",
+      "exit_date": "2022-11-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": 1421.05,
+      "pnl_pct": 0.022496,
+      "entry_date": "2022-10-13",
+      "exit_date": "2022-11-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601919.SH",
+      "name": "中远海控",
+      "pnl_amount": 4216.76,
+      "pnl_pct": 0.052204,
+      "entry_date": "2022-10-20",
+      "exit_date": "2022-11-17",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": 8328.59,
+      "pnl_pct": 0.10888,
+      "entry_date": "2022-11-01",
+      "exit_date": "2022-11-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002466.SZ",
+      "name": "天齐锂业",
+      "pnl_amount": -5826.81,
+      "pnl_pct": -0.082969,
+      "entry_date": "2022-11-01",
+      "exit_date": "2022-11-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688981.SH",
+      "name": "中芯国际",
+      "pnl_amount": -2901.09,
+      "pnl_pct": -0.038709,
+      "entry_date": "2022-11-01",
+      "exit_date": "2022-11-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": -5368.78,
+      "pnl_pct": -0.068448,
+      "entry_date": "2022-11-01",
+      "exit_date": "2022-11-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300782.SZ",
+      "name": "卓胜微",
+      "pnl_amount": 17868.2,
+      "pnl_pct": 0.244605,
+      "entry_date": "2022-11-01",
+      "exit_date": "2022-11-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "603290.SH",
+      "name": "斯达半导",
+      "pnl_amount": -7298.96,
+      "pnl_pct": -0.098513,
+      "entry_date": "2022-11-01",
+      "exit_date": "2022-11-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "pnl_amount": 12588.37,
+      "pnl_pct": 0.170013,
+      "entry_date": "2022-11-01",
+      "exit_date": "2022-11-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002252.SZ",
+      "name": "上海莱士",
+      "pnl_amount": -981.56,
+      "pnl_pct": -0.012504,
+      "entry_date": "2022-11-01",
+      "exit_date": "2022-11-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000768.SZ",
+      "name": "中航西飞",
+      "pnl_amount": -790.08,
+      "pnl_pct": -0.009609,
+      "entry_date": "2022-11-10",
+      "exit_date": "2022-12-08",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600795.SH",
+      "name": "国电电力",
+      "pnl_amount": -4652.52,
+      "pnl_pct": -0.05493,
+      "entry_date": "2022-11-17",
+      "exit_date": "2022-12-15",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601919.SH",
+      "name": "中远海控",
+      "pnl_amount": -496.24,
+      "pnl_pct": -0.006128,
+      "entry_date": "2022-11-29",
+      "exit_date": "2022-12-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000066.SZ",
+      "name": "中国长城",
+      "pnl_amount": -9083.98,
+      "pnl_pct": -0.11306,
+      "entry_date": "2022-11-29",
+      "exit_date": "2022-12-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": -558.59,
+      "pnl_pct": -0.006934,
+      "entry_date": "2022-11-29",
+      "exit_date": "2022-12-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": 11064.73,
+      "pnl_pct": 0.180142,
+      "entry_date": "2022-11-29",
+      "exit_date": "2022-12-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000069.SZ",
+      "name": "华侨城Ａ",
+      "pnl_amount": 1235.77,
+      "pnl_pct": 0.015265,
+      "entry_date": "2022-11-29",
+      "exit_date": "2022-12-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600436.SH",
+      "name": "XD片仔癀",
+      "pnl_amount": 11741.58,
+      "pnl_pct": 0.166496,
+      "entry_date": "2022-11-29",
+      "exit_date": "2022-12-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "pnl_amount": -4828.54,
+      "pnl_pct": -0.059621,
+      "entry_date": "2022-11-29",
+      "exit_date": "2022-12-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601088.SH",
+      "name": "中国神华",
+      "pnl_amount": -7157.2,
+      "pnl_pct": -0.090599,
+      "entry_date": "2022-11-29",
+      "exit_date": "2022-12-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": -6068.87,
+      "pnl_pct": -0.072694,
+      "entry_date": "2022-12-08",
+      "exit_date": "2023-01-06",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000768.SZ",
+      "name": "中航西飞",
+      "pnl_amount": -5205.12,
+      "pnl_pct": -0.063979,
+      "entry_date": "2022-12-15",
+      "exit_date": "2023-01-13",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600795.SH",
+      "name": "国电电力",
+      "pnl_amount": -2000.48,
+      "pnl_pct": -0.024937,
+      "entry_date": "2022-12-27",
+      "exit_date": "2023-02-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002466.SZ",
+      "name": "天齐锂业",
+      "pnl_amount": 13557.81,
+      "pnl_pct": 0.179377,
+      "entry_date": "2022-12-27",
+      "exit_date": "2023-02-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688981.SH",
+      "name": "中芯国际",
+      "pnl_amount": 727.54,
+      "pnl_pct": 0.009232,
+      "entry_date": "2022-12-27",
+      "exit_date": "2023-02-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": 2586.97,
+      "pnl_pct": 0.033254,
+      "entry_date": "2022-12-27",
+      "exit_date": "2023-02-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601225.SH",
+      "name": "陕西煤业",
+      "pnl_amount": 2490.06,
+      "pnl_pct": 0.031206,
+      "entry_date": "2022-12-27",
+      "exit_date": "2023-02-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": -9682.49,
+      "pnl_pct": -0.121001,
+      "entry_date": "2022-12-27",
+      "exit_date": "2023-02-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600900.SH",
+      "name": "长江电力",
+      "pnl_amount": 1050.08,
+      "pnl_pct": 0.013278,
+      "entry_date": "2022-12-27",
+      "exit_date": "2023-02-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "603290.SH",
+      "name": "斯达半导",
+      "pnl_amount": -358.5,
+      "pnl_pct": -0.005661,
+      "entry_date": "2022-12-27",
+      "exit_date": "2023-02-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601919.SH",
+      "name": "中远海控",
+      "pnl_amount": 4712.27,
+      "pnl_pct": 0.057835,
+      "entry_date": "2023-01-06",
+      "exit_date": "2023-02-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": 2017.4,
+      "pnl_pct": 0.02473,
+      "entry_date": "2023-01-13",
+      "exit_date": "2023-02-17",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000768.SZ",
+      "name": "中航西飞",
+      "pnl_amount": -2345.5,
+      "pnl_pct": -0.029597,
+      "entry_date": "2023-02-01",
+      "exit_date": "2023-03-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000066.SZ",
+      "name": "中国长城",
+      "pnl_amount": 4715.74,
+      "pnl_pct": 0.058781,
+      "entry_date": "2023-02-01",
+      "exit_date": "2023-03-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": 6337.26,
+      "pnl_pct": 0.078308,
+      "entry_date": "2023-02-01",
+      "exit_date": "2023-03-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -2034.86,
+      "pnl_pct": -0.025318,
+      "entry_date": "2023-02-01",
+      "exit_date": "2023-03-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600436.SH",
+      "name": "XD片仔癀",
+      "pnl_amount": -323.82,
+      "pnl_pct": -0.00551,
+      "entry_date": "2023-02-01",
+      "exit_date": "2023-03-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000069.SZ",
+      "name": "华侨城Ａ",
+      "pnl_amount": -1022.21,
+      "pnl_pct": -0.012627,
+      "entry_date": "2023-02-01",
+      "exit_date": "2023-03-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601088.SH",
+      "name": "中国神华",
+      "pnl_amount": -1574.2,
+      "pnl_pct": -0.019546,
+      "entry_date": "2023-02-01",
+      "exit_date": "2023-03-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "pnl_amount": -1341.13,
+      "pnl_pct": -0.016729,
+      "entry_date": "2023-02-01",
+      "exit_date": "2023-03-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600795.SH",
+      "name": "国电电力",
+      "pnl_amount": -9.36,
+      "pnl_pct": -0.000114,
+      "entry_date": "2023-02-10",
+      "exit_date": "2023-03-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601919.SH",
+      "name": "中远海控",
+      "pnl_amount": 4346.48,
+      "pnl_pct": 0.053218,
+      "entry_date": "2023-02-17",
+      "exit_date": "2023-03-17",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": -11281.57,
+      "pnl_pct": -0.139806,
+      "entry_date": "2023-03-01",
+      "exit_date": "2023-03-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002466.SZ",
+      "name": "天齐锂业",
+      "pnl_amount": -7128.72,
+      "pnl_pct": -0.094213,
+      "entry_date": "2023-03-01",
+      "exit_date": "2023-03-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688981.SH",
+      "name": "中芯国际",
+      "pnl_amount": 13222.73,
+      "pnl_pct": 0.16539,
+      "entry_date": "2023-03-01",
+      "exit_date": "2023-03-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": 9949.27,
+      "pnl_pct": 0.124986,
+      "entry_date": "2023-03-01",
+      "exit_date": "2023-03-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601225.SH",
+      "name": "陕西煤业",
+      "pnl_amount": -2290.75,
+      "pnl_pct": -0.028047,
+      "entry_date": "2023-03-01",
+      "exit_date": "2023-03-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": 9351.33,
+      "pnl_pct": 0.118425,
+      "entry_date": "2023-03-01",
+      "exit_date": "2023-03-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600900.SH",
+      "name": "长江电力",
+      "pnl_amount": -3767.65,
+      "pnl_pct": -0.04611,
+      "entry_date": "2023-03-01",
+      "exit_date": "2023-03-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "603290.SH",
+      "name": "斯达半导",
+      "pnl_amount": -6603.85,
+      "pnl_pct": -0.111468,
+      "entry_date": "2023-03-01",
+      "exit_date": "2023-03-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000768.SZ",
+      "name": "中航西飞",
+      "pnl_amount": -665.31,
+      "pnl_pct": -0.008161,
+      "entry_date": "2023-03-10",
+      "exit_date": "2023-04-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600795.SH",
+      "name": "国电电力",
+      "pnl_amount": -823.73,
+      "pnl_pct": -0.010201,
+      "entry_date": "2023-03-17",
+      "exit_date": "2023-04-17",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002756.SZ",
+      "name": "永兴材料",
+      "pnl_amount": -15582.5,
+      "pnl_pct": -0.210703,
+      "entry_date": "2023-03-29",
+      "exit_date": "2023-04-21",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601919.SH",
+      "name": "中远海控",
+      "pnl_amount": -2135.41,
+      "pnl_pct": -0.026337,
+      "entry_date": "2023-03-29",
+      "exit_date": "2023-04-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688303.SH",
+      "name": "大全能源",
+      "pnl_amount": -411.62,
+      "pnl_pct": -0.005129,
+      "entry_date": "2023-03-29",
+      "exit_date": "2023-04-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": -12831.46,
+      "pnl_pct": -0.160042,
+      "entry_date": "2023-03-29",
+      "exit_date": "2023-04-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -3593.78,
+      "pnl_pct": -0.048617,
+      "entry_date": "2023-03-29",
+      "exit_date": "2023-04-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "pnl_amount": -6842.97,
+      "pnl_pct": -0.084756,
+      "entry_date": "2023-03-29",
+      "exit_date": "2023-04-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601088.SH",
+      "name": "中国神华",
+      "pnl_amount": 3323.61,
+      "pnl_pct": 0.041511,
+      "entry_date": "2023-03-29",
+      "exit_date": "2023-04-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600436.SH",
+      "name": "XD片仔癀",
+      "pnl_amount": -4475.98,
+      "pnl_pct": -0.056138,
+      "entry_date": "2023-03-29",
+      "exit_date": "2023-04-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": 607.01,
+      "pnl_pct": 0.007453,
+      "entry_date": "2023-04-10",
+      "exit_date": "2023-05-11",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000768.SZ",
+      "name": "中航西飞",
+      "pnl_amount": -328.23,
+      "pnl_pct": -0.004036,
+      "entry_date": "2023-04-17",
+      "exit_date": "2023-05-18",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600795.SH",
+      "name": "国电电力",
+      "pnl_amount": 2062.87,
+      "pnl_pct": 0.025658,
+      "entry_date": "2023-04-21",
+      "exit_date": "2023-05-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002756.SZ",
+      "name": "永兴材料",
+      "pnl_amount": 3423.02,
+      "pnl_pct": 0.045183,
+      "entry_date": "2023-04-27",
+      "exit_date": "2023-05-30",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002466.SZ",
+      "name": "天齐锂业",
+      "pnl_amount": 1626.62,
+      "pnl_pct": 0.022514,
+      "entry_date": "2023-04-27",
+      "exit_date": "2023-05-30",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688981.SH",
+      "name": "中芯国际",
+      "pnl_amount": -7009.76,
+      "pnl_pct": -0.093906,
+      "entry_date": "2023-04-27",
+      "exit_date": "2023-05-30",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": -12750.68,
+      "pnl_pct": -0.166678,
+      "entry_date": "2023-04-27",
+      "exit_date": "2023-05-30",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601225.SH",
+      "name": "陕西煤业",
+      "pnl_amount": -7821.31,
+      "pnl_pct": -0.102569,
+      "entry_date": "2023-04-27",
+      "exit_date": "2023-05-30",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000069.SZ",
+      "name": "华侨城Ａ",
+      "pnl_amount": -2276.56,
+      "pnl_pct": -0.029652,
+      "entry_date": "2023-04-27",
+      "exit_date": "2023-05-30",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": -2466.09,
+      "pnl_pct": -0.032888,
+      "entry_date": "2023-04-27",
+      "exit_date": "2023-05-30",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688303.SH",
+      "name": "大全能源",
+      "pnl_amount": 6904.9,
+      "pnl_pct": 0.089993,
+      "entry_date": "2023-05-11",
+      "exit_date": "2023-06-08",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -7341.72,
+      "pnl_pct": -0.108674,
+      "entry_date": "2023-05-18",
+      "exit_date": "2023-06-15",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": -2848.69,
+      "pnl_pct": -0.037006,
+      "entry_date": "2023-05-24",
+      "exit_date": "2023-06-21",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600436.SH",
+      "name": "XD片仔癀",
+      "pnl_amount": -4542.68,
+      "pnl_pct": -0.077755,
+      "entry_date": "2023-05-30",
+      "exit_date": "2023-06-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300782.SZ",
+      "name": "卓胜微",
+      "pnl_amount": 6482.61,
+      "pnl_pct": 0.08945,
+      "entry_date": "2023-05-30",
+      "exit_date": "2023-06-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002252.SZ",
+      "name": "上海莱士",
+      "pnl_amount": 5858.76,
+      "pnl_pct": 0.078798,
+      "entry_date": "2023-05-30",
+      "exit_date": "2023-06-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002821.SZ",
+      "name": "凯莱英",
+      "pnl_amount": -4075.07,
+      "pnl_pct": -0.062804,
+      "entry_date": "2023-05-30",
+      "exit_date": "2023-06-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": 13538.87,
+      "pnl_pct": 0.184686,
+      "entry_date": "2023-05-30",
+      "exit_date": "2023-06-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300408.SZ",
+      "name": "三环集团",
+      "pnl_amount": -3805.0,
+      "pnl_pct": -0.05095,
+      "entry_date": "2023-05-30",
+      "exit_date": "2023-06-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000858.SZ",
+      "name": "五 粮 液",
+      "pnl_amount": 414.58,
+      "pnl_pct": 0.005792,
+      "entry_date": "2023-05-30",
+      "exit_date": "2023-06-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": -4921.8,
+      "pnl_pct": -0.066242,
+      "entry_date": "2023-06-08",
+      "exit_date": "2023-07-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688303.SH",
+      "name": "大全能源",
+      "pnl_amount": -4775.35,
+      "pnl_pct": -0.062967,
+      "entry_date": "2023-06-15",
+      "exit_date": "2023-07-17",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -1367.32,
+      "pnl_pct": -0.022845,
+      "entry_date": "2023-06-21",
+      "exit_date": "2023-07-21",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": 4506.6,
+      "pnl_pct": 0.059942,
+      "entry_date": "2023-06-29",
+      "exit_date": "2023-07-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002756.SZ",
+      "name": "永兴材料",
+      "pnl_amount": -9164.14,
+      "pnl_pct": -0.124016,
+      "entry_date": "2023-06-29",
+      "exit_date": "2023-07-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002466.SZ",
+      "name": "天齐锂业",
+      "pnl_amount": -4199.36,
+      "pnl_pct": -0.057566,
+      "entry_date": "2023-06-29",
+      "exit_date": "2023-07-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": 2499.52,
+      "pnl_pct": 0.034731,
+      "entry_date": "2023-06-29",
+      "exit_date": "2023-07-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601699.SH",
+      "name": "潞安环能",
+      "pnl_amount": 3097.65,
+      "pnl_pct": 0.041481,
+      "entry_date": "2023-06-29",
+      "exit_date": "2023-07-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688065.SH",
+      "name": "凯赛生物",
+      "pnl_amount": -1944.94,
+      "pnl_pct": -0.027586,
+      "entry_date": "2023-06-29",
+      "exit_date": "2023-07-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300033.SZ",
+      "name": "同花顺",
+      "pnl_amount": -5123.88,
+      "pnl_pct": -0.069299,
+      "entry_date": "2023-06-29",
+      "exit_date": "2023-07-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600436.SH",
+      "name": "XD片仔癀",
+      "pnl_amount": 1567.71,
+      "pnl_pct": 0.029266,
+      "entry_date": "2023-07-10",
+      "exit_date": "2023-08-07",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": 593.19,
+      "pnl_pct": 0.007886,
+      "entry_date": "2023-07-17",
+      "exit_date": "2023-08-14",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688303.SH",
+      "name": "大全能源",
+      "pnl_amount": -584.36,
+      "pnl_pct": -0.008144,
+      "entry_date": "2023-07-21",
+      "exit_date": "2023-08-18",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -8958.54,
+      "pnl_pct": -0.1398,
+      "entry_date": "2023-07-27",
+      "exit_date": "2023-08-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300782.SZ",
+      "name": "卓胜微",
+      "pnl_amount": -2130.54,
+      "pnl_pct": -0.030706,
+      "entry_date": "2023-07-27",
+      "exit_date": "2023-08-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002252.SZ",
+      "name": "上海莱士",
+      "pnl_amount": -4928.56,
+      "pnl_pct": -0.0658,
+      "entry_date": "2023-07-27",
+      "exit_date": "2023-08-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002821.SZ",
+      "name": "凯莱英",
+      "pnl_amount": -1543.11,
+      "pnl_pct": -0.021254,
+      "entry_date": "2023-07-27",
+      "exit_date": "2023-08-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": -6637.88,
+      "pnl_pct": -0.0894,
+      "entry_date": "2023-07-27",
+      "exit_date": "2023-08-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300408.SZ",
+      "name": "三环集团",
+      "pnl_amount": -2712.11,
+      "pnl_pct": -0.03672,
+      "entry_date": "2023-07-27",
+      "exit_date": "2023-08-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000858.SZ",
+      "name": "五 粮 液",
+      "pnl_amount": -6877.37,
+      "pnl_pct": -0.11019,
+      "entry_date": "2023-07-27",
+      "exit_date": "2023-08-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": -3584.85,
+      "pnl_pct": -0.048407,
+      "entry_date": "2023-08-07",
+      "exit_date": "2023-09-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600436.SH",
+      "name": "XD片仔癀",
+      "pnl_amount": -3693.09,
+      "pnl_pct": -0.067581,
+      "entry_date": "2023-08-14",
+      "exit_date": "2023-09-11",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": 5391.04,
+      "pnl_pct": 0.074249,
+      "entry_date": "2023-08-18",
+      "exit_date": "2023-09-15",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688303.SH",
+      "name": "大全能源",
+      "pnl_amount": -783.25,
+      "pnl_pct": -0.011633,
+      "entry_date": "2023-08-24",
+      "exit_date": "2023-09-21",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002756.SZ",
+      "name": "永兴材料",
+      "pnl_amount": -372.33,
+      "pnl_pct": -0.00561,
+      "entry_date": "2023-08-24",
+      "exit_date": "2023-09-21",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002466.SZ",
+      "name": "天齐锂业",
+      "pnl_amount": -3558.88,
+      "pnl_pct": -0.053209,
+      "entry_date": "2023-08-24",
+      "exit_date": "2023-09-21",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": 1435.6,
+      "pnl_pct": 0.02107,
+      "entry_date": "2023-08-24",
+      "exit_date": "2023-09-21",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601699.SH",
+      "name": "潞安环能",
+      "pnl_amount": 13539.14,
+      "pnl_pct": 0.192154,
+      "entry_date": "2023-08-24",
+      "exit_date": "2023-09-21",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "pnl_amount": -480.93,
+      "pnl_pct": -0.006907,
+      "entry_date": "2023-08-24",
+      "exit_date": "2023-09-21",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601088.SH",
+      "name": "中国神华",
+      "pnl_amount": 7729.11,
+      "pnl_pct": 0.110495,
+      "entry_date": "2023-08-24",
+      "exit_date": "2023-09-21",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -6830.57,
+      "pnl_pct": -0.114348,
+      "entry_date": "2023-09-04",
+      "exit_date": "2023-10-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": -4989.35,
+      "pnl_pct": -0.069384,
+      "entry_date": "2023-09-11",
+      "exit_date": "2023-10-17",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002821.SZ",
+      "name": "凯莱英",
+      "pnl_amount": 11484.7,
+      "pnl_pct": 0.178668,
+      "entry_date": "2023-09-15",
+      "exit_date": "2023-10-23",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": -9131.99,
+      "pnl_pct": -0.126046,
+      "entry_date": "2023-09-21",
+      "exit_date": "2023-10-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": 13666.56,
+      "pnl_pct": 0.189628,
+      "entry_date": "2023-09-21",
+      "exit_date": "2023-10-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300782.SZ",
+      "name": "卓胜微",
+      "pnl_amount": -3281.94,
+      "pnl_pct": -0.046152,
+      "entry_date": "2023-09-21",
+      "exit_date": "2023-10-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002252.SZ",
+      "name": "上海莱士",
+      "pnl_amount": -2155.12,
+      "pnl_pct": -0.02977,
+      "entry_date": "2023-09-21",
+      "exit_date": "2023-10-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300408.SZ",
+      "name": "三环集团",
+      "pnl_amount": -4125.79,
+      "pnl_pct": -0.056888,
+      "entry_date": "2023-09-21",
+      "exit_date": "2023-10-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "pnl_amount": -4253.66,
+      "pnl_pct": -0.060899,
+      "entry_date": "2023-09-21",
+      "exit_date": "2023-10-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000858.SZ",
+      "name": "五 粮 液",
+      "pnl_amount": -4015.44,
+      "pnl_pct": -0.057933,
+      "entry_date": "2023-09-21",
+      "exit_date": "2023-10-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002756.SZ",
+      "name": "永兴材料",
+      "pnl_amount": 7218.82,
+      "pnl_pct": 0.100274,
+      "entry_date": "2023-10-10",
+      "exit_date": "2023-11-07",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -6757.85,
+      "pnl_pct": -0.134062,
+      "entry_date": "2023-10-17",
+      "exit_date": "2023-11-14",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": 9865.79,
+      "pnl_pct": 0.138178,
+      "entry_date": "2023-10-23",
+      "exit_date": "2023-11-20",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002821.SZ",
+      "name": "凯莱英",
+      "pnl_amount": -2634.54,
+      "pnl_pct": -0.044708,
+      "entry_date": "2023-10-27",
+      "exit_date": "2023-11-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688303.SH",
+      "name": "大全能源",
+      "pnl_amount": -5549.41,
+      "pnl_pct": -0.07855,
+      "entry_date": "2023-10-27",
+      "exit_date": "2023-11-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "pnl_amount": 157.76,
+      "pnl_pct": 0.002221,
+      "entry_date": "2023-10-27",
+      "exit_date": "2023-11-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002466.SZ",
+      "name": "天齐锂业",
+      "pnl_amount": 92.42,
+      "pnl_pct": 0.001317,
+      "entry_date": "2023-10-27",
+      "exit_date": "2023-11-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": 13291.51,
+      "pnl_pct": 0.198543,
+      "entry_date": "2023-10-27",
+      "exit_date": "2023-11-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600436.SH",
+      "name": "XD片仔癀",
+      "pnl_amount": 2446.79,
+      "pnl_pct": 0.034684,
+      "entry_date": "2023-10-27",
+      "exit_date": "2023-11-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002027.SZ",
+      "name": "分众传媒",
+      "pnl_amount": -577.27,
+      "pnl_pct": -0.008132,
+      "entry_date": "2023-10-27",
+      "exit_date": "2023-11-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": -3243.61,
+      "pnl_pct": -0.044132,
+      "entry_date": "2023-11-07",
+      "exit_date": "2023-12-05",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002756.SZ",
+      "name": "永兴材料",
+      "pnl_amount": -672.46,
+      "pnl_pct": -0.009345,
+      "entry_date": "2023-11-14",
+      "exit_date": "2023-12-12",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -9982.17,
+      "pnl_pct": -0.150021,
+      "entry_date": "2023-11-20",
+      "exit_date": "2023-12-18",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": -283.37,
+      "pnl_pct": -0.003962,
+      "entry_date": "2023-11-24",
+      "exit_date": "2023-12-22",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300782.SZ",
+      "name": "卓胜微",
+      "pnl_amount": 1840.68,
+      "pnl_pct": 0.026719,
+      "entry_date": "2023-11-24",
+      "exit_date": "2023-12-22",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": -6261.96,
+      "pnl_pct": -0.085835,
+      "entry_date": "2023-11-24",
+      "exit_date": "2023-12-22",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002252.SZ",
+      "name": "上海莱士",
+      "pnl_amount": 5618.07,
+      "pnl_pct": 0.077269,
+      "entry_date": "2023-11-24",
+      "exit_date": "2023-12-22",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300498.SZ",
+      "name": "温氏股份",
+      "pnl_amount": -372.0,
+      "pnl_pct": -0.005189,
+      "entry_date": "2023-11-24",
+      "exit_date": "2023-12-22",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000858.SZ",
+      "name": "五 粮 液",
+      "pnl_amount": -8516.05,
+      "pnl_pct": -0.127767,
+      "entry_date": "2023-11-24",
+      "exit_date": "2023-12-22",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300408.SZ",
+      "name": "三环集团",
+      "pnl_amount": -3553.86,
+      "pnl_pct": -0.049053,
+      "entry_date": "2023-11-24",
+      "exit_date": "2023-12-22",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002821.SZ",
+      "name": "凯莱英",
+      "pnl_amount": -6933.28,
+      "pnl_pct": -0.1111,
+      "entry_date": "2023-12-05",
+      "exit_date": "2024-01-03",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": -9590.31,
+      "pnl_pct": -0.135599,
+      "entry_date": "2023-12-12",
+      "exit_date": "2024-01-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": -6536.39,
+      "pnl_pct": -0.092485,
+      "entry_date": "2023-12-18",
+      "exit_date": "2024-01-16",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "pnl_amount": -13260.02,
+      "pnl_pct": -0.204151,
+      "entry_date": "2023-12-22",
+      "exit_date": "2024-01-17",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": 7261.07,
+      "pnl_pct": 0.127287,
+      "entry_date": "2023-12-22",
+      "exit_date": "2024-01-22",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002466.SZ",
+      "name": "天齐锂业",
+      "pnl_amount": 5423.41,
+      "pnl_pct": 0.083196,
+      "entry_date": "2023-12-22",
+      "exit_date": "2024-01-22",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688041.SH",
+      "name": "海光信息",
+      "pnl_amount": -5964.11,
+      "pnl_pct": -0.086406,
+      "entry_date": "2023-12-22",
+      "exit_date": "2024-01-22",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600436.SH",
+      "name": "XD片仔癀",
+      "pnl_amount": -4426.02,
+      "pnl_pct": -0.065846,
+      "entry_date": "2023-12-22",
+      "exit_date": "2024-01-22",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688303.SH",
+      "name": "大全能源",
+      "pnl_amount": 3617.16,
+      "pnl_pct": 0.052388,
+      "entry_date": "2023-12-22",
+      "exit_date": "2024-01-22",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601006.SH",
+      "name": "大秦铁路",
+      "pnl_amount": 409.03,
+      "pnl_pct": 0.005849,
+      "entry_date": "2023-12-22",
+      "exit_date": "2024-01-22",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": -2240.16,
+      "pnl_pct": -0.032502,
+      "entry_date": "2024-01-03",
+      "exit_date": "2024-01-31",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002821.SZ",
+      "name": "凯莱英",
+      "pnl_amount": -12876.27,
+      "pnl_pct": -0.204151,
+      "entry_date": "2024-01-10",
+      "exit_date": "2024-02-02",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300782.SZ",
+      "name": "卓胜微",
+      "pnl_amount": -13564.88,
+      "pnl_pct": -0.204151,
+      "entry_date": "2024-01-22",
+      "exit_date": "2024-02-02",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "pnl_amount": -13768.68,
+      "pnl_pct": -0.204151,
+      "entry_date": "2024-01-22",
+      "exit_date": "2024-02-02",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": -13000.03,
+      "pnl_pct": -0.204151,
+      "entry_date": "2024-01-17",
+      "exit_date": "2024-02-05",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": 1788.87,
+      "pnl_pct": 0.026588,
+      "entry_date": "2024-01-16",
+      "exit_date": "2024-02-21",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002252.SZ",
+      "name": "上海莱士",
+      "pnl_amount": 1393.06,
+      "pnl_pct": 0.0208,
+      "entry_date": "2024-01-22",
+      "exit_date": "2024-02-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300498.SZ",
+      "name": "温氏股份",
+      "pnl_amount": 1012.47,
+      "pnl_pct": 0.015252,
+      "entry_date": "2024-01-22",
+      "exit_date": "2024-02-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": 5584.94,
+      "pnl_pct": 0.082787,
+      "entry_date": "2024-01-22",
+      "exit_date": "2024-02-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000858.SZ",
+      "name": "五 粮 液",
+      "pnl_amount": 5172.84,
+      "pnl_pct": 0.077015,
+      "entry_date": "2024-01-22",
+      "exit_date": "2024-02-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": 7607.56,
+      "pnl_pct": 0.132391,
+      "entry_date": "2024-01-31",
+      "exit_date": "2024-03-07",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": 11890.15,
+      "pnl_pct": 0.202603,
+      "entry_date": "2024-02-02",
+      "exit_date": "2024-03-11",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002466.SZ",
+      "name": "天齐锂业",
+      "pnl_amount": 5271.92,
+      "pnl_pct": 0.09038,
+      "entry_date": "2024-02-02",
+      "exit_date": "2024-03-11",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688041.SH",
+      "name": "海光信息",
+      "pnl_amount": 10284.5,
+      "pnl_pct": 0.186843,
+      "entry_date": "2024-02-02",
+      "exit_date": "2024-03-11",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002821.SZ",
+      "name": "凯莱英",
+      "pnl_amount": 10244.18,
+      "pnl_pct": 0.200493,
+      "entry_date": "2024-02-05",
+      "exit_date": "2024-03-12",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": -3113.3,
+      "pnl_pct": -0.047501,
+      "entry_date": "2024-02-21",
+      "exit_date": "2024-03-20",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": -9499.48,
+      "pnl_pct": -0.143367,
+      "entry_date": "2024-02-27",
+      "exit_date": "2024-03-26",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300782.SZ",
+      "name": "卓胜微",
+      "pnl_amount": 2490.73,
+      "pnl_pct": 0.041886,
+      "entry_date": "2024-02-27",
+      "exit_date": "2024-03-26",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600436.SH",
+      "name": "XD片仔癀",
+      "pnl_amount": 3661.85,
+      "pnl_pct": 0.059084,
+      "entry_date": "2024-02-27",
+      "exit_date": "2024-03-26",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688303.SH",
+      "name": "大全能源",
+      "pnl_amount": -3274.35,
+      "pnl_pct": -0.050063,
+      "entry_date": "2024-02-27",
+      "exit_date": "2024-03-26",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002252.SZ",
+      "name": "上海莱士",
+      "pnl_amount": -2179.76,
+      "pnl_pct": -0.031296,
+      "entry_date": "2024-03-07",
+      "exit_date": "2024-04-08",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002821.SZ",
+      "name": "凯莱英",
+      "pnl_amount": -13974.04,
+      "pnl_pct": -0.204151,
+      "entry_date": "2024-03-20",
+      "exit_date": "2024-04-09",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -5811.57,
+      "pnl_pct": -0.089126,
+      "entry_date": "2024-03-11",
+      "exit_date": "2024-04-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300498.SZ",
+      "name": "温氏股份",
+      "pnl_amount": -320.28,
+      "pnl_pct": -0.004668,
+      "entry_date": "2024-03-11",
+      "exit_date": "2024-04-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": -4609.87,
+      "pnl_pct": -0.066798,
+      "entry_date": "2024-03-11",
+      "exit_date": "2024-04-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": 3282.54,
+      "pnl_pct": 0.048429,
+      "entry_date": "2024-03-12",
+      "exit_date": "2024-04-11",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002466.SZ",
+      "name": "天齐锂业",
+      "pnl_amount": -14737.31,
+      "pnl_pct": -0.225028,
+      "entry_date": "2024-03-26",
+      "exit_date": "2024-04-25",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": -2560.55,
+      "pnl_pct": -0.040996,
+      "entry_date": "2024-03-26",
+      "exit_date": "2024-04-25",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688041.SH",
+      "name": "海光信息",
+      "pnl_amount": -4719.06,
+      "pnl_pct": -0.073745,
+      "entry_date": "2024-03-26",
+      "exit_date": "2024-04-25",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "pnl_amount": 1644.32,
+      "pnl_pct": 0.027594,
+      "entry_date": "2024-03-26",
+      "exit_date": "2024-04-25",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": 16407.15,
+      "pnl_pct": 0.256033,
+      "entry_date": "2024-04-08",
+      "exit_date": "2024-05-09",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300782.SZ",
+      "name": "卓胜微",
+      "pnl_amount": -2632.89,
+      "pnl_pct": -0.045519,
+      "entry_date": "2024-04-09",
+      "exit_date": "2024-05-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002821.SZ",
+      "name": "凯莱英",
+      "pnl_amount": 3825.37,
+      "pnl_pct": 0.066432,
+      "entry_date": "2024-04-10",
+      "exit_date": "2024-05-13",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002252.SZ",
+      "name": "上海莱士",
+      "pnl_amount": 3335.63,
+      "pnl_pct": 0.051984,
+      "entry_date": "2024-04-10",
+      "exit_date": "2024-05-13",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688303.SH",
+      "name": "大全能源",
+      "pnl_amount": -3671.03,
+      "pnl_pct": -0.058476,
+      "entry_date": "2024-04-10",
+      "exit_date": "2024-05-13",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": 1478.72,
+      "pnl_pct": 0.024853,
+      "entry_date": "2024-04-11",
+      "exit_date": "2024-05-14",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": -2540.59,
+      "pnl_pct": -0.041654,
+      "entry_date": "2024-04-25",
+      "exit_date": "2024-05-28",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300498.SZ",
+      "name": "温氏股份",
+      "pnl_amount": 9911.21,
+      "pnl_pct": 0.160786,
+      "entry_date": "2024-04-25",
+      "exit_date": "2024-05-28",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": -2359.32,
+      "pnl_pct": -0.037699,
+      "entry_date": "2024-04-25",
+      "exit_date": "2024-05-28",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300408.SZ",
+      "name": "三环集团",
+      "pnl_amount": 7804.31,
+      "pnl_pct": 0.125604,
+      "entry_date": "2024-04-25",
+      "exit_date": "2024-05-28",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": 1960.77,
+      "pnl_pct": 0.030105,
+      "entry_date": "2024-05-09",
+      "exit_date": "2024-06-06",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": 1377.19,
+      "pnl_pct": 0.021409,
+      "entry_date": "2024-05-10",
+      "exit_date": "2024-06-07",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000876.SZ",
+      "name": "新 希 望",
+      "pnl_amount": 2379.38,
+      "pnl_pct": 0.036085,
+      "entry_date": "2024-05-13",
+      "exit_date": "2024-06-11",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "pnl_amount": 2046.84,
+      "pnl_pct": 0.031656,
+      "entry_date": "2024-05-13",
+      "exit_date": "2024-06-11",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300782.SZ",
+      "name": "卓胜微",
+      "pnl_amount": -3053.6,
+      "pnl_pct": -0.048742,
+      "entry_date": "2024-05-13",
+      "exit_date": "2024-06-11",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002252.SZ",
+      "name": "上海莱士",
+      "pnl_amount": 643.89,
+      "pnl_pct": 0.00974,
+      "entry_date": "2024-05-14",
+      "exit_date": "2024-06-12",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -10664.99,
+      "pnl_pct": -0.178611,
+      "entry_date": "2024-05-28",
+      "exit_date": "2024-06-26",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688041.SH",
+      "name": "海光信息",
+      "pnl_amount": -2.93,
+      "pnl_pct": -4.6e-05,
+      "entry_date": "2024-05-28",
+      "exit_date": "2024-06-26",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300223.SZ",
+      "name": "君正股份",
+      "pnl_amount": -5043.09,
+      "pnl_pct": -0.079843,
+      "entry_date": "2024-05-28",
+      "exit_date": "2024-06-26",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002821.SZ",
+      "name": "凯莱英",
+      "pnl_amount": -6083.06,
+      "pnl_pct": -0.099579,
+      "entry_date": "2024-05-28",
+      "exit_date": "2024-06-26",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": -7666.34,
+      "pnl_pct": -0.115277,
+      "entry_date": "2024-06-06",
+      "exit_date": "2024-07-05",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": 10299.4,
+      "pnl_pct": 0.167528,
+      "entry_date": "2024-06-07",
+      "exit_date": "2024-07-08",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": -1355.07,
+      "pnl_pct": -0.021661,
+      "entry_date": "2024-06-11",
+      "exit_date": "2024-07-09",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": -869.88,
+      "pnl_pct": -0.013372,
+      "entry_date": "2024-06-11",
+      "exit_date": "2024-07-09",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300408.SZ",
+      "name": "三环集团",
+      "pnl_amount": -2866.53,
+      "pnl_pct": -0.045282,
+      "entry_date": "2024-06-11",
+      "exit_date": "2024-07-09",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000876.SZ",
+      "name": "新 希 望",
+      "pnl_amount": -5999.21,
+      "pnl_pct": -0.091346,
+      "entry_date": "2024-06-12",
+      "exit_date": "2024-07-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600161.SH",
+      "name": "天坛生物",
+      "pnl_amount": 1229.3,
+      "pnl_pct": 0.020193,
+      "entry_date": "2024-06-26",
+      "exit_date": "2024-07-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002252.SZ",
+      "name": "上海莱士",
+      "pnl_amount": 902.98,
+      "pnl_pct": 0.014497,
+      "entry_date": "2024-06-26",
+      "exit_date": "2024-07-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300832.SZ",
+      "name": "新产业",
+      "pnl_amount": -3225.9,
+      "pnl_pct": -0.0556,
+      "entry_date": "2024-06-26",
+      "exit_date": "2024-07-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "pnl_amount": -1449.02,
+      "pnl_pct": -0.026696,
+      "entry_date": "2024-06-26",
+      "exit_date": "2024-07-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": 4366.75,
+      "pnl_pct": 0.071532,
+      "entry_date": "2024-07-05",
+      "exit_date": "2024-08-02",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": 19934.55,
+      "pnl_pct": 0.317906,
+      "entry_date": "2024-07-08",
+      "exit_date": "2024-08-05",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": -5249.73,
+      "pnl_pct": -0.088927,
+      "entry_date": "2024-07-09",
+      "exit_date": "2024-08-06",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300782.SZ",
+      "name": "卓胜微",
+      "pnl_amount": 1859.15,
+      "pnl_pct": 0.032797,
+      "entry_date": "2024-07-09",
+      "exit_date": "2024-08-06",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688041.SH",
+      "name": "海光信息",
+      "pnl_amount": 3352.27,
+      "pnl_pct": 0.059347,
+      "entry_date": "2024-07-09",
+      "exit_date": "2024-08-06",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": -8382.57,
+      "pnl_pct": -0.133926,
+      "entry_date": "2024-07-10",
+      "exit_date": "2024-08-07",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000876.SZ",
+      "name": "新 希 望",
+      "pnl_amount": -607.76,
+      "pnl_pct": -0.009482,
+      "entry_date": "2024-07-24",
+      "exit_date": "2024-08-21",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": -130.9,
+      "pnl_pct": -0.002071,
+      "entry_date": "2024-07-24",
+      "exit_date": "2024-08-21",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300223.SZ",
+      "name": "君正股份",
+      "pnl_amount": -11376.52,
+      "pnl_pct": -0.182828,
+      "entry_date": "2024-07-24",
+      "exit_date": "2024-08-21",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002821.SZ",
+      "name": "凯莱英",
+      "pnl_amount": -3204.12,
+      "pnl_pct": -0.052765,
+      "entry_date": "2024-07-24",
+      "exit_date": "2024-08-21",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -13399.19,
+      "pnl_pct": -0.205318,
+      "entry_date": "2024-08-05",
+      "exit_date": "2024-08-29",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600161.SH",
+      "name": "天坛生物",
+      "pnl_amount": -1173.61,
+      "pnl_pct": -0.017954,
+      "entry_date": "2024-08-02",
+      "exit_date": "2024-08-30",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": -10083.79,
+      "pnl_pct": -0.155459,
+      "entry_date": "2024-08-06",
+      "exit_date": "2024-09-03",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002252.SZ",
+      "name": "上海莱士",
+      "pnl_amount": -5276.97,
+      "pnl_pct": -0.081415,
+      "entry_date": "2024-08-06",
+      "exit_date": "2024-09-03",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300832.SZ",
+      "name": "新产业",
+      "pnl_amount": -1773.87,
+      "pnl_pct": -0.027934,
+      "entry_date": "2024-08-06",
+      "exit_date": "2024-09-03",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": -1609.82,
+      "pnl_pct": -0.02543,
+      "entry_date": "2024-08-07",
+      "exit_date": "2024-09-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": 5248.25,
+      "pnl_pct": 0.086281,
+      "entry_date": "2024-08-21",
+      "exit_date": "2024-09-20",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "pnl_amount": -9248.45,
+      "pnl_pct": -0.168522,
+      "entry_date": "2024-08-21",
+      "exit_date": "2024-09-20",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300782.SZ",
+      "name": "卓胜微",
+      "pnl_amount": -4567.51,
+      "pnl_pct": -0.075307,
+      "entry_date": "2024-08-21",
+      "exit_date": "2024-09-20",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688041.SH",
+      "name": "海光信息",
+      "pnl_amount": 404.55,
+      "pnl_pct": 0.006733,
+      "entry_date": "2024-08-21",
+      "exit_date": "2024-09-20",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000876.SZ",
+      "name": "新 希 望",
+      "pnl_amount": 6340.58,
+      "pnl_pct": 0.107959,
+      "entry_date": "2024-08-29",
+      "exit_date": "2024-09-30",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": 53481.83,
+      "pnl_pct": 0.992307,
+      "entry_date": "2024-08-30",
+      "exit_date": "2024-10-08",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600161.SH",
+      "name": "天坛生物",
+      "pnl_amount": 902.38,
+      "pnl_pct": 0.015932,
+      "entry_date": "2024-09-03",
+      "exit_date": "2024-10-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": 6458.7,
+      "pnl_pct": 0.110135,
+      "entry_date": "2024-09-03",
+      "exit_date": "2024-10-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300223.SZ",
+      "name": "君正股份",
+      "pnl_amount": 43305.53,
+      "pnl_pct": 0.739536,
+      "entry_date": "2024-09-03",
+      "exit_date": "2024-10-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": -15055.41,
+      "pnl_pct": -0.204151,
+      "entry_date": "2024-10-08",
+      "exit_date": "2024-10-11",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002252.SZ",
+      "name": "上海莱士",
+      "pnl_amount": 2010.36,
+      "pnl_pct": 0.034043,
+      "entry_date": "2024-09-04",
+      "exit_date": "2024-10-11",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": 11711.1,
+      "pnl_pct": 0.2033,
+      "entry_date": "2024-09-20",
+      "exit_date": "2024-10-25",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": 21602.48,
+      "pnl_pct": 0.401797,
+      "entry_date": "2024-09-20",
+      "exit_date": "2024-10-25",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000725.SZ",
+      "name": "京东方Ａ",
+      "pnl_amount": 7363.13,
+      "pnl_pct": 0.127452,
+      "entry_date": "2024-09-20",
+      "exit_date": "2024-10-25",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600050.SH",
+      "name": "中国联通",
+      "pnl_amount": 6880.14,
+      "pnl_pct": 0.11944,
+      "entry_date": "2024-09-20",
+      "exit_date": "2024-10-25",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "pnl_amount": 559.22,
+      "pnl_pct": 0.00938,
+      "entry_date": "2024-09-30",
+      "exit_date": "2024-11-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -2772.28,
+      "pnl_pct": -0.041716,
+      "entry_date": "2024-10-10",
+      "exit_date": "2024-11-07",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600219.SH",
+      "name": "南山铝业",
+      "pnl_amount": 5896.59,
+      "pnl_pct": 0.077973,
+      "entry_date": "2024-10-10",
+      "exit_date": "2024-11-07",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600585.SH",
+      "name": "海螺水泥",
+      "pnl_amount": 7659.77,
+      "pnl_pct": 0.101766,
+      "entry_date": "2024-10-10",
+      "exit_date": "2024-11-07",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600161.SH",
+      "name": "天坛生物",
+      "pnl_amount": -3875.48,
+      "pnl_pct": -0.052461,
+      "entry_date": "2024-10-11",
+      "exit_date": "2024-11-08",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": 13536.43,
+      "pnl_pct": 0.181052,
+      "entry_date": "2024-10-11",
+      "exit_date": "2024-11-08",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": -692.41,
+      "pnl_pct": -0.009795,
+      "entry_date": "2024-10-25",
+      "exit_date": "2024-11-22",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "002252.SZ",
+      "name": "上海莱士",
+      "pnl_amount": 3106.43,
+      "pnl_pct": 0.042118,
+      "entry_date": "2024-10-25",
+      "exit_date": "2024-11-22",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600938.SH",
+      "name": "XD中国海",
+      "pnl_amount": -4384.42,
+      "pnl_pct": -0.060751,
+      "entry_date": "2024-10-25",
+      "exit_date": "2024-11-22",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300223.SZ",
+      "name": "君正股份",
+      "pnl_amount": -374.4,
+      "pnl_pct": -0.005189,
+      "entry_date": "2024-10-25",
+      "exit_date": "2024-11-22",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": 28319.36,
+      "pnl_pct": 0.389367,
+      "entry_date": "2024-11-04",
+      "exit_date": "2024-12-02",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300496.SZ",
+      "name": "中科创达",
+      "pnl_amount": -5990.81,
+      "pnl_pct": -0.07926,
+      "entry_date": "2024-11-07",
+      "exit_date": "2024-12-05",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601238.SH",
+      "name": "广汽集团",
+      "pnl_amount": 14986.46,
+      "pnl_pct": 0.197105,
+      "entry_date": "2024-11-07",
+      "exit_date": "2024-12-05",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "pnl_amount": -8560.07,
+      "pnl_pct": -0.112323,
+      "entry_date": "2024-11-07",
+      "exit_date": "2024-12-05",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -11331.25,
+      "pnl_pct": -0.16111,
+      "entry_date": "2024-11-08",
+      "exit_date": "2024-12-06",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601919.SH",
+      "name": "中远海控",
+      "pnl_amount": -5692.94,
+      "pnl_pct": -0.072913,
+      "entry_date": "2024-11-08",
+      "exit_date": "2024-12-06",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": 1997.06,
+      "pnl_pct": 0.026939,
+      "entry_date": "2024-11-22",
+      "exit_date": "2024-12-20",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600219.SH",
+      "name": "南山铝业",
+      "pnl_amount": -3547.41,
+      "pnl_pct": -0.046335,
+      "entry_date": "2024-11-22",
+      "exit_date": "2024-12-20",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "pnl_amount": 17398.66,
+      "pnl_pct": 0.246752,
+      "entry_date": "2024-11-22",
+      "exit_date": "2024-12-20",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300408.SZ",
+      "name": "三环集团",
+      "pnl_amount": 3705.0,
+      "pnl_pct": 0.049197,
+      "entry_date": "2024-11-22",
+      "exit_date": "2024-12-20",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": 2718.76,
+      "pnl_pct": 0.037427,
+      "entry_date": "2024-12-02",
+      "exit_date": "2024-12-30",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "600938.SH",
+      "name": "XD中国海",
+      "pnl_amount": 5959.76,
+      "pnl_pct": 0.079507,
+      "entry_date": "2024-12-05",
+      "exit_date": "2024-12-31",
+      "exit_reason": "end"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": -3803.6,
+      "pnl_pct": -0.050674,
+      "entry_date": "2024-12-05",
+      "exit_date": "2024-12-31",
+      "exit_reason": "end"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300496.SZ",
+      "name": "中科创达",
+      "pnl_amount": 13146.05,
+      "pnl_pct": 0.18391,
+      "entry_date": "2024-12-06",
+      "exit_date": "2024-12-31",
+      "exit_reason": "end"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601238.SH",
+      "name": "广汽集团",
+      "pnl_amount": -1402.58,
+      "pnl_pct": -0.018453,
+      "entry_date": "2024-12-06",
+      "exit_date": "2024-12-31",
+      "exit_reason": "end"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "pnl_amount": -1303.02,
+      "pnl_pct": -0.01638,
+      "entry_date": "2024-12-20",
+      "exit_date": "2024-12-31",
+      "exit_reason": "end"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -7719.42,
+      "pnl_pct": -0.098045,
+      "entry_date": "2024-12-20",
+      "exit_date": "2024-12-31",
+      "exit_reason": "end"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "601919.SH",
+      "name": "中远海控",
+      "pnl_amount": 4367.25,
+      "pnl_pct": 0.055306,
+      "entry_date": "2024-12-20",
+      "exit_date": "2024-12-31",
+      "exit_reason": "end"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "300394.SZ",
+      "name": "天孚通信",
+      "pnl_amount": -2493.92,
+      "pnl_pct": -0.031481,
+      "entry_date": "2024-12-20",
+      "exit_date": "2024-12-31",
+      "exit_reason": "end"
+    },
+    {
+      "segment": "discovery",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": -2654.47,
+      "pnl_pct": -0.033262,
+      "entry_date": "2024-12-30",
+      "exit_date": "2024-12-31",
+      "exit_reason": "end"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601238.SH",
+      "name": "广汽集团",
+      "pnl_amount": 2794.48,
+      "pnl_pct": 0.028082,
+      "entry_date": "2025-01-03",
+      "exit_date": "2025-02-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "pnl_amount": 3194.65,
+      "pnl_pct": 0.032201,
+      "entry_date": "2025-01-03",
+      "exit_date": "2025-02-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -652.26,
+      "pnl_pct": -0.007726,
+      "entry_date": "2025-01-03",
+      "exit_date": "2025-02-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": 13543.37,
+      "pnl_pct": 0.136624,
+      "entry_date": "2025-01-03",
+      "exit_date": "2025-02-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601919.SH",
+      "name": "中远海控",
+      "pnl_amount": -4168.56,
+      "pnl_pct": -0.042083,
+      "entry_date": "2025-01-03",
+      "exit_date": "2025-02-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": 9468.39,
+      "pnl_pct": 0.095899,
+      "entry_date": "2025-01-03",
+      "exit_date": "2025-02-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "600219.SH",
+      "name": "南山铝业",
+      "pnl_amount": 4562.4,
+      "pnl_pct": 0.045696,
+      "entry_date": "2025-01-03",
+      "exit_date": "2025-02-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300394.SZ",
+      "name": "天孚通信",
+      "pnl_amount": 401.66,
+      "pnl_pct": 0.004206,
+      "entry_date": "2025-01-03",
+      "exit_date": "2025-02-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "pnl_amount": 30696.5,
+      "pnl_pct": 0.329935,
+      "entry_date": "2025-01-03",
+      "exit_date": "2025-02-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "600938.SH",
+      "name": "XD中国海",
+      "pnl_amount": -7431.14,
+      "pnl_pct": -0.07527,
+      "entry_date": "2025-01-03",
+      "exit_date": "2025-02-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "002252.SZ",
+      "name": "上海莱士",
+      "pnl_amount": -3789.24,
+      "pnl_pct": -0.036189,
+      "entry_date": "2025-02-10",
+      "exit_date": "2025-03-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300408.SZ",
+      "name": "三环集团",
+      "pnl_amount": 5249.12,
+      "pnl_pct": 0.050327,
+      "entry_date": "2025-02-10",
+      "exit_date": "2025-03-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": 1997.57,
+      "pnl_pct": 0.019351,
+      "entry_date": "2025-02-10",
+      "exit_date": "2025-03-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "600161.SH",
+      "name": "天坛生物",
+      "pnl_amount": -5625.77,
+      "pnl_pct": -0.053903,
+      "entry_date": "2025-02-10",
+      "exit_date": "2025-03-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "688041.SH",
+      "name": "海光信息",
+      "pnl_amount": 12720.99,
+      "pnl_pct": 0.129063,
+      "entry_date": "2025-02-10",
+      "exit_date": "2025-03-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601006.SH",
+      "name": "大秦铁路",
+      "pnl_amount": -1498.97,
+      "pnl_pct": -0.014288,
+      "entry_date": "2025-02-10",
+      "exit_date": "2025-03-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000858.SZ",
+      "name": "五 粮 液",
+      "pnl_amount": 4517.79,
+      "pnl_pct": 0.047949,
+      "entry_date": "2025-02-10",
+      "exit_date": "2025-03-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601088.SH",
+      "name": "中国神华",
+      "pnl_amount": -8359.62,
+      "pnl_pct": -0.079736,
+      "entry_date": "2025-02-10",
+      "exit_date": "2025-03-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300832.SZ",
+      "name": "新产业",
+      "pnl_amount": -3192.21,
+      "pnl_pct": -0.031444,
+      "entry_date": "2025-02-10",
+      "exit_date": "2025-03-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "603288.SH",
+      "name": "海天味业",
+      "pnl_amount": -3129.8,
+      "pnl_pct": -0.03038,
+      "entry_date": "2025-02-10",
+      "exit_date": "2025-03-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": -21000.65,
+      "pnl_pct": -0.204151,
+      "entry_date": "2025-03-10",
+      "exit_date": "2025-04-07",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300394.SZ",
+      "name": "天孚通信",
+      "pnl_amount": -22396.22,
+      "pnl_pct": -0.21682,
+      "entry_date": "2025-03-10",
+      "exit_date": "2025-04-07",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "validation",
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "pnl_amount": -19386.29,
+      "pnl_pct": -0.20993,
+      "entry_date": "2025-03-10",
+      "exit_date": "2025-04-07",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -3072.72,
+      "pnl_pct": -0.031025,
+      "entry_date": "2025-03-10",
+      "exit_date": "2025-04-08",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "pnl_amount": -10305.01,
+      "pnl_pct": -0.09914,
+      "entry_date": "2025-03-10",
+      "exit_date": "2025-04-08",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": -14842.05,
+      "pnl_pct": -0.14404,
+      "entry_date": "2025-03-10",
+      "exit_date": "2025-04-08",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601238.SH",
+      "name": "广汽集团",
+      "pnl_amount": -15804.55,
+      "pnl_pct": -0.151352,
+      "entry_date": "2025-03-10",
+      "exit_date": "2025-04-08",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601919.SH",
+      "name": "中远海控",
+      "pnl_amount": -5460.76,
+      "pnl_pct": -0.052457,
+      "entry_date": "2025-03-10",
+      "exit_date": "2025-04-08",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "600938.SH",
+      "name": "XD中国海",
+      "pnl_amount": -6502.88,
+      "pnl_pct": -0.061967,
+      "entry_date": "2025-03-10",
+      "exit_date": "2025-04-08",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "600219.SH",
+      "name": "南山铝业",
+      "pnl_amount": -14810.49,
+      "pnl_pct": -0.141078,
+      "entry_date": "2025-03-10",
+      "exit_date": "2025-04-08",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "002252.SZ",
+      "name": "上海莱士",
+      "pnl_amount": -3917.75,
+      "pnl_pct": -0.044532,
+      "entry_date": "2025-04-07",
+      "exit_date": "2025-05-08",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300408.SZ",
+      "name": "三环集团",
+      "pnl_amount": -5343.86,
+      "pnl_pct": -0.061448,
+      "entry_date": "2025-04-07",
+      "exit_date": "2025-05-08",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": 3527.23,
+      "pnl_pct": 0.040531,
+      "entry_date": "2025-04-07",
+      "exit_date": "2025-05-08",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300394.SZ",
+      "name": "天孚通信",
+      "pnl_amount": 15109.74,
+      "pnl_pct": 0.16707,
+      "entry_date": "2025-04-08",
+      "exit_date": "2025-05-09",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": 14775.28,
+      "pnl_pct": 0.173274,
+      "entry_date": "2025-04-08",
+      "exit_date": "2025-05-09",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "pnl_amount": 15809.27,
+      "pnl_pct": 0.187082,
+      "entry_date": "2025-04-08",
+      "exit_date": "2025-05-09",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "688041.SH",
+      "name": "海光信息",
+      "pnl_amount": 4113.11,
+      "pnl_pct": 0.04967,
+      "entry_date": "2025-04-08",
+      "exit_date": "2025-05-09",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "600161.SH",
+      "name": "天坛生物",
+      "pnl_amount": -11872.8,
+      "pnl_pct": -0.131292,
+      "entry_date": "2025-04-08",
+      "exit_date": "2025-05-09",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601006.SH",
+      "name": "大秦铁路",
+      "pnl_amount": 2032.34,
+      "pnl_pct": 0.022573,
+      "entry_date": "2025-04-08",
+      "exit_date": "2025-05-09",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601088.SH",
+      "name": "中国神华",
+      "pnl_amount": 1268.49,
+      "pnl_pct": 0.014312,
+      "entry_date": "2025-04-08",
+      "exit_date": "2025-05-09",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": 1452.71,
+      "pnl_pct": 0.017335,
+      "entry_date": "2025-05-08",
+      "exit_date": "2025-06-06",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": 4041.12,
+      "pnl_pct": 0.043199,
+      "entry_date": "2025-05-08",
+      "exit_date": "2025-06-06",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": 230.71,
+      "pnl_pct": 0.002459,
+      "entry_date": "2025-05-08",
+      "exit_date": "2025-06-06",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "pnl_amount": 1977.29,
+      "pnl_pct": 0.020811,
+      "entry_date": "2025-05-09",
+      "exit_date": "2025-06-09",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": -3296.51,
+      "pnl_pct": -0.034709,
+      "entry_date": "2025-05-09",
+      "exit_date": "2025-06-09",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "600219.SH",
+      "name": "南山铝业",
+      "pnl_amount": 3174.41,
+      "pnl_pct": 0.033359,
+      "entry_date": "2025-05-09",
+      "exit_date": "2025-06-09",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "002252.SZ",
+      "name": "上海莱士",
+      "pnl_amount": 2139.86,
+      "pnl_pct": 0.022526,
+      "entry_date": "2025-05-09",
+      "exit_date": "2025-06-09",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300408.SZ",
+      "name": "三环集团",
+      "pnl_amount": -4208.79,
+      "pnl_pct": -0.045729,
+      "entry_date": "2025-05-09",
+      "exit_date": "2025-06-09",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "688396.SH",
+      "name": "华润微",
+      "pnl_amount": -1150.36,
+      "pnl_pct": -0.012699,
+      "entry_date": "2025-05-09",
+      "exit_date": "2025-06-09",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000975.SZ",
+      "name": "山金国际",
+      "pnl_amount": 902.9,
+      "pnl_pct": 0.009534,
+      "entry_date": "2025-05-09",
+      "exit_date": "2025-06-09",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": -1687.02,
+      "pnl_pct": -0.018476,
+      "entry_date": "2025-06-06",
+      "exit_date": "2025-07-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300394.SZ",
+      "name": "天孚通信",
+      "pnl_amount": 23287.57,
+      "pnl_pct": 0.25113,
+      "entry_date": "2025-06-06",
+      "exit_date": "2025-07-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "pnl_amount": 994.15,
+      "pnl_pct": 0.010585,
+      "entry_date": "2025-06-06",
+      "exit_date": "2025-07-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -975.98,
+      "pnl_pct": -0.011488,
+      "entry_date": "2025-06-09",
+      "exit_date": "2025-07-07",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": 1282.44,
+      "pnl_pct": 0.013674,
+      "entry_date": "2025-06-09",
+      "exit_date": "2025-07-07",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": 11633.15,
+      "pnl_pct": 0.124718,
+      "entry_date": "2025-06-09",
+      "exit_date": "2025-07-07",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "600585.SH",
+      "name": "海螺水泥",
+      "pnl_amount": -271.97,
+      "pnl_pct": -0.002816,
+      "entry_date": "2025-06-09",
+      "exit_date": "2025-07-07",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "600436.SH",
+      "name": "XD片仔癀",
+      "pnl_amount": -2117.8,
+      "pnl_pct": -0.027018,
+      "entry_date": "2025-06-09",
+      "exit_date": "2025-07-07",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "603806.SH",
+      "name": "福斯特",
+      "pnl_amount": 9535.16,
+      "pnl_pct": 0.099828,
+      "entry_date": "2025-06-09",
+      "exit_date": "2025-07-07",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601006.SH",
+      "name": "大秦铁路",
+      "pnl_amount": -2907.69,
+      "pnl_pct": -0.03017,
+      "entry_date": "2025-06-09",
+      "exit_date": "2025-07-07",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "001391.SZ",
+      "name": "国货航",
+      "pnl_amount": -328.93,
+      "pnl_pct": -0.003276,
+      "entry_date": "2025-07-04",
+      "exit_date": "2025-08-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "pnl_amount": 2489.67,
+      "pnl_pct": 0.024751,
+      "entry_date": "2025-07-04",
+      "exit_date": "2025-08-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": -3191.38,
+      "pnl_pct": -0.03218,
+      "entry_date": "2025-07-04",
+      "exit_date": "2025-08-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": 496.8,
+      "pnl_pct": 0.005107,
+      "entry_date": "2025-07-07",
+      "exit_date": "2025-08-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "600219.SH",
+      "name": "南山铝业",
+      "pnl_amount": 243.91,
+      "pnl_pct": 0.002463,
+      "entry_date": "2025-07-07",
+      "exit_date": "2025-08-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "002252.SZ",
+      "name": "上海莱士",
+      "pnl_amount": 349.14,
+      "pnl_pct": 0.003537,
+      "entry_date": "2025-07-07",
+      "exit_date": "2025-08-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300394.SZ",
+      "name": "天孚通信",
+      "pnl_amount": 38784.42,
+      "pnl_pct": 0.407287,
+      "entry_date": "2025-07-07",
+      "exit_date": "2025-08-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300408.SZ",
+      "name": "三环集团",
+      "pnl_amount": 1185.26,
+      "pnl_pct": 0.012046,
+      "entry_date": "2025-07-07",
+      "exit_date": "2025-08-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "pnl_amount": -2628.48,
+      "pnl_pct": -0.027597,
+      "entry_date": "2025-07-07",
+      "exit_date": "2025-08-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "688396.SH",
+      "name": "华润微",
+      "pnl_amount": -1786.78,
+      "pnl_pct": -0.018837,
+      "entry_date": "2025-07-07",
+      "exit_date": "2025-08-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": 1797.08,
+      "pnl_pct": 0.019842,
+      "entry_date": "2025-08-01",
+      "exit_date": "2025-08-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": 11998.39,
+      "pnl_pct": 0.118532,
+      "entry_date": "2025-08-01",
+      "exit_date": "2025-08-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": 9978.16,
+      "pnl_pct": 0.099083,
+      "entry_date": "2025-08-01",
+      "exit_date": "2025-08-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "001391.SZ",
+      "name": "国货航",
+      "pnl_amount": 1599.01,
+      "pnl_pct": 0.015567,
+      "entry_date": "2025-08-04",
+      "exit_date": "2025-09-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "pnl_amount": 12366.26,
+      "pnl_pct": 0.120477,
+      "entry_date": "2025-08-04",
+      "exit_date": "2025-09-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": 25564.72,
+      "pnl_pct": 0.248548,
+      "entry_date": "2025-08-04",
+      "exit_date": "2025-09-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000975.SZ",
+      "name": "山金国际",
+      "pnl_amount": 9017.79,
+      "pnl_pct": 0.087667,
+      "entry_date": "2025-08-04",
+      "exit_date": "2025-09-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "600585.SH",
+      "name": "海螺水泥",
+      "pnl_amount": 4511.02,
+      "pnl_pct": 0.044274,
+      "entry_date": "2025-08-04",
+      "exit_date": "2025-09-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "600436.SH",
+      "name": "XD片仔癀",
+      "pnl_amount": 3789.95,
+      "pnl_pct": 0.038808,
+      "entry_date": "2025-08-04",
+      "exit_date": "2025-09-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "603806.SH",
+      "name": "福斯特",
+      "pnl_amount": 3572.12,
+      "pnl_pct": 0.034769,
+      "entry_date": "2025-08-04",
+      "exit_date": "2025-09-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": 17750.35,
+      "pnl_pct": 0.171484,
+      "entry_date": "2025-08-29",
+      "exit_date": "2025-09-26",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "600219.SH",
+      "name": "南山铝业",
+      "pnl_amount": -9548.14,
+      "pnl_pct": -0.086767,
+      "entry_date": "2025-08-29",
+      "exit_date": "2025-09-26",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "002252.SZ",
+      "name": "上海莱士",
+      "pnl_amount": -5579.91,
+      "pnl_pct": -0.050666,
+      "entry_date": "2025-08-29",
+      "exit_date": "2025-09-26",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": 2806.12,
+      "pnl_pct": 0.025935,
+      "entry_date": "2025-09-01",
+      "exit_date": "2025-09-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": -721.13,
+      "pnl_pct": -0.006479,
+      "entry_date": "2025-09-01",
+      "exit_date": "2025-09-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -5130.92,
+      "pnl_pct": -0.054638,
+      "entry_date": "2025-09-01",
+      "exit_date": "2025-09-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "pnl_amount": 18834.3,
+      "pnl_pct": 0.191154,
+      "entry_date": "2025-09-01",
+      "exit_date": "2025-09-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300408.SZ",
+      "name": "三环集团",
+      "pnl_amount": 4791.16,
+      "pnl_pct": 0.044073,
+      "entry_date": "2025-09-01",
+      "exit_date": "2025-09-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300832.SZ",
+      "name": "新产业",
+      "pnl_amount": 9980.5,
+      "pnl_pct": 0.091114,
+      "entry_date": "2025-09-01",
+      "exit_date": "2025-09-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300394.SZ",
+      "name": "天孚通信",
+      "pnl_amount": -14140.21,
+      "pnl_pct": -0.143445,
+      "entry_date": "2025-09-01",
+      "exit_date": "2025-09-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "pnl_amount": 30752.49,
+      "pnl_pct": 0.267285,
+      "entry_date": "2025-09-26",
+      "exit_date": "2025-11-03",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": 3840.71,
+      "pnl_pct": 0.033458,
+      "entry_date": "2025-09-26",
+      "exit_date": "2025-11-03",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "001391.SZ",
+      "name": "国货航",
+      "pnl_amount": -943.92,
+      "pnl_pct": -0.008213,
+      "entry_date": "2025-09-26",
+      "exit_date": "2025-11-03",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": -294.12,
+      "pnl_pct": -0.002734,
+      "entry_date": "2025-09-29",
+      "exit_date": "2025-11-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "603288.SH",
+      "name": "海天味业",
+      "pnl_amount": -3517.02,
+      "pnl_pct": -0.031836,
+      "entry_date": "2025-09-29",
+      "exit_date": "2025-11-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "600585.SH",
+      "name": "海螺水泥",
+      "pnl_amount": 918.31,
+      "pnl_pct": 0.008175,
+      "entry_date": "2025-09-29",
+      "exit_date": "2025-11-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "600104.SH",
+      "name": "上汽集团",
+      "pnl_amount": -6052.15,
+      "pnl_pct": -0.054229,
+      "entry_date": "2025-09-29",
+      "exit_date": "2025-11-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "600219.SH",
+      "name": "南山铝业",
+      "pnl_amount": 25031.2,
+      "pnl_pct": 0.221972,
+      "entry_date": "2025-09-29",
+      "exit_date": "2025-11-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000807.SZ",
+      "name": "云铝股份",
+      "pnl_amount": 24407.81,
+      "pnl_pct": 0.217059,
+      "entry_date": "2025-09-29",
+      "exit_date": "2025-11-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000975.SZ",
+      "name": "山金国际",
+      "pnl_amount": -1874.66,
+      "pnl_pct": -0.016882,
+      "entry_date": "2025-09-29",
+      "exit_date": "2025-11-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": 9311.4,
+      "pnl_pct": 0.077797,
+      "entry_date": "2025-11-03",
+      "exit_date": "2025-12-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": -7981.09,
+      "pnl_pct": -0.066293,
+      "entry_date": "2025-11-03",
+      "exit_date": "2025-12-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -11542.03,
+      "pnl_pct": -0.10467,
+      "entry_date": "2025-11-03",
+      "exit_date": "2025-12-01",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "pnl_amount": 8070.45,
+      "pnl_pct": 0.067057,
+      "entry_date": "2025-11-04",
+      "exit_date": "2025-12-02",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "001391.SZ",
+      "name": "国货航",
+      "pnl_amount": -4640.74,
+      "pnl_pct": -0.038552,
+      "entry_date": "2025-11-04",
+      "exit_date": "2025-12-02",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": -5188.75,
+      "pnl_pct": -0.043573,
+      "entry_date": "2025-11-04",
+      "exit_date": "2025-12-02",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601111.SH",
+      "name": "中国国航",
+      "pnl_amount": 3211.16,
+      "pnl_pct": 0.026664,
+      "entry_date": "2025-11-04",
+      "exit_date": "2025-12-02",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "002001.SZ",
+      "name": "新 和 成",
+      "pnl_amount": 398.56,
+      "pnl_pct": 0.003331,
+      "entry_date": "2025-11-04",
+      "exit_date": "2025-12-02",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601298.SH",
+      "name": "青岛港",
+      "pnl_amount": -3097.01,
+      "pnl_pct": -0.02589,
+      "entry_date": "2025-11-04",
+      "exit_date": "2025-12-02",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "603259.SH",
+      "name": "药明康德",
+      "pnl_amount": -5247.34,
+      "pnl_pct": -0.046329,
+      "entry_date": "2025-11-04",
+      "exit_date": "2025-12-02",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000975.SZ",
+      "name": "山金国际",
+      "pnl_amount": 15532.78,
+      "pnl_pct": 0.132791,
+      "entry_date": "2025-12-01",
+      "exit_date": "2025-12-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "600219.SH",
+      "name": "南山铝业",
+      "pnl_amount": 20890.8,
+      "pnl_pct": 0.17673,
+      "entry_date": "2025-12-01",
+      "exit_date": "2025-12-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": 227.52,
+      "pnl_pct": 0.002106,
+      "entry_date": "2025-12-01",
+      "exit_date": "2025-12-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": 33284.59,
+      "pnl_pct": 0.286314,
+      "entry_date": "2025-12-02",
+      "exit_date": "2025-12-30",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -4624.23,
+      "pnl_pct": -0.040212,
+      "entry_date": "2025-12-02",
+      "exit_date": "2025-12-30",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": 6267.45,
+      "pnl_pct": 0.052938,
+      "entry_date": "2025-12-02",
+      "exit_date": "2025-12-30",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601006.SH",
+      "name": "大秦铁路",
+      "pnl_amount": -6616.69,
+      "pnl_pct": -0.055559,
+      "entry_date": "2025-12-02",
+      "exit_date": "2025-12-30",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "603288.SH",
+      "name": "海天味业",
+      "pnl_amount": -330.76,
+      "pnl_pct": -0.002778,
+      "entry_date": "2025-12-02",
+      "exit_date": "2025-12-30",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300408.SZ",
+      "name": "三环集团",
+      "pnl_amount": 8544.82,
+      "pnl_pct": 0.071675,
+      "entry_date": "2025-12-02",
+      "exit_date": "2025-12-30",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300394.SZ",
+      "name": "天孚通信",
+      "pnl_amount": 35883.79,
+      "pnl_pct": 0.317418,
+      "entry_date": "2025-12-02",
+      "exit_date": "2025-12-30",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300251.SZ",
+      "name": "光线传媒",
+      "pnl_amount": 11517.04,
+      "pnl_pct": 0.087537,
+      "entry_date": "2025-12-29",
+      "exit_date": "2026-01-28",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "pnl_amount": 28480.72,
+      "pnl_pct": 0.217786,
+      "entry_date": "2025-12-29",
+      "exit_date": "2026-01-28",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": 47192.63,
+      "pnl_pct": 0.362023,
+      "entry_date": "2025-12-29",
+      "exit_date": "2026-01-28",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "001391.SZ",
+      "name": "国货航",
+      "pnl_amount": -4868.77,
+      "pnl_pct": -0.037646,
+      "entry_date": "2025-12-30",
+      "exit_date": "2026-01-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601111.SH",
+      "name": "中国国航",
+      "pnl_amount": -11713.62,
+      "pnl_pct": -0.090459,
+      "entry_date": "2025-12-30",
+      "exit_date": "2026-01-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000975.SZ",
+      "name": "山金国际",
+      "pnl_amount": 91545.59,
+      "pnl_pct": 0.7064,
+      "entry_date": "2025-12-30",
+      "exit_date": "2026-01-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": 55721.19,
+      "pnl_pct": 0.46822,
+      "entry_date": "2025-12-30",
+      "exit_date": "2026-01-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "600219.SH",
+      "name": "南山铝业",
+      "pnl_amount": 74091.14,
+      "pnl_pct": 0.571879,
+      "entry_date": "2025-12-30",
+      "exit_date": "2026-01-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "603893.SH",
+      "name": "瑞芯微",
+      "pnl_amount": 16752.26,
+      "pnl_pct": 0.13717,
+      "entry_date": "2025-12-30",
+      "exit_date": "2026-01-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "603259.SH",
+      "name": "药明康德",
+      "pnl_amount": 4162.18,
+      "pnl_pct": 0.032832,
+      "entry_date": "2025-12-30",
+      "exit_date": "2026-01-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": -14238.64,
+      "pnl_pct": -0.095717,
+      "entry_date": "2026-01-28",
+      "exit_date": "2026-03-05",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -1122.79,
+      "pnl_pct": -0.007386,
+      "entry_date": "2026-01-28",
+      "exit_date": "2026-03-05",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601006.SH",
+      "name": "大秦铁路",
+      "pnl_amount": 5089.81,
+      "pnl_pct": 0.032689,
+      "entry_date": "2026-01-28",
+      "exit_date": "2026-03-05",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300251.SZ",
+      "name": "光线传媒",
+      "pnl_amount": -3966.86,
+      "pnl_pct": -0.024838,
+      "entry_date": "2026-01-29",
+      "exit_date": "2026-03-06",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "pnl_amount": 8433.17,
+      "pnl_pct": 0.052722,
+      "entry_date": "2026-01-29",
+      "exit_date": "2026-03-06",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": -2658.38,
+      "pnl_pct": -0.016862,
+      "entry_date": "2026-01-29",
+      "exit_date": "2026-03-06",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": -13551.16,
+      "pnl_pct": -0.084732,
+      "entry_date": "2026-01-29",
+      "exit_date": "2026-03-06",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "603288.SH",
+      "name": "海天味业",
+      "pnl_amount": 5702.37,
+      "pnl_pct": 0.035825,
+      "entry_date": "2026-01-29",
+      "exit_date": "2026-03-06",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601088.SH",
+      "name": "中国神华",
+      "pnl_amount": 15491.36,
+      "pnl_pct": 0.098387,
+      "entry_date": "2026-01-29",
+      "exit_date": "2026-03-06",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300408.SZ",
+      "name": "三环集团",
+      "pnl_amount": 17334.89,
+      "pnl_pct": 0.110575,
+      "entry_date": "2026-01-29",
+      "exit_date": "2026-03-06",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "600219.SH",
+      "name": "南山铝业",
+      "pnl_amount": -33309.35,
+      "pnl_pct": -0.205989,
+      "entry_date": "2026-03-06",
+      "exit_date": "2026-03-20",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601111.SH",
+      "name": "中国国航",
+      "pnl_amount": -19211.95,
+      "pnl_pct": -0.117833,
+      "entry_date": "2026-03-05",
+      "exit_date": "2026-04-02",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "001391.SZ",
+      "name": "国货航",
+      "pnl_amount": -13540.18,
+      "pnl_pct": -0.083179,
+      "entry_date": "2026-03-05",
+      "exit_date": "2026-04-02",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000975.SZ",
+      "name": "山金国际",
+      "pnl_amount": -7727.44,
+      "pnl_pct": -0.048279,
+      "entry_date": "2026-03-05",
+      "exit_date": "2026-04-02",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": 2692.11,
+      "pnl_pct": 0.017262,
+      "entry_date": "2026-03-06",
+      "exit_date": "2026-04-03",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -26367.72,
+      "pnl_pct": -0.175497,
+      "entry_date": "2026-03-06",
+      "exit_date": "2026-04-03",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": -20852.91,
+      "pnl_pct": -0.138178,
+      "entry_date": "2026-03-06",
+      "exit_date": "2026-04-03",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "603893.SH",
+      "name": "瑞芯微",
+      "pnl_amount": -15223.49,
+      "pnl_pct": -0.102273,
+      "entry_date": "2026-03-06",
+      "exit_date": "2026-04-03",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601006.SH",
+      "name": "大秦铁路",
+      "pnl_amount": 3505.4,
+      "pnl_pct": 0.021646,
+      "entry_date": "2026-03-06",
+      "exit_date": "2026-04-03",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "603259.SH",
+      "name": "药明康德",
+      "pnl_amount": 13166.53,
+      "pnl_pct": 0.085346,
+      "entry_date": "2026-03-06",
+      "exit_date": "2026-04-03",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300251.SZ",
+      "name": "光线传媒",
+      "pnl_amount": 3749.77,
+      "pnl_pct": 0.024618,
+      "entry_date": "2026-03-20",
+      "exit_date": "2026-04-20",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "pnl_amount": 15833.89,
+      "pnl_pct": 0.104213,
+      "entry_date": "2026-04-02",
+      "exit_date": "2026-05-06",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": 18187.13,
+      "pnl_pct": 0.121418,
+      "entry_date": "2026-04-02",
+      "exit_date": "2026-05-06",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "002493.SZ",
+      "name": "荣盛石化",
+      "pnl_amount": 19680.48,
+      "pnl_pct": 0.129659,
+      "entry_date": "2026-04-02",
+      "exit_date": "2026-05-06",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "600029.SH",
+      "name": "南方航空",
+      "pnl_amount": -3119.4,
+      "pnl_pct": -0.020814,
+      "entry_date": "2026-04-03",
+      "exit_date": "2026-05-07",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "600104.SH",
+      "name": "上汽集团",
+      "pnl_amount": -7436.67,
+      "pnl_pct": -0.04965,
+      "entry_date": "2026-04-03",
+      "exit_date": "2026-05-07",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "600415.SH",
+      "name": "小商品城",
+      "pnl_amount": 1380.37,
+      "pnl_pct": 0.00925,
+      "entry_date": "2026-04-03",
+      "exit_date": "2026-05-07",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000975.SZ",
+      "name": "山金国际",
+      "pnl_amount": -7606.35,
+      "pnl_pct": -0.050807,
+      "entry_date": "2026-04-03",
+      "exit_date": "2026-05-07",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "001391.SZ",
+      "name": "国货航",
+      "pnl_amount": -1909.13,
+      "pnl_pct": -0.012754,
+      "entry_date": "2026-04-03",
+      "exit_date": "2026-05-07",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601088.SH",
+      "name": "中国神华",
+      "pnl_amount": -1396.66,
+      "pnl_pct": -0.00936,
+      "entry_date": "2026-04-03",
+      "exit_date": "2026-05-07",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "pnl_amount": -31547.06,
+      "pnl_pct": -0.204151,
+      "entry_date": "2026-05-07",
+      "exit_date": "2026-05-19",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": -10076.33,
+      "pnl_pct": -0.06888,
+      "entry_date": "2026-04-20",
+      "exit_date": "2026-05-21",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": -31755.25,
+      "pnl_pct": -0.204151,
+      "entry_date": "2026-05-07",
+      "exit_date": "2026-05-29",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "validation",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": 45339.55,
+      "pnl_pct": 0.29775,
+      "entry_date": "2026-05-06",
+      "exit_date": "2026-06-03",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000807.SZ",
+      "name": "云铝股份",
+      "pnl_amount": -11034.77,
+      "pnl_pct": -0.071714,
+      "entry_date": "2026-05-06",
+      "exit_date": "2026-06-03",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "603893.SH",
+      "name": "瑞芯微",
+      "pnl_amount": -8941.52,
+      "pnl_pct": -0.060537,
+      "entry_date": "2026-05-06",
+      "exit_date": "2026-06-03",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "pnl_amount": 55326.9,
+      "pnl_pct": 0.398353,
+      "entry_date": "2026-05-07",
+      "exit_date": "2026-06-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300832.SZ",
+      "name": "新产业",
+      "pnl_amount": -5493.15,
+      "pnl_pct": -0.036244,
+      "entry_date": "2026-05-07",
+      "exit_date": "2026-06-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300394.SZ",
+      "name": "天孚通信",
+      "pnl_amount": 66085.4,
+      "pnl_pct": 0.47958,
+      "entry_date": "2026-05-07",
+      "exit_date": "2026-06-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601006.SH",
+      "name": "大秦铁路",
+      "pnl_amount": -4633.69,
+      "pnl_pct": -0.029729,
+      "entry_date": "2026-05-07",
+      "exit_date": "2026-06-04",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000975.SZ",
+      "name": "山金国际",
+      "pnl_amount": -12931.34,
+      "pnl_pct": -0.082941,
+      "entry_date": "2026-05-19",
+      "exit_date": "2026-06-16",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "pnl_amount": -13793.85,
+      "pnl_pct": -0.086637,
+      "entry_date": "2026-05-21",
+      "exit_date": "2026-06-18",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000807.SZ",
+      "name": "云铝股份",
+      "pnl_amount": -32475.49,
+      "pnl_pct": -0.204151,
+      "entry_date": "2026-06-04",
+      "exit_date": "2026-06-25",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "validation",
+      "symbol": "001391.SZ",
+      "name": "国货航",
+      "pnl_amount": -32231.44,
+      "pnl_pct": -0.204151,
+      "entry_date": "2026-06-03",
+      "exit_date": "2026-06-26",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000975.SZ",
+      "name": "山金国际",
+      "pnl_amount": -30326.94,
+      "pnl_pct": -0.204151,
+      "entry_date": "2026-06-18",
+      "exit_date": "2026-06-26",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": -17200.28,
+      "pnl_pct": -0.146194,
+      "entry_date": "2026-05-29",
+      "exit_date": "2026-06-29",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300394.SZ",
+      "name": "天孚通信",
+      "pnl_amount": -27036.04,
+      "pnl_pct": -0.204151,
+      "entry_date": "2026-06-26",
+      "exit_date": "2026-07-02",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": 4215.83,
+      "pnl_pct": 0.026864,
+      "entry_date": "2026-06-03",
+      "exit_date": "2026-07-02",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": -11716.12,
+      "pnl_pct": -0.075647,
+      "entry_date": "2026-06-03",
+      "exit_date": "2026-07-02",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": 7375.44,
+      "pnl_pct": 0.049455,
+      "entry_date": "2026-06-04",
+      "exit_date": "2026-07-03",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -16760.05,
+      "pnl_pct": -0.105665,
+      "entry_date": "2026-06-04",
+      "exit_date": "2026-07-03",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "600161.SH",
+      "name": "天坛生物",
+      "pnl_amount": -14456.75,
+      "pnl_pct": -0.090805,
+      "entry_date": "2026-06-04",
+      "exit_date": "2026-07-03",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "pnl_amount": -29154.29,
+      "pnl_pct": -0.204151,
+      "entry_date": "2026-06-25",
+      "exit_date": "2026-07-13",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300832.SZ",
+      "name": "新产业",
+      "pnl_amount": -792.61,
+      "pnl_pct": -0.005189,
+      "entry_date": "2026-06-16",
+      "exit_date": "2026-07-15",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": -26851.87,
+      "pnl_pct": -0.204151,
+      "entry_date": "2026-07-13",
+      "exit_date": "2026-07-16",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300394.SZ",
+      "name": "天孚通信",
+      "pnl_amount": -25729.17,
+      "pnl_pct": -0.204151,
+      "entry_date": "2026-07-03",
+      "exit_date": "2026-07-20",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": -28480.4,
+      "pnl_pct": -0.204151,
+      "entry_date": "2026-07-03",
+      "exit_date": "2026-07-21",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000807.SZ",
+      "name": "云铝股份",
+      "pnl_amount": 12204.67,
+      "pnl_pct": 0.086154,
+      "entry_date": "2026-06-26",
+      "exit_date": "2026-07-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000975.SZ",
+      "name": "山金国际",
+      "pnl_amount": 36746.88,
+      "pnl_pct": 0.293886,
+      "entry_date": "2026-06-29",
+      "exit_date": "2026-07-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "pnl_amount": -18248.54,
+      "pnl_pct": -0.204151,
+      "entry_date": "2026-07-21",
+      "exit_date": "2026-07-29",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": 20939.07,
+      "pnl_pct": 0.153404,
+      "entry_date": "2026-07-02",
+      "exit_date": "2026-07-30",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "001391.SZ",
+      "name": "国货航",
+      "pnl_amount": 5890.35,
+      "pnl_pct": 0.043103,
+      "entry_date": "2026-07-02",
+      "exit_date": "2026-07-30",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601006.SH",
+      "name": "大秦铁路",
+      "pnl_amount": 14095.47,
+      "pnl_pct": 0.103164,
+      "entry_date": "2026-07-02",
+      "exit_date": "2026-07-30",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": 16641.35,
+      "pnl_pct": 0.119598,
+      "entry_date": "2026-07-03",
+      "exit_date": "2026-07-31",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "pnl_amount": 16924.09,
+      "pnl_pct": 0.120135,
+      "entry_date": "2026-07-15",
+      "exit_date": "2026-08-12",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300832.SZ",
+      "name": "新产业",
+      "pnl_amount": 12247.51,
+      "pnl_pct": 0.090633,
+      "entry_date": "2026-07-16",
+      "exit_date": "2026-08-13",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": 8648.14,
+      "pnl_pct": 0.088679,
+      "entry_date": "2026-07-20",
+      "exit_date": "2026-08-17",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": -7056.99,
+      "pnl_pct": -0.048852,
+      "entry_date": "2026-07-24",
+      "exit_date": "2026-08-21",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000807.SZ",
+      "name": "云铝股份",
+      "pnl_amount": 3780.26,
+      "pnl_pct": 0.026448,
+      "entry_date": "2026-07-27",
+      "exit_date": "2026-08-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000975.SZ",
+      "name": "山金国际",
+      "pnl_amount": 35427.74,
+      "pnl_pct": 0.281935,
+      "entry_date": "2026-07-29",
+      "exit_date": "2026-08-26",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "pnl_amount": 15312.04,
+      "pnl_pct": 0.107077,
+      "entry_date": "2026-07-30",
+      "exit_date": "2026-08-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300394.SZ",
+      "name": "天孚通信",
+      "pnl_amount": 53926.22,
+      "pnl_pct": 0.427813,
+      "entry_date": "2026-07-30",
+      "exit_date": "2026-08-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300896.SZ",
+      "name": "爱美客",
+      "pnl_amount": -14608.31,
+      "pnl_pct": -0.108607,
+      "entry_date": "2026-07-30",
+      "exit_date": "2026-08-27",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": -3699.23,
+      "pnl_pct": -0.027228,
+      "entry_date": "2026-07-31",
+      "exit_date": "2026-08-28",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "001391.SZ",
+      "name": "国货航",
+      "pnl_amount": -4325.4,
+      "pnl_pct": -0.028542,
+      "entry_date": "2026-08-12",
+      "exit_date": "2026-09-09",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "pnl_amount": -11997.1,
+      "pnl_pct": -0.078215,
+      "entry_date": "2026-08-13",
+      "exit_date": "2026-09-10",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300832.SZ",
+      "name": "新产业",
+      "pnl_amount": -13801.7,
+      "pnl_pct": -0.09041,
+      "entry_date": "2026-08-17",
+      "exit_date": "2026-09-14",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": -903.26,
+      "pnl_pct": -0.006431,
+      "entry_date": "2026-08-21",
+      "exit_date": "2026-09-18",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": -905.87,
+      "pnl_pct": -0.006104,
+      "entry_date": "2026-08-24",
+      "exit_date": "2026-09-21",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000807.SZ",
+      "name": "云铝股份",
+      "pnl_amount": 4205.6,
+      "pnl_pct": 0.028604,
+      "entry_date": "2026-08-26",
+      "exit_date": "2026-09-23",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": -4547.59,
+      "pnl_pct": -0.030359,
+      "entry_date": "2026-08-27",
+      "exit_date": "2026-09-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601006.SH",
+      "name": "大秦铁路",
+      "pnl_amount": -4198.06,
+      "pnl_pct": -0.028034,
+      "entry_date": "2026-08-27",
+      "exit_date": "2026-09-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "688396.SH",
+      "name": "华润微",
+      "pnl_amount": 4771.25,
+      "pnl_pct": 0.032511,
+      "entry_date": "2026-08-27",
+      "exit_date": "2026-09-24",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "pnl_amount": -8694.78,
+      "pnl_pct": -0.07107,
+      "entry_date": "2026-08-28",
+      "exit_date": "2026-09-28",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300394.SZ",
+      "name": "天孚通信",
+      "pnl_amount": -29016.61,
+      "pnl_pct": -0.204151,
+      "entry_date": "2026-09-18",
+      "exit_date": "2026-10-09",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "validation",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": -27679.67,
+      "pnl_pct": -0.204151,
+      "entry_date": "2026-09-23",
+      "exit_date": "2026-10-13",
+      "exit_reason": "stop_loss"
+    },
+    {
+      "segment": "validation",
+      "symbol": "001979.SZ",
+      "name": "招商蛇口",
+      "pnl_amount": 9168.04,
+      "pnl_pct": 0.062183,
+      "entry_date": "2026-09-09",
+      "exit_date": "2026-10-15",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000408.SZ",
+      "name": "藏格矿业",
+      "pnl_amount": -15577.13,
+      "pnl_pct": -0.109633,
+      "entry_date": "2026-09-10",
+      "exit_date": "2026-10-16",
+      "exit_reason": "max_hold"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000792.SZ",
+      "name": "盐湖股份",
+      "pnl_amount": -13251.01,
+      "pnl_pct": -0.091694,
+      "entry_date": "2026-09-14",
+      "exit_date": "2026-10-16",
+      "exit_reason": "end"
+    },
+    {
+      "segment": "validation",
+      "symbol": "002466.SZ",
+      "name": "天齐锂业",
+      "pnl_amount": -19128.81,
+      "pnl_pct": -0.130962,
+      "entry_date": "2026-09-21",
+      "exit_date": "2026-10-16",
+      "exit_reason": "end"
+    },
+    {
+      "segment": "validation",
+      "symbol": "000807.SZ",
+      "name": "云铝股份",
+      "pnl_amount": -6953.93,
+      "pnl_pct": -0.047593,
+      "entry_date": "2026-09-24",
+      "exit_date": "2026-10-16",
+      "exit_reason": "end"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300628.SZ",
+      "name": "亿联网络",
+      "pnl_amount": -12090.49,
+      "pnl_pct": -0.083568,
+      "entry_date": "2026-09-24",
+      "exit_date": "2026-10-16",
+      "exit_reason": "end"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300832.SZ",
+      "name": "新产业",
+      "pnl_amount": 7562.35,
+      "pnl_pct": 0.053401,
+      "entry_date": "2026-09-24",
+      "exit_date": "2026-10-16",
+      "exit_reason": "end"
+    },
+    {
+      "segment": "validation",
+      "symbol": "601698.SH",
+      "name": "中国卫通",
+      "pnl_amount": -11738.04,
+      "pnl_pct": -0.08318,
+      "entry_date": "2026-09-28",
+      "exit_date": "2026-10-16",
+      "exit_reason": "end"
+    },
+    {
+      "segment": "validation",
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "pnl_amount": -16626.4,
+      "pnl_pct": -0.127627,
+      "entry_date": "2026-10-09",
+      "exit_date": "2026-10-16",
+      "exit_reason": "end"
+    },
+    {
+      "segment": "validation",
+      "symbol": "300394.SZ",
+      "name": "天孚通信",
+      "pnl_amount": 5024.66,
+      "pnl_pct": 0.038254,
+      "entry_date": "2026-10-13",
+      "exit_date": "2026-10-16",
+      "exit_reason": "end"
+    },
+    {
+      "segment": "validation",
+      "symbol": "688008.SH",
+      "name": "澜起科技",
+      "pnl_amount": 6210.82,
+      "pnl_pct": 0.049142,
+      "entry_date": "2026-10-15",
+      "exit_date": "2026-10-16",
+      "exit_reason": "end"
+    }
+  ],
+  "decision": {
+    "C1": true,
+    "C2": false,
+    "C3": false,
+    "C4": false,
+    "C5": true,
+    "C6": true,
+    "C7": true,
+    "all_pass": false
+  },
+  "caveats": [
+    "Trade P&L amounts from two segments each start from 1,000,000 notional, so shares are contribution-share diagnostics, not compounded-return decomposition.",
+    "Industry classification is a current snapshot, not historical PIT.",
+    "The audit describes concentration, not causality."
+  ]
+}
