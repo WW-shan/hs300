@@ -1,0 +1,82 @@
+{
+  "round": "R247",
+  "captured_at": "2026-10-20T01:55:02.780253+00:00",
+  "factor_id": "ext_alt_hs300_pf7_piotroski7_score",
+  "config_id": "alt_hs300_pf7",
+  "field": "piotroski7_score",
+  "label": "HS300七项会计质量因子·七项会计质量分数(高好)",
+  "direction": "high",
+  "formula": "(1/7) * [ROA>0 + OCF>0 + delta_ROA>0 + (OCF>NI) + delta_leverage<0 + delta_gross_margin>0 + delta_asset_turnover>0]",
+  "builder": "scripts/build_r247_piotroski7_factor.py",
+  "source_data": {
+    "income_table": "data/financials/income/part.parquet",
+    "balance_sheet_table": "data/financials/balance_sheet/part.parquet",
+    "cash_flow_table": "data/financials/cash_flow/part.parquet",
+    "annual_valid_rows": 20425,
+    "annual_valid_symbols": 5124,
+    "period_range": [
+      "2022-12-31",
+      "2025-12-31"
+    ]
+  },
+  "partitions": 2132,
+  "first_partition": "date=2018-01-02",
+  "last_partition": "date=2026-10-19",
+  "factor_rows": 1187524,
+  "factor_symbols": 557,
+  "valid_rows": 397212,
+  "valid_symbols": 474,
+  "first_valid_date": "2023-05-04",
+  "last_date": "2026-10-19",
+  "score_distribution": {
+    "0.0": 596,
+    "0.14285714285714285": 12960,
+    "0.2857142857142857": 31750,
+    "0.42857142857142855": 75416,
+    "0.5714285714285714": 95290,
+    "0.7142857142857142": 85700,
+    "0.8571428571428571": 63486,
+    "1.0": 32014
+  },
+  "coverage": {
+    "eligible_member_rows": 209024,
+    "valid_member_rows": 209024,
+    "full_period_coverage": 1.0,
+    "recent_member_rows": 62630,
+    "recent_valid_rows": 62630,
+    "recent_12m_coverage": 1.0,
+    "first_valid_date": "2023-05-04"
+  },
+  "pit_audit": {
+    "rule": "annual reports only; effective date = statutory reporting deadline + 3 calendar days; latest annual report expires after 500 calendar days",
+    "factor_rows_checked": 1187524,
+    "expected_rows": 1187524,
+    "missing_written_rows": 0,
+    "unexpected_written_rows": 0,
+    "max_abs_formula_difference": 0.0,
+    "written_rows_match_expected_asof_panel": true,
+    "written_values_match_formula": true,
+    "pit_unit_test": "backend/tests/test_r247_piotroski7_factor.py::test_r247_score_pit_components_and_staleness",
+    "all_checks_pass": true
+  },
+  "independence": {
+    "method": "mean absolute monthly cross-sectional Spearman correlation within historical non-financial HS300 members",
+    "source": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r247_data_feasibility.json",
+    "max_mean_abs_correlation": 0.291102,
+    "max_correlation_field": "ocf_margin_4q"
+  },
+  "universe": {
+    "industry_source": "current ext_hy_ths industry snapshot; not historical PIT",
+    "excluded_industries": [
+      "银行",
+      "非银金融"
+    ],
+    "member_snapshot_rows": 430500,
+    "nonfinancial_member_rows": 353797,
+    "excluded_financial_member_rows": 73251,
+    "industry_missing_member_rows": 3452,
+    "nonfinancial_symbols": 469,
+    "excluded_financial_symbols": 80,
+    "industry_missing_symbols": 15
+  }
+}
