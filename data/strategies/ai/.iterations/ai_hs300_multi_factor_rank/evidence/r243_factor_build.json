@@ -1,0 +1,68 @@
+{
+  "round": "R243",
+  "captured_at": "2026-10-20T00:50:12.809847+00:00",
+  "factor_id": "ext_alt_hs300_ag_asset_growth_yoy_low",
+  "config_id": "alt_hs300_ag",
+  "field": "asset_growth_yoy_low",
+  "label": "总资产同比低增长(高好)",
+  "formula": "clip(total_assets_(t-4) / total_assets_t - 1, -1, 1)",
+  "effective_date": "current report statutory disclosure deadline + 3 calendar days",
+  "builder": "scripts/build_r243_asset_growth_factor.py",
+  "partitions": 2132,
+  "coverage": {
+    "eligible_member_rows": 260035,
+    "valid_member_rows": 259875,
+    "coverage_2022_2026": 0.999385,
+    "recent_member_rows": 62630,
+    "recent_valid_rows": 62573,
+    "recent_12m_coverage": 0.99909,
+    "first_valid_date": "2022-05-05",
+    "factor_min": -0.966765,
+    "factor_p01": -0.525461,
+    "factor_median": -0.065336,
+    "factor_p99": 0.30003,
+    "factor_max": 1.0
+  },
+  "independence": {
+    "fields": {
+      "capex_intensity_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.132259,
+        "mean_signed_correlation": 0.107392
+      },
+      "net_financing_4q_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.493396,
+        "mean_signed_correlation": 0.493396
+      },
+      "equity_supply_ratio_180d_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.115963,
+        "mean_signed_correlation": 0.111106
+      },
+      "cash_to_assets": {
+        "months": 51,
+        "mean_abs_correlation": 0.146424,
+        "mean_signed_correlation": -0.113689
+      },
+      "rd_intensity": {
+        "months": 51,
+        "mean_abs_correlation": 0.205715,
+        "mean_signed_correlation": -0.205715
+      },
+      "goodwill_ratio_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.050659,
+        "mean_signed_correlation": -0.006634
+      },
+      "working_capital_change_yoy_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.056395,
+        "mean_signed_correlation": -0.010205
+      }
+    },
+    "max_mean_abs_correlation": 0.493396
+  },
+  "first_partition": "date=2018-01-02",
+  "last_partition": "date=2026-10-19"
+}
