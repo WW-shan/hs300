@@ -1,0 +1,132 @@
+{
+  "status": "feasibility_only_no_forward_returns",
+  "factor": "management_ocf_gm_min_rank",
+  "formula": "min(cross_sectional_percentile_rank(management_expense_ratio_4q_low), percentile_rank(ocf_margin_4q), percentile_rank(gross_margin_yoy_improvement_q)); all three components required and ranks computed within the current nonfinancial historical HS300 membership",
+  "evaluation_start": "2023-05-04",
+  "evaluation_end": "2026-10-16",
+  "coverage": {
+    "eligible_member_rows": 209024,
+    "valid_member_rows": 209024,
+    "full_period_coverage": 1.0,
+    "recent_member_rows": 62630,
+    "recent_valid_rows": 62630,
+    "recent_12m_coverage": 1.0,
+    "first_valid_date": "2022-05-05",
+    "by_year": [
+      {
+        "year": 2023,
+        "member_rows": 41325,
+        "valid_rows": 41325,
+        "coverage": 1.0
+      },
+      {
+        "year": 2024,
+        "member_rows": 60488,
+        "valid_rows": 60488,
+        "coverage": 1.0
+      },
+      {
+        "year": 2025,
+        "member_rows": 60504,
+        "valid_rows": 60504,
+        "coverage": 1.0
+      },
+      {
+        "year": 2026,
+        "member_rows": 46707,
+        "valid_rows": 46707,
+        "coverage": 1.0
+      }
+    ]
+  },
+  "distribution": {
+    "valid_rows": 270194,
+    "min": 0.0,
+    "p01": 0.0,
+    "median": 0.202429,
+    "p99": 0.84,
+    "max": 1.0
+  },
+  "independence": {
+    "method": "mean absolute monthly cross-sectional Spearman correlation within historical non-financial HS300 members",
+    "fields": {
+      "ocf_margin_4q": {
+        "months": 41,
+        "mean_abs_correlation": 0.423267,
+        "mean_signed_correlation": -0.423267
+      },
+      "cash_to_assets": {
+        "months": 41,
+        "mean_abs_correlation": 0.068856,
+        "mean_signed_correlation": 0.068856
+      },
+      "sga_ratio_4q_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.375581,
+        "mean_signed_correlation": -0.375581
+      },
+      "gross_margin_yoy_improvement_q": {
+        "months": 41,
+        "mean_abs_correlation": 0.44728,
+        "mean_signed_correlation": -0.44728
+      },
+      "gross_margin_stability_4q_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.138881,
+        "mean_signed_correlation": 0.119856
+      },
+      "risk_adjusted_momentum_60d": {
+        "months": 41,
+        "mean_abs_correlation": 0.107822,
+        "mean_signed_correlation": -0.077642
+      },
+      "trend_efficiency_60d": {
+        "months": 41,
+        "mean_abs_correlation": 0.107718,
+        "mean_signed_correlation": -0.077546
+      },
+      "idio_vol_60d_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.074132,
+        "mean_signed_correlation": -0.049184
+      },
+      "stock_rel_industry_20d": {
+        "months": 41,
+        "mean_abs_correlation": 0.077204,
+        "mean_signed_correlation": -0.044566
+      },
+      "capex_intensity_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.04294,
+        "mean_signed_correlation": 0.03928
+      },
+      "free_cash_flow_assets": {
+        "months": 41,
+        "mean_abs_correlation": 0.144484,
+        "mean_signed_correlation": -0.144484
+      },
+      "asset_growth_yoy_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.101941,
+        "mean_signed_correlation": 0.069107
+      },
+      "working_capital_change_yoy_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.087421,
+        "mean_signed_correlation": -0.08083
+      },
+      "gross_profitability": {
+        "months": 41,
+        "mean_abs_correlation": 0.078175,
+        "mean_signed_correlation": 0.078114
+      },
+      "piotroski7_score": {
+        "months": 41,
+        "mean_abs_correlation": 0.114696,
+        "mean_signed_correlation": -0.107243
+      }
+    },
+    "max_mean_abs_correlation": 0.44728
+  },
+  "selection_note": "Management expense is used instead of selling-plus-management expense because the latter leaves 1.54% of nonfinancial member rows uncovered. The three selected components are already materialized factors; no forward returns were read."
+}
