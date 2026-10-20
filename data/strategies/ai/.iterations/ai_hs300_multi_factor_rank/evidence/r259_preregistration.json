@@ -1,0 +1,100 @@
+{
+  "round": "R259",
+  "registered_at": "2026-10-20",
+  "status": "pre_registered_before_factor_table_strategy_implementation_and_backtest",
+  "hypothesis": "R257's realized P&L was dominated by repeated strength winners. A 5-day reversal weakest link should retain quality and industry-relative leadership while avoiding names that have just become short-term overextended, broadening the set of executable leaders without changing R257's internal formula or portfolio constraints.",
+  "selection_basis": "R257 passed all predictive, return and cost-stress gates but failed C2/C3/C4 with top1/top3/top5 net P&L shares of 27.95%/64.08%/94.43%. R258's 20-day re-entry gate was rejected before returns because its daily fresh-name median was only one. R259 changes the economic dimension rather than tuning R257 or R258: it adds 5-day short-term reversal as a second weak link while keeping R257's formula, holding period, stop loss, score-pool size, position count and cost assumptions unchanged. Feasibility read no forward or strategy returns: joint coverage is 99.9211% full, 99.9646% discovery, 99.8797% validation and 99.9122% recent year; 42 month-end component rank correlations have mean absolute 0.219068 and maximum absolute 0.515145; the composite is 0.185805 lower than the R257 percentile on average and is at least 0.10 lower for 41.1718% of observations; the minimum daily valid candidate count is 246. Evidence: r259_data_feasibility.json.",
+  "factor": {
+    "id": "ext_alt_hs300_qrspb_quality_rs_pullback_min_rank",
+    "config_id": "alt_hs300_qrspb",
+    "column": "quality_rs_pullback_min_rank",
+    "direction": "high",
+    "formula": "quality_rs_pullback_min_rank = min(rank_pct(quality_relative_strength_min_rank), rank_pct(-momentum_5d)) within same-date historical nonfinancial HS300 members; 1 is best and 0 is worst",
+    "components": [
+      "quality_relative_strength_min_rank",
+      "reversal_5d"
+    ],
+    "component_definitions": {
+      "quality_relative_strength_min_rank": "R257 composite of the R253 quality weakest link and same-date 20-day stock-relative-to-industry strength",
+      "reversal_5d": "-(close_t / close_t_minus_5_trading_days - 1), using front-adjusted closes through date t"
+    },
+    "interpretation": "R257 remains unchanged. R259 requires both quality-relative leadership and the absence of a sharp recent five-day extension.",
+    "pit_rule": "R257 inherits its financial publication/PIT dates and same-date industry-relative strength. momentum_5d uses front-adjusted closes through date t. Ranks and the minimum use only same-date eligible historical nonfinancial HS300 members.",
+    "missing_data_rule": "Both components are required; a missing component leaves the composite null."
+  },
+  "strategies": {
+    "candidate": {
+      "id": "ai_hs300_qrs_pullback_h20_sl20",
+      "scoring": {
+        "ext_alt_hs300_qrspb_quality_rs_pullback_min_rank": 0.45,
+        "uf_quality_value_defensive": 0.3,
+        "uf_cash_quality": 0.25
+      }
+    },
+    "control": {
+      "id": "ai_hs300_qrs_pullback_control",
+      "scoring": {
+        "ext_alt_hs300_qrs_quality_relative_strength_min_rank": 0.45,
+        "uf_quality_value_defensive": 0.3,
+        "uf_cash_quality": 0.25
+      }
+    },
+    "common_filter": "Current nonfinancial industry snapshot is required; history uses historical HS300 membership. Both strategies require ma60 and non-null quality_rs_pullback_min_rank so the candidate and control universe is identical. The R257 factor and its two underlying component fields are also declared as required features for auditability.",
+    "execution": "30-name score limit, at most 10 equal-weight positions, 20-day holding, -20% stop loss, T+1 open execution and 3x costs; candidate also tested at 4x/5x."
+  },
+  "execution": {
+    "engine": "StrategyBacktestService",
+    "matching": "open_t+1",
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "score_limit": 30,
+    "holding_days": 20,
+    "stop_loss": -0.2,
+    "asset_type": "stock",
+    "cost_3x": "6bp fees + 6bp commission + 15bp slippage + 10bp stamp tax",
+    "cost_stress": "4x and 5x scale all four components proportionally",
+    "segments": {
+      "discovery": ["2023-05-04", "2024-12-31"],
+      "validation": ["2025-01-02", "2026-10-16"],
+      "stitching": "compound two independently run segment curves; skip the first return of each later segment"
+    }
+  },
+  "factor_ic": {
+    "method": "R259 factor month-end rank IC versus T+1 open to T+21 open return within historical nonfinancial HS300 members",
+    "minimum_names": 30
+  },
+  "gates": {
+    "D1": "full and recent-12-month joint component coverage >=0.99",
+    "D2": "discovery and validation joint component coverage >=0.99",
+    "D3": "first valid date is no later than 2023-05-04 and written values exactly match the same-date composite formula with max abs difference <=1e-12",
+    "D4": "mean absolute monthly component correlation <=0.70, every monthly absolute correlation <=0.80, mean composite reduction versus R257 percentile >=0.05 and at least 20% of observations reduced by >=0.10",
+    "I1": "discovery mean R259 rank IC >=0.02 with at least 18 month-end observations",
+    "I2": "validation mean R259 rank IC >=0.01 with at least 18 month-end observations and the same positive sign",
+    "G1": "discovery candidate return >= control return + 5pp",
+    "G2": "discovery candidate MDD is no worse than control MDD by more than 5pp",
+    "G3": "validation candidate return >= control return",
+    "G4": "full-sample candidate return > 0 and >= control return",
+    "G5": "full-sample candidate MDD <= 40% in absolute value and no worse than control by more than 5pp",
+    "G6": "rolling 1-year positive rate >= 60% and no worse than control by more than 2pp",
+    "G7": "recent 12-month candidate return > 0 and MDD no worse than control by more than 5pp",
+    "G8": "full-sample candidate return at 4x cost is positive",
+    "G9": "full-sample candidate return at 5x cost is positive",
+    "C1": "at least 30 distinct symbols are traded across the full sample",
+    "C2": "the largest symbol's share of net P&L is <= 25%",
+    "C3": "the top three symbols' share of net P&L is <= 55%",
+    "C4": "the top five symbols' share of net P&L is <= 75%",
+    "C5": "at least 8 distinct symbols have positive P&L in the validation segment",
+    "C6": "the largest industry's share of gross profit is <= 45%",
+    "C7": "the largest single-symbol loss is <= 20% of gross profit in absolute value"
+  },
+  "decision_rule": "All D, I, G and C gates must pass. Any failure means the quality-relative-strength plus 5-day-reversal factor is not accepted and cannot be rescued by changing component weights, reversal window, rank direction, holding period, stop loss, universe, costs or gates after seeing results.",
+  "known_limitations": [
+    "The 5-day reversal component can be noisy, increase turnover and conflict with momentum persistence.",
+    "The minimum of two percentile ranks can be sparse and sensitive to ties.",
+    "R253, industry-relative strength and price reversal were already researched in overlapping samples, so multiple-comparison risk remains.",
+    "The nonfinancial industry snapshot is current rather than historical PIT.",
+    "R253 inherits financial restatement and publication-timing risk.",
+    "The full curve is stitched from two system-engine segments and segment boundaries can reset open positions.",
+    "Passing these gates would justify paper-trading validation, not production deployment."
+  ]
+}
