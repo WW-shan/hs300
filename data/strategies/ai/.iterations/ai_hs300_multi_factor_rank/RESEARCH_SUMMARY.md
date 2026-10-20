@@ -3081,4 +3081,6 @@ R225 预注册 `ext_alt_hs300_sga_ratio_stability_4q_low`：将累计销售费�
 
 **判定规则**: D/I/G/C 全部通过才可继续纸面交易研究；任何失败均不采纳。运行后不得修改因子公式、clip、权重、持仓数、持有期、止损、成本、宇宙或门槛。
 
+**实现期修正（回测前）**: 原 ext_data `alt_hs300` 分区在管理沙箱中只读，因子改存独立 timeseries 表 `alt_hs300_wc`，面板 ID 由 `ext_alt_hs300_working_capital_change_yoy_low` 调整为 `ext_alt_hs300_wc_working_capital_change_yoy_low`。公式、方向、权重、执行口径和全部门槛保持不变；修正发生在任何策略收益回测之前。
+
 **预注册证据**: `evidence/r242_preregistration.json`
