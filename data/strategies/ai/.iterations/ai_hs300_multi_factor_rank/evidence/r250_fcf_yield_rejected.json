@@ -1,0 +1,129 @@
+{
+  "status": "feasibility_only_no_forward_returns",
+  "factor": "free_cash_flow_yield",
+  "formula": "annual (net_operating_cash_flow - capex) / same-day market capitalization; market cap = raw_close * latest known total_shares",
+  "evaluation_start": "2022-07-01",
+  "evaluation_end": "2026-10-16",
+  "annual_observations": {
+    "rows": 2253,
+    "symbols": 451,
+    "period_range": [
+      "2021-12-31",
+      "2025-12-31"
+    ],
+    "first_effective_date": "2022-05-03"
+  },
+  "coverage": {
+    "eligible_member_rows": 260035,
+    "valid_member_rows": 211000,
+    "full_period_coverage": 0.811429,
+    "recent_member_rows": 62630,
+    "recent_valid_rows": 58972,
+    "recent_12m_coverage": 0.941593,
+    "first_valid_date": "2022-05-05",
+    "by_year": [
+      {
+        "year": 2022,
+        "member_rows": 31375,
+        "valid_rows": 21727,
+        "coverage": 0.692494
+      },
+      {
+        "year": 2023,
+        "member_rows": 60961,
+        "valid_rows": 43512,
+        "coverage": 0.713768
+      },
+      {
+        "year": 2024,
+        "member_rows": 60488,
+        "valid_rows": 47945,
+        "coverage": 0.792637
+      },
+      {
+        "year": 2025,
+        "member_rows": 60504,
+        "valid_rows": 53043,
+        "coverage": 0.876686
+      },
+      {
+        "year": 2026,
+        "member_rows": 46707,
+        "valid_rows": 44773,
+        "coverage": 0.958593
+      }
+    ]
+  },
+  "distribution": {
+    "valid_daily_rows": 319786,
+    "valid_symbols": 300,
+    "min": -1.641361,
+    "p01": -0.619967,
+    "median": 0.019416,
+    "p99": 1.201107,
+    "max": 3.646436
+  },
+  "independence": {
+    "method": "mean absolute monthly cross-sectional Spearman correlation within historical non-financial HS300 members",
+    "fields": {
+      "free_cash_flow_assets": {
+        "months": 51,
+        "mean_abs_correlation": 0.797026,
+        "mean_signed_correlation": 0.797026
+      },
+      "ocf_margin_4q": {
+        "months": 51,
+        "mean_abs_correlation": 0.345276,
+        "mean_signed_correlation": 0.345276
+      },
+      "cash_to_assets": {
+        "months": 51,
+        "mean_abs_correlation": 0.156697,
+        "mean_signed_correlation": 0.156525
+      },
+      "sga_ratio_4q_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.065604,
+        "mean_signed_correlation": -0.017686
+      },
+      "gross_profitability": {
+        "months": 51,
+        "mean_abs_correlation": 0.27359,
+        "mean_signed_correlation": 0.27359
+      },
+      "piotroski7_score": {
+        "months": 41,
+        "mean_abs_correlation": 0.431281,
+        "mean_signed_correlation": 0.431281
+      },
+      "risk_adjusted_momentum_60d": {
+        "months": 51,
+        "mean_abs_correlation": 0.105797,
+        "mean_signed_correlation": 0.032143
+      },
+      "trend_efficiency_60d": {
+        "months": 51,
+        "mean_abs_correlation": 0.106852,
+        "mean_signed_correlation": 0.032837
+      },
+      "idio_vol_60d_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.159473,
+        "mean_signed_correlation": 0.156461
+      },
+      "stock_rel_industry_20d": {
+        "months": 51,
+        "mean_abs_correlation": 0.09536,
+        "mean_signed_correlation": 0.029192
+      },
+      "_market_cap": {
+        "months": 51,
+        "mean_abs_correlation": 0.151726,
+        "mean_signed_correlation": 0.150921
+      }
+    },
+    "max_mean_abs_correlation": 0.797026
+  },
+  "pit_rule": "FCF effective at max(vendor notice date + 1 day, statutory reporting deadline + 3 days); shares effective after availability; price on current date; reports expire after 500 calendar days",
+  "missing_data_rule": "require positive market cap, known shares and a non-expired annual FCF observation; no partial fill"
+}
