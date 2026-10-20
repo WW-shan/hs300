@@ -85,3 +85,28 @@ def test_r244_candidate_and_control_strategies_load() -> None:
     })
     assert frame.filter(candidate.filter_fn(frame, {}))["industry_l1"].to_list() == ["电子"]
     assert frame.filter(control.filter_fn(frame, {}))["industry_l1"].to_list() == ["电子"]
+
+def test_r244_backtest_contract_and_ic_helpers() -> None:
+    spec = importlib.util.spec_from_file_location(
+        "backtest_r244_gross_profitability",
+        ROOT / "scripts" / "backtest_r244_gross_profitability.py",
+    )
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(module)
+
+    assert module.FACTOR_ID == "ext_alt_hs300_gp_gross_profitability"
+    assert module.STRATEGIES == {
+        "candidate": "ai_hs300_gross_profitability_h20_sl20",
+        "control": "ai_hs300_gross_profitability_control",
+    }
+    calendar = [date(2024, 1, 1) + timedelta(days=index) for index in range(120)]
+    month_ends = [date(2024, 1, 31), date(2024, 2, 29), date(2024, 3, 19)]
+    days = module._eligible_rebalance_days(month_ends, calendar, date(2024, 1, 1), date(2024, 3, 31))
+    assert days == [date(2024, 1, 31), date(2024, 2, 29)]
+
+    frame = pl.DataFrame({
+        "factor": [1.0, 2.0, 3.0, 4.0],
+        "forward_return": [0.01, 0.02, 0.03, 0.04],
+    })
+    assert module._rank_ic(frame, "factor", "forward_return", minimum=4) == 1.0

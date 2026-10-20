@@ -1,0 +1,83 @@
+{
+    "round": "R244",
+    "captured_at": "2026-10-20T00:58:21.264278+00:00",
+    "api_base": "http://127.0.0.1:3018",
+    "reload": {
+        "method": "POST",
+        "endpoint": "/api/strategies/reload",
+        "ok": true,
+        "count": 114
+    },
+    "factors": {
+        "endpoint": "/api/factors",
+        "count": 213,
+        "expected_scoring_factor_count": 3,
+        "missing_scoring_factors": [],
+        "registered": [
+            {
+                "id": "ext_alt_hs300_gp_gross_profitability",
+                "label": "HS300毛利生产率因子·TTM毛利/总资产(高好)",
+                "group": "扩展数据",
+                "kind": "base",
+                "version": 1,
+                "formula": "扩展表「HS300毛利生产率因子」字段 gross_profitability (时序·按交易日对齐)",
+                "direction": "none",
+                "pit": false
+            },
+            {
+                "id": "uf_cash_quality",
+                "label": "现金质量",
+                "group": "财务",
+                "kind": "custom",
+                "version": 1,
+                "formula": "ocf_ni - accrual",
+                "direction": "high",
+                "pit": false
+            },
+            {
+                "id": "uf_quality_value_defensive",
+                "label": "质量价值防守",
+                "group": "财务",
+                "kind": "custom",
+                "version": 1,
+                "formula": "roe_latest / (100 * pb_latest) - debt_ratio_latest / 100",
+                "direction": "high",
+                "pit": false
+            }
+        ]
+    },
+    "strategies": {
+        "endpoint": "/api/strategies?include_research=true",
+        "count": 181,
+        "load_error_count": 0,
+        "load_errors": [],
+        "registered": [
+            {
+                "id": "ai_hs300_gross_profitability_h20_sl20",
+                "name": "HS300非金融总资产毛利生产率",
+                "research_only": true,
+                "scoring": {
+                    "ext_alt_hs300_gp_gross_profitability": 0.45,
+                    "uf_quality_value_defensive": 0.3,
+                    "uf_cash_quality": 0.25
+                },
+                "stop_loss": -0.2,
+                "max_hold_days": 20,
+                "limit": 30
+            },
+            {
+                "id": "ai_hs300_gross_profitability_control",
+                "name": "HS300非金融毛利生产率匹配对照",
+                "research_only": true,
+                "scoring": {
+                    "uf_quality_value_defensive": 0.545,
+                    "uf_cash_quality": 0.455
+                },
+                "stop_loss": -0.2,
+                "max_hold_days": 20,
+                "limit": 30
+            }
+        ]
+    },
+    "note": "R244 factor and both candidate/control strategies are registered before the final research result is committed."
+}
