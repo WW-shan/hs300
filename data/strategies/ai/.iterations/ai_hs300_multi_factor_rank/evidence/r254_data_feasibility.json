@@ -1,0 +1,133 @@
+{
+  "status": "feasibility_only_no_forward_returns",
+  "factor": "industry_management_ocf_gm_min_rank",
+  "formula": "min(industry_rank_pct(management_expense_ratio_4q_low), industry_rank_pct(ocf_margin_4q), industry_rank_pct(gross_margin_yoy_improvement_q)); ranks use current nonfinancial historical HS300 members within the same date and current industry snapshot; 1 best, 0 worst, singleton industries neutral 0.5",
+  "evaluation_start": "2023-05-04",
+  "evaluation_end": "2026-10-16",
+  "coverage": {
+    "eligible_member_rows": 209024,
+    "valid_member_rows": 209024,
+    "full_period_coverage": 1.0,
+    "recent_member_rows": 62630,
+    "recent_valid_rows": 62630,
+    "recent_12m_coverage": 1.0,
+    "first_valid_date": "2022-05-05",
+    "by_year": [
+      {
+        "year": 2023,
+        "member_rows": 41325,
+        "valid_rows": 41325,
+        "coverage": 1.0
+      },
+      {
+        "year": 2024,
+        "member_rows": 60488,
+        "valid_rows": 60488,
+        "coverage": 1.0
+      },
+      {
+        "year": 2025,
+        "member_rows": 60504,
+        "valid_rows": 60504,
+        "coverage": 1.0
+      },
+      {
+        "year": 2026,
+        "member_rows": 46707,
+        "valid_rows": 46707,
+        "coverage": 1.0
+      }
+    ]
+  },
+  "distribution": {
+    "valid_rows": 270194,
+    "min": 0.0,
+    "p01": 0.0,
+    "median": 0.181818,
+    "p99": 0.875,
+    "max": 1.0,
+    "singleton_rows": 2944
+  },
+  "independence": {
+    "method": "mean absolute monthly cross-sectional Spearman correlation within historical non-financial HS300 members",
+    "fields": {
+      "ocf_margin_4q": {
+        "months": 41,
+        "mean_abs_correlation": 0.317019,
+        "mean_signed_correlation": 0.317019
+      },
+      "cash_to_assets": {
+        "months": 41,
+        "mean_abs_correlation": 0.06813,
+        "mean_signed_correlation": 0.06813
+      },
+      "sga_ratio_4q_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.156173,
+        "mean_signed_correlation": 0.156173
+      },
+      "gross_margin_yoy_improvement_q": {
+        "months": 41,
+        "mean_abs_correlation": 0.379599,
+        "mean_signed_correlation": 0.379599
+      },
+      "gross_margin_stability_4q_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.132704,
+        "mean_signed_correlation": 0.132704
+      },
+      "risk_adjusted_momentum_60d": {
+        "months": 41,
+        "mean_abs_correlation": 0.091826,
+        "mean_signed_correlation": 0.063956
+      },
+      "trend_efficiency_60d": {
+        "months": 41,
+        "mean_abs_correlation": 0.090076,
+        "mean_signed_correlation": 0.063351
+      },
+      "idio_vol_60d_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.057066,
+        "mean_signed_correlation": -0.005853
+      },
+      "stock_rel_industry_20d": {
+        "months": 41,
+        "mean_abs_correlation": 0.101779,
+        "mean_signed_correlation": 0.018437
+      },
+      "capex_intensity_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.050441,
+        "mean_signed_correlation": 0.023103
+      },
+      "free_cash_flow_assets": {
+        "months": 41,
+        "mean_abs_correlation": 0.24714,
+        "mean_signed_correlation": 0.24714
+      },
+      "asset_growth_yoy_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.127109,
+        "mean_signed_correlation": -0.127109
+      },
+      "working_capital_change_yoy_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.110427,
+        "mean_signed_correlation": 0.110427
+      },
+      "gross_profitability": {
+        "months": 41,
+        "mean_abs_correlation": 0.157618,
+        "mean_signed_correlation": 0.157618
+      },
+      "piotroski7_score": {
+        "months": 41,
+        "mean_abs_correlation": 0.194106,
+        "mean_signed_correlation": 0.194106
+      }
+    },
+    "max_mean_abs_correlation": 0.379599
+  },
+  "selection_note": "R253 showed that cross-market weakest-link quality had positive IC and full-sample return but failed recent-year, cost stress and concentration. R254 tests a separate industry-relative hypothesis grounded in peer comparability and concentration control. No forward returns were read."
+}
