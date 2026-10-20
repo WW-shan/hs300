@@ -1,0 +1,117 @@
+{
+  "round": "R250",
+  "captured_at": "2026-10-20T02:42:32.520836+00:00",
+  "api_base": "http://127.0.0.1:3018",
+  "reload": {
+    "method": "POST",
+    "endpoint": "/api/strategies/reload",
+    "ok": true,
+    "count": 114
+  },
+  "factors": {
+    "endpoint": "/api/factors",
+    "count": 219,
+    "expected_scoring_factor_count": 3,
+    "missing_scoring_factors": [],
+    "registered": [
+      {
+        "id": "uf_cash_quality",
+        "label": "现金质量",
+        "group": "财务",
+        "kind": "custom",
+        "version": 1,
+        "formula": "ocf_ni - accrual",
+        "direction": "high",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "experimental",
+        "scale_free": true,
+        "dependencies": [
+          "accrual",
+          "ocf_ni"
+        ]
+      },
+      {
+        "id": "uf_quality_value_defensive",
+        "label": "质量价值防守",
+        "group": "财务",
+        "kind": "custom",
+        "version": 1,
+        "formula": "roe_latest / (100 * pb_latest) - debt_ratio_latest / 100",
+        "direction": "high",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "experimental",
+        "scale_free": true,
+        "dependencies": [
+          "debt_ratio_latest",
+          "pb_latest",
+          "roe_latest"
+        ]
+      },
+      {
+        "id": "ext_alt_hs300_revstab_revenue_growth_stability_4q_low",
+        "label": "HS300营收增长稳定性因子·4季度营收增长稳定性(高好)",
+        "group": "扩展数据",
+        "kind": "base",
+        "version": 1,
+        "formula": "扩展表「HS300营收增长稳定性因子」字段 revenue_growth_stability_4q_low (时序·按交易日对齐)",
+        "direction": "none",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "stable",
+        "scale_free": false,
+        "dependencies": []
+      }
+    ]
+  },
+  "strategies": {
+    "endpoint": "/api/strategies?include_research=true",
+    "count": 193,
+    "load_error_count": 0,
+    "load_errors": [],
+    "registered": [
+      {
+        "id": "ai_hs300_revenue_stability_quality_control",
+        "name": "HS300营收增长稳定性匹配对照",
+        "research_only": true,
+        "scoring": {
+          "uf_quality_value_defensive": 0.545,
+          "uf_cash_quality": 0.455
+        },
+        "stop_loss": -0.2,
+        "max_hold_days": 20,
+        "limit": 30
+      },
+      {
+        "id": "ai_hs300_revenue_stability_quality_h20_sl20",
+        "name": "HS300营收增长稳定性",
+        "research_only": true,
+        "scoring": {
+          "ext_alt_hs300_revstab_revenue_growth_stability_4q_low": 0.45,
+          "uf_quality_value_defensive": 0.3,
+          "uf_cash_quality": 0.25
+        },
+        "stop_loss": -0.2,
+        "max_hold_days": 20,
+        "limit": 30
+      }
+    ]
+  },
+  "note": "R250 factor and both candidate/control strategies are registered in the panel before the final research result is committed."
+}

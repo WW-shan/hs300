@@ -1,0 +1,177 @@
+{
+  "round": "R250",
+  "captured_at": "2026-10-20T02:43:13.211866+00:00",
+  "factor_id": "ext_alt_hs300_revstab_revenue_growth_stability_4q_low",
+  "config_id": "alt_hs300_revstab",
+  "field": "revenue_growth_stability_4q_low",
+  "label": "HS300营收增长稳定性因子·4季度营收增长稳定性(高好)",
+  "direction": "high",
+  "formula": "revenue_growth_stability_4q_low = -std(g_t, g_t_minus_1, g_t_minus_2, g_t_minus_3), where g_t = single_quarter_revenue_t / single_quarter_revenue_t_minus_4 - 1",
+  "builder": "scripts/build_r250_revenue_stability_factor.py",
+  "source_data": {
+    "income_table": "data/financials/income/part.parquet",
+    "quarterly_valid_rows": 54841,
+    "quarterly_valid_symbols": 5155,
+    "period_range": [
+      "2023-03-31",
+      "2026-06-30"
+    ],
+    "first_effective_date": "2023-05-03"
+  },
+  "partitions": 2132,
+  "first_partition": "date=2018-01-02",
+  "last_partition": "date=2026-10-19",
+  "factor_rows": 1187524,
+  "factor_symbols": 557,
+  "valid_rows": 455589,
+  "valid_symbols": 549,
+  "first_valid_date": "2023-05-04",
+  "last_date": "2026-10-19",
+  "distribution": {
+    "valid_daily_rows": 455589,
+    "valid_symbols": 549,
+    "min": -30.09557,
+    "p01": -2.455146,
+    "median": -0.124898,
+    "p99": -0.014031,
+    "max": -0.001655
+  },
+  "coverage": {
+    "eligible_member_rows": 209024,
+    "valid_member_rows": 208967,
+    "full_period_coverage": 0.999727,
+    "recent_member_rows": 62630,
+    "recent_valid_rows": 62573,
+    "recent_12m_coverage": 0.99909,
+    "first_valid_date": "2023-05-04",
+    "by_year": [
+      {
+        "year": 2023,
+        "member_rows": 41325,
+        "valid_rows": 41325,
+        "coverage": 1.0
+      },
+      {
+        "year": 2024,
+        "member_rows": 60488,
+        "valid_rows": 60488,
+        "coverage": 1.0
+      },
+      {
+        "year": 2025,
+        "member_rows": 60504,
+        "valid_rows": 60504,
+        "coverage": 1.0
+      },
+      {
+        "year": 2026,
+        "member_rows": 46707,
+        "valid_rows": 46650,
+        "coverage": 0.99878
+      }
+    ]
+  },
+  "pit_audit": {
+    "rule": "single-quarter revenue from cumulative YTD reports; effective date = statutory reporting deadline + 3 calendar days; latest report expires after 500 calendar days",
+    "factor_rows_checked": 1187524,
+    "expected_rows": 1187524,
+    "missing_written_rows": 0,
+    "unexpected_written_rows": 0,
+    "max_abs_formula_difference": 0.0,
+    "written_rows_match_expected_asof_panel": true,
+    "written_values_match_formula": true,
+    "pit_unit_test": "backend/tests/test_r250_revenue_stability_factor.py::test_r250_revenue_stability_formula_pit_and_staleness",
+    "all_checks_pass": true
+  },
+  "independence": {
+    "method": "mean absolute monthly cross-sectional Spearman correlation within historical non-financial HS300 members",
+    "fields": {
+      "ocf_margin_4q": {
+        "months": 41,
+        "mean_abs_correlation": 0.048058,
+        "mean_signed_correlation": 0.034253
+      },
+      "cash_to_assets": {
+        "months": 41,
+        "mean_abs_correlation": 0.092682,
+        "mean_signed_correlation": -0.011792
+      },
+      "sga_ratio_4q_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.132889,
+        "mean_signed_correlation": -0.132889
+      },
+      "gross_margin_yoy_improvement_q": {
+        "months": 41,
+        "mean_abs_correlation": 0.045716,
+        "mean_signed_correlation": 0.007785
+      },
+      "gross_margin_stability_4q_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.246639,
+        "mean_signed_correlation": 0.246639
+      },
+      "risk_adjusted_momentum_60d": {
+        "months": 41,
+        "mean_abs_correlation": 0.081633,
+        "mean_signed_correlation": 0.03018
+      },
+      "trend_efficiency_60d": {
+        "months": 41,
+        "mean_abs_correlation": 0.082507,
+        "mean_signed_correlation": 0.033527
+      },
+      "idio_vol_60d_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.226954,
+        "mean_signed_correlation": 0.226625
+      },
+      "stock_rel_industry_20d": {
+        "months": 41,
+        "mean_abs_correlation": 0.069288,
+        "mean_signed_correlation": 0.022809
+      },
+      "gross_profitability": {
+        "months": 41,
+        "mean_abs_correlation": 0.089955,
+        "mean_signed_correlation": 0.063809
+      },
+      "asset_growth_yoy_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.150745,
+        "mean_signed_correlation": 0.136856
+      },
+      "working_capital_change_yoy_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.054545,
+        "mean_signed_correlation": 0.02679
+      },
+      "piotroski7_score": {
+        "months": 41,
+        "mean_abs_correlation": 0.063322,
+        "mean_signed_correlation": 0.055991
+      },
+      "revenue_growth_accel_q": {
+        "months": 41,
+        "mean_abs_correlation": 0.142925,
+        "mean_signed_correlation": 0.055533
+      }
+    },
+    "max_mean_abs_correlation": 0.246639,
+    "source": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r250_data_feasibility.json"
+  },
+  "universe": {
+    "industry_source": "current ext_hy_ths industry snapshot; not historical PIT",
+    "excluded_industries": [
+      "银行",
+      "非银金融"
+    ],
+    "member_snapshot_rows": 430500,
+    "nonfinancial_member_rows": 353797,
+    "excluded_financial_member_rows": 73251,
+    "industry_missing_member_rows": 3452,
+    "nonfinancial_symbols": 469,
+    "excluded_financial_symbols": 80,
+    "industry_missing_symbols": 15
+  }
+}
