@@ -1,0 +1,51 @@
+{
+    "round": "R239",
+    "registered_at": "2026-10-20",
+    "status": "pre_registered_before_concentration_audit",
+    "hypothesis": "R238's five-position candidate passed all gates, but a five-stock equal-weight portfolio can be driven by one or two names. This round audits the actual engine trades from the frozen R238 candidate across 2022-2026 and tests whether the P&L is diversified across symbols and industries. It is a concentration audit, not a new alpha discovery.",
+    "factor": {
+        "id": "ext_alt_hs300_sga_ratio_4q_low",
+        "definition": "frozen from R221/R238",
+        "source_evidence": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r238_five_position.json"
+    },
+    "strategy": {
+        "id": "ai_hs300_sga_nonfin_quality_h5_sl20",
+        "max_positions": 5,
+        "holding_days": 20,
+        "stop_loss": -0.2,
+        "position_sizing": "equal",
+        "cost": "3x baseline"
+    },
+    "execution": {
+        "engine": "StrategyBacktestService",
+        "matching": "open_t+1",
+        "universe": "historical non-financial HS300 membership; daily snapshots from 2022",
+        "segments": [
+            [
+                "2022-07-01",
+                "2024-12-31"
+            ],
+            [
+                "2025-01-02",
+                "2026-10-16"
+            ]
+        ]
+    },
+    "gates": {
+        "C1": "at least 30 distinct symbols are traded across the full period",
+        "C2": "the single largest symbol's share of net P&L is at most 25%",
+        "C3": "the top three symbols' share of net P&L is at most 55%",
+        "C4": "the top five symbols' share of net P&L is at most 75%",
+        "C5": "at least 8 distinct symbols have positive P&L in the validation segment",
+        "C6": "the single largest symbol's share of validation gross profit is at most 35%",
+        "C7": "the largest industry's share of gross profit is at most 45%",
+        "C8": "the single largest symbol loss is at most 20% of gross profit in absolute value"
+    },
+    "decision_rule": "All C gates must pass. A failure means the five-position candidate's P&L is too concentrated to justify even paper trading without additional diversification controls. No gate may be relaxed after seeing the audit.",
+    "known_limitations": [
+        "Trade P&L amounts from two segments each start from 1,000,000 notional, so the audit is a contribution-share analysis, not a compounded-return decomposition.",
+        "Industry classification is a current snapshot, not historical PIT.",
+        "The audit describes concentration, not causality.",
+        "Passing concentration gates does not override the result-driven nature of the five-position choice."
+    ]
+}
