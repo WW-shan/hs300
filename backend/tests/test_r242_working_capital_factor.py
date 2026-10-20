@@ -81,3 +81,25 @@ def test_r242_candidate_and_control_strategies_load() -> None:
     })
     assert frame.filter(candidate.filter_fn(frame, {}))["industry_l1"].to_list() == ["电子"]
     assert frame.filter(control.filter_fn(frame, {}))["industry_l1"].to_list() == ["电子"]
+
+def test_r242_factor_ic_rebalance_days_are_nonempty() -> None:
+    spec = importlib.util.spec_from_file_location(
+        "backtest_r242_working_capital_change",
+        ROOT / "scripts" / "backtest_r242_working_capital_change.py",
+    )
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(module)
+
+    calendar = [date(2024, 1, 1) + timedelta(days=index) for index in range(120)]
+    month_ends = [date(2024, 1, 31), date(2024, 2, 29), date(2024, 3, 19)]
+    days = module._eligible_rebalance_days(month_ends, calendar, date(2024, 1, 1), date(2024, 3, 31))
+    assert date(2024, 1, 31) in days
+    assert date(2024, 2, 29) in days
+    assert date(2024, 3, 19) not in days
+
+    frame = pl.DataFrame({
+        "factor": [1.0, 2.0, 3.0, 4.0],
+        "forward_return": [0.01, 0.02, 0.03, 0.04],
+    })
+    assert module._rank_ic(frame, "factor", "forward_return", minimum=4) == 1.0
