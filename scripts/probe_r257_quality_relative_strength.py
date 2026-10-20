@@ -12,14 +12,7 @@ import polars as pl
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
-EVIDENCE = (
-    DATA
-    / "strategies"
-    / "ai"
-    / ".iterations"
-    / "ai_hs300_multi_factor_rank"
-    / "evidence"
-)
+EVIDENCE = DATA / "strategies" / "ai" / ".iterations" / "ai_hs300_multi_factor_rank" / "evidence"
 OUT = EVIDENCE / "r257_data_feasibility.json"
 R229_SCRIPT = ROOT / "scripts" / "backtest_r229_ocf_margin.py"
 R253_BUILDER = ROOT / "scripts" / "build_r253_min_rank_factor.py"
@@ -73,11 +66,7 @@ def _month_ends(calendar: list[date]) -> list[date]:
 
 def _rank_corr(frame: pl.DataFrame, left: str, right: str) -> float | None:
     part = frame.select([left, right]).drop_nulls()
-    if (
-        part.height < MIN_NAMES
-        or part[left].n_unique() < 2
-        or part[right].n_unique() < 2
-    ):
+    if part.height < MIN_NAMES or part[left].n_unique() < 2 or part[right].n_unique() < 2:
         return None
     ranked = part.select(
         pl.col(left).rank("average").alias("x"),
@@ -89,9 +78,7 @@ def _rank_corr(frame: pl.DataFrame, left: str, right: str) -> float | None:
 
 def _sample_stats(frame: pl.DataFrame, start: date, end: date) -> dict:
     sample = frame.filter((pl.col("date") >= start) & (pl.col("date") <= end))
-    valid = sample.filter(
-        pl.all_horizontal([pl.col(field).is_not_null() for field in COMPONENTS])
-    )
+    valid = sample.filter(pl.all_horizontal([pl.col(field).is_not_null() for field in COMPONENTS]))
     return {
         "eligible_member_rows": sample.height,
         "valid_member_rows": valid.height,
@@ -169,19 +156,18 @@ def main() -> int:
         .filter(pl.col("_names") > 1)
         .with_columns(
             [
-                (
-                    (pl.col("_names") - pl.col(f"_rank_{field}"))
-                    / (pl.col("_names") - 1.0)
-                ).alias(f"_pct_{field}")
+                ((pl.col("_names") - pl.col(f"_rank_{field}")) / (pl.col("_names") - 1.0)).alias(
+                    f"_pct_{field}"
+                )
                 for field in COMPONENTS
             ]
         )
     )
     composite_column = "quality_relative_strength_min_rank"
     composite = ranked.with_columns(
-        pl.min_horizontal(
-            [pl.col(f"_pct_{R253_FIELD}"), pl.col(f"_pct_{RS_FIELD}")]
-        ).alias(composite_column)
+        pl.min_horizontal([pl.col(f"_pct_{R253_FIELD}"), pl.col(f"_pct_{RS_FIELD}")]).alias(
+            composite_column
+        )
     )
     difference = composite.select(
         (pl.col(f"_pct_{R253_FIELD}") - pl.col(composite_column)).alias("_diff")
@@ -205,8 +191,7 @@ def main() -> int:
         "D1_full_coverage": samples["full"]["coverage"] >= 0.99,
         "D2_recent_coverage": samples["recent_12m"]["coverage"] >= 0.99,
         "D3_segment_coverage": (
-            samples["discovery"]["coverage"] >= 0.99
-            and samples["validation"]["coverage"] >= 0.99
+            samples["discovery"]["coverage"] >= 0.99 and samples["validation"]["coverage"] >= 0.99
         ),
         "D4_first_valid_by_start": samples["full"]["first_valid_date"] is not None
         and samples["full"]["first_valid_date"] <= str(START),
@@ -256,12 +241,8 @@ def main() -> int:
         "joint_valid_rows": valid.height,
         "component_monthly_rank_correlation": {
             "months": len(corr_values),
-            "mean": round(sum(corr_values) / len(corr_values), 6)
-            if corr_values
-            else None,
-            "mean_abs": round(
-                sum(abs(value) for value in corr_values) / len(corr_values), 6
-            )
+            "mean": round(sum(corr_values) / len(corr_values), 6) if corr_values else None,
+            "mean_abs": round(sum(abs(value) for value in corr_values) / len(corr_values), 6)
             if corr_values
             else None,
             "min": round(min(corr_values), 6) if corr_values else None,
@@ -278,9 +259,7 @@ def main() -> int:
         ),
     }
     EVIDENCE.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(
-        json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-    )
+    OUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(payload, ensure_ascii=False, indent=2))
     return 0
 
