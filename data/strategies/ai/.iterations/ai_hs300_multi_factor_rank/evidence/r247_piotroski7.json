@@ -1,0 +1,1635 @@
+{
+  "purpose": "R247 non-financial HS300 seven-signal accounting-quality factor versus a matched quality-cash control",
+  "preregistration": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r247_preregistration.json",
+  "window": [
+    "2023-05-04",
+    "2026-10-16"
+  ],
+  "universe": {
+    "industry_source": "current ext_hy_ths industry snapshot; not historical PIT",
+    "excluded_industries": [
+      "银行",
+      "非银金融"
+    ],
+    "member_snapshot_rows": 430500,
+    "nonfinancial_member_rows": 353797,
+    "excluded_financial_member_rows": 73251,
+    "industry_missing_member_rows": 3452,
+    "nonfinancial_symbols": 469,
+    "excluded_financial_symbols": 80,
+    "industry_missing_symbols": 15
+  },
+  "factor": {
+    "id": "ext_alt_hs300_pf7_piotroski7_score",
+    "column": "piotroski7_score",
+    "formula": "(1/7) * [ROA>0 + OCF>0 + delta_ROA>0 + (OCF>NI) + delta_leverage<0 + delta_gross_margin>0 + delta_asset_turnover>0]; higher means more annual accounting-quality signals improved simultaneously",
+    "pit_rule": "annual reports only; effective date = statutory reporting deadline + 3 calendar days; values expire after 500 calendar days",
+    "coverage": {
+      "eligible_member_rows": 209024,
+      "valid_member_rows": 209024,
+      "coverage_2023_2026": 1.0,
+      "recent_member_rows": 62630,
+      "recent_valid_rows": 62630,
+      "recent_12m_coverage": 1.0,
+      "first_valid_date": "2023-05-04",
+      "factor_min": 0.0,
+      "factor_p01": 0.142857,
+      "factor_median": 0.571429,
+      "factor_p99": 1.0,
+      "factor_max": 1.0
+    },
+    "pit_audit": {
+      "rule": "annual report effective date; factor null when the latest annual report is older than 500 calendar days",
+      "factor_rows_checked": 1187524,
+      "expected_rows": 1187524,
+      "missing_written_rows": 0,
+      "unexpected_written_rows": 0,
+      "max_abs_formula_difference": 0.0,
+      "written_rows_match_expected_asof_panel": true,
+      "written_values_match_formula": true,
+      "pit_unit_test": "backend/tests/test_r247_piotroski7_factor.py::test_r247_score_pit_components_and_staleness",
+      "all_checks_pass": true
+    },
+    "independence": {
+      "fields": {
+        "ocf_margin_4q": {
+          "months": 41,
+          "mean_abs_correlation": 0.291102,
+          "mean_signed_correlation": 0.291102
+        },
+        "cash_to_assets": {
+          "months": 41,
+          "mean_abs_correlation": 0.088056,
+          "mean_signed_correlation": 0.087649
+        },
+        "sga_ratio_4q_low": {
+          "months": 41,
+          "mean_abs_correlation": 0.079373,
+          "mean_signed_correlation": 0.064764
+        },
+        "gross_margin_yoy_improvement_q": {
+          "months": 41,
+          "mean_abs_correlation": 0.175901,
+          "mean_signed_correlation": 0.112672
+        },
+        "gross_margin_stability_4q_low": {
+          "months": 41,
+          "mean_abs_correlation": 0.070634,
+          "mean_signed_correlation": 0.070634
+        },
+        "rd_intensity": {
+          "months": 41,
+          "mean_abs_correlation": 0.123441,
+          "mean_signed_correlation": -0.123441
+        },
+        "capex_intensity_low": {
+          "months": 41,
+          "mean_abs_correlation": 0.041262,
+          "mean_signed_correlation": 0.025167
+        },
+        "net_financing_4q_low": {
+          "months": 41,
+          "mean_abs_correlation": 0.260841,
+          "mean_signed_correlation": 0.260841
+        },
+        "working_capital_change_yoy_low": {
+          "months": 41,
+          "mean_abs_correlation": 0.059824,
+          "mean_signed_correlation": -0.039067
+        },
+        "asset_growth_yoy_low": {
+          "months": 41,
+          "mean_abs_correlation": 0.056717,
+          "mean_signed_correlation": 0.008049
+        },
+        "gross_profitability": {
+          "months": 41,
+          "mean_abs_correlation": 0.22925,
+          "mean_signed_correlation": 0.22925
+        }
+      },
+      "max_mean_abs_correlation": 0.291102
+    }
+  },
+  "samples": {
+    "discovery": [
+      "2023-05-04",
+      "2024-12-31"
+    ],
+    "validation": [
+      "2025-01-02",
+      "2026-10-16"
+    ],
+    "rolling_1y": "252-trading-day rolling compounded return over the stitched 2023-2026 curve",
+    "recent_12m": "last 252 trading-day returns of the stitched 2023-2026 curve"
+  },
+  "execution": {
+    "engine": "StrategyBacktestService",
+    "matching": "open_t+1",
+    "cost_3x": "6bp fees + 6bp commission + 15bp slippage + 10bp stamp tax",
+    "cost_stress": "4x and 5x scale all four components proportionally",
+    "max_positions": 10,
+    "score_limit": 30,
+    "position_sizing": "equal",
+    "holding_days": 20,
+    "stop_loss": -0.2,
+    "segments": [
+      [
+        "2023-05-04",
+        "2024-12-31"
+      ],
+      [
+        "2025-01-02",
+        "2026-10-16"
+      ]
+    ],
+    "stitching": "two segment returns compounded into one curve; first day of each later segment skipped"
+  },
+  "strategies": {
+    "candidate": "ai_hs300_piotroski7_quality_h20_sl20",
+    "control": "ai_hs300_piotroski7_quality_control"
+  },
+  "factor_ic": {
+    "discovery": {
+      "months": 19,
+      "mean_ic": 0.035874,
+      "positive_rate": 0.6842,
+      "monthly": [
+        {
+          "date": "2023-05-31",
+          "ic": -0.009247,
+          "names": 253
+        },
+        {
+          "date": "2023-06-30",
+          "ic": -0.091918,
+          "names": 252
+        },
+        {
+          "date": "2023-07-31",
+          "ic": 0.223962,
+          "names": 252
+        },
+        {
+          "date": "2023-08-31",
+          "ic": 0.044818,
+          "names": 252
+        },
+        {
+          "date": "2023-09-28",
+          "ic": -0.052393,
+          "names": 252
+        },
+        {
+          "date": "2023-10-31",
+          "ic": 0.003988,
+          "names": 252
+        },
+        {
+          "date": "2023-11-30",
+          "ic": 0.20592,
+          "names": 252
+        },
+        {
+          "date": "2023-12-29",
+          "ic": 0.021156,
+          "names": 250
+        },
+        {
+          "date": "2024-01-31",
+          "ic": 0.10092,
+          "names": 250
+        },
+        {
+          "date": "2024-02-29",
+          "ic": 0.044683,
+          "names": 250
+        },
+        {
+          "date": "2024-03-29",
+          "ic": -0.084349,
+          "names": 250
+        },
+        {
+          "date": "2024-04-30",
+          "ic": 0.196226,
+          "names": 250
+        },
+        {
+          "date": "2024-05-31",
+          "ic": 0.103197,
+          "names": 250
+        },
+        {
+          "date": "2024-06-28",
+          "ic": 0.022394,
+          "names": 249
+        },
+        {
+          "date": "2024-07-31",
+          "ic": 0.119303,
+          "names": 249
+        },
+        {
+          "date": "2024-08-30",
+          "ic": -0.154705,
+          "names": 250
+        },
+        {
+          "date": "2024-09-30",
+          "ic": -0.190985,
+          "names": 250
+        },
+        {
+          "date": "2024-10-31",
+          "ic": 0.030524,
+          "names": 250
+        },
+        {
+          "date": "2024-11-29",
+          "ic": 0.148117,
+          "names": 249
+        }
+      ]
+    },
+    "validation": {
+      "months": 20,
+      "mean_ic": 0.018222,
+      "positive_rate": 0.65,
+      "monthly": [
+        {
+          "date": "2025-01-27",
+          "ic": -0.105224,
+          "names": 248
+        },
+        {
+          "date": "2025-02-28",
+          "ic": 0.160153,
+          "names": 248
+        },
+        {
+          "date": "2025-03-31",
+          "ic": 0.072945,
+          "names": 250
+        },
+        {
+          "date": "2025-04-30",
+          "ic": 0.065981,
+          "names": 248
+        },
+        {
+          "date": "2025-05-30",
+          "ic": -0.078625,
+          "names": 248
+        },
+        {
+          "date": "2025-06-30",
+          "ic": -0.238029,
+          "names": 248
+        },
+        {
+          "date": "2025-07-31",
+          "ic": 0.055061,
+          "names": 248
+        },
+        {
+          "date": "2025-08-29",
+          "ic": 0.019232,
+          "names": 247
+        },
+        {
+          "date": "2025-09-30",
+          "ic": -0.034457,
+          "names": 249
+        },
+        {
+          "date": "2025-10-31",
+          "ic": 0.113187,
+          "names": 249
+        },
+        {
+          "date": "2025-11-28",
+          "ic": 0.157201,
+          "names": 248
+        },
+        {
+          "date": "2025-12-31",
+          "ic": -0.030264,
+          "names": 247
+        },
+        {
+          "date": "2026-01-30",
+          "ic": 0.020539,
+          "names": 247
+        },
+        {
+          "date": "2026-02-27",
+          "ic": 0.065053,
+          "names": 247
+        },
+        {
+          "date": "2026-03-31",
+          "ic": -0.018637,
+          "names": 248
+        },
+        {
+          "date": "2026-04-30",
+          "ic": 0.134784,
+          "names": 248
+        },
+        {
+          "date": "2026-05-29",
+          "ic": 0.079812,
+          "names": 248
+        },
+        {
+          "date": "2026-06-30",
+          "ic": 0.000866,
+          "names": 248
+        },
+        {
+          "date": "2026-07-31",
+          "ic": 0.025223,
+          "names": 249
+        },
+        {
+          "date": "2026-08-31",
+          "ic": -0.100352,
+          "names": 249
+        }
+      ]
+    }
+  },
+  "results": {
+    "candidate": {
+      "runs": [
+        {
+          "start": "2023-05-04",
+          "end": "2024-12-31",
+          "cached": true,
+          "days": 406,
+          "curve_stats": {
+            "total_return": -0.005425,
+            "annual": -0.003379,
+            "sharpe": 0.0926,
+            "mdd": -0.206009,
+            "days": 406
+          }
+        },
+        {
+          "start": "2025-01-02",
+          "end": "2026-10-16",
+          "cached": true,
+          "days": 431,
+          "curve_stats": {
+            "total_return": -0.01686,
+            "annual": -0.009915,
+            "sharpe": 0.0475,
+            "mdd": -0.252724,
+            "days": 431
+          }
+        }
+      ],
+      "result": {
+        "full": {
+          "total_return": -0.022193,
+          "annual": -0.00675,
+          "sharpe": 0.0705,
+          "mdd": -0.252724,
+          "days": 836
+        },
+        "validation_2025_2026": {
+          "total_return": -0.001841,
+          "annual": -0.001082,
+          "sharpe": 0.0927,
+          "mdd": -0.252724,
+          "days": 430
+        },
+        "rolling_1y": {
+          "windows": 585,
+          "positive_rate": 0.8051,
+          "return_p05": -0.1136,
+          "return_median": 0.101,
+          "return_worst": -0.1852,
+          "mdd_p05": -0.1811,
+          "mdd_worst": -0.2527
+        },
+        "recent_12m": {
+          "total_return": -0.12089,
+          "mdd": -0.252724
+        },
+        "discovery_2023_2024": {
+          "total_return": -0.005425,
+          "annual": -0.003379,
+          "sharpe": 0.0926,
+          "mdd": -0.206009,
+          "days": 406
+        }
+      }
+    },
+    "control": {
+      "runs": [
+        {
+          "start": "2023-05-04",
+          "end": "2024-12-31",
+          "cached": true,
+          "days": 406,
+          "curve_stats": {
+            "total_return": -0.099926,
+            "annual": -0.063407,
+            "sharpe": -0.1209,
+            "mdd": -0.36343,
+            "days": 406
+          }
+        },
+        {
+          "start": "2025-01-02",
+          "end": "2026-10-16",
+          "cached": true,
+          "days": 431,
+          "curve_stats": {
+            "total_return": 0.086728,
+            "annual": 0.04995,
+            "sharpe": 0.3419,
+            "mdd": -0.242314,
+            "days": 431
+          }
+        }
+      ],
+      "result": {
+        "full": {
+          "total_return": -0.021865,
+          "annual": -0.00665,
+          "sharpe": 0.087,
+          "mdd": -0.36343,
+          "days": 836
+        },
+        "validation_2025_2026": {
+          "total_return": 0.107797,
+          "annual": 0.06198,
+          "sharpe": 0.3983,
+          "mdd": -0.242314,
+          "days": 430
+        },
+        "rolling_1y": {
+          "windows": 585,
+          "positive_rate": 0.6752,
+          "return_p05": -0.2815,
+          "return_median": 0.13,
+          "return_worst": -0.328,
+          "mdd_p05": -0.3224,
+          "mdd_worst": -0.3343
+        },
+        "recent_12m": {
+          "total_return": -0.136293,
+          "mdd": -0.242314
+        },
+        "discovery_2023_2024": {
+          "total_return": -0.099926,
+          "annual": -0.063407,
+          "sharpe": -0.1209,
+          "mdd": -0.36343,
+          "days": 406
+        }
+      }
+    }
+  },
+  "stress": {
+    "4x": {
+      "runs": [
+        {
+          "start": "2023-05-04",
+          "end": "2024-12-31",
+          "cached": true,
+          "days": 406,
+          "curve_stats": {
+            "total_return": -0.051078,
+            "annual": -0.032096,
+            "sharpe": -0.046,
+            "mdd": -0.223193,
+            "days": 406
+          }
+        },
+        {
+          "start": "2025-01-02",
+          "end": "2026-10-16",
+          "cached": true,
+          "days": 431,
+          "curve_stats": {
+            "total_return": -0.046129,
+            "annual": -0.027297,
+            "sharpe": -0.0431,
+            "mdd": -0.255069,
+            "days": 431
+          }
+        }
+      ],
+      "result": {
+        "full": {
+          "total_return": -0.094851,
+          "annual": -0.029628,
+          "sharpe": -0.0445,
+          "mdd": -0.255069,
+          "days": 836
+        },
+        "validation_2025_2026": {
+          "total_return": -0.030897,
+          "annual": -0.018267,
+          "sharpe": 0.0039,
+          "mdd": -0.255069,
+          "days": 430
+        },
+        "rolling_1y": {
+          "windows": 585,
+          "positive_rate": 0.7419,
+          "return_p05": -0.1324,
+          "return_median": 0.0728,
+          "return_worst": -0.2015,
+          "mdd_p05": -0.1914,
+          "mdd_worst": -0.2551
+        },
+        "recent_12m": {
+          "total_return": -0.135687,
+          "mdd": -0.255069
+        },
+        "discovery_2023_2024": {
+          "total_return": -0.051078,
+          "annual": -0.032096,
+          "sharpe": -0.046,
+          "mdd": -0.223193,
+          "days": 406
+        }
+      }
+    },
+    "5x": {
+      "runs": [
+        {
+          "start": "2023-05-04",
+          "end": "2024-12-31",
+          "cached": true,
+          "days": 406,
+          "curve_stats": {
+            "total_return": -0.078805,
+            "annual": -0.049792,
+            "sharpe": -0.1297,
+            "mdd": -0.239114,
+            "days": 406
+          }
+        },
+        {
+          "start": "2025-01-02",
+          "end": "2026-10-16",
+          "cached": true,
+          "days": 431,
+          "curve_stats": {
+            "total_return": -0.081981,
+            "annual": -0.048893,
+            "sharpe": -0.1577,
+            "mdd": -0.264578,
+            "days": 431
+          }
+        }
+      ],
+      "result": {
+        "full": {
+          "total_return": -0.154326,
+          "annual": -0.049329,
+          "sharpe": -0.1433,
+          "mdd": -0.264578,
+          "days": 836
+        },
+        "validation_2025_2026": {
+          "total_return": -0.066686,
+          "annual": -0.039729,
+          "sharpe": -0.109,
+          "mdd": -0.264578,
+          "days": 430
+        },
+        "rolling_1y": {
+          "windows": 585,
+          "positive_rate": 0.6803,
+          "return_p05": -0.1487,
+          "return_median": 0.0526,
+          "return_worst": -0.2151,
+          "mdd_p05": -0.2038,
+          "mdd_worst": -0.2646
+        },
+        "recent_12m": {
+          "total_return": -0.155731,
+          "mdd": -0.264578
+        },
+        "discovery_2023_2024": {
+          "total_return": -0.078805,
+          "annual": -0.049792,
+          "sharpe": -0.1297,
+          "mdd": -0.239114,
+          "days": 406
+        }
+      }
+    }
+  },
+  "concentration": {
+    "full": {
+      "n_trades": 440,
+      "distinct_symbols": 82,
+      "total_pnl_amount": -22284.66,
+      "gross_profit": 1623326.75,
+      "gross_loss": 1645611.41,
+      "net_to_gross": -0.0137,
+      "top1_symbol": {
+        "symbol": "600176.SH",
+        "name": "XD中国巨",
+        "n_trades": 1,
+        "pnl_amount": 96884.23,
+        "wins": 1
+      },
+      "top3_symbols": [
+        {
+          "symbol": "600176.SH",
+          "name": "XD中国巨",
+          "n_trades": 1,
+          "pnl_amount": 96884.23,
+          "wins": 1
+        },
+        {
+          "symbol": "600219.SH",
+          "name": "南山铝业",
+          "n_trades": 8,
+          "pnl_amount": 78348.71,
+          "wins": 7
+        },
+        {
+          "symbol": "300408.SZ",
+          "name": "三环集团",
+          "n_trades": 5,
+          "pnl_amount": 65131.979999999996,
+          "wins": 4
+        }
+      ],
+      "top5_symbols": [
+        {
+          "symbol": "600176.SH",
+          "name": "XD中国巨",
+          "n_trades": 1,
+          "pnl_amount": 96884.23,
+          "wins": 1
+        },
+        {
+          "symbol": "600219.SH",
+          "name": "南山铝业",
+          "n_trades": 8,
+          "pnl_amount": 78348.71,
+          "wins": 7
+        },
+        {
+          "symbol": "300408.SZ",
+          "name": "三环集团",
+          "n_trades": 5,
+          "pnl_amount": 65131.979999999996,
+          "wins": 4
+        },
+        {
+          "symbol": "601600.SH",
+          "name": "中国铝业",
+          "n_trades": 6,
+          "pnl_amount": 55497.01,
+          "wins": 5
+        },
+        {
+          "symbol": "000807.SZ",
+          "name": "云铝股份",
+          "n_trades": 8,
+          "pnl_amount": 53869.689999999995,
+          "wins": 6
+        }
+      ],
+      "worst_symbols": [
+        {
+          "symbol": "001391.SZ",
+          "name": "国货航",
+          "n_trades": 12,
+          "pnl_amount": -65585.37,
+          "wins": 1
+        },
+        {
+          "symbol": "600118.SH",
+          "name": "中国卫星",
+          "n_trades": 3,
+          "pnl_amount": -62932.97,
+          "wins": 0
+        },
+        {
+          "symbol": "601698.SH",
+          "name": "中国卫通",
+          "n_trades": 6,
+          "pnl_amount": -53266.59,
+          "wins": 2
+        },
+        {
+          "symbol": "603195.SH",
+          "name": "公牛集团",
+          "n_trades": 3,
+          "pnl_amount": -38825.74,
+          "wins": 0
+        },
+        {
+          "symbol": "600438.SH",
+          "name": "通威股份",
+          "n_trades": 6,
+          "pnl_amount": -34148.17,
+          "wins": 2
+        }
+      ],
+      "top1_net_share": 96884.23,
+      "top3_net_share": 240364.92,
+      "top5_net_share": 349731.62,
+      "top1_gross_share": 0.059683,
+      "top3_gross_share": 0.148069,
+      "top5_gross_share": 0.215441,
+      "max_symbol_loss_abs": 65585.37,
+      "max_symbol_loss_to_gross": 0.040402,
+      "industries": [
+        {
+          "industry": "电子",
+          "gross_profit": 322785.76000000007
+        },
+        {
+          "industry": "有色金属",
+          "gross_profit": 280677.25000000006
+        },
+        {
+          "industry": "医药生物",
+          "gross_profit": 174705.99999999997
+        },
+        {
+          "industry": "交通运输",
+          "gross_profit": 125421.43
+        },
+        {
+          "industry": "建筑材料",
+          "gross_profit": 117476.64
+        },
+        {
+          "industry": "通信",
+          "gross_profit": 97406.1
+        },
+        {
+          "industry": "食品饮料",
+          "gross_profit": 81294.09
+        },
+        {
+          "industry": "计算机",
+          "gross_profit": 79487.41
+        },
+        {
+          "industry": "煤炭",
+          "gross_profit": 68266.98
+        },
+        {
+          "industry": "石油石化",
+          "gross_profit": 41585.91
+        },
+        {
+          "industry": "美容护理",
+          "gross_profit": 37168.95
+        },
+        {
+          "industry": "传媒",
+          "gross_profit": 35215.65
+        },
+        {
+          "industry": "国防军工",
+          "gross_profit": 30996.039999999997
+        },
+        {
+          "industry": "电力设备",
+          "gross_profit": 25909.399999999998
+        },
+        {
+          "industry": "纺织服饰",
+          "gross_profit": 24903.93
+        },
+        {
+          "industry": "基础化工",
+          "gross_profit": 21756.8
+        },
+        {
+          "industry": "汽车",
+          "gross_profit": 19229.97
+        },
+        {
+          "industry": "商贸零售",
+          "gross_profit": 16808.7
+        },
+        {
+          "industry": "农林牧渔",
+          "gross_profit": 13770.7
+        },
+        {
+          "industry": "公用事业",
+          "gross_profit": 8459.04
+        }
+      ],
+      "top_industry_gross_share": 0.198842
+    },
+    "validation": {
+      "n_trades": 228,
+      "distinct_symbols": 57,
+      "total_pnl_amount": -16859.65,
+      "gross_profit": 957024.76,
+      "gross_loss": 973884.41,
+      "net_to_gross": -0.0176,
+      "top1_symbol": {
+        "symbol": "600176.SH",
+        "name": "XD中国巨",
+        "n_trades": 1,
+        "pnl_amount": 96884.23,
+        "wins": 1
+      },
+      "top3_symbols": [
+        {
+          "symbol": "600176.SH",
+          "name": "XD中国巨",
+          "n_trades": 1,
+          "pnl_amount": 96884.23,
+          "wins": 1
+        },
+        {
+          "symbol": "600219.SH",
+          "name": "南山铝业",
+          "n_trades": 8,
+          "pnl_amount": 78348.71,
+          "wins": 7
+        },
+        {
+          "symbol": "300408.SZ",
+          "name": "三环集团",
+          "n_trades": 5,
+          "pnl_amount": 65131.979999999996,
+          "wins": 4
+        }
+      ],
+      "top5_symbols": [
+        {
+          "symbol": "600176.SH",
+          "name": "XD中国巨",
+          "n_trades": 1,
+          "pnl_amount": 96884.23,
+          "wins": 1
+        },
+        {
+          "symbol": "600219.SH",
+          "name": "南山铝业",
+          "n_trades": 8,
+          "pnl_amount": 78348.71,
+          "wins": 7
+        },
+        {
+          "symbol": "300408.SZ",
+          "name": "三环集团",
+          "n_trades": 5,
+          "pnl_amount": 65131.979999999996,
+          "wins": 4
+        },
+        {
+          "symbol": "601600.SH",
+          "name": "中国铝业",
+          "n_trades": 6,
+          "pnl_amount": 55497.01,
+          "wins": 5
+        },
+        {
+          "symbol": "000807.SZ",
+          "name": "云铝股份",
+          "n_trades": 8,
+          "pnl_amount": 53869.689999999995,
+          "wins": 6
+        }
+      ],
+      "worst_symbols": [
+        {
+          "symbol": "001391.SZ",
+          "name": "国货航",
+          "n_trades": 12,
+          "pnl_amount": -65585.37,
+          "wins": 1
+        },
+        {
+          "symbol": "600118.SH",
+          "name": "中国卫星",
+          "n_trades": 3,
+          "pnl_amount": -62932.97,
+          "wins": 0
+        },
+        {
+          "symbol": "601698.SH",
+          "name": "中国卫通",
+          "n_trades": 6,
+          "pnl_amount": -53266.59,
+          "wins": 2
+        },
+        {
+          "symbol": "601816.SH",
+          "name": "京沪高铁",
+          "n_trades": 10,
+          "pnl_amount": -38405.24999999999,
+          "wins": 3
+        },
+        {
+          "symbol": "603501.SH",
+          "name": "豪威集团",
+          "n_trades": 10,
+          "pnl_amount": -32919.8,
+          "wins": 5
+        }
+      ],
+      "top1_net_share": 96884.23,
+      "top3_net_share": 240364.92,
+      "top5_net_share": 349731.62,
+      "top1_gross_share": 0.101235,
+      "top3_gross_share": 0.251159,
+      "top5_gross_share": 0.365436,
+      "max_symbol_loss_abs": 65585.37,
+      "max_symbol_loss_to_gross": 0.06853,
+      "industries": [
+        {
+          "industry": "电子",
+          "gross_profit": 318669.5900000001
+        },
+        {
+          "industry": "有色金属",
+          "gross_profit": 273300.49000000005
+        },
+        {
+          "industry": "建筑材料",
+          "gross_profit": 96884.23
+        },
+        {
+          "industry": "医药生物",
+          "gross_profit": 89873.77999999998
+        },
+        {
+          "industry": "交通运输",
+          "gross_profit": 52574.1
+        },
+        {
+          "industry": "通信",
+          "gross_profit": 51948.84
+        },
+        {
+          "industry": "汽车",
+          "gross_profit": 19229.97
+        },
+        {
+          "industry": "传媒",
+          "gross_profit": 12380.359999999999
+        },
+        {
+          "industry": "石油石化",
+          "gross_profit": 10084.96
+        },
+        {
+          "industry": "公用事业",
+          "gross_profit": 8459.04
+        },
+        {
+          "industry": "国防军工",
+          "gross_profit": 7091.53
+        },
+        {
+          "industry": "计算机",
+          "gross_profit": 5012.97
+        },
+        {
+          "industry": "农林牧渔",
+          "gross_profit": 4787.49
+        },
+        {
+          "industry": "食品饮料",
+          "gross_profit": 3331.5
+        },
+        {
+          "industry": "纺织服饰",
+          "gross_profit": 2363.5299999999997
+        },
+        {
+          "industry": "商贸零售",
+          "gross_profit": 1032.38
+        }
+      ],
+      "top_industry_gross_share": 0.332979
+    },
+    "validation_positive_symbols": 24,
+    "per_symbol_full": [
+      {
+        "symbol": "600176.SH",
+        "name": "XD中国巨",
+        "n_trades": 1,
+        "pnl_amount": 96884.23,
+        "wins": 1
+      },
+      {
+        "symbol": "600219.SH",
+        "name": "南山铝业",
+        "n_trades": 8,
+        "pnl_amount": 78348.71,
+        "wins": 7
+      },
+      {
+        "symbol": "300408.SZ",
+        "name": "三环集团",
+        "n_trades": 5,
+        "pnl_amount": 65131.979999999996,
+        "wins": 4
+      },
+      {
+        "symbol": "601600.SH",
+        "name": "中国铝业",
+        "n_trades": 6,
+        "pnl_amount": 55497.01,
+        "wins": 5
+      },
+      {
+        "symbol": "000807.SZ",
+        "name": "云铝股份",
+        "n_trades": 8,
+        "pnl_amount": 53869.689999999995,
+        "wins": 6
+      },
+      {
+        "symbol": "600276.SH",
+        "name": "恒瑞医药",
+        "n_trades": 14,
+        "pnl_amount": 35622.22,
+        "wins": 10
+      },
+      {
+        "symbol": "301269.SZ",
+        "name": "华大九天",
+        "n_trades": 8,
+        "pnl_amount": 34201.08,
+        "wins": 5
+      },
+      {
+        "symbol": "600050.SH",
+        "name": "中国联通",
+        "n_trades": 8,
+        "pnl_amount": 30461.32,
+        "wins": 6
+      },
+      {
+        "symbol": "601088.SH",
+        "name": "中国神华",
+        "n_trades": 9,
+        "pnl_amount": 30101.11,
+        "wins": 7
+      },
+      {
+        "symbol": "600938.SH",
+        "name": "XD中国海",
+        "n_trades": 4,
+        "pnl_amount": 27392.48,
+        "wins": 4
+      },
+      {
+        "symbol": "600809.SH",
+        "name": "山西汾酒",
+        "n_trades": 6,
+        "pnl_amount": 16670.18,
+        "wins": 4
+      },
+      {
+        "symbol": "600941.SH",
+        "name": "中国移动",
+        "n_trades": 6,
+        "pnl_amount": 15358.7,
+        "wins": 3
+      },
+      {
+        "symbol": "600233.SH",
+        "name": "圆通速递",
+        "n_trades": 7,
+        "pnl_amount": 15150.37,
+        "wins": 4
+      },
+      {
+        "symbol": "002001.SZ",
+        "name": "新 和 成",
+        "n_trades": 6,
+        "pnl_amount": 14068.53,
+        "wins": 4
+      },
+      {
+        "symbol": "300979.SZ",
+        "name": "华利集团",
+        "n_trades": 4,
+        "pnl_amount": 13967.460000000003,
+        "wins": 3
+      },
+      {
+        "symbol": "300394.SZ",
+        "name": "天孚通信",
+        "n_trades": 2,
+        "pnl_amount": 13080.43,
+        "wins": 1
+      },
+      {
+        "symbol": "601699.SH",
+        "name": "潞安环能",
+        "n_trades": 5,
+        "pnl_amount": 12131.55,
+        "wins": 3
+      },
+      {
+        "symbol": "600660.SH",
+        "name": "福耀玻璃",
+        "n_trades": 3,
+        "pnl_amount": 11283.220000000001,
+        "wins": 1
+      },
+      {
+        "symbol": "000858.SZ",
+        "name": "五 粮 液",
+        "n_trades": 7,
+        "pnl_amount": 10124.379999999994,
+        "wins": 1
+      },
+      {
+        "symbol": "603986.SH",
+        "name": "兆易创新",
+        "n_trades": 12,
+        "pnl_amount": 9142.320000000007,
+        "wins": 5
+      },
+      {
+        "symbol": "600845.SH",
+        "name": "宝信软件",
+        "n_trades": 2,
+        "pnl_amount": 9126.05,
+        "wins": 1
+      },
+      {
+        "symbol": "601919.SH",
+        "name": "中远海控",
+        "n_trades": 6,
+        "pnl_amount": 8732.349999999997,
+        "wins": 3
+      },
+      {
+        "symbol": "601857.SH",
+        "name": "中国石油",
+        "n_trades": 7,
+        "pnl_amount": 8639.820000000002,
+        "wins": 4
+      },
+      {
+        "symbol": "600027.SH",
+        "name": "华电国际",
+        "n_trades": 1,
+        "pnl_amount": 8459.04,
+        "wins": 1
+      },
+      {
+        "symbol": "000725.SZ",
+        "name": "京东方Ａ",
+        "n_trades": 2,
+        "pnl_amount": 7952.64,
+        "wins": 2
+      },
+      {
+        "symbol": "601872.SH",
+        "name": "招商轮船",
+        "n_trades": 4,
+        "pnl_amount": 7889.64,
+        "wins": 2
+      },
+      {
+        "symbol": "300896.SZ",
+        "name": "爱美客",
+        "n_trades": 6,
+        "pnl_amount": 7730.459999999999,
+        "wins": 1
+      },
+      {
+        "symbol": "300498.SZ",
+        "name": "温氏股份",
+        "n_trades": 6,
+        "pnl_amount": 6743.25,
+        "wins": 4
+      },
+      {
+        "symbol": "603993.SH",
+        "name": "洛阳钼业",
+        "n_trades": 1,
+        "pnl_amount": 6489.17,
+        "wins": 1
+      },
+      {
+        "symbol": "688008.SH",
+        "name": "澜起科技",
+        "n_trades": 6,
+        "pnl_amount": 4632.080000000004,
+        "wins": 4
+      },
+      {
+        "symbol": "300015.SZ",
+        "name": "爱尔眼科",
+        "n_trades": 6,
+        "pnl_amount": 3786.1799999999994,
+        "wins": 3
+      },
+      {
+        "symbol": "000963.SZ",
+        "name": "华东医药",
+        "n_trades": 6,
+        "pnl_amount": 3404.64,
+        "wins": 3
+      },
+      {
+        "symbol": "002938.SZ",
+        "name": "鹏鼎控股",
+        "n_trades": 1,
+        "pnl_amount": 2502.8,
+        "wins": 1
+      },
+      {
+        "symbol": "600377.SH",
+        "name": "宁沪高速",
+        "n_trades": 1,
+        "pnl_amount": 1733.16,
+        "wins": 1
+      },
+      {
+        "symbol": "000983.SZ",
+        "name": "山西焦煤",
+        "n_trades": 4,
+        "pnl_amount": 1668.44,
+        "wins": 3
+      },
+      {
+        "symbol": "603259.SH",
+        "name": "药明康德",
+        "n_trades": 7,
+        "pnl_amount": 1397.969999999997,
+        "wins": 4
+      },
+      {
+        "symbol": "000733.SZ",
+        "name": "振华科技",
+        "n_trades": 4,
+        "pnl_amount": 1116.8899999999994,
+        "wins": 2
+      },
+      {
+        "symbol": "002027.SZ",
+        "name": "分众传媒",
+        "n_trades": 12,
+        "pnl_amount": 906.5800000000004,
+        "wins": 2
+      },
+      {
+        "symbol": "601006.SH",
+        "name": "大秦铁路",
+        "n_trades": 6,
+        "pnl_amount": 803.4299999999996,
+        "wins": 3
+      },
+      {
+        "symbol": "000792.SZ",
+        "name": "盐湖股份",
+        "n_trades": 7,
+        "pnl_amount": -737.4899999999998,
+        "wins": 3
+      },
+      {
+        "symbol": "600406.SH",
+        "name": "国电南瑞",
+        "n_trades": 6,
+        "pnl_amount": -1289.8600000000006,
+        "wins": 2
+      },
+      {
+        "symbol": "600415.SH",
+        "name": "小商品城",
+        "n_trades": 2,
+        "pnl_amount": -1583.5699999999997,
+        "wins": 1
+      },
+      {
+        "symbol": "601111.SH",
+        "name": "中国国航",
+        "n_trades": 2,
+        "pnl_amount": -1788.8099999999995,
+        "wins": 1
+      },
+      {
+        "symbol": "600009.SH",
+        "name": "上海机场",
+        "n_trades": 12,
+        "pnl_amount": -2026.7099999999982,
+        "wins": 5
+      },
+      {
+        "symbol": "688041.SH",
+        "name": "海光信息",
+        "n_trades": 2,
+        "pnl_amount": -2035.4500000000003,
+        "wins": 1
+      },
+      {
+        "symbol": "002602.SZ",
+        "name": "世纪华通",
+        "n_trades": 4,
+        "pnl_amount": -3236.9500000000016,
+        "wins": 2
+      },
+      {
+        "symbol": "300433.SZ",
+        "name": "蓝思科技",
+        "n_trades": 5,
+        "pnl_amount": -4276.5899999999965,
+        "wins": 2
+      },
+      {
+        "symbol": "002007.SZ",
+        "name": "华兰生物",
+        "n_trades": 5,
+        "pnl_amount": -4927.46,
+        "wins": 1
+      },
+      {
+        "symbol": "002352.SZ",
+        "name": "顺丰控股",
+        "n_trades": 3,
+        "pnl_amount": -6567.6,
+        "wins": 1
+      },
+      {
+        "symbol": "600989.SH",
+        "name": "宝丰能源",
+        "n_trades": 1,
+        "pnl_amount": -7324.77,
+        "wins": 0
+      },
+      {
+        "symbol": "002304.SZ",
+        "name": "洋河股份",
+        "n_trades": 6,
+        "pnl_amount": -9057.76,
+        "wins": 1
+      },
+      {
+        "symbol": "000786.SZ",
+        "name": "北新建材",
+        "n_trades": 6,
+        "pnl_amount": -9085.670000000002,
+        "wins": 2
+      },
+      {
+        "symbol": "688981.SH",
+        "name": "中芯国际",
+        "n_trades": 4,
+        "pnl_amount": -10199.619999999999,
+        "wins": 2
+      },
+      {
+        "symbol": "000975.SZ",
+        "name": "山金国际",
+        "n_trades": 3,
+        "pnl_amount": -10446.990000000002,
+        "wins": 1
+      },
+      {
+        "symbol": "688126.SH",
+        "name": "沪硅产业",
+        "n_trades": 2,
+        "pnl_amount": -12721.01,
+        "wins": 0
+      },
+      {
+        "symbol": "002821.SZ",
+        "name": "凯莱英",
+        "n_trades": 7,
+        "pnl_amount": -12846.11,
+        "wins": 3
+      },
+      {
+        "symbol": "600585.SH",
+        "name": "海螺水泥",
+        "n_trades": 1,
+        "pnl_amount": -12997.77,
+        "wins": 0
+      },
+      {
+        "symbol": "600489.SH",
+        "name": "中金黄金",
+        "n_trades": 9,
+        "pnl_amount": -13530.16,
+        "wins": 6
+      },
+      {
+        "symbol": "300661.SZ",
+        "name": "圣邦股份",
+        "n_trades": 3,
+        "pnl_amount": -13666.19,
+        "wins": 1
+      },
+      {
+        "symbol": "300308.SZ",
+        "name": "中际旭创",
+        "n_trades": 3,
+        "pnl_amount": -14359.060000000001,
+        "wins": 1
+      },
+      {
+        "symbol": "002532.SZ",
+        "name": "天山铝业",
+        "n_trades": 1,
+        "pnl_amount": -14388.81,
+        "wins": 0
+      },
+      {
+        "symbol": "002466.SZ",
+        "name": "天齐锂业",
+        "n_trades": 3,
+        "pnl_amount": -14586.59,
+        "wins": 1
+      },
+      {
+        "symbol": "000408.SZ",
+        "name": "藏格矿业",
+        "n_trades": 8,
+        "pnl_amount": -14993.87,
+        "wins": 3
+      },
+      {
+        "symbol": "300628.SZ",
+        "name": "亿联网络",
+        "n_trades": 7,
+        "pnl_amount": -15176.800000000003,
+        "wins": 3
+      },
+      {
+        "symbol": "688303.SH",
+        "name": "大全能源",
+        "n_trades": 7,
+        "pnl_amount": -15788.360000000004,
+        "wins": 3
+      },
+      {
+        "symbol": "002410.SZ",
+        "name": "广联达",
+        "n_trades": 1,
+        "pnl_amount": -16163.46,
+        "wins": 0
+      },
+      {
+        "symbol": "601888.SH",
+        "name": "中国中免",
+        "n_trades": 6,
+        "pnl_amount": -16416.739999999998,
+        "wins": 2
+      },
+      {
+        "symbol": "002236.SZ",
+        "name": "大华股份",
+        "n_trades": 5,
+        "pnl_amount": -16984.26,
+        "wins": 1
+      },
+      {
+        "symbol": "300832.SZ",
+        "name": "新产业",
+        "n_trades": 6,
+        "pnl_amount": -18005.559999999998,
+        "wins": 1
+      },
+      {
+        "symbol": "600089.SH",
+        "name": "特变电工",
+        "n_trades": 4,
+        "pnl_amount": -18494.85,
+        "wins": 0
+      },
+      {
+        "symbol": "603893.SH",
+        "name": "瑞芯微",
+        "n_trades": 1,
+        "pnl_amount": -20941.67,
+        "wins": 0
+      },
+      {
+        "symbol": "601816.SH",
+        "name": "京沪高铁",
+        "n_trades": 14,
+        "pnl_amount": -22710.08,
+        "wins": 6
+      },
+      {
+        "symbol": "603288.SH",
+        "name": "海天味业",
+        "n_trades": 7,
+        "pnl_amount": -25226.08,
+        "wins": 2
+      },
+      {
+        "symbol": "300347.SZ",
+        "name": "泰格医药",
+        "n_trades": 2,
+        "pnl_amount": -26089.0,
+        "wins": 0
+      },
+      {
+        "symbol": "002756.SZ",
+        "name": "永兴材料",
+        "n_trades": 4,
+        "pnl_amount": -27128.82,
+        "wins": 1
+      },
+      {
+        "symbol": "600161.SH",
+        "name": "天坛生物",
+        "n_trades": 14,
+        "pnl_amount": -29007.03,
+        "wins": 7
+      },
+      {
+        "symbol": "603501.SH",
+        "name": "豪威集团",
+        "n_trades": 10,
+        "pnl_amount": -32919.8,
+        "wins": 5
+      },
+      {
+        "symbol": "600438.SH",
+        "name": "通威股份",
+        "n_trades": 6,
+        "pnl_amount": -34148.17,
+        "wins": 2
+      },
+      {
+        "symbol": "603195.SH",
+        "name": "公牛集团",
+        "n_trades": 3,
+        "pnl_amount": -38825.74,
+        "wins": 0
+      },
+      {
+        "symbol": "601698.SH",
+        "name": "中国卫通",
+        "n_trades": 6,
+        "pnl_amount": -53266.59,
+        "wins": 2
+      },
+      {
+        "symbol": "600118.SH",
+        "name": "中国卫星",
+        "n_trades": 3,
+        "pnl_amount": -62932.97,
+        "wins": 0
+      },
+      {
+        "symbol": "001391.SZ",
+        "name": "国货航",
+        "n_trades": 12,
+        "pnl_amount": -65585.37,
+        "wins": 1
+      }
+    ]
+  },
+  "decision": {
+    "D1": true,
+    "D2": true,
+    "D3": true,
+    "D4": true,
+    "I1": true,
+    "I2": true,
+    "G1": true,
+    "G2": true,
+    "G3": false,
+    "G4": false,
+    "G5": true,
+    "G6": true,
+    "G7": false,
+    "G8": false,
+    "G9": false,
+    "C1": true,
+    "C2": false,
+    "C3": false,
+    "C4": false,
+    "C5": true,
+    "C6": true,
+    "C7": true,
+    "all_pass": false
+  },
+  "caveats": [
+    "Only seven traditional Piotroski signals are available; current-ratio and share-issuance components are absent from the local financial contract.",
+    "The factor updates once per fiscal year and can be stale within the year.",
+    "Two consecutive annual reports are required, so the first valid score is 2023-05-04.",
+    "Financial values are current snapshots and may contain restatements.",
+    "The industry snapshot used to exclude financials is current rather than historical PIT.",
+    "The full curve is stitched from two system-engine segments; segment boundaries can reset an open position.",
+    "Trade P&L shares are contribution diagnostics from two segments each starting at 1,000,000 notional, not a compounded-return decomposition.",
+    "The factor is research-only until every preregistered gate passes; passing would justify paper-trading validation, not production deployment."
+  ]
+}
