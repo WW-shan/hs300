@@ -1,0 +1,96 @@
+{
+  "round": "R260",
+  "registered_at": "2026-10-20",
+  "status": "pre_registered_before_factor_table_strategy_implementation_and_backtest",
+  "hypothesis": "R257's P&L concentration comes from repeatedly selected winners, but R258's hard freshness gate eliminated the candidate pool and R259's reversal min-rank destroyed returns. A bounded soft recency penalty can demote persistent top-30 names without excluding any stock.",
+  "selection_basis": "This is a result-driven follow-up informed by R257's C2/C3/C4 failure, R258's daily fresh-name median of one and R259's G1-G9 failure. It is not independent confirmation. Feasibility read no forward or strategy returns: joint coverage is 99.9211% full, 99.9646% discovery, 99.8797% validation and 99.9122% recent year; the factor-only soft Top30 overlaps the R257 Top30 by a median of 0.60 with 99.8805% of days below full overlap; the penalty lowers the R257 percentile by 0.018719 on average, affects 26.4963% of observations and is capped at 0.20; every date has at least 246 valid names. The first D7 implementation incorrectly required a constant daily member count and was corrected before any return was read; no factor definition, universe or threshold changed. Evidence: r260_data_feasibility.json.",
+  "factor": {
+    "id": "ext_alt_hs300_qrsrf_quality_rs_soft_fresh_rank",
+    "config_id": "alt_hs300_qrsrf",
+    "column": "quality_rs_soft_fresh_rank",
+    "direction": "high",
+    "formula": "quality_rs_soft_fresh_rank = rank_pct(quality_relative_strength_min_rank) * (1 - 0.20 * prior20_r257_top30_count / 20) within same-date historical nonfinancial HS300 members; 1 is best",
+    "lookback": 20,
+    "top_n": 30,
+    "penalty_cap": 0.2,
+    "prior_count_definition": "Number of preceding 20 benchmark trading dates on which the stock was in the strict R257 Top30. Strict ordering is R257 value descending then symbol ascending. Nonmembership and missing R257 value count as zero.",
+    "interpretation": "The R257 score remains the primary signal. Persistent presence in the trailing R257 Top30 applies only a bounded multiplicative haircut; no stock is excluded and the maximum haircut is 20%.",
+    "pit_rule": "Prior Top30 membership uses only the preceding 20 complete benchmark trading dates. Current-date ranks use only current eligible historical nonfinancial HS300 members.",
+    "missing_data_rule": "A missing R257 value leaves the factor null. Prior membership history is complete on the common benchmark calendar."
+  },
+  "strategies": {
+    "candidate": {
+      "id": "ai_hs300_qrs_soft_fresh_h20_sl20",
+      "scoring": {
+        "ext_alt_hs300_qrsrf_quality_rs_soft_fresh_rank": 0.45,
+        "uf_quality_value_defensive": 0.3,
+        "uf_cash_quality": 0.25
+      }
+    },
+    "control": {
+      "id": "ai_hs300_qrs_soft_fresh_control",
+      "scoring": {
+        "ext_alt_hs300_qrs_quality_relative_strength_min_rank": 0.45,
+        "uf_quality_value_defensive": 0.3,
+        "uf_cash_quality": 0.25
+      }
+    },
+    "common_filter": "Current nonfinancial industry snapshot is required; history uses historical HS300 membership. Both strategies require ma60 and non-null quality_rs_soft_fresh_rank so the candidate and control universe is identical.",
+    "execution": "30-name score limit, at most 10 equal-weight positions, 20-day holding, -20% stop loss, T+1 open execution and 3x costs; candidate also tested at 4x/5x."
+  },
+  "execution": {
+    "engine": "StrategyBacktestService",
+    "matching": "open_t+1",
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "score_limit": 30,
+    "holding_days": 20,
+    "stop_loss": -0.2,
+    "asset_type": "stock",
+    "cost_3x": "6bp fees + 6bp commission + 15bp slippage + 10bp stamp tax",
+    "cost_stress": "4x and 5x scale all four components proportionally",
+    "segments": {
+      "discovery": ["2023-05-04", "2024-12-31"],
+      "validation": ["2025-01-02", "2026-10-16"],
+      "stitching": "compound two independently run segment curves; skip the first return of each later segment"
+    }
+  },
+  "factor_ic": {
+    "method": "R260 factor month-end rank IC versus T+1 open to T+21 open return within historical nonfinancial HS300 members",
+    "minimum_names": 30
+  },
+  "gates": {
+    "D1": "full and recent-12-month coverage >=0.99",
+    "D2": "discovery and validation coverage >=0.99",
+    "D3": "first valid date is no later than 2023-05-04 and written values exactly match the same-date formula with max abs difference <=1e-12",
+    "D4": "factor-only soft Top30 overlap median is 0.60-0.95, at least 50% of days have less than full overlap, mean reduction versus the R257 percentile >=0.01, at least 20% of observations are reduced, and no haircut exceeds 0.20",
+    "I1": "discovery mean R260 rank IC >=0.02 with at least 18 month-end observations",
+    "I2": "validation mean R260 rank IC >=0.01 with at least 18 month-end observations and the same positive sign",
+    "G1": "discovery candidate return >= control return + 5pp",
+    "G2": "discovery candidate MDD is no worse than control MDD by more than 5pp",
+    "G3": "validation candidate return >= control return",
+    "G4": "full-sample candidate return > 0 and >= control return",
+    "G5": "full-sample candidate MDD <= 40% in absolute value and no worse than control by more than 5pp",
+    "G6": "rolling 1-year positive rate >= 60% and no worse than control by more than 2pp",
+    "G7": "recent 12-month candidate return > 0 and MDD no worse than control by more than 5pp",
+    "G8": "full-sample candidate return at 4x cost is positive",
+    "G9": "full-sample candidate return at 5x cost is positive",
+    "C1": "at least 30 distinct symbols are traded across the full sample",
+    "C2": "the largest symbol's share of net P&L is <= 25%",
+    "C3": "the top three symbols' share of net P&L is <= 55%",
+    "C4": "the top five symbols' share of net P&L is <= 75%",
+    "C5": "at least 8 distinct symbols have positive P&L in the validation segment",
+    "C6": "the largest industry's share of gross profit is <= 45%",
+    "C7": "the largest single-symbol loss is <= 20% of gross profit in absolute value"
+  },
+  "decision_rule": "All D, I, G and C gates must pass. Any failure means the soft-recency factor is not accepted and cannot be rescued by changing the penalty cap, lookback, scoring weights, holding period, stop loss, universe, costs or gates after seeing results.",
+  "known_limitations": [
+    "This is a result-driven follow-up to R257/R258/R259 and not independent out-of-sample confirmation.",
+    "The 20-day recency count depends on strict top-30 tie-breaking and the common benchmark calendar.",
+    "A 20% maximum haircut is intentionally gentle; it may leave concentration unchanged.",
+    "R253, industry-relative strength and recency were researched in overlapping samples, so multiple-comparison risk remains.",
+    "The nonfinancial industry snapshot is current rather than historical PIT.",
+    "The full curve is stitched from two system-engine segments and segment boundaries can reset open positions.",
+    "Passing these gates would justify paper-trading validation, not production deployment."
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "round": "R260",
+  "status": "feasibility_only_no_forward_returns",
+  "pre_return_audit_note": "The first feasibility run failed D7 because the probe incorrectly required a constant daily member count. Before reading any return, D7 was corrected to require at least 30 valid names on every benchmark date. The formula, universe, penalty cap, lookback and other thresholds were unchanged.",
+  "hypothesis": "R257's P&L concentration comes from repeatedly selected winners, but R258's hard freshness gate eliminated the candidate pool and R259's reversal min-rank destroyed returns. A bounded soft recency penalty can demote persistent top-30 names without excluding any stock.",
+  "selection_basis": "This is a result-driven follow-up informed by R257's C2/C3/C4 failure, R258's daily fresh-name median of one and R259's G1-G9 failure. It does not claim independent confirmation. The penalty cap is fixed at 20% before reading any R260 forward or strategy return.",
+  "factor": {
+    "provisional_id": "ext_alt_hs300_qrsrf_quality_rs_soft_fresh_rank",
+    "config_id": "alt_hs300_qrsrf",
+    "column": "quality_rs_soft_fresh_rank",
+    "formula": "rank_pct(quality_relative_strength_min_rank) * (1 - 0.20 * prior20_r257_top30_count / 20) within historical nonfinancial HS300 members",
+    "direction": "high",
+    "lookback": 20,
+    "top_n": 30,
+    "penalty_cap": 0.2,
+    "pit_rule": "Prior top-30 membership uses only the preceding 20 benchmark trading dates. Strict top-30 uses factor descending then symbol ascending. Current-date ranks use only current eligible historical nonfinancial HS300 members."
+  },
+  "window": [
+    "2023-05-04",
+    "2026-10-16"
+  ],
+  "trading_days": 837,
+  "recent_window_start": "2025-09-25",
+  "samples": {
+    "full": {
+      "eligible_member_rows": 209024,
+      "valid_member_rows": 208859,
+      "coverage": 0.999211,
+      "eligible_dates": 837,
+      "valid_dates": 837,
+      "first_valid_date": "2023-05-04",
+      "last_valid_date": "2026-10-16",
+      "valid_symbols": 331,
+      "min_daily_names": 246,
+      "median_daily_names": 249.0
+    },
+    "discovery": {
+      "eligible_member_rows": 101813,
+      "valid_member_rows": 101777,
+      "coverage": 0.999646,
+      "eligible_dates": 406,
+      "valid_dates": 406,
+      "first_valid_date": "2023-05-04",
+      "last_valid_date": "2024-12-31",
+      "valid_symbols": 299,
+      "min_daily_names": 248,
+      "median_daily_names": 250.0
+    },
+    "validation": {
+      "eligible_member_rows": 107211,
+      "valid_member_rows": 107082,
+      "coverage": 0.998797,
+      "eligible_dates": 431,
+      "valid_dates": 431,
+      "first_valid_date": "2025-01-02",
+      "last_valid_date": "2026-10-16",
+      "valid_symbols": 284,
+      "min_daily_names": 246,
+      "median_daily_names": 248.0
+    },
+    "recent_12m": {
+      "eligible_member_rows": 62630,
+      "valid_member_rows": 62575,
+      "coverage": 0.999122,
+      "eligible_dates": 252,
+      "valid_dates": 252,
+      "first_valid_date": "2025-09-25",
+      "last_valid_date": "2026-10-16",
+      "valid_symbols": 278,
+      "min_daily_names": 246,
+      "median_daily_names": 248.0
+    }
+  },
+  "factor_stats": {
+    "rows": 208859,
+    "dates": 837,
+    "symbols": 331,
+    "min": 0.0,
+    "p01": 0.00996,
+    "median": 0.493976,
+    "p99": 0.924398,
+    "max": 1.0,
+    "mean_reduction_vs_r257_rank": 0.018719,
+    "share_reduced": 0.264963,
+    "share_reduced_by_at_least_005": 0.135187,
+    "max_reduction": 0.2
+  },
+  "top30_overlap_with_r257": {
+    "days": 837,
+    "min": 0.4,
+    "p05": 0.5,
+    "median": 0.6,
+    "p95": 0.733333,
+    "max": 1.0,
+    "share_days_below_one": 0.998805
+  },
+  "soft_top30_recency": {
+    "top30_count_min": 0,
+    "top30_count_p25": 0.0,
+    "top30_count_median": 3.0,
+    "top30_count_p75": 8.0,
+    "top30_count_max": 20,
+    "top30_share_zero_count": 0.316687,
+    "top30_share_count_ge_10": 0.18638
+  },
+  "checks": {
+    "D1_full_coverage": true,
+    "D2_recent_coverage": true,
+    "D3_segment_coverage": true,
+    "D4_first_valid_by_start": true,
+    "D5_soft_overlap_constructive": true,
+    "D6_penalty_incremental": true,
+    "D7_daily_capacity": true,
+    "D8_formula": true
+  },
+  "all_checks_pass": true,
+  "selection_note": "These thresholds are fixed before reading any R260 forward return. If all checks pass, the factor and candidate/control strategies will be pre-registered before implementation."
+}
