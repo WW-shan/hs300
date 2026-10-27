@@ -1,0 +1,40 @@
+{
+  "round": "R264",
+  "registered_at": "2026-10-27",
+  "status": "pre_registered_before_trade_level_audit",
+  "hypothesis": "R131 双袖风险平价在 2018-2026 的收益和回撤已通过多轮验证，但逐笔交易级集中度尚未审计。如果 A/B 两袖的逐笔 P&L 在按月度风险平价权重和波动率目标暴露缩放后仍满足 C2-C4，则 R131 可进入纸面交易；否则只能作为研究候选。",
+  "method": {
+    "window": [
+      "2021-06-01",
+      "2026-10-16"
+    ],
+    "engine": "StrategyBacktestService",
+    "membership": "r78_daily_membership daily historical HS300",
+    "sleeves": {
+      "A": "ai_hs300_macro_gate_quality",
+      "B": "ai_hs300_industry_relative_strength_quality_h20_sl20"
+    },
+    "portfolio": "60d inverse-vol risk parity [0.2,0.8], 15% vol target [0.2,1.0], monthly",
+    "cost": "3x (6bp fees + 6bp commission + 15bp slippage + 10bp stamp tax)",
+    "attribution": "A trade P&L x weight_a(entry month) x vol-target exposure(entry month) + B trade P&L x (1 - weight_a(entry month)) x vol-target exposure(entry month); concentration shares are ratio-invariant to the common 1M sleeve capital."
+  },
+  "gates": {
+    "P1": "re-run A/B curves match the validated r125/r119 caches after rebasing; max abs difference <= 1e-6",
+    "P2": "paper_trade_candidate.py produces a state with all_pass=true",
+    "C1": "at least 30 distinct symbols traded",
+    "C2": "largest symbol share of attributed net P&L <= 25%",
+    "C3": "top three symbols share <= 55%",
+    "C4": "top five symbols share <= 75%",
+    "C5": "at least 8 distinct symbols with positive attributed P&L in the last 12 months",
+    "C6": "largest industry share of gross profit <= 45%",
+    "C7": "largest single-symbol loss <= 20% of gross profit"
+  },
+  "decision_rule": "P1/P2/C1-C7 全部通过才把 R131 标记为可进入纸面交易；任一失败则只保留研究候选状态，不得通过放宽门槛或修改归因口径来挽救。纸面交易不等于生产部署。",
+  "known_limitations": [
+    "逐笔归因使用月度权重和月度暴露，不是逐日现金流复算",
+    "A/B 两袖各自以 100 万起始资金回测，组合层按权重缩放是近似",
+    "行业分类为当前快照，不是历史 PIT",
+    "R131 的收益集中在 2023-2026，2018-2022 较弱",
+    "止盈/止损按日线成交，存在日线口径偏差"
+  ]
+}
