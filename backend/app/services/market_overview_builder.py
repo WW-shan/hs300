@@ -162,6 +162,10 @@ def _dimension_field(config: ExtConfig, kind: str) -> str | None:
     for candidate in candidates:
         needle = candidate.lower()
         for field in config.fields:
+            # 维度字段必须是分类字符串。数值因子名里也可能含 industry
+            # (如 industry_rps_20d)，不能当作行业归属字段。
+            if str(getattr(field, "dtype", "string")).lower() != "string":
+                continue
             haystack = f"{field.name} {field.label}".lower()
             if needle in haystack:
                 return field.name
@@ -172,7 +176,12 @@ def _ext_files(data_dir, config: ExtConfig) -> list[str]:
     base = data_dir / "ext_data" / config.id
     if config.mode == "timeseries":
         root = base / "timeseries"
-        return [str(p) for p in sorted(root.rglob("*.parquet")) if p.is_file()]
+        # 维度聚合只消费最新快照。读全部历史分区会让看板在因子库变大后
+        # 扫描数万个 parquet 文件并卡死（2026-10-27 看板加载 bug）。
+        partitions = sorted(root.glob("date=*/part.parquet"))
+        if partitions:
+            return [str(partitions[-1])]
+        return [str(p) for p in sorted(root.glob("*.parquet")) if p.is_file()]
     return [str(p) for p in sorted(base.glob("*.parquet")) if p.is_file()]
 
 
