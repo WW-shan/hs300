@@ -1,0 +1,41 @@
+{
+  "round": "R263",
+  "registered_at": "2026-10-27",
+  "status": "pre_registered_before_any_combination_backtest",
+  "hypothesis": "R131 双袖风险平价是已验证的低波动核心（2018-2026 +64.5%，MDD -15.7%，滚动一年正收益率 67.8%），R262 的 tp20 变体在验证集和最近一年更强（+44.4% / +15.0%），但单票 P&L 集中度更高。把 tp20 作为 20%-30% 的卫星、R131 作为核心，月度再平衡，应能在控制回撤的同时提高组合收益和近期表现。",
+  "construction": {
+    "core": "R131 PIT dual-sleeve: A=ai_hs300_macro_gate_quality, B=ai_hs300_industry_relative_strength_quality_h20_sl20, 60d inverse-vol risk parity [0.2,0.8], 15% vol target [0.2,1.0], monthly",
+    "satellite": "R262 tp20: ai_hs300_quality_relative_strength_h20_sl20 with take_profit=0.20, max_hold_days=20, 3x cost",
+    "rebalance": "monthly to fixed target weights, no leverage",
+    "variants": {
+      "core70_sat30": [
+        0.7,
+        0.3
+      ],
+      "core80_sat20": [
+        0.8,
+        0.2
+      ]
+    },
+    "window": [
+      "2023-05-04",
+      "2026-10-16"
+    ]
+  },
+  "gates": {
+    "G1": "combo full-sample return > R131 alone full-sample return over the same window",
+    "G2": "combo full-sample MDD no worse than R131 alone by more than 5pp",
+    "G3": "combo rolling 1-year positive rate >= R131 alone",
+    "G4": "combo recent 12-month return >= R131 alone",
+    "G5": "combo Sharpe >= R131 alone",
+    "G6": "satellite-attributable top-1 P&L bound = satellite weight x tp20 top1 net share <= 15%"
+  },
+  "decision_rule": "G1-G6 全部通过才进入下一轮逐笔交易级集中度审计；本轮不构成部署批准，因为 R131 逐笔 P&L 未缓存，组合 top1/top3/top5 的完整份额无法在曲线层证明。读取结果后不得修改权重、卫星选择、再平衡频率或门槛。",
+  "known_limitations": [
+    "曲线层月度再平衡忽略了月内权重漂移和两次再平衡之间的现金流",
+    "R131 逐笔交易未缓存，本轮只能给出卫星部分的可归属集中度上界",
+    "tp20 的止盈按日内最高价成交，存在日线乐观偏差",
+    "R131 与 tp20 的样本期重叠，且都已在之前轮次使用过",
+    "组合结果依赖两段回测拼接与 R131 缓存曲线"
+  ]
+}

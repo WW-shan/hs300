@@ -1,0 +1,38 @@
+{
+  "round": "R262-gate-audit",
+  "captured_at": "2026-10-27T08:19:47.104394+00:00",
+  "scope": "59 candidate result files under evidence/ that expose a decision dict",
+  "gate_failure_counts": {
+    "G1": 35,
+    "G2": 15,
+    "G3": 22,
+    "G4": 36,
+    "G5": 23,
+    "G6": 27,
+    "G7": 36,
+    "G8": 38,
+    "G9": 27,
+    "C2": 20,
+    "C3": 20,
+    "C4": 20,
+    "D1": 2,
+    "D2": 1,
+    "D3": 1,
+    "I1": 5,
+    "I2": 7
+  },
+  "rounds_failing_only_concentration": [
+    "r239_concentration_audit.json",
+    "r241_r232_concentration.json",
+    "r257_quality_relative_strength.json"
+  ],
+  "concentration_failure_note": "20 rounds mention C2/C3/C4; most of those also fail return gates or have negative net P&L, so concentration is not the independent blocker. Only R239, R241 and R257 fail only C2/C3/C4.",
+  "return_failure_note": "G4 fails in 36 of 59 rounds, G7 in 36 and G8 in 38. The dominant failure mode is negative or insufficient realized return at 3x/4x cost, not a marginal gate.",
+  "rolling_rate_note": "R163 reported 67.8% rolling 1-year positive rate against a 70% gate then in force. The R261-era gate set uses a 60% threshold for G6, under which 67.8% passes.",
+  "conclusion": "The gates are not uniformly too strict. The only clear threshold artifact is the earlier 70% rolling-1y gate. The concentration gates reflect a real structural property of the R257 family, confirmed by R262: take-profit and shorter holding worsen both return and concentration.",
+  "sources": [
+    "evidence/r234-r261 decision dicts",
+    "evidence/r262_take_profit_concentration.json",
+    "evidence/r163_extended_candidate.json"
+  ]
+}

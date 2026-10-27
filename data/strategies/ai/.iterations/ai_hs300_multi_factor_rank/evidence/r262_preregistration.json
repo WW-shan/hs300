@@ -1,0 +1,87 @@
+{
+  "round": "R262",
+  "registered_at": "2026-10-27",
+  "status": "pre_registered_before_any_variant_backtest",
+  "hypothesis": "R257 的已实现 P&L 高度集中，且 432 笔交易中 395 笔以 max_hold 退出，说明收益主要来自让强势股跑满 20 日并反复再入场。在组合层提前兑现收益（固定止盈）或缩短持有期，应能把 P&L 分散到更多股票和交易上，在有限让渡收益的前提下把 C2/C3/C4 集中度压回门槛内。",
+  "inherit": {
+    "factor": "ext_alt_hs300_qrs_quality_relative_strength_min_rank",
+    "factor_runs": [
+      "R257"
+    ],
+    "inherited_gates": "D1-D4, I1-I2 全部沿用 R257 已通过的结论；本轮不修改因子定义、宇宙或权重",
+    "rationale": "本轮只改变组合层退出规则，不重新搜索因子，避免多重比较污染因子结论"
+  },
+  "variants": {
+    "tp20": {
+      "take_profit": 0.2,
+      "max_hold_days": 20
+    },
+    "tp30": {
+      "take_profit": 0.3,
+      "max_hold_days": 20
+    },
+    "tp40": {
+      "take_profit": 0.4,
+      "max_hold_days": 20
+    },
+    "h10": {
+      "take_profit": null,
+      "max_hold_days": 10
+    }
+  },
+  "control": {
+    "strategy": "ai_hs300_quality_relative_strength_h20_sl20",
+    "take_profit": null,
+    "max_hold_days": 20
+  },
+  "execution": {
+    "engine": "StrategyBacktestService",
+    "universe": "historical nonfinancial HS300 members, current industry snapshot",
+    "scoring": "R257 candidate scoring (0.45 qrs factor + 0.30 quality value defensive + 0.25 cash quality)",
+    "score_limit": 30,
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "stop_loss": -0.2,
+    "matching": "open_t+1",
+    "cost_3x": "6bp fees + 6bp commission + 15bp slippage + 10bp stamp tax",
+    "segments": {
+      "discovery": [
+        "2023-05-04",
+        "2024-12-31"
+      ],
+      "validation": [
+        "2025-01-02",
+        "2026-10-16"
+      ]
+    },
+    "stitching": "compound two independently run segment curves; skip first return of later segment"
+  },
+  "gates": {
+    "G1": "(deployment) discovery variant return >= control discovery return - 10pp",
+    "G2": "validation variant return > 0",
+    "G3": "full-sample variant return > 0 at 3x cost",
+    "G4": "full-sample variant return >= 60% of control full-sample return",
+    "G5": "full-sample variant MDD <= 40% in absolute value",
+    "G6": "rolling 1-year positive rate >= 60%",
+    "G7": "recent 12-month variant return > 0",
+    "G8": "selected variant full-sample return at 4x cost > 0",
+    "G9": "selected variant full-sample return at 5x cost > 0",
+    "C1": "at least 30 distinct symbols traded",
+    "C2": "largest symbol share of net P&L <= 25%",
+    "C3": "top three symbols share of net P&L <= 55%",
+    "C4": "top five symbols share of net P&L <= 75%",
+    "C5": "at least 8 distinct symbols with positive validation P&L",
+    "C6": "largest industry share of gross profit <= 45%",
+    "C7": "largest single-symbol loss <= 20% of gross profit"
+  },
+  "selection_rule": "先对四个变体跑 discovery+validation 3x；所有 G/C 门槛在 3x 下都通过的变体中，选 full-sample return 最高者做 4x/5x 压力测试。若其 G8/G9 通过则记为 deployment candidate；若没有任何变体通过 3x 全部门槛，则本轮整体否决。",
+  "decision_rule": "读取结果后不得修改止盈档位、持有期、因子权重、宇宙、分段、成本或门槛。通过只代表可进入纸面交易，不代表生产部署。",
+  "known_limitations": [
+    "固定止盈按日内最高价触及止盈价成交，日线数据下存在乐观偏差",
+    "全期由两段独立回测拼接，分段边界会重置持仓",
+    "行业分类为当前快照，不是历史 PIT",
+    "本轮是 R257 结果驱动的后续假设，不是独立样本确认",
+    "四个变体存在多重比较风险，因此只允许预注册的四个档位",
+    "继承 R257 的因子在发现集与验证集已使用过，本轮样本不是全新样本外"
+  ]
+}
