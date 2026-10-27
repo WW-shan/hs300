@@ -1,0 +1,53 @@
+{
+  "round": "R266",
+  "registered_at": "2026-10-27",
+  "status": "pre_registered_before_a_leg_only_validation",
+  "hypothesis": "R131 的 B 腿在当前数据上失效，但 A 腿（宏观三闸门 + 股东集中度/质量/低波/现金）在 2021-06~2026-10 当前数据上仍有年化约 9.6%、MDD -18.8%、滚动一年正收益率约 93%。把 A 腿作为独立低波动绝对收益候选重新验证，若通过收益、成本、集中度和面板门槛，则进入纸面交易。",
+  "strategy": "ai_hs300_macro_gate_quality",
+  "execution": {
+    "window": [
+      "2021-06-01",
+      "2026-10-16"
+    ],
+    "discovery": [
+      "2021-06-01",
+      "2023-12-31"
+    ],
+    "validation": [
+      "2024-01-01",
+      "2026-10-16"
+    ],
+    "membership": "r78_daily_membership",
+    "matching": "open_t+1",
+    "cost_3x": "6bp fees + 6bp commission + 15bp slippage + 10bp stamp tax",
+    "cost_stress": "4x and 5x",
+    "max_positions": 10,
+    "position_sizing": "equal"
+  },
+  "gates": {
+    "P1": "re-run curve matches the R265 A-leg curve after rebasing; max abs difference <= 1e-6",
+    "P2": "strategy is present in the running panel with zero load errors",
+    "G1": "full-sample 3x return > 0",
+    "G2": "full-sample MDD <= 25% in absolute value",
+    "G3": "rolling 1-year positive rate >= 70%",
+    "G4": "validation 2024-2026 return > 0",
+    "G5": "validation annualized return >= 5%",
+    "G6": "full-sample 4x return > 0",
+    "G7": "full-sample 5x return > 0",
+    "C1": "at least 30 distinct symbols traded",
+    "C2": "largest symbol share of net P&L <= 25%",
+    "C3": "top three symbols share <= 55%",
+    "C4": "top five symbols share <= 75%",
+    "C5": "at least 8 distinct symbols with positive validation P&L",
+    "C6": "largest industry share of gross profit <= 45%",
+    "C7": "largest single-symbol loss <= 20% of gross profit"
+  },
+  "decision_rule": "P/G/C 全部通过才把 A 腿标记为纸面交易候选；任一失败则只保留研究候选。读取结果后不得修改窗口、成本、门槛或宇宙。",
+  "known_limitations": [
+    "2021-2023 发现段与 2024-2026 验证段并非完全独立，策略参数在更早的研究中已使用过",
+    "宏观闸门依赖当前可得的 ERP/信用利差/期限利差数据，存在源数据版本漂移风险",
+    "行业分类为当前快照，不是历史 PIT",
+    "A 腿无固定止损，持有 35 日，尾部风险依赖宏观闸门和分散度",
+    "纸面交易不等于生产部署"
+  ]
+}

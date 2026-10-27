@@ -1,0 +1,49 @@
+{
+  "round": "R268",
+  "registered_at": "2026-10-27",
+  "status": "pre_registered_before_position_capacity_test",
+  "hypothesis": "R267 将同时持仓从 10 提到 20 后，标的覆盖和单票集中度改善，但收益留存仅 42.3%，前三/前五集中度仍不合格。15 仓作为折中容量，可能同时保留至少 70% 的 10 仓收益，并满足股票数及单票/前三/前五集中度限制。",
+  "strategy": "ai_hs300_macro_gate_quality",
+  "control_round": "R266",
+  "related_negative_round": "R267",
+  "execution": {
+    "window": ["2021-06-01", "2026-10-16"],
+    "discovery": ["2021-06-01", "2023-12-31"],
+    "validation": ["2024-01-01", "2026-10-16"],
+    "membership": "r78_daily_membership",
+    "matching": "open_t+1",
+    "cost_3x": "6bp fees + 6bp commission + 15bp slippage + 10bp stamp tax",
+    "cost_stress": "4x and 5x",
+    "max_positions_candidate": 15,
+    "max_positions_control": 10,
+    "position_sizing": "equal",
+    "all_other_strategy_parameters": "unchanged from ai_hs300_macro_gate_quality defaults"
+  },
+  "gates": {
+    "P1": "R266 10-position control curve is byte-identical to the finalized R266 evidence and passes R265 parity",
+    "P2": "strategy is present in the running panel, referenced factors are present, and strategy load errors are zero",
+    "G1": "candidate full-sample 3x return > 0 and >= 70% of R266 10-position return",
+    "G2": "candidate full-sample MDD is no worse than -25%",
+    "G3": "candidate rolling 1-year positive rate >= 70%",
+    "G4": "candidate validation 2024-2026 return > 0",
+    "G5": "candidate validation annualized return >= 5%",
+    "G6": "candidate full-sample 4x return > 0",
+    "G7": "candidate full-sample 5x return > 0",
+    "D1": "candidate trades at least 80 distinct symbols",
+    "C1": "at least 30 distinct symbols traded",
+    "C2": "largest symbol share of net P&L <= 25%",
+    "C3": "top three symbols share <= 55%",
+    "C4": "top five symbols share <= 75%",
+    "C5": "at least 8 distinct symbols with positive validation P&L",
+    "C6": "largest industry share of gross profit <= 45%",
+    "C7": "largest single-symbol loss <= 20% of gross profit"
+  },
+  "decision_rule": "P/G/D/C 全部通过才进入纸面观察研究；任一失败均不采纳。读取结果后不得修改持仓上限、成本、窗口、宇宙或门槛。",
+  "known_limitations": [
+    "The capacity is selected after observing R267, so this is a dependent follow-up, not an independent confirmation.",
+    "Discovery/validation are not fully independent because this strategy was used in earlier research.",
+    "Industry classification is the current snapshot.",
+    "The strategy holds up to 35 trading days and has no fixed stop loss.",
+    "Panel registration does not constitute production approval."
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "round": "R267",
+  "registered_at": "2026-10-27",
+  "status": "pre_registered_before_position_capacity_test",
+  "hypothesis": "R266 的 A 腿在当前数据上有正收益和可承受回撤，但收益由少数股票贡献。保持信号、候选排序、持有期、成本和历史成分不变，仅将同时持仓上限从 10 提至 20；若扩大的持仓容量能提高覆盖股票数、通过集中度上限，并保留至少 70% 的 10 仓全样本收益，则该配置进入纸面观察研究。",
+  "strategy": "ai_hs300_macro_gate_quality",
+  "control_round": "R266",
+  "execution": {
+    "window": ["2021-06-01", "2026-10-16"],
+    "discovery": ["2021-06-01", "2023-12-31"],
+    "validation": ["2024-01-01", "2026-10-16"],
+    "membership": "r78_daily_membership",
+    "matching": "open_t+1",
+    "cost_3x": "6bp fees + 6bp commission + 15bp slippage + 10bp stamp tax",
+    "cost_stress": "4x and 5x",
+    "max_positions_candidate": 20,
+    "max_positions_control": 10,
+    "position_sizing": "equal",
+    "all_other_strategy_parameters": "unchanged from ai_hs300_macro_gate_quality defaults"
+  },
+  "gates": {
+    "P1": "10-position control curve loaded for comparison is byte-identical to the finalized R266 3x curve cache; R266 parity gate passed",
+    "P2": "strategy is present in the running panel, referenced factors are present, and strategy load errors are zero",
+    "G1": "candidate full-sample 3x return > 0 and >= 70% of R266 10-position return",
+    "G2": "candidate full-sample MDD is no worse than -25%",
+    "G3": "candidate rolling 1-year positive rate >= 70%",
+    "G4": "candidate validation 2024-2026 return > 0",
+    "G5": "candidate validation annualized return >= 5%",
+    "G6": "candidate full-sample 4x return > 0",
+    "G7": "candidate full-sample 5x return > 0",
+    "D1": "candidate trades at least 70 distinct symbols, versus 59 in R266",
+    "C1": "at least 30 distinct symbols traded",
+    "C2": "largest symbol share of net P&L <= 25%",
+    "C3": "top three symbols share <= 55%",
+    "C4": "top five symbols share <= 75%",
+    "C5": "at least 8 distinct symbols with positive validation P&L",
+    "C6": "largest industry share of gross profit <= 45%",
+    "C7": "largest single-symbol loss <= 20% of gross profit"
+  },
+  "decision_rule": "P/G/D/C 全部通过才进入纸面观察研究；任一失败均不采纳。读取结果后不得修改持仓上限、成本、窗口、宇宙或门槛。",
+  "known_limitations": [
+    "The comparison is one strategy capacity configuration and does not isolate future market regimes.",
+    "Discovery/validation split is not fully independent; the strategy has been used in prior research.",
+    "Industry classification is the current snapshot.",
+    "The strategy holds up to 35 trading days and has no fixed stop loss.",
+    "A panel registration check does not constitute production approval."
+  ]
+}
