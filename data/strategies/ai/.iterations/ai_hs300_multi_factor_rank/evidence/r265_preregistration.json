@@ -1,0 +1,37 @@
+{
+  "round": "R265",
+  "registered_at": "2026-10-27",
+  "status": "pre_registered_before_snapshot_rebuild",
+  "hypothesis": "R264 的 parity 失败可能来自 R131 之后 build_alt_factor_data.py 的字段扩张和重建，而不是行情或财务源数据本身。用 R131 验证时的构建脚本（commit 0c196090）重建 alt_hs300，再跑 A/B 两袖，若曲线与 R125/R119 缓存逐日一致，则 R131 可被冻结为可复现快照；若仍不一致，则 R131 的验证结果不可复现，必须退役。",
+  "method": {
+    "builder": "git show 0c196090:scripts/build_alt_factor_data.py",
+    "builder_copy": "scripts/_r265_build_alt_factor_data_r131.py",
+    "target_config": "alt_hs300",
+    "backup": "data/research/r265_backup_alt_hs300",
+    "frozen_snapshot": "data/research/r265_frozen_alt_hs300",
+    "sleeves": {
+      "A": "ai_hs300_macro_gate_quality",
+      "B": "ai_hs300_industry_relative_strength_quality_h20_sl20"
+    },
+    "window": [
+      "2021-06-01",
+      "2026-10-16"
+    ],
+    "membership": "r78_daily_membership",
+    "cost": "3x",
+    "comparison": "rebase both curves to first value; max absolute daily difference"
+  },
+  "gates": {
+    "P1": "R131-era builder completes and writes alt_hs300 config with the expected R131 field set",
+    "P2": "A sleeve max rebase difference vs r125 cache <= 1e-6",
+    "P3": "B sleeve max rebase difference vs r119 cache <= 1e-6",
+    "P4": "current alt_hs300 is restored after the run, or a frozen snapshot is preserved on success"
+  },
+  "decision_rule": "P1-P4 全部通过才把 R131 标记为可复现，并允许进入 R266 逐笔集中度审计；P2/P3 任一失败则 R131 退役，不再作为纸面交易候选。读取结果后不得修改窗口、成本、成员口径或门槛。",
+  "known_limitations": [
+    "底层行情/财务源数据可能在 R131 之后被刷新，旧构建脚本无法恢复已覆盖的源数据",
+    "重建会临时替换 data/ext_data/alt_hs300，失败时必须依赖 finally 恢复备份",
+    "面板服务在重建期间不应读取 alt_hs300，避免读到中间状态",
+    "R131 的 70% 滚动一年门槛问题已在 R262 门禁审计中单独记录"
+  ]
+}
