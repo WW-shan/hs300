@@ -1,0 +1,221 @@
+{
+  "round": "R269",
+  "captured_at": "2026-10-27T17:10:13.373171+00:00",
+  "api_base": "http://127.0.0.1:3018",
+  "reload": {
+    "method": "POST",
+    "endpoint": "/api/strategies/reload",
+    "http_status": 200,
+    "ok": true,
+    "count": 114,
+    "error": null
+  },
+  "factors": {
+    "endpoint": "/api/factors",
+    "http_status": 200,
+    "count": 228,
+    "expected_factor_count": 4,
+    "missing_factors": [],
+    "registered": [
+      {
+        "id": "ext_alt_hs300_holder_top10_free_float_share",
+        "label": "HS300另类因子·前十大流通股东持股比例合计",
+        "group": "扩展数据",
+        "kind": "base",
+        "version": 1,
+        "formula": "扩展表「HS300另类因子」字段 holder_top10_free_float_share (时序·按交易日对齐)",
+        "direction": "none",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "stable",
+        "scale_free": false,
+        "dependencies": []
+      },
+      {
+        "id": "ext_alt_hs300_equity_risk_premium",
+        "label": "HS300另类因子·沪深300 ERP(盈利收益率-10年国债)",
+        "group": "扩展数据",
+        "kind": "base",
+        "version": 1,
+        "formula": "扩展表「HS300另类因子」字段 equity_risk_premium (时序·按交易日对齐)",
+        "direction": "none",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "stable",
+        "scale_free": false,
+        "dependencies": []
+      },
+      {
+        "id": "ext_alt_hs300_credit_spread_5y_low",
+        "label": "HS300另类因子·AAA-国债5年信用利差反向",
+        "group": "扩展数据",
+        "kind": "base",
+        "version": 1,
+        "formula": "扩展表「HS300另类因子」字段 credit_spread_5y_low (时序·按交易日对齐)",
+        "direction": "none",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "stable",
+        "scale_free": false,
+        "dependencies": []
+      },
+      {
+        "id": "ext_alt_hs300_term_spread_10y_2y",
+        "label": "HS300另类因子·10Y-2Y期限利差",
+        "group": "扩展数据",
+        "kind": "base",
+        "version": 1,
+        "formula": "扩展表「HS300另类因子」字段 term_spread_10y_2y (时序·按交易日对齐)",
+        "direction": "none",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "stable",
+        "scale_free": false,
+        "dependencies": []
+      }
+    ]
+  },
+  "strategies": {
+    "endpoint": "/api/strategies?include_research=true",
+    "http_status": 200,
+    "count": 215,
+    "registered": {
+      "id": "ai_hs300_macro_gate_quality",
+      "name": "HS300宏观三闸门质量",
+      "description": "ERP、信用利差、期限利差同时满足时持有股东集中度+质量价值+低波动（实验）",
+      "tags": [
+        "ERP",
+        "信用利差",
+        "期限利差",
+        "宏观",
+        "质量",
+        "沪深300",
+        "实验"
+      ],
+      "source": "ai",
+      "research_only": false,
+      "execution_backend": "polars_expr",
+      "asset_types": [
+        "stock"
+      ],
+      "timeframes": [
+        "1d"
+      ],
+      "version": "1.0.0",
+      "basic_filter": {
+        "price_min": 3,
+        "price_max": 500,
+        "market_cap_min": 1000000000.0,
+        "float_cap_min": null,
+        "float_cap_max": null,
+        "amount_min": 20000000.0,
+        "amount_max": null,
+        "turnover_min": null,
+        "turnover_max": null,
+        "exclude_st": true,
+        "exclude_new_days": 60,
+        "boards": [
+          "沪主板",
+          "深主板",
+          "创业板",
+          "科创板",
+          "北交所"
+        ]
+      },
+      "params": [
+        {
+          "id": "erp_min",
+          "label": "ERP最低阈值",
+          "type": "float",
+          "default": 5.5,
+          "min": 3.0,
+          "max": 9.0,
+          "step": 0.1
+        },
+        {
+          "id": "credit_max",
+          "label": "信用利差最高阈值",
+          "type": "float",
+          "default": 0.8,
+          "min": 0.2,
+          "max": 1.5,
+          "step": 0.05
+        },
+        {
+          "id": "term_min",
+          "label": "期限利差最低阈值",
+          "type": "float",
+          "default": 0.3,
+          "min": 0.0,
+          "max": 1.5,
+          "step": 0.05
+        }
+      ],
+      "params_defaults": {
+        "erp_min": 5.5,
+        "credit_max": 0.8,
+        "term_min": 0.3
+      },
+      "scoring": {
+        "ext_alt_hs300_holder_top10_free_float_share": 0.35,
+        "uf_quality_value_defensive": 0.25,
+        "uf_low_vol": 0.2,
+        "uf_cash_quality": 0.2
+      },
+      "scoring_directions": {},
+      "entry_signals": [],
+      "exit_signals": [],
+      "overlay_filter": [],
+      "minute_exit_trigger_supported_signals": [
+        "signal_ma10_breakdown",
+        "signal_ma20_breakdown",
+        "signal_ma5_breakdown",
+        "signal_ma_dead_5_20"
+      ],
+      "stop_loss": null,
+      "take_profit": null,
+      "trailing_stop": null,
+      "trailing_take_profit_activate": null,
+      "trailing_take_profit_drawdown": null,
+      "max_hold_days": 35,
+      "order_by": "score",
+      "descending": true,
+      "limit": 30,
+      "display_limit": null,
+      "composite_children": null
+    },
+    "load_error_count": 0,
+    "load_errors": []
+  },
+  "checks": {
+    "reload_http_ok": true,
+    "reload_ok": true,
+    "factors_http_ok": true,
+    "strategies_http_ok": true,
+    "strategy_registered": true,
+    "referenced_factors_registered": true,
+    "no_strategy_load_errors": true
+  },
+  "strategy_panel_ready": true,
+  "all_checks_pass": true
+}

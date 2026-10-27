@@ -1,0 +1,54 @@
+{
+  "round": "R269",
+  "registered_at": "2026-10-27",
+  "status": "pre_registered_before_score_weight_backtest",
+  "hypothesis": "R266 等权 A 腿有正收益，但净 P&L 集中度 C2-C4 失败。保持策略信号、10 仓上限、历史成分、撮合、成本和窗口全部不变，只将持仓方式改为系统已支持的 score_weight；检验评分加权是否能在保留收益的同时改善风险调整和头部贡献。引擎还对单票仓位设有等权目标上限，因此不能凭名称推断实际效果。",
+  "strategy": "ai_hs300_macro_gate_quality",
+  "control_round": "R266",
+  "execution": {
+    "window": ["2021-06-01", "2026-10-16"],
+    "discovery": ["2021-06-01", "2023-12-31"],
+    "validation": ["2024-01-01", "2026-10-16"],
+    "membership": "r78_daily_membership",
+    "matching": "open_t+1",
+    "costs": ["3x primary", "4x stress", "5x stress"],
+    "max_positions": 10,
+    "control_position_sizing": "equal",
+    "candidate_position_sizing": "score_weight",
+    "all_strategy_signals_filters_scoring_and_other_parameters": "unchanged"
+  },
+  "gates": {
+    "P1": "R266 equal-weight control cache hashes match finalized R266 evidence, and its curve passes R265 parity",
+    "P2": "strategy and all four referenced factors are present after running-panel reload, with zero strategy load errors",
+    "G1": "candidate 3x return is positive and retains at least 70% of the R266 equal-weight return",
+    "G2": "candidate maximum drawdown is no worse than -25%",
+    "G3": "candidate rolling one-year positive-return rate is at least 70%",
+    "G4": "2024-01-01 through 2026-10-16 validation return is positive",
+    "G5": "validation annualized return is at least 5%",
+    "G6": "candidate 4x cost return is positive",
+    "G7": "candidate 5x cost return is positive",
+    "R1": "candidate full-sample Sharpe is no lower than equal-weight control",
+    "R2": "candidate maximum drawdown is no worse than equal-weight control by more than 3 percentage points",
+    "C1": "at least 30 distinct symbols traded",
+    "C2": "largest symbol net P&L share is at most 25%",
+    "C3": "top three symbols net P&L share is at most 55%",
+    "C4": "top five symbols net P&L share is at most 75%",
+    "C5": "at least 8 distinct symbols have positive validation P&L",
+    "C6": "largest industry gross-profit share is at most 45%",
+    "C7": "largest single-symbol loss is at most 20% of gross profit"
+  },
+  "diagnostics_not_gates": [
+    "For control and candidate, report top-1/top-3/top-5 shares using gross-profit denominator alongside registered net-P&L shares.",
+    "Report net-to-gross profit ratio to quantify how much gross profit is consumed by losses.",
+    "These alternate-denominator diagnostics do not replace or relax C2-C4."
+  ],
+  "decision_rule": "P/G/R/C 全部通过才进入下一阶段纸面观察研究；任何失败均不采纳。读取结果后不得改变仓位方式、持仓数、成本、窗口或门槛。",
+  "known_limitations": [
+    "The strategy was studied previously; discovery and validation are not independent.",
+    "The experiment reuses existing engine sizing behavior and does not add a portfolio risk model.",
+    "The score_weight implementation caps each position at the equal-weight target, so it may leave cash uninvested.",
+    "Industry classification is the current snapshot, not historical point-in-time data.",
+    "The strategy can hold for up to 35 trading days and has no fixed stop loss.",
+    "Panel registration and a passing backtest would not by themselves authorize production deployment."
+  ]
+}
