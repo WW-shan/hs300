@@ -17614,3 +17614,20 @@ R212 预注册并检验了 `ext_alt_hs300_market_down_beta_60d_low`。因子对�
 **判定**: P1 失败、C2/C3/C4 失败，P2/C1/C5/C6/C7 通过；`all_pass=false`，`paper_trading_cleared=false`。
 
 **结论**: R131 的 +64.5%/MDD -15.7% 是特定因子数据快照下的结果，当前工作区无法复现。在冻结或恢复当时的 `alt_hs300` / `alt_market_regime` 快照并重跑审计之前，暂缓 R131 纸面交易。当前数据变体不能部署：B 腿亏钱且集中度更差。下一步应优先做“因子数据快照版本化”，而不是继续调策略参数。
+
+# 面板注册补齐（2026-10-27）— R262/R263/R264
+
+**规则补充**: 从本轮起，每轮研究必须产出 `evidence/rNNN_panel_registration.json`。即使该轮没有新增因子或策略，也要记录引用到的因子/策略存在性、`/api/strategies/reload` 结果、面板总数和加载错误数。没有面板留痕的轮次不视为完成。
+
+**R262**: 四个变体已注册为 research-only 策略并通过面板查询验证：
+- `ai_hs300_qrs_tp20_h20_sl20`（take_profit=0.20, max_hold_days=20）
+- `ai_hs300_qrs_tp30_h20_sl20`（0.30, 20）
+- `ai_hs300_qrs_tp40_h20_sl20`（0.40, 20）
+- `ai_hs300_qrs_h10_sl20`（无固定止盈, 10）
+证据：`evidence/r262_panel_registration.json`。
+
+**R263**: 核心 R131 A/B、R257 基础策略和 R262 tp20 卫星均已确认在面板中存在；无新增策略。证据：`evidence/r263_panel_registration.json`。
+
+**R264**: R131 A/B 两袖和全部引用因子已确认存在；无新增策略。证据：`evidence/r264_panel_registration.json`。
+
+**引擎修复**: Python 策略模块此前不支持 `TAKE_PROFIT` 常量（只有 backtest overrides 能用）。本轮在 `StrategyDef` 与 Python 策略加载器中补上 `TAKE_PROFIT`，并加回归测试 `test_r262_take_profit_strategies.py`。面板策略总数从 211 增至 215，加载错误 0。

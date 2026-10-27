@@ -1,0 +1,169 @@
+{
+  "round": "R263",
+  "captured_at": "2026-10-27T09:10:07.703117+00:00",
+  "api_base": "http://127.0.0.1:3018",
+  "reload": {
+    "method": "POST",
+    "endpoint": "/api/strategies/reload",
+    "http_status": 200,
+    "ok": true,
+    "count": 114
+  },
+  "factors": {
+    "endpoint": "/api/factors",
+    "http_status": 200,
+    "count": 228,
+    "expected_factor_count": 5,
+    "missing_factors": [],
+    "registered": [
+      {
+        "id": "ext_alt_hs300_holder_top10_free_float_share",
+        "label": "HS300另类因子·前十大流通股东持股比例合计",
+        "group": "扩展数据",
+        "kind": "base",
+        "version": 1,
+        "formula": "扩展表「HS300另类因子」字段 holder_top10_free_float_share (时序·按交易日对齐)",
+        "direction": "none",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "stable",
+        "scale_free": false,
+        "dependencies": []
+      },
+      {
+        "id": "ext_alt_hs300_equity_risk_premium",
+        "label": "HS300另类因子·沪深300 ERP(盈利收益率-10年国债)",
+        "group": "扩展数据",
+        "kind": "base",
+        "version": 1,
+        "formula": "扩展表「HS300另类因子」字段 equity_risk_premium (时序·按交易日对齐)",
+        "direction": "none",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "stable",
+        "scale_free": false,
+        "dependencies": []
+      },
+      {
+        "id": "ext_alt_hs300_credit_spread_5y_low",
+        "label": "HS300另类因子·AAA-国债5年信用利差反向",
+        "group": "扩展数据",
+        "kind": "base",
+        "version": 1,
+        "formula": "扩展表「HS300另类因子」字段 credit_spread_5y_low (时序·按交易日对齐)",
+        "direction": "none",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "stable",
+        "scale_free": false,
+        "dependencies": []
+      },
+      {
+        "id": "ext_alt_hs300_term_spread_10y_2y",
+        "label": "HS300另类因子·10Y-2Y期限利差",
+        "group": "扩展数据",
+        "kind": "base",
+        "version": 1,
+        "formula": "扩展表「HS300另类因子」字段 term_spread_10y_2y (时序·按交易日对齐)",
+        "direction": "none",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "stable",
+        "scale_free": false,
+        "dependencies": []
+      },
+      {
+        "id": "ext_alt_hs300_qrs_quality_relative_strength_min_rank",
+        "label": "HS300质量相对强度因子·质量与行业相对强度最弱一环(高好)",
+        "group": "扩展数据",
+        "kind": "base",
+        "version": 1,
+        "formula": "扩展表「HS300质量相对强度因子」字段 quality_relative_strength_min_rank (时序·按交易日对齐)",
+        "direction": "none",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "stable",
+        "scale_free": false,
+        "dependencies": []
+      }
+    ]
+  },
+  "strategies": {
+    "endpoint": "/api/strategies?include_research=true",
+    "http_status": 200,
+    "count": 215,
+    "expected_strategy_count": 4,
+    "missing_strategies": [],
+    "load_error_count": 0,
+    "load_errors": [],
+    "registered": [
+      {
+        "id": "ai_hs300_industry_relative_strength_quality_h20_sl20",
+        "name": "HS300行业内相对强弱质量(20日/止损20%)",
+        "research_only": false,
+        "take_profit": null,
+        "max_hold_days": 20,
+        "stop_loss": -0.2
+      },
+      {
+        "id": "ai_hs300_macro_gate_quality",
+        "name": "HS300宏观三闸门质量",
+        "research_only": false,
+        "take_profit": null,
+        "max_hold_days": 35,
+        "stop_loss": null
+      },
+      {
+        "id": "ai_hs300_qrs_tp20_h20_sl20",
+        "name": "HS300质量相对强度止盈20%",
+        "research_only": true,
+        "take_profit": 0.2,
+        "max_hold_days": 20,
+        "stop_loss": -0.2
+      },
+      {
+        "id": "ai_hs300_quality_relative_strength_h20_sl20",
+        "name": "HS300质量相对强度最弱一环",
+        "research_only": true,
+        "take_profit": null,
+        "max_hold_days": 20,
+        "stop_loss": -0.2
+      }
+    ]
+  },
+  "checks": {
+    "reload_http_ok": true,
+    "reload_ok": true,
+    "factors_http_ok": true,
+    "strategies_http_ok": true,
+    "factor_registered": true,
+    "strategies_registered": true,
+    "no_strategy_load_errors": true
+  },
+  "all_checks_pass": true
+}

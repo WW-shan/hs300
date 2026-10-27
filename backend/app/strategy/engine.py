@@ -213,6 +213,8 @@ class StrategyDef:
     # 仅 minute_filter: META["daily_history_bars"] 声明需要的日线历史窗口 (0=不需要;
     # >0 时 filter_minute_history 必须接受 daily 关键字, 引擎注入 context.daily_history)
     minute_daily_bars: int = 0
+    # 固定止盈（Python 策略模块可通过 TAKE_PROFIT 声明；overrides 仍可覆盖）
+    take_profit: float | None = None
 
 
 @dataclass
@@ -576,6 +578,7 @@ class StrategyEngine:
             exit_signals=getattr(mod, "EXIT_SIGNALS", []),
             stop_loss=getattr(mod, "STOP_LOSS", None),
             trailing_stop=getattr(mod, "TRAILING_STOP", None),
+            take_profit=getattr(mod, "TAKE_PROFIT", None),
             trailing_take_profit_activate=getattr(mod, "TRAILING_TAKE_PROFIT_ACTIVATE", None),
             trailing_take_profit_drawdown=getattr(mod, "TRAILING_TAKE_PROFIT_DRAWDOWN", None),
             max_hold_days=getattr(mod, "MAX_HOLD_DAYS", None),
