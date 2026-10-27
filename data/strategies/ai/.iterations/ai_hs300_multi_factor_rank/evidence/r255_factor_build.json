@@ -1,0 +1,97 @@
+{
+  "round": "R255",
+  "captured_at": "2026-10-20T03:53:46.931637+00:00",
+  "factor_id": "ext_alt_market_regime_hs300_above_ma200",
+  "config_id": "alt_market_regime",
+  "field": "hs300_above_ma200",
+  "label": "沪深300趋势闸门·收盘高于200日均线",
+  "direction": "gate",
+  "formula": "1 when 000300.SH close_t > trailing 200-trading-day simple mean(close); otherwise 0; null before warm-up",
+  "builder": "scripts/build_r255_trend_gate_factor.py",
+  "source_data": {
+    "index_symbol": "000300.SH",
+    "index_table": "data/kline_index_daily",
+    "component_grid": "data/ext_data/alt_hs300/timeseries",
+    "window": 200,
+    "scope": "date-constant value broadcast to every component-grid stock row"
+  },
+  "partitions": 2132,
+  "first_partition": "date=2018-01-02",
+  "last_partition": "date=2026-10-19",
+  "factor_rows": 1187524,
+  "factor_symbols": 557,
+  "valid_rows": 1075567,
+  "valid_symbols": 557,
+  "first_valid_date": "2018-10-30",
+  "last_date": "2026-10-19",
+  "valid_dates": 1931,
+  "on_dates": 1086,
+  "off_dates": 845,
+  "on_rows": 604902,
+  "off_rows": 470665,
+  "date_constant": true,
+  "binary": true,
+  "coverage": {
+    "full": {
+      "expected_dates": 837,
+      "valid_dates": 837,
+      "coverage": 1.0,
+      "on_dates": 486,
+      "off_dates": 351,
+      "first_valid_date": "2023-05-04",
+      "last_valid_date": "2026-10-16"
+    },
+    "discovery": {
+      "expected_dates": 406,
+      "valid_dates": 406,
+      "coverage": 1.0,
+      "on_dates": 114,
+      "off_dates": 292,
+      "first_valid_date": "2023-05-04",
+      "last_valid_date": "2024-12-31"
+    },
+    "validation": {
+      "expected_dates": 431,
+      "valid_dates": 431,
+      "coverage": 1.0,
+      "on_dates": 372,
+      "off_dates": 59,
+      "first_valid_date": "2025-01-02",
+      "last_valid_date": "2026-10-16"
+    },
+    "recent_12m": {
+      "expected_dates": 252,
+      "valid_dates": 252,
+      "coverage": 1.0,
+      "on_dates": 196,
+      "off_dates": 56,
+      "first_valid_date": "2025-09-25",
+      "last_valid_date": "2026-10-16"
+    }
+  },
+  "formula_audit": {
+    "index_symbol": "000300.SH",
+    "rolling_window": 200,
+    "close_only": true,
+    "expected_dates": 837,
+    "actual_dates": 837,
+    "missing_formula_dates": 0,
+    "extra_formula_dates": 0,
+    "null_mismatch_dates": 0,
+    "max_abs_difference": 0.0,
+    "formula_match": true,
+    "prefix_invariance_checks": 26,
+    "prefix_invariance_mismatches": [],
+    "no_future_index_leakage": true
+  },
+  "row_audit": {
+    "written_rows_match_expected_asof_panel": true,
+    "missing_written_rows": 0,
+    "unexpected_written_rows": 0,
+    "value_mismatch_rows": 0,
+    "duplicate_date_symbol_rows": 0,
+    "max_abs_formula_difference": 0.0,
+    "pit_unit_test": "backend/tests/test_r255_trend_gate_factor.py::test_r255_gate_warmup_equal_close_and_above"
+  },
+  "all_checks_pass": true
+}

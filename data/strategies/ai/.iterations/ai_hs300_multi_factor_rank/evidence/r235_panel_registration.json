@@ -1,0 +1,85 @@
+{
+    "round": "R235",
+    "captured_at": "2026-10-19T23:49:46.349286+00:00",
+    "api_base": "http://127.0.0.1:3018",
+    "reload": {
+        "method": "POST",
+        "endpoint": "/api/strategies/reload",
+        "ok": true,
+        "count": 114
+    },
+    "factors": {
+        "endpoint": "/api/factors",
+        "count": 210,
+        "candidate_factor_present": true,
+        "registered": {
+            "id": "ocf_debt",
+            "label": "经营现金流/总负债(TTM)",
+            "group": "财务",
+            "kind": "base",
+            "version": 1,
+            "formula": "TTM 经营现金流 / 总负债; 分母<=0 或数据缺失时为空",
+            "direction": "none",
+            "pit": true
+        }
+    },
+    "strategies": {
+        "endpoint": "/api/strategies?include_research=true",
+        "count": 171,
+        "load_error_count": 0,
+        "load_errors": [],
+        "registered": [
+            {
+                "id": "ai_hs300_ocf_debt_quality_control",
+                "name": "HS300非金融经营现金流负债覆盖匹配对照",
+                "description": "与R235候选使用相同非金融股票池、ocf_debt可用性过滤和执行口径，但不把ocf_debt计入评分。",
+                "tags": [
+                    "质量",
+                    "现金质量",
+                    "匹配对照",
+                    "沪深300",
+                    "非金融",
+                    "实验",
+                    "R235"
+                ],
+                "source": "ai",
+                "research_only": true,
+                "execution_backend": "polars_expr",
+                "scoring": {
+                    "uf_quality_value_defensive": 0.545,
+                    "uf_cash_quality": 0.455
+                },
+                "stop_loss": -0.2,
+                "max_hold_days": 20,
+                "limit": 30
+            },
+            {
+                "id": "ai_hs300_ocf_debt_quality_h20_sl20",
+                "name": "HS300非金融经营现金流负债覆盖",
+                "description": "历史沪深300剔除银行和非银金融；TTM经营现金流/总负债、质量价值防守与现金质量复合；30只、20日持有、-20%止损（R235实验）。",
+                "tags": [
+                    "OCF",
+                    "总负债",
+                    "偿债覆盖",
+                    "现金质量",
+                    "质量",
+                    "沪深300",
+                    "非金融",
+                    "实验",
+                    "R235"
+                ],
+                "source": "ai",
+                "research_only": true,
+                "execution_backend": "polars_expr",
+                "scoring": {
+                    "ocf_debt": 0.45,
+                    "uf_quality_value_defensive": 0.3,
+                    "uf_cash_quality": 0.25
+                },
+                "stop_loss": -0.2,
+                "max_hold_days": 20,
+                "limit": 30
+            }
+        ]
+    }
+}

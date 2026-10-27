@@ -1,0 +1,69 @@
+{
+  "status": "feasibility_only_no_forward_returns",
+  "captured_at": "2026-10-20T01:46:48.701079+00:00",
+  "factor": "piotroski7_score",
+  "formula": "(1/7) * sum of seven binary annual-accounting improvement signals",
+  "evaluation_start": "2023-05-04",
+  "warmup_reason": "Two consecutive annual reports are required for year-over-year components; the first valid score is therefore 2023-05-04.",
+  "annual_observations": {
+    "rows": 20425,
+    "symbols": 5124,
+    "period_range": [
+      "2022-12-31",
+      "2025-12-31"
+    ],
+    "first_effective_date": "2023-05-03"
+  },
+  "coverage": {
+    "eligible_member_rows": 209024,
+    "valid_member_rows": 209024,
+    "full_period_coverage": 1.0,
+    "recent_member_rows": 62630,
+    "recent_valid_rows": 62630,
+    "recent_12m_coverage": 1.0,
+    "first_valid_date": "2023-05-04"
+  },
+  "score_distribution_daily_rows": {
+    "0.0": 596,
+    "0.142857": 12960,
+    "0.285714": 31750,
+    "0.428571": 75416,
+    "0.571429": 95290,
+    "0.714286": 85700,
+    "0.857143": 63486,
+    "1.0": 32014
+  },
+  "components": [
+    "ROA_t > 0",
+    "net_operating_cash_flow_t > 0",
+    "ROA_t > ROA_t-1",
+    "net_operating_cash_flow_t > net_income_t",
+    "total_liabilities_t / total_assets_t < the same ratio at t-1",
+    "gross_margin_t > gross_margin_t-1",
+    "revenue_t / total_assets_t > revenue_t-1 / total_assets_t-1"
+  ],
+  "independence": {
+    "method": "mean absolute monthly cross-sectional Spearman correlation within historical non-financial HS300 members",
+    "fields": {
+      "ocf_margin_4q": 0.291102,
+      "cash_to_assets": 0.088056,
+      "net_financing_4q_low": 0.260841,
+      "sga_ratio_4q_low": 0.079373,
+      "gross_margin_yoy_improvement_q": 0.175901,
+      "gross_margin_stability_4q_low": 0.070634,
+      "capex_intensity_low": 0.041262,
+      "asset_growth_yoy_low": 0.056717,
+      "working_capital_change_yoy_low": 0.059824,
+      "gross_profitability": 0.22925
+    },
+    "max_mean_abs_correlation": 0.291102,
+    "max_correlation_field": "ocf_margin_4q"
+  },
+  "universe_rule": "historical HS300 membership excluding banks and non-bank financials using the current industry snapshot",
+  "caveats": [
+    "Only seven of the traditional Piotroski signals are available; current-ratio and share-issuance components are not present in the local contract.",
+    "The score updates annually and can be stale within a fiscal year.",
+    "Financial values are current snapshots and may contain restatements.",
+    "The industry snapshot used to exclude financials is current rather than historical PIT."
+  ]
+}

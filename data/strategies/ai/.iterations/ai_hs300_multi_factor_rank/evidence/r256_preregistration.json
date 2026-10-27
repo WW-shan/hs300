@@ -1,0 +1,101 @@
+{
+  "round": "R256",
+  "registered_at": "2026-10-20",
+  "status": "pre_registered_before_factor_table_strategy_implementation_and_backtest",
+  "hypothesis": "A quality company that also clears the cross-sectional free-cash-flow/assets rank should have more durable earnings quality than the R253 weakest link alone. The new factor takes the minimum of the R253 percentile and the FCF/assets percentile, preserving the weakest-link construction while adding a cash-generation requirement.",
+  "selection_basis": "R253 passed both IC segments and most relative/full-sample gates but failed recent-year, 4x/5x cost and concentration gates. R246 free-cash-flow/assets had 100% coverage and positive validation and recent-year relative behavior, while its standalone strategy failed discovery and full-sample gates. R256 tests the economically distinct combination rather than tuning R253. The feasibility audit read no forward or strategy returns: R253/FCF joint coverage is 100% in full, discovery, validation and recent year; 42 month-end rank correlations average 0.303375 (range 0.090587 to 0.419795); the preview minimum factor differs from the R253 percentile by 0.130743 on average and is at least 0.10 lower for 35.80% of observations. Evidence: r256_data_feasibility.json.",
+  "factor": {
+    "id": "ext_alt_hs300_qfcf_cash_backed_quality_min_rank",
+    "config_id": "alt_hs300_qfcf",
+    "column": "cash_backed_quality_min_rank",
+    "direction": "high",
+    "formula": "cash_backed_quality_min_rank = min(rank_pct(management_ocf_gm_min_rank), rank_pct(free_cash_flow_assets)) within same-date historical nonfinancial HS300 members; 1 is best and 0 is worst",
+    "components": [
+      "management_ocf_gm_min_rank",
+      "free_cash_flow_assets"
+    ],
+    "interpretation": "R253 remains the existing minimum of management-expense, OCF-margin and gross-margin-trend percentiles. R256 adds FCF/assets as a fourth weak link instead of changing R253 internals.",
+    "pit_rule": "R253 and FCF inherit their existing financial publication/PIT dates. Percentile ranks and the minimum use only same-date eligible historical nonfinancial HS300 members. No component is forward-filled beyond its own provider/PIT rule.",
+    "missing_data_rule": "Both components are required; a missing component leaves the composite null."
+  },
+  "strategies": {
+    "candidate": {
+      "id": "ai_hs300_cash_backed_quality_h20_sl20",
+      "scoring": {
+        "ext_alt_hs300_qfcf_cash_backed_quality_min_rank": 0.45,
+        "uf_quality_value_defensive": 0.3,
+        "uf_cash_quality": 0.25
+      }
+    },
+    "control": {
+      "id": "ai_hs300_cash_backed_quality_control",
+      "scoring": {
+        "uf_quality_value_defensive": 0.545,
+        "uf_cash_quality": 0.455
+      }
+    },
+    "common_filter": "Current nonfinancial industry snapshot is required; history uses historical HS300 membership. Both strategies require ma60 and non-null cash_backed_quality_min_rank, so the candidate/control universe and component availability are identical.",
+    "execution": "30-name score limit, at most 10 equal-weight positions, 20-day holding, -20% stop loss, T+1 open execution and 3x costs; candidate also tested at 4x/5x."
+  },
+  "execution": {
+    "engine": "StrategyBacktestService",
+    "matching": "open_t+1",
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "score_limit": 30,
+    "holding_days": 20,
+    "stop_loss": -0.2,
+    "asset_type": "stock",
+    "cost_3x": "6bp fees + 6bp commission + 15bp slippage + 10bp stamp tax",
+    "cost_stress": "4x and 5x scale all four components proportionally",
+    "segments": {
+      "discovery": [
+        "2023-05-04",
+        "2024-12-31"
+      ],
+      "validation": [
+        "2025-01-02",
+        "2026-10-16"
+      ],
+      "stitching": "compound two independently run segment curves; skip the first return of each later segment"
+    }
+  },
+  "factor_ic": {
+    "method": "R256 factor month-end rank IC versus T+1 open to T+21 open return within historical nonfinancial HS300 members",
+    "minimum_names": 30
+  },
+  "gates": {
+    "D1": "full and recent-12-month joint component coverage >=0.99",
+    "D2": "discovery and validation joint component coverage >=0.99",
+    "D3": "first valid date is no later than 2023-05-04 and written rows exactly match the same-date composite formula with max abs difference <=1e-12",
+    "D4": "mean absolute monthly component rank correlation <=0.70, every monthly correlation <=0.80, mean composite reduction versus R253 percentile >=0.05 and at least 20% of observations reduced by >=0.10",
+    "I1": "discovery mean R256 rank IC >=0.02 with at least 18 month-end observations",
+    "I2": "validation mean R256 rank IC >=0.01 with at least 18 month-end observations and the same positive sign",
+    "G1": "discovery candidate return >= control return + 5pp",
+    "G2": "discovery candidate MDD is no worse than control MDD by more than 5pp",
+    "G3": "validation candidate return >= control return",
+    "G4": "full-sample candidate return > 0 and >= control return",
+    "G5": "full-sample candidate MDD <= 40% in absolute value and no worse than control by more than 5pp",
+    "G6": "rolling 1-year positive rate >= 60% and no worse than control by more than 2pp",
+    "G7": "recent 12-month candidate return > 0 and MDD no worse than control by more than 5pp",
+    "G8": "full-sample candidate return at 4x cost is positive",
+    "G9": "full-sample candidate return at 5x cost is positive",
+    "C1": "at least 30 distinct symbols are traded across the full sample",
+    "C2": "the largest symbol's share of net P&L is <= 25%",
+    "C3": "the top three symbols' share of net P&L is <= 55%",
+    "C4": "the top five symbols' share of net P&L is <= 75%",
+    "C5": "at least 8 distinct symbols have positive P&L in the validation segment",
+    "C6": "the largest industry's share of gross profit is <= 45%",
+    "C7": "the largest single-symbol loss is <= 20% of gross profit in absolute value"
+  },
+  "decision_rule": "All D, I, G and C gates must pass. Any failure means the cash-backed quality factor is not accepted and cannot be rescued by changing component weights, rank direction, holding period, stop loss, universe, costs or gates after seeing results.",
+  "known_limitations": [
+    "The FCF component is annual and can be up to 500 days old; it may lag changing cash generation.",
+    "The minimum of four percentile ranks can be sparse and sensitive to ties.",
+    "R253 and R246 were already researched in overlapping samples, so multiple-comparison risk remains.",
+    "The nonfinancial industry snapshot is current rather than historical PIT.",
+    "Financial values inherit provider restatement and publication-timing risk.",
+    "The full curve is stitched from two system-engine segments and segment boundaries can reset open positions.",
+    "Passing these gates would justify paper-trading validation, not production deployment."
+  ]
+}

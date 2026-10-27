@@ -1,0 +1,95 @@
+{
+  "round": "R244",
+  "registered_at": "2026-10-20",
+  "status": "pre_registered_before_factor_implementation_and_strategy_backtest",
+  "hypothesis": "Gross profit scaled by total assets measures how efficiently a firm's asset base converts operating resources into gross profit. Unlike gross margin, it jointly captures pricing power and asset turnover. High asset productivity may predict stronger future returns and may be distinct from the cost-, cash- and growth-oriented factors already tested.",
+  "selection_basis": "The definition was selected from an economic hypothesis before reading forward returns. Data feasibility showed full-period coverage of 99.94% and recent-12m coverage of 99.91%. Its largest mean absolute monthly cross-sectional correlation with related tested factors was 0.450514 versus sga_ratio_4q_low. Evidence: data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r244_data_feasibility.json",
+  "factor": {
+    "id": "ext_alt_hs300_gp_gross_profitability",
+    "config_id": "alt_hs300_gp",
+    "column": "gross_profitability",
+    "direction": "high",
+    "formula": "gross_profitability = (TTM revenue - TTM operating_costs) / total_assets_t",
+    "interpretation": "Higher means more trailing gross profit generated per unit of current total assets.",
+    "quarterly_rule": "Cumulative revenue and operating_costs are de-cumulated into single-quarter values. Q1 uses the report value; later quarters subtract the previous cumulative quarter. Four consecutive quarters are required.",
+    "pit_rule": "Use the statutory disclosure deadline of the current report plus 3 calendar days. The current report supplies total assets. No interpolation, filling or announcement-date fallback.",
+    "required_fields": [
+      "revenue",
+      "operating_costs",
+      "total_assets"
+    ],
+    "missing_data_rule": "Fail closed when any of the four quarterly revenue/cost observations is unavailable, total assets is non-positive, or the quarter sequence is incomplete.",
+    "universe": "historical HS300 membership excluding banks and non-bank financials using the current industry snapshot"
+  },
+  "strategies": {
+    "candidate": {
+      "id": "ai_hs300_gross_profitability_h20_sl20",
+      "scoring": {
+        "ext_alt_hs300_gp_gross_profitability": 0.45,
+        "uf_quality_value_defensive": 0.30,
+        "uf_cash_quality": 0.25
+      }
+    },
+    "control": {
+      "id": "ai_hs300_gross_profitability_control",
+      "scoring": {
+        "uf_quality_value_defensive": 0.545,
+        "uf_cash_quality": 0.455
+      }
+    },
+    "matched_requirements": "Both strategies use the same non-financial HS300 universe, gross-profitability availability filter, score limit 30, top 10 equal-weight positions, 20-day holding period, -20% stop loss, T+1 open execution and cost model."
+  },
+  "execution": {
+    "engine": "StrategyBacktestService",
+    "matching": "open_t+1",
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "score_limit": 30,
+    "holding_days": 20,
+    "stop_loss": -0.2,
+    "asset_type": "stock",
+    "cost_3x": "6bp fees + 6bp commission + 15bp slippage + 10bp stamp tax",
+    "cost_stress": "4x and 5x scale all four cost components proportionally",
+    "segments": {
+      "discovery": ["2022-07-01", "2024-12-31"],
+      "validation": ["2025-01-02", "2026-10-16"],
+      "stitching": "compound two independently run segment curves; skip the first return of each later segment"
+    }
+  },
+  "factor_ic": {
+    "method": "month-end factor value versus T+1 open to T+21 open forward return within historical non-financial HS300 members; cross-sectional Spearman rank IC",
+    "minimum_names": 30
+  },
+  "gates": {
+    "D1": "full-period non-financial member-row coverage >= 0.95",
+    "D2": "recent 252-trading-day non-financial member-row coverage >= 0.98",
+    "D3": "point-in-time construction and four consecutive quarters verified; no fill or fallback",
+    "D4": "maximum mean absolute monthly cross-sectional correlation versus ocf_margin_4q, cash_to_assets, sga_ratio_4q_low, gross_margin_yoy_improvement_q, gross_margin_stability_4q_low, rd_intensity, capex_intensity_low, working_capital_change_yoy_low and asset_growth_yoy_low <= 0.70",
+    "I1": "discovery mean rank IC >= 0.02 with at least 24 month-end observations",
+    "I2": "validation mean rank IC >= 0.01 with at least 18 month-end observations and the same positive sign",
+    "G1": "discovery candidate return >= control return + 5pp",
+    "G2": "discovery candidate MDD is no worse than control MDD by more than 5pp",
+    "G3": "validation candidate return >= control return",
+    "G4": "full-sample candidate return > 0 and >= control return",
+    "G5": "full-sample candidate MDD <= 40% in absolute value and no worse than control by more than 5pp",
+    "G6": "rolling 1-year positive rate >= 60% and no worse than control by more than 2pp",
+    "G7": "recent 12-month candidate return > 0 and MDD no worse than control by more than 5pp",
+    "G8": "full-sample candidate return at 4x cost is positive",
+    "G9": "full-sample candidate return at 5x cost is positive",
+    "C1": "at least 30 distinct symbols are traded across the full sample",
+    "C2": "the largest symbol's share of net P&L is <= 25%",
+    "C3": "the top three symbols' share of net P&L is <= 55%",
+    "C4": "the top five symbols' share of net P&L is <= 75%",
+    "C5": "at least 8 distinct symbols have positive P&L in the validation segment",
+    "C6": "the largest industry's share of gross profit is <= 45%",
+    "C7": "the largest single-symbol loss is <= 20% of gross profit in absolute value"
+  },
+  "decision_rule": "All D, I, G and C gates must pass. Any failure means the factor is not accepted and cannot be rescued by changing the formula, weights, holding period, stop loss, universe, costs or gates after seeing results.",
+  "known_limitations": [
+    "The local financial tables are current snapshots and restatement risk remains.",
+    "Statutory deadlines are fallback effective dates, not necessarily the exact first public disclosure time.",
+    "The industry snapshot used to exclude financials is current rather than historical PIT.",
+    "Operating-cost classifications can differ across firms and industries.",
+    "Passing these gates would justify further paper-trading validation, not production deployment."
+  ]
+}

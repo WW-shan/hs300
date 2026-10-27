@@ -1,0 +1,104 @@
+{
+  "round": "R242",
+  "registered_at": "2026-10-20",
+  "status": "pre_registered_before_factor_implementation_and_strategy_backtest",
+  "implementation_amendment": {
+    "recorded_at": "2026-10-20",
+    "before_any_strategy_backtest": true,
+    "reason": "The existing alt_hs300 partitions are read-only in the managed workspace, so the factor is stored in an isolated alt_hs300_wc timeseries table instead of mutating the base research table.",
+    "original_factor_id": "ext_alt_hs300_working_capital_change_yoy_low",
+    "factor_id": "ext_alt_hs300_wc_working_capital_change_yoy_low",
+    "unchanged": "Formula, clip, direction, strategies, weights, execution, datasets and all gates are unchanged."
+  },
+  "hypothesis": "Year-over-year reductions in net operating working capital intensity may indicate better cash conversion, stronger bargaining power and more efficient inventory/credit management. Year-over-year increases may indicate receivable build-up, weak demand or inventory obsolescence and should predict weaker returns. This is an incremental balance-sheet efficiency signal, distinct from the abandoned SG&A/OCF/gross-margin family.",
+  "selection_basis": "The definition was selected from an economic hypothesis and a data-feasibility audit that did not read forward returns. The audit showed full-period coverage of 98.11% and recent-12m coverage of 98.43%; its largest mean absolute monthly cross-sectional correlation with tested related factors was 0.16568. Evidence: data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r242_data_feasibility.json",
+  "factor": {
+    "id": "ext_alt_hs300_wc_working_capital_change_yoy_low",
+    "column": "working_capital_change_yoy_low",
+    "config_id": "alt_hs300_wc",
+    "direction": "high",
+    "formula": "NWC_t = accounts_receivable_t + inventory_t - accounts_payable_t; NWC_ratio_t = NWC_t / total_assets_t; value = clip(NWC_ratio_(t-4) - NWC_ratio_t, -1, 1)",
+    "interpretation": "Higher means a larger year-over-year reduction in net operating working capital relative to total assets.",
+    "pit_rule": "Use the statutory disclosure deadline of the current report plus 3 calendar days. Require the current report and the report exactly four fiscal quarters earlier; no interpolation, filling or announcement-date fallback.",
+    "required_fields": [
+      "accounts_receivable",
+      "inventory",
+      "accounts_payable",
+      "total_assets"
+    ],
+    "missing_data_rule": "Fail closed when any required field is null, total_assets <= 0, or the four-quarter lag is unavailable.",
+    "advance_receipts_excluded": "Advance receipts are excluded by design because their coverage is only 32.99%, which would create a structural missingness regime.",
+    "universe": "historical HS300 membership excluding banks and non-bank financials using the current industry snapshot"
+  },
+  "strategies": {
+    "candidate": {
+      "id": "ai_hs300_working_capital_change_quality_h20_sl20",
+      "scoring": {
+        "ext_alt_hs300_wc_working_capital_change_yoy_low": 0.45,
+        "uf_quality_value_defensive": 0.30,
+        "uf_cash_quality": 0.25
+      }
+    },
+    "control": {
+      "id": "ai_hs300_working_capital_change_quality_control",
+      "scoring": {
+        "uf_quality_value_defensive": 0.545,
+        "uf_cash_quality": 0.455
+      }
+    },
+    "matched_requirements": "Both strategies use the same non-financial HS300 universe, working-capital factor availability filter, score limit 30, top 10 equal-weight positions, 20-day holding period, -20% stop loss, T+1 open execution and cost model."
+  },
+  "execution": {
+    "engine": "StrategyBacktestService",
+    "matching": "open_t+1",
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "score_limit": 30,
+    "holding_days": 20,
+    "stop_loss": -0.2,
+    "asset_type": "stock",
+    "cost_3x": "6bp fees + 6bp commission + 15bp slippage + 10bp stamp tax",
+    "cost_stress": "4x and 5x scale all four cost components proportionally",
+    "segments": {
+      "discovery": ["2022-07-01", "2024-12-31"],
+      "validation": ["2025-01-02", "2026-10-16"],
+      "stitching": "compound two independently run segment curves; skip the first return of each later segment"
+    }
+  },
+  "factor_ic": {
+    "method": "month-end factor value versus T+1 open to T+21 open forward return within historical non-financial HS300 members; cross-sectional Spearman rank IC",
+    "minimum_names": 30
+  },
+  "gates": {
+    "D1": "full-period non-financial member-row coverage >= 0.90",
+    "D2": "recent 252-trading-day non-financial member-row coverage >= 0.95",
+    "D3": "point-in-time construction and exact four-quarter lag verified; no fill or fallback",
+    "D4": "maximum mean absolute monthly cross-sectional correlation versus ocf_margin_4q, cash_to_assets, sga_ratio_4q_low, cash_flow_stability_4q_low, goodwill_ratio_low and capex_intensity_low <= 0.70",
+    "I1": "discovery mean rank IC >= 0.02 with at least 24 month-end observations",
+    "I2": "validation mean rank IC >= 0.01 with at least 18 month-end observations and the same positive sign",
+    "G1": "discovery candidate return >= control return + 5pp",
+    "G2": "discovery candidate MDD is no worse than control MDD by more than 5pp",
+    "G3": "validation candidate return >= control return",
+    "G4": "full-sample candidate return > 0 and >= control return",
+    "G5": "full-sample candidate MDD <= 40% in absolute value and no worse than control by more than 5pp",
+    "G6": "rolling 1-year positive rate >= 60% and no worse than control by more than 2pp",
+    "G7": "recent 12-month candidate return > 0 and MDD no worse than control by more than 5pp",
+    "G8": "full-sample candidate return at 4x cost is positive",
+    "G9": "full-sample candidate return at 5x cost is positive",
+    "C1": "at least 30 distinct symbols are traded across the full sample",
+    "C2": "the largest symbol's share of net P&L is <= 25%",
+    "C3": "the top three symbols' share of net P&L is <= 55%",
+    "C4": "the top five symbols' share of net P&L is <= 75%",
+    "C5": "at least 8 distinct symbols have positive P&L in the validation segment",
+    "C6": "the largest industry's share of gross profit is <= 45%",
+    "C7": "the largest single-symbol loss is <= 20% of gross profit in absolute value"
+  },
+  "decision_rule": "All D, I, G and C gates must pass. Any failure means the factor is not accepted, cannot be deployed and cannot be rescued by changing the formula, clip, weights, holding period, stop loss, universe, costs or gates after seeing results.",
+  "known_limitations": [
+    "The local financial tables are current snapshots and restatement risk remains.",
+    "Statutory deadlines are fallback effective dates, not necessarily the exact first public disclosure time.",
+    "The industry snapshot used to exclude financials is current rather than historical PIT.",
+    "The factor is seasonal only insofar as the year-over-year alignment controls seasonality; business-cycle effects remain.",
+    "Passing these gates would justify further paper-trading validation, not production deployment."
+  ]
+}

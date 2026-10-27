@@ -1,0 +1,127 @@
+{
+  "round": "R246",
+  "captured_at": "2026-10-20T01:38:30.886061+00:00",
+  "factor_id": "ext_alt_hs300_fcf_free_cash_flow_assets",
+  "config_id": "alt_hs300_fcf",
+  "field": "free_cash_flow_assets",
+  "label": "自由现金流/总资产(高好)",
+  "direction": "high",
+  "formula": "(annual net_operating_cash_flow - annual capex) / total_assets_t",
+  "builder": "scripts/build_r246_free_cash_flow_factor.py",
+  "source_data": {
+    "capex_cache": "data/research/r86_intangible",
+    "capex_generator": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/script_r86_intangible_investment.py",
+    "cash_flow_table": "data/financials/cash_flow/part.parquet",
+    "annual_valid_rows": 2253,
+    "annual_valid_symbols": 451,
+    "period_range": [
+      "2021-12-31",
+      "2025-12-31"
+    ]
+  },
+  "partitions": 2132,
+  "first_partition": "date=2018-01-02",
+  "last_partition": "date=2026-10-19",
+  "factor_rows": 1187524,
+  "factor_symbols": 557,
+  "coverage": {
+    "eligible_member_rows": 260035,
+    "valid_member_rows": 260035,
+    "coverage_2022_2026": 1.0,
+    "recent_member_rows": 62630,
+    "recent_valid_rows": 62630,
+    "recent_12m_coverage": 1.0,
+    "first_valid_date": "2022-05-05",
+    "factor_min": -0.530296,
+    "factor_p01": -0.214474,
+    "factor_median": 0.022998,
+    "factor_p99": 0.258503,
+    "factor_max": 0.556903
+  },
+  "pit_audit": {
+    "rule": "annual report effective date; factor null when the latest annual report is older than 500 calendar days",
+    "factor_rows_checked": 1187524,
+    "expected_rows": 1187524,
+    "missing_written_rows": 0,
+    "unexpected_written_rows": 0,
+    "max_abs_formula_difference": 0.0,
+    "written_rows_match_expected_asof_panel": true,
+    "written_values_match_formula": true,
+    "pit_unit_test": "backend/tests/test_r246_free_cash_flow_factor.py::test_r246_free_cash_flow_pit_and_staleness",
+    "all_checks_pass": true
+  },
+  "independence": {
+    "fields": {
+      "ocf_margin_4q": {
+        "months": 51,
+        "mean_abs_correlation": 0.470492,
+        "mean_signed_correlation": 0.470492
+      },
+      "cash_to_assets": {
+        "months": 51,
+        "mean_abs_correlation": 0.321979,
+        "mean_signed_correlation": 0.321979
+      },
+      "sga_ratio_4q_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.20598,
+        "mean_signed_correlation": -0.20598
+      },
+      "gross_margin_yoy_improvement_q": {
+        "months": 51,
+        "mean_abs_correlation": 0.123721,
+        "mean_signed_correlation": 0.076348
+      },
+      "gross_margin_stability_4q_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.086063,
+        "mean_signed_correlation": 0.084859
+      },
+      "rd_intensity": {
+        "months": 51,
+        "mean_abs_correlation": 0.097468,
+        "mean_signed_correlation": -0.096884
+      },
+      "capex_intensity_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.419994,
+        "mean_signed_correlation": 0.419994
+      },
+      "net_financing_4q_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.603257,
+        "mean_signed_correlation": 0.603257
+      },
+      "working_capital_change_yoy_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.042546,
+        "mean_signed_correlation": 0.02481
+      },
+      "asset_growth_yoy_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.07406,
+        "mean_signed_correlation": 0.056055
+      },
+      "gross_profitability": {
+        "months": 51,
+        "mean_abs_correlation": 0.553494,
+        "mean_signed_correlation": 0.553494
+      }
+    },
+    "max_mean_abs_correlation": 0.603257
+  },
+  "universe": {
+    "industry_source": "current ext_hy_ths industry snapshot; not historical PIT",
+    "excluded_industries": [
+      "银行",
+      "非银金融"
+    ],
+    "member_snapshot_rows": 430500,
+    "nonfinancial_member_rows": 353797,
+    "excluded_financial_member_rows": 73251,
+    "industry_missing_member_rows": 3452,
+    "nonfinancial_symbols": 469,
+    "excluded_financial_symbols": 80,
+    "industry_missing_symbols": 15
+  }
+}

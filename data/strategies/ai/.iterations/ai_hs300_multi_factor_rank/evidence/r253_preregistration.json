@@ -1,0 +1,98 @@
+{
+  "round": "R253",
+  "registered_at": "2026-10-20",
+  "status": "pre_registered_before_factor_table_strategy_implementation_and_backtest",
+  "hypothesis": "Non-financial HS300 firms that simultaneously rank well on management-cost discipline, operating cash-flow conversion and gross-margin improvement should earn higher future returns than firms where a strong component compensates for weakness in another.",
+  "selection_basis": "R232's equal-weight SG&A + OCF-margin + gross-margin-trend composite passed its recent-year and cost-stress checks but failed the discovery-set relative-return gate; R241 later found its contribution concentrated in a few names. Before preregistration, two min-rank variants using SG&A were rejected because the SG&A component has only 98.4557% coverage, below the frozen 99% gate; evidence: r252_minrank_rejected.json. Replacing SG&A with the management-expense component yields 100% joint coverage and a maximum mean absolute correlation of 0.447280 with the audited existing-factor set; evidence: r253_data_feasibility.json. No forward returns for the new factor were read.",
+  "factor": {
+    "id": "ext_alt_hs300_minrank_management_ocf_gm_min_rank",
+    "config_id": "alt_hs300_minrank",
+    "column": "management_ocf_gm_min_rank",
+    "direction": "high",
+    "formula": "management_ocf_gm_min_rank = min(rank_pct(management_expense_ratio_4q_low), rank_pct(ocf_margin_4q), rank_pct(gross_margin_yoy_improvement_q)); each rank_pct is a same-date cross-sectional percentile within the current non-financial historical HS300 membership, with 1 = best and 0 = worst",
+    "interpretation": "Higher means the firm's weakest of cost discipline, cash conversion and gross-margin direction is still strong relative to peers.",
+    "pit_rule": "Each component inherits its existing financial PIT effective date. The min-rank is computed only from same-date component values and historical HS300 membership; no future financial report, future return, or full-sample rank is used.",
+    "missing_data_rule": "Require all three components to be non-null. Missing components remain null; no partial score, zero fill, interpolation, cross-sectional fallback or industry mean substitution.",
+    "universe": "historical HS300 membership excluding banks and non-bank financials using the current industry snapshot"
+  },
+  "strategies": {
+    "candidate": {
+      "id": "ai_hs300_management_ocf_gm_minrank_quality_h20_sl20",
+      "scoring": {
+        "ext_alt_hs300_minrank_management_ocf_gm_min_rank": 0.45,
+        "uf_quality_value_defensive": 0.3,
+        "uf_cash_quality": 0.25
+      }
+    },
+    "control": {
+      "id": "ai_hs300_management_ocf_gm_minrank_quality_control",
+      "scoring": {
+        "uf_quality_value_defensive": 0.545,
+        "uf_cash_quality": 0.455
+      }
+    },
+    "weight_rationale": "The min-rank receives the fixed 45% research weight used in recent rounds. The remaining quality and cash weights preserve the 54.5/45.5 ratio of the matched control. No weight was selected using forward returns.",
+    "matched_requirements": "Both strategies use the same non-financial HS300 universe, three-component availability filter, 30-name score limit, top 10 equal-weight positions, 20-day holding period, -20% stop loss, T+1 open execution and cost model."
+  },
+  "execution": {
+    "engine": "StrategyBacktestService",
+    "matching": "open_t+1",
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "score_limit": 30,
+    "holding_days": 20,
+    "stop_loss": -0.2,
+    "asset_type": "stock",
+    "cost_3x": "6bp fees + 6bp commission + 15bp slippage + 10bp stamp tax",
+    "cost_stress": "4x and 5x scale all four cost components proportionally",
+    "segments": {
+      "discovery": [
+        "2023-05-04",
+        "2024-12-31"
+      ],
+      "validation": [
+        "2025-01-02",
+        "2026-10-16"
+      ],
+      "stitching": "compound two independently run segment curves; skip the first return of each later segment"
+    }
+  },
+  "factor_ic": {
+    "method": "month-end factor value versus T+1 open to T+21 open forward return within historical non-financial HS300 members; cross-sectional Spearman rank IC",
+    "minimum_names": 30
+  },
+  "gates": {
+    "D1": "full-period non-financial member-row factor coverage from 2023-05-04 onward >= 0.99",
+    "D2": "recent 252-trading-day non-financial member-row factor coverage >= 0.99",
+    "D3": "same-date min-rank construction, component coverage, ties, historical membership and PIT audit pass",
+    "D4": "maximum mean absolute monthly rank correlation with the preregistered existing-factor set <= 0.70",
+    "I1": "discovery mean rank IC >= 0.02 with at least 18 month-end observations",
+    "I2": "validation mean rank IC >= 0.01 with at least 18 month-end observations and the same positive sign",
+    "G1": "discovery candidate return >= control return + 5pp",
+    "G2": "discovery candidate MDD is no worse than control MDD by more than 5pp",
+    "G3": "validation candidate return >= control return",
+    "G4": "full-sample candidate return > 0 and >= control return",
+    "G5": "full-sample candidate MDD <= 40% in absolute value and no worse than control by more than 5pp",
+    "G6": "rolling 1-year positive rate >= 60% and no worse than control by more than 2pp",
+    "G7": "recent 12-month candidate return > 0 and MDD no worse than control by more than 5pp",
+    "G8": "full-sample candidate return at 4x cost is positive",
+    "G9": "full-sample candidate return at 5x cost is positive",
+    "C1": "at least 30 distinct symbols are traded across the full sample",
+    "C2": "the largest symbol's share of net P&L is <= 25%",
+    "C3": "the top three symbols' share of net P&L is <= 55%",
+    "C4": "the top five symbols' share of net P&L is <= 75%",
+    "C5": "at least 8 distinct symbols have positive P&L in the validation segment",
+    "C6": "the largest industry's share of gross profit is <= 45%",
+    "C7": "the largest single-symbol loss is <= 20% of gross profit in absolute value"
+  },
+  "decision_rule": "All D, I, G and C gates must pass. Any failure means the factor is not accepted and cannot be rescued by changing the min-rank rule, management-cost component, weights, holding period, stop loss, universe, costs or gates after seeing results.",
+  "known_limitations": [
+    "The weakest-link rule can make the factor sparse when a strong component is paired with a weak component.",
+    "Average percentile ranks can produce ties, including a 1st-percentile value of zero.",
+    "Management expenses do not capture selling expenses and may be classified inconsistently across firms.",
+    "All components use current financial snapshots and inherit restatement risk.",
+    "The industry snapshot used to exclude financials is current rather than historical PIT.",
+    "This is another composite built from the same broad quality-factor family, so multiple-comparison risk remains.",
+    "Passing these gates would justify further paper-trading validation, not production deployment."
+  ]
+}

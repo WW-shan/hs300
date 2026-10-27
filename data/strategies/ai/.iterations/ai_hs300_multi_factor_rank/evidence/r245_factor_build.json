@@ -1,0 +1,166 @@
+{
+  "round": "R245",
+  "captured_at": "2026-10-20T01:09:41.967163+00:00",
+  "factor_id": "ext_alt_hs300_tenure_hs300_membership_tenure_low",
+  "config_id": "alt_hs300_tenure",
+  "field": "hs300_membership_tenure_low",
+  "label": "HS300连续成分新近度(高好)",
+  "direction": "high",
+  "formula": "1 / (1 + days_since_continuous_membership_start / 252)",
+  "builder": "scripts/build_r245_membership_tenure_factor.py",
+  "snapshot_sources": [
+    "data/research/r157_membership/monthly_snapshots.parquet",
+    "data/research/r78_daily_membership/daily_snapshots.parquet"
+  ],
+  "partitions": 2132,
+  "first_partition": "date=2018-01-02",
+  "last_partition": "date=2026-10-19",
+  "factor_rows": 639600,
+  "factor_symbols": 564,
+  "coverage": {
+    "eligible_member_rows": 260035,
+    "valid_member_rows": 260035,
+    "coverage_2022_2026": 1.0,
+    "recent_member_rows": 62630,
+    "recent_valid_rows": 62630,
+    "recent_12m_coverage": 1.0,
+    "first_valid_date": "2018-01-02",
+    "factor_min": 0.072727,
+    "factor_p01": 0.074446,
+    "factor_median": 0.208092,
+    "factor_p99": 0.94382,
+    "factor_max": 1.0
+  },
+  "pit_audit": {
+    "rule": "latest membership snapshot with query_date <= factor date; observed exits reset tenure on re-entry",
+    "factor_rows_checked": 639600,
+    "expected_rows": 639600,
+    "missing_written_rows": 0,
+    "unexpected_written_rows": 0,
+    "max_abs_formula_difference": 0.0,
+    "written_rows_match_asof_membership": true,
+    "written_values_match_formula": true,
+    "reentry_reset_unit_test": "backend/tests/test_r245_membership_tenure_factor.py::test_r245_tenure_resets_after_exit_and_reentry",
+    "all_checks_pass": true
+  },
+  "prevalence": {
+    "method": "HS300 members with tenure_low >= 0.5; count each observed trading date",
+    "first_date": "2022-07-01",
+    "last_date": "2026-10-16",
+    "observed_dates": 1040,
+    "qualifying_dates": 939,
+    "qualifying_date_share": 0.902885,
+    "minimum_daily_members": 300,
+    "maximum_daily_members": 300,
+    "minimum_daily_within_252d": 0,
+    "median_daily_within_252d": 19.0,
+    "maximum_daily_within_252d": 55,
+    "passes_d4": true,
+    "annual": [
+      {
+        "year": 2022,
+        "observed_dates": 125,
+        "qualifying_dates": 125,
+        "min_within_252d": 28,
+        "median_within_252d": 28.0,
+        "max_within_252d": 55
+      },
+      {
+        "year": 2023,
+        "observed_dates": 242,
+        "qualifying_dates": 214,
+        "min_within_252d": 0,
+        "median_within_252d": 24.0,
+        "max_within_252d": 28
+      },
+      {
+        "year": 2024,
+        "observed_dates": 242,
+        "qualifying_dates": 242,
+        "min_within_252d": 12,
+        "median_within_252d": 14.0,
+        "max_within_252d": 28
+      },
+      {
+        "year": 2025,
+        "observed_dates": 243,
+        "qualifying_dates": 170,
+        "min_within_252d": 8,
+        "median_within_252d": 17.0,
+        "max_within_252d": 28
+      },
+      {
+        "year": 2026,
+        "observed_dates": 188,
+        "qualifying_dates": 188,
+        "min_within_252d": 11,
+        "median_within_252d": 19.0,
+        "max_within_252d": 30
+      }
+    ]
+  },
+  "independence": {
+    "fields": {
+      "ocf_margin_4q": {
+        "months": 51,
+        "mean_abs_correlation": 0.058868,
+        "mean_signed_correlation": 0.048461
+      },
+      "cash_to_assets": {
+        "months": 51,
+        "mean_abs_correlation": 0.077743,
+        "mean_signed_correlation": 0.075688
+      },
+      "sga_ratio_4q_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.030689,
+        "mean_signed_correlation": 0.02003
+      },
+      "gross_margin_yoy_improvement_q": {
+        "months": 51,
+        "mean_abs_correlation": 0.085647,
+        "mean_signed_correlation": -0.029823
+      },
+      "gross_margin_stability_4q_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.064012,
+        "mean_signed_correlation": -0.053359
+      },
+      "rd_intensity": {
+        "months": 51,
+        "mean_abs_correlation": 0.20656,
+        "mean_signed_correlation": 0.20656
+      },
+      "capex_intensity_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.201647,
+        "mean_signed_correlation": -0.201647
+      },
+      "working_capital_change_yoy_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.07789,
+        "mean_signed_correlation": -0.066025
+      },
+      "asset_growth_yoy_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.284101,
+        "mean_signed_correlation": -0.284101
+      }
+    },
+    "max_mean_abs_correlation": 0.284101
+  },
+  "universe": {
+    "industry_source": "current ext_hy_ths industry snapshot; not historical PIT",
+    "excluded_industries": [
+      "银行",
+      "非银金融"
+    ],
+    "member_snapshot_rows": 430500,
+    "nonfinancial_member_rows": 353797,
+    "excluded_financial_member_rows": 73251,
+    "industry_missing_member_rows": 3452,
+    "nonfinancial_symbols": 469,
+    "excluded_financial_symbols": 80,
+    "industry_missing_symbols": 15
+  }
+}

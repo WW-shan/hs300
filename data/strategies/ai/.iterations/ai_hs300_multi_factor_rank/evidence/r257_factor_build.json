@@ -1,0 +1,340 @@
+{
+  "round": "R257",
+  "captured_at": "2026-10-20T04:34:48.325309+00:00",
+  "factor_id": "ext_alt_hs300_qrs_quality_relative_strength_min_rank",
+  "config_id": "alt_hs300_qrs",
+  "field": "quality_relative_strength_min_rank",
+  "label": "HS300质量相对强度因子·质量与行业相对强度最弱一环(高好)",
+  "direction": "high",
+  "formula": "min(rank_pct(management_ocf_gm_min_rank), rank_pct(stock_rel_industry_20d)) within same-date historical nonfinancial HS300 members",
+  "builder": "scripts/build_r257_quality_relative_strength_factor.py",
+  "components": [
+    {
+      "id": "ext_alt_hs300_minrank_management_ocf_gm_min_rank",
+      "table": "data/ext_data/alt_hs300_minrank/timeseries"
+    },
+    {
+      "id": "ext_alt_hs300_stock_rel_industry_20d",
+      "table": "data/ext_data/alt_hs300/timeseries"
+    }
+  ],
+  "partitions": 2132,
+  "first_partition": "date=2018-01-02",
+  "last_partition": "date=2026-10-19",
+  "factor_rows": 1187524,
+  "factor_symbols": 557,
+  "valid_rows": 269757,
+  "valid_symbols": 361,
+  "valid_dates": 1081,
+  "first_valid_date": "2022-05-05",
+  "last_date": "2026-10-19",
+  "distribution": {
+    "min": 0.0,
+    "p01": 0.004,
+    "median": 0.297189,
+    "p99": 0.905622,
+    "max": 1.0,
+    "zero_rate": 0.004419
+  },
+  "coverage": {
+    "full": {
+      "eligible_member_rows": 209024,
+      "valid_member_rows": 208859,
+      "coverage": 0.999211,
+      "eligible_dates": 837,
+      "valid_dates": 837,
+      "first_valid_date": "2023-05-04",
+      "last_valid_date": "2026-10-16",
+      "valid_symbols": 331
+    },
+    "discovery": {
+      "eligible_member_rows": 101813,
+      "valid_member_rows": 101777,
+      "coverage": 0.999646,
+      "eligible_dates": 406,
+      "valid_dates": 406,
+      "first_valid_date": "2023-05-04",
+      "last_valid_date": "2024-12-31",
+      "valid_symbols": 299
+    },
+    "validation": {
+      "eligible_member_rows": 107211,
+      "valid_member_rows": 107082,
+      "coverage": 0.998797,
+      "eligible_dates": 431,
+      "valid_dates": 431,
+      "first_valid_date": "2025-01-02",
+      "last_valid_date": "2026-10-16",
+      "valid_symbols": 284
+    },
+    "recent_12m": {
+      "eligible_member_rows": 62630,
+      "valid_member_rows": 62575,
+      "coverage": 0.999122,
+      "eligible_dates": 252,
+      "valid_dates": 252,
+      "first_valid_date": "2025-09-25",
+      "last_valid_date": "2026-10-16",
+      "valid_symbols": 278
+    },
+    "coverage_2023_2026": 0.999211,
+    "recent_12m_coverage": 0.999122,
+    "first_valid_date": "2022-05-05",
+    "factor_min": 0.0,
+    "factor_p01": 0.003984,
+    "factor_median": 0.297189,
+    "factor_p99": 0.90873,
+    "factor_max": 0.996032,
+    "zero_rate": 0.004419
+  },
+  "pit_audit": {
+    "rule": "same-date percentile rank of R253 weakest-link quality and RS/assets within historical nonfinancial HS300 members; take the minimum of the two percentile ranks; both required",
+    "rank_normalization": "rank_pct = (number_of_names - descending_average_rank) / (number_of_names - 1); 1 is best and 0 is worst",
+    "factor_rows_checked": 1187524,
+    "expected_rows": 1187524,
+    "missing_written_rows": 0,
+    "unexpected_written_rows": 0,
+    "value_mismatch_rows": 0,
+    "max_abs_formula_difference": 0.0,
+    "duplicate_date_symbol_rows": 0,
+    "written_rows_match_expected_asof_panel": true,
+    "written_values_match_formula": true,
+    "valid_range": [
+      0.0,
+      1.0
+    ],
+    "range_valid": true,
+    "pit_unit_test": "backend/tests/test_r257_quality_relative_strength_factor.py::test_r257_quality_relative_strength_min_rank_formula_and_missing",
+    "all_checks_pass": true
+  },
+  "increment_audit": {
+    "months": 41,
+    "mean_abs_correlation": 0.116031,
+    "max_correlation": 0.31196,
+    "monthly": [
+      {
+        "date": "2023-05-31",
+        "corr": 0.093989,
+        "names": 253
+      },
+      {
+        "date": "2023-06-30",
+        "corr": 0.054956,
+        "names": 252
+      },
+      {
+        "date": "2023-07-31",
+        "corr": -0.061559,
+        "names": 252
+      },
+      {
+        "date": "2023-08-31",
+        "corr": 0.081584,
+        "names": 252
+      },
+      {
+        "date": "2023-09-28",
+        "corr": -0.041794,
+        "names": 252
+      },
+      {
+        "date": "2023-10-31",
+        "corr": -0.10316,
+        "names": 252
+      },
+      {
+        "date": "2023-11-30",
+        "corr": 0.059665,
+        "names": 252
+      },
+      {
+        "date": "2023-12-29",
+        "corr": 0.139624,
+        "names": 250
+      },
+      {
+        "date": "2024-01-31",
+        "corr": 0.205854,
+        "names": 250
+      },
+      {
+        "date": "2024-02-29",
+        "corr": 0.099327,
+        "names": 250
+      },
+      {
+        "date": "2024-03-29",
+        "corr": 0.160266,
+        "names": 250
+      },
+      {
+        "date": "2024-04-30",
+        "corr": 0.115838,
+        "names": 250
+      },
+      {
+        "date": "2024-05-31",
+        "corr": -0.100095,
+        "names": 250
+      },
+      {
+        "date": "2024-06-28",
+        "corr": 0.273016,
+        "names": 250
+      },
+      {
+        "date": "2024-07-31",
+        "corr": -0.185703,
+        "names": 249
+      },
+      {
+        "date": "2024-08-30",
+        "corr": 0.139168,
+        "names": 250
+      },
+      {
+        "date": "2024-09-30",
+        "corr": -0.159009,
+        "names": 250
+      },
+      {
+        "date": "2024-10-31",
+        "corr": -0.24773,
+        "names": 250
+      },
+      {
+        "date": "2024-11-29",
+        "corr": -0.208057,
+        "names": 250
+      },
+      {
+        "date": "2024-12-31",
+        "corr": 0.31196,
+        "names": 248
+      },
+      {
+        "date": "2025-01-27",
+        "corr": 0.217752,
+        "names": 249
+      },
+      {
+        "date": "2025-02-28",
+        "corr": -0.162804,
+        "names": 248
+      },
+      {
+        "date": "2025-03-31",
+        "corr": 0.20619,
+        "names": 250
+      },
+      {
+        "date": "2025-04-30",
+        "corr": 0.054227,
+        "names": 250
+      },
+      {
+        "date": "2025-05-30",
+        "corr": 0.116019,
+        "names": 248
+      },
+      {
+        "date": "2025-06-30",
+        "corr": 0.083599,
+        "names": 248
+      },
+      {
+        "date": "2025-07-31",
+        "corr": -0.073059,
+        "names": 248
+      },
+      {
+        "date": "2025-08-29",
+        "corr": 0.052394,
+        "names": 248
+      },
+      {
+        "date": "2025-09-30",
+        "corr": 0.082767,
+        "names": 249
+      },
+      {
+        "date": "2025-10-31",
+        "corr": 0.033483,
+        "names": 249
+      },
+      {
+        "date": "2025-11-28",
+        "corr": 0.087258,
+        "names": 249
+      },
+      {
+        "date": "2025-12-31",
+        "corr": 0.137524,
+        "names": 246
+      },
+      {
+        "date": "2026-01-30",
+        "corr": 0.069357,
+        "names": 248
+      },
+      {
+        "date": "2026-02-27",
+        "corr": 0.049668,
+        "names": 247
+      },
+      {
+        "date": "2026-03-31",
+        "corr": 0.045156,
+        "names": 248
+      },
+      {
+        "date": "2026-04-30",
+        "corr": 0.055143,
+        "names": 248
+      },
+      {
+        "date": "2026-05-29",
+        "corr": 0.160031,
+        "names": 248
+      },
+      {
+        "date": "2026-06-30",
+        "corr": -0.036016,
+        "names": 248
+      },
+      {
+        "date": "2026-07-31",
+        "corr": 0.008904,
+        "names": 249
+      },
+      {
+        "date": "2026-08-31",
+        "corr": 0.116993,
+        "names": 249
+      },
+      {
+        "date": "2026-09-30",
+        "corr": 0.066567,
+        "names": 249
+      }
+    ],
+    "mean_reduction_vs_r253_rank": 0.160932,
+    "share_reduced_by_at_least_010": 0.396392,
+    "preview_max_abs_difference": 0.0,
+    "checks": {
+      "mean_abs_component_correlation": true,
+      "max_component_correlation": true,
+      "mean_reduction_vs_r253": true,
+      "share_reduced_by_at_least_010": true,
+      "preview_formula_match": true
+    },
+    "all_checks_pass": true
+  },
+  "checks": {
+    "coverage": true,
+    "pit": true,
+    "increment": true,
+    "first_valid_by_start": true
+  },
+  "all_checks_pass": true
+}

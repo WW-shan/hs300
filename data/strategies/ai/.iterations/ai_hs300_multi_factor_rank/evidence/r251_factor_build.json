@@ -1,0 +1,161 @@
+{
+  "round": "R251",
+  "captured_at": "2026-10-20T03:00:49.944619+00:00",
+  "factor_id": "ext_alt_hs300_capexyoy_capex_intensity_improvement_yoy",
+  "config_id": "alt_hs300_capexyoy",
+  "field": "capex_intensity_improvement_yoy",
+  "label": "HS300资本开支强度改善因子·资本开支/营收同比下降(高好)",
+  "direction": "high",
+  "formula": "capex_intensity_improvement_yoy = capex_t_minus_1 / revenue_t_minus_1 - capex_t / revenue_t",
+  "builder": "scripts/build_r251_capex_improvement_factor.py",
+  "source_data": {
+    "capex_cache": "data/research/r86_intangible",
+    "capex_generator": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/script_r86_intangible_investment.py",
+    "income_table": "data/financials/income/part.parquet",
+    "annual_valid_rows": 1803,
+    "annual_valid_symbols": 451,
+    "period_range": [
+      "2022-12-31",
+      "2025-12-31"
+    ],
+    "first_effective_date": "2023-05-03"
+  },
+  "partitions": 2132,
+  "first_partition": "date=2018-01-02",
+  "last_partition": "date=2026-10-19",
+  "factor_rows": 1187524,
+  "factor_symbols": 557,
+  "valid_rows": 377521,
+  "valid_symbols": 451,
+  "first_valid_date": "2023-05-04",
+  "last_date": "2026-10-19",
+  "distribution": {
+    "valid_daily_rows": 377521,
+    "valid_symbols": 451,
+    "min": -1.102476,
+    "p01": -0.307842,
+    "median": 0.001348,
+    "p99": 0.339276,
+    "max": 0.977357
+  },
+  "coverage": {
+    "eligible_member_rows": 209024,
+    "valid_member_rows": 209024,
+    "coverage_2023_2026": 1.0,
+    "recent_member_rows": 62630,
+    "recent_valid_rows": 62630,
+    "recent_12m_coverage": 1.0,
+    "first_valid_date": "2023-05-04",
+    "factor_min": -1.102476,
+    "factor_p01": -0.307842,
+    "factor_median": 0.001348,
+    "factor_p99": 0.339276,
+    "factor_max": 0.977357
+  },
+  "pit_audit": {
+    "rule": "annual capex and revenue; effective date = max(vendor notice_date + 1 calendar day, statutory reporting deadline + 3 calendar days); latest annual report expires after 500 calendar days",
+    "factor_rows_checked": 1187524,
+    "expected_rows": 1187524,
+    "missing_written_rows": 0,
+    "unexpected_written_rows": 0,
+    "max_abs_formula_difference": 0.0,
+    "written_rows_match_expected_asof_panel": true,
+    "written_values_match_formula": true,
+    "pit_unit_test": "backend/tests/test_r251_capex_improvement_factor.py::test_r251_formula_pit_missing_values_and_staleness",
+    "all_checks_pass": true
+  },
+  "independence": {
+    "fields": {
+      "ocf_margin_4q": {
+        "months": 41,
+        "mean_abs_correlation": 0.02413,
+        "mean_signed_correlation": 0.003853
+      },
+      "cash_to_assets": {
+        "months": 41,
+        "mean_abs_correlation": 0.055353,
+        "mean_signed_correlation": -0.00641
+      },
+      "sga_ratio_4q_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.036991,
+        "mean_signed_correlation": -0.034895
+      },
+      "gross_margin_yoy_improvement_q": {
+        "months": 41,
+        "mean_abs_correlation": 0.098626,
+        "mean_signed_correlation": 0.070847
+      },
+      "gross_margin_stability_4q_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.082828,
+        "mean_signed_correlation": 0.043595
+      },
+      "risk_adjusted_momentum_60d": {
+        "months": 41,
+        "mean_abs_correlation": 0.083891,
+        "mean_signed_correlation": 0.030017
+      },
+      "trend_efficiency_60d": {
+        "months": 41,
+        "mean_abs_correlation": 0.084491,
+        "mean_signed_correlation": 0.028776
+      },
+      "idio_vol_60d_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.075072,
+        "mean_signed_correlation": -0.075072
+      },
+      "stock_rel_industry_20d": {
+        "months": 41,
+        "mean_abs_correlation": 0.059708,
+        "mean_signed_correlation": 0.006471
+      },
+      "capex_intensity_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.203377,
+        "mean_signed_correlation": 0.203377
+      },
+      "free_cash_flow_assets": {
+        "months": 41,
+        "mean_abs_correlation": 0.166909,
+        "mean_signed_correlation": 0.166179
+      },
+      "asset_growth_yoy_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.070176,
+        "mean_signed_correlation": 0.056433
+      },
+      "working_capital_change_yoy_low": {
+        "months": 41,
+        "mean_abs_correlation": 0.075111,
+        "mean_signed_correlation": -0.058394
+      },
+      "gross_profitability": {
+        "months": 41,
+        "mean_abs_correlation": 0.084513,
+        "mean_signed_correlation": 0.07392
+      },
+      "piotroski7_score": {
+        "months": 41,
+        "mean_abs_correlation": 0.145342,
+        "mean_signed_correlation": 0.145342
+      }
+    },
+    "max_mean_abs_correlation": 0.203377
+  },
+  "universe": {
+    "industry_source": "current ext_hy_ths industry snapshot; not historical PIT",
+    "excluded_industries": [
+      "银行",
+      "非银金融"
+    ],
+    "member_snapshot_rows": 430500,
+    "nonfinancial_member_rows": 353797,
+    "excluded_financial_member_rows": 73251,
+    "industry_missing_member_rows": 3452,
+    "nonfinancial_symbols": 469,
+    "excluded_financial_symbols": 80,
+    "industry_missing_symbols": 15
+  }
+}

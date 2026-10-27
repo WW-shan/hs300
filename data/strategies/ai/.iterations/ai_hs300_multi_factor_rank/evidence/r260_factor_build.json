@@ -1,0 +1,325 @@
+{
+  "round": "R260",
+  "status": "factor_build_and_pit_audit_completed_before_strategy_returns",
+  "factor_id": "ext_alt_hs300_qrsrf_quality_rs_soft_fresh_rank",
+  "config_id": "alt_hs300_qrsrf",
+  "field": "quality_rs_soft_fresh_rank",
+  "formula": "rank_pct(quality_relative_strength_min_rank) * (1 - 0.20 * prior20_r257_top30_count / 20)",
+  "components": [
+    "quality_relative_strength_min_rank",
+    "prior20_r257_top30_count"
+  ],
+  "partitions": 2132,
+  "factor_rows": 1187524,
+  "valid_rows": 269757,
+  "valid_symbols": 361,
+  "valid_dates": 1081,
+  "first_valid_date": "2022-05-05",
+  "last_date": "2026-10-19",
+  "factor_min": 0.0,
+  "factor_median": 0.493975903614,
+  "factor_max": 1.0,
+  "coverage": {
+    "full": {
+      "eligible_member_rows": 209024,
+      "valid_member_rows": 208859,
+      "coverage": 0.999211,
+      "eligible_dates": 837,
+      "valid_dates": 837,
+      "first_valid_date": "2023-05-04",
+      "last_valid_date": "2026-10-16",
+      "valid_symbols": 331
+    },
+    "discovery": {
+      "eligible_member_rows": 101813,
+      "valid_member_rows": 101777,
+      "coverage": 0.999646,
+      "eligible_dates": 406,
+      "valid_dates": 406,
+      "first_valid_date": "2023-05-04",
+      "last_valid_date": "2024-12-31",
+      "valid_symbols": 299
+    },
+    "validation": {
+      "eligible_member_rows": 107211,
+      "valid_member_rows": 107082,
+      "coverage": 0.998797,
+      "eligible_dates": 431,
+      "valid_dates": 431,
+      "first_valid_date": "2025-01-02",
+      "last_valid_date": "2026-10-16",
+      "valid_symbols": 284
+    },
+    "recent_12m": {
+      "eligible_member_rows": 62630,
+      "valid_member_rows": 62575,
+      "coverage": 0.999122,
+      "eligible_dates": 252,
+      "valid_dates": 252,
+      "first_valid_date": "2025-09-25",
+      "last_valid_date": "2026-10-16",
+      "valid_symbols": 278
+    },
+    "coverage_2023_2026": 0.999211,
+    "recent_12m_coverage": 0.999122,
+    "first_valid_date": "2022-05-05",
+    "factor_min": 0.0,
+    "factor_p01": 0.00996,
+    "factor_median": 0.493976,
+    "factor_p99": 0.923077,
+    "factor_max": 1.0,
+    "zero_rate": 0.003596
+  },
+  "pit_audit": {
+    "rule": "rank_pct(R257) multiplied by a bounded recency penalty based on prior R257 Top30 count within historical nonfinancial HS300 members; R257 value required",
+    "rank_normalization": "rank_pct = (number_of_names - descending_average_rank) / (number_of_names - 1); 1 is best and 0 is worst",
+    "factor_rows_checked": 1187524,
+    "expected_rows": 1187524,
+    "missing_written_rows": 0,
+    "unexpected_written_rows": 0,
+    "value_mismatch_rows": 0,
+    "max_abs_formula_difference": 0.0,
+    "duplicate_date_symbol_rows": 0,
+    "written_rows_match_expected_asof_panel": true,
+    "written_values_match_formula": true,
+    "valid_range": [
+      0.0,
+      1.0
+    ],
+    "range_valid": true,
+    "pit_unit_test": "backend/tests/test_r260_soft_freshness_factor.py::test_r260_soft_freshness_counts_prior_top30_and_caps_penalty",
+    "all_checks_pass": true
+  },
+  "increment_audit": {
+    "months": 41,
+    "monthly_rank_correlation": [
+      {
+        "date": "2023-05-31",
+        "corr": 0.988318,
+        "names": 253
+      },
+      {
+        "date": "2023-06-30",
+        "corr": 0.99123,
+        "names": 252
+      },
+      {
+        "date": "2023-07-31",
+        "corr": 0.990897,
+        "names": 252
+      },
+      {
+        "date": "2023-08-31",
+        "corr": 0.992149,
+        "names": 252
+      },
+      {
+        "date": "2023-09-28",
+        "corr": 0.990078,
+        "names": 252
+      },
+      {
+        "date": "2023-10-31",
+        "corr": 0.990565,
+        "names": 252
+      },
+      {
+        "date": "2023-11-30",
+        "corr": 0.991042,
+        "names": 252
+      },
+      {
+        "date": "2023-12-29",
+        "corr": 0.987771,
+        "names": 250
+      },
+      {
+        "date": "2024-01-31",
+        "corr": 0.987995,
+        "names": 250
+      },
+      {
+        "date": "2024-02-29",
+        "corr": 0.987838,
+        "names": 250
+      },
+      {
+        "date": "2024-03-29",
+        "corr": 0.989726,
+        "names": 250
+      },
+      {
+        "date": "2024-04-30",
+        "corr": 0.990095,
+        "names": 250
+      },
+      {
+        "date": "2024-05-31",
+        "corr": 0.987399,
+        "names": 250
+      },
+      {
+        "date": "2024-06-28",
+        "corr": 0.989337,
+        "names": 250
+      },
+      {
+        "date": "2024-07-31",
+        "corr": 0.988359,
+        "names": 249
+      },
+      {
+        "date": "2024-08-30",
+        "corr": 0.992286,
+        "names": 250
+      },
+      {
+        "date": "2024-09-30",
+        "corr": 0.990936,
+        "names": 250
+      },
+      {
+        "date": "2024-10-31",
+        "corr": 0.98863,
+        "names": 250
+      },
+      {
+        "date": "2024-11-29",
+        "corr": 0.991323,
+        "names": 250
+      },
+      {
+        "date": "2024-12-31",
+        "corr": 0.991005,
+        "names": 248
+      },
+      {
+        "date": "2025-01-27",
+        "corr": 0.98743,
+        "names": 249
+      },
+      {
+        "date": "2025-02-28",
+        "corr": 0.990993,
+        "names": 248
+      },
+      {
+        "date": "2025-03-31",
+        "corr": 0.992504,
+        "names": 250
+      },
+      {
+        "date": "2025-04-30",
+        "corr": 0.987852,
+        "names": 250
+      },
+      {
+        "date": "2025-05-30",
+        "corr": 0.989487,
+        "names": 248
+      },
+      {
+        "date": "2025-06-30",
+        "corr": 0.988586,
+        "names": 248
+      },
+      {
+        "date": "2025-07-31",
+        "corr": 0.988767,
+        "names": 248
+      },
+      {
+        "date": "2025-08-29",
+        "corr": 0.989747,
+        "names": 248
+      },
+      {
+        "date": "2025-09-30",
+        "corr": 0.988763,
+        "names": 249
+      },
+      {
+        "date": "2025-10-31",
+        "corr": 0.992083,
+        "names": 249
+      },
+      {
+        "date": "2025-11-28",
+        "corr": 0.987277,
+        "names": 249
+      },
+      {
+        "date": "2025-12-31",
+        "corr": 0.988006,
+        "names": 246
+      },
+      {
+        "date": "2026-01-30",
+        "corr": 0.99042,
+        "names": 248
+      },
+      {
+        "date": "2026-02-27",
+        "corr": 0.988355,
+        "names": 247
+      },
+      {
+        "date": "2026-03-31",
+        "corr": 0.987066,
+        "names": 248
+      },
+      {
+        "date": "2026-04-30",
+        "corr": 0.98811,
+        "names": 248
+      },
+      {
+        "date": "2026-05-29",
+        "corr": 0.989042,
+        "names": 248
+      },
+      {
+        "date": "2026-06-30",
+        "corr": 0.990809,
+        "names": 248
+      },
+      {
+        "date": "2026-07-31",
+        "corr": 0.990873,
+        "names": 249
+      },
+      {
+        "date": "2026-08-31",
+        "corr": 0.990787,
+        "names": 249
+      },
+      {
+        "date": "2026-09-30",
+        "corr": 0.991105,
+        "names": 249
+      }
+    ],
+    "mean_reduction_vs_r257_rank": 0.018983,
+    "share_reduced": 0.266989,
+    "max_reduction": 0.2,
+    "top30_overlap_median": 0.6,
+    "top30_share_days_below_full_overlap": 1.0,
+    "checks": {
+      "mean_reduction_vs_r257": true,
+      "share_reduced": true,
+      "penalty_cap_respected": true,
+      "overlap_median_constructive": true,
+      "share_days_below_full_overlap": true
+    },
+    "all_checks_pass": true
+  },
+  "checks": {
+    "full_coverage": true,
+    "recent_coverage": true,
+    "segment_coverage": true,
+    "pit": true,
+    "first_valid_by_start": true,
+    "increment": true
+  },
+  "all_checks_pass": true
+}

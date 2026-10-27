@@ -1,0 +1,644 @@
+{
+  "purpose": "R236 non-financial HS300 OCF margin plus gross-margin trend equal-weight composite versus a matched quality-cash control",
+  "preregistration": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r236_preregistration.json",
+  "window": [
+    "2022-07-01",
+    "2026-10-16"
+  ],
+  "universe": {
+    "industry_source": "current ext_hy_ths industry snapshot; not historical PIT",
+    "excluded_industries": [
+      "银行",
+      "非银金融"
+    ],
+    "member_snapshot_rows": 430500,
+    "nonfinancial_member_rows": 353797,
+    "excluded_financial_member_rows": 73251,
+    "industry_missing_member_rows": 3452,
+    "nonfinancial_symbols": 469,
+    "excluded_financial_symbols": 80,
+    "industry_missing_symbols": 15
+  },
+  "factor": {
+    "id": "research_composite_ocf_gm_trend",
+    "components": {
+      "ext_alt_hs300_ocf_margin_4q": 0.5,
+      "ext_alt_hs300_gross_margin_yoy_improvement_q": 0.5
+    },
+    "formula": "50% ext_alt_hs300_ocf_margin_4q + 50% ext_alt_hs300_gross_margin_yoy_improvement_q; both components must be non-null",
+    "effective_date": "each component keeps its own effective date; both use the maximum statutory disclosure deadline of four quarters plus four calendar days",
+    "first_valid_date_scope": "all factor history through END before applying the START coverage window",
+    "includes": "TTM operating cash flow over revenue and single-quarter gross-margin YoY improvement",
+    "coverage": {
+      "eligible_member_rows": 260035,
+      "valid_member_rows": 260035,
+      "coverage_2022_2026": 1.0,
+      "recent_member_rows": 62630,
+      "recent_valid_rows": 62630,
+      "recent_12m_coverage": 1.0,
+      "first_valid_date": "2022-05-05",
+      "factor_min": -16.031776,
+      "factor_median": 0.137265,
+      "factor_max": 7.718033,
+      "independence": {
+        "method": "daily cross-sectional Spearman rank correlation averaged within each calendar month, then mean absolute monthly correlation",
+        "component_pair": "ocf_margin_4q vs gross_margin_yoy_improvement_q",
+        "stats": {
+          "months": 52,
+          "overlap_member_rows": 260035,
+          "mean_abs_monthly_spearman": 0.118635,
+          "mean_signed_monthly_spearman": 0.118615,
+          "min_monthly_spearman": -0.000532,
+          "max_monthly_spearman": 0.198696
+        }
+      }
+    }
+  },
+  "samples": {
+    "discovery": [
+      "2022-07-01",
+      "2024-12-31"
+    ],
+    "validation": [
+      "2025-01-02",
+      "2026-10-16"
+    ],
+    "rolling_1y": "252-trading-day rolling compounded return over the stitched 2022-2026 curve",
+    "recent_12m": "last 252 trading-day returns of the stitched 2022-2026 curve"
+  },
+  "execution": {
+    "engine": "StrategyBacktestService",
+    "matching": "open_t+1",
+    "cost": "3x: 6bp commission + 15bp slippage + 10bp stamp tax",
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "holding_days": 20,
+    "stop_loss": -0.2,
+    "universe": "historical HS300 membership excluding banks and non-bank financials; current industry snapshot applied to history",
+    "segments": [
+      [
+        "2022-07-01",
+        "2024-12-31"
+      ],
+      [
+        "2025-01-02",
+        "2026-10-16"
+      ]
+    ],
+    "stitching": "two segment returns compounded into one curve; first day of each later segment skipped"
+  },
+  "related_benchmark": {
+    "strategy_id": "ai_hs300_sga_nonfin_quality_h20_sl20",
+    "source_evidence": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r221_sga_nonfin_quality.json",
+    "full_total_return": 0.091198,
+    "g9_threshold": 0.041198
+  },
+  "strategies": {
+    "candidate": "ai_hs300_ocf_gm_trend_composite_h20_sl20",
+    "control": "ai_hs300_ocf_gm_trend_composite_control"
+  },
+  "runs": {
+    "candidate": [
+      {
+        "start": "2022-07-01",
+        "end": "2024-12-31",
+        "cached": false,
+        "days": 609,
+        "curve_stats": {
+          "total_return": -0.239083,
+          "annual": -0.10707,
+          "sharpe": -0.3633,
+          "mdd": -0.401871,
+          "days": 609
+        },
+        "result_stats": {
+          "total_return": -0.2391,
+          "annual_return": -0.1069,
+          "max_drawdown": -0.4019,
+          "sharpe": -0.36,
+          "sortino": -0.57,
+          "calmar": -0.27,
+          "win_rate": 0.3774,
+          "profit_factor": 1.35,
+          "n_trades": 310,
+          "avg_pnl": -0.0076,
+          "avg_win": 0.091,
+          "avg_loss": 0.0673,
+          "best": 0.8087,
+          "worst": -0.225,
+          "median_pnl": -0.0172,
+          "avg_holding_days": 19.6,
+          "final_equity": 760916.69,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9557,
+          "max_exposure": 0.9976,
+          "mc_maxdd_p50": -0.9916,
+          "mc_maxdd_p95": -0.9994,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 16,
+            "buy_no_slot": 125212,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 301,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 1,
+            "sell_limit_down": 0,
+            "pending_exit": 1
+          },
+          "pending_exit_positions": 1,
+          "market_matrix_shape": [
+            609,
+            467
+          ],
+          "market_matrix_bytes": 12805443,
+          "timing_ms": {
+            "load_panel": 12645.6,
+            "signals_score": 433.2,
+            "matrix_build": 448.9,
+            "simulate": 1066.3,
+            "statistics": 6.9,
+            "total": 14782.6
+          },
+          "panel_rows": 282735,
+          "panel_columns": 11,
+          "feature_columns": 133,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 148892,
+            "entry_candidates": 148892,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_ocf_margin_4q",
+              "win_mean": 0.454689,
+              "lose_mean": 0.461415,
+              "win_n": 117,
+              "lose_n": 193
+            },
+            {
+              "factor": "ext_alt_hs300_gross_margin_yoy_improvement_q",
+              "win_mean": 0.025342,
+              "lose_mean": 0.038048,
+              "win_n": 117,
+              "lose_n": 193
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.135517,
+              "lose_mean": -0.148721,
+              "win_n": 117,
+              "lose_n": 193
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 3.561687,
+              "lose_mean": 315.914519,
+              "win_n": 117,
+              "lose_n": 193
+            }
+          ],
+          "n_win": 117,
+          "n_lose": 193
+        },
+        "elapsed_seconds": 15.245
+      },
+      {
+        "start": "2025-01-02",
+        "end": "2026-10-16",
+        "cached": false,
+        "days": 431,
+        "curve_stats": {
+          "total_return": 0.224696,
+          "annual": 0.12613,
+          "sharpe": 0.627,
+          "mdd": -0.17824,
+          "days": 431
+        },
+        "result_stats": {
+          "total_return": 0.2247,
+          "annual_return": 0.1258,
+          "max_drawdown": -0.1782,
+          "sharpe": 0.63,
+          "sortino": 0.88,
+          "calmar": 0.71,
+          "win_rate": 0.4464,
+          "profit_factor": 1.59,
+          "n_trades": 224,
+          "avg_pnl": 0.0118,
+          "avg_win": 0.1196,
+          "avg_loss": 0.0751,
+          "best": 0.7064,
+          "worst": -0.262,
+          "median_pnl": -0.0116,
+          "avg_holding_days": 19.2,
+          "final_equity": 1224695.77,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9697,
+          "max_exposure": 0.9997,
+          "mc_maxdd_p50": -0.8194,
+          "mc_maxdd_p95": -0.9687,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 22,
+            "buy_no_slot": 84445,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 214,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 0,
+            "sell_limit_down": 0,
+            "pending_exit": 0
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            431,
+            469
+          ],
+          "market_matrix_bytes": 9101427,
+          "timing_ms": {
+            "load_panel": 2093.4,
+            "signals_score": 322.6,
+            "matrix_build": 231.1,
+            "simulate": 731.9,
+            "statistics": 6.0,
+            "total": 3433.7
+          },
+          "panel_rows": 201573,
+          "panel_columns": 11,
+          "feature_columns": 133,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 104175,
+            "entry_candidates": 104175,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "ext_alt_hs300_ocf_margin_4q",
+              "win_mean": 0.424321,
+              "lose_mean": 0.38354,
+              "win_n": 100,
+              "lose_n": 124
+            },
+            {
+              "factor": "ext_alt_hs300_gross_margin_yoy_improvement_q",
+              "win_mean": 0.047852,
+              "lose_mean": 0.048366,
+              "win_n": 100,
+              "lose_n": 124
+            },
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.147402,
+              "lose_mean": -0.14186,
+              "win_n": 100,
+              "lose_n": 124
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 7.924648,
+              "lose_mean": 5.345373,
+              "win_n": 100,
+              "lose_n": 124
+            }
+          ],
+          "n_win": 100,
+          "n_lose": 124
+        },
+        "elapsed_seconds": 3.861
+      }
+    ],
+    "control": [
+      {
+        "start": "2022-07-01",
+        "end": "2024-12-31",
+        "cached": false,
+        "days": 609,
+        "curve_stats": {
+          "total_return": -0.16375,
+          "annual": -0.071439,
+          "sharpe": -0.188,
+          "mdd": -0.390235,
+          "days": 609
+        },
+        "result_stats": {
+          "total_return": -0.1638,
+          "annual_return": -0.0713,
+          "max_drawdown": -0.3902,
+          "sharpe": -0.19,
+          "sortino": -0.3,
+          "calmar": -0.18,
+          "win_rate": 0.4437,
+          "profit_factor": 1.15,
+          "n_trades": 311,
+          "avg_pnl": -0.0034,
+          "avg_win": 0.0872,
+          "avg_loss": 0.0757,
+          "best": 0.5734,
+          "worst": -0.3476,
+          "median_pnl": -0.011,
+          "avg_holding_days": 19.5,
+          "final_equity": 836249.97,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.96,
+          "max_exposure": 0.9973,
+          "mc_maxdd_p50": -0.9795,
+          "mc_maxdd_p95": -0.9986,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 16,
+            "buy_no_slot": 107662,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 297,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 1,
+            "sell_limit_down": 0,
+            "pending_exit": 1
+          },
+          "pending_exit_positions": 1,
+          "market_matrix_shape": [
+            609,
+            467
+          ],
+          "market_matrix_bytes": 12805443,
+          "timing_ms": {
+            "load_panel": 1540.5,
+            "signals_score": 388.4,
+            "matrix_build": 345.3,
+            "simulate": 1117.9,
+            "statistics": 6.4,
+            "total": 3454.5
+          },
+          "panel_rows": 282735,
+          "panel_columns": 11,
+          "feature_columns": 133,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 148892,
+            "entry_candidates": 148892,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.14472,
+              "lose_mean": -0.123878,
+              "win_n": 138,
+              "lose_n": 173
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 444.86057,
+              "lose_mean": 354.898043,
+              "win_n": 138,
+              "lose_n": 173
+            }
+          ],
+          "n_win": 138,
+          "n_lose": 173
+        },
+        "elapsed_seconds": 3.914
+      },
+      {
+        "start": "2025-01-02",
+        "end": "2026-10-16",
+        "cached": false,
+        "days": 431,
+        "curve_stats": {
+          "total_return": 0.086728,
+          "annual": 0.04995,
+          "sharpe": 0.3419,
+          "mdd": -0.242314,
+          "days": 431
+        },
+        "result_stats": {
+          "total_return": 0.0867,
+          "annual_return": 0.0498,
+          "max_drawdown": -0.2423,
+          "sharpe": 0.34,
+          "sortino": 0.48,
+          "calmar": 0.21,
+          "win_rate": 0.4529,
+          "profit_factor": 1.38,
+          "n_trades": 223,
+          "avg_pnl": 0.0059,
+          "avg_win": 0.1023,
+          "avg_loss": 0.0739,
+          "best": 0.8719,
+          "worst": -0.2532,
+          "median_pnl": -0.0102,
+          "avg_holding_days": 19.2,
+          "final_equity": 1086727.76,
+          "initial_capital": 1000000.0,
+          "avg_exposure": 0.9665,
+          "max_exposure": 0.9991,
+          "mc_maxdd_p50": -0.8706,
+          "mc_maxdd_p95": -0.9832,
+          "execution": {
+            "buy_invalid_price": 0,
+            "buy_suspended": 0,
+            "buy_limit_up": 21,
+            "buy_no_slot": 82401,
+            "buy_cash": 0,
+            "buy_lot_size": 0,
+            "buy_same_day_reentry": 209,
+            "buy_exposure": 0,
+            "buy_score_filter": 0,
+            "sell_invalid_price": 0,
+            "sell_suspended": 0,
+            "sell_limit_down": 0,
+            "pending_exit": 0
+          },
+          "pending_exit_positions": 0,
+          "market_matrix_shape": [
+            431,
+            469
+          ],
+          "market_matrix_bytes": 9101427,
+          "timing_ms": {
+            "load_panel": 1484.6,
+            "signals_score": 320.0,
+            "matrix_build": 224.5,
+            "simulate": 737.0,
+            "statistics": 4.6,
+            "total": 2822.7
+          },
+          "panel_rows": 201573,
+          "panel_columns": 11,
+          "feature_columns": 133,
+          "full_feature_fallback": false,
+          "execution_backend": "polars_expr",
+          "selection": {
+            "strategy_matches": 104175,
+            "entry_candidates": 104175,
+            "entry_trigger_filtered": 0,
+            "entry_trigger_enabled": false
+          },
+          "shared_market_data": false,
+          "matrix_data_cache_hit": false,
+          "matrix_data_cache_status": "none",
+          "matrix_data_cache_timing_ms": {}
+        },
+        "factor_attribution": {
+          "factors": [
+            {
+              "factor": "uf_quality_value_defensive",
+              "win_mean": -0.12039,
+              "lose_mean": -0.119247,
+              "win_n": 101,
+              "lose_n": 122
+            },
+            {
+              "factor": "uf_cash_quality",
+              "win_mean": 8.107779,
+              "lose_mean": 5.652365,
+              "win_n": 101,
+              "lose_n": 122
+            }
+          ],
+          "n_win": 101,
+          "n_lose": 122
+        },
+        "elapsed_seconds": 3.249
+      }
+    ]
+  },
+  "results": {
+    "candidate": {
+      "full": {
+        "total_return": -0.068109,
+        "annual": -0.016979,
+        "sharpe": 0.0438,
+        "mdd": -0.401871,
+        "days": 1039
+      },
+      "discovery_2022_2024": {
+        "total_return": -0.239083,
+        "annual": -0.10707,
+        "sharpe": -0.3633,
+        "mdd": -0.401871,
+        "days": 609
+      },
+      "validation_2025_2026": {
+        "total_return": 0.245387,
+        "annual": 0.137583,
+        "sharpe": 0.6706,
+        "mdd": -0.17824,
+        "days": 430
+      },
+      "rolling_1y": {
+        "windows": 788,
+        "positive_rate": 0.5533,
+        "return_p05": -0.2527,
+        "return_median": 0.0427,
+        "return_worst": -0.2967,
+        "mdd_p05": -0.3417,
+        "mdd_worst": -0.3538
+      },
+      "recent_12m": {
+        "total_return": 0.004561,
+        "mdd": -0.17824
+      }
+    },
+    "control": {
+      "full": {
+        "total_return": -0.091224,
+        "annual": -0.022955,
+        "sharpe": 0.0096,
+        "mdd": -0.390235,
+        "days": 1039
+      },
+      "discovery_2022_2024": {
+        "total_return": -0.16375,
+        "annual": -0.071439,
+        "sharpe": -0.188,
+        "mdd": -0.390235,
+        "days": 609
+      },
+      "validation_2025_2026": {
+        "total_return": 0.107797,
+        "annual": 0.06198,
+        "sharpe": 0.3983,
+        "mdd": -0.242314,
+        "days": 430
+      },
+      "rolling_1y": {
+        "windows": 788,
+        "positive_rate": 0.6003,
+        "return_p05": -0.2115,
+        "return_median": 0.0753,
+        "return_worst": -0.2866,
+        "mdd_p05": -0.2997,
+        "mdd_worst": -0.3009
+      },
+      "recent_12m": {
+        "total_return": -0.136293,
+        "mdd": -0.242314
+      }
+    }
+  },
+  "decision": {
+    "D1": true,
+    "D2": true,
+    "D3": true,
+    "G1": false,
+    "G2": true,
+    "G3": true,
+    "G4": false,
+    "G5": true,
+    "G6": true,
+    "G7": true,
+    "G8": false,
+    "G9": false,
+    "all_pass": false
+  },
+  "caveats": [
+    "The clean point-in-time sample starts in 2022; 2018-2020 financial data are excluded because reliable first-disclosure dates are unavailable.",
+    "The factor uses statutory disclosure deadlines as a fallback because provider announcement dates are not reliable first-disclosure timestamps.",
+    "Local financial tables are current snapshots, so restatement risk remains and is not fully eliminated.",
+    "Equal component weights are a fixed prior, not an optimized allocation.",
+    "The full curve is stitched from two system-engine segments because the combined matrix exceeded memory; segment boundaries can reset an open position.",
+    "The factor is research-only until every preregistered gate passes.",
+    "Candidate and control share the same non-financial HS300 universe, two-component availability filter, and execution; the control excludes both components from scoring.",
+    "Banks and non-bank financials are excluded because operating cash flow and gross-margin definitions are not economically comparable for those firms.",
+    "Industry classification is a current snapshot applied to history, not a point-in-time industry series.",
+    "D3 checks the average monthly cross-sectional rank correlation between the two components; the audited value before preregistration was 0.118635 over 52 months.",
+    "Both components must be non-null; no filling and no fallback to either single factor is used."
+  ]
+}

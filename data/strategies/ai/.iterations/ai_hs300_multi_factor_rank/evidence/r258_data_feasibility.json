@@ -1,0 +1,78 @@
+{
+  "round": "R258",
+  "status": "feasibility_only_no_forward_returns",
+  "hypothesis": "R257's P&L is too concentrated in repeated winners. A 20-trading-day fresh-entry gate, which prevents a stock from re-entering the R257 top-30 score pool after it appeared there in the prior 20 trading days, should diversify realized P&L without changing the R257 factor or 10-position limits.",
+  "selection_basis": "R257 passed all D/I/G gates and all cost-stress tests but failed C2/C3/C4 with top1/top3/top5 net P&L shares of 27.95%/64.08%/94.43%. This is a follow-up, result-driven concentration hypothesis, not independent confirmation. No R258 forward or strategy returns are read in this audit.",
+  "gate_factor": {
+    "provisional_id": "ext_alt_hs300_qrs_fresh20_flag",
+    "config_id": "alt_hs300_qrs_fresh20",
+    "column": "fresh_quality_rs_flag",
+    "formula": "1 if R257 factor is in the top 30 eligible historical nonfinancial HS300 members on date t and the stock was not in the top 30 on any of the prior 20 trading dates in the common benchmark calendar; otherwise 0",
+    "direction": "gate",
+    "lookback": 20,
+    "top_n": 30,
+    "pit_rule": "top-30 membership and the prior-window maximum use only information available on or before date t"
+  },
+  "window": [
+    "2023-05-04",
+    "2026-10-16"
+  ],
+  "coverage": 0.999211,
+  "eligible_member_rows": 209024,
+  "history_grid_rows": 277047,
+  "history_symbols": 331,
+  "valid_r257_rows": 208859,
+  "daily_fresh_name_counts": {
+    "days": 837,
+    "min_top30_names": 30,
+    "max_top30_names": 30,
+    "min": 0,
+    "p05": 0,
+    "median": 1.0,
+    "p95": 3,
+    "max": 30,
+    "days_ge_10": 2,
+    "days_ge_20": 1,
+    "days_ge_30": 1,
+    "share_days_ge_10": 0.002389,
+    "share_days_ge_20": 0.001195,
+    "share_days_ge_30": 0.001195
+  },
+  "samples": {
+    "full": {
+      "dates": 837,
+      "top_rows": 25110,
+      "fresh_rows": 1088,
+      "fresh_share_of_top30": 0.043329
+    },
+    "discovery": {
+      "dates": 406,
+      "top_rows": 12180,
+      "fresh_rows": 573,
+      "fresh_share_of_top30": 0.047044
+    },
+    "validation": {
+      "dates": 431,
+      "top_rows": 12930,
+      "fresh_rows": 515,
+      "fresh_share_of_top30": 0.03983
+    },
+    "recent_12m": {
+      "dates": 252,
+      "top_rows": 7560,
+      "fresh_rows": 289,
+      "fresh_share_of_top30": 0.038228
+    }
+  },
+  "checks": {
+    "D1_factor_coverage": true,
+    "D2_strict_top30_count": true,
+    "D3_min_fresh_names": false,
+    "D4_median_fresh_names": false,
+    "D5_available_on_95pct_days": false,
+    "D6_fresh_share_constructive": false,
+    "D7_full_dates": true
+  },
+  "all_checks_pass": false,
+  "selection_note": "These feasibility constraints are fixed before reading any strategy return. If they pass, the fresh-entry factor and candidate/control strategies will be pre-registered before implementation."
+}

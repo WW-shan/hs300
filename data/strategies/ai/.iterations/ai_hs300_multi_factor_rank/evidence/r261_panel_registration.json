@@ -1,0 +1,208 @@
+{
+  "round": "R261",
+  "captured_at": "2026-10-20T06:24:36.602402+00:00",
+  "api_base": "http://127.0.0.1:3018",
+  "reload": {
+    "method": "POST",
+    "endpoint": "/api/strategies/reload",
+    "http_status": 200,
+    "ok": true,
+    "count": 114
+  },
+  "factors": {
+    "endpoint": "/api/factors",
+    "http_status": 200,
+    "count": 228,
+    "expected_factor_count": 1,
+    "missing_factors": [],
+    "registered": [
+      {
+        "id": "ext_alt_hs300_qlot_quality_low_lottery_min_rank",
+        "label": "HS300质量相对强度与低彩票需求因子·质量相对强度与低20日最",
+        "group": "扩展数据",
+        "kind": "base",
+        "version": 1,
+        "formula": "扩展表「HS300质量相对强度与低彩票需求因子」字段 quality_low_lottery_min_rank (时序·按交易日对齐)",
+        "direction": "none",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "stable",
+        "scale_free": false,
+        "dependencies": []
+      }
+    ]
+  },
+  "strategies": {
+    "endpoint": "/api/strategies?include_research=true",
+    "http_status": 200,
+    "count": 211,
+    "expected_strategy_count": 2,
+    "missing_strategies": [],
+    "load_error_count": 0,
+    "load_errors": [],
+    "registered": [
+      {
+        "id": "ai_hs300_qrs_low_lottery_control",
+        "name": "HS300质量相对强度低彩票匹配对照",
+        "description": "与R261候选使用相同非金融股票池、ma60和新复合因子可用性过滤；评分保持R257原口径，但不包含低彩票复合因子。",
+        "tags": [
+          "质量",
+          "行业相对强度",
+          "低彩票需求",
+          "匹配对照",
+          "沪深300",
+          "非金融",
+          "实验",
+          "R261"
+        ],
+        "source": "ai",
+        "research_only": true,
+        "execution_backend": "polars_expr",
+        "asset_types": [
+          "stock"
+        ],
+        "timeframes": [
+          "1d"
+        ],
+        "version": "1.0.0",
+        "basic_filter": {
+          "price_min": 3,
+          "price_max": 500,
+          "market_cap_min": 1000000000.0,
+          "float_cap_min": null,
+          "float_cap_max": null,
+          "amount_min": 20000000.0,
+          "amount_max": null,
+          "turnover_min": null,
+          "turnover_max": null,
+          "exclude_st": true,
+          "exclude_new_days": 60,
+          "boards": [
+            "沪主板",
+            "深主板",
+            "创业板",
+            "科创板",
+            "北交所"
+          ]
+        },
+        "params": [],
+        "params_defaults": {},
+        "scoring": {
+          "ext_alt_hs300_qrs_quality_relative_strength_min_rank": 0.45,
+          "uf_quality_value_defensive": 0.3,
+          "uf_cash_quality": 0.25
+        },
+        "scoring_directions": {},
+        "entry_signals": [],
+        "exit_signals": [],
+        "overlay_filter": [],
+        "minute_exit_trigger_supported_signals": [
+          "signal_ma10_breakdown",
+          "signal_ma20_breakdown",
+          "signal_ma5_breakdown",
+          "signal_ma_dead_5_20"
+        ],
+        "stop_loss": -0.2,
+        "take_profit": null,
+        "trailing_stop": null,
+        "trailing_take_profit_activate": null,
+        "trailing_take_profit_drawdown": null,
+        "max_hold_days": 20,
+        "order_by": "score",
+        "descending": true,
+        "limit": 30,
+        "display_limit": null,
+        "composite_children": null
+      },
+      {
+        "id": "ai_hs300_qrs_low_lottery_h20_sl20",
+        "name": "HS300质量相对强度与低彩票需求",
+        "description": "R257质量相对强度叠加低20日最大单日涨幅分位；30只、10仓、20日持有、-20%止损（R261实验）。",
+        "tags": [
+          "质量",
+          "行业相对强度",
+          "低彩票需求",
+          "最弱一环",
+          "沪深300",
+          "非金融",
+          "实验",
+          "R261"
+        ],
+        "source": "ai",
+        "research_only": true,
+        "execution_backend": "polars_expr",
+        "asset_types": [
+          "stock"
+        ],
+        "timeframes": [
+          "1d"
+        ],
+        "version": "1.0.0",
+        "basic_filter": {
+          "price_min": 3,
+          "price_max": 500,
+          "market_cap_min": 1000000000.0,
+          "float_cap_min": null,
+          "float_cap_max": null,
+          "amount_min": 20000000.0,
+          "amount_max": null,
+          "turnover_min": null,
+          "turnover_max": null,
+          "exclude_st": true,
+          "exclude_new_days": 60,
+          "boards": [
+            "沪主板",
+            "深主板",
+            "创业板",
+            "科创板",
+            "北交所"
+          ]
+        },
+        "params": [],
+        "params_defaults": {},
+        "scoring": {
+          "ext_alt_hs300_qlot_quality_low_lottery_min_rank": 0.45,
+          "uf_quality_value_defensive": 0.3,
+          "uf_cash_quality": 0.25
+        },
+        "scoring_directions": {},
+        "entry_signals": [],
+        "exit_signals": [],
+        "overlay_filter": [],
+        "minute_exit_trigger_supported_signals": [
+          "signal_ma10_breakdown",
+          "signal_ma20_breakdown",
+          "signal_ma5_breakdown",
+          "signal_ma_dead_5_20"
+        ],
+        "stop_loss": -0.2,
+        "take_profit": null,
+        "trailing_stop": null,
+        "trailing_take_profit_activate": null,
+        "trailing_take_profit_drawdown": null,
+        "max_hold_days": 20,
+        "order_by": "score",
+        "descending": true,
+        "limit": 30,
+        "display_limit": null,
+        "composite_children": null
+      }
+    ]
+  },
+  "checks": {
+    "reload_http_ok": true,
+    "reload_ok": true,
+    "factors_http_ok": true,
+    "strategies_http_ok": true,
+    "factor_registered": true,
+    "strategies_registered": true,
+    "no_strategy_load_errors": true
+  },
+  "all_checks_pass": true,
+  "note": "R261 factor and both candidate/control strategies are registered in the running panel before the final strategy backtest is read."
+}

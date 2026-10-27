@@ -1,0 +1,63 @@
+{
+  "round": "R242",
+  "captured_at": "2026-10-20T00:42:08.850060+00:00",
+  "factor_id": "ext_alt_hs300_wc_working_capital_change_yoy_low",
+  "config_id": "alt_hs300_wc",
+  "field": "working_capital_change_yoy_low",
+  "label": "营运资本同比改善(高好)",
+  "formula": "clip(NWC_ratio_(t-4) - NWC_ratio_t, -1, 1); NWC = accounts_receivable + inventory - accounts_payable",
+  "effective_date": "current report statutory disclosure deadline + 3 calendar days",
+  "builder": "scripts/build_r242_working_capital_factor.py",
+  "partitions": 2132,
+  "coverage": {
+    "eligible_member_rows": 260035,
+    "valid_member_rows": 255203,
+    "coverage_2022_2026": 0.981418,
+    "recent_member_rows": 62630,
+    "recent_valid_rows": 61739,
+    "recent_12m_coverage": 0.985774,
+    "first_valid_date": "2022-05-05",
+    "factor_min": -0.360231,
+    "factor_p01": -0.113841,
+    "factor_median": 0.000867,
+    "factor_p99": 0.130742,
+    "factor_max": 0.475799
+  },
+  "independence": {
+    "fields": {
+      "ocf_margin_4q": {
+        "months": 51,
+        "mean_abs_correlation": 0.164751,
+        "mean_signed_correlation": 0.164751
+      },
+      "cash_to_assets": {
+        "months": 51,
+        "mean_abs_correlation": 0.05803,
+        "mean_signed_correlation": 0.045951
+      },
+      "sga_ratio_4q_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.097516,
+        "mean_signed_correlation": 0.091175
+      },
+      "cash_flow_stability_4q_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.049426,
+        "mean_signed_correlation": 0.018638
+      },
+      "goodwill_ratio_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.105583,
+        "mean_signed_correlation": 0.099127
+      },
+      "capex_intensity_low": {
+        "months": 51,
+        "mean_abs_correlation": 0.077922,
+        "mean_signed_correlation": 0.008752
+      }
+    },
+    "max_mean_abs_correlation": 0.164751
+  },
+  "first_partition": "date=2018-01-02",
+  "last_partition": "date=2026-10-19"
+}

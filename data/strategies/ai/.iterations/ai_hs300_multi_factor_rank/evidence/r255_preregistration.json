@@ -1,0 +1,99 @@
+{
+  "round": "R255",
+  "registered_at": "2026-10-20",
+  "status": "pre_registered_before_factor_table_strategy_implementation_and_backtest",
+  "hypothesis": "Applying a standard HS300 200-trading-day trend gate only to new entries should reduce exposure to adverse broad-market regimes and improve R253's recent-year and cost-stress behavior without changing the quality ranking or forcing existing positions out before their fixed holding/stop rules.",
+  "selection_basis": "R253 passed both IC segments and most relative/full-sample gates but failed the recent-12-month, 4x/5x cost and concentration gates. R255 keeps R253 unchanged and tests one standard market-state entry gate. Feasibility shows 100% date coverage from 2023-05-04 with 486 gate-on and 351 gate-off trading days over the full sample; discovery has 114 on/292 off, validation 372 on/59 off, and the recent year 196 on/56 off. No strategy or conditional returns were read before preregistration. Evidence: r255_data_feasibility.json.",
+  "factor": {
+    "id": "ext_alt_market_regime_hs300_above_ma200",
+    "config_id": "alt_market_regime",
+    "column": "hs300_above_ma200",
+    "direction": "high",
+    "formula": "hs300_above_ma200 = 1 if 000300.SH close_t > mean(close_{t-199}...close_t), else 0; null until 200 closes exist",
+    "interpretation": "1 permits new entries; 0 blocks new entries but does not force existing positions to exit.",
+    "pit_rule": "Uses only close and the 200-trading-day moving average observable at date t. Order execution remains T+1 open; no future index value is used.",
+    "missing_data_rule": "Null before the first complete 200-close window. No forward fill across missing index dates beyond an exact date join; a missing gate date blocks new entries fail-closed.",
+    "scope": "date-constant market-state factor broadcast to every stock row for panel compatibility"
+  },
+  "strategies": {
+    "candidate": {
+      "id": "ai_hs300_minrank_ma200_gate_quality_h20_sl20",
+      "scoring": {
+        "ext_alt_hs300_minrank_management_ocf_gm_min_rank": 0.45,
+        "uf_quality_value_defensive": 0.3,
+        "uf_cash_quality": 0.25
+      }
+    },
+    "control": {
+      "id": "ai_hs300_minrank_ma200_gate_quality_control",
+      "scoring": {
+        "uf_quality_value_defensive": 0.545,
+        "uf_cash_quality": 0.455
+      }
+    },
+    "gate_rule": "Both strategies require hs300_above_ma200 == 1 for new entries and share the same nonfinancial universe and R253 factor-availability filter. Existing positions are not force-sold by the gate and remain subject to the 20-day holding period and -20% stop.",
+    "weight_rationale": "R253's scoring weights are unchanged. The gate is not scored and receives no weight.",
+    "matched_requirements": "Both strategies use the same gate, universe, three-component availability filter, 30-name score limit, top 10 equal-weight positions, 20-day holding period, -20% stop loss, T+1 open execution and cost model."
+  },
+  "execution": {
+    "engine": "StrategyBacktestService",
+    "matching": "open_t+1",
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "score_limit": 30,
+    "holding_days": 20,
+    "stop_loss": -0.2,
+    "asset_type": "stock",
+    "cost_3x": "6bp fees + 6bp commission + 15bp slippage + 10bp stamp tax",
+    "cost_stress": "4x and 5x scale all four cost components proportionally",
+    "segments": {
+      "discovery": [
+        "2023-05-04",
+        "2024-12-31"
+      ],
+      "validation": [
+        "2025-01-02",
+        "2026-10-16"
+      ],
+      "stitching": "compound two independently run segment curves; skip the first return of each later segment"
+    }
+  },
+  "factor_ic": {
+    "method": "R253 quality factor month-end rank IC versus T+1 open to T+21 open return, restricted to gate-on month-end dates within historical non-financial HS300 members",
+    "minimum_names": 30
+  },
+  "gates": {
+    "D1": "gate date coverage is >= 0.99 in full, discovery, validation and recent-12-month samples",
+    "D2": "full sample has at least 30 gate-on and 30 gate-off dates; discovery and validation each also have at least 30 gate-on and 30 gate-off dates",
+    "D3": "200-trading-day close-only rule and T+1 entry timing audit pass",
+    "D4": "gate is date-constant for every stock row, complete from 2023-05-04, and has no future-index leakage",
+    "I1": "gate-on discovery mean R253 rank IC >= 0.02 with at least 6 month-end observations",
+    "I2": "gate-on validation mean R253 rank IC >= 0.01 with at least 12 month-end observations and the same positive sign",
+    "G1": "discovery candidate return >= control return + 5pp",
+    "G2": "discovery candidate MDD is no worse than control MDD by more than 5pp",
+    "G3": "validation candidate return >= control return",
+    "G4": "full-sample candidate return > 0 and >= control return",
+    "G5": "full-sample candidate MDD <= 40% in absolute value and no worse than control by more than 5pp",
+    "G6": "rolling 1-year positive rate >= 60% and no worse than control by more than 2pp",
+    "G7": "recent 12-month candidate return > 0 and MDD no worse than control by more than 5pp",
+    "G8": "full-sample candidate return at 4x cost is positive",
+    "G9": "full-sample candidate return at 5x cost is positive",
+    "C1": "at least 30 distinct symbols are traded across the full sample",
+    "C2": "the largest symbol's share of net P&L is <= 25%",
+    "C3": "the top three symbols' share of net P&L is <= 55%",
+    "C4": "the top five symbols' share of net P&L is <= 75%",
+    "C5": "at least 8 distinct symbols have positive P&L in the validation segment",
+    "C6": "the largest industry's share of gross profit is <= 45%",
+    "C7": "the largest single-symbol loss is <= 20% of gross profit in absolute value"
+  },
+  "decision_rule": "All D, I, G and C gates must pass. Any failure means the gated strategy is not accepted and cannot be rescued by changing the moving-average window, gate direction, quality weights, holding period, stop loss, universe, costs or gates after seeing results.",
+  "known_limitations": [
+    "The gate affects new entries only and cannot prevent losses on positions already open.",
+    "The 200-day trend rule is a fixed prior, not an optimized parameter, and may whipsaw near the moving average.",
+    "The gate is date-constant and has no cross-sectional alpha interpretation.",
+    "Conditional discovery IC has only about seven month-end observations under this gate.",
+    "The underlying R253 quality factor still carries financial-snapshot, industry-snapshot and concentration risks.",
+    "This is another attempt in the same broad quality family, so multiple-comparison risk remains.",
+    "Passing these gates would justify further paper-trading validation, not production deployment."
+  ]
+}

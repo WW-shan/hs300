@@ -1,0 +1,80 @@
+{
+    "round": "R240",
+    "registered_at": "2026-10-20",
+    "status": "pre_registered_before_strategy_backtest",
+    "hypothesis": "R237 showed that the R221 10-position, 20-day baseline turns negative at 4x cost (-1.76%) and 5x cost (-8.57%), while the 5-position variant survives but is driven by one stock (R239). The next test keeps 10 positions for diversification but doubles the holding period from 20 to 60 days, cutting turnover and giving winners more time to compound. If the cost drag is mostly turnover, the 60-day version should improve 4x/5x net returns without the single-stock concentration of the 5-position variant.",
+    "factor": {
+        "id": "ext_alt_hs300_sga_ratio_4q_low",
+        "definition": "frozen from R221; TTM selling-plus-management expense ratio inverted, four consecutive quarters",
+        "source_evidence": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r221_sga_nonfin_quality.json",
+        "coverage_2022_2026": 0.984464,
+        "recent_12m_coverage": 0.98472,
+        "first_valid_date": "2022-05-05"
+    },
+    "candidate_strategy": {
+        "id": "ai_hs300_sga_nonfin_quality_h60_sl20",
+        "scoring": {
+            "ext_alt_hs300_sga_ratio_4q_low": 0.45,
+            "uf_quality_value_defensive": 0.3,
+            "uf_cash_quality": 0.25
+        },
+        "limit": 30,
+        "max_positions": 10,
+        "max_hold_days": 60,
+        "stop_loss": -0.2,
+        "position_sizing": "equal"
+    },
+    "control_strategy": {
+        "id": "ai_hs300_sga_nonfin_quality_h20_sl20",
+        "scoring": {
+            "ext_alt_hs300_sga_ratio_4q_low": 0.45,
+            "uf_quality_value_defensive": 0.3,
+            "uf_cash_quality": 0.25
+        },
+        "limit": 30,
+        "max_positions": 10,
+        "max_hold_days": 20,
+        "stop_loss": -0.2,
+        "position_sizing": "equal"
+    },
+    "execution": {
+        "engine": "StrategyBacktestService",
+        "matching": "open_t+1",
+        "cost": "3x baseline: 6bp fees + 6bp commission + 15bp slippage + 10bp stamp tax; 4x and 5x scale all four components proportionally",
+        "universe": "historical non-financial HS300 membership; daily snapshots from 2022",
+        "segments": [
+            [
+                "2022-07-01",
+                "2024-12-31"
+            ],
+            [
+                "2025-01-02",
+                "2026-10-16"
+            ]
+        ]
+    },
+    "gates": {
+        "D1": "factor coverage unchanged from R221 and at least 90%",
+        "D2": "first valid value by 2022-06-30 and recent-12m coverage at least 95%",
+        "D3": "candidate and control use identical factor, scoring weights, universe and stop loss; only holding period differs",
+        "G1": "candidate 3x full-sample total return is at least control - 2pp",
+        "G2": "candidate 4x full-sample total return is positive",
+        "G3": "candidate 5x full-sample total return is positive",
+        "G4": "candidate 3x recent-12m total return is positive",
+        "G5": "candidate 3x full-sample MDD is no worse than control by more than 5pp",
+        "G6": "candidate 3x rolling-1y positive rate is at least control - 5pp",
+        "G7": "candidate top-one symbol share of net P&L is at most 25%",
+        "G8": "candidate top-three symbol share of net P&L is at most 55%",
+        "G9": "candidate trades at least 30 distinct symbols and at least 8 symbols have positive P&L in validation",
+        "G10": "candidate validation total return is at least control - 5pp",
+        "G11": "candidate 3x full-sample total return is at least R221 evidence minus 5pp"
+    },
+    "decision_rule": "All D and G gates must pass. The factor, scoring weights, 10-position count, universe and stop loss are frozen; only the holding period is deliberately changed from 20 to 60 days. No post-result tuning of cost, holding period, position count or weights is allowed.",
+    "known_limitations": [
+        "The 60-day holding period is a turnover hypothesis, not an optimized parameter.",
+        "A 60-day hold can increase exposure to adverse reversals and reduces the number of independent trades.",
+        "The concentration gates use trade P&L shares and are diagnostics, not causal tests.",
+        "Industry classification is a current snapshot, not historical PIT.",
+        "Passing gates would justify paper trading only."
+    ]
+}

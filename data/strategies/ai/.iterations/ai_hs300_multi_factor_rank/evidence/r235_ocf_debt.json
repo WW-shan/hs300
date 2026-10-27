@@ -1,0 +1,264 @@
+{
+  "purpose": "R235 non-financial HS300 TTM operating cash flow over total liabilities versus a matched quality-cash control",
+  "preregistration": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r235_preregistration.json",
+  "window": [
+    "2022-07-01",
+    "2026-10-16"
+  ],
+  "universe": {
+    "industry_source": "current ext_hy_ths industry snapshot; not historical PIT",
+    "excluded_industries": [
+      "银行",
+      "非银金融"
+    ],
+    "member_snapshot_rows": 430500,
+    "nonfinancial_member_rows": 353797,
+    "excluded_financial_member_rows": 73251,
+    "industry_missing_member_rows": 3452,
+    "nonfinancial_symbols": 469,
+    "excluded_financial_symbols": 80,
+    "industry_missing_symbols": 15
+  },
+  "factor": {
+    "id": "ocf_debt",
+    "column": "ocf_debt",
+    "formula": "TTM net operating cash flow divided by total liabilities; higher means stronger cash coverage of the liability base",
+    "effective_date": "latest PIT effective date among cash_flow and balance_sheet dependencies; usable strictly after that date",
+    "first_valid_date_scope": "all factor history through END before applying the START coverage window",
+    "includes": "TTM operating cash flow and total liabilities from the engine PIT snapshot",
+    "coverage": {
+      "eligible_member_rows": 260035,
+      "valid_member_rows": 260035,
+      "coverage_2022_2026": 1.0,
+      "recent_member_rows": 62630,
+      "recent_valid_rows": 62630,
+      "recent_12m_coverage": 1.0,
+      "first_valid_date": "2022-05-04",
+      "factor_min": -2.509628,
+      "factor_median": 0.182018,
+      "factor_max": 7.250349,
+      "independence": {
+        "method": "daily cross-sectional Spearman rank correlation averaged within each calendar month, then mean absolute monthly correlation",
+        "debt_ratio_latest": {
+          "months": 52,
+          "overlap_member_rows": 260035,
+          "mean_abs_monthly_spearman": 0.634831,
+          "mean_signed_monthly_spearman": -0.634831,
+          "min_monthly_spearman": -0.71502,
+          "max_monthly_spearman": -0.545956
+        },
+        "ocf_ni": {
+          "months": 52,
+          "overlap_member_rows": 241180,
+          "mean_abs_monthly_spearman": 0.204938,
+          "mean_signed_monthly_spearman": 0.204938,
+          "min_monthly_spearman": 0.086585,
+          "max_monthly_spearman": 0.282065
+        }
+      }
+    }
+  },
+  "samples": {
+    "discovery": [
+      "2022-07-01",
+      "2024-12-31"
+    ],
+    "validation": [
+      "2025-01-02",
+      "2026-10-16"
+    ],
+    "rolling_1y": "252-trading-day rolling compounded return over the stitched 2022-2026 curve",
+    "recent_12m": "last 252 trading-day returns of the stitched 2022-2026 curve"
+  },
+  "execution": {
+    "engine": "StrategyBacktestService",
+    "matching": "open_t+1",
+    "cost": "3x: 6bp commission + 15bp slippage + 10bp stamp tax",
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "holding_days": 20,
+    "stop_loss": -0.2,
+    "universe": "historical HS300 membership excluding banks and non-bank financials; current industry snapshot applied to history",
+    "segments": [
+      [
+        "2022-07-01",
+        "2024-12-31"
+      ],
+      [
+        "2025-01-02",
+        "2026-10-16"
+      ]
+    ],
+    "stitching": "two segment returns compounded into one curve; first day of each later segment skipped"
+  },
+  "related_benchmark": {
+    "strategy_id": "ai_hs300_sga_nonfin_quality_h20_sl20",
+    "source_evidence": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r221_sga_nonfin_quality.json",
+    "full_total_return": 0.091198,
+    "g9_threshold": 0.041198
+  },
+  "strategies": {
+    "candidate": "ai_hs300_ocf_debt_quality_h20_sl20",
+    "control": "ai_hs300_ocf_debt_quality_control"
+  },
+  "runs": {
+    "candidate": [
+      {
+        "start": "2022-07-01",
+        "end": "2024-12-31",
+        "cached": true,
+        "days": 609,
+        "curve_stats": {
+          "total_return": -0.369122,
+          "annual": -0.173805,
+          "sharpe": -0.7086,
+          "mdd": -0.51162,
+          "days": 609
+        }
+      },
+      {
+        "start": "2025-01-02",
+        "end": "2026-10-16",
+        "cached": true,
+        "days": 431,
+        "curve_stats": {
+          "total_return": 0.540766,
+          "annual": 0.288316,
+          "sharpe": 1.1945,
+          "mdd": -0.157255,
+          "days": 431
+        }
+      }
+    ],
+    "control": [
+      {
+        "start": "2022-07-01",
+        "end": "2024-12-31",
+        "cached": true,
+        "days": 609,
+        "curve_stats": {
+          "total_return": -0.16375,
+          "annual": -0.071439,
+          "sharpe": -0.188,
+          "mdd": -0.390235,
+          "days": 609
+        }
+      },
+      {
+        "start": "2025-01-02",
+        "end": "2026-10-16",
+        "cached": true,
+        "days": 431,
+        "curve_stats": {
+          "total_return": 0.086728,
+          "annual": 0.04995,
+          "sharpe": 0.3419,
+          "mdd": -0.242314,
+          "days": 431
+        }
+      }
+    ]
+  },
+  "results": {
+    "candidate": {
+      "full": {
+        "total_return": -0.027964,
+        "annual": -0.006862,
+        "sharpe": 0.0872,
+        "mdd": -0.51162,
+        "days": 1039
+      },
+      "discovery_2022_2024": {
+        "total_return": -0.369122,
+        "annual": -0.173805,
+        "sharpe": -0.7086,
+        "mdd": -0.51162,
+        "days": 609
+      },
+      "validation_2025_2026": {
+        "total_return": 0.568834,
+        "annual": 0.30282,
+        "sharpe": 1.2428,
+        "mdd": -0.157255,
+        "days": 430
+      },
+      "rolling_1y": {
+        "windows": 788,
+        "positive_rate": 0.5266,
+        "return_p05": -0.2881,
+        "return_median": 0.0336,
+        "return_worst": -0.3729,
+        "mdd_p05": -0.3522,
+        "mdd_worst": -0.3766
+      },
+      "recent_12m": {
+        "total_return": 0.28222,
+        "mdd": -0.157255
+      }
+    },
+    "control": {
+      "full": {
+        "total_return": -0.091224,
+        "annual": -0.022955,
+        "sharpe": 0.0096,
+        "mdd": -0.390235,
+        "days": 1039
+      },
+      "discovery_2022_2024": {
+        "total_return": -0.16375,
+        "annual": -0.071439,
+        "sharpe": -0.188,
+        "mdd": -0.390235,
+        "days": 609
+      },
+      "validation_2025_2026": {
+        "total_return": 0.107797,
+        "annual": 0.06198,
+        "sharpe": 0.3983,
+        "mdd": -0.242314,
+        "days": 430
+      },
+      "rolling_1y": {
+        "windows": 788,
+        "positive_rate": 0.6003,
+        "return_p05": -0.2115,
+        "return_median": 0.0753,
+        "return_worst": -0.2866,
+        "mdd_p05": -0.2997,
+        "mdd_worst": -0.3009
+      },
+      "recent_12m": {
+        "total_return": -0.136293,
+        "mdd": -0.242314
+      }
+    }
+  },
+  "decision": {
+    "D1": true,
+    "D2": true,
+    "D3": true,
+    "G1": false,
+    "G2": false,
+    "G3": true,
+    "G4": false,
+    "G5": false,
+    "G6": true,
+    "G7": true,
+    "G8": false,
+    "G9": false,
+    "all_pass": false
+  },
+  "caveats": [
+    "The clean point-in-time sample starts in 2022; 2018-2020 financial data are excluded because reliable first-disclosure dates are unavailable.",
+    "The factor uses statutory disclosure deadlines as a fallback because provider announcement dates are not reliable first-disclosure timestamps.",
+    "Local financial tables are current snapshots, so restatement risk remains and is not fully eliminated.",
+    "Total liabilities include operating liabilities as well as interest-bearing debt, so this is a broad coverage measure rather than an interest-coverage ratio.",
+    "The full curve is stitched from two system-engine segments because the combined matrix exceeded memory; segment boundaries can reset an open position.",
+    "The factor is research-only until every preregistered gate passes.",
+    "Candidate and control share the same non-financial HS300 universe, factor-availability filter, and execution; the control excludes ocf_debt from scoring.",
+    "Banks and non-bank financials are excluded because operating cash flow and liability definitions are not economically comparable for those firms.",
+    "Industry classification is a current snapshot applied to history, not a point-in-time industry series.",
+    "OCF/debt is checked against both debt_ratio_latest and ocf_ni through average monthly cross-sectional rank correlations.",
+    "No filling or fallback to debt ratio, ocf_ni, accrual or cash-flow stability is used."
+  ]
+}

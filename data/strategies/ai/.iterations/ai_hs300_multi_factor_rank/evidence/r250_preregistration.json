@@ -1,0 +1,97 @@
+{
+  "round": "R250",
+  "registered_at": "2026-10-20",
+  "status": "pre_registered_before_factor_table_strategy_implementation_and_backtest",
+  "hypothesis": "Non-financial HS300 firms with more stable year-over-year single-quarter revenue growth over the latest four quarters should earn higher future returns than firms with volatile revenue momentum.",
+  "selection_basis": "Free-cash-flow yield was rejected before preregistration because full-period coverage was only 81.14% and its mean absolute correlation with free-cash-flow/assets was 0.797; evidence: r250_fcf_yield_rejected.json. A revenue-stability hypothesis was then frozen after a no-forward-return coverage and independence audit. The four-quarter window is short enough to retain a 2023-05-04 start and a usable discovery segment; evidence: r250_data_feasibility.json.",
+  "factor": {
+    "id": "ext_alt_hs300_revstab_revenue_growth_stability_4q_low",
+    "config_id": "alt_hs300_revstab",
+    "column": "revenue_growth_stability_4q_low",
+    "direction": "high",
+    "formula": "revenue_growth_stability_4q_low = -std(g_t, g_t_minus_1, g_t_minus_2, g_t_minus_3), where g_t = single_quarter_revenue_t / single_quarter_revenue_t_minus_4 - 1",
+    "interpretation": "Higher means more stable year-over-year single-quarter revenue growth over the latest four quarters.",
+    "pit_rule": "Single-quarter revenue is derived from cumulative year-to-date reports. The effective date is the statutory reporting deadline plus 3 calendar days. The latest report expires after 500 calendar days.",
+    "missing_data_rule": "Require four consecutive valid year-over-year single-quarter growth observations. Missing components remain null; no partial score, zero fill or interpolation.",
+    "universe": "historical HS300 membership excluding banks and non-bank financials using the current industry snapshot"
+  },
+  "strategies": {
+    "candidate": {
+      "id": "ai_hs300_revenue_stability_quality_h20_sl20",
+      "scoring": {
+        "ext_alt_hs300_revstab_revenue_growth_stability_4q_low": 0.45,
+        "uf_quality_value_defensive": 0.3,
+        "uf_cash_quality": 0.25
+      }
+    },
+    "control": {
+      "id": "ai_hs300_revenue_stability_quality_control",
+      "scoring": {
+        "uf_quality_value_defensive": 0.545,
+        "uf_cash_quality": 0.455
+      }
+    },
+    "weight_rationale": "The revenue-stability score receives the same fixed 45% research weight used in recent rounds. The remaining quality and cash weights preserve the 54.5/45.5 quality-cash ratio of the matched control. No weight was selected using forward returns.",
+    "matched_requirements": "Both strategies use the same non-financial HS300 universe, four-quarter factor-availability filter, 30-name score limit, top 10 equal-weight positions, 20-day holding period, -20% stop loss, T+1 open execution and cost model."
+  },
+  "execution": {
+    "engine": "StrategyBacktestService",
+    "matching": "open_t+1",
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "score_limit": 30,
+    "holding_days": 20,
+    "stop_loss": -0.2,
+    "asset_type": "stock",
+    "cost_3x": "6bp fees + 6bp commission + 15bp slippage + 10bp stamp tax",
+    "cost_stress": "4x and 5x scale all four cost components proportionally",
+    "segments": {
+      "discovery": [
+        "2023-05-04",
+        "2024-12-31"
+      ],
+      "validation": [
+        "2025-01-02",
+        "2026-10-16"
+      ],
+      "stitching": "compound two independently run segment curves; skip the first return of each later segment"
+    }
+  },
+  "factor_ic": {
+    "method": "month-end factor value versus T+1 open to T+21 open forward return within historical non-financial HS300 members; cross-sectional Spearman rank IC",
+    "minimum_names": 30
+  },
+  "gates": {
+    "D1": "full-period non-financial member-row factor coverage from 2023-05-04 onward >= 0.99",
+    "D2": "recent 252-trading-day non-financial member-row factor coverage >= 0.99",
+    "D3": "four-growth-observation formula and PIT audit pass; partial and nonfinite stability remain null",
+    "D4": "maximum mean absolute monthly rank correlation with the preregistered existing-factor set <= 0.70",
+    "I1": "discovery mean rank IC >= 0.02 with at least 18 month-end observations",
+    "I2": "validation mean rank IC >= 0.01 with at least 18 month-end observations and the same positive sign",
+    "G1": "discovery candidate return >= control return + 5pp",
+    "G2": "discovery candidate MDD is no worse than control MDD by more than 5pp",
+    "G3": "validation candidate return >= control return",
+    "G4": "full-sample candidate return > 0 and >= control return",
+    "G5": "full-sample candidate MDD <= 40% in absolute value and no worse than control by more than 5pp",
+    "G6": "rolling 1-year positive rate >= 60% and no worse than control by more than 2pp",
+    "G7": "recent 12-month candidate return > 0 and MDD no worse than control by more than 5pp",
+    "G8": "full-sample candidate return at 4x cost is positive",
+    "G9": "full-sample candidate return at 5x cost is positive",
+    "C1": "at least 30 distinct symbols are traded across the full sample",
+    "C2": "the largest symbol's share of net P&L is <= 25%",
+    "C3": "the top three symbols' share of net P&L is <= 55%",
+    "C4": "the top five symbols' share of net P&L is <= 75%",
+    "C5": "at least 8 distinct symbols have positive P&L in the validation segment",
+    "C6": "the largest industry's share of gross profit is <= 45%",
+    "C7": "the largest single-symbol loss is <= 20% of gross profit in absolute value"
+  },
+  "decision_rule": "All D, I, G and C gates must pass. Any failure means the factor is not accepted and cannot be rescued by changing the stability window, weights, holding period, stop loss, universe, costs or gates after seeing results.",
+  "known_limitations": [
+    "Only four year-over-year growth observations are used, so the stability estimate can be noisy.",
+    "The standard deviation is sensitive to one-off revenue shocks and low prior-year bases.",
+    "The discovery segment has only about 19 months because two years of annual and quarterly history are required for four completed growth observations.",
+    "Financial values are current snapshots and may contain restatements.",
+    "The industry snapshot used to exclude financials is current rather than historical PIT.",
+    "Passing these gates would justify further paper-trading validation, not production deployment."
+  ]
+}
