@@ -1,0 +1,143 @@
+{
+  "as_of": {
+    "latest_market_partition": "2026-10-27",
+    "market_data_member_rows": 300,
+    "market_date": "2026-10-27",
+    "members_without_market_row": [],
+    "membership_as_of": "2026-10-28",
+    "membership_count": 300,
+    "membership_source": "csindex"
+  },
+  "classification": "corrected_read_only_system_attachment_audit",
+  "conclusion": "The exact-date production attachment still yields no 2026-10-27 R257 values (0/300). The market-date check is corrected: every embedded row in the 10-27 partition is dated 10-27, and each of the 300 current members has a market row. Re-running the current industry calculation in memory yields broad 10-27 coverage, while the saved R257 factor partitions still end on 10-19. The underlying R257 freshness result is unchanged.",
+  "corrected_audit_input_hashes": {
+    "builder": "8bc09244005be8d4df9cfc8ddf691e8298f8fc8d8239ec09d9a144f35fa79b8d",
+    "industry_map": "244b068b01ee28dc04eb721596df73bda2f9b45cff9a4dfde26698114a132ebf",
+    "market_partition": "e040f74a3948bdc12b7c08ee2a89959ffa50d3ed74b42d04b6970561314ddd70",
+    "membership_snapshot": "5a35d28fc347e45d4a6112f67a6b42c61f20e7594d43a6ef2ced9229c7734a8e",
+    "r290_preregistration": "6197c12c5b9926fcf488d5721c3a0f8bf0ebd429b63376752a6fe98ff7a52d58"
+  },
+  "correction": {
+    "correct_partition_evidence": {
+      "current_members_with_exact_date_market_rows": 300,
+      "latest_market_partition": "2026-10-27",
+      "partition_embedded_dates_and_rows": {
+        "2026-10-27": 5570
+      },
+      "partition_sha256": "e040f74a3948bdc12b7c08ee2a89959ffa50d3ed74b42d04b6970561314ddd70"
+    },
+    "current_industry_builder_recalculation": {
+      "builder_sha256": "8bc09244005be8d4df9cfc8ddf691e8298f8fc8d8239ec09d9a144f35fa79b8d",
+      "nonnull": {
+        "industry_breadth_20d": 547,
+        "industry_mom_20d": 547,
+        "industry_mom_60d": 547,
+        "industry_rps_20d": 547,
+        "stock_rel_industry_20d": 547
+      },
+      "rows": 547,
+      "symbols": 547
+    },
+    "original_v1_and_v2_artifacts_preserved": true,
+    "supersedes_script_comment": "The initial R290 script comment about old embedded trade dates was incorrect."
+  },
+  "execution_limits": {
+    "backtest_run": false,
+    "forward_returns_read": false,
+    "historical_trade_outcomes_read": false,
+    "market_or_ext_data_written": false,
+    "provider_called": false,
+    "strategy_or_production_state_changed": false
+  },
+  "factor_inputs": {
+    "alt_hs300": {
+      "config_sha256": "2dd24cf1a19266179273933eb5b80bc0c2dcd0ad64ad998599756d40dfc78658",
+      "field": "stock_rel_industry_20d",
+      "latest_partition": "2026-10-19",
+      "latest_partition_sha256": "7651d5ec29d6137d6f025d75cfc95e486ff9828036e4ab895b121b3ed958a8bf",
+      "nonnull_values": 28,
+      "rows": 557
+    },
+    "alt_hs300_minrank": {
+      "config_sha256": "f089e7c5cf222baf6e160315c49a3cd2f1c90a071c357961d14fc95eb509706a",
+      "field": "management_ocf_gm_min_rank",
+      "latest_partition": "2026-10-19",
+      "latest_partition_sha256": "5961325f4476d79ef132a32917a6320dd1cb2d0712800cf850d1d929bc1ea45d",
+      "nonnull_values": 249,
+      "rows": 557
+    },
+    "alt_hs300_qrs": {
+      "config_sha256": "5e8cc006b4cf5f07a5af23deb0645623b35999ac19ac0c9b9bffaa877587d491",
+      "field": "quality_relative_strength_min_rank",
+      "latest_partition": "2026-10-19",
+      "latest_partition_sha256": "dcacfa5f644c7d2dbb06833ac8799321c6a062789e0a470e05f6972ca88223cc",
+      "nonnull_values": 2,
+      "rows": 557
+    }
+  },
+  "latest_factor_partition_member_coverage": {
+    "alt_hs300": {
+      "current_members": 300,
+      "nonnull_current_members": 3
+    },
+    "alt_hs300_minrank": {
+      "current_members": 300,
+      "nonnull_current_members": 249
+    },
+    "alt_hs300_qrs": {
+      "current_members": 300,
+      "nonnull_current_members": 2
+    }
+  },
+  "registered_input_hashes": {
+    "backend/app/backtest/candidates.py": "28dfa3d7fb2ed47bb14a12929773b498282eb8cec13a5afb0e9182bdd205192f",
+    "backend/app/backtest/engine.py": "79962c45a4b6e64d77b625be144997efc4c12fda85e33242224fdb44d3c62bf3",
+    "backend/app/backtest/strategy.py": "318b6548354c587965c321921faafcbb7c4be0012fefe3ada0ced97fae06fd4e",
+    "backend/app/factors/ext_factors.py": "18ebc6e115387f3ef8457978a242592732341b5ba3700bb0d5ddd1a595b9701f",
+    "backend/app/hs300/current.py": "05bff32af5439117760b711cb628e3386dceb69658efcea20b2ef13846db2a94",
+    "backend/app/services/ext_data.py": "1e4a53fc47f3db937177afa2578a5647b4c03be6c49c3bc880944be0799a0ac9",
+    "data/ext_data/alt_hs300/config.json": "2dd24cf1a19266179273933eb5b80bc0c2dcd0ad64ad998599756d40dfc78658",
+    "data/ext_data/alt_hs300/timeseries/date=2026-10-19/part.parquet": "7651d5ec29d6137d6f025d75cfc95e486ff9828036e4ab895b121b3ed958a8bf",
+    "data/ext_data/alt_hs300_minrank/config.json": "f089e7c5cf222baf6e160315c49a3cd2f1c90a071c357961d14fc95eb509706a",
+    "data/ext_data/alt_hs300_minrank/timeseries/date=2026-10-19/part.parquet": "5961325f4476d79ef132a32917a6320dd1cb2d0712800cf850d1d929bc1ea45d",
+    "data/ext_data/alt_hs300_qrs/config.json": "5e8cc006b4cf5f07a5af23deb0645623b35999ac19ac0c9b9bffaa877587d491",
+    "data/ext_data/alt_hs300_qrs/timeseries/date=2026-10-19/part.parquet": "dcacfa5f644c7d2dbb06833ac8799321c6a062789e0a470e05f6972ca88223cc",
+    "data/hs300/current_members.json": "5a35d28fc347e45d4a6112f67a6b42c61f20e7594d43a6ef2ced9229c7734a8e",
+    "data/kline_daily_enriched/date=2026-10-27/part.parquet": "e040f74a3948bdc12b7c08ee2a89959ffa50d3ed74b42d04b6970561314ddd70",
+    "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r257_factor_build.json": "7c5b24963d72d9893d37df456b2d034fc4c6d71b0a8f65e9308c9afce956a27d",
+    "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r257_preregistration.json": "6a70e8726384da28d7c852d8b26340224d23568671dcbfb0fe7b8ac91d49e07e",
+    "data/strategies/ai/ai_hs300_quality_relative_strength_h20_sl20.py": "7de61e4b6c4e91527cb0f4140ceb682b2499a6a39735e8d63f340d08f584b8da"
+  },
+  "round": "R290",
+  "status": "not_ready_no_fresh_signal",
+  "system_attachment": {
+    "coverage": {
+      "ext_alt_hs300_minrank_management_ocf_gm_min_rank": {
+        "coverage": 0.0,
+        "current_member_rows_with_market_data": 300,
+        "distinct_nonnull_symbols": 0,
+        "nonnull_current_member_rows": 0
+      },
+      "ext_alt_hs300_qrs_quality_relative_strength_min_rank": {
+        "coverage": 0.0,
+        "current_member_rows_with_market_data": 300,
+        "distinct_nonnull_symbols": 0,
+        "nonnull_current_member_rows": 0
+      },
+      "ext_alt_hs300_stock_rel_industry_20d": {
+        "coverage": 0.0,
+        "current_member_rows_with_market_data": 300,
+        "distinct_nonnull_symbols": 0,
+        "nonnull_current_member_rows": 0
+      }
+    },
+    "function": "app.factors.ext_factors.attach_ext_columns",
+    "isolated_input_method": "temporary scratch copy of original configs and byte-identical latest partitions",
+    "join_key": [
+      "symbol",
+      "date"
+    ],
+    "ready": false,
+    "system_path": "BacktestEngine.load_panel_for_backtest -> attach_ext_columns(include_snapshot=False)"
+  }
+}

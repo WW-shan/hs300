@@ -1,0 +1,357 @@
+{
+  "round": "R274",
+  "classification": "pre_backtest_live_panel_registration_proof",
+  "captured_at": "2026-10-28T01:25:57.262103+00:00",
+  "api_base": "http://127.0.0.1:3018",
+  "preregistration": {
+    "path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r274_preregistration.json",
+    "sha256": "631b59f21dbce81ba7501d6e8ed7381e6f2b77093afc6490c14fa108011d9398"
+  },
+  "registrar": {
+    "path": "scripts/register_r274_panel.py",
+    "sha256": "6ce36b7a02f7a1824fa56a903f66b559bb8a21d8e291b2cdefbb891265a927a2"
+  },
+  "reload": {
+    "endpoint": "/api/strategies/reload",
+    "http_status": 200,
+    "response": {
+      "ok": true,
+      "count": 114
+    }
+  },
+  "factors": {
+    "endpoint": "/api/factors?asset_type=stock",
+    "http_status": 200,
+    "expected_ids": [
+      "ext_alt_hs300_holder_top10_free_float_share",
+      "uf_quality_value_defensive",
+      "uf_low_vol",
+      "uf_cash_quality"
+    ],
+    "registered": {
+      "ext_alt_hs300_holder_top10_free_float_share": {
+        "id": "ext_alt_hs300_holder_top10_free_float_share",
+        "label": "HS300另类因子·前十大流通股东持股比例合计",
+        "group": "扩展数据",
+        "kind": "base",
+        "version": 1,
+        "formula": "扩展表「HS300另类因子」字段 holder_top10_free_float_share (时序·按交易日对齐)",
+        "direction": "none",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "stable",
+        "scale_free": false,
+        "dependencies": []
+      },
+      "uf_quality_value_defensive": {
+        "id": "uf_quality_value_defensive",
+        "label": "质量价值防守",
+        "group": "财务",
+        "kind": "custom",
+        "version": 1,
+        "formula": "roe_latest / (100 * pb_latest) - debt_ratio_latest / 100",
+        "direction": "high",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "experimental",
+        "scale_free": true,
+        "dependencies": [
+          "debt_ratio_latest",
+          "pb_latest",
+          "roe_latest"
+        ]
+      },
+      "uf_low_vol": {
+        "id": "uf_low_vol",
+        "label": "低波动",
+        "group": "波动率",
+        "kind": "custom",
+        "version": 1,
+        "formula": "0 - annual_vol_20d",
+        "direction": "high",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "experimental",
+        "scale_free": true,
+        "dependencies": [
+          "annual_vol_20d"
+        ]
+      },
+      "uf_cash_quality": {
+        "id": "uf_cash_quality",
+        "label": "现金质量",
+        "group": "财务",
+        "kind": "custom",
+        "version": 1,
+        "formula": "ocf_ni - accrual",
+        "direction": "high",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "experimental",
+        "scale_free": true,
+        "dependencies": [
+          "accrual",
+          "ocf_ni"
+        ]
+      }
+    }
+  },
+  "strategies": {
+    "endpoint": "/api/strategies?include_research=true",
+    "http_status": 200,
+    "registered": {
+      "ai_hs300_macro_gate_quality": {
+        "id": "ai_hs300_macro_gate_quality",
+        "name": "HS300宏观三闸门质量",
+        "description": "ERP、信用利差、期限利差同时满足时持有股东集中度+质量价值+低波动（实验）",
+        "tags": [
+          "ERP",
+          "信用利差",
+          "期限利差",
+          "宏观",
+          "质量",
+          "沪深300",
+          "实验"
+        ],
+        "source": "ai",
+        "research_only": false,
+        "execution_backend": "polars_expr",
+        "asset_types": [
+          "stock"
+        ],
+        "timeframes": [
+          "1d"
+        ],
+        "version": "1.0.0",
+        "basic_filter": {
+          "price_min": 3,
+          "price_max": 500,
+          "market_cap_min": 1000000000.0,
+          "float_cap_min": null,
+          "float_cap_max": null,
+          "amount_min": 20000000.0,
+          "amount_max": null,
+          "turnover_min": null,
+          "turnover_max": null,
+          "exclude_st": true,
+          "exclude_new_days": 60,
+          "boards": [
+            "沪主板",
+            "深主板",
+            "创业板",
+            "科创板",
+            "北交所"
+          ]
+        },
+        "params": [
+          {
+            "id": "erp_min",
+            "label": "ERP最低阈值",
+            "type": "float",
+            "default": 5.5,
+            "min": 3.0,
+            "max": 9.0,
+            "step": 0.1
+          },
+          {
+            "id": "credit_max",
+            "label": "信用利差最高阈值",
+            "type": "float",
+            "default": 0.8,
+            "min": 0.2,
+            "max": 1.5,
+            "step": 0.05
+          },
+          {
+            "id": "term_min",
+            "label": "期限利差最低阈值",
+            "type": "float",
+            "default": 0.3,
+            "min": 0.0,
+            "max": 1.5,
+            "step": 0.05
+          }
+        ],
+        "params_defaults": {
+          "erp_min": 5.5,
+          "credit_max": 0.8,
+          "term_min": 0.3
+        },
+        "scoring": {
+          "ext_alt_hs300_holder_top10_free_float_share": 0.35,
+          "uf_quality_value_defensive": 0.25,
+          "uf_low_vol": 0.2,
+          "uf_cash_quality": 0.2
+        },
+        "scoring_directions": {},
+        "entry_signals": [],
+        "exit_signals": [],
+        "overlay_filter": [],
+        "minute_exit_trigger_supported_signals": [
+          "signal_ma10_breakdown",
+          "signal_ma20_breakdown",
+          "signal_ma5_breakdown",
+          "signal_ma_dead_5_20"
+        ],
+        "stop_loss": null,
+        "take_profit": null,
+        "trailing_stop": null,
+        "trailing_take_profit_activate": null,
+        "trailing_take_profit_drawdown": null,
+        "max_hold_days": 35,
+        "order_by": "score",
+        "descending": true,
+        "limit": 30,
+        "display_limit": null,
+        "composite_children": null
+      },
+      "ai_hs300_macro_gate_quality_r274_no_macro_gate": {
+        "id": "ai_hs300_macro_gate_quality_r274_no_macro_gate",
+        "name": "R274 HS300宏观入场闸门消融",
+        "description": "研究候选：保留R266基础过滤、评分和持有规则，仅移除ERP、信用利差、期限利差三项入场门槛。",
+        "tags": [
+          "R274",
+          "宏观闸门消融",
+          "研究"
+        ],
+        "source": "ai",
+        "research_only": true,
+        "execution_backend": "polars_expr",
+        "asset_types": [
+          "stock"
+        ],
+        "timeframes": [
+          "1d"
+        ],
+        "version": "1.0.0",
+        "basic_filter": {
+          "price_min": 3,
+          "price_max": 500,
+          "market_cap_min": 1000000000.0,
+          "float_cap_min": null,
+          "float_cap_max": null,
+          "amount_min": 20000000.0,
+          "amount_max": null,
+          "turnover_min": null,
+          "turnover_max": null,
+          "exclude_st": true,
+          "exclude_new_days": 60,
+          "boards": [
+            "沪主板",
+            "深主板",
+            "创业板",
+            "科创板",
+            "北交所"
+          ]
+        },
+        "params": [],
+        "params_defaults": {},
+        "scoring": {
+          "ext_alt_hs300_holder_top10_free_float_share": 0.35,
+          "uf_quality_value_defensive": 0.25,
+          "uf_low_vol": 0.2,
+          "uf_cash_quality": 0.2
+        },
+        "scoring_directions": {},
+        "entry_signals": [],
+        "exit_signals": [],
+        "overlay_filter": [],
+        "minute_exit_trigger_supported_signals": [
+          "signal_ma10_breakdown",
+          "signal_ma20_breakdown",
+          "signal_ma5_breakdown",
+          "signal_ma_dead_5_20"
+        ],
+        "stop_loss": null,
+        "take_profit": null,
+        "trailing_stop": null,
+        "trailing_take_profit_activate": null,
+        "trailing_take_profit_drawdown": null,
+        "max_hold_days": 35,
+        "order_by": "score",
+        "descending": true,
+        "limit": 30,
+        "display_limit": null,
+        "composite_children": null
+      }
+    },
+    "source_contracts": {
+      "ai_hs300_macro_gate_quality": {
+        "path": "data/strategies/ai/ai_hs300_macro_gate_quality.py",
+        "sha256": "b1c2b43ef9861053d3f4e4dd2ac4a3aeb7d0eae301b5400bdb0dbf65169b87ec",
+        "id_matches": true,
+        "research_only": false,
+        "required_features": [
+          "ext_alt_hs300_credit_spread_5y_low",
+          "ext_alt_hs300_equity_risk_premium",
+          "ext_alt_hs300_holder_top10_free_float_share",
+          "ext_alt_hs300_term_spread_10y_2y",
+          "ma60"
+        ],
+        "exit_signals": [],
+        "scoring": {
+          "ext_alt_hs300_holder_top10_free_float_share": 0.35,
+          "uf_quality_value_defensive": 0.25,
+          "uf_low_vol": 0.2,
+          "uf_cash_quality": 0.2
+        }
+      },
+      "ai_hs300_macro_gate_quality_r274_no_macro_gate": {
+        "path": "data/strategies/ai/ai_hs300_macro_gate_quality_r274_no_macro_gate.py",
+        "sha256": "a48f2ba6262c8fa072d7c4db79f259ee39af358e48ed77d5d833a1de5bac0cd1",
+        "id_matches": true,
+        "research_only": true,
+        "required_features": [
+          "ext_alt_hs300_holder_top10_free_float_share",
+          "ma60"
+        ],
+        "exit_signals": [],
+        "scoring": {
+          "ext_alt_hs300_holder_top10_free_float_share": 0.35,
+          "uf_quality_value_defensive": 0.25,
+          "uf_low_vol": 0.2,
+          "uf_cash_quality": 0.2
+        }
+      }
+    },
+    "load_error_count": 0,
+    "load_errors": []
+  },
+  "checks": {
+    "reload_http_ok": true,
+    "reload_ok": true,
+    "factor_api_ok": true,
+    "strategy_api_ok": true,
+    "all_four_scoring_factors_registered_for_stock": true,
+    "candidate_and_control_registered": true,
+    "candidate_research_only": true,
+    "control_is_r266_baseline": true,
+    "source_contracts_match": true,
+    "candidate_score_matches_control": true,
+    "candidate_filter_only_removes_macro_gates": true,
+    "no_strategy_load_errors": true
+  },
+  "all_checks_pass": true,
+  "production_status": "pause_production",
+  "backtest_run": false
+}

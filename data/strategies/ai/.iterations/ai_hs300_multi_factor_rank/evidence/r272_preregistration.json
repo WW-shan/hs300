@@ -1,0 +1,113 @@
+{
+  "round": "R272",
+  "registered_at": "2026-10-28",
+  "status": "pre_registered_after_feasibility_before_factor_build_and_forward_return_analysis",
+  "classification": "exploratory_factor_family_not_independent_confirmation",
+  "hypothesis": "A positive year-over-year change in single-quarter operating-profit margin captures improving operating leverage that can rank future returns beyond the matched quality-cash baseline.",
+  "selection_basis": {
+    "feasibility_evidence": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r272_data_feasibility.json",
+    "feasibility_sha256": "ef8cc3c7ecc119d25d336812c643c5ba3d44fa2ca1804722fc6f3c9dbf595385",
+    "gates": {
+      "F1": true,
+      "F2": true,
+      "F3": true,
+      "F4": true,
+      "F5": true
+    },
+    "forward_or_strategy_result_data_read_before_registration": false
+  },
+  "factor": {
+    "id": "ext_alt_hs300_operating_margin_yoy_change_q",
+    "config_id": "alt_hs300_opm",
+    "column": "operating_margin_yoy_change_q",
+    "direction": "high",
+    "formula": "(quarterly operating_profit / quarterly revenue)_t - (quarterly operating_profit / quarterly revenue)_(t-4)",
+    "quarterization": "Q1 uses reported cumulative values; Q2-Q4 use the difference from the immediately preceding same-fiscal-year quarter only when period indices are consecutive",
+    "point_in_time": "Each source period uses financial_pit_date's statutory deadline fallback. A derived quarter becomes available only after all cumulative reports needed for that quarter, and the YoY change only after current and year-ago quarters are available; factor begins T+1 and expires after 180 calendar days.",
+    "missing_data_rule": "Require positive quarterly revenue and non-null operating profit/revenue inputs in both current and year-ago quarters; otherwise null. No zero fill, interpolation, or fallback.",
+    "universe": "Historical daily HS300 membership excluding banks and non-bank financials using the current industry snapshot; not historical PIT."
+  },
+  "strategy": {
+    "candidate": {
+      "id": "ai_hs300_operating_margin_improvement_quality_h20_sl20",
+      "scoring": {
+        "ext_alt_hs300_operating_margin_yoy_change_q": 0.45,
+        "uf_quality_value_defensive": 0.3,
+        "uf_cash_quality": 0.25
+      }
+    },
+    "control": {
+      "id": "ai_hs300_operating_margin_improvement_quality_control",
+      "scoring": {
+        "uf_quality_value_defensive": 0.545,
+        "uf_cash_quality": 0.455
+      }
+    },
+    "matched_requirements": "Same historical non-financial HS300 universe, factor-availability filter, basic filter, score limit 30, top 10 equal-weight positions, 20 trading-day max hold, -20% stop, T+1 open execution and cost model."
+  },
+  "execution": {
+    "engine": "StrategyBacktestService -> BacktestEngine",
+    "matching": "open_t+1",
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "score_limit": 30,
+    "holding_days": 20,
+    "stop_loss": -0.2,
+    "cost_3x": "6bp fees + 6bp commission + 15bp slippage + 10bp stamp tax",
+    "cost_stress": [
+      "4x",
+      "5x"
+    ],
+    "segments": {
+      "discovery": [
+        "2023-05-04",
+        "2024-12-31"
+      ],
+      "validation": [
+        "2025-01-02",
+        "2026-10-16"
+      ],
+      "stitching": "Compound separately executed discovery and validation curves and skip first return of subsequent segment."
+    }
+  },
+  "factor_ic": {
+    "method": "Month-end factor value versus T+1 open to T+21 open forward return, cross-sectional Spearman within historical non-financial HS300 members; at least 30 names.",
+    "discovery_min_mean": 0.02,
+    "validation_min_mean": 0.01,
+    "minimum_months_each": 18
+  },
+  "gates": {
+    "D1": "Coverage and first-valid-date feasibility gates F1-F3 remain satisfied.",
+    "D2": "Same-date PIT, report-age expiry, source-quarter continuity and no-fill audit passes.",
+    "D3": "Maximum mean absolute monthly rank correlation with the frozen R272 feasibility comparison list is <=0.70.",
+    "I1": "Discovery mean rank IC >=0.02 across at least 18 months.",
+    "I2": "Validation mean rank IC >=0.01 across at least 18 months and positive.",
+    "G1": "Discovery candidate return >= control +5 percentage points.",
+    "G2": "Discovery candidate MDD no worse than control by more than 5 percentage points.",
+    "G3": "Validation candidate return >= control.",
+    "G4": "Full-sample candidate return is positive and >= control.",
+    "G5": "Full-sample MDD no deeper than -40% and no worse than control by more than 5 percentage points.",
+    "G6": "Rolling one-year positive-return rate >=60% and no worse than control by more than 2 percentage points.",
+    "G7": "Recent 12-month candidate return is positive and MDD no worse than control by more than 5 percentage points.",
+    "G8": "Full-sample return is positive under 4x costs.",
+    "G9": "Full-sample return is positive under 5x costs.",
+    "C1": "At least 30 distinct symbols traded.",
+    "C2": "Largest symbol net P&L share <=25%.",
+    "C3": "Top three symbols net P&L share <=55%.",
+    "C4": "Top five symbols net P&L share <=75%.",
+    "C5": "At least 8 distinct positive-contribution symbols in validation.",
+    "C6": "Largest industry gross-profit share <=45%.",
+    "C7": "Largest single-symbol loss <=20% of gross profit."
+  },
+  "decision_rule": "All D/I/G/C gates must pass; any failure rejects the candidate. Results do not authorize paper trading or production without separate approval. Do not tune the formula, 180-day expiry, score weight, holding period, stop, costs, universe, or thresholds after results.",
+  "known_limitations": [
+    "Financial parquet files are current snapshots and can contain restatements or backfilled values despite statutory-date fallback.",
+    "Current industry classification is applied historically.",
+    "The factor may be regime-sensitive and uses overlapping discovery/validation-era research, so this is exploratory, not untouched confirmation.",
+    "Two independently initialized system-backtest segments are stitched; a position open at a segment boundary is not carried.",
+    "Passing would only permit a separately governed paper-trading discussion."
+  ],
+  "builder_sha256": "69526dddede0e68ff0702bb91e6251893cf7629b3420f1eeb72fc56639abb7a0",
+  "runner_sha256": "2404f909a73e3ae0151d0dbbf88c73d9ba90f2d9447021b7859b0529949ff304",
+  "preregistration_script_sha256": "64b5fe3a2cfe6ff705a7e48eabe7a6fa1619d8f2951681bf05bd1be799c04e30"
+}

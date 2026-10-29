@@ -1,0 +1,22 @@
+# R299 证据索引
+
+- 分类：费用语义事后敏感性审计，不是独立 alpha 确认。
+- 预注册：r299_preregistration.json；冻结输入：r299_input_manifest.jsonl。
+- 系统回测：r299_result.json；说明：r299_result.md。
+- 面板：r299_panel_registration.json 和 r299_final_panel_readback.json。
+- 完整性：r299_input_integrity_final.json；缓存：data/research/r299_cost_audit_cache/。
+- 原 R257/R298 证据未覆盖；R257 保持 research-only，生产保持 pause_production。
+
+## SHA-256
+
+- r299_feasibility.json: 292b5090ce0bd91d843736be7f44e171a0824d90fd3c20bc4af4f27430188123
+- r299_input_manifest.jsonl: a2a5c10bc8307616debf059b1471ffe369a8335380840ef887c6b794627e475c
+- r299_manifest_execution_addendum.json: 5691e21588fab54b1283931c129a18e2b271b293cfba01adef3eb916f98307ab
+- r299_preregistration.json: 84566a4ddd973d63267c0cb5b1d66a6bb6b514975979580cea95557430be4352
+- r299_panel_registration_intent.json: 6f962e2fa230298d947501e2ffd1528eba069e76e74fbb2e33b8ee72ffb6d5f1
+- r299_panel_registration_post.json: b851839365317bfcf7530bc884dbc36b4d7d29b3578fadf63aace8e205268db5
+- r299_panel_registration.json: 13d4ae13df717c3c65292ff52ee76e8300e469d531e9d042f1d40f54e8af1769
+- r299_result.json: 7b0f9ff980e0e0b72903649e04f4545433985bec2c6cd6438ad31a0b6094fa8e
+- r299_result.md: 1708ff4385303ed1fbcf0b05f2e157abe28dde1a9df4439d3f85e76bbac9d7f8
+- r299_final_panel_readback.json: 63e224a54d87e85ed8da3aa731d764984b52ca1d0da3e8b67806f0d29e0fd799
+- r299_input_integrity_final.json: 0d03dcff192eb6ed39d6afd3c3694849e124633c7e2cc88ca1ddb4d4df7c48d0

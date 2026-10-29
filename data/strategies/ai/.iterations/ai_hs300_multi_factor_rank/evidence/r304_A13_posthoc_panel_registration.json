@@ -1,0 +1,52 @@
+{
+  "round": "R304-A13",
+  "record_type": "post_hoc_panel_registration_preregistration",
+  "date": "2026-10-29",
+  "classification": "prospective one-time panel registration of a retrospective process-deviation audit; not a preregistration of the underlying discovery and not an alpha result",
+  "disclosure": "The static chunk was fetched before this panel-registration plan was frozen. This record does not retroactively preregister that fetch. The chunk request count remains uncertain because the first PowerShell attempt's dispatch state is unknown.",
+  "candidate": {
+    "kind": "factor",
+    "name": "R304-A13 成分查询静态核验与请求偏差（事后审计，非预注册/非回测）",
+    "source_id": "r304_a13_constituent_query_static_and_deviation_audit",
+    "config": {
+      "asset_type": "stock",
+      "start": "2018-01-02",
+      "end": "2026-10-27",
+      "factor_name": "r304_a13_constituent_query_static_and_deviation_audit",
+      "n_groups": 5,
+      "rebalance": "monthly",
+      "weight": 1.0,
+      "fees_pct": 0.0,
+      "slippage_bps": 0.0
+    },
+    "metrics": {},
+    "data_as_of": "2026-10-29",
+    "status": "pending"
+  },
+  "method": [
+    "Verify the frozen A13 audit and registration script hashes before any panel request.",
+    "Issue one GET preflight to the local research panel and archive the raw response.",
+    "Require the existing R304 candidate to remain unique and pending, all statuses present in the A11 baseline to remain unchanged, and no duplicate A13 audit candidate.",
+    "Write a create-new intent with the exact POST body and preflight hash, then issue at most one POST with no retry.",
+    "Issue one GET readback; archive the raw response and verify one A13 candidate is pending, the R304 candidate remains pending, and every pre-existing candidate status remains unchanged."
+  ],
+  "decision_rule": {
+    "post_only_if": "The GET preflight succeeds and every frozen guard passes.",
+    "no_retry": "Never retry POST after dispatch, including timeout, transport error, or non-200 response.",
+    "interpretation": "Panel registration records the audit only. It does not cure the preregistration deviation, establish historical API support, close the PIT gap, or validate alpha."
+  },
+  "prohibited": [
+    "No official network/API request in this panel-registration step.",
+    "No modification of the existing R304 candidate or any prior candidate status.",
+    "No return backtest, factor-return calculation, alpha scan, production-data or strategy mutation."
+  ],
+  "panel": {
+    "endpoint": "http://127.0.0.1:3018/api/backtest/candidates",
+    "registration_required": true,
+    "candidate_count_expected_before": 20,
+    "expected_existing_r304_id": "1ed2c75285b74fc6a521cc73f75f7320",
+    "expected_existing_r304_status": "pending",
+    "baseline_readback": "r304_A11_panel_readback.json",
+    "baseline_readback_sha256": "0e4c58ac8aca404a73d6fe855facd3ed866d2142ae27ca94c6bdaaaa2b6765be"
+  }
+}

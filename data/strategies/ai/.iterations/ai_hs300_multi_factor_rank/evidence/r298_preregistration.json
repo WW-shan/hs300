@@ -1,0 +1,96 @@
+{
+  "round": "R298",
+  "registered_at_utc": "2026-10-28T21:43:50.106441+00:00",
+  "status": "pre_registered_after_feasibility_and_before_system_backtest",
+  "research_question": "Does the frozen R257 quality-relative-strength candidate beat its matched quality/cash control in the 12-month period before R257's original discovery window?",
+  "classification": "historical_pre_discovery_temporal_holdout_supplement_not_independent_confirmation",
+  "selection_note": "The exact R257 strategy has no earlier backtest listed in the research ledger/evidence scan. Its factor family, source datasets, and related sleeves were researched elsewhere; multiple-comparison risk remains.",
+  "window": {
+    "requested_start": "2022-05-05",
+    "requested_end": "2023-04-28",
+    "calendar_source": "system 000300.SH daily index trading calendar",
+    "observed_first_last": [
+      "2022-05-05",
+      "2023-04-28"
+    ],
+    "trading_days": 243
+  },
+  "universe_and_data": {
+    "membership": "R157 monthly plus R78 daily historical HS300 snapshots using existing system research loader and backward as-of membership; current industry snapshot excludes banks and non-bank finance, matching R257.",
+    "factor": "Existing R257 factor only; no new factor or builder run.",
+    "matched_control": "Existing R257 quality/cash control with the same nonfinancial membership and factor availability requirement.",
+    "limitations": [
+      "Current industry classification is not historical PIT.",
+      "System market_cap_min uses current instrument shares rather than historical PIT shares.",
+      "Financial values may include revisions; original provider publication and vintage history are unavailable.",
+      "This window predates R257's registered discovery interval but the factor/data family and related sleeves have been researched, so it is not an untouched independent study."
+    ]
+  },
+  "execution": {
+    "engine": "StrategyBacktestService via existing R253 segment runner",
+    "matching": "open_t+1",
+    "score_limit": 30,
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "holding_days": 20,
+    "stop_loss": -0.2,
+    "cost_3x": {
+      "fees_pct": 0.0006,
+      "commission_pct": 0.0006,
+      "stamp_tax_pct": 0.001,
+      "slippage_bps": 15.0
+    },
+    "stress": {
+      "4x": "multiply each 3x cost component by 4/3",
+      "5x": "multiply each 3x cost component by 5/3"
+    },
+    "cache_dir": "data/research/r298_cache"
+  },
+  "decision_gates": {
+    "F1": "factor coverage >=99% with at least one valid name on >=95% of calendar days; determined before registration from feasibility evidence",
+    "G1": "candidate 3x compounded return > 0",
+    "G2": "candidate 3x compounded return >= control 3x return + 5 percentage points",
+    "G3": "candidate 3x maximum drawdown >= -40%",
+    "G4": "candidate compounded return > 0 under both 4x and 5x costs",
+    "C1": "at least 30 completed candidate trades and 20 distinct candidate symbols; otherwise concentration review is underpowered and fails",
+    "C2": "largest symbol net-P&L share <=25%",
+    "C3": "top three symbol net-P&L share <=55%",
+    "C4": "top five symbol net-P&L share <=75%"
+  },
+  "decision_rule": "All F/G/C gates must pass to call this temporal holdout supportive. Do not change factor, score weights, universe, costs, holding period, or gates after seeing the result. A pass remains exploratory and does not clear paper trading or production.",
+  "side_effect_boundary": "Direct system engine calls write only the dedicated R298 research cache and R298 evidence; they do not call providers, strategy/backtest write APIs, or paper/order flows.",
+  "feasibility_artifact": "evidence/r298_pre_registration_feasibility.json",
+  "feasibility_sha256": "0e10910ae7e1091b0fdceb394d566ebdfb016a1eb32a57924199284777fb9c63",
+  "input_manifest": "evidence/r298_input_manifest.jsonl",
+  "input_manifest_sha256": "3258acc6cf8288d806911259f6345bb86535224110d92e54a26d6f9a5992bb4e",
+  "input_manifest_file_count": 10713,
+  "source_commit": "60f8d6fd5ff33c18f83bc53c5a7182cacd60e0a6",
+  "panel_candidate": {
+    "kind": "strategy",
+    "name": "R298 R257 发现期前一年补充回测",
+    "source_id": "ai_hs300_quality_relative_strength_h20_sl20",
+    "config": {
+      "strategy_id": "ai_hs300_quality_relative_strength_h20_sl20",
+      "start": "2022-05-05",
+      "end": "2023-04-28",
+      "matching": "open_t+1",
+      "fees_pct": 0.0006,
+      "commission_pct": 0.0006,
+      "stamp_tax_pct": 0.001,
+      "slippage_bps": 15.0,
+      "max_positions": 10,
+      "max_exposure_pct": 1.0,
+      "holding_days": 20,
+      "asset_type": "stock",
+      "position_sizing": "equal",
+      "mode": "position",
+      "minute_fill": false,
+      "initial_capital": 1000000.0,
+      "params": {},
+      "overrides": {}
+    },
+    "metrics": {},
+    "data_as_of": "2023-04-28",
+    "status": "pending"
+  }
+}

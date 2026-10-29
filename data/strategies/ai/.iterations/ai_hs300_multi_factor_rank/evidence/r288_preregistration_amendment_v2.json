@@ -1,0 +1,28 @@
+{
+  "classification": "execution_resource_amendment",
+  "created_at_utc": "2026-10-28T12:43:40.573294+00:00",
+  "execution_change": {
+    "chunk_size_formal_trading_dates": 60,
+    "fix": "The v2 launcher incorrectly included its already-created amendment in the output-must-not-exist list and exited before reading data. v3 treats the amendment as required input and checks only audit outputs for absence; amendment chain and hashes are verified.",
+    "no_duplicate_registration": true,
+    "planned_chunks": 24,
+    "preserved": "Frozen sample and dates, source and partition hashes, system dependency plans, system panel loader, filters, historical membership mask, scorer, metrics, accounting and guard checks; no return or backtest access.",
+    "warmup_calendar_days": 120
+  },
+  "input_snapshot_sha256": "5611382a648989de7f9dc6ca53cbeabddf0d8c9efd320c44ec7f0dd693469f52",
+  "original_executor_sha256": "301e97cd18f013472c2d4b648171cd887dcc21f735940aac208eceb10d1f4dab",
+  "panel_registration_proof_sha256": "00ed686ba7b752f44c01540a4c6a626b0dbd98e9b22f5b4eecca13334909ded7",
+  "preregistration_sha256": "032da01d97f7209bf12821d119316c5e372cd67823158aac9eec665557217449",
+  "previous_amendment_sha256": "b17c17ee25b43029e5deda53f774655571973032f52a381d4f583c7d7e2408e9",
+  "prior_attempt": {
+    "candidate_or_panel_state_changed": false,
+    "executor": "r288_system_mask_audit_v2.py",
+    "executor_sha256": "e934428c110ce705bb027f93f6681cfe37d0b3e1e1a294f8554f897dacfa7e4f",
+    "outcome": "guarded_abort_before_frozen_data_read",
+    "reason": "output-exists guard incorrectly included the required amendment artifact",
+    "result_written": false
+  },
+  "replacement_executor": "r288_system_mask_audit_v3.py",
+  "replacement_executor_sha256": "d461a9d5b12dac24488f0d7071750aa0c946966fc3fa5f0598a3c8422ef82c21",
+  "round": "R288"
+}

@@ -1,0 +1,46 @@
+{
+  "round": "R304",
+  "amendment_id": "R304-A12",
+  "date": "2026-10-29",
+  "classification": "prospective feasibility-only test of one fixed official constituent-history attachment URL from the retained 12590 article",
+  "parent_amendments": ["R304-A9", "R304-A10"],
+  "question": "Does the official historical XLSX linked by notice 12590 contain a dated complete 000300 constituent snapshot, rather than only adjustment deltas?",
+  "reason": "A10's audit workbook records 24 additions and 24 deletions but no full snapshot; the original workbook also contains a complete constituent list sheet whose date semantics are not yet established. The original notice HTML retains a separate official historical XLSX URL under /files/20180227/. This bounded request may test whether it is a current or archived sample list; one response alone cannot be assumed PIT.",
+  "fixed_target": {
+    "official_url": "https://oss-ch.csindex.com.cn/static/html/csindex/public/uploads/indices/info/files/20180227/1519719074537344.xlsx",
+    "notice_id": "12590",
+    "source_detail_response_sha256": "783193e914444ddf9246baa549dd5cff85e2c634fd60c73795086060ae40ac4f",
+    "source_workbook_sha256": "e291b4d9f388279ecf06e0c88c57c8ec47761e1dc9727d136502dcc6ae13b94e"
+  },
+  "method": [
+    "No panel registration or panel GET is required in A12; rely on A11 final panel readback.",
+    "Persist a separate dispatch intent and issue exactly one GET to the fixed official XLSX URL. Never retry after dispatch, including an HTTP error, timeout, or empty response.",
+    "Capture raw response bytes/status/headers/hash. If the downloaded bytes hash equals the A10 workbook hash, do not parse or reinterpret them as a second independent artifact; record that only the already retained response was confirmed.",
+    "If the response differs and is a valid XLSX, parse locally to identify the 000300 list row count, sheet dates/labels, and any explicit as-of date. Preserve a new audit and hashes.",
+    "Do not infer historical validity from file path, filename, workbook creation time, or a 300-row list without an explicit effective/as-of date and independently verifiable transition chain."
+  ],
+  "prohibited": [
+    "No additional official request, link, browser navigation, other notice, attachment, listing, search, or third-party source.",
+    "No panel mutation, production mutation, alpha scan, factor return, or backtest."
+  ],
+  "decision_rule": {
+    "historical_snapshot_supported": "Only if response differs and includes a complete 300-constituent 000300 membership with an explicit effective/as-of date covering 2018-01-02, or can be independently closed through a full event chain from a known state.",
+    "no_go": "Same attachment bytes, no date metadata, or a list whose effective period cannot be tied to 2018-01-02 means the seed remains unsupported."
+  },
+  "next_discovery_scope": {
+    "classification": "local-only endpoint discovery; no HTTP request dispatched",
+    "retained_bundle": "r304_official_frontend_bundle.js",
+    "bundle_sha256": "232cafcfdb4da07c7b2ce24efae30318b59a8168edd023566364579445f2d998",
+    "observed_routes": [
+      "/indexInfo/index-sample-information",
+      "/indexInfo/sample-information"
+    ],
+    "observation": "The homepage bundle advertises a constituent-search page and these two routes, but the lazy page chunk and request/parameter contract are not present in the retained bundle. No endpoint call has been made.",
+    "purpose": "Determine whether an official query can expose a date-effective HS300 sample snapshot without querying undocumented endpoints blindly."
+  },
+  "scope": {
+    "official_requests": 1,
+    "alpha_search_or_backtest": false,
+    "production_mutation": false
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "classification": "read_only_system_attachment_freshness_audit",
+  "decision_rule": {
+    "not_ready": "Any required partition is older than 2026-10-27, the column is not materialized, or composite coverage is below 99%. Missing/stale values are not current signals.",
+    "ready": "All three R257 partitions have a date=2026-10-27 partition, the real attach_ext_columns path materializes the composite column, and at least 99% of current HS300 members with a 2026-10-27 market row have non-null composite values."
+  },
+  "hypothesis": "The production path can attach R257 only on an exact (symbol,date) match. If the existing R257 composite table is stale, the current-session cross-section is unavailable even when the code and historical factor values are valid.",
+  "input_sha256": {
+    "backend/app/backtest/candidates.py": "28dfa3d7fb2ed47bb14a12929773b498282eb8cec13a5afb0e9182bdd205192f",
+    "backend/app/backtest/engine.py": "79962c45a4b6e64d77b625be144997efc4c12fda85e33242224fdb44d3c62bf3",
+    "backend/app/backtest/strategy.py": "318b6548354c587965c321921faafcbb7c4be0012fefe3ada0ced97fae06fd4e",
+    "backend/app/factors/ext_factors.py": "18ebc6e115387f3ef8457978a242592732341b5ba3700bb0d5ddd1a595b9701f",
+    "backend/app/hs300/current.py": "05bff32af5439117760b711cb628e3386dceb69658efcea20b2ef13846db2a94",
+    "backend/app/services/ext_data.py": "1e4a53fc47f3db937177afa2578a5647b4c03be6c49c3bc880944be0799a0ac9",
+    "data/ext_data/alt_hs300/config.json": "2dd24cf1a19266179273933eb5b80bc0c2dcd0ad64ad998599756d40dfc78658",
+    "data/ext_data/alt_hs300/timeseries/date=2026-10-19/part.parquet": "7651d5ec29d6137d6f025d75cfc95e486ff9828036e4ab895b121b3ed958a8bf",
+    "data/ext_data/alt_hs300_minrank/config.json": "f089e7c5cf222baf6e160315c49a3cd2f1c90a071c357961d14fc95eb509706a",
+    "data/ext_data/alt_hs300_minrank/timeseries/date=2026-10-19/part.parquet": "5961325f4476d79ef132a32917a6320dd1cb2d0712800cf850d1d929bc1ea45d",
+    "data/ext_data/alt_hs300_qrs/config.json": "5e8cc006b4cf5f07a5af23deb0645623b35999ac19ac0c9b9bffaa877587d491",
+    "data/ext_data/alt_hs300_qrs/timeseries/date=2026-10-19/part.parquet": "dcacfa5f644c7d2dbb06833ac8799321c6a062789e0a470e05f6972ca88223cc",
+    "data/hs300/current_members.json": "5a35d28fc347e45d4a6112f67a6b42c61f20e7594d43a6ef2ced9229c7734a8e",
+    "data/kline_daily_enriched/date=2026-10-27/part.parquet": "e040f74a3948bdc12b7c08ee2a89959ffa50d3ed74b42d04b6970561314ddd70",
+    "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r257_factor_build.json": "7c5b24963d72d9893d37df456b2d034fc4c6d71b0a8f65e9308c9afce956a27d",
+    "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r257_preregistration.json": "6a70e8726384da28d7c852d8b26340224d23568671dcbfb0fe7b8ac91d49e07e",
+    "data/strategies/ai/ai_hs300_quality_relative_strength_h20_sl20.py": "7de61e4b6c4e91527cb0f4140ceb682b2499a6a39735e8d63f340d08f584b8da"
+  },
+  "limits": [
+    "No forward returns or historical trade outcomes may be read.",
+    "No backtest, signal ranking, paper execution, order, or production gate change.",
+    "No provider calls, synchronization, factor builder, market-data writes, or ext-data writes.",
+    "Temporary scratch files are removed by TemporaryDirectory on normal completion."
+  ],
+  "method": "Read the current-members cache and latest enriched daily partition; copy only the byte-identical latest partitions for the three R257 tables and their one-field configs into a temporary scratch data_dir; call production app.factors.ext_factors.attach_ext_columns(..., include_snapshot=False) on the current-member market rows; count exact-date non-null coverage. Record SHA-256 for source/code inputs and output.",
+  "panel_candidate": {
+    "config": {
+      "asset_type": "stock",
+      "commission_pct": 0.0006,
+      "end": "2026-10-27",
+      "fees_pct": 0.0006,
+      "holding_days": 20,
+      "initial_capital": 1000000.0,
+      "matching": "open_t+1",
+      "max_exposure_pct": 1.0,
+      "max_positions": 10,
+      "minute_fill": false,
+      "mode": "position",
+      "overrides": {},
+      "params": {},
+      "position_sizing": "equal",
+      "slippage_bps": 15.0,
+      "stamp_tax_pct": 0.001,
+      "start": "2026-10-27",
+      "strategy_id": "ai_hs300_quality_relative_strength_h20_sl20"
+    },
+    "name": "R290 R257?????????????",
+    "source_id": "ai_hs300_quality_relative_strength_h20_sl20"
+  },
+  "panel_capacity_note": "The panel currently has six entries; backend CandidateStore permits up to 200. A pending candidate documents a research diagnostic and is not authorization to execute its config as a backtest.",
+  "panel_guard": {
+    "R288_candidate_id": "280b43c9d2364b5589d9d0edc73d1144",
+    "R288_required_status": "pending",
+    "R289_candidate_id": "58dc4329c85e4df88271aa9b42276089",
+    "R289_required_status": "pending",
+    "post_retry": "never",
+    "register_once": true
+  },
+  "question": "Can the production extended-factor attachment path produce an auditable, same-date, non-null R257 cross-section for the latest market session among current HS300 constituents?",
+  "registered_at": "2026-10-28",
+  "round": "R290",
+  "scope": {
+    "components": [
+      "ext_alt_hs300_minrank_management_ocf_gm_min_rank",
+      "ext_alt_hs300_stock_rel_industry_20d"
+    ],
+    "factor_id": "ext_alt_hs300_qrs_quality_relative_strength_min_rank",
+    "market_date": "2026-10-27",
+    "membership_snapshot": "data/hs300/current_members.json"
+  },
+  "status": "frozen_before_system_attachment_result",
+  "system_chain": {
+    "attachment": "app.factors.ext_factors.attach_ext_columns, exact (symbol,date), include_snapshot=False",
+    "composite_required_by_strategy": "data/strategies/ai/ai_hs300_quality_relative_strength_h20_sl20.py",
+    "dependency_resolution": "StrategyDependencyResolver.resolve in backend/app/backtest/strategy.py",
+    "historical_panel": "BacktestEngine.load_panel_for_backtest in backend/app/backtest/engine.py"
+  }
+}

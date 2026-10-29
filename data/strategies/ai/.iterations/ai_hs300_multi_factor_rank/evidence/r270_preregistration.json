@@ -1,0 +1,96 @@
+{
+  "round": "R270",
+  "registered_at": "2026-10-28",
+  "status": "pre_registered_before_backtest",
+  "hypothesis": "R269 逐笔结果显示，A 腿基线发现段 120 笔中 54 笔亏损，亏损中位数约 -4.46%，约四分之一低于 -10%；validation 170 笔中 91 笔亏损，中位数 -5.59%，下四分位约 -9.67%，约四分之一低于 -10%。280/290 笔按 35 日 max_hold 退出。保持信号、评分、历史 HS300、10 仓、T+1 开盘撮合、成本与窗口不变，只增加固定止损，检验能否截断尾部亏损并保留绝对收益。",
+  "strategy": "ai_hs300_macro_gate_quality",
+  "control_round": "R266",
+  "execution": {
+    "window": [
+      "2021-06-01",
+      "2026-10-16"
+    ],
+    "discovery": [
+      "2021-06-01",
+      "2023-12-31"
+    ],
+    "validation": [
+      "2024-01-01",
+      "2026-10-16"
+    ],
+    "membership": "r78_daily_membership",
+    "matching": "open_t+1",
+    "costs": [
+      "3x primary",
+      "4x stress",
+      "5x stress"
+    ],
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "unchanged": [
+      "strategy signals",
+      "filters",
+      "scoring",
+      "35-day max hold",
+      "universe",
+      "entry/exit matching",
+      "fees",
+      "slippage"
+    ],
+    "only_changed_parameter": "stop_loss override",
+    "candidate_cache_namespace": "data/research/r270_cache_final/",
+    "fixed_stop_variants": {
+      "control": null,
+      "sl10": 0.1,
+      "sl15": 0.15,
+      "sl20": 0.2
+    },
+    "stop_execution": "BacktestEngine uses the strategy panel's forward-adjusted daily OHLC: if open <= stop line fill at open, else if low <= stop line fill at stop line; same-day entry risk exits are disallowed and system tradability/price-limit blocks remain active."
+  },
+  "gates": {
+    "P1": "R266 equal-weight 3x/4x/5x control curve and trade cache hashes match finalized evidence, and the 3x R265 parity passes.",
+    "P2": "After running-panel reload, the strategy and all four referenced factors exist with zero strategy load errors.",
+    "G1": "3x full-sample return is positive and retains at least 70% of R266 equal-weight return.",
+    "G2": "3x maximum drawdown is no worse than -25%.",
+    "G3": "3x rolling one-year positive-return rate is at least 70%.",
+    "G4": "3x validation-period return is positive.",
+    "G5": "3x validation annualized return is at least 5%.",
+    "G6": "4x full-sample return is positive.",
+    "G7": "5x full-sample return is positive.",
+    "G8": "3x validation return retains at least 70% of the R266 validation return.",
+    "R1": "3x full-sample Sharpe is no lower than R266 equal-weight control.",
+    "R2": "3x maximum drawdown is no worse than R266 control by more than 3 percentage points.",
+    "L1": "Full-sample losing-trade mean loss magnitude improves (shrinks) by at least 1 percentage point versus control: compare -mean(loss pnl_pct) among losing completed trades. All full-window trades, including any entry before the window, are counted as before.",
+    "L2": "Validation-entry losing-trade mean loss magnitude improves (shrinks) by at least 1 percentage point versus control, using completed losses for trades entered on/after 2024-01-01; attribution by entry_date.",
+    "L3": "The worst completed trade return in the full sample is less negative than control.",
+    "L4": "The worst validation-entry trade return is less negative than control.",
+    "C1": "At least 30 distinct symbols traded.",
+    "C2": "Largest symbol net P&L share is at most 25%.",
+    "C3": "Top three symbols net P&L share is at most 55%.",
+    "C4": "Top five symbols net P&L share is at most 75%.",
+    "C5": "At least 8 distinct validation-entry symbols have positive P&L.",
+    "C6": "Largest industry gross-profit share is at most 45%.",
+    "C7": "Largest single-symbol loss is at most 20% of gross profit.",
+    "C8": "Validation-period largest symbol share of net P&L is at most 35%."
+  },
+  "decision_rule": "Each fixed-stop variant is judged independently; every P/G/R/L/C gate must pass, otherwise it is rejected. Thresholds and variants cannot be changed after seeing results. A pass permits consideration for separate paper-observation research only, not production deployment.",
+  "diagnostics_not_gates": [
+    "Report stop-exit counts, signed average loss and positive loss magnitude, median losing trade, q10 and worst trade for full, discovery and validation-entry samples.",
+    "Report net-P&L concentration and gross-profit-denominator concentration separately; gross-profit shares cannot replace C2-C4.",
+    "Report 3x/4x/5x curves and trades with source and cache hashes."
+  ],
+  "known_limitations": [
+    "An initial run with the same frozen variants was superseded before finalization after audit corrected the signed loss-improvement gate; the finalized runner must execute all nine system backtests into a fresh cache namespace.",
+    "The strategy and validation interval have been studied in previous rounds; this is not an untouched holdout.",
+    "The -10%/-15%/-20% bracket is anchored to the R269 discovery-segment loss distribution and frozen before R270 runs.",
+    "Daily OHLC cannot establish intraday ordering when a stop and a price-limit condition coincide.",
+    "Stop trigger/fill prices use the system strategy panel OHLC fields (forward-adjusted), not tick-level raw fills.",
+    "Gap-through-stop losses can exceed the threshold; real fills may be worse than simulated opening/stop-line fills.",
+    "Historical HS300 membership is used; industry classification is a current snapshot, not point-in-time.",
+    "Discovery/validation trade attribution uses entry_date, so trades spanning the boundary remain assigned to their entry period.",
+    "Only 290 baseline trades are available, creating sampling uncertainty in tail quantiles.",
+    "Panel reload and a passing historical backtest do not authorize production deployment."
+  ],
+  "runner_sha256": "94ae9b0398b4d7873e3d5de3556504db838800ee4a4244fdbf57c28009843eb4",
+  "panel_registrar_sha256": "4b5495be49745b984976b8b3643af1464d5d7282d70e68f4d2c5bd1148412cd3"
+}

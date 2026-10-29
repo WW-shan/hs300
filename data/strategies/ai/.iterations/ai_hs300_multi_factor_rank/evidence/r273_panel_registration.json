@@ -1,0 +1,552 @@
+{
+  "round": "R273",
+  "classification": "pre_backtest_live_panel_registration_proof",
+  "captured_at": "2026-10-28T00:40:10.296463+00:00",
+  "api_base": "http://127.0.0.1:3018",
+  "macro_data_inventory": {
+    "config_sha256": "2dd24cf1a19266179273933eb5b80bc0c2dcd0ad64ad998599756d40dfc78658",
+    "partition_count": 2132,
+    "total_size_bytes": 306190733,
+    "inventory_sha256": "b51d74f61c76e3d7ca45da0d2e411deec2fa322efe33f8c933f1cb1601a90f3a"
+  },
+  "preregistration": {
+    "path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r273_preregistration.json",
+    "sha256": "910cd33abefa4809446e8f1e112b0ad9ad71b6219d227553bc2996b2d0c6688d"
+  },
+  "registrar": {
+    "path": "scripts/register_r273_panel.py",
+    "sha256": "c460282dfd2572df18c04ee1de94b3c07d97a2e613c25b252f487193ca5c9832"
+  },
+  "signal_sources": {
+    "r273_macro_exit_erp": {
+      "path": "data/user_data/custom_signals/r273_macro_exit_erp.json",
+      "sha256": "75da4752bc625d1ae3c2dbac22e4edc68aa6cc7be8919bdf078bfacabd7d0466"
+    },
+    "r273_macro_exit_credit": {
+      "path": "data/user_data/custom_signals/r273_macro_exit_credit.json",
+      "sha256": "fcd0c924dec45de28f9f342752e61568edb90dff00e7c764c02d49d18722d231"
+    },
+    "r273_macro_exit_term": {
+      "path": "data/user_data/custom_signals/r273_macro_exit_term.json",
+      "sha256": "fd496966085b8221cb2329aa636d329d859636b9df7ec5ee543b2f42f3372fe8"
+    }
+  },
+  "raw_signal_save_responses": [
+    {
+      "source": "data/user_data/custom_signals/r273_macro_exit_erp.json",
+      "http_status": 200,
+      "response": {
+        "ok": true,
+        "signal": {
+          "id": "r273_macro_exit_erp",
+          "name": "R273 宏观退出：ERP低于5.5",
+          "kind": "exit",
+          "conditions": [
+            {
+              "left": "ext_alt_hs300_equity_risk_premium",
+              "op": "<",
+              "right": "5.5",
+              "leftDays": 0,
+              "rightDays": 0
+            }
+          ],
+          "enabled": true,
+          "timeframe": "daily",
+          "min_bars": 0,
+          "column": null
+        }
+      }
+    },
+    {
+      "source": "data/user_data/custom_signals/r273_macro_exit_credit.json",
+      "http_status": 200,
+      "response": {
+        "ok": true,
+        "signal": {
+          "id": "r273_macro_exit_credit",
+          "name": "R273 宏观退出：信用利差低于-0.8",
+          "kind": "exit",
+          "conditions": [
+            {
+              "left": "ext_alt_hs300_credit_spread_5y_low",
+              "op": "<",
+              "right": "-0.8",
+              "leftDays": 0,
+              "rightDays": 0
+            }
+          ],
+          "enabled": true,
+          "timeframe": "daily",
+          "min_bars": 0,
+          "column": null
+        }
+      }
+    },
+    {
+      "source": "data/user_data/custom_signals/r273_macro_exit_term.json",
+      "http_status": 200,
+      "response": {
+        "ok": true,
+        "signal": {
+          "id": "r273_macro_exit_term",
+          "name": "R273 宏观退出：期限利差低于0.3",
+          "kind": "exit",
+          "conditions": [
+            {
+              "left": "ext_alt_hs300_term_spread_10y_2y",
+              "op": "<",
+              "right": "0.3",
+              "leftDays": 0,
+              "rightDays": 0
+            }
+          ],
+          "enabled": true,
+          "timeframe": "daily",
+          "min_bars": 0,
+          "column": null
+        }
+      }
+    }
+  ],
+  "reload": {
+    "endpoint": "/api/strategies/reload",
+    "http_status": 200,
+    "response": {
+      "ok": true,
+      "count": 114
+    }
+  },
+  "factors": {
+    "endpoint": "/api/factors?asset_type=stock",
+    "http_status": 200,
+    "expected_ids": [
+      "ext_alt_hs300_holder_top10_free_float_share",
+      "ext_alt_hs300_equity_risk_premium",
+      "ext_alt_hs300_credit_spread_5y_low",
+      "ext_alt_hs300_term_spread_10y_2y"
+    ],
+    "registered": {
+      "ext_alt_hs300_holder_top10_free_float_share": {
+        "id": "ext_alt_hs300_holder_top10_free_float_share",
+        "label": "HS300另类因子·前十大流通股东持股比例合计",
+        "group": "扩展数据",
+        "kind": "base",
+        "version": 1,
+        "formula": "扩展表「HS300另类因子」字段 holder_top10_free_float_share (时序·按交易日对齐)",
+        "direction": "none",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "stable",
+        "scale_free": false,
+        "dependencies": []
+      },
+      "ext_alt_hs300_equity_risk_premium": {
+        "id": "ext_alt_hs300_equity_risk_premium",
+        "label": "HS300另类因子·沪深300 ERP(盈利收益率-10年国债)",
+        "group": "扩展数据",
+        "kind": "base",
+        "version": 1,
+        "formula": "扩展表「HS300另类因子」字段 equity_risk_premium (时序·按交易日对齐)",
+        "direction": "none",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "stable",
+        "scale_free": false,
+        "dependencies": []
+      },
+      "ext_alt_hs300_credit_spread_5y_low": {
+        "id": "ext_alt_hs300_credit_spread_5y_low",
+        "label": "HS300另类因子·AAA-国债5年信用利差反向",
+        "group": "扩展数据",
+        "kind": "base",
+        "version": 1,
+        "formula": "扩展表「HS300另类因子」字段 credit_spread_5y_low (时序·按交易日对齐)",
+        "direction": "none",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "stable",
+        "scale_free": false,
+        "dependencies": []
+      },
+      "ext_alt_hs300_term_spread_10y_2y": {
+        "id": "ext_alt_hs300_term_spread_10y_2y",
+        "label": "HS300另类因子·10Y-2Y期限利差",
+        "group": "扩展数据",
+        "kind": "base",
+        "version": 1,
+        "formula": "扩展表「HS300另类因子」字段 term_spread_10y_2y (时序·按交易日对齐)",
+        "direction": "none",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "stable",
+        "scale_free": false,
+        "dependencies": []
+      }
+    }
+  },
+  "strategies": {
+    "endpoint": "/api/strategies?include_research=true",
+    "http_status": 200,
+    "registered": {
+      "ai_hs300_macro_gate_quality": {
+        "id": "ai_hs300_macro_gate_quality",
+        "name": "HS300宏观三闸门质量",
+        "description": "ERP、信用利差、期限利差同时满足时持有股东集中度+质量价值+低波动（实验）",
+        "tags": [
+          "ERP",
+          "信用利差",
+          "期限利差",
+          "宏观",
+          "质量",
+          "沪深300",
+          "实验"
+        ],
+        "source": "ai",
+        "research_only": false,
+        "execution_backend": "polars_expr",
+        "asset_types": [
+          "stock"
+        ],
+        "timeframes": [
+          "1d"
+        ],
+        "version": "1.0.0",
+        "basic_filter": {
+          "price_min": 3,
+          "price_max": 500,
+          "market_cap_min": 1000000000.0,
+          "float_cap_min": null,
+          "float_cap_max": null,
+          "amount_min": 20000000.0,
+          "amount_max": null,
+          "turnover_min": null,
+          "turnover_max": null,
+          "exclude_st": true,
+          "exclude_new_days": 60,
+          "boards": [
+            "沪主板",
+            "深主板",
+            "创业板",
+            "科创板",
+            "北交所"
+          ]
+        },
+        "params": [
+          {
+            "id": "erp_min",
+            "label": "ERP最低阈值",
+            "type": "float",
+            "default": 5.5,
+            "min": 3.0,
+            "max": 9.0,
+            "step": 0.1
+          },
+          {
+            "id": "credit_max",
+            "label": "信用利差最高阈值",
+            "type": "float",
+            "default": 0.8,
+            "min": 0.2,
+            "max": 1.5,
+            "step": 0.05
+          },
+          {
+            "id": "term_min",
+            "label": "期限利差最低阈值",
+            "type": "float",
+            "default": 0.3,
+            "min": 0.0,
+            "max": 1.5,
+            "step": 0.05
+          }
+        ],
+        "params_defaults": {
+          "erp_min": 5.5,
+          "credit_max": 0.8,
+          "term_min": 0.3
+        },
+        "scoring": {
+          "ext_alt_hs300_holder_top10_free_float_share": 0.35,
+          "uf_quality_value_defensive": 0.25,
+          "uf_low_vol": 0.2,
+          "uf_cash_quality": 0.2
+        },
+        "scoring_directions": {},
+        "entry_signals": [],
+        "exit_signals": [],
+        "overlay_filter": [],
+        "minute_exit_trigger_supported_signals": [
+          "signal_ma10_breakdown",
+          "signal_ma20_breakdown",
+          "signal_ma5_breakdown",
+          "signal_ma_dead_5_20"
+        ],
+        "stop_loss": null,
+        "take_profit": null,
+        "trailing_stop": null,
+        "trailing_take_profit_activate": null,
+        "trailing_take_profit_drawdown": null,
+        "max_hold_days": 35,
+        "order_by": "score",
+        "descending": true,
+        "limit": 30,
+        "display_limit": null,
+        "composite_children": null
+      },
+      "ai_hs300_macro_gate_quality_r273_gate_exit": {
+        "id": "ai_hs300_macro_gate_quality_r273_gate_exit",
+        "name": "R273 HS300宏观三闸门质量(关闭后离场)",
+        "description": "研究候选：保持R266 A腿入场与评分不变，宏观任一闸门关闭后在T+1开盘退出已有持仓。",
+        "tags": [
+          "R273",
+          "宏观闸门",
+          "退出规则",
+          "研究"
+        ],
+        "source": "ai",
+        "research_only": true,
+        "execution_backend": "polars_expr",
+        "asset_types": [
+          "stock"
+        ],
+        "timeframes": [
+          "1d"
+        ],
+        "version": "1.0.0",
+        "basic_filter": {
+          "price_min": 3,
+          "price_max": 500,
+          "market_cap_min": 1000000000.0,
+          "float_cap_min": null,
+          "float_cap_max": null,
+          "amount_min": 20000000.0,
+          "amount_max": null,
+          "turnover_min": null,
+          "turnover_max": null,
+          "exclude_st": true,
+          "exclude_new_days": 60,
+          "boards": [
+            "沪主板",
+            "深主板",
+            "创业板",
+            "科创板",
+            "北交所"
+          ]
+        },
+        "params": [
+          {
+            "id": "erp_min",
+            "label": "ERP最低阈值",
+            "type": "float",
+            "default": 5.5,
+            "min": 3.0,
+            "max": 9.0,
+            "step": 0.1
+          },
+          {
+            "id": "credit_max",
+            "label": "信用利差最高阈值",
+            "type": "float",
+            "default": 0.8,
+            "min": 0.2,
+            "max": 1.5,
+            "step": 0.05
+          },
+          {
+            "id": "term_min",
+            "label": "期限利差最低阈值",
+            "type": "float",
+            "default": 0.3,
+            "min": 0.0,
+            "max": 1.5,
+            "step": 0.05
+          }
+        ],
+        "params_defaults": {
+          "erp_min": 5.5,
+          "credit_max": 0.8,
+          "term_min": 0.3
+        },
+        "scoring": {
+          "ext_alt_hs300_holder_top10_free_float_share": 0.35,
+          "uf_quality_value_defensive": 0.25,
+          "uf_low_vol": 0.2,
+          "uf_cash_quality": 0.2
+        },
+        "scoring_directions": {},
+        "entry_signals": [],
+        "exit_signals": [
+          "csg_r273_macro_exit_erp",
+          "csg_r273_macro_exit_credit",
+          "csg_r273_macro_exit_term"
+        ],
+        "overlay_filter": [],
+        "minute_exit_trigger_supported_signals": [
+          "signal_ma10_breakdown",
+          "signal_ma20_breakdown",
+          "signal_ma5_breakdown",
+          "signal_ma_dead_5_20"
+        ],
+        "stop_loss": null,
+        "take_profit": null,
+        "trailing_stop": null,
+        "trailing_take_profit_activate": null,
+        "trailing_take_profit_drawdown": null,
+        "max_hold_days": 35,
+        "order_by": "score",
+        "descending": true,
+        "limit": 30,
+        "display_limit": null,
+        "composite_children": null
+      }
+    },
+    "source_contracts": {
+      "ai_hs300_macro_gate_quality": {
+        "path": "data/strategies/ai/ai_hs300_macro_gate_quality.py",
+        "sha256": "b1c2b43ef9861053d3f4e4dd2ac4a3aeb7d0eae301b5400bdb0dbf65169b87ec",
+        "id_matches": true,
+        "research_only": false,
+        "required_features": [
+          "ext_alt_hs300_credit_spread_5y_low",
+          "ext_alt_hs300_equity_risk_premium",
+          "ext_alt_hs300_holder_top10_free_float_share",
+          "ext_alt_hs300_term_spread_10y_2y",
+          "ma60"
+        ],
+        "exit_signals": [],
+        "scoring": {
+          "ext_alt_hs300_holder_top10_free_float_share": 0.35,
+          "uf_quality_value_defensive": 0.25,
+          "uf_low_vol": 0.2,
+          "uf_cash_quality": 0.2
+        }
+      },
+      "ai_hs300_macro_gate_quality_r273_gate_exit": {
+        "path": "data/strategies/ai/ai_hs300_macro_gate_quality_r273_gate_exit.py",
+        "sha256": "8b6c373ede5dc9a71188a03e405bee042ff9be6422ae57c32c70dbec97a5a8e9",
+        "id_matches": true,
+        "research_only": true,
+        "required_features": [
+          "ext_alt_hs300_credit_spread_5y_low",
+          "ext_alt_hs300_equity_risk_premium",
+          "ext_alt_hs300_holder_top10_free_float_share",
+          "ext_alt_hs300_term_spread_10y_2y",
+          "ma60"
+        ],
+        "exit_signals": [
+          "csg_r273_macro_exit_erp",
+          "csg_r273_macro_exit_credit",
+          "csg_r273_macro_exit_term"
+        ],
+        "scoring": {
+          "ext_alt_hs300_holder_top10_free_float_share": 0.35,
+          "uf_quality_value_defensive": 0.25,
+          "uf_low_vol": 0.2,
+          "uf_cash_quality": 0.2
+        }
+      }
+    },
+    "load_error_count": 0,
+    "load_errors": []
+  },
+  "signals": {
+    "endpoint": "/api/custom-signals",
+    "http_status": 200,
+    "registered": {
+      "r273_macro_exit_erp": {
+        "id": "r273_macro_exit_erp",
+        "name": "R273 宏观退出：ERP低于5.5",
+        "kind": "exit",
+        "conditions": [
+          {
+            "left": "ext_alt_hs300_equity_risk_premium",
+            "op": "<",
+            "right": "5.5",
+            "leftDays": 0,
+            "rightDays": 0
+          }
+        ],
+        "enabled": true,
+        "timeframe": "daily",
+        "min_bars": 0,
+        "column": null
+      },
+      "r273_macro_exit_credit": {
+        "id": "r273_macro_exit_credit",
+        "name": "R273 宏观退出：信用利差低于-0.8",
+        "kind": "exit",
+        "conditions": [
+          {
+            "left": "ext_alt_hs300_credit_spread_5y_low",
+            "op": "<",
+            "right": "-0.8",
+            "leftDays": 0,
+            "rightDays": 0
+          }
+        ],
+        "enabled": true,
+        "timeframe": "daily",
+        "min_bars": 0,
+        "column": null
+      },
+      "r273_macro_exit_term": {
+        "id": "r273_macro_exit_term",
+        "name": "R273 宏观退出：期限利差低于0.3",
+        "kind": "exit",
+        "conditions": [
+          {
+            "left": "ext_alt_hs300_term_spread_10y_2y",
+            "op": "<",
+            "right": "0.3",
+            "leftDays": 0,
+            "rightDays": 0
+          }
+        ],
+        "enabled": true,
+        "timeframe": "daily",
+        "min_bars": 0,
+        "column": null
+      }
+    }
+  },
+  "checks": {
+    "all_signal_saves_ok": true,
+    "reload_http_ok": true,
+    "reload_ok": true,
+    "factor_api_ok": true,
+    "strategy_api_ok": true,
+    "signal_api_ok": true,
+    "all_four_factors_registered_for_stock": true,
+    "candidate_and_control_registered": true,
+    "candidate_and_control_research_only": false,
+    "all_three_signals_registered_enabled": true,
+    "candidate_exit_signals_match": false,
+    "source_contracts_match": false,
+    "candidate_score_matches_control": true,
+    "candidate_non_exit_contract_matches_control": true,
+    "no_strategy_load_errors": true
+  },
+  "all_checks_pass": false,
+  "production_status": "pause_production",
+  "backtest_run": false
+}

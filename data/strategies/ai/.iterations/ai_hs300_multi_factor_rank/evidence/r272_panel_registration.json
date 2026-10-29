@@ -1,0 +1,243 @@
+{
+  "round": "R272",
+  "classification": "pre_backtest_system_panel_reload_and_registration_proof",
+  "captured_at": "2026-10-27T22:56:27.269020+00:00",
+  "api_base": "http://127.0.0.1:3018",
+  "registrar": {
+    "path": "scripts/register_r272_panel.py",
+    "sha256": "367d379bdbe4e63ab9ea0e0e0d05844bf07fa08a7cd211c0d0e5ace72c381ba9"
+  },
+  "factor_audit": {
+    "path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r272_corrected_factor_audit_v2.json",
+    "sha256": "d83b3dc96a5062556780a7748e9a71a7812b0e435c846ee32bc6240b84cca4b4"
+  },
+  "reload": {
+    "endpoint": "/api/strategies/reload",
+    "http_status": 200,
+    "response": {
+      "ok": true,
+      "count": 114
+    }
+  },
+  "factor": {
+    "endpoint": "/api/factors?asset_type=stock",
+    "http_status": 200,
+    "registered": {
+      "id": "ext_alt_hs300_opm_operating_margin_yoy_change_q",
+      "label": "HS300 operating margin YoY impro",
+      "group": "扩展数据",
+      "kind": "base",
+      "version": 1,
+      "formula": "扩展表「HS300 operating margin YoY improvement」字段 operating_margin_yoy_change_q (时序·按交易日对齐)",
+      "direction": "none",
+      "unit": "none",
+      "warmup_bars": 1,
+      "pit": false,
+      "asset_types": [
+        "etf",
+        "stock"
+      ],
+      "stability": "stable",
+      "scale_free": false,
+      "dependencies": []
+    },
+    "config_path": "data/ext_data/alt_hs300_opm/config.json",
+    "config_sha256": "cfa6f05cce86b1a155f4baa4de0e2d8ebf8acb4029331438b1dba6a8fd090b75"
+  },
+  "strategies": {
+    "endpoint": "/api/strategies?include_research=true",
+    "http_status": 200,
+    "registered": {
+      "ai_hs300_operating_margin_improvement_quality_h20_sl20": {
+        "id": "ai_hs300_operating_margin_improvement_quality_h20_sl20",
+        "name": "HS300 operating leverage improvement (R272 research)",
+        "description": "Ranks non-financial historical HS300 members by year-over-year improvement in single-quarter operating-profit margin, combined with quality and cash factors.",
+        "tags": [
+          "R272",
+          "operating margin",
+          "quality",
+          "research"
+        ],
+        "source": "ai",
+        "research_only": true,
+        "execution_backend": "polars_expr",
+        "asset_types": [
+          "stock"
+        ],
+        "timeframes": [
+          "1d"
+        ],
+        "version": "1.0.0",
+        "basic_filter": {
+          "price_min": 3,
+          "price_max": 500,
+          "market_cap_min": 1000000000.0,
+          "float_cap_min": null,
+          "float_cap_max": null,
+          "amount_min": 20000000.0,
+          "amount_max": null,
+          "turnover_min": null,
+          "turnover_max": null,
+          "exclude_st": true,
+          "exclude_new_days": 60,
+          "boards": [
+            "沪主板",
+            "深主板",
+            "创业板",
+            "科创板",
+            "北交所"
+          ]
+        },
+        "params": [],
+        "params_defaults": {},
+        "scoring": {
+          "ext_alt_hs300_opm_operating_margin_yoy_change_q": 0.45,
+          "uf_quality_value_defensive": 0.3,
+          "uf_cash_quality": 0.25
+        },
+        "scoring_directions": {},
+        "entry_signals": [],
+        "exit_signals": [],
+        "overlay_filter": [],
+        "minute_exit_trigger_supported_signals": [
+          "signal_ma10_breakdown",
+          "signal_ma20_breakdown",
+          "signal_ma5_breakdown",
+          "signal_ma_dead_5_20"
+        ],
+        "stop_loss": -0.2,
+        "take_profit": null,
+        "trailing_stop": null,
+        "trailing_take_profit_activate": null,
+        "trailing_take_profit_drawdown": null,
+        "max_hold_days": 20,
+        "order_by": "score",
+        "descending": true,
+        "limit": 30,
+        "display_limit": null,
+        "composite_children": null
+      },
+      "ai_hs300_operating_margin_improvement_quality_control": {
+        "id": "ai_hs300_operating_margin_improvement_quality_control",
+        "name": "HS300 operating margin R272 matched control",
+        "description": "Matched quality/cash control for R272; uses the same historical non-financial HS300 eligibility filter without scoring the tested factor.",
+        "tags": [
+          "R272",
+          "matched control",
+          "research"
+        ],
+        "source": "ai",
+        "research_only": true,
+        "execution_backend": "polars_expr",
+        "asset_types": [
+          "stock"
+        ],
+        "timeframes": [
+          "1d"
+        ],
+        "version": "1.0.0",
+        "basic_filter": {
+          "price_min": 3,
+          "price_max": 500,
+          "market_cap_min": 1000000000.0,
+          "float_cap_min": null,
+          "float_cap_max": null,
+          "amount_min": 20000000.0,
+          "amount_max": null,
+          "turnover_min": null,
+          "turnover_max": null,
+          "exclude_st": true,
+          "exclude_new_days": 60,
+          "boards": [
+            "沪主板",
+            "深主板",
+            "创业板",
+            "科创板",
+            "北交所"
+          ]
+        },
+        "params": [],
+        "params_defaults": {},
+        "scoring": {
+          "uf_quality_value_defensive": 0.545,
+          "uf_cash_quality": 0.455
+        },
+        "scoring_directions": {},
+        "entry_signals": [],
+        "exit_signals": [],
+        "overlay_filter": [],
+        "minute_exit_trigger_supported_signals": [
+          "signal_ma10_breakdown",
+          "signal_ma20_breakdown",
+          "signal_ma5_breakdown",
+          "signal_ma_dead_5_20"
+        ],
+        "stop_loss": -0.2,
+        "take_profit": null,
+        "trailing_stop": null,
+        "trailing_take_profit_activate": null,
+        "trailing_take_profit_drawdown": null,
+        "max_hold_days": 20,
+        "order_by": "score",
+        "descending": true,
+        "limit": 30,
+        "display_limit": null,
+        "composite_children": null
+      }
+    },
+    "source_contracts": {
+      "ai_hs300_operating_margin_improvement_quality_h20_sl20": {
+        "path": "data/strategies/ai/ai_hs300_operating_margin_improvement_quality_h20_sl20.py",
+        "sha256": "af8f5a606b4332030445829bc3628de90c8249102eaede64906e623c4f7e6585",
+        "id_matches": true,
+        "research_only": true,
+        "scoring": {
+          "ext_alt_hs300_opm_operating_margin_yoy_change_q": 0.45,
+          "uf_quality_value_defensive": 0.3,
+          "uf_cash_quality": 0.25
+        },
+        "required_features": [
+          "ext_alt_hs300_opm_operating_margin_yoy_change_q",
+          "industry_l1",
+          "ma60"
+        ]
+      },
+      "ai_hs300_operating_margin_improvement_quality_control": {
+        "path": "data/strategies/ai/ai_hs300_operating_margin_improvement_quality_control.py",
+        "sha256": "c2a87b3ed8cb6266bdbc0a0471eb6c23032927975b15fe38044743995d1d378e",
+        "id_matches": true,
+        "research_only": true,
+        "scoring": {
+          "uf_quality_value_defensive": 0.545,
+          "uf_cash_quality": 0.455
+        },
+        "required_features": [
+          "ext_alt_hs300_opm_operating_margin_yoy_change_q",
+          "industry_l1",
+          "ma60"
+        ]
+      }
+    },
+    "load_error_count": 0,
+    "load_errors": []
+  },
+  "checks": {
+    "audit_passed_before_reload": true,
+    "reload_http_ok": true,
+    "reload_ok": true,
+    "factor_api_ok": true,
+    "strategy_api_ok": true,
+    "canonical_factor_registered": true,
+    "candidate_and_control_registered": true,
+    "both_strategies_research_only": true,
+    "source_contracts_match": true,
+    "candidate_scores_canonical_factor": true,
+    "both_share_same_factor_availability_filter": true,
+    "config_matches_factor": true,
+    "no_strategy_load_errors": true
+  },
+  "all_checks_pass": true,
+  "production_status": "pause_production",
+  "outcome_data_read": false,
+  "backtest_run": false
+}

@@ -1,0 +1,51 @@
+{
+  "round": "R304",
+  "amendment_id": "R304-A4",
+  "date": "2026-10-29",
+  "classification": "prospective browser-based recovery of previously failed official detail reads",
+  "parent_preregistration_sha256": "d7c116125264a78462b41089a467eecea49fe98c73897c4a266c80103e41b49f",
+  "prior_amendment_A3_sha256": "ace2620aaa6078aff73adb21a85f3361763626fd4769cc08766ebcce22e53751",
+  "reason": "Thirty-two selected official CSI announcement detail requests previously returned HTTP 403. The successful 39 detail responses and successfully saved official attachment must remain untouched. This amendment checks whether the official public announcement UI can render the same failed details in a browser context.",
+  "question": "Can the China Securities Index Company's own public announcement UI expose the content of the 32 already-selected detail records whose direct detail requests returned HTTP 403?",
+  "fixed_targets": {
+    "official_origin": "https://www.csindex.com.cn",
+    "ui_route_template": "/csindex-home/about/newsDetail?id={notice_id}",
+    "notice_ids": [
+      "14100", "14118", "14144", "14217", "14223", "14225",
+      "14460", "14497", "14503", "14535", "14796", "14806",
+      "15043", "15044", "15252", "15266", "15267", "15440",
+      "15470", "15471", "15503", "15504", "15516", "15546",
+      "15690", "15693", "1006022", "3006000", "3006002",
+      "3006137", "3006139", "3006227"
+    ],
+    "known_scope": "These IDs are the full set of 32 previously failed detail requests from the fixed 71-title candidate set; they are not all assumed to concern the 000300 stock index."
+  },
+  "method": [
+    "Before visiting any target, verify the existing R304 panel candidate remains uniquely registered with status pending using one read-only GET; retain the response and hash. Do not POST another candidate because this amendment belongs to the already-registered R304 source-discovery round.",
+    "Open the official CSI public site in a fresh Playwright browser context and navigate once to each fixed UI route, in the listed order. Record the final URL, page title, visible article text, and observed browser navigation/API response status for each target.",
+    "Save a screenshot and rendered DOM or page snapshot for each target that returns article content. Preserve a failure record for targets that redirect, remain empty, or return an error. Do not retry any target after a dispatched navigation.",
+    "Use only the official CSI origin and the fixed IDs above. Do not query listing pages, search engines, third-party sites, attachment URLs, or any successfully retrieved detail again.",
+    "Classify a detail as an HS300 constituent-change record only when its article content identifies the 000300 stock index and states a sample change or its effective date. Do not classify by a broad title match alone."
+  ],
+  "success_criteria": [
+    "All target navigations are accounted for exactly once, including failures, with timestamps and retained browser evidence.",
+    "Recovered content is attributable to the official CSI site and can be hash-verified.",
+    "The record distinguishes routine adjustments, exceptional adjustments, other 300-branded indices, and unrelated notices.",
+    "Any missing period, missing exceptional event, missing effective date, or missing seed membership continues to fail the PIT-reconstruction feasibility rule."
+  ],
+  "prohibited": [
+    "No repeat request for the 39 successful details or the saved PDF.",
+    "No listing-page refresh, search-engine query, or non-official source used as primary evidence.",
+    "No mining, factor-return calculation, alpha search, strategy backtest, or threshold change.",
+    "No production membership change, provider sync, rebuild, candidate status change, or additional panel POST."
+  ],
+  "panel": {
+    "existing_candidate_name": "R304 中证官方历史成分数据源可行性（无收益回测）",
+    "registration_action": "read-only verification of the existing R304 entry; no duplicate POST",
+    "required_status": "pending"
+  },
+  "decision_rule": {
+    "feasible": "R304 as a whole is feasible only if official date-effective records cover every routine and exceptional membership event in 2018-01-02 through 2026-10-27 and an auditable seed membership is available.",
+    "no_go": "If browser recovery does not close every material coverage gap with official content and unambiguous effective dates, do not construct a PIT universe from current members or third-party guesses."
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "classification": "read_only_stale_derived_factor_root_cause_audit",
+  "decision_rule": {
+    "qualification": "Without a frozen pre-refresh K-line copy, timestamps support stale lineage but cannot prove the exact prior input values or identify which upstream refresh changed them.",
+    "support_stale_derived_output": "The current builder calculation yields at least 500/557 non-null industry-relative strength values on 2026-10-19; the saved partition has at most 50/557; the saved derived partition predates its current enriched K-line partition by at least one day; and rebuilding the R257 composite in memory with current relative-strength values restores at least 200 values from the existing quality component."
+  },
+  "frozen_scope": {
+    "composite_function": "scripts/build_r257_quality_relative_strength_factor.py::_min_rank_factor",
+    "dates": [
+      "2026-10-14",
+      "2026-10-16",
+      "2026-10-19",
+      "2026-10-27"
+    ],
+    "input_files": 2626,
+    "input_manifest": "r291_input_manifest.jsonl",
+    "input_manifest_sha256": "1ad023b966d60cd758a499d9fff45b8b5b6fab5061f1471a9e6a01fb4543d9e7",
+    "recomputed_function": "scripts/build_alt_factor_data.py::_industry_daily",
+    "universe": "the 557 symbols selected by build_alt_factor_data._calendar()"
+  },
+  "hypothesis": "The base factor partition is stale relative to refreshed enriched K-line inputs. The industry mapping, current builder calculation, and R257 formula remain usable; the saved custom-factor table was not regenerated after source data changed.",
+  "limits": {
+    "backtest_run": false,
+    "builder_write_called": false,
+    "factor_or_market_data_written": false,
+    "provider_called": false,
+    "returns_or_trades_read": false,
+    "strategy_or_production_state_changed": false
+  },
+  "panel_candidate": {
+    "config": {
+      "asset_type": "stock",
+      "commission_pct": 0.0006,
+      "end": "2026-10-19",
+      "fees_pct": 0.0006,
+      "holding_days": 20,
+      "initial_capital": 1000000.0,
+      "matching": "open_t+1",
+      "max_exposure_pct": 1.0,
+      "max_positions": 10,
+      "minute_fill": false,
+      "mode": "position",
+      "overrides": {},
+      "params": {},
+      "position_sizing": "equal",
+      "slippage_bps": 15.0,
+      "stamp_tax_pct": 0.001,
+      "start": "2026-10-19",
+      "strategy_id": "ai_hs300_quality_relative_strength_h20_sl20"
+    },
+    "data_as_of": "2026-10-19",
+    "kind": "strategy",
+    "metrics": {},
+    "name": "R291 R257基础因子陈旧分区根因审计",
+    "source_id": "ai_hs300_quality_relative_strength_h20_sl20",
+    "status": "pending"
+  },
+  "panel_guard": {
+    "R288_candidate_id": "280b43c9d2364b5589d9d0edc73d1144",
+    "R289_candidate_id": "58dc4329c85e4df88271aa9b42276089",
+    "R290_candidate_id": "2451e5a386d5489584e4121f42d97792",
+    "register_once": true,
+    "required_status": "pending",
+    "retry_post": false
+  },
+  "question": "Did the 2026-10-19 alt_hs300 coverage collapse arise because derived factor partitions were built before enriched K-line partitions were refreshed, and does the current production factor calculation restore the missing coverage?",
+  "registered_at_utc": "2026-10-28T15:57:32.104601+00:00",
+  "round": "R291",
+  "status": "frozen_before_results"
+}

@@ -1,0 +1,182 @@
+{
+  "as_of": {
+    "latest_market_partition": "2026-10-27",
+    "market_data_member_rows": 300,
+    "market_date": "2026-10-27",
+    "market_partition_embedded_date_counts": [
+      {
+        "date": "2026-10-27",
+        "len": 5570
+      }
+    ],
+    "members_without_market_row": [],
+    "membership_as_of": "2026-10-28",
+    "membership_count": 300,
+    "membership_source": "csindex"
+  },
+  "classification": "read_only_system_attachment_freshness_audit",
+  "conclusion": "The current R257 factor table does not contain an exact-date partition for the latest market session; the production attachment path therefore yields no same-day R257 signal for the current member cross-section.",
+  "execution_limits": {
+    "backtest_run": false,
+    "forward_returns_read": false,
+    "historical_trade_outcomes_read": false,
+    "market_or_ext_data_written": false,
+    "provider_called": false,
+    "strategy_or_production_state_changed": false
+  },
+  "factor_inputs": {
+    "alt_hs300": {
+      "config_sha256": "2dd24cf1a19266179273933eb5b80bc0c2dcd0ad64ad998599756d40dfc78658",
+      "distinct_symbols": 557,
+      "field": "stock_rel_industry_20d",
+      "latest_partition": "2026-10-19",
+      "latest_partition_bytes": 138196,
+      "latest_partition_sha256": "7651d5ec29d6137d6f025d75cfc95e486ff9828036e4ab895b121b3ed958a8bf",
+      "nonnull_values": 28,
+      "rows": 557
+    },
+    "alt_hs300_minrank": {
+      "config_sha256": "f089e7c5cf222baf6e160315c49a3cd2f1c90a071c357961d14fc95eb509706a",
+      "distinct_symbols": 557,
+      "field": "management_ocf_gm_min_rank",
+      "latest_partition": "2026-10-19",
+      "latest_partition_bytes": 3124,
+      "latest_partition_sha256": "5961325f4476d79ef132a32917a6320dd1cb2d0712800cf850d1d929bc1ea45d",
+      "nonnull_values": 249,
+      "rows": 557
+    },
+    "alt_hs300_qrs": {
+      "config_sha256": "5e8cc006b4cf5f07a5af23deb0645623b35999ac19ac0c9b9bffaa877587d491",
+      "distinct_symbols": 557,
+      "field": "quality_relative_strength_min_rank",
+      "latest_partition": "2026-10-19",
+      "latest_partition_bytes": 2361,
+      "latest_partition_sha256": "dcacfa5f644c7d2dbb06833ac8799321c6a062789e0a470e05f6972ca88223cc",
+      "nonnull_values": 2,
+      "rows": 557
+    }
+  },
+  "input_sha256": {
+    "backtest_engine": {
+      "path": "backend\\app\\backtest\\engine.py",
+      "sha256": "79962c45a4b6e64d77b625be144997efc4c12fda85e33242224fdb44d3c62bf3"
+    },
+    "candidate_store": {
+      "path": "backend\\app\\backtest\\candidates.py",
+      "sha256": "28dfa3d7fb2ed47bb14a12929773b498282eb8cec13a5afb0e9182bdd205192f"
+    },
+    "ext_config_store": {
+      "path": "backend\\app\\services\\ext_data.py",
+      "sha256": "1e4a53fc47f3db937177afa2578a5647b4c03be6c49c3bc880944be0799a0ac9"
+    },
+    "ext_factor_loader": {
+      "path": "backend\\app\\factors\\ext_factors.py",
+      "sha256": "18ebc6e115387f3ef8457978a242592732341b5ba3700bb0d5ddd1a595b9701f"
+    },
+    "factor_build_evidence": {
+      "path": "data\\strategies\\ai\\.iterations\\ai_hs300_multi_factor_rank\\evidence\\r257_factor_build.json",
+      "sha256": "7c5b24963d72d9893d37df456b2d034fc4c6d71b0a8f65e9308c9afce956a27d"
+    },
+    "hs300_members_service": {
+      "path": "backend\\app\\hs300\\current.py",
+      "sha256": "05bff32af5439117760b711cb628e3386dceb69658efcea20b2ef13846db2a94"
+    },
+    "market_partition": {
+      "path": "data\\kline_daily_enriched\\date=2026-10-27\\part.parquet",
+      "sha256": "e040f74a3948bdc12b7c08ee2a89959ffa50d3ed74b42d04b6970561314ddd70"
+    },
+    "membership_snapshot": {
+      "path": "data\\hs300\\current_members.json",
+      "sha256": "5a35d28fc347e45d4a6112f67a6b42c61f20e7594d43a6ef2ced9229c7734a8e"
+    },
+    "preregistration": {
+      "path": "data\\strategies\\ai\\.iterations\\ai_hs300_multi_factor_rank\\evidence\\r257_preregistration.json",
+      "sha256": "6a70e8726384da28d7c852d8b26340224d23568671dcbfb0fe7b8ac91d49e07e"
+    },
+    "r257_source_partitions": {
+      "alt_hs300": {
+        "path": "data\\ext_data\\alt_hs300\\timeseries\\date=2026-10-19\\part.parquet",
+        "sha256": "7651d5ec29d6137d6f025d75cfc95e486ff9828036e4ab895b121b3ed958a8bf"
+      },
+      "alt_hs300_minrank": {
+        "path": "data\\ext_data\\alt_hs300_minrank\\timeseries\\date=2026-10-19\\part.parquet",
+        "sha256": "5961325f4476d79ef132a32917a6320dd1cb2d0712800cf850d1d929bc1ea45d"
+      },
+      "alt_hs300_qrs": {
+        "path": "data\\ext_data\\alt_hs300_qrs\\timeseries\\date=2026-10-19\\part.parquet",
+        "sha256": "dcacfa5f644c7d2dbb06833ac8799321c6a062789e0a470e05f6972ca88223cc"
+      }
+    },
+    "r290_system_attachment_audit.py": {
+      "path": "data\\strategies\\ai\\.iterations\\ai_hs300_multi_factor_rank\\evidence\\r290_system_attachment_audit.py",
+      "sha256": "ebb14f53d36ff2432f991cbb7e8a33c1d6ad9c4ae7cee2807bdf56de4701c5c4"
+    },
+    "strategy": {
+      "path": "data\\strategies\\ai\\ai_hs300_quality_relative_strength_h20_sl20.py",
+      "sha256": "7de61e4b6c4e91527cb0f4140ceb682b2499a6a39735e8d63f340d08f584b8da"
+    },
+    "strategy_resolver": {
+      "path": "backend\\app\\backtest\\strategy.py",
+      "sha256": "318b6548354c587965c321921faafcbb7c4be0012fefe3ada0ced97fae06fd4e"
+    }
+  },
+  "latest_factor_partition_member_coverage": {
+    "alt_hs300": {
+      "coverage": 0.01,
+      "current_members": 300,
+      "nonnull_current_members": 3
+    },
+    "alt_hs300_minrank": {
+      "coverage": 0.83,
+      "current_members": 300,
+      "nonnull_current_members": 249
+    },
+    "alt_hs300_qrs": {
+      "coverage": 0.006666666666666667,
+      "current_members": 300,
+      "nonnull_current_members": 2
+    }
+  },
+  "question": "Can the production extended-factor attachment path provide an auditable same-date R257 cross-section for the latest market session and current HS300 members?",
+  "round": "R290",
+  "status": "not_ready_no_fresh_signal",
+  "system_attachment": {
+    "attached_columns": [
+      "ext_alt_hs300_minrank_management_ocf_gm_min_rank",
+      "ext_alt_hs300_qrs_quality_relative_strength_min_rank",
+      "ext_alt_hs300_stock_rel_industry_20d"
+    ],
+    "coverage": {
+      "ext_alt_hs300_minrank_management_ocf_gm_min_rank": {
+        "coverage": 0.0,
+        "current_member_rows_with_market_data": 300,
+        "distinct_nonnull_symbols": 0,
+        "nonnull_current_member_rows": 0
+      },
+      "ext_alt_hs300_qrs_quality_relative_strength_min_rank": {
+        "coverage": 0.0,
+        "current_member_rows_with_market_data": 300,
+        "distinct_nonnull_symbols": 0,
+        "nonnull_current_member_rows": 0
+      },
+      "ext_alt_hs300_stock_rel_industry_20d": {
+        "coverage": 0.0,
+        "current_member_rows_with_market_data": 300,
+        "distinct_nonnull_symbols": 0,
+        "nonnull_current_member_rows": 0
+      }
+    },
+    "function": "app.factors.ext_factors.attach_ext_columns",
+    "isolated_input_method": "temporary scratch data_dir containing the original config fields and byte-identical latest partitions for only the three R257 tables; source files were not changed",
+    "join_key": [
+      "symbol",
+      "date"
+    ],
+    "ready": false,
+    "ready_threshold": {
+      "qrs_nonnull_coverage_minimum": 0.99,
+      "same_date_factor_partition": "2026-10-27"
+    },
+    "system_path": "BacktestEngine.load_panel_for_backtest -> attach_ext_columns(include_snapshot=False)"
+  }
+}

@@ -1,0 +1,595 @@
+{
+  "round": "R275",
+  "registration_version": "r275-panel-registrar-v3b",
+  "classification": "pre_backtest_live_panel_registration_proof",
+  "captured_at": "2026-10-28T02:00:11.951546+00:00",
+  "api_base": "http://127.0.0.1:3018",
+  "preregistration_sha256": "05f7499cd8dc2f5e14f2d30233c049b662d1a9f2d78a7e7f51f880084d9931cc",
+  "registrar_sha256": "57c5b89b8a8bf2620e170984920e6971a4d0c0094598dd357feabb935694e98a",
+  "reload": {
+    "http_status": 200,
+    "response": {
+      "ok": true,
+      "count": 114
+    }
+  },
+  "factors": {
+    "http_status": 200,
+    "expected": [
+      "ext_alt_hs300_holder_top10_free_float_share",
+      "uf_quality_value_defensive",
+      "uf_low_vol",
+      "uf_cash_quality"
+    ],
+    "registered": {
+      "ext_alt_hs300_holder_top10_free_float_share": {
+        "id": "ext_alt_hs300_holder_top10_free_float_share",
+        "label": "HS300另类因子·前十大流通股东持股比例合计",
+        "group": "扩展数据",
+        "kind": "base",
+        "version": 1,
+        "formula": "扩展表「HS300另类因子」字段 holder_top10_free_float_share (时序·按交易日对齐)",
+        "direction": "none",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "stable",
+        "scale_free": false,
+        "dependencies": []
+      },
+      "uf_quality_value_defensive": {
+        "id": "uf_quality_value_defensive",
+        "label": "质量价值防守",
+        "group": "财务",
+        "kind": "custom",
+        "version": 1,
+        "formula": "roe_latest / (100 * pb_latest) - debt_ratio_latest / 100",
+        "direction": "high",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "experimental",
+        "scale_free": true,
+        "dependencies": [
+          "debt_ratio_latest",
+          "pb_latest",
+          "roe_latest"
+        ]
+      },
+      "uf_low_vol": {
+        "id": "uf_low_vol",
+        "label": "低波动",
+        "group": "波动率",
+        "kind": "custom",
+        "version": 1,
+        "formula": "0 - annual_vol_20d",
+        "direction": "high",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "experimental",
+        "scale_free": true,
+        "dependencies": [
+          "annual_vol_20d"
+        ]
+      },
+      "uf_cash_quality": {
+        "id": "uf_cash_quality",
+        "label": "现金质量",
+        "group": "财务",
+        "kind": "custom",
+        "version": 1,
+        "formula": "ocf_ni - accrual",
+        "direction": "high",
+        "unit": "none",
+        "warmup_bars": 1,
+        "pit": false,
+        "asset_types": [
+          "etf",
+          "stock"
+        ],
+        "stability": "experimental",
+        "scale_free": true,
+        "dependencies": [
+          "accrual",
+          "ocf_ni"
+        ]
+      }
+    }
+  },
+  "strategies": {
+    "http_status": 200,
+    "expected": [
+      "ai_hs300_macro_gate_quality",
+      "ai_hs300_macro_gate_quality_r275_remove_erp",
+      "ai_hs300_macro_gate_quality_r275_remove_credit",
+      "ai_hs300_macro_gate_quality_r275_remove_term"
+    ],
+    "registered": {
+      "ai_hs300_macro_gate_quality": {
+        "id": "ai_hs300_macro_gate_quality",
+        "name": "HS300宏观三闸门质量",
+        "description": "ERP、信用利差、期限利差同时满足时持有股东集中度+质量价值+低波动（实验）",
+        "tags": [
+          "ERP",
+          "信用利差",
+          "期限利差",
+          "宏观",
+          "质量",
+          "沪深300",
+          "实验"
+        ],
+        "source": "ai",
+        "research_only": false,
+        "execution_backend": "polars_expr",
+        "asset_types": [
+          "stock"
+        ],
+        "timeframes": [
+          "1d"
+        ],
+        "version": "1.0.0",
+        "basic_filter": {
+          "price_min": 3,
+          "price_max": 500,
+          "market_cap_min": 1000000000.0,
+          "float_cap_min": null,
+          "float_cap_max": null,
+          "amount_min": 20000000.0,
+          "amount_max": null,
+          "turnover_min": null,
+          "turnover_max": null,
+          "exclude_st": true,
+          "exclude_new_days": 60,
+          "boards": [
+            "沪主板",
+            "深主板",
+            "创业板",
+            "科创板",
+            "北交所"
+          ]
+        },
+        "params": [
+          {
+            "id": "erp_min",
+            "label": "ERP最低阈值",
+            "type": "float",
+            "default": 5.5,
+            "min": 3.0,
+            "max": 9.0,
+            "step": 0.1
+          },
+          {
+            "id": "credit_max",
+            "label": "信用利差最高阈值",
+            "type": "float",
+            "default": 0.8,
+            "min": 0.2,
+            "max": 1.5,
+            "step": 0.05
+          },
+          {
+            "id": "term_min",
+            "label": "期限利差最低阈值",
+            "type": "float",
+            "default": 0.3,
+            "min": 0.0,
+            "max": 1.5,
+            "step": 0.05
+          }
+        ],
+        "params_defaults": {
+          "erp_min": 5.5,
+          "credit_max": 0.8,
+          "term_min": 0.3
+        },
+        "scoring": {
+          "ext_alt_hs300_holder_top10_free_float_share": 0.35,
+          "uf_quality_value_defensive": 0.25,
+          "uf_low_vol": 0.2,
+          "uf_cash_quality": 0.2
+        },
+        "scoring_directions": {},
+        "entry_signals": [],
+        "exit_signals": [],
+        "overlay_filter": [],
+        "minute_exit_trigger_supported_signals": [
+          "signal_ma10_breakdown",
+          "signal_ma20_breakdown",
+          "signal_ma5_breakdown",
+          "signal_ma_dead_5_20"
+        ],
+        "stop_loss": null,
+        "take_profit": null,
+        "trailing_stop": null,
+        "trailing_take_profit_activate": null,
+        "trailing_take_profit_drawdown": null,
+        "max_hold_days": 35,
+        "order_by": "score",
+        "descending": true,
+        "limit": 30,
+        "display_limit": null,
+        "composite_children": null
+      },
+      "ai_hs300_macro_gate_quality_r275_remove_erp": {
+        "id": "ai_hs300_macro_gate_quality_r275_remove_erp",
+        "name": "R275 宏观门禁消融 - ERP",
+        "description": "研究候选：保留信用与期限利差门禁，只移除 ERP 入场门禁。",
+        "tags": [
+          "R275",
+          "ERP",
+          "研究"
+        ],
+        "source": "ai",
+        "research_only": true,
+        "execution_backend": "polars_expr",
+        "asset_types": [
+          "stock"
+        ],
+        "timeframes": [
+          "1d"
+        ],
+        "version": "1.0.0",
+        "basic_filter": {
+          "price_min": 3,
+          "price_max": 500,
+          "market_cap_min": 1000000000.0,
+          "float_cap_min": null,
+          "float_cap_max": null,
+          "amount_min": 20000000.0,
+          "amount_max": null,
+          "turnover_min": null,
+          "turnover_max": null,
+          "exclude_st": true,
+          "exclude_new_days": 60,
+          "boards": [
+            "沪主板",
+            "深主板",
+            "创业板",
+            "科创板",
+            "北交所"
+          ]
+        },
+        "params": [],
+        "params_defaults": {},
+        "scoring": {
+          "ext_alt_hs300_holder_top10_free_float_share": 0.35,
+          "uf_quality_value_defensive": 0.25,
+          "uf_low_vol": 0.2,
+          "uf_cash_quality": 0.2
+        },
+        "scoring_directions": {},
+        "entry_signals": [],
+        "exit_signals": [],
+        "overlay_filter": [],
+        "minute_exit_trigger_supported_signals": [
+          "signal_ma10_breakdown",
+          "signal_ma20_breakdown",
+          "signal_ma5_breakdown",
+          "signal_ma_dead_5_20"
+        ],
+        "stop_loss": null,
+        "take_profit": null,
+        "trailing_stop": null,
+        "trailing_take_profit_activate": null,
+        "trailing_take_profit_drawdown": null,
+        "max_hold_days": 35,
+        "order_by": "score",
+        "descending": true,
+        "limit": 30,
+        "display_limit": null,
+        "composite_children": null
+      },
+      "ai_hs300_macro_gate_quality_r275_remove_credit": {
+        "id": "ai_hs300_macro_gate_quality_r275_remove_credit",
+        "name": "R275 宏观门禁消融 - 信用利差",
+        "description": "研究候选：保留 ERP 与期限利差门禁，只移除信用利差入场门禁。",
+        "tags": [
+          "R275",
+          "信用利差",
+          "研究"
+        ],
+        "source": "ai",
+        "research_only": true,
+        "execution_backend": "polars_expr",
+        "asset_types": [
+          "stock"
+        ],
+        "timeframes": [
+          "1d"
+        ],
+        "version": "1.0.0",
+        "basic_filter": {
+          "price_min": 3,
+          "price_max": 500,
+          "market_cap_min": 1000000000.0,
+          "float_cap_min": null,
+          "float_cap_max": null,
+          "amount_min": 20000000.0,
+          "amount_max": null,
+          "turnover_min": null,
+          "turnover_max": null,
+          "exclude_st": true,
+          "exclude_new_days": 60,
+          "boards": [
+            "沪主板",
+            "深主板",
+            "创业板",
+            "科创板",
+            "北交所"
+          ]
+        },
+        "params": [],
+        "params_defaults": {},
+        "scoring": {
+          "ext_alt_hs300_holder_top10_free_float_share": 0.35,
+          "uf_quality_value_defensive": 0.25,
+          "uf_low_vol": 0.2,
+          "uf_cash_quality": 0.2
+        },
+        "scoring_directions": {},
+        "entry_signals": [],
+        "exit_signals": [],
+        "overlay_filter": [],
+        "minute_exit_trigger_supported_signals": [
+          "signal_ma10_breakdown",
+          "signal_ma20_breakdown",
+          "signal_ma5_breakdown",
+          "signal_ma_dead_5_20"
+        ],
+        "stop_loss": null,
+        "take_profit": null,
+        "trailing_stop": null,
+        "trailing_take_profit_activate": null,
+        "trailing_take_profit_drawdown": null,
+        "max_hold_days": 35,
+        "order_by": "score",
+        "descending": true,
+        "limit": 30,
+        "display_limit": null,
+        "composite_children": null
+      },
+      "ai_hs300_macro_gate_quality_r275_remove_term": {
+        "id": "ai_hs300_macro_gate_quality_r275_remove_term",
+        "name": "R275 宏观门禁消融 - 期限利差",
+        "description": "研究候选：保留 ERP 与信用利差门禁，只移除期限利差入场门禁。",
+        "tags": [
+          "R275",
+          "期限利差",
+          "研究"
+        ],
+        "source": "ai",
+        "research_only": true,
+        "execution_backend": "polars_expr",
+        "asset_types": [
+          "stock"
+        ],
+        "timeframes": [
+          "1d"
+        ],
+        "version": "1.0.0",
+        "basic_filter": {
+          "price_min": 3,
+          "price_max": 500,
+          "market_cap_min": 1000000000.0,
+          "float_cap_min": null,
+          "float_cap_max": null,
+          "amount_min": 20000000.0,
+          "amount_max": null,
+          "turnover_min": null,
+          "turnover_max": null,
+          "exclude_st": true,
+          "exclude_new_days": 60,
+          "boards": [
+            "沪主板",
+            "深主板",
+            "创业板",
+            "科创板",
+            "北交所"
+          ]
+        },
+        "params": [],
+        "params_defaults": {},
+        "scoring": {
+          "ext_alt_hs300_holder_top10_free_float_share": 0.35,
+          "uf_quality_value_defensive": 0.25,
+          "uf_low_vol": 0.2,
+          "uf_cash_quality": 0.2
+        },
+        "scoring_directions": {},
+        "entry_signals": [],
+        "exit_signals": [],
+        "overlay_filter": [],
+        "minute_exit_trigger_supported_signals": [
+          "signal_ma10_breakdown",
+          "signal_ma20_breakdown",
+          "signal_ma5_breakdown",
+          "signal_ma_dead_5_20"
+        ],
+        "stop_loss": null,
+        "take_profit": null,
+        "trailing_stop": null,
+        "trailing_take_profit_activate": null,
+        "trailing_take_profit_drawdown": null,
+        "max_hold_days": 35,
+        "order_by": "score",
+        "descending": true,
+        "limit": 30,
+        "display_limit": null,
+        "composite_children": null
+      }
+    },
+    "load_errors": [],
+    "source_contracts": {
+      "erp": {
+        "candidate_sha256": "7017173413b414e17c8367d21816029d91d3f4df4a72c3afca438f49c92c13aa",
+        "research_only": true,
+        "same_scoring": true,
+        "same_basic_filter": true,
+        "has_only_expected_macro_required_features": true
+      },
+      "credit": {
+        "candidate_sha256": "799d38d112864129c83bba4950e38e12f29ec42b537bcd0814c20b74b67f7492",
+        "research_only": true,
+        "same_scoring": true,
+        "same_basic_filter": true,
+        "has_only_expected_macro_required_features": true
+      },
+      "term": {
+        "candidate_sha256": "c707832dda70fa51f461814d623d88eba94dd32a45e1dbede61da7b18bcdd2d8",
+        "research_only": true,
+        "same_scoring": true,
+        "same_basic_filter": true,
+        "has_only_expected_macro_required_features": true
+      }
+    }
+  },
+  "gate_truth_table": {
+    "all_pass": {
+      "erp": {
+        "accepted": true,
+        "expected": true
+      },
+      "credit": {
+        "accepted": true,
+        "expected": true
+      },
+      "term": {
+        "accepted": true,
+        "expected": true
+      },
+      "all_three_expected": true
+    },
+    "only_erp_blocked": {
+      "erp": {
+        "accepted": true,
+        "expected": true
+      },
+      "credit": {
+        "accepted": false,
+        "expected": false
+      },
+      "term": {
+        "accepted": false,
+        "expected": false
+      },
+      "all_three_expected": true
+    },
+    "only_credit_blocked": {
+      "erp": {
+        "accepted": false,
+        "expected": false
+      },
+      "credit": {
+        "accepted": true,
+        "expected": true
+      },
+      "term": {
+        "accepted": false,
+        "expected": false
+      },
+      "all_three_expected": true
+    },
+    "only_term_blocked": {
+      "erp": {
+        "accepted": false,
+        "expected": false
+      },
+      "credit": {
+        "accepted": false,
+        "expected": false
+      },
+      "term": {
+        "accepted": true,
+        "expected": true
+      },
+      "all_three_expected": true
+    },
+    "erp_credit_blocked": {
+      "erp": {
+        "accepted": false,
+        "expected": false
+      },
+      "credit": {
+        "accepted": false,
+        "expected": false
+      },
+      "term": {
+        "accepted": false,
+        "expected": false
+      },
+      "all_three_expected": true
+    },
+    "erp_term_blocked": {
+      "erp": {
+        "accepted": false,
+        "expected": false
+      },
+      "credit": {
+        "accepted": false,
+        "expected": false
+      },
+      "term": {
+        "accepted": false,
+        "expected": false
+      },
+      "all_three_expected": true
+    },
+    "credit_term_blocked": {
+      "erp": {
+        "accepted": false,
+        "expected": false
+      },
+      "credit": {
+        "accepted": false,
+        "expected": false
+      },
+      "term": {
+        "accepted": false,
+        "expected": false
+      },
+      "all_three_expected": true
+    },
+    "all_blocked": {
+      "erp": {
+        "accepted": false,
+        "expected": false
+      },
+      "credit": {
+        "accepted": false,
+        "expected": false
+      },
+      "term": {
+        "accepted": false,
+        "expected": false
+      },
+      "all_three_expected": true
+    }
+  },
+  "checks": {
+    "reload_http_ok": true,
+    "factor_api_ok": true,
+    "strategy_api_ok": true,
+    "all_four_scoring_factors_registered": true,
+    "control_and_all_candidates_registered": true,
+    "all_candidates_research_only": true,
+    "source_contracts_match": true,
+    "synthetic_gate_truth_table_passes": true,
+    "zero_strategy_load_errors": true
+  },
+  "all_checks_pass": true,
+  "backtest_run": false,
+  "production_status": "pause_production"
+}

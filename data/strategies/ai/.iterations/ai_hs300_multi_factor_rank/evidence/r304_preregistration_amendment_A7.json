@@ -1,0 +1,41 @@
+{
+  "round": "R304",
+  "amendment_id": "R304-A7",
+  "date": "2026-10-29",
+  "classification": "prospective one-target official browser recovery for a pre-window seed-boundary notice",
+  "parent_amendment": "R304-A6",
+  "parent_a6_sha256": "09ff1fb5691b9e6b8cced03953ecefde28057aa7f85ae8568a674128e57062c6",
+  "question": "Does official CSI notice 12589 provide a verifiable full HS300 membership seed or a date-effective transition immediately preceding the 2018-01-02 research window?",
+  "reason": "The local official archive contains a 2017-11-27 listing row for notice 12589 titled '沪深300、上证50和中证500等指数2017年第二次定期调整样本股'. A6 deliberately identified this as a candidate but did not request its details. It is the nearest already-archived routine-adjustment listing before the frozen window and is relevant to the missing seed boundary.",
+  "fixed_target": {
+    "notice_id": "12589",
+    "publish_date": "2017-11-27",
+    "official_listing_title": "沪深300、上证50和中证500等指数2017年第二次定期调整样本股",
+    "official_route": "https://www.csindex.com.cn/#/about/newsDetail?id=12589",
+    "listing_evidence": "r304_official_archive/pages/page-026.json"
+  },
+  "method": [
+    "Before navigation, make one read-only GET of the existing unique R304 panel candidate (id 1ed2c75285b74fc6a521cc73f75f7320); save the full response and SHA-256. Do not POST or change candidate status.",
+    "Use one fresh named Playwright session, open the official CSI origin, then dispatch exactly one navigation to the fixed official SPA route for notice 12589. Persist dispatch intent before the target navigation.",
+    "Never retry the target navigation after dispatch, including timeout or browser failure. Capture final URL, page title, rendered body, DOM snapshot, screenshot, observed detail API status/response body, timestamps, and SHA-256 proofs where available.",
+    "Inspect only the retrieved official article and any membership table rendered as part of that same article. Do not follow attachment links or navigate/request another notice, listing page, or third-party site.",
+    "Classify the result only from article content: distinguish complete dated membership, add/remove deltas, stated effective date, and unrelated or missing content. Do not infer a 2018-01-02 seed from the title or announcement date.",
+    "After the capture, make one read-only GET of the same panel candidate and preserve its response/hash; require one unique match with status pending."
+  ],
+  "prohibited": [
+    "No external HTTP request except the single fixed official article navigation and resources automatically loaded by that page.",
+    "No attachment request, retry, search-engine query, exchange query, or third-party historical membership source.",
+    "No additional panel POST, duplicate candidate, or status transition.",
+    "No production membership/data changes, factor-return calculation, alpha search, or backtest."
+  ],
+  "decision_rule": {
+    "seed_supported": "Only if the official content itself provides a complete and auditable membership snapshot with an unambiguous effective time covering 2018-01-02, or a complete independently closed transition chain to that date.",
+    "no_go": "A replacement list plus a date is not a seed membership. Any missing pre-window membership state, event, or effective date keeps PIT reconstruction no-go."
+  },
+  "panel": {
+    "candidate_id": "1ed2c75285b74fc6a521cc73f75f7320",
+    "candidate_name": "R304 中证官方历史成分数据源可行性（无收益回测）",
+    "required_status": "pending",
+    "registration_action": "verify existing candidate by read-only GET only; no duplicate POST"
+  }
+}

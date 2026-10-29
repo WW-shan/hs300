@@ -1,0 +1,62 @@
+{
+  "round": "R300",
+  "registered_at_utc": "2026-10-29T02:41:15.686284+00:00",
+  "classification": "post_hoc_R299_trade_subsegment_concentration_diagnostic_not_alpha_confirmation",
+  "selection_note": "The R257/R299 strategy, result and some exploratory segment/year attribution were already inspected before this protocol was written. This is an explicitly post-hoc descriptive audit, not blind or independent validation and not evidence of a new alpha.",
+  "question": "Within the two already-frozen R299 discovery and validation segments, does the original stock-level net-P&L concentration failure persist in both segments?",
+  "parent_round": "R299",
+  "parent_candidate_id": "2d19f0651b3948bab8cd30c85e7c4e1a",
+  "parent_result_sha256": "7b0f9ff980e0e0b72903649e04f4545433985bec2c6cd6438ad31a0b6094fa8e",
+  "time_segments": [
+    {
+      "start": "2023-05-04",
+      "end": "2024-12-31"
+    },
+    {
+      "start": "2025-01-02",
+      "end": "2026-10-16"
+    }
+  ],
+  "source": "R299's existing corrected-cost StrategyBacktestService trade records only; no new backtest",
+  "metric_definition_source": "scripts/backtest_r239_concentration_audit.py::_aggregate and R257 preregistration C2-C4",
+  "analysis": {
+    "unit": "closed trade P&L grouped by symbol within each frozen segment",
+    "primary_metrics": [
+      "trade_count",
+      "distinct_symbols",
+      "total_net_pnl",
+      "top1_net_share",
+      "top3_net_share",
+      "top5_net_share"
+    ],
+    "secondary_metrics": [
+      "top1_gross_profit_share",
+      "top3_gross_profit_share",
+      "top5_gross_profit_share"
+    ],
+    "annual_slice_handling": "Optional descriptive entry-calendar-year trade attribution only; not annual portfolio returns. Original C2-C4 are evaluated only for a positive net-P&L slice.",
+    "no_parameter_search": true,
+    "no_threshold_changes": true
+  },
+  "decision_rules": {
+    "C2": "top1 positive symbol net P&L / segment total net P&L <= 0.25, only if total net P&L > 0",
+    "C3": "top3 positive symbol net P&L / segment total net P&L <= 0.55, only if total net P&L > 0",
+    "C4": "top5 positive symbol net P&L / segment total net P&L <= 0.75, only if total net P&L > 0",
+    "non_positive_net_pnl_slice": "C2-C4 not applicable; report the net P&L and do not substitute a denominator"
+  },
+  "panel_status": "not registered in this execution because the user's instruction explicitly prohibited panel API registration or viewing; no further panel requests are made",
+  "panel_preflight_note": "The preserved R300 feasibility artifact includes one accidental read-only GET from the preceding failed attempt. It is retained unmodified; this freeze and subsequent analysis do not call the panel API.",
+  "industry_snapshot": {
+    "path": "data/ext_data/ext_hy_ths/part.parquet",
+    "bytes": 103700,
+    "mtime_ns": 1791982174103328000,
+    "sha256": "8c3d96b4658dd5881aeaa42e83541e67d65bef0e0c5797adf1fc586857afb1c9"
+  },
+  "feasibility_path": "evidence/r300_feasibility.json",
+  "feasibility_sha256": "1bb0e00c894b05c2fb91c37acf18db6bb595ebb710d9822f2d952b3a1110d005",
+  "input_manifest_path": "evidence/r300_input_manifest.jsonl",
+  "input_count": 14,
+  "side_effect_boundary": "Only R300 evidence is written. No panel API, provider, builder, market/factor/strategy data write, backtest, paper account, or order flow.",
+  "input_manifest_sha256": "56b934d33c57c402983810b7e74438fae6871276053eaa2033649e04aff93be5",
+  "input_manifest_file_count": 14
+}

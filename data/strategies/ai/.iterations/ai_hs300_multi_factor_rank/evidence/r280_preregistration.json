@@ -1,0 +1,92 @@
+{
+  "round": "R280",
+  "registered_at": "2026-10-28",
+  "classification": "read_only_after_close_snapshot_feasibility_audit_not_alpha_test",
+  "question": "Can the frozen R275 term-spread candidate produce a complete, date-aligned and auditable after-close signal snapshot through existing system strategy/screener modules without shared-cache, market-data, realtime, or paper-trading side effects?",
+  "hypothesis": "The present blocker is likely input assembly and freshness, not merely research-only API gating: standard strategy context may omit extension columns and custom financial PIT columns; local enriched/extension partitions may lag current provider observations and current HS300 membership.",
+  "prior_evidence": {
+    "r279_preregistration_sha256": "2faed5b7153c6e237499d464931a84ca114420df6b2d1a40c71742f53eac47cd",
+    "r279_macro_source_audit_sha256": "dec86c468412b752ed6d03b39259953a2f7fea5c8f174ca8bed6c19fc2925d80",
+    "r279_panel_registration_sha256": "a87c44c7fd15cbbc0017587f899f35336f739b06267c4726831307f4cc1ac17d",
+    "r275_candidate_source_sha256": "c707832dda70fa51f461814d623d88eba94dd32a45e1dbede61da7b18bcdd2d8"
+  },
+  "frozen_candidate": {
+    "strategy_id": "ai_hs300_macro_gate_quality_r275_remove_term",
+    "control_id": "ai_hs300_macro_gate_quality",
+    "candidate_source_sha256": "c707832dda70fa51f461814d623d88eba94dd32a45e1dbede61da7b18bcdd2d8",
+    "required_scoring_factors": [
+      "ext_alt_hs300_holder_top10_free_float_share",
+      "uf_quality_value_defensive",
+      "uf_low_vol",
+      "uf_cash_quality"
+    ],
+    "required_financial_columns": [
+      "roe_latest",
+      "pb_latest",
+      "debt_ratio_latest",
+      "ocf_ni",
+      "accrual"
+    ],
+    "required_extension_columns": [
+      "ext_alt_hs300_holder_top10_free_float_share",
+      "ext_alt_hs300_equity_risk_premium",
+      "ext_alt_hs300_credit_spread_5y_low"
+    ]
+  },
+  "prior_observations": {
+    "r279_akshare_latest_completed_day": "2026-10-27",
+    "r279_local_enriched_latest_partition": "2026-10-19",
+    "r279_local_alt_hs300_latest_partition": "2026-10-19",
+    "current_members_as_of_at_registration": "2026-10-27"
+  },
+  "frozen_checks": {
+    "panel_registration": "Live read-only panel APIs show the frozen candidate and control registered, candidate remains research-only, all four scoring factors exist, zero strategy load errors, and candidate source SHA is unchanged. No reload or state-changing registration is performed.",
+    "date_alignment": "The latest enriched daily and alt_hs300 partitions have the same date and are not newer than the current HS300 membership as_of date; the date is compared with R279's latest completed system-provider session. Any mismatch fails.",
+    "feature_coverage": "All three candidate extension columns are present in the standard strategy-context frame, and the five financial PIT inputs for the two custom scoring factors are present in that same frame. Missing data fails; registered factor IDs alone do not pass.",
+    "side_effect_isolation": "The inspected system path must prove an isolated invocation and archival route that avoids shared strategy_cache.json, market/enriched/extension writes, realtime monitoring/paper hooks, and orders. If not proven, do not execute the strategy.",
+    "decision": "Any failed check sets not_ready; do not generate a candidate signal, run a backtest, scan thresholds, or relax research-only gates. No alpha claim is allowed."
+  },
+  "scope": {
+    "panel_modules": [
+      "/api/strategies?include_research=true",
+      "/api/factors?asset_type=stock",
+      "/api/settings/capability-matrix",
+      "/api/settings/data-sources"
+    ],
+    "local_inputs": [
+      "data/kline_daily_enriched/date=*/part.parquet",
+      "data/ext_data/alt_hs300/timeseries/date=*/part.parquet",
+      "data/ext_data/alt_hs300/config.json",
+      "data/hs300/current_members.json",
+      "data/user_data/custom_factors/uf_quality_value_defensive.json",
+      "data/user_data/custom_factors/uf_cash_quality.json",
+      "data/user_data/custom_factors/uf_low_vol.json"
+    ],
+    "system_call_paths": [
+      "backend/app/services/screener.py::ScreenerService.build_strategy_context",
+      "backend/app/strategy/engine.py::StrategyEngine.run",
+      "backend/app/strategy/scoring.py::materialize_scoring_columns",
+      "backend/app/api/screener.py::run_preset/run_all",
+      "backend/app/backtest/fundamentals.py"
+    ]
+  },
+  "side_effects_allowed": [
+    "GET live panel APIs",
+    "read local partition names, schemas, hashes, and config",
+    "read strategy, factor, materializer and API source code",
+    "write R280 preregistration, read-only panel proof, audit evidence, hash sidecars, and append R280 result to research logs"
+  ],
+  "side_effects_prohibited": [
+    "reload or modify panel strategies/factors",
+    "execute strategy or screener",
+    "generate or archive signals",
+    "write shared strategy cache or any market/enriched/extension data",
+    "run a backtest, IC/outcome analysis, or parameter scan",
+    "start quote polling, realtime monitoring, or paper hooks",
+    "create paper accounts, orders, or notifications",
+    "change candidate logic, research-only state, production status, or frozen gates"
+  ],
+  "runner_path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r280_snapshot_feasibility_audit.py",
+  "runner_sha256": "c66081cea4501b6c669d0f492ce38b322d5b9d2b9ef0454f3f87e72cb692f208",
+  "production_status": "pause_production"
+}

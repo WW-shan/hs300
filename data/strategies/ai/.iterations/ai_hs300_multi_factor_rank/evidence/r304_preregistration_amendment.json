@@ -1,0 +1,23 @@
+{
+  "round": "R304",
+  "amendment_id": "R304-A1",
+  "classification": "prospective bounded amendment after official page-100 preflight; before archive pagination or notice-detail collection",
+  "date": "2026-10-29",
+  "parent_preregistration_sha256": "d7c116125264a78462b41089a467eecea49fe98c73897c4a266c80103e41b49f",
+  "reason": "The official notice API reports 4,216 records and pageSize 100. The fixed first-page response covers only 2026-04-23 through 2026-10-28, but contains HS300 routine and temporary adjustment notices. One page cannot establish historical coverage.",
+  "amended_method": {
+    "listing": "Retain the already frozen page 1 response and query official pages 2 through 43 with the identical POST schema and rows=100; require page totals to remain 4,216 and verify every item ID is unique. Do not silently stop early.",
+    "record_selection": "Select every listing row whose title contains 沪深300, 沪深 300, 000300, or CSI 300, plus all index-adjustment rows in the 2018-01-02 to 2026-10-27 publication window for a completeness cross-check.",
+    "details": "Fetch the official queryAnnouncementById endpoint once for each unique HS300-related listing ID. Preserve the complete JSON response. Download every official enclosure linked by those details and hash the raw bytes.",
+    "verification": "Report listing publication-date coverage, gaps, routine and temporary adjustment counts, unique IDs, duplicate/missing pages, attachment availability, and effective dates parsed verbatim from official content/attachments."
+  },
+  "limitations": [
+    "The paginated archive may change during collection; capture per-page totals, ranges and timestamps, and fail completeness if IDs or totals are inconsistent.",
+    "A complete publication archive is not sufficient by itself: effective dates and every event must be present in details/attachments.",
+    "Do not claim PIT reconstruction until every adjustment event and seed membership across the target window has been independently reconciled."
+  ],
+  "prohibited": [
+    "No alpha mining or return backtest.",
+    "No production data or membership write, no cache mutation, and no third-party membership substitution."
+  ]
+}

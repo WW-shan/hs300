@@ -1,0 +1,53 @@
+{
+  "round": "R305",
+  "date": "2026-10-29",
+  "classification": "posthoc_data_provenance_diagnostic; exploratory counts were inspected before this record and are not preregistered evidence",
+  "question": "Of exact (query_date, symbol) keys in R78 membership snapshots without a corresponding row in canonical daily K-line partitions, how many match the existing R40 bootstrap cache, and what trade_status does that cache report?",
+  "scope": {
+    "membership_source": "data/research/r78_daily_membership/daily_snapshots.parquet",
+    "canonical_bars": "data/kline_daily/date=*/part.parquet",
+    "auxiliary_source": "data/research/r40_prices/bootstrap_missing.parquet; qfq rows only",
+    "columns_read": {
+      "membership": ["query_date", "symbol"],
+      "canonical_bars": ["date", "symbol"],
+      "auxiliary_source": ["date", "symbol", "tradestatus", "price_mode"]
+    },
+    "join": "exact date and symbol equality; no forward fill, ticker rewriting, or current-member substitution",
+    "prohibited": ["OHLCV values", "adjusted prices", "returns", "backtests", "alpha scans", "production writes"]
+  },
+  "classification_rules": {
+    "canonical_present": "exact membership key exists in canonical daily K-line partitions",
+    "auxiliary_trading": "canonical-missing key matches an auxiliary qfq row with tradestatus=1; this does not prove why it is absent canonically",
+    "auxiliary_nontrading": "canonical-missing key matches an auxiliary qfq row with tradestatus=0; this is source-reported non-trading, not independently verified suspension",
+    "unresolved": "canonical-missing key has no auxiliary qfq match or has another status"
+  },
+  "decision_rule": "Data coverage diagnostic only. Do not change R304-A14's frozen NO-GO, infer returns, or classify unresolved rows as suspensions. Preserve exact counts, input hashes, and absence of writes.",
+  "panel": {
+    "endpoint": "http://127.0.0.1:3018/api/backtest/candidates",
+    "expected_count_before": 22,
+    "protected_candidates": {
+      "R304": {"id": "1ed2c75285b74fc6a521cc73f75f7320", "status": "pending"},
+      "R304-A13": {"id": "ecd1805dde7a4a8d971718116bd773f6", "status": "pending"},
+      "R304-A14": {"id": "7e600177b497423e9c204996eacb2de1", "status": "pending"}
+    },
+    "candidate": {
+      "kind": "factor",
+      "name": "R305 R78成员日行情缺口溯源（事后数据审计，无收益）",
+      "source_id": "r305_r78_member_bar_gap_provenance_audit",
+      "config": {
+        "asset_type": "stock",
+        "start": "2020-12-31",
+        "end": "2026-10-14",
+        "rebalance": "data_provenance_audit_only",
+        "n_groups": 1,
+        "weight": 1.0,
+        "fees_pct": 0.0,
+        "slippage_bps": 0.0
+      },
+      "metrics": {},
+      "data_as_of": "2026-10-29",
+      "status": "pending"
+    },
+    "method": "GET and archive raw body; require the exact current ID/status map to match the frozen A14 readback, all protected candidates pending, and no duplicate source_id; save one exact POST intent; issue one POST with no retry; GET and archive raw readback; require exactly one new candidate and unchanged pre-existing statuses."
+  }
+}

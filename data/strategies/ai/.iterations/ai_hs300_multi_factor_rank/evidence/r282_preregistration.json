@@ -1,0 +1,57 @@
+{
+  "round": "R282",
+  "registered_at": "2026-10-28",
+  "classification": "read_only_research_candidate_execution_boundary_and_isolation_audit_not_alpha_test",
+  "question": "Does research_only block the frozen R275 candidate from the system's public screening and backtest entry points, and can any existing route execute it without mutating shared research or production state?",
+  "hypothesis": "research_only may be enforced inconsistently: ordinary screener routes may hide or skip the candidate, while direct backtest routes may resolve any registered strategy ID. Even if a direct route is reachable, system matrix caches and result pipelines may prevent claiming isolated execution. No execution will be attempted in R282.",
+  "frozen_candidate": {
+    "strategy_id": "ai_hs300_macro_gate_quality_r275_remove_term",
+    "source_sha256": "c707832dda70fa51f461814d623d88eba94dd32a45e1dbede61da7b18bcdd2d8",
+    "research_only": true
+  },
+  "scope": {
+    "read_only_panel_gets": [
+      "/api/strategies?include_research=true",
+      "/api/factors?asset_type=stock",
+      "/api/settings/capability-matrix",
+      "/api/settings/data-sources",
+      "/api/backtest/status"
+    ],
+    "source_paths": [
+      "backend/app/api/screener.py",
+      "backend/app/services/screener.py",
+      "backend/app/strategy/engine.py",
+      "backend/app/api/backtest.py",
+      "backend/app/backtest/worker.py",
+      "backend/app/backtest/strategy.py",
+      "backend/app/backtest/engine.py",
+      "backend/app/backtest/matrix.py",
+      "backend/app/backtest/candidates.py",
+      "backend/app/backtest/fundamentals.py"
+    ],
+    "local_state_metadata": [
+      "data/strategies/ai/ai_hs300_macro_gate_quality_r275_remove_term.py",
+      "data/user_data/strategy_cache.json metadata and hash if present",
+      "data/.backtest_matrix_cache manifest metadata and hashes if present",
+      "current research candidate store metadata and hash if present"
+    ]
+  },
+  "side_effects_allowed": [
+    "write this preregistration and SHA-256 sidecar",
+    "GET the five listed live panel APIs and save sanitized response proofs with hashes",
+    "read source code, existing tests, and local state metadata and hashes",
+    "write R282 audit/result evidence and SHA-256 sidecars",
+    "append a clear R282 note to LEDGER.md and RESEARCH_SUMMARY.md, with final file hashes recorded in evidence"
+  ],
+  "side_effects_prohibited": [
+    "reload, register, modify, or execute strategies or factors",
+    "invoke screener, strategy backtest, factor backtest, optimization, walk-forward, or mining execution",
+    "generate, persist, publish, or archive candidate signals or performance results",
+    "write or clear strategy caches, backtest matrix caches, candidate stores, market data, enriched data, extension data, or financial data",
+    "pull or synchronize any data, or start realtime, paper trading, account, order, or notification hooks",
+    "change frozen candidate logic, research_only, production status, gates, or panel state"
+  ],
+  "audit_protocol_note": "Before registration, only read-only source inspection and local file status/hash inspection were performed. No live panel request or execution endpoint was called in this round.",
+  "decision_rule": "Report route reachability separately from safe isolation. Any path with unbounded or shared writes is not a proven isolated research route. Do not execute the candidate or claim alpha in R282. Preserve R275 research_only and pause_production.",
+  "production_status": "pause_production"
+}

@@ -1,0 +1,37 @@
+{
+  "round": "R304",
+  "amendment_id": "R304-A10",
+  "date": "2026-10-29",
+  "classification": "prospective single official attachment GET from captured notice 12590 response",
+  "parent_amendment": "R304-A9",
+  "question": "Does the single Excel attachment linked by official notice 12590 contain a complete, independently auditable HS300 add/remove list for the adjustment effective 2017-12-11?",
+  "reason": "The one retained official detail response for notice 12590 states that HS300 changes 24 stocks and links a file titled 调整名单.xlsx. The announcement body itself does not enumerate the full names. A single attachment request is narrowly needed to classify the linked official record; it cannot by itself supply the pre-adjustment 300-member state.",
+  "fixed_target": {
+    "notice_id": "12590",
+    "attachment_title": "调整名单.xlsx",
+    "official_url": "https://oss-ch.csindex.com.cn/static/html/csindex/public/uploads/indices/info/files/20180227/1519719074537344.xlsx",
+    "source_response": "r304_A9_detail_response.raw",
+    "source_response_sha256": "783193e914444ddf9246baa549dd5cff85e2c634fd60c73795086060ae40ac4f"
+  },
+  "method": [
+    "Verify the fixed attachment URL and source response hash locally before dispatch.",
+    "Persist one-time dispatch intent before making exactly one GET to the fixed official attachment URL. Never retry after dispatch.",
+    "Save response bytes, HTTP status, headers, request URL, timestamp, SHA-256, and any parser output as new write-once evidence. Do not fetch other links or notices.",
+    "Inspect workbook sheets and count rows/codes for the HS300 adjustment only; record whether it provides full added and removed lists, any stated effective date, and whether it provides a complete 2018-01-02 seed (expected to require a prior state)."
+  ],
+  "prohibited": [
+    "No second GET, retry, browser navigation, other attachment, notice, listing page, or third-party source.",
+    "No panel POST, duplicate, or state transition.",
+    "No production or strategy changes, factor-return calculation, alpha scan, or backtest."
+  ],
+  "decision_rule": {
+    "delta_supported": "A workbook with the full 24 HS300 names entering and leaving, consistently identifying 12 each, supports this event delta only.",
+    "seed_supported": "The workbook supports the 2018-01-02 seed only if it provides a complete dated member snapshot on or before that day or a complete independently closed chain from a known prior state.",
+    "no_go": "A delta without the complete pre-adjustment member state, any missing transition, or unresolved exceptional-event effective date keeps PIT reconstruction no-go."
+  },
+  "panel": {
+    "candidate_id": "1ed2c75285b74fc6a521cc73f75f7320",
+    "required_status": "pending",
+    "registration_action": "no panel request in A10; rely on A9 read-only preflight"
+  }
+}

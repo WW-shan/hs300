@@ -1,0 +1,695 @@
+{
+  "classification": "exploratory_historical_trade_attribution_after_outcome_review",
+  "execution_mapping": {
+    "calendar_first": "2021-06-01",
+    "calendar_last": "2026-10-16",
+    "candidate_trade_rows": 310,
+    "candidate_trade_rows_outside_r288_window": 0,
+    "control_trade_rows": 290,
+    "matched_control_same_symbol_entry_date_rows": 0,
+    "matched_fraction_of_candidate_trades": 0.1935483870967742,
+    "matched_fraction_of_released_member_date_rows": 0.0010565984573662522,
+    "matched_signal_dates": 6,
+    "matched_symbols": 29,
+    "matched_trade_rows": 60,
+    "rule": "entry_date is matched to the immediately preceding date in the frozen R275 backtest curve calendar; open_t+1 fills occur on entry_date"
+  },
+  "input_sha256": {
+    "data/research/r266_cache/ai_hs300_macro_gate_quality_3x_2021-06-01_2026-10-16.parquet": "db742d445b8c1e8ca2598008976bf3d2fcfc5ac9b72768b91ed226db95802112",
+    "data/research/r266_cache/ai_hs300_macro_gate_quality_3x_2021-06-01_2026-10-16.trades.json": "d11bb39184003b1380cda54b794612e6e9a9defe6f3827b036831c406b8ab839",
+    "data/research/r275_cache_v3d/ai_hs300_macro_gate_quality_r275_remove_term_3x_2021-06-01_2026-10-16.manifest.json": "50896ef6bbaa04c991319e69a5d20a2ffd549b03fba88e00ccb4326908a6d0bc",
+    "data/research/r275_cache_v3d/ai_hs300_macro_gate_quality_r275_remove_term_3x_2021-06-01_2026-10-16.parquet": "e28a93e142a3b2e62bb2b2b93e354e04c2d680d11fcdbc56bc178b3f0f4f9f60",
+    "data/research/r275_cache_v3d/ai_hs300_macro_gate_quality_r275_remove_term_3x_2021-06-01_2026-10-16.trades.json": "17d9bd4e3a0f18c55fe659f9e9ba3237e514c3330dafe1a19a81a2b1c353856a",
+    "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r266_preregistration.json": "5a56b3e60f1142425fb4e0b6305ef37f520941f1b4b102d509549d14f62a733d",
+    "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r275_preregistration_v3d.json": "97f192c0cf5eb81e4e9e64db770366852681c93d6214b1260822bbcd28182f11",
+    "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r288_panel_registration.json": "00ed686ba7b752f44c01540a4c6a626b0dbd98e9b22f5b4eecca13334909ded7",
+    "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r288_preregistration.json": "032da01d97f7209bf12821d119316c5e372cd67823158aac9eec665557217449",
+    "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r288_system_mask_audit_v4.json": "8dd01dfbae23985336b17edb53defd472bdc2318e4124923631a107433570402"
+  },
+  "limitations": [
+    "The R288 and R275 analyses reuse repeatedly viewed historical windows; this attribution is post-outcome exploratory analysis, not independent confirmation.",
+    "A released member-date is eligibility, not a portfolio allocation; top-ten ranking and slot capacity mean most eligible rows need not trade.",
+    "Summed per-trade pnl_amount is not a portfolio NAV increment because capital overlap, compounding, cash availability, and path effects are not reconstructed here.",
+    "Historical HS300 membership, macro publication/revision timestamps, and current alternative-factor partitions may carry timing or revision bias.",
+    "Daily OHLC-based open_t+1 execution cannot fully model queues, suspensions, price limits, liquidity, or market impact.",
+    "The exact R275 fills come from the already executed ten-position backtest; this round does not rerun or independently recompute the portfolio."
+  ],
+  "matched_trade_details": [
+    {
+      "entry_date": "2023-11-22",
+      "exit_date": "2024-01-11",
+      "exit_reason": "max_hold",
+      "name": "上港集团",
+      "pnl_amount": 4865.36,
+      "pnl_pct": 0.045054,
+      "signal_date": "2023-11-21",
+      "symbol": "600018.SH"
+    },
+    {
+      "entry_date": "2023-11-22",
+      "exit_date": "2024-01-11",
+      "exit_reason": "max_hold",
+      "name": "国电南瑞",
+      "pnl_amount": -3182.03,
+      "pnl_pct": -0.029947,
+      "signal_date": "2023-11-21",
+      "symbol": "600406.SH"
+    },
+    {
+      "entry_date": "2023-11-22",
+      "exit_date": "2024-01-11",
+      "exit_reason": "max_hold",
+      "name": "大秦铁路",
+      "pnl_amount": 3999.24,
+      "pnl_pct": 0.037024,
+      "signal_date": "2023-11-21",
+      "symbol": "601006.SH"
+    },
+    {
+      "entry_date": "2023-11-22",
+      "exit_date": "2024-01-11",
+      "exit_reason": "max_hold",
+      "name": "中国神华",
+      "pnl_amount": 10741.79,
+      "pnl_pct": 0.09975,
+      "signal_date": "2023-11-21",
+      "symbol": "601088.SH"
+    },
+    {
+      "entry_date": "2023-11-22",
+      "exit_date": "2024-01-11",
+      "exit_reason": "max_hold",
+      "name": "恒立液压",
+      "pnl_amount": -3121.48,
+      "pnl_pct": -0.029537,
+      "signal_date": "2023-11-21",
+      "symbol": "601100.SH"
+    },
+    {
+      "entry_date": "2023-11-22",
+      "exit_date": "2024-01-11",
+      "exit_reason": "max_hold",
+      "name": "广汽集团",
+      "pnl_amount": -17136.98,
+      "pnl_pct": -0.159937,
+      "signal_date": "2023-11-21",
+      "symbol": "601238.SH"
+    },
+    {
+      "entry_date": "2023-11-22",
+      "exit_date": "2024-01-11",
+      "exit_reason": "max_hold",
+      "name": "中国卫通",
+      "pnl_amount": -21224.1,
+      "pnl_pct": -0.197095,
+      "signal_date": "2023-11-21",
+      "symbol": "601698.SH"
+    },
+    {
+      "entry_date": "2023-11-22",
+      "exit_date": "2024-01-11",
+      "exit_reason": "max_hold",
+      "name": "中国石油",
+      "pnl_amount": 2891.82,
+      "pnl_pct": 0.026857,
+      "signal_date": "2023-11-21",
+      "symbol": "601857.SH"
+    },
+    {
+      "entry_date": "2023-11-22",
+      "exit_date": "2024-01-11",
+      "exit_reason": "max_hold",
+      "name": "公牛集团",
+      "pnl_amount": -7851.68,
+      "pnl_pct": -0.072839,
+      "signal_date": "2023-11-21",
+      "symbol": "603195.SH"
+    },
+    {
+      "entry_date": "2023-11-22",
+      "exit_date": "2024-01-11",
+      "exit_reason": "max_hold",
+      "name": "万泰生物",
+      "pnl_amount": 53014.35,
+      "pnl_pct": 0.513404,
+      "signal_date": "2023-11-21",
+      "symbol": "603392.SH"
+    },
+    {
+      "entry_date": "2024-01-11",
+      "exit_date": "2024-03-08",
+      "exit_reason": "max_hold",
+      "name": "中国石化",
+      "pnl_amount": 18026.65,
+      "pnl_pct": 0.163638,
+      "signal_date": "2024-01-10",
+      "symbol": "600028.SH"
+    },
+    {
+      "entry_date": "2024-01-11",
+      "exit_date": "2024-03-08",
+      "exit_reason": "max_hold",
+      "name": "海螺水泥",
+      "pnl_amount": 7942.91,
+      "pnl_pct": 0.073079,
+      "signal_date": "2024-01-10",
+      "symbol": "600585.SH"
+    },
+    {
+      "entry_date": "2024-01-11",
+      "exit_date": "2024-03-08",
+      "exit_reason": "max_hold",
+      "name": "中国海油",
+      "pnl_amount": 39964.58,
+      "pnl_pct": 0.366181,
+      "signal_date": "2024-01-10",
+      "symbol": "600938.SH"
+    },
+    {
+      "entry_date": "2024-01-11",
+      "exit_date": "2024-03-08",
+      "exit_reason": "max_hold",
+      "name": "中国移动",
+      "pnl_amount": 9355.84,
+      "pnl_pct": 0.085493,
+      "signal_date": "2024-01-10",
+      "symbol": "600941.SH"
+    },
+    {
+      "entry_date": "2024-01-11",
+      "exit_date": "2024-03-08",
+      "exit_reason": "max_hold",
+      "name": "中海油服",
+      "pnl_amount": 19.89,
+      "pnl_pct": 0.000181,
+      "signal_date": "2024-01-10",
+      "symbol": "601808.SH"
+    },
+    {
+      "entry_date": "2024-01-11",
+      "exit_date": "2024-03-08",
+      "exit_reason": "max_hold",
+      "name": "京沪高铁",
+      "pnl_amount": 6382.52,
+      "pnl_pct": 0.057907,
+      "signal_date": "2024-01-10",
+      "symbol": "601816.SH"
+    },
+    {
+      "entry_date": "2024-01-11",
+      "exit_date": "2024-03-08",
+      "exit_reason": "max_hold",
+      "name": "中煤能源",
+      "pnl_amount": 21471.88,
+      "pnl_pct": 0.195461,
+      "signal_date": "2024-01-10",
+      "symbol": "601898.SH"
+    },
+    {
+      "entry_date": "2024-01-11",
+      "exit_date": "2024-03-08",
+      "exit_reason": "max_hold",
+      "name": "海天味业",
+      "pnl_amount": 14140.24,
+      "pnl_pct": 0.128981,
+      "signal_date": "2024-01-10",
+      "symbol": "603288.SH"
+    },
+    {
+      "entry_date": "2024-01-11",
+      "exit_date": "2024-03-08",
+      "exit_reason": "max_hold",
+      "name": "华润微",
+      "pnl_amount": 1280.42,
+      "pnl_pct": 0.011714,
+      "signal_date": "2024-01-10",
+      "symbol": "688396.SH"
+    },
+    {
+      "entry_date": "2024-01-11",
+      "exit_date": "2024-03-08",
+      "exit_reason": "max_hold",
+      "name": "中芯国际",
+      "pnl_amount": -955.25,
+      "pnl_pct": -0.008766,
+      "signal_date": "2024-01-10",
+      "symbol": "688981.SH"
+    },
+    {
+      "entry_date": "2024-03-08",
+      "exit_date": "2024-04-30",
+      "exit_reason": "max_hold",
+      "name": "上港集团",
+      "pnl_amount": 6345.47,
+      "pnl_pct": 0.052133,
+      "signal_date": "2024-03-07",
+      "symbol": "600018.SH"
+    },
+    {
+      "entry_date": "2024-03-08",
+      "exit_date": "2024-04-30",
+      "exit_reason": "max_hold",
+      "name": "宝钢股份",
+      "pnl_amount": 1835.36,
+      "pnl_pct": 0.015084,
+      "signal_date": "2024-03-07",
+      "symbol": "600019.SH"
+    },
+    {
+      "entry_date": "2024-03-08",
+      "exit_date": "2024-04-30",
+      "exit_reason": "max_hold",
+      "name": "国电南瑞",
+      "pnl_amount": -5599.82,
+      "pnl_pct": -0.04632,
+      "signal_date": "2024-03-07",
+      "symbol": "600406.SH"
+    },
+    {
+      "entry_date": "2024-03-08",
+      "exit_date": "2024-04-30",
+      "exit_reason": "max_hold",
+      "name": "大秦铁路",
+      "pnl_amount": -6828.75,
+      "pnl_pct": -0.056136,
+      "signal_date": "2024-03-07",
+      "symbol": "601006.SH"
+    },
+    {
+      "entry_date": "2024-03-08",
+      "exit_date": "2024-04-30",
+      "exit_reason": "max_hold",
+      "name": "中国神华",
+      "pnl_amount": -3399.64,
+      "pnl_pct": -0.028359,
+      "signal_date": "2024-03-07",
+      "symbol": "601088.SH"
+    },
+    {
+      "entry_date": "2024-03-08",
+      "exit_date": "2024-04-30",
+      "exit_reason": "max_hold",
+      "name": "恒立液压",
+      "pnl_amount": -12268.27,
+      "pnl_pct": -0.101778,
+      "signal_date": "2024-03-07",
+      "symbol": "601100.SH"
+    },
+    {
+      "entry_date": "2024-03-08",
+      "exit_date": "2024-04-30",
+      "exit_reason": "max_hold",
+      "name": "广汽集团",
+      "pnl_amount": 3146.9,
+      "pnl_pct": 0.025827,
+      "signal_date": "2024-03-07",
+      "symbol": "601238.SH"
+    },
+    {
+      "entry_date": "2024-03-08",
+      "exit_date": "2024-04-30",
+      "exit_reason": "max_hold",
+      "name": "中国卫通",
+      "pnl_amount": -6880.42,
+      "pnl_pct": -0.056868,
+      "signal_date": "2024-03-07",
+      "symbol": "601698.SH"
+    },
+    {
+      "entry_date": "2024-03-08",
+      "exit_date": "2024-04-30",
+      "exit_reason": "max_hold",
+      "name": "中国石油",
+      "pnl_amount": 13687.93,
+      "pnl_pct": 0.112429,
+      "signal_date": "2024-03-07",
+      "symbol": "601857.SH"
+    },
+    {
+      "entry_date": "2024-03-08",
+      "exit_date": "2024-04-30",
+      "exit_reason": "max_hold",
+      "name": "公牛集团",
+      "pnl_amount": 15964.61,
+      "pnl_pct": 0.142114,
+      "signal_date": "2024-03-07",
+      "symbol": "603195.SH"
+    },
+    {
+      "entry_date": "2025-03-14",
+      "exit_date": "2025-05-08",
+      "exit_reason": "max_hold",
+      "name": "中国石化",
+      "pnl_amount": -1461.21,
+      "pnl_pct": -0.010407,
+      "signal_date": "2025-03-13",
+      "symbol": "600028.SH"
+    },
+    {
+      "entry_date": "2025-03-14",
+      "exit_date": "2025-05-08",
+      "exit_reason": "max_hold",
+      "name": "中国海油",
+      "pnl_amount": -3738.73,
+      "pnl_pct": -0.026629,
+      "signal_date": "2025-03-13",
+      "symbol": "600938.SH"
+    },
+    {
+      "entry_date": "2025-03-14",
+      "exit_date": "2025-05-08",
+      "exit_reason": "max_hold",
+      "name": "中国移动",
+      "pnl_amount": 9401.26,
+      "pnl_pct": 0.069361,
+      "signal_date": "2025-03-13",
+      "symbol": "600941.SH"
+    },
+    {
+      "entry_date": "2025-03-14",
+      "exit_date": "2025-05-08",
+      "exit_reason": "max_hold",
+      "name": "大秦铁路",
+      "pnl_amount": 1854.93,
+      "pnl_pct": 0.013233,
+      "signal_date": "2025-03-13",
+      "symbol": "601006.SH"
+    },
+    {
+      "entry_date": "2025-03-14",
+      "exit_date": "2025-05-08",
+      "exit_reason": "max_hold",
+      "name": "京沪高铁",
+      "pnl_amount": 5476.83,
+      "pnl_pct": 0.039064,
+      "signal_date": "2025-03-13",
+      "symbol": "601816.SH"
+    },
+    {
+      "entry_date": "2025-03-14",
+      "exit_date": "2025-05-08",
+      "exit_reason": "max_hold",
+      "name": "中煤能源",
+      "pnl_amount": -3136.79,
+      "pnl_pct": -0.02239,
+      "signal_date": "2025-03-13",
+      "symbol": "601898.SH"
+    },
+    {
+      "entry_date": "2025-03-14",
+      "exit_date": "2025-05-08",
+      "exit_reason": "max_hold",
+      "name": "中远海控",
+      "pnl_amount": 6017.76,
+      "pnl_pct": 0.042924,
+      "signal_date": "2025-03-13",
+      "symbol": "601919.SH"
+    },
+    {
+      "entry_date": "2025-03-14",
+      "exit_date": "2025-05-08",
+      "exit_reason": "max_hold",
+      "name": "公牛集团",
+      "pnl_amount": -5615.9,
+      "pnl_pct": -0.041679,
+      "signal_date": "2025-03-13",
+      "symbol": "603195.SH"
+    },
+    {
+      "entry_date": "2025-03-14",
+      "exit_date": "2025-05-08",
+      "exit_reason": "max_hold",
+      "name": "海天味业",
+      "pnl_amount": 7520.24,
+      "pnl_pct": 0.054397,
+      "signal_date": "2025-03-13",
+      "symbol": "603288.SH"
+    },
+    {
+      "entry_date": "2025-03-14",
+      "exit_date": "2025-05-08",
+      "exit_reason": "max_hold",
+      "name": "华润微",
+      "pnl_amount": 936.02,
+      "pnl_pct": 0.00686,
+      "signal_date": "2025-03-13",
+      "symbol": "688396.SH"
+    },
+    {
+      "entry_date": "2025-05-08",
+      "exit_date": "2025-06-27",
+      "exit_reason": "max_hold",
+      "name": "上港集团",
+      "pnl_amount": 5873.56,
+      "pnl_pct": 0.041331,
+      "signal_date": "2025-05-07",
+      "symbol": "600018.SH"
+    },
+    {
+      "entry_date": "2025-05-08",
+      "exit_date": "2025-06-27",
+      "exit_reason": "max_hold",
+      "name": "片仔癀",
+      "pnl_amount": -5175.73,
+      "pnl_pct": -0.036895,
+      "signal_date": "2025-05-07",
+      "symbol": "600436.SH"
+    },
+    {
+      "entry_date": "2025-05-08",
+      "exit_date": "2025-06-27",
+      "exit_reason": "max_hold",
+      "name": "海螺水泥",
+      "pnl_amount": -10523.64,
+      "pnl_pct": -0.074493,
+      "signal_date": "2025-05-07",
+      "symbol": "600585.SH"
+    },
+    {
+      "entry_date": "2025-05-08",
+      "exit_date": "2025-06-27",
+      "exit_reason": "max_hold",
+      "name": "青岛啤酒",
+      "pnl_amount": -6420.76,
+      "pnl_pct": -0.046052,
+      "signal_date": "2025-05-07",
+      "symbol": "600600.SH"
+    },
+    {
+      "entry_date": "2025-05-08",
+      "exit_date": "2025-06-27",
+      "exit_reason": "max_hold",
+      "name": "川投能源",
+      "pnl_amount": -8449.13,
+      "pnl_pct": -0.059515,
+      "signal_date": "2025-05-07",
+      "symbol": "600674.SH"
+    },
+    {
+      "entry_date": "2025-05-08",
+      "exit_date": "2025-06-27",
+      "exit_reason": "max_hold",
+      "name": "山西汾酒",
+      "pnl_amount": -16588.65,
+      "pnl_pct": -0.124905,
+      "signal_date": "2025-05-07",
+      "symbol": "600809.SH"
+    },
+    {
+      "entry_date": "2025-05-08",
+      "exit_date": "2025-06-27",
+      "exit_reason": "max_hold",
+      "name": "中国神华",
+      "pnl_amount": 4668.8,
+      "pnl_pct": 0.03359,
+      "signal_date": "2025-05-07",
+      "symbol": "601088.SH"
+    },
+    {
+      "entry_date": "2025-05-08",
+      "exit_date": "2025-06-27",
+      "exit_reason": "max_hold",
+      "name": "中国卫通",
+      "pnl_amount": -148.64,
+      "pnl_pct": -0.001058,
+      "signal_date": "2025-05-07",
+      "symbol": "601698.SH"
+    },
+    {
+      "entry_date": "2025-05-08",
+      "exit_date": "2025-06-27",
+      "exit_reason": "max_hold",
+      "name": "中国电信",
+      "pnl_amount": 399.86,
+      "pnl_pct": 0.002811,
+      "signal_date": "2025-05-07",
+      "symbol": "601728.SH"
+    },
+    {
+      "entry_date": "2025-05-08",
+      "exit_date": "2025-06-27",
+      "exit_reason": "max_hold",
+      "name": "中国石油",
+      "pnl_amount": 15800.72,
+      "pnl_pct": 0.111082,
+      "signal_date": "2025-05-07",
+      "symbol": "601857.SH"
+    },
+    {
+      "entry_date": "2025-06-27",
+      "exit_date": "2025-08-15",
+      "exit_reason": "max_hold",
+      "name": "中国石化",
+      "pnl_amount": -1212.22,
+      "pnl_pct": -0.008674,
+      "signal_date": "2025-06-26",
+      "symbol": "600028.SH"
+    },
+    {
+      "entry_date": "2025-06-27",
+      "exit_date": "2025-08-15",
+      "exit_reason": "max_hold",
+      "name": "上汽集团",
+      "pnl_amount": 18402.64,
+      "pnl_pct": 0.132529,
+      "signal_date": "2025-06-26",
+      "symbol": "600104.SH"
+    },
+    {
+      "entry_date": "2025-06-27",
+      "exit_date": "2025-08-15",
+      "exit_reason": "max_hold",
+      "name": "中国海油",
+      "pnl_amount": -358.42,
+      "pnl_pct": -0.002559,
+      "signal_date": "2025-06-26",
+      "symbol": "600938.SH"
+    },
+    {
+      "entry_date": "2025-06-27",
+      "exit_date": "2025-08-15",
+      "exit_reason": "max_hold",
+      "name": "中国移动",
+      "pnl_amount": -5949.0,
+      "pnl_pct": -0.043333,
+      "signal_date": "2025-06-26",
+      "symbol": "600941.SH"
+    },
+    {
+      "entry_date": "2025-06-27",
+      "exit_date": "2025-08-15",
+      "exit_reason": "max_hold",
+      "name": "中海油服",
+      "pnl_amount": 2251.47,
+      "pnl_pct": 0.016086,
+      "signal_date": "2025-06-26",
+      "symbol": "601808.SH"
+    },
+    {
+      "entry_date": "2025-06-27",
+      "exit_date": "2025-08-15",
+      "exit_reason": "max_hold",
+      "name": "京沪高铁",
+      "pnl_amount": -8208.94,
+      "pnl_pct": -0.058724,
+      "signal_date": "2025-06-26",
+      "symbol": "601816.SH"
+    },
+    {
+      "entry_date": "2025-06-27",
+      "exit_date": "2025-08-15",
+      "exit_reason": "max_hold",
+      "name": "中煤能源",
+      "pnl_amount": 14799.0,
+      "pnl_pct": 0.106157,
+      "signal_date": "2025-06-26",
+      "symbol": "601898.SH"
+    },
+    {
+      "entry_date": "2025-06-27",
+      "exit_date": "2025-08-15",
+      "exit_reason": "max_hold",
+      "name": "海天味业",
+      "pnl_amount": -1539.19,
+      "pnl_pct": -0.011063,
+      "signal_date": "2025-06-26",
+      "symbol": "603288.SH"
+    },
+    {
+      "entry_date": "2025-06-27",
+      "exit_date": "2025-08-15",
+      "exit_reason": "max_hold",
+      "name": "盛美上海",
+      "pnl_amount": 4886.27,
+      "pnl_pct": 0.036724,
+      "signal_date": "2025-06-26",
+      "symbol": "688082.SH"
+    },
+    {
+      "entry_date": "2025-06-27",
+      "exit_date": "2025-08-15",
+      "exit_reason": "max_hold",
+      "name": "华润微",
+      "pnl_amount": -2842.92,
+      "pnl_pct": -0.020899,
+      "signal_date": "2025-06-26",
+      "symbol": "688396.SH"
+    }
+  ],
+  "panel_registration_sha256": "1ed991b9ccec0fd93d68cbf6efff396d9c0087036e75c3e1940808d68ff69e99",
+  "preregistration_sha256": "f7e4430f7dbcf2a30299e6ddac1841fbe837d613826449fd9f508521c3ed5a60",
+  "released_signal_set": {
+    "active_dates": 195,
+    "distinct_symbols": 342,
+    "member_date_rows": 56786,
+    "sha256": "c9e772f60b5462a6abd506e76e65754411f9cb7a6709601516baf5f9c80b8f2f"
+  },
+  "round": "R289",
+  "status": "completed_no_alpha_confirmation",
+  "trade_outcomes": {
+    "all_r275_candidate_trades": {
+      "break_even": 0,
+      "losses": 146,
+      "mean_trade_pnl_amount": 2918.0084193548387,
+      "mean_trade_return": 0.02263352258064516,
+      "median_trade_return": 0.006993,
+      "sum_trade_pnl_amount": 904582.61,
+      "trade_count": 310,
+      "win_rate": 0.5290322580645161,
+      "wins": 164
+    },
+    "gate_release_attributed": {
+      "break_even": 0,
+      "losses": 27,
+      "mean_trade_pnl_amount": 2725.8138333333336,
+      "mean_trade_return": 0.024693383333333332,
+      "median_trade_return": 0.009287,
+      "sum_trade_pnl_amount": 163548.83000000002,
+      "trade_count": 60,
+      "win_rate": 0.55,
+      "wins": 33
+    },
+    "other_r275_candidate_trades": {
+      "break_even": 0,
+      "losses": 119,
+      "mean_trade_pnl_amount": 2964.13512,
+      "mean_trade_return": 0.022139156,
+      "median_trade_return": 0.005792,
+      "sum_trade_pnl_amount": 741033.78,
+      "trade_count": 250,
+      "win_rate": 0.524,
+      "wins": 131
+    },
+    "r266_control_trades": {
+      "break_even": 0,
+      "losses": 145,
+      "mean_trade_pnl_amount": 2183.9855862068966,
+      "mean_trade_return": 0.020232627586206895,
+      "median_trade_return": 0.0008239999999999999,
+      "sum_trade_pnl_amount": 633355.8200000001,
+      "trade_count": 290,
+      "win_rate": 0.5,
+      "wins": 145
+    }
+  }
+}

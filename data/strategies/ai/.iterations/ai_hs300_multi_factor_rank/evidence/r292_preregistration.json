@@ -1,0 +1,78 @@
+{
+  "classification": "isolated_r257_factor_rebuild_and_system_attachment_audit",
+  "decision_rule": {
+    "fail": "Any required frozen source hash changes, a production function fails, or either scratch composite or attached coverage is below 200.",
+    "interpretation": "Pass proves isolated computational and system-attachment recoverability for the frozen historical date only; it does not reproduce old numeric values, establish point-in-time correctness, measure returns, or validate alpha.",
+    "pass": "The scratch-only production builder produces at least 200 non-null R257 values on the target date, production attach_ext_columns attaches at least 200 to target-date enriched rows, and exact attached values equal the scratch factor partition for every non-null row."
+  },
+  "execution_limits": {
+    "backtest_or_matching_run": false,
+    "builder_main_called": false,
+    "provider_called": false,
+    "registered_market_or_ext_data_write": false,
+    "returns_or_trades_read": false,
+    "scratch_only_rebuild": true,
+    "strategy_or_production_state_changed": false
+  },
+  "frozen_at_utc": "2026-10-29T00:00:00+00:00",
+  "frozen_scope": {
+    "composite_function": "scripts/build_r257_quality_relative_strength_factor.py::_factor_daily / _min_rank_factor",
+    "industry_function": "scripts/build_alt_factor_data.py::_industry_daily",
+    "input_files": 2154,
+    "input_manifest": "evidence/r292_input_manifest.jsonl",
+    "input_manifest_sha256": "6cf5e261461f65232de650e922ba9a1443cae81bf94255a37a2ba4f2f7d8dc62",
+    "kline_partition_count": 2138,
+    "market_input": "all frozen kline_daily_enriched partitions, used for rolling warm-up",
+    "parent_manifest": "evidence/r291_input_manifest.jsonl",
+    "parent_manifest_sha256": "1ad023b966d60cd758a499d9fff45b8b5b6fab5061f1471a9e6a01fb4543d9e7",
+    "required_paths_missing_from_parent_manifest": [
+      "backend/app/factors/ext_factors.py",
+      "backend/app/services/ext_data.py",
+      "backend/app/services/fs_utils.py"
+    ],
+    "system_attachment": "backend/app/factors/ext_factors.py::attach_ext_columns(include_snapshot=False)",
+    "target_date": "2026-10-19",
+    "universe": "symbols present in the frozen alt_hs300 target-date partition"
+  },
+  "hypothesis": "Using current enriched K-lines to recalculate the production industry factor will restore broad R257 coverage for the frozen 2026-10-19 date through both the production composite builder and production attachment function.",
+  "panel_candidate": {
+    "config": {
+      "asset_type": "stock",
+      "commission_pct": 0.0006,
+      "end": "2026-10-19",
+      "fees_pct": 0.0006,
+      "holding_days": 20,
+      "initial_capital": 1000000.0,
+      "matching": "open_t+1",
+      "max_exposure_pct": 1.0,
+      "max_positions": 10,
+      "minute_fill": false,
+      "mode": "position",
+      "overrides": {},
+      "params": {},
+      "position_sizing": "equal",
+      "slippage_bps": 15.0,
+      "stamp_tax_pct": 0.001,
+      "start": "2026-10-19",
+      "strategy_id": "ai_hs300_quality_relative_strength_h20_sl20"
+    },
+    "data_as_of": "2026-10-19",
+    "kind": "strategy",
+    "metrics": {},
+    "name": "R292 ???????????",
+    "source_id": "ai_hs300_quality_relative_strength_h20_sl20",
+    "status": "pending"
+  },
+  "panel_guard": {
+    "R288": "280b43c9d2364b5589d9d0edc73d1144",
+    "R289": "58dc4329c85e4df88271aa9b42276089",
+    "R290": "2451e5a386d5489584e4121f42d97792",
+    "R291": "4b5134a2f8a1441d8034dbb484b8e238",
+    "register_once": true,
+    "required_status": "pending",
+    "retry_post": false
+  },
+  "question": "Does rebuilding only the stale industry-relative-strength input in a temporary data directory restore R257 coverage through the production composite builder and production exact-date extension attachment, without changing registered data?",
+  "round": "R292",
+  "status": "frozen_before_results"
+}

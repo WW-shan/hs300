@@ -1,0 +1,64 @@
+{
+  "round": "R301",
+  "classification": "pre_registration_feasibility_only_no_forward_returns_or_strategy_results_read",
+  "created_at_utc": "2026-10-29",
+  "question": "Can a point-in-time signal for revenue growth outpacing receivables growth provide a sufficiently covered, non-duplicate candidate for later system validation?",
+  "hypothesis": "Revenue growth that materially exceeds receivables growth may reflect better collections and higher revenue quality. The factor is defined as revenue_yoy_growth minus receivables_yoy_growth; high is favorable.",
+  "selection_note": "This is an economic feasibility hypothesis only. Related factors receivable_growth_yoy (R82) and working_capital_change_yoy_low (R242) have already been tested and rejected. R301 will compare signal coverage and overlap before deciding whether any later return test is justified; it will not repeat those formulas under new names.",
+  "factor": {
+    "formula": "revenue_growth_yoy = current cumulative YTD revenue / same fiscal period one year earlier cumulative YTD revenue - 1; receivables_growth_yoy = current accounts_receivable / accounts_receivable exactly four fiscal quarters earlier - 1; collection_quality_spread = revenue_growth_yoy - receivables_growth_yoy",
+    "direction": "high",
+    "quarter_alignment": "Exact same fiscal quarter in adjacent years; period index must differ by exactly 4. No 365-day approximation, interpolation, fill, or fallback.",
+    "source_tables": {
+      "revenue": "data/financials/income/part.parquet",
+      "receivables": "data/financials/balance_sheet/part.parquet"
+    },
+    "pit_rule": "Apply backend/app/backtest/fundamentals.py financial_pit_date independently to each source table. The factor effective date is the later PIT date of the current income and balance-sheet report, plus one calendar day; require both current reports and both exact four-quarter lags. No as-of publication timestamps or historical vintages are available, so PIT is conservative statutory-date normalization, not exact original publication history.",
+    "expiry_rule": "Set null when signal_date minus current period_end exceeds 180 calendar days. Do not carry values across stale reports.",
+    "value_rules": "Require all four source values non-null and strictly positive for denominators; resulting growths and spread must be finite. No winsorization or clipping."
+  },
+  "universe_and_period": {
+    "membership": "data/research/r78_daily_membership/daily_snapshots.parquet, exact historical query_date membership",
+    "industry_exclusion": "Use the existing current industry map, excluding banks and non-bank financials; explicitly non-PIT and reported as a limitation.",
+    "full": ["2022-07-01", "2026-10-14"],
+    "discovery": ["2022-07-01", "2024-12-31"],
+    "validation": ["2025-01-02", "2026-10-14"],
+    "recent_12m": "last 252 trading dates ending 2026-10-14",
+    "date_rule": "A report effective on a date is not available until the next calendar day; signals are attached by backward as-of and never to a date earlier than effective_date."
+  },
+  "feasibility_gates": {
+    "F1": "Full, discovery, validation and recent-252 member-row coverage each >=90%; at least one valid name on >=95% of trading dates.",
+    "F2": "Maximum mean absolute monthly cross-sectional Spearman correlation versus receivable_growth_yoy_low, working_capital_change_yoy_low, asset_growth_yoy_low, ocf_margin_4q, cash_to_assets, sga_ratio_4q_low, and gross_margin_yoy_improvement_q <=0.70; calculate only month-ends with >=30 paired valid members and report all monthly counts.",
+    "F3": "Monthly signal provides incremental rank information versus existing receivable_growth_yoy_low: report signal-minus-old rank residual correlation after cross-sectional linear projection, with >=30 paired names in >=80% of month-ends. This is an information/feasibility gate only, not a return test.",
+    "F4": "Exact-quarter and PIT logic pass deterministic synthetic boundary checks, including duplicate source column avoidance, missing-quarter rejection, same-day exclusion, and 180-day expiry."
+  },
+  "decision_rule": "If any F gate fails, reject this direction without reading forward returns or running strategy backtests. If all pass, write a separate preregistration and then consider a first-time predictive screen/system backtest; do not change this formula, sample, or feasibility gates after observing results. A pass here never constitutes alpha.",
+  "evidence_boundary": "May read financial inputs, historical membership, industry classifications, and pre-existing factor values only. Must not read forward returns, strategy return caches, or trade outcomes.",
+  "side_effect_boundary": "Write only new R301 evidence and a dedicated R301 feasibility cache. Do not modify financial/market data, formal factor partitions, strategies, existing evidence, LEDGER.md, RESEARCH_SUMMARY.md, R300 files, or panel candidate store. No provider calls, builder runs, backtests, or panel writes in this feasibility stage.",
+  "known_limitations": [
+    "Financial values are current snapshots with restatement risk.",
+    "financial_pit_date uses statutory deadlines where raw announce_date is late or invalid; exact historical publication timestamps are unavailable.",
+    "Current industry classification is backfilled historically and is not PIT.",
+    "R82 and R242 rejected adjacent related financial signals; any observed feasibility cannot erase these negative results."
+  ],
+  "panel_candidate_intent": {
+    "kind": "factor",
+    "name": "R301 应收相对营收增速可行性审计",
+    "source_id": "r301_collection_quality_growth_spread",
+    "config": {
+      "factor_name": "r301_collection_quality_growth_spread",
+      "start": "2022-07-01",
+      "end": "2026-10-14",
+      "n_groups": 5,
+      "rebalance": "monthly",
+      "weight": 1.0,
+      "fees_pct": 0.0,
+      "slippage_bps": 0.0,
+      "asset_type": "stock"
+    },
+    "metrics": {},
+    "data_as_of": "2026-10-14",
+    "status": "pending",
+    "registration_policy": "Do not POST this intent. Feasibility-only evidence is not a backtest candidate; any later outcome test must have its own frozen registration before outcomes are read."
+  }
+}

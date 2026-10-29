@@ -1,0 +1,56 @@
+{
+  "round": "R294",
+  "status": "frozen_before_probe",
+  "frozen_at_utc": "2026-10-28T17:19:27.498678+00:00",
+  "research_question": "Can same-volume per-directory replacement support a safe staged publication with rollback, and what cache/view invalidation is required for readers to observe a complete derived-factor generation?",
+  "hypotheses": [
+    "A single directory rename can provide a per-tree namespace switch, but sequential publication of three trees is not a transaction.",
+    "A journaled backup-and-replace sequence can recover an injected mid-switch failure while the process is alive; abrupt-crash recovery remains a separate requirement.",
+    "Correct visibility requires clearing extension-frame/registry/strategy caches and the live repository enriched cache, and refreshing DuckDB views where used."
+  ],
+  "method": [
+    "Create synthetic old/new directory trees only below data/.staging and verify same-volume replacement behavior on Windows.",
+    "Inject a failure between moving the old tree to backup and installing the staged tree; verify rollback restores the complete old tree and staged files remain recoverable.",
+    "Trace actual extension factor, API, DuckDB, enriched repository and strategy cache invalidation functions.",
+    "Define fail-closed full-build validation gates against the enriched trading-date set and upstream dependency dates."
+  ],
+  "decision_rules": [
+    "Call a switch atomic only for one directory namespace operation; do not label a multi-tree sequence atomic.",
+    "Any missing/extra partition, date mismatch, duplicate symbol-date, schema mismatch, or component coverage failure must abort publication.",
+    "A rollback test proves only the tested process-level failure path, not power-loss durability.",
+    "A successful storage probe does not imply historic factor-value reproduction, PIT validity, returns, or alpha."
+  ],
+  "input_snapshot": {
+    "file": "r294_input_snapshot.json",
+    "sha256": "350c6441f042aa8ead29ccd8f95beac8b5051d782b41c726acfdfe1df4a6583c"
+  },
+  "freeze_script_sha256": "fb97d182fa06d8985c1cff959b599d934d77fc5405b845c6c41e0ce7605a5911",
+  "panel_candidate": {
+    "kind": "strategy",
+    "name": "R294 派生因子目录切换与缓存失效安全验证",
+    "source_id": "ai_hs300_quality_relative_strength_h20_sl20",
+    "config": {
+      "asset_type": "stock",
+      "commission_pct": 0.0006,
+      "end": "2026-10-19",
+      "fees_pct": 0.0006,
+      "holding_days": 20,
+      "initial_capital": 1000000.0,
+      "matching": "open_t+1",
+      "max_exposure_pct": 1.0,
+      "max_positions": 10,
+      "minute_fill": false,
+      "mode": "position",
+      "overrides": {},
+      "params": {},
+      "position_sizing": "equal",
+      "slippage_bps": 15.0,
+      "stamp_tax_pct": 0.001,
+      "start": "2026-10-19",
+      "strategy_id": "ai_hs300_quality_relative_strength_h20_sl20"
+    },
+    "metrics": {},
+    "data_as_of": "2026-10-19",
+    "status": "pending"
+  }
+}

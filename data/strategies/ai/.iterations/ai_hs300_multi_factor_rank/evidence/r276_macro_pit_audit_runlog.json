@@ -1,0 +1,48 @@
+{
+  "round": "R276",
+  "classification": "forensic_audit_runner_correction_log",
+  "runner": "scripts/audit_macro_gate_point_in_time.py",
+  "runner_sha256_at_final_run": "e801b85dacdee11e62f92d5221c156037e5b53d3aad321f0164cbd6ec9ea16b9",
+  "execution_history": [
+    {
+      "attempt": 1,
+      "status": "failed",
+      "observed_error": "Polars ColumnNotFoundError: unable to find column date in partition parquet; date is encoded by the date=YYYY-MM-DD directory name.",
+      "resolution": "Read each partition and derive the observation date from its parent directory name."
+    },
+    {
+      "attempt": 2,
+      "status": "superseded",
+      "observed_issue": "Change frequency was calculated across symbols, which does not describe the shared market-level macro series.",
+      "resolution": "Aggregate one value per date across symbols before measuring macro-value transitions."
+    },
+    {
+      "attempt": 3,
+      "status": "superseded",
+      "observed_issue": "Annual return diagnostic initially lacked the exact prior-year curve base and the R266 comparison.",
+      "resolution": "Use prior-year closing equity as annual base and include checksummed R275 term and R266 control curves/trades."
+    },
+    {
+      "attempt": 4,
+      "status": "superseded",
+      "evidence": "r276_macro_pit_audit_v4.json",
+      "sha256": "209e93b29ff75e99660a37745a2886f69bf33117d604a6ec2cfe1d2d57465252",
+      "observed_issue": "Market-level inputs should explicitly prove a single shared value per date across all symbols.",
+      "resolution": "Add an integrity assertion and max distinct values per date to the macro audit."
+    },
+    {
+      "attempt": 5,
+      "status": "final",
+      "evidence": "r276_macro_pit_audit_v5.json",
+      "sha256": "9783ccaccb81a1137c229ceac150bd67f074d2fbccc05b2a1ca83e836b9ff7a7",
+      "validation": "Ruff passed; audit completed over 2,132 partitions; each macro field has one distinct value per date; sidecar checksum verified."
+    }
+  ],
+  "superseded_outputs_preserved": [
+    "r276_macro_pit_audit.json",
+    "r276_macro_pit_audit_v2.json",
+    "r276_macro_pit_audit_v3.json",
+    "r276_macro_pit_audit_v4.json"
+  ],
+  "decision": "Only v5 is the final PIT/annual diagnostic evidence; older output versions are preserved as superseded audit artifacts and must not be treated as final findings."
+}

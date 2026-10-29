@@ -1,0 +1,103 @@
+{
+  "round": "R274",
+  "registered_at": "2026-10-28",
+  "status": "pre_registered_before_panel_registration_and_backtest",
+  "classification": "single_variant_exploratory_ablation_not_independent_confirmation",
+  "question": "Are R266's ERP/credit/term entry gates overly restrictive, or do they improve the A-leg's realized portfolio outcomes?",
+  "hypothesis": "Removing only the three macro entry predicates increases eligible entries and may improve exposure/return, but could worsen drawdown, loss tail or concentration.",
+  "control_strategy": "ai_hs300_macro_gate_quality",
+  "candidate_strategy": "ai_hs300_macro_gate_quality_r274_no_macro_gate",
+  "only_changed_behavior": "Remove ERP >= 5.5, credit_spread_5y_low >= -0.8, term_spread_10y_2y >= 0.3 from entry filter; retain all base filters, scoring, ranking, universe, sizing, holding and execution behavior.",
+  "execution": {
+    "window": [
+      "2021-06-01",
+      "2026-10-16"
+    ],
+    "discovery": [
+      "2021-06-01",
+      "2023-12-31"
+    ],
+    "validation": [
+      "2024-01-01",
+      "2026-10-16"
+    ],
+    "membership": "r78_daily_membership",
+    "matching": "open_t+1",
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "max_hold_days": 35,
+    "costs": {
+      "3x": "0.0006 commission + 0.001 stamp tax + 15bp slippage",
+      "4x": "proportionally scaled",
+      "5x": "proportionally scaled"
+    },
+    "r266_control_cache_hashes": {
+      "3x": {
+        "curve": "db742d445b8c1e8ca2598008976bf3d2fcfc5ac9b72768b91ed226db95802112",
+        "trades": "d11bb39184003b1380cda54b794612e6e9a9defe6f3827b036831c406b8ab839"
+      },
+      "4x": {
+        "curve": "b4028a3c21cf030ac484a7b525cd10d8a964d8913b530e61371dfe8967a885d6",
+        "trades": "34da09e8a22d8fa2733f3bc746c0646e780bdfe8c85a524445747f7fb2c8298e"
+      },
+      "5x": {
+        "curve": "728f68b2a913677ca3e51b37d0bb4d5fd55f297017f2f2b9bd7eb09b879ac025",
+        "trades": "8a4600676ab4b235b3e53b4d601e9b0a3c6323cdc6d77f140ecfa1e821f37048"
+      }
+    },
+    "r266_evidence_sha256": "32fea04080242d0029e99e59e790b49e85d0d9245d8f7ca8f05d44ef749ca2a0",
+    "control_source_sha256": "b1c2b43ef9861053d3f4e4dd2ac4a3aeb7d0eae301b5400bdb0dbf65169b87ec",
+    "candidate_source_sha256": "a48f2ba6262c8fa072d7c4db79f259ee39af358e48ed77d5d833a1de5bac0cd1",
+    "historical_membership_sha256": "f4417807dfb7ede462fe6cc70ac2262d2f171320de7f2cfc6bfaef96d89234ef",
+    "macro_data": {
+      "config_sha256": "2dd24cf1a19266179273933eb5b80bc0c2dcd0ad64ad998599756d40dfc78658",
+      "partition_count": 2132,
+      "total_size_bytes": 306190733,
+      "inventory_sha256": "b51d74f61c76e3d7ca45da0d2e411deec2fa322efe33f8c933f1cb1601a90f3a"
+    },
+    "system_source_sha256": {
+      "strategy_service": "318b6548354c587965c321921faafcbb7c4be0012fefe3ada0ced97fae06fd4e",
+      "backtest_engine": "79962c45a4b6e64d77b625be144997efc4c12fda85e33242224fdb44d3c62bf3",
+      "strategy_engine": "68894cd5f0212b6b1fc49cfe94e8480f1754271cb80b1ee1c7eaafc8feab0399",
+      "indicator_pipeline": "4460ac88ad326590d59bd1e961981e8cc679272263fc326fcf18df7c0b168880",
+      "membership_runner": "94c615bedbe9c5afa7fd3720e36bc20a3a8ede9046715efc9bbf6841458bd1ae"
+    },
+    "candidate_cache_namespace": "data/research/r274_cache/"
+  },
+  "gates": {
+    "P1": "R266 curve/trade cache hashes at 3x/4x/5x match finalized evidence.",
+    "P2": "Live panel reload succeeds; R274 candidate and R266 control exist; all required stock factors exist; zero strategy load errors.",
+    "G1": "3x full return positive and >=70% of R266 full return.",
+    "G2": "3x maximum drawdown >= -25%.",
+    "G3": "3x rolling one-year positive-return rate >=70%.",
+    "G4": "3x validation return positive.",
+    "G5": "3x validation annualized return >=5%.",
+    "G6": "4x full return positive.",
+    "G7": "5x full return positive.",
+    "G8": "3x prior-close-rebased validation return retains >=70% of R266.",
+    "R1": "3x Sharpe >= R266.",
+    "R2": "3x MDD >= R266 MDD - 3 percentage points.",
+    "L1": "3x full mean losing-trade loss magnitude improves >=1pp versus R266.",
+    "L2": "3x validation-entry mean losing-trade loss magnitude improves >=1pp versus R266.",
+    "L3": "3x worst full trade is less negative than R266.",
+    "L4": "3x worst validation-entry trade is less negative than R266.",
+    "C1": "At least 30 distinct traded symbols.",
+    "C2": "Largest symbol net P&L share <=25%.",
+    "C3": "Top-three symbol net P&L share <=55%.",
+    "C4": "Top-five symbol net P&L share <=75%.",
+    "C5": "At least 8 validation-entry symbols have positive P&L.",
+    "C6": "Largest industry gross-profit share <=45%.",
+    "C7": "Largest single-symbol loss <=20% of gross profit.",
+    "C8": "Validation-period largest symbol net P&L share <=35%."
+  },
+  "decision_rule": "Run this single frozen ablation at 3x/4x/5x only; every P/G/R/L/C gate must pass. Unknown or failed gate rejects. Do not tune thresholds or run a follow-up grid.",
+  "known_limitations": [
+    "R266 and the validation interval were extensively used in prior research; this is exploratory, not independent confirmation or an untouched holdout.",
+    "Macro observation publication timestamps and point-in-time release lags are not independently verified.",
+    "Historical HS300 membership, macro data and industry mapping may have revision/snapshot bias.",
+    "Daily OHLC cannot reproduce queue priority; T+1 fills remain subject to suspension and limit-down constraints.",
+    "A passing research result does not authorize paper trading or production; production remains pause_production."
+  ],
+  "runner_sha256": "15cf7e3f313ff90b146133f1f8be8f88a59b225c879831d80dd10794443a447e",
+  "panel_registrar_sha256": "6ce36b7a02f7a1824fa56a903f66b559bb8a21d8e291b2cdefbb891265a927a2"
+}

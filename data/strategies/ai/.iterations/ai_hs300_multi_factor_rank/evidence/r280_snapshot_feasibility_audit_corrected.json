@@ -1,0 +1,384 @@
+{
+  "all_pass": false,
+  "captured_at_utc": "2026-10-28T06:01:18.936226+00:00",
+  "checks": {
+    "all_candidate_ext_features_available_in_alt_source_partition": true,
+    "all_candidate_ext_features_present_in_standard_enriched_context": false,
+    "financial_pit_columns_present_in_standard_enriched_context": false,
+    "isolated_research_execution_path_proven_without_shared_cache_or_realtime_hooks": false,
+    "local_daily_and_alt_dates_align": true,
+    "local_inputs_align_to_current_members_date": false,
+    "panel_registration_proof_pass": true
+  },
+  "classification": "preregistered_read_only_after_close_snapshot_feasibility_audit",
+  "current_members": {
+    "as_of": "2026-10-27",
+    "count": 300,
+    "sha256": "50fd9d08b3fd2092dd9cd987a873cdc545cbe066bb182287c0c1304e16ca5308",
+    "source": "csindex"
+  },
+  "custom_factor_definitions": {
+    "uf_cash_quality": {
+      "financial_inputs_present_in_enriched_schema": [],
+      "formula": "ocf_ni - accrual",
+      "formula_identifier_inputs": [
+        "accrual",
+        "ocf_ni"
+      ],
+      "path": "data/user_data/custom_factors/uf_cash_quality.json",
+      "sha256": "57bbd5eb9f28726ccba096fc69cf6d947a8310e6e10b54047e709b1d39fbd506"
+    },
+    "uf_low_vol": {
+      "financial_inputs_present_in_enriched_schema": [],
+      "formula": "0 - annual_vol_20d",
+      "formula_identifier_inputs": [],
+      "path": "data/user_data/custom_factors/uf_low_vol.json",
+      "sha256": "4195df1afc7c26879c220e8a8aeadead689b16fac349f8a0cbdcdec7efa5a787"
+    },
+    "uf_quality_value_defensive": {
+      "financial_inputs_present_in_enriched_schema": [],
+      "formula": "roe_latest / (100 * pb_latest) - debt_ratio_latest / 100",
+      "formula_identifier_inputs": [
+        "debt_ratio_latest",
+        "pb_latest",
+        "roe_latest"
+      ],
+      "path": "data/user_data/custom_factors/uf_quality_value_defensive.json",
+      "sha256": "64b6b8a530029c4c184403759069f11f70ef93fd2047aedf0a9475de01116f36"
+    }
+  },
+  "date_alignment_pass": false,
+  "dates": {
+    "alt_hs300_latest_partition": "2026-10-19",
+    "current_hs300_members_as_of": "2026-10-27",
+    "enriched_daily_latest_partition": "2026-10-19",
+    "r279_akshare_sample_daily_latest": "2026-10-27"
+  },
+  "decision": "not_ready_no_signal_generated",
+  "evidence_correction": {
+    "classification": "append_only_deterministic_evidence_correction",
+    "correction_preregistration_sha256": "6c149b45a07cdc2278f9277715561b207aa315816005f37fe1776a0604853f1d",
+    "correction_runner_sha256": "32072d271ef0d0b435110070c0dbab36b7f103bca7d76435ce0cce22674576fa",
+    "original_audit_path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r280_snapshot_feasibility_audit.json",
+    "original_audit_sha256": "9e70a8f360da22f5f14b5d5fada1d5f0196a1a5dde1c8cdc095e385edc6c4f5a",
+    "reason": "R280 v1 compared the ext_alt_hs300_* factor ID directly to unprefixed physical alt_hs300 parquet/config field names. This correction uses the registered physical field name while leaving the frozen readiness gates unchanged."
+  },
+  "financial_columns_available_in_enriched": {
+    "accrual": false,
+    "debt_ratio_latest": false,
+    "ocf_ni": false,
+    "pb_latest": false,
+    "roe_latest": false
+  },
+  "input_hashes": {
+    "alt_config": "2dd24cf1a19266179273933eb5b80bc0c2dcd0ad64ad998599756d40dfc78658",
+    "alt_latest_partition": "7651d5ec29d6137d6f025d75cfc95e486ff9828036e4ab895b121b3ed958a8bf",
+    "candidate_source": "c707832dda70fa51f461814d623d88eba94dd32a45e1dbede61da7b18bcdd2d8",
+    "current_members": "50fd9d08b3fd2092dd9cd987a873cdc545cbe066bb182287c0c1304e16ca5308",
+    "enriched_latest_partition": "1bbc20bb71a34e0a8a2eee743d78bfcd0ea453cd4c5f120cc51417b6040477dd"
+  },
+  "panel_registration_proof_sha256": "72fe4007dc1dc110901bf31e0bfd8cb6bae32d6851962359951f4f7a1615ebfb",
+  "partition_schemas": {
+    "alt_hs300": {
+      "columns": [
+        "symbol",
+        "insider_buy_20d",
+        "insider_net_buy_20d",
+        "insider_sell_20d_low",
+        "holder_top10_free_float_share",
+        "holder_top10_share_chg_qoq",
+        "holder_top10_share_chg_yoy",
+        "holder_net_buy_ratio_90d",
+        "holder_net_buy_count_90d",
+        "fund_count_low",
+        "fund_count_chg_qoq_low",
+        "fund_holding_ratio_low",
+        "fund_holding_ratio_chg_qoq_low",
+        "fund_holding_value_chg_qoq_low",
+        "lhb_net_buy_ratio_20d",
+        "lhb_inst_net_buy_ratio_20d",
+        "lhb_event_count_20d_low",
+        "pledge_ratio_low",
+        "pledge_ratio_chg_1m_low",
+        "repurchase_event_60d",
+        "block_trade_ratio_20d_low",
+        "block_premium_20d",
+        "analyst_rating_score_20d",
+        "analyst_rating_change_20d",
+        "forecast_surprise_60d",
+        "express_surprise_60d",
+        "industry_mom_20d",
+        "industry_mom_60d",
+        "industry_rps_20d",
+        "industry_breadth_20d",
+        "stock_rel_industry_20d",
+        "hs300_stock_rel_industry_top3_flag",
+        "mainline_top1_flag",
+        "mainline_strength",
+        "mainline_leader_flag",
+        "etf_share_chg_1m",
+        "etf_share_chg_3m",
+        "qvix_z_252",
+        "m1_m2_scissors",
+        "m1_m2_scissors_chg_1m",
+        "m2_yoy",
+        "shibor_3m",
+        "shibor_3m_chg_20d",
+        "pmi",
+        "cpi_yoy",
+        "ppi_yoy",
+        "market_breadth_above_ma20",
+        "market_profit_score",
+        "market_trend_score",
+        "market_speculation_score",
+        "northbound_net_buy_20d",
+        "margin_chg_1m_low",
+        "short_ratio_low",
+        "if_net_short_chg_1m",
+        "bond_mom_20d",
+        "bond_tf_mom_20d",
+        "ah_premium_z",
+        "ah_premium_chg_1m",
+        "hsi_mom_20d",
+        "hsciei_mom_20d",
+        "hsi_rel_hs300_20d",
+        "margin_safety_z",
+        "margin_safety_chg_20d",
+        "nh_nl_diff_z",
+        "nh_nl_diff_20d",
+        "shibor_tightness_z",
+        "turnover_hhi_z",
+        "top30_amount_share_z",
+        "hs300_turnover_z",
+        "hs300_turnover_chg_20d",
+        "hs300_turnover_z_ext2017",
+        "hs300_turnover_chg_20d_ext2017",
+        "hs300_turnover_gate_flag_ext2017",
+        "idio_vol_60d_low",
+        "price_delay_60d",
+        "cs_spread_60d",
+        "vol_of_vol_60d_low",
+        "market_down_beta_60d_low",
+        "beta_asymmetry_120d",
+        "trend_efficiency_60d",
+        "risk_adjusted_momentum_60d",
+        "market_skew_60d_low",
+        "cash_flow_stability_4q_low",
+        "ocf_margin_4q",
+        "cash_to_assets",
+        "net_financing_4q_low",
+        "sga_ratio_4q_low",
+        "sga_ratio_4q_industry_neutral",
+        "sga_ratio_4q_qoq_improvement",
+        "management_expense_ratio_4q_low",
+        "sga_ratio_stability_4q_low",
+        "gross_margin_stability_4q_low",
+        "gross_margin_yoy_improvement_q",
+        "goodwill_ratio_low",
+        "intangible_ratio_low",
+        "rd_intensity",
+        "capex_intensity_low",
+        "equity_supply_ratio_180d_low",
+        "dividend_growth_ttm",
+        "dividend_ttm_cash",
+        "dividend_yield",
+        "dividend_initiation_flag",
+        "equity_risk_premium",
+        "equity_risk_premium_chg3m",
+        "credit_spread_5y_low",
+        "term_spread_10y_2y",
+        "market_emotion_score"
+      ],
+      "directory": "data/ext_data/alt_hs300/timeseries",
+      "latest_date": "2026-10-19",
+      "latest_partition": "data/ext_data/alt_hs300/timeseries/date=2026-10-19/part.parquet",
+      "latest_partition_mtime_utc": "2026-10-19T20:24:25.518993+00:00",
+      "latest_partition_sha256": "7651d5ec29d6137d6f025d75cfc95e486ff9828036e4ab895b121b3ed958a8bf",
+      "latest_partition_size_bytes": 138196,
+      "partition_count": 2132
+    },
+    "enriched_daily": {
+      "columns": [
+        "symbol",
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "amount",
+        "raw_close",
+        "raw_high",
+        "raw_low",
+        "turnover_rate",
+        "consecutive_limit_ups",
+        "consecutive_limit_downs",
+        "quote_ts"
+      ],
+      "directory": "data/kline_daily_enriched",
+      "latest_date": "2026-10-19",
+      "latest_partition": "data/kline_daily_enriched/date=2026-10-19/part.parquet",
+      "latest_partition_mtime_utc": "2026-10-19T08:38:14.218246+00:00",
+      "latest_partition_sha256": "1bbc20bb71a34e0a8a2eee743d78bfcd0ea453cd4c5f120cc51417b6040477dd",
+      "latest_partition_size_bytes": 6815,
+      "partition_count": 2132
+    }
+  },
+  "preregistration_sha256": "b607f04b6813aff0c681be60a7ae411c172a18d11e52d5d55eaa7bbf63d22a3a",
+  "production_status": "pause_production",
+  "required_ext_features": {
+    "ext_alt_hs300_credit_spread_5y_low": {
+      "column_in_latest_alt_partition": true,
+      "column_in_standard_enriched_partition": false,
+      "physical_partition_column": "credit_spread_5y_low",
+      "previous_mapping": {
+        "column_in_enriched_daily_partition": false,
+        "column_in_latest_alt_partition": false,
+        "registered_in_alt_config": true
+      },
+      "registered_in_alt_config": true
+    },
+    "ext_alt_hs300_equity_risk_premium": {
+      "column_in_latest_alt_partition": true,
+      "column_in_standard_enriched_partition": false,
+      "physical_partition_column": "equity_risk_premium",
+      "previous_mapping": {
+        "column_in_enriched_daily_partition": false,
+        "column_in_latest_alt_partition": false,
+        "registered_in_alt_config": true
+      },
+      "registered_in_alt_config": true
+    },
+    "ext_alt_hs300_holder_top10_free_float_share": {
+      "column_in_latest_alt_partition": true,
+      "column_in_standard_enriched_partition": false,
+      "physical_partition_column": "holder_top10_free_float_share",
+      "previous_mapping": {
+        "column_in_enriched_daily_partition": false,
+        "column_in_latest_alt_partition": false,
+        "registered_in_alt_config": true
+      },
+      "registered_in_alt_config": true
+    }
+  },
+  "required_financial_factor_inputs": {
+    "uf_cash_quality": [
+      "ocf_ni",
+      "accrual"
+    ],
+    "uf_quality_value_defensive": [
+      "roe_latest",
+      "pb_latest",
+      "debt_ratio_latest"
+    ]
+  },
+  "round": "R280",
+  "side_effects": {
+    "backtest_or_parameter_scan_run": false,
+    "market_or_extension_data_written": false,
+    "panel_reload_performed": false,
+    "paper_account_or_order_created": false,
+    "quote_polling_or_realtime_hooks_started": false,
+    "shared_strategy_cache_written": false,
+    "signal_generated": false,
+    "strategy_or_screener_run": false
+  },
+  "system_call_path_sources": {
+    "backtest_financial_pit": {
+      "line_matches": {
+        "FUNDAMENTAL_FACTORS": [
+          43,
+          54,
+          60,
+          61,
+          62,
+          64,
+          65,
+          194,
+          337,
+          368,
+          378,
+          395
+        ],
+        "financial_pit_date": [
+          9,
+          82
+        ],
+        "strictly": []
+      },
+      "path": "backend/app/backtest/fundamentals.py",
+      "sha256": "6a85acf0d1ee3e163ccd2d1e2c4b67f02f861ef8da8adac88bf6486845ddf411"
+    },
+    "scoring_materializer": {
+      "line_matches": {
+        "compiled.frame_transform(frame)": [
+          473
+        ],
+        "def materialize_scoring_columns(": [
+          438
+        ],
+        "if transformed is None:": [
+          474
+        ]
+      },
+      "path": "backend/app/strategy/scoring.py",
+      "sha256": "60b8293d94626fedd7d407628fddfa251c0e09e7edeab26aaa0d444df8f5c5e3"
+    },
+    "screener_api": {
+      "line_matches": {
+        "_update_cache_strategy(data_dir": [
+          304,
+          434
+        ],
+        "def run_preset(": [
+          377
+        ],
+        "if engine.get(req.strategy_id).meta.get(\"research_only\"):": [
+          397
+        ],
+        "strategy_cache.write_cache(data_dir": [
+          319,
+          720,
+          727,
+          895
+        ]
+      },
+      "path": "backend/app/api/screener.py",
+      "sha256": "4824fa4a997b7babec9edbdcc461bc726c4b5bd1a364dda3f36aa2bfe6176001"
+    },
+    "strategy_context": {
+      "line_matches": {
+        "def build_strategy_context": [
+          436
+        ],
+        "return StrategyDataContext(": [
+          465,
+          483
+        ],
+        "self._load_enriched_for_date(as_of)": [
+          387,
+          453
+        ]
+      },
+      "path": "backend/app/services/screener.py",
+      "sha256": "c4bdea03e7fd2d8c0b4fb7f032a131a9c5fac2069d9e3489a26fff177984364d"
+    },
+    "strategy_engine": {
+      "line_matches": {
+        "_apply_scoring(": [
+          1132,
+          1868
+        ],
+        "_materialize_scoring_frames(": [
+          951,
+          1925
+        ],
+        "def run(": [
+          893
+        ]
+      },
+      "path": "backend/app/strategy/engine.py",
+      "sha256": "68894cd5f0212b6b1fc49cfe94e8480f1754271cb80b1ee1c7eaafc8feab0399"
+    }
+  }
+}

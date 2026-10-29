@@ -1,0 +1,62 @@
+{
+  "round": "R302",
+  "classification": "post_hoc_R299_segment_concentration_diagnostic_after_R300_panel_schema_failure_not_alpha_confirmation",
+  "parent_round": "R300",
+  "parent_result_round": "R299",
+  "question": "Within the two already-frozen R299 discovery and validation segments, does the original stock-level net-P&L concentration failure persist in each segment?",
+  "selection_note": "R257/R299 aggregate results and the existence and counts of frozen segment trade logs were inspected before this protocol. This descriptive attribution is post hoc, not blind, independent validation, or evidence of a new alpha.",
+  "R300_registration_failure": "The first R300 POST was rejected with HTTP 400 because diagnostic metadata keys were not in CandidateStore's allowlist. Candidate count stayed at 17, no R300 record was created, and no trade-level outcome aggregation occurred. The R300 POST will not be retried.",
+  "data": {
+    "source": "Only the two already-generated R299 corrected-cost StrategyBacktestService trade logs; no new backtest, provider call, builder call, or formal data write.",
+    "segments": [
+      {"label": "discovery", "start": "2023-05-04", "end": "2024-12-31", "trading_days": 406, "trades": 209},
+      {"label": "validation", "start": "2025-01-02", "end": "2026-10-16", "trading_days": 431, "trades": 223}
+    ],
+    "candidate_strategy": "ai_hs300_quality_relative_strength_h20_sl20",
+    "matched_control_strategy": "ai_hs300_quality_relative_strength_control",
+    "fee_corrected_cost_model": {"fees_pct_provenance": 0.0006, "commission_pct_effective": 0.0012, "stamp_tax_pct_sell": 0.001, "slippage_bps_per_side": 15},
+    "frozen_trade_cache_directory": "data/research/r299_cost_audit_cache"
+  },
+  "analysis": {
+    "unit": "system-generated closed trades; P&L aggregated per symbol separately within each frozen segment",
+    "primary": ["trade_count", "distinct_symbols", "total_net_pnl", "top1_positive_symbol_net_pnl_share", "top3_positive_symbol_net_pnl_share", "top5_positive_symbol_net_pnl_share"],
+    "secondary": ["gross_profit", "gross_loss", "top1_top3_top5_gross_profit_shares", "win_rate", "profit_factor", "mean_trade_pnl_pct", "median_trade_pnl_pct"],
+    "control": "Report the same segment metrics for the matched R299 control; compare system curve returns already preserved in the frozen R299 result, not reconstructed from trade attribution.",
+    "calendar_year_slices": "Not required; if included, label only as trade P&L attribution, never as annual portfolio returns.",
+    "no_parameter_search": true,
+    "no_threshold_changes": true
+  },
+  "decision_rules": {
+    "C2": "top 1 positive symbol net P&L / segment total net P&L <= 0.25, evaluated only when segment total net P&L > 0",
+    "C3": "top 3 positive symbol net P&L / segment total net P&L <= 0.55, evaluated only when segment total net P&L > 0",
+    "C4": "top 5 positive symbol net P&L / segment total net P&L <= 0.75, evaluated only when segment total net P&L > 0",
+    "non_positive_segment_net_pnl": "C2-C4 not applicable under their positive-net denominator; report no substitute ratio",
+    "interpretation": "This is a diagnostic of the already-failed R257 concentration gates, not a new strategy pass/fail and not alpha confirmation."
+  },
+  "panel_candidate": {
+    "kind": "strategy",
+    "name": "R302 固定样本分段集中度核验（非新增回测）",
+    "source_id": "ai_hs300_quality_relative_strength_h20_sl20",
+    "config": {
+      "strategy_id": "ai_hs300_quality_relative_strength_h20_sl20",
+      "start": "2023-05-04",
+      "end": "2026-10-16",
+      "matching": "open_t+1",
+      "fees_pct": 0.0006,
+      "commission_pct": 0.0012,
+      "stamp_tax_pct": 0.001,
+      "slippage_bps": 15.0,
+      "max_positions": 10,
+      "max_exposure_pct": 1.0,
+      "initial_capital": 1000000.0,
+      "position_sizing": "equal",
+      "mode": "position",
+      "holding_days": 20,
+      "asset_type": "stock"
+    },
+    "metrics": {},
+    "data_as_of": "2026-10-16",
+    "status": "pending"
+  },
+  "side_effect_boundary": "Only R302 evidence and one pending panel research record may be written. No panel status update, backtest, provider, builder, formal market/factor/strategy data write, paper account, or order flow."
+}

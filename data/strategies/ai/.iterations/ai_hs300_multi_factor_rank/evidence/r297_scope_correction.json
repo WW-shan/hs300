@@ -1,0 +1,43 @@
+{
+  "round": "R297",
+  "classification": "pre_compute_scope_correction_for_mutable_runtime_cache",
+  "captured_at_utc": "2026-10-28T20:12:00+00:00",
+  "original_preregistration_sha256": "66c938113d29176ac579348c841ad8fb66a525118e016d9ba693c7627f37b97a",
+  "original_manifest_sha256": "1b011b54d04bc9f9dd4c55647279a404b4a323e529c09acc45cbe8b6e32a55f4",
+  "reason": "The first audit stopped before any factor computation because the panel service refreshed data/hs300/current_members.json after preregistration. It is an operational TTL cache and the audit consumes the separately frozen official snapshot artifact.",
+  "observed_cache_before_compute": {
+    "path": "data/hs300/current_members.json",
+    "frozen_sha256": "5a35d28fc347e45d4a6112f67a6b42c61f20e7594d43a6ef2ced9229c7734a8e",
+    "current_sha256": "ca317bd0362ff0753faccc55d8a1435c4c49ba3aa7f665c2bdd8e318294af819",
+    "frozen_size_bytes": 22557,
+    "current_size_bytes": 22557,
+    "current_fetched_at": "2026-10-29T04:10:03+08:00",
+    "frozen_official_as_of": "2026-10-28",
+    "current_cache_as_of": "2026-10-28",
+    "frozen_semantic_members_sha256": "b04607171e83d4e859370062010b92d7d2ab108d444efaad027d42904e8122c4",
+    "current_semantic_members_sha256": "b04607171e83d4e859370062010b92d7d2ab108d444efaad027d42904e8122c4",
+    "current_source": "csindex"
+  },
+  "scope_change": {
+    "exclude_only_mutable_cache_raw_hash_from_abort_set": true,
+    "keep_cache_identity_and_membership_semantic_equality_check": true,
+    "all_other_original_manifest_files_remain_frozen": true,
+    "formal_factor_tree_baseline_remains_frozen": true,
+    "no_original_frozen_file_is_modified": true
+  },
+  "pre_compute_revalidation": {
+    "original_manifest_files_except_cache": 2639,
+    "original_manifest_mismatches_except_cache": 0,
+    "formal_factor_partitions": 6396,
+    "formal_factor_partition_mismatches": 0,
+    "panel_candidate_id": "25d66a13bc214247a93c233b2a32a7cd",
+    "panel_candidate_status": "pending",
+    "panel_candidate_count": 14
+  },
+  "limitations": [
+    "This is a transparent post-registration, pre-computation scope correction.",
+    "It does not retroactively make the mutable cache hash a pre-run invariant.",
+    "The separately frozen official membership artifact remains the calculation input.",
+    "If the live cache membership set diverges from the frozen official artifact before or after the audit, abort."
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "captured_at_utc": "2026-10-29T11:16:00Z",
+  "classification": "posthoc_scope_and_reporting_correction; appended without overwriting preregistration or first report",
+  "correction": {
+    "conclusion_effect": "No change to the row-coverage totals or status counts. R304-A14 remains NO-GO, R257 remains unaccepted, and production remains pause_production.",
+    "corrected_statement": "Before registration, exploratory auditing read OHLC values for null/validity checks and displayed auxiliary-cache sample prices. The frozen R305 audit script itself read only membership/date/symbol keys and auxiliary trade_status; no forward return, outcome, backtest, or alpha scan was read or computed.",
+    "original_statement": "The first R305 report said no OHLCV values were read, without limiting the claim to the frozen audit script."
+  },
+  "frozen_audit_phase": {
+    "backtest_or_alpha_scan": false,
+    "columns_read": {
+      "auxiliary_bootstrap": [
+        "date",
+        "symbol",
+        "tradestatus",
+        "price_mode"
+      ],
+      "canonical_daily_partitions": [
+        "date",
+        "symbol"
+      ],
+      "membership": [
+        "query_date",
+        "symbol"
+      ]
+    },
+    "forward_returns_or_outcomes_read": false,
+    "script": "audit_r305_member_bar_gap.py",
+    "script_sha256": "ec9a5c27e311bf2eff8650c04c0870ce94c1ee30aac99ebee07a852727624746"
+  },
+  "pre_registration_exploration": {
+    "R40_auxiliary_cache": "A read-only exploratory command loaded the bootstrap cache including OHLC columns, printed its schema and the first 25 sample rows, and displayed price values. No signal, return, or backtest calculation was performed.",
+    "canonical_and_enriched_bars": "A read-only exploratory join loaded open/high/low/close columns over the R78 date range to count missing/null/non-positive values. No forward return was derived.",
+    "status": "This exploration occurred before the R305 preregistration and is therefore retrospective. It is disclosed as a scope deviation and does not count as preregistered evidence."
+  },
+  "related_evidence": {
+    "final_integrity_audit_sha256": "75b138c5e2837894aa3e2b03f7ad771055e7a511ce246638a0670fc5bc54c050",
+    "first_report_sha256": "7a6a3d91128eb42ab885e3565095e6f8bfdc360044624ae7f00d83181b8c5c46",
+    "machine_result_sha256": "acad1a124363f29a82080c8d33f8b0d9143865eb0fce1765da5fbe57ab370b01",
+    "preregistration_sha256": "87c79266a023b7d37bbef7e16b81ad18d7fa09784aed92ad902b536d8e79ef70"
+  },
+  "round": "R305",
+  "trigger": "Final evidence review found that exploratory commands executed before the R305 preregistration read OHLC columns, while the first report used wording broad enough to imply no price fields were read at any point in the round."
+}

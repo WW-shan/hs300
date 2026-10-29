@@ -1,0 +1,31 @@
+{
+  "classification": "execution_resource_amendment",
+  "created_at_utc": "2026-10-28T12:38:51.919405+00:00",
+  "execution_change": {
+    "change": "Keep the frozen sample, source hashes, system loader, historical membership, masks, four scoring inputs, metrics, and accounting checks. Load at most 60 formal trading dates per chunk, with the same 120-calendar-day warmup before each chunk, process through the actual system functions, reconcile, then clear the system panel cache and release arrays.",
+    "chunk_count_expected": 24,
+    "formal_trading_dates_per_chunk_max": 60,
+    "preflight": "A read-only 20-trading-day system-path preflight completed without error. It loaded 40,645 warmup panel rows and retained 8,339 formal rows for 2021-01-04 through 2021-01-29; 5,819 of 6,000 frozen member-date rows were present in the formal system panel; both strategy masks selected zero member-date rows in this preflight slice. This is an execution preflight, not the full-window result.",
+    "reason": "The frozen one-shot executor raised MemoryError while constructing full-window Boolean masks; no audit result was written.",
+    "unchanged": "No sample dates, inclusion rules, thresholds, candidate definitions, score weights, metrics, data inputs, panel registration, candidate state, or production state changed.",
+    "warmup_calendar_days": 120,
+    "window_end": "2026-10-14",
+    "window_start": "2021-01-04"
+  },
+  "first_attempt": {
+    "backtest_or_returns_called": false,
+    "candidate_state_changed": false,
+    "failure": "MemoryError during full-window Boolean mask construction after roughly one minute.",
+    "partial_audit_or_result_written": false,
+    "status": "failed_before_result_write"
+  },
+  "input_snapshot_sha256": "5611382a648989de7f9dc6ca53cbeabddf0d8c9efd320c44ec7f0dd693469f52",
+  "original_executor_sha256": "301e97cd18f013472c2d4b648171cd887dcc21f735940aac208eceb10d1f4dab",
+  "original_executor_sidecar_sha256": "394a63df19d7a654168ee37c5199ef83dc1bca3b81cb4a1003c996334d8a63ee",
+  "panel_registration_proof_sha256": "00ed686ba7b752f44c01540a4c6a626b0dbd98e9b22f5b4eecca13334909ded7",
+  "preregistration_sha256": "032da01d97f7209bf12821d119316c5e372cd67823158aac9eec665557217449",
+  "registration_policy": "Reuse the existing candidate; no duplicate POST and no status update.",
+  "replacement_executor": "r288_system_mask_audit_v2.py",
+  "replacement_executor_sha256": "e934428c110ce705bb027f93f6681cfe37d0b3e1e1a294f8554f897dacfa7e4f",
+  "round": "R288"
+}

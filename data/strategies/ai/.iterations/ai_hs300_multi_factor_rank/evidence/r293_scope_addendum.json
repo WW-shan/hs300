@@ -1,0 +1,93 @@
+{
+  "round": "R293",
+  "classification": "post-freeze_scope_addendum",
+  "captured_at_utc": "2026-10-28T17:11:33.964132+00:00",
+  "reason": "The original R293 manifest did not include the extension pull scheduler, app startup, configuration/data APIs, repository and strategy-cache invalidation, parquet writer, factor cache registration, or the three local extension configurations. Original frozen artifacts are preserved unchanged; this addendum expands audit coverage.",
+  "source_files": [
+    {
+      "path": "backend/app/main.py",
+      "size_bytes": 29251,
+      "sha256": "8f7e5ee9c91c6bf3d00610030a373f4c88682732d27e4dd5e20ada4f58685d8c"
+    },
+    {
+      "path": "backend/app/services/ext_pull.py",
+      "size_bytes": 27191,
+      "sha256": "96b69e744118cffc8ddf9c009e2a1de4b416c921980213028b898e2a2fae3ad5"
+    },
+    {
+      "path": "backend/app/services/ext_data.py",
+      "size_bytes": 35741,
+      "sha256": "1e4a53fc47f3db937177afa2578a5647b4c03be6c49c3bc880944be0799a0ac9"
+    },
+    {
+      "path": "backend/app/services/ext_presets.py",
+      "size_bytes": 10840,
+      "sha256": "06b498587ed5f15f1fb6952300c25ed44b467520c67cee3da1ded360560f890a"
+    },
+    {
+      "path": "backend/app/api/ext_data.py",
+      "size_bytes": 58730,
+      "sha256": "28bd876e563d71f72f83a4a4c2203cc46081b8b895c85378e201f1d001796071"
+    },
+    {
+      "path": "backend/app/tickflow/repository.py",
+      "size_bytes": 126935,
+      "sha256": "4e949855cc357bbd785be2a03dec9c075ffd92a69d1283e2b94ca93a38d64c8f"
+    },
+    {
+      "path": "backend/app/services/strategy_cache.py",
+      "size_bytes": 7896,
+      "sha256": "c513a152e50ed00041eeb28e346b5070c76605b8184b129d4235fd19820a4073"
+    },
+    {
+      "path": "backend/app/services/fs_utils.py",
+      "size_bytes": 2008,
+      "sha256": "c1f2c6d042c4597318319ff5a955e9d613c23020265b06d4dd364f313535c2f6"
+    },
+    {
+      "path": "backend/app/factors/ext_factors.py",
+      "size_bytes": 15089,
+      "sha256": "18ebc6e115387f3ef8457978a242592732341b5ba3700bb0d5ddd1a595b9701f"
+    },
+    {
+      "path": "data/ext_data/alt_hs300/config.json",
+      "size_bytes": 15148,
+      "sha256": "2dd24cf1a19266179273933eb5b80bc0c2dcd0ad64ad998599756d40dfc78658",
+      "config_id": "alt_hs300",
+      "pull_present": false,
+      "pull_enabled": false
+    },
+    {
+      "path": "data/ext_data/alt_hs300_minrank/config.json",
+      "size_bytes": 659,
+      "sha256": "f089e7c5cf222baf6e160315c49a3cd2f1c90a071c357961d14fc95eb509706a",
+      "config_id": "alt_hs300_minrank",
+      "pull_present": false,
+      "pull_enabled": false
+    },
+    {
+      "path": "data/ext_data/alt_hs300_qrs/config.json",
+      "size_bytes": 655,
+      "sha256": "5e8cc006b4cf5f07a5af23deb0645623b35999ac19ac0c9b9bffaa877587d491",
+      "config_id": "alt_hs300_qrs",
+      "pull_present": false,
+      "pull_enabled": false
+    }
+  ],
+  "builder_reference_search": {
+    "roots": [
+      "backend/app",
+      "backend/tests",
+      "scripts"
+    ],
+    "identifiers": "build_alt_factor_data|build_r253_min_rank_factor|build_r257_quality_relative_strength_factor|probe_r257_quality_relative_strength",
+    "hit_count": 128,
+    "output": "r293_scope_addendum_search.txt",
+    "sha256": "be90d50846a5b3f59e90946517713dcb22bbb1c75b8ccc729b1be5de41254838"
+  },
+  "limitations": [
+    "This is a source/configuration audit, not a runtime builder or cache test.",
+    "Configuration hashes preserve local file identity; no credentials are recorded separately.",
+    "It does not establish PIT validity, historical factor values, returns, or alpha."
+  ]
+}

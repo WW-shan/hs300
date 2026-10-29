@@ -1,0 +1,88 @@
+{
+  "round": "R289",
+  "registered_at": "2026-10-28",
+  "status": "frozen_before_outcome_read",
+  "question": "Among the R288 HS300 member-date signals released only by removing the R275 term-spread gate, how many correspond to an actual R275 position fill, and what are those fills' descriptive trade outcomes compared with other R275 fills?",
+  "classification": "exploratory_historical_trade_attribution_after_outcome_review",
+  "window": {
+    "start": "2021-01-04",
+    "end": "2026-10-14"
+  },
+  "attribution_method": {
+    "signal_set": "R288 daily_results released_symbols, keyed by exact (signal date, symbol)",
+    "fill_set": "R275 remove_term 3x finalized trade cache",
+    "mapping": "For each entry_date, locate the immediately preceding date in the frozen R275 3x curve trading calendar; open_t+1 fill date maps to that prior signal date.",
+    "attributed_fill": "The exact (mapped signal date, symbol) must exist in the R288 released set.",
+    "comparison": "All other R275 remove_term 3x fills; R266 control fills are used only for exact same-symbol/same-entry-date overlap checks and descriptive whole-strategy context.",
+    "trade_metrics": ["count", "win rate", "mean pnl_pct", "median pnl_pct", "sum pnl_amount"],
+    "interpretation": "Trade-level attribution only. Do not interpret sum of trade pnl_amount as portfolio NAV increment or infer portfolio return by treating fills independently."
+  },
+  "repository_root": "D:/Code/hs300",
+  "paths": {
+    "r288_audit": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r288_system_mask_audit_v4.json",
+    "r288_panel_registration": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r288_panel_registration.json",
+    "r288_preregistration": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r288_preregistration.json",
+    "r275_preregistration": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r275_preregistration_v3d.json",
+    "r266_preregistration": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r266_preregistration.json",
+    "r275_candidate_trades": "data/research/r275_cache_v3d/ai_hs300_macro_gate_quality_r275_remove_term_3x_2021-06-01_2026-10-16.trades.json",
+    "r275_candidate_manifest": "data/research/r275_cache_v3d/ai_hs300_macro_gate_quality_r275_remove_term_3x_2021-06-01_2026-10-16.manifest.json",
+    "r275_candidate_curve": "data/research/r275_cache_v3d/ai_hs300_macro_gate_quality_r275_remove_term_3x_2021-06-01_2026-10-16.parquet",
+    "r266_control_trades": "data/research/r266_cache/ai_hs300_macro_gate_quality_3x_2021-06-01_2026-10-16.trades.json",
+    "r266_control_curve": "data/research/r266_cache/ai_hs300_macro_gate_quality_3x_2021-06-01_2026-10-16.parquet"
+  },
+  "input_sha256": {
+    "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r288_system_mask_audit_v4.json": "8dd01dfbae23985336b17edb53defd472bdc2318e4124923631a107433570402",
+    "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r288_panel_registration.json": "00ed686ba7b752f44c01540a4c6a626b0dbd98e9b22f5b4eecca13334909ded7",
+    "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r288_preregistration.json": "032da01d97f7209bf12821d119316c5e372cd67823158aac9eec665557217449",
+    "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r275_preregistration_v3d.json": "97f192c0cf5eb81e4e9e64db770366852681c93d6214b1260822bbcd28182f11",
+    "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r266_preregistration.json": "5a56b3e60f1142425fb4e0b6305ef37f520941f1b4b102d509549d14f62a733d",
+    "data/research/r275_cache_v3d/ai_hs300_macro_gate_quality_r275_remove_term_3x_2021-06-01_2026-10-16.trades.json": "17d9bd4e3a0f18c55fe659f9e9ba3237e514c3330dafe1a19a81a2b1c353856a",
+    "data/research/r275_cache_v3d/ai_hs300_macro_gate_quality_r275_remove_term_3x_2021-06-01_2026-10-16.manifest.json": "50896ef6bbaa04c991319e69a5d20a2ffd549b03fba88e00ccb4326908a6d0bc",
+    "data/research/r275_cache_v3d/ai_hs300_macro_gate_quality_r275_remove_term_3x_2021-06-01_2026-10-16.parquet": "e28a93e142a3b2e62bb2b2b93e354e04c2d680d11fcdbc56bc178b3f0f4f9f60",
+    "data/research/r266_cache/ai_hs300_macro_gate_quality_3x_2021-06-01_2026-10-16.trades.json": "d11bb39184003b1380cda54b794612e6e9a9defe6f3827b036831c406b8ab839",
+    "data/research/r266_cache/ai_hs300_macro_gate_quality_3x_2021-06-01_2026-10-16.parquet": "db742d445b8c1e8ca2598008976bf3d2fcfc5ac9b72768b91ed226db95802112"
+  },
+  "code_sha256": {
+    "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r289_register_panel_once.py": "5f373f4ba96842dedc6817090bf2710e30fb92eae0917c572077532b457554bc",
+    "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r289_trade_attribution.py": "a917edc1338582c237a02569d8a02c1330bcfebd54ae7096a3cc096d8e0a056c"
+  },
+  "panel_guard": {
+    "r288_candidate_id": "280b43c9d2364b5589d9d0edc73d1144",
+    "required_status": "pending",
+    "r289_status": "pending",
+    "backtest_run": false
+  },
+  "panel_candidate": {
+    "name": "R289 门禁释放信号的实际成交归因",
+    "source_id": "ai_hs300_macro_gate_quality_r275_remove_term",
+    "config": {
+      "strategy_id": "ai_hs300_macro_gate_quality_r275_remove_term",
+      "start": "2021-01-04",
+      "end": "2026-10-14",
+      "params": {},
+      "overrides": {},
+      "matching": "open_t+1",
+      "fees_pct": 0.0006,
+      "commission_pct": 0.0006,
+      "stamp_tax_pct": 0.001,
+      "slippage_bps": 15.0,
+      "max_positions": 10,
+      "max_exposure_pct": 1.0,
+      "initial_capital": 1000000.0,
+      "position_sizing": "equal",
+      "mode": "position",
+      "holding_days": 35,
+      "asset_type": "stock",
+      "minute_fill": false
+    }
+  },
+  "limitations": [
+    "The R288 and R275 analyses reuse repeatedly viewed historical windows; this attribution is post-outcome exploratory analysis, not independent confirmation.",
+    "A released member-date is eligibility, not a portfolio allocation; top-ten ranking and slot capacity mean most eligible rows need not trade.",
+    "Summed per-trade pnl_amount is not a portfolio NAV increment because capital overlap, compounding, cash availability, and path effects are not reconstructed here.",
+    "Historical HS300 membership, macro publication/revision timestamps, and current alternative-factor partitions may carry timing or revision bias.",
+    "Daily OHLC-based open_t+1 execution cannot fully model queues, suspensions, price limits, liquidity, or market impact.",
+    "The exact R275 fills come from the already executed ten-position backtest; this round does not rerun or independently recompute the portfolio."
+  ],
+  "decision_rule": "Report exact matched fill attribution descriptively. Do not claim alpha, promote the candidate, change strategy or production state, or infer portfolio incremental return."
+}

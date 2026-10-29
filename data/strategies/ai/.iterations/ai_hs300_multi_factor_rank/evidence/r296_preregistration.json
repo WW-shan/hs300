@@ -1,0 +1,119 @@
+{
+  "classification": "isolated_single_date_factor_build_and_system_attachment_feasibility_not_alpha_test",
+  "frozen_at_utc": "2026-10-28T19:23:51.262949+00:00",
+  "frozen_context": {
+    "builder_universe": "production _calendar(): symbols from R87 holder files union R163 holder batches",
+    "financial_fields": [
+      "management_expense_ratio_4q_low",
+      "ocf_margin_4q",
+      "gross_margin_yoy_improvement_q"
+    ],
+    "industry_field": "stock_rel_industry_20d",
+    "industry_window": "all frozen enriched partitions through target date for production rolling calculations",
+    "input_manifest": {
+      "audit_scripts": [
+        "freeze_r296.py",
+        "register_r296_panel_once.py",
+        "audit_r296_isolated_build_attachment.py"
+      ],
+      "enriched_partition_count": 2138,
+      "file": "r296_input_manifest.jsonl",
+      "file_count": 2624,
+      "sha256": "69f9d84709e8f68fa91297c6b54b5ce55ab598ca43104ca84200e168ac17410d",
+      "source_files": [
+        "backend/app/api/hs300.py",
+        "backend/app/backtest/fundamentals.py",
+        "backend/app/factors/ext_factors.py",
+        "backend/app/factors/registry.py",
+        "backend/app/services/ext_data.py",
+        "backend/app/services/fs_utils.py",
+        "backend/app/services/industry_map.py",
+        "data/ext_data/alt_hs300/config.json",
+        "data/ext_data/alt_hs300_minrank/config.json",
+        "data/ext_data/alt_hs300_qrs/config.json",
+        "data/ext_data/ext_hy_ths/config.json",
+        "data/ext_data/ext_hy_ths/part.parquet",
+        "data/financials/cash_flow/part.parquet",
+        "data/financials/income/part.parquet",
+        "data/research/r157_membership/monthly_snapshots.parquet",
+        "data/research/r78_daily_membership/daily_snapshots.parquet",
+        "scripts/build_alt_factor_data.py",
+        "scripts/build_r253_min_rank_factor.py",
+        "scripts/build_r257_quality_relative_strength_factor.py"
+      ]
+    },
+    "known_membership_lineage_risk": "The historical snapshot may lag the official current list; report selected snapshot date, trading-session age, set overlap, and both current-list and snapshot-list coverage. Do not silently substitute universes.",
+    "membership_rule": "production R78 daily + R157 monthly snapshots, backward as-of target date; never select a future snapshot",
+    "official_snapshot": {
+      "as_of": "2026-10-28",
+      "count": 300,
+      "file": "r296_official_members.json",
+      "sha256": "63973e06447a99a7e1e11d367ce44ff48ebd4ef596e63a5c1cb4c65bc0df72b3",
+      "source": "csindex"
+    },
+    "official_universe_endpoint": "http://127.0.0.1:3018/api/hs300/current",
+    "system_attachment": "app.factors.ext_factors.attach_ext_columns(include_snapshot=False), exact (symbol,date) join",
+    "target_date": "2026-10-27"
+  },
+  "hypothesis": "Recomputing the three financial inputs and industry-relative-strength input for the frozen target date, then running production R253/R257 ranking and attach_ext_columns, restores broad exact-date coverage without changing registered data.",
+  "interpretation_rules": [
+    "I1-I6 can establish only isolated build and system attachment feasibility for this date, not alpha, investment return, PIT historical reconstruction, or production readiness.",
+    "If attachment and coverage pass but membership freshness is stale, report data coverage restored while operational current-universe readiness remains failed.",
+    "Any hash drift, missing dependency, duplicate key, unexpected date, or system attachment mismatch makes the audit incomplete; do not repair frozen inputs in place.",
+    "No gate, strategy rule, fee, signal threshold, or production state may be changed based on R296."
+  ],
+  "method": [
+    "Hash and verify all frozen code/data inputs before and after the audit.",
+    "Call production _calendar() read-only to obtain the research builder universe and full enriched date window.",
+    "Call production _industry_daily() with full frozen date history; compute the three financial input functions only for the frozen target date.",
+    "In a unique temporary root under data/.staging, use production R253 and R257 calculation/writer functions after redirecting their output roots to scratch; do not call any builder main().",
+    "Call production attach_ext_columns() against a frozen target-date market frame with include_snapshot=False; compare attached values with staged output at exact symbol/date keys.",
+    "Report coverage for the official current 300, the as-of historical membership set, and the full builder universe separately."
+  ],
+  "panel_candidate": {
+    "config": {
+      "asset_type": "stock",
+      "commission_pct": 0.0006,
+      "end": "2026-10-27",
+      "fees_pct": 0.0006,
+      "holding_days": 20,
+      "initial_capital": 1000000.0,
+      "matching": "open_t+1",
+      "max_exposure_pct": 1.0,
+      "max_positions": 10,
+      "minute_fill": false,
+      "mode": "position",
+      "overrides": {},
+      "params": {},
+      "position_sizing": "equal",
+      "slippage_bps": 15.0,
+      "stamp_tax_pct": 0.001,
+      "start": "2026-10-27",
+      "strategy_id": "ai_hs300_quality_relative_strength_h20_sl20"
+    },
+    "data_as_of": "2026-10-27",
+    "kind": "strategy",
+    "metrics": {},
+    "name": "R296 R257单日隔离重建与系统装配可行性",
+    "source_id": "ai_hs300_quality_relative_strength_h20_sl20",
+    "status": "pending"
+  },
+  "precommitted_checks": {
+    "I1_inputs_unchanged": "Every manifest file matches frozen size, mtime_ns and SHA-256 before and after execution.",
+    "I2_exact_date": "Each generated factor table contains only the frozen target date and unique symbol keys.",
+    "I3_quality_coverage": "At least 150 official current members have a non-null R253 value and at least 150 have a non-null R257 value.",
+    "I4_system_attachment": "Every non-null staged R253/R257 value attaches at the same (symbol,date) key and matches exactly; no attachment-only values.",
+    "I5_no_future_membership": "Selected historical membership snapshot is not later than target_date; its age and mismatch with official set are reported.",
+    "I6_no_formal_writes": "No file under formal ext_data, enriched market, factor caches, strategy state or paper/production directories is changed."
+  },
+  "prior_knowledge": "R290-R294 established that R257 partitions stop at 2026-10-19, the latest enriched date is 2026-10-27, R292 restored coverage for 2026-10-19 in scratch, and the latest historical membership snapshot was previously observed at 2026-10-14. Those findings are known context, not blind evidence.",
+  "research_question": "Can production R253/R257 factor functions rebuild the latest enriched date in an isolated data root, and can the normal system extension attachment expose those values for current HS300 members?",
+  "round": "R296",
+  "scope_exclusions": [
+    "No provider, network data pull, builder main(), backtest service, screener, strategy runner, matcher, order, or paper account is called.",
+    "No returns, trade logs, or forward outcomes are read.",
+    "No formal market, enriched, factor, configuration, cache, strategy, paper, or production file is written or changed.",
+    "No alpha, independent sample, historical PIT validity, or deployable portfolio conclusion is tested."
+  ],
+  "status": "frozen_before_compute"
+}

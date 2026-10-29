@@ -1,0 +1,146 @@
+{
+  "api_base": "http://127.0.0.1:3018",
+  "candidate": {
+    "id": "ai_hs300_macro_gate_quality_r275_remove_term",
+    "registered": true,
+    "research_only": true,
+    "scoring": {
+      "ext_alt_hs300_holder_top10_free_float_share": 0.35,
+      "uf_cash_quality": 0.2,
+      "uf_low_vol": 0.2,
+      "uf_quality_value_defensive": 0.25
+    },
+    "source_matches_frozen_R275": true,
+    "source_path": "data/strategies/ai/ai_hs300_macro_gate_quality_r275_remove_term.py",
+    "source_sha256": "c707832dda70fa51f461814d623d88eba94dd32a45e1dbede61da7b18bcdd2d8"
+  },
+  "capabilities": [
+    {
+      "effective": "tickflow",
+      "field": "daily_data_provider",
+      "id": "daily",
+      "usable": true
+    },
+    {
+      "effective": "akshare",
+      "field": "adj_factor_provider",
+      "id": "adj_factor",
+      "usable": true
+    },
+    {
+      "effective": "akshare",
+      "field": "realtime_data_provider",
+      "id": "realtime",
+      "usable": true
+    },
+    {
+      "effective": "akshare",
+      "field": "minute_data_provider",
+      "id": "minute",
+      "usable": true
+    },
+    {
+      "effective": "tickflow",
+      "field": "depth5_data_provider",
+      "id": "depth5",
+      "usable": false
+    },
+    {
+      "effective": "akshare",
+      "field": "financial_data_provider",
+      "id": "financial",
+      "usable": true
+    },
+    {
+      "effective": "tickflow",
+      "field": "full_minute_data_provider",
+      "id": "full_minute",
+      "usable": false
+    }
+  ],
+  "captured_at_utc": "2026-10-28T06:41:04.371827+00:00",
+  "classification": "read_only_live_panel_registration_proof_R281",
+  "control": {
+    "id": "ai_hs300_macro_gate_quality",
+    "registered": true,
+    "research_only": false
+  },
+  "data_source_status": {
+    "errors": [],
+    "plugins": [
+      {
+        "available": true,
+        "datasets": [
+          "daily",
+          "adj_factor",
+          "financial",
+          "minute",
+          "realtime"
+        ],
+        "name": "akshare",
+        "status": "ok"
+      },
+      {
+        "available": false,
+        "datasets": [
+          "realtime",
+          "daily",
+          "adj_factor",
+          "financial"
+        ],
+        "name": "fuyao",
+        "status": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 FUYAO_API_KEY)"
+      },
+      {
+        "available": false,
+        "datasets": [
+          "realtime",
+          "depth5",
+          "daily",
+          "adj_factor",
+          "minute",
+          "full_minute"
+        ],
+        "name": "tdxquant",
+        "status": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 TDXQUANT_API_KEY)"
+      }
+    ]
+  },
+  "factor_count": 229,
+  "required_factor_ids_registered": {
+    "ext_alt_hs300_credit_spread_5y_low": true,
+    "ext_alt_hs300_equity_risk_premium": true,
+    "ext_alt_hs300_holder_top10_free_float_share": true,
+    "uf_cash_quality": true,
+    "uf_low_vol": true,
+    "uf_quality_value_defensive": true
+  },
+  "response_proofs": {
+    "capabilities": {
+      "http_status": 200,
+      "path": "/api/settings/capability-matrix",
+      "response_bytes": 5597,
+      "response_sha256": "8cef8f3555618414dff35e06820e614971d316683c41c7b8588af1993c10923c"
+    },
+    "data_sources": {
+      "http_status": 200,
+      "path": "/api/settings/data-sources",
+      "response_bytes": 3012,
+      "response_sha256": "12d0eb6188eb0fefd6e0f5a711917d37fc0d7d7a6922709c11f1600eaecb2006"
+    },
+    "factors": {
+      "http_status": 200,
+      "path": "/api/factors?asset_type=stock",
+      "response_bytes": 86789,
+      "response_sha256": "73f3d757e5782b762e420132b502a8df047ca9d3cddb03d32b28edcda37e5859"
+    },
+    "strategies": {
+      "http_status": 200,
+      "path": "/api/strategies?include_research=true",
+      "response_bytes": 318740,
+      "response_sha256": "bd2943d5ed8b05ed0a4cc31878d6a65a96ba842d5c43fb4b2f7ea49c540be227"
+    }
+  },
+  "strategy_count_including_research": 223,
+  "strategy_load_errors": []
+}

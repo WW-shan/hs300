@@ -1,0 +1,79 @@
+{
+  "classification": "counterfactual_membership_coverage_feasibility_not_PIT_or_alpha",
+  "counterfactual_definition": "In a unique temporary data root only, append the frozen official-current 300-member list as a synthetic R78 snapshot effective on target_date. The list was observed the following calendar day and no official composition-change effective notice has been independently verified here; this scenario is solely a coverage sensitivity test, never historical membership, PIT evidence, a historical signal, or a production rule.",
+  "frozen_at_utc": "2026-10-28T20:10:08.627536+00:00",
+  "frozen_inputs": {
+    "file_count": 2640,
+    "formal_factor_baseline": "r297_formal_factor_baseline.json",
+    "formal_factor_baseline_sha256": "cfa217f90ddacc0af8aa52dd60489c9fef353ab13bfefbb6837d84be0dc063b2",
+    "formal_factor_partition_count": 6396,
+    "manifest": "r297_input_manifest.jsonl",
+    "manifest_sha256": "1b011b54d04bc9f9dd4c55647279a404b4a323e529c09acc45cbe8b6e32a55f4",
+    "r296_manifest_sha256": "69f9d84709e8f68fa91297c6b54b5ce55ab598ca43104ca84200e168ac17410d",
+    "script_sha256": {
+      "audit_r297_counterfactual_membership.py": "35884cf3c4eff30648926baeb21814521dd69fd59170c0a0c62fb30a77316b9e",
+      "freeze_r297.py": "0889b4f7ede6515de8600bc3c77c7f78a5bd89c3c82c3eb37868fb82dccc30f3",
+      "register_r297_panel_once.py": "4b843c9bcd5dd517a8850d0969ac4030ce9601aaaebd1340231bfbc66220a5d4"
+    }
+  },
+  "interpretation_rules": [
+    "A pass establishes only that membership input is the observed coverage boundary and production calculations/attachment can compute the member in isolation.",
+    "The next-day official list is a counterfactual only; no historical/PIT claim is permitted.",
+    "Do not change gates, factor thresholds, the strategy, historical membership or production state based on this audit.",
+    "No alpha, return, portfolio, or deployability conclusion is tested."
+  ],
+  "official_current_snapshot": {
+    "as_of": "2026-10-28",
+    "count": 300,
+    "fetched_at": "2026-10-28T22:06:57+08:00",
+    "file": "r297_official_current_members.json",
+    "sha256": "63973e06447a99a7e1e11d367ce44ff48ebd4ef596e63a5c1cb4c65bc0df72b3",
+    "source": "csindex"
+  },
+  "panel_candidate": {
+    "config": {
+      "asset_type": "stock",
+      "commission_pct": 0.0006,
+      "end": "2026-10-27",
+      "fees_pct": 0.0006,
+      "holding_days": 20,
+      "initial_capital": 1000000.0,
+      "matching": "open_t+1",
+      "max_exposure_pct": 1.0,
+      "max_positions": 10,
+      "minute_fill": false,
+      "mode": "position",
+      "overrides": {},
+      "params": {},
+      "position_sizing": "equal",
+      "slippage_bps": 15.0,
+      "stamp_tax_pct": 0.001,
+      "start": "2026-10-27",
+      "strategy_id": "ai_hs300_quality_relative_strength_h20_sl20"
+    },
+    "data_as_of": "2026-10-27",
+    "kind": "strategy",
+    "metrics": {},
+    "name": "R297 当前官方名单覆盖敏感性核验（反事实，非PIT）",
+    "source_id": "ai_hs300_quality_relative_strength_h20_sl20",
+    "status": "pending"
+  },
+  "precommitted_checks": {
+    "I1_inputs_unchanged": "Every frozen source matches its pre-run size, mtime_ns and SHA-256 after execution.",
+    "I2_new_member_inputs": "002294.SZ has a target-date enriched row, current industry mapping outside excluded industries, all three R253 financial inputs, and stock_rel_industry_20d.",
+    "I3_counterfactual_eligible_coverage": "Both R253 and R257 are non-null for every industry-eligible member in the synthetic official-current target-date snapshot.",
+    "I4_system_attachment": "Every non-null staged R253/R257 value attaches to the same symbol/date and equals it exactly; no attachment-only values.",
+    "I5_formal_factor_trees_unchanged": "All formal factor partitions match their frozen SHA-256, size and mtime inventory.",
+    "I6_no_outcome_read": "No returns/trades are read and no backtest, screener, strategy runner, matcher or paper operation is called."
+  },
+  "research_question": "Is R296's only uncovered next-day official eligible member missing because required market/financial/industry inputs are absent, or because the historical membership snapshots exclude it; can production R253/R257 and system attachment produce the member when the official current list is supplied only as an isolated counterfactual snapshot?",
+  "round": "R297",
+  "scope_exclusions": [
+    "No formal market, enriched, historical membership, factor, cache, strategy, paper or production data is changed.",
+    "No provider, data pull, builder main(), backtest service, screener, strategy runner, matcher, order or paper account is called.",
+    "No return series, trade logs or forward outcomes are read.",
+    "Panel registration is an intentional, separately evidenced research-panel write."
+  ],
+  "status": "frozen_before_compute",
+  "target_date": "2026-10-27"
+}

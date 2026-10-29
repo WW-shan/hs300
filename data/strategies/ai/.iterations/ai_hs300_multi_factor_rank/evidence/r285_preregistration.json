@@ -1,0 +1,77 @@
+{
+  "classification": "read_only_macro_provenance_and_auditable_collection_feasibility_audit_not_alpha_test",
+  "created_at_utc": "2026-10-28T00:00:00Z",
+  "decision_rules": [
+    "Inspect current tracked source and read-only local metadata only; do not call external providers, write market/ext-data caches, alter polling, create paper accounts/orders, or run backtests.",
+    "Treat observation dates, filesystem mtime, and local audit capture time as distinct from vendor publication time; no source timestamp is considered proven without explicit source evidence.",
+    "Report the exact current storage contract and whether it can retain per-fetch receipt time and source payload identity without replacing a same-date observation.",
+    "Do not modify code, backfill history, test returns, tune thresholds, promote a candidate, or change production status."
+  ],
+  "evidence_policy": "Create-once outputs with SHA-256 sidecars; never overwrite existing R285 artifacts.",
+  "frozen_scope": {
+    "candidate": "R275 10Y-2Y term-spread gate research candidate",
+    "inputs": [
+      "data/research/macro/bond_10y.parquet",
+      "data/research/r92_credit_spread/*.parquet",
+      "data/research/r93_erp/hs300_pe.parquet",
+      "data/ext_data/alt_hs300/config.json and timeseries partition metadata"
+    ],
+    "question": "Can the current system-owned data contracts provide an auditable prospective archive that separates observation_date, source publication/release time, local fetch receipt time, source identity, and revisions for R275 macro gates?",
+    "routes_to_inspect": [
+      "backend/app/services/ext_data.py",
+      "backend/app/services/ext_pull.py",
+      "backend/app/factors/ext_factors.py",
+      "backend/app/api/ext_data.py"
+    ],
+    "previous_evidence": {
+      "r276_pit_audit_sha256": "9783ccaccb81a1137c229ceac150bd67f074d2fbccc05b2a1ca83e836b9ff7a7",
+      "r278_readiness_audit_sha256": "9bd9219c45a6d1264bec3b5f33f3da3f966309e8af52f2d03f50bdb846d1eb47",
+      "r279_macro_source_audit_sha256": "dec86c468412b752ed6d03b39259953a2f7fea5c8f174ca8bed6c19fc2925d80"
+    },
+    "side_effects": "One pending R285 research candidate record in system panel and evidence-only files.",
+    "system_panel_candidate": {
+      "kind": "strategy",
+      "name": "R285 宏观数据时间戳归档可行性审计",
+      "source_id": "ai_hs300_macro_gate_quality_r275_remove_term",
+      "strategy_id": "ai_hs300_macro_gate_quality_r275_remove_term",
+      "start": "2026-04-20",
+      "end": "2026-10-16",
+      "status": "pending"
+    }
+  },
+  "round": "R285",
+  "source_hashes": {
+    "ext_data_api": {
+      "path": "backend/app/api/ext_data.py",
+      "sha256": "28bd876e563d71f72f83a4a4c2203cc46081b8b895c85378e201f1d001796071"
+    },
+    "ext_data_service": {
+      "path": "backend/app/services/ext_data.py",
+      "sha256": "1e4a53fc47f3db937177afa2578a5647b4c03be6c49c3bc880944be0799a0ac9"
+    },
+    "ext_factor_assembly": {
+      "path": "backend/app/factors/ext_factors.py",
+      "sha256": "18ebc6e115387f3ef8457978a242592732341b5ba3700bb0d5ddd1a595b9701f"
+    },
+    "ext_pull_service": {
+      "path": "backend/app/services/ext_pull.py",
+      "sha256": "96b69e744118cffc8ddf9c009e2a1de4b416c921980213028b898e2a2fae3ad5"
+    },
+    "macro_ext_config": {
+      "path": "data/ext_data/alt_hs300/config.json",
+      "sha256": "2dd24cf1a19266179273933eb5b80bc0c2dcd0ad64ad998599756d40dfc78658"
+    },
+    "r276_pit_audit": {
+      "path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r276_macro_pit_audit_v5.json",
+      "sha256": "9783ccaccb81a1137c229ceac150bd67f074d2fbccc05b2a1ca83e836b9ff7a7"
+    },
+    "r278_readiness_audit": {
+      "path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r278_readiness_audit.json",
+      "sha256": "9bd9219c45a6d1264bec3b5f33f3da3f966309e8af52f2d03f50bdb846d1eb47"
+    },
+    "r279_source_audit": {
+      "path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r279_macro_source_audit.json",
+      "sha256": "dec86c468412b752ed6d03b39259953a2f7fea5c8f174ca8bed6c19fc2925d80"
+    }
+  }
+}

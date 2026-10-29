@@ -1,0 +1,38 @@
+{
+  "round": "R304",
+  "amendment_id": "R304-A9",
+  "date": "2026-10-29",
+  "classification": "prospective single official detail-API request for adjacent 2017 HS300 adjustment notice",
+  "parent_amendment": "R304-A8",
+  "question": "Does official CSI notice 12590 contain the complete 2017-12 HS300 sample adjustment list and an unambiguous effective date that contributes to a defensible 2018-01-02 seed?",
+  "reason": "The frozen official archive page 26 lists notice 12590 on 2017-11-27, titled '关于调整沪深300和中证香港100等指数样本股的公告'. Notice 12589 only reports that 24 HS300 constituents change and a December 11 effective date, without the complete names. Notice 12590 is an adjacent official listing entry and is a separate fixed target.",
+  "fixed_target": {
+    "notice_id": "12590",
+    "publish_date": "2017-11-27",
+    "official_listing_title": "关于调整沪深300和中证香港100等指数样本股的公告",
+    "official_api_url": "https://www.csindex.com.cn/csindex-home/announcement/queryAnnouncementById?id=12590",
+    "listing_evidence": "r304_official_archive/pages/page-026.json",
+    "listing_evidence_sha256": "81bebc095fe2c01ca054d5fe4a276dba9350997ba74e6120046c9adce2cda0f7"
+  },
+  "method": [
+    "Before the official request, perform one read-only GET of panel candidate 1ed2c75285b74fc6a521cc73f75f7320 and preserve the full response and SHA-256; require exactly one matching candidate with status pending. No POST or status change is allowed.",
+    "Persist a one-time dispatch intent before sending exactly one GET to the fixed official detail API URL. Use official Origin/Referer and a standard browser user agent. Never retry after dispatch, including timeout, HTTP error, or empty response.",
+    "Capture request URL, timestamp, HTTP status, response headers, exact raw response bytes, parsed JSON when possible, and SHA-256 sidecars. Do not fetch attachments or other notices.",
+    "Classify only the retrieved official content: presence of 000300/HS300, complete added and removed sample names or a complete dated sample, explicit effective date, and whether the evidence can establish the membership state on 2018-01-02.",
+    "Do not combine an incomplete transition with current membership or third-party history. Keep PIT reconstruction no-go unless seed and all intervening routine and exceptional transitions/effective dates are independently closed."
+  ],
+  "prohibited": [
+    "No second request to notice 12590 or any other official endpoint; no browser navigation, attachment download, listing refresh, search engine, exchange endpoint, or third-party source.",
+    "No panel POST, duplicate candidate, or status transition.",
+    "No production data or strategy changes, factor-return calculations, alpha search, or backtest."
+  ],
+  "decision_rule": {
+    "seed_supported": "Only if the response provides a complete auditable HS300 membership state effective on or before 2018-01-02, or supplies a complete transition whose prior full state is independently available and whose effective date is unambiguous.",
+    "no_go": "An adjustment count, partial examples, or a complete delta without an independently known prior membership state cannot establish the 2018-01-02 seed. Any unresolved state, event, or effective date keeps PIT reconstruction no-go."
+  },
+  "panel": {
+    "candidate_id": "1ed2c75285b74fc6a521cc73f75f7320",
+    "required_status": "pending",
+    "registration_action": "read-only GET preflight only; no registration or state update"
+  }
+}

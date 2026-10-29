@@ -1,0 +1,184 @@
+{
+  "all_checks_pass": true,
+  "all_three_gate_eligible_cohort": {
+    "all_three_gates_pass_fraction": 1.0,
+    "all_three_gates_pass_rows": 244925,
+    "date_count": 821,
+    "eight_gate_state_row_counts": {
+      "000": 0,
+      "001": 0,
+      "010": 0,
+      "011": 0,
+      "100": 0,
+      "101": 0,
+      "110": 0,
+      "111": 244925
+    },
+    "rows": 244925
+  },
+  "alpha_decision": "not_tested",
+  "captured_at_utc": "2026-10-28T09:26:04.742435+00:00",
+  "checks": {
+    "date_combo_partition_reconciles": true,
+    "frozen_input_hashes_match": true,
+    "macro_values_consistent_within_date": true,
+    "no_returns_or_backtest_data_loaded": true,
+    "omitted_gate_row_identities_reconcile": true,
+    "panel_registration_and_readback_pass": true,
+    "preregistration_hash_valid": true,
+    "row_combo_partition_reconciles": true,
+    "unique_alt_keys": true,
+    "unique_enriched_keys": true,
+    "unique_membership_keys": true
+  },
+  "classification": "frozen_macro_gate_exposure_and_overlap_diagnostic_no_returns_no_backtest",
+  "classification_limits": [
+    "This measures how often frozen thresholds exclude feature-eligible historical constituent rows, not whether those excluded rows would have earned returns.",
+    "Supersedes the first R286 audit: that version mistakenly defined the pre-gate cohort by requiring all three gates to pass, making its single-gate row exclusions zero by construction; preserve that artifact as an error record.",
+    "MA60 is computed from enriched close history using a 60-observation rolling mean, matching the system indicator definition; 59 prior market sessions are loaded for warmup.",
+    "Feature cohort omits the strategy's price, market-cap, amount, ST, new-listing and score-rank constraints; it is not a final executable candidate mask.",
+    "Historical membership snapshots and current local macro values can include revision/timing bias; source publication-time PIT is not proven.",
+    "No outcome series, trade log, equity curve, backtest, screener run, provider fetch, paper account or order was used or created."
+  ],
+  "eight_gate_state_date_counts": {
+    "000": 0,
+    "001": 43,
+    "010": 0,
+    "011": 297,
+    "100": 0,
+    "101": 42,
+    "110": 195,
+    "111": 821
+  },
+  "feature_attrition_rows": {
+    "alt_partition_rows_present": 419400,
+    "enriched_rows_present": 415823,
+    "holder_nonnull_rows": 419400,
+    "ma60_nonnull_rows": 415800,
+    "membership_rows": 419400,
+    "rows_without_alt_partition_match": 0,
+    "rows_without_enriched_match": 3577
+  },
+  "frozen_thresholds": {
+    "credit_spread_5y_low": {
+      "field": "credit_spread_5y_low",
+      "minimum": -0.8
+    },
+    "equity_risk_premium": {
+      "field": "equity_risk_premium",
+      "minimum": 5.5
+    },
+    "term_spread_10y_2y": {
+      "field": "term_spread_10y_2y",
+      "minimum": 0.3
+    }
+  },
+  "incremental_row_exclusion_by_single_gate": {
+    "credit_spread_5y_low": {
+      "accounting_reconciles": true,
+      "blocked_rows_released_if_only_this_gate_removed": 12503,
+      "counterfactual_rows_with_this_gate_removed": 257428,
+      "fraction_of_other_two_pass_rows_blocked": 0.048568920241776344,
+      "other_two_gates_pass_rows": 257428
+    },
+    "equity_risk_premium": {
+      "accounting_reconciles": true,
+      "blocked_rows_released_if_only_this_gate_removed": 87509,
+      "counterfactual_rows_with_this_gate_removed": 332434,
+      "fraction_of_other_two_pass_rows_blocked": 0.2632372140033811,
+      "other_two_gates_pass_rows": 332434
+    },
+    "term_spread_10y_2y": {
+      "accounting_reconciles": true,
+      "blocked_rows_released_if_only_this_gate_removed": 58166,
+      "counterfactual_rows_with_this_gate_removed": 303091,
+      "fraction_of_other_two_pass_rows_blocked": 0.19190936055508082,
+      "other_two_gates_pass_rows": 303091
+    }
+  },
+  "input_snapshot_sha256": "9c12828eafe3c6478b93e2dde7a36a88bda6baf8338864a1c72a49ee21cc14d7",
+  "market_wide_gate_date_metrics": {
+    "credit_spread_5y_low": {
+      "fail_dates": 85,
+      "field": "credit_spread_5y_low",
+      "known_dates": 1398,
+      "longest_consecutive_failed_known_date_run": 36,
+      "missing_dates": 0,
+      "pass_dates": 1313,
+      "pass_rate_known": 0.9391988555078684,
+      "threshold": -0.8
+    },
+    "equity_risk_premium": {
+      "fail_dates": 340,
+      "field": "equity_risk_premium",
+      "known_dates": 1398,
+      "longest_consecutive_failed_known_date_run": 300,
+      "missing_dates": 0,
+      "pass_dates": 1058,
+      "pass_rate_known": 0.7567954220314735,
+      "threshold": 5.5
+    },
+    "term_spread_10y_2y": {
+      "fail_dates": 195,
+      "field": "term_spread_10y_2y",
+      "known_dates": 1398,
+      "longest_consecutive_failed_known_date_run": 89,
+      "missing_dates": 0,
+      "pass_dates": 1203,
+      "pass_rate_known": 0.8605150214592274,
+      "threshold": 0.3
+    }
+  },
+  "panel_registration_sha256": "337d3e009216294e8856341aa300dd20c3d65823cbe861138d477d19799326f3",
+  "pre_gate_feature_eligible_cohort": {
+    "all_three_gates_pass_fraction": 0.589045214045214,
+    "all_three_gates_pass_rows": 244925,
+    "date_count": 1398,
+    "definition": "historical member-date row with ma60 and holder value and all three macro values non-null, before applying pass/fail gates",
+    "eight_gate_state_row_counts": {
+      "000": 0,
+      "001": 12697,
+      "010": 0,
+      "011": 87509,
+      "100": 0,
+      "101": 12503,
+      "110": 58166,
+      "111": 244925
+    },
+    "rows": 415800
+  },
+  "preregistration_sha256": "3c94e091ebdd6c5806cacf1498ca253fd219989e9d743a5fefdd5c61cb861a78",
+  "production_status": "pause_production",
+  "round": "R286",
+  "source_integrity": {
+    "alt_inventory_sha256": "5d1930532d419f8b13adc192245fda3129f0649b326a0affd22152fc73db58a6",
+    "alt_partition_count": 1398,
+    "enriched_inventory_sha256": "b7ac6a7638625641066f63f799bc334db36d44e6ca8c320566192feed2b596d2",
+    "enriched_partition_count": 1398,
+    "frozen_files": {
+      "alt_hs300_config": "2dd24cf1a19266179273933eb5b80bc0c2dcd0ad64ad998599756d40dfc78658",
+      "control_strategy": "b1c2b43ef9861053d3f4e4dd2ac4a3aeb7d0eae301b5400bdb0dbf65169b87ec",
+      "historical_membership": "f4417807dfb7ede462fe6cc70ac2262d2f171320de7f2cfc6bfaef96d89234ef",
+      "r275_preregistration": "97f192c0cf5eb81e4e9e64db770366852681c93d6214b1260822bbcd28182f11",
+      "r275_result": "e119d58593ee0ccb73e0bd8288bfdc3b10c21049295a7de3d2fcb0db6f5f4821",
+      "r284_result": "67f2388a055355b57ef77260f6b9cc52a9f378658ca83a56a4bb7d8fb1491ed1",
+      "term_removed_candidate": "c707832dda70fa51f461814d623d88eba94dd32a45e1dbede61da7b18bcdd2d8"
+    },
+    "macro_within_date_distinct_values_over_one": {
+      "credit_spread_5y_low": 0,
+      "equity_risk_premium": 0,
+      "term_spread_10y_2y": 0
+    }
+  },
+  "strategy_status": "research_only",
+  "supersedes_audit_sha256": "a86feb4902bfd093c9b4450eb66733862a53643d29681ead010c3e61b7f9ee33",
+  "window": {
+    "aligned_membership_alt_enriched_dates": 1398,
+    "dates_with_macro_inputs": 1398,
+    "end": "2026-10-14",
+    "historical_membership_dates": 1398,
+    "membership_rows": 419400,
+    "membership_source": "r78_daily_membership query_date",
+    "start": "2021-01-04"
+  }
+}

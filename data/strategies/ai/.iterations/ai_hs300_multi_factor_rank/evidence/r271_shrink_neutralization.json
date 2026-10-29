@@ -1,0 +1,1873 @@
+{
+  "round": "R271",
+  "classification": "exploratory_not_independent_confirmation",
+  "preregistration": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r271_preregistration.json",
+  "strategy": "ai_hs300_macro_gate_quality",
+  "hypothesis": "A fixed 0.5 shrink of the system's industry-neutral scoring transform may reduce industry-linked concentration while preserving more of the default A-leg score ordering than full shrink=1.0. This is a single exploratory contrast against R266; prior R98 industry-neutralization results and this strategy's extensive history are known, so neither discovery nor validation is an untouched holdout.",
+  "execution": {
+    "window": [
+      "2021-06-01",
+      "2026-10-16"
+    ],
+    "discovery": [
+      "2021-06-01",
+      "2023-12-31"
+    ],
+    "validation": [
+      "2024-01-01",
+      "2026-10-16"
+    ],
+    "membership": "r78_daily_membership",
+    "matching": "open_t+1",
+    "costs": [
+      "3x primary",
+      "4x stress",
+      "5x stress"
+    ],
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "unchanged": [
+      "strategy signals",
+      "filters",
+      "scoring weights",
+      "35-day max hold",
+      "universe",
+      "entry/exit matching",
+      "fees",
+      "slippage",
+      "all gates"
+    ],
+    "only_changed_parameter": "system neutralize override: industry_l1 with shrink=0.5",
+    "variants": {
+      "control": {},
+      "industry_shrink_05": {
+        "neutralize": {
+          "industry": "industry_l1",
+          "shrink": 0.5
+        }
+      }
+    },
+    "candidate_cache_namespace": "data/research/r271_cache/",
+    "candidate_strategy": "ai_hs300_macro_gate_quality_r271_industry_shrink05",
+    "candidate_strategy_source_sha256": "6e8cdaf9c2917bf0178ddd4745c00f2399cd6413a32873427860a6a9687594ef",
+    "implementation": "StrategyBacktestService -> BacktestEngine -> existing scoring.neutralize_scoring_columns; candidate transforms are calculated inside each date's HS300 candidate universe.",
+    "industry_data": "current industry_l1 snapshot; not point-in-time",
+    "control": "R266 finalized curve/trade caches; byte hashes checked before comparison"
+  },
+  "costs": {
+    "3": [
+      0.0006,
+      0.0006,
+      0.001,
+      15.0
+    ],
+    "4": [
+      0.0008,
+      0.0008,
+      0.001333333333,
+      20.0
+    ],
+    "5": [
+      0.001,
+      0.001,
+      0.001666666667,
+      25.0
+    ]
+  },
+  "control_round": "R266",
+  "control": {
+    "runs": {
+      "3x": {
+        "full": {
+          "total_return": 0.633356,
+          "annual": 0.099617,
+          "sharpe": 0.7003,
+          "mdd": -0.188447,
+          "days": 1303
+        },
+        "rolling_1y": {
+          "windows": 1052,
+          "positive_rate": 0.9325,
+          "return_p05": -0.0049,
+          "return_median": 0.0769,
+          "return_worst": -0.068,
+          "mdd_p05": -0.1884,
+          "mdd_worst": -0.1884
+        },
+        "recent_12m": {
+          "total_return": 0.066995,
+          "mdd": -0.188447
+        },
+        "discovery": {
+          "total_return": 0.072544,
+          "annual": 0.028455,
+          "sharpe": 0.2981,
+          "mdd": -0.109851,
+          "days": 630
+        },
+        "validation": {
+          "total_return": 0.52288,
+          "annual": 0.170571,
+          "sharpe": 0.9712,
+          "mdd": -0.188447,
+          "days": 674
+        },
+        "concentration": {
+          "distinct_symbols": 59,
+          "n_trades": 290,
+          "total_pnl_amount": 633355.82,
+          "gross_profit": 1808342.78,
+          "gross_loss": 1174986.96,
+          "net_to_gross": 0.3502,
+          "net_shares": {
+            "top1_net_share": 0.298258,
+            "top3_net_share": 0.673281,
+            "top5_net_share": 0.976915
+          },
+          "gross_profit_shares": {
+            "top1_gross_share": 0.104462,
+            "top3_gross_share": 0.235811,
+            "top5_gross_share": 0.342156
+          },
+          "top_industry_gross_share": 0.192634,
+          "max_symbol_loss_to_gross": 0.035788,
+          "top_symbols": [
+            {
+              "symbol": "601698.SH",
+              "name": "中国卫通",
+              "n_trades": 11,
+              "pnl_amount": 188903.72999999998,
+              "wins": 8
+            },
+            {
+              "symbol": "688981.SH",
+              "name": "中芯国际",
+              "n_trades": 3,
+              "pnl_amount": 134592.18000000002,
+              "wins": 2
+            },
+            {
+              "symbol": "601088.SH",
+              "name": "中国神华",
+              "n_trades": 16,
+              "pnl_amount": 102930.53,
+              "wins": 12
+            },
+            {
+              "symbol": "601857.SH",
+              "name": "中国石油",
+              "n_trades": 16,
+              "pnl_amount": 97929.85,
+              "wins": 11
+            },
+            {
+              "symbol": "601898.SH",
+              "name": "中煤能源",
+              "n_trades": 9,
+              "pnl_amount": 94378.26000000001,
+              "wins": 5
+            }
+          ]
+        },
+        "validation_concentration": {
+          "distinct_symbols": 44,
+          "n_trades": 170,
+          "total_pnl_amount": 430638.53,
+          "gross_profit": 1279474.78,
+          "gross_loss": 848836.25,
+          "net_to_gross": 0.3366,
+          "net_shares": {
+            "top1_net_share": 0.32246,
+            "top3_net_share": 0.874559,
+            "top5_net_share": 1.201209
+          },
+          "gross_profit_shares": {
+            "top1_gross_share": 0.108532,
+            "top3_gross_share": 0.294354,
+            "top5_gross_share": 0.404296
+          },
+          "top_industry_gross_share": 0.159619,
+          "max_symbol_loss_to_gross": 0.050568,
+          "top_symbols": [
+            {
+              "symbol": "601698.SH",
+              "name": "中国卫通",
+              "n_trades": 8,
+              "pnl_amount": 138863.65,
+              "wins": 5
+            },
+            {
+              "symbol": "688981.SH",
+              "name": "中芯国际",
+              "n_trades": 1,
+              "pnl_amount": 136369.64,
+              "wins": 1
+            },
+            {
+              "symbol": "601898.SH",
+              "name": "中煤能源",
+              "n_trades": 5,
+              "pnl_amount": 101385.64000000001,
+              "wins": 4
+            },
+            {
+              "symbol": "601100.SH",
+              "name": "XD恒立液",
+              "n_trades": 4,
+              "pnl_amount": 76324.12,
+              "wins": 2
+            },
+            {
+              "symbol": "688396.SH",
+              "name": "华润微",
+              "n_trades": 5,
+              "pnl_amount": 64343.619999999995,
+              "wins": 4
+            }
+          ]
+        },
+        "trade_loss_summary": {
+          "trades": 290,
+          "losses": 145,
+          "mean_loss_pct": -0.062144,
+          "mean_loss_magnitude_pct": 0.062144,
+          "q10_trade_return_pct": -0.107432,
+          "worst_trade_return_pct": -0.233188
+        },
+        "validation_trade_loss_summary": {
+          "trades": 170,
+          "losses": 91,
+          "mean_loss_pct": -0.065086,
+          "mean_loss_magnitude_pct": 0.065086,
+          "q10_trade_return_pct": -0.107551,
+          "worst_trade_return_pct": -0.233188
+        },
+        "cost_multiplier": 3
+      },
+      "4x": {
+        "full": {
+          "total_return": 0.552455,
+          "annual": 0.088858,
+          "sharpe": 0.635,
+          "mdd": -0.191331,
+          "days": 1303
+        },
+        "rolling_1y": {
+          "windows": 1052,
+          "positive_rate": 0.903,
+          "return_p05": -0.0146,
+          "return_median": 0.0663,
+          "return_worst": -0.0771,
+          "mdd_p05": -0.1913,
+          "mdd_worst": -0.1913
+        },
+        "recent_12m": {
+          "total_return": 0.053862,
+          "mdd": -0.191331
+        },
+        "discovery": {
+          "total_return": 0.049654,
+          "annual": 0.019605,
+          "sharpe": 0.2242,
+          "mdd": -0.115007,
+          "days": 630
+        },
+        "validation": {
+          "total_return": 0.479017,
+          "annual": 0.157831,
+          "sharpe": 0.9086,
+          "mdd": -0.191331,
+          "days": 674
+        },
+        "concentration": {
+          "distinct_symbols": 59,
+          "n_trades": 290,
+          "total_pnl_amount": 552455.27,
+          "gross_profit": 1721058.6,
+          "gross_loss": 1168603.33,
+          "net_to_gross": 0.321,
+          "net_shares": {
+            "top1_net_share": 0.327858,
+            "top3_net_share": 0.736444,
+            "top5_net_share": 1.062393
+          },
+          "gross_profit_shares": {
+            "top1_gross_share": 0.105241,
+            "top3_gross_share": 0.236397,
+            "top5_gross_share": 0.341025
+          },
+          "top_industry_gross_share": 0.192329,
+          "max_symbol_loss_to_gross": 0.03683,
+          "top_symbols": [
+            {
+              "symbol": "601698.SH",
+              "name": "中国卫通",
+              "n_trades": 11,
+              "pnl_amount": 181126.65,
+              "wins": 8
+            },
+            {
+              "symbol": "688981.SH",
+              "name": "中芯国际",
+              "n_trades": 3,
+              "pnl_amount": 128271.48,
+              "wins": 2
+            },
+            {
+              "symbol": "601088.SH",
+              "name": "中国神华",
+              "n_trades": 16,
+              "pnl_amount": 97454.09999999999,
+              "wins": 12
+            },
+            {
+              "symbol": "601857.SH",
+              "name": "中国石油",
+              "n_trades": 16,
+              "pnl_amount": 91688.73999999999,
+              "wins": 11
+            },
+            {
+              "symbol": "601898.SH",
+              "name": "中煤能源",
+              "n_trades": 9,
+              "pnl_amount": 88383.67000000001,
+              "wins": 5
+            }
+          ]
+        },
+        "validation_concentration": {
+          "distinct_symbols": 44,
+          "n_trades": 170,
+          "total_pnl_amount": 376601.52,
+          "gross_profit": 1213092.07,
+          "gross_loss": 836490.55,
+          "net_to_gross": 0.3104,
+          "net_shares": {
+            "top1_net_share": 0.351152,
+            "top3_net_share": 0.9524,
+            "top5_net_share": 1.307196
+          },
+          "gross_profit_shares": {
+            "top1_gross_share": 0.109014,
+            "top3_gross_share": 0.29567,
+            "top5_gross_share": 0.405816
+          },
+          "top_industry_gross_share": 0.160695,
+          "max_symbol_loss_to_gross": 0.052168,
+          "top_symbols": [
+            {
+              "symbol": "601698.SH",
+              "name": "中国卫通",
+              "n_trades": 8,
+              "pnl_amount": 132244.54,
+              "wins": 5
+            },
+            {
+              "symbol": "688981.SH",
+              "name": "中芯国际",
+              "n_trades": 1,
+              "pnl_amount": 130381.43,
+              "wins": 1
+            },
+            {
+              "symbol": "601898.SH",
+              "name": "中煤能源",
+              "n_trades": 5,
+              "pnl_amount": 96049.49,
+              "wins": 4
+            },
+            {
+              "symbol": "601100.SH",
+              "name": "XD恒立液",
+              "n_trades": 4,
+              "pnl_amount": 72647.87999999999,
+              "wins": 2
+            },
+            {
+              "symbol": "688396.SH",
+              "name": "华润微",
+              "n_trades": 5,
+              "pnl_amount": 60968.82,
+              "wins": 4
+            }
+          ]
+        },
+        "trade_loss_summary": {
+          "trades": 290,
+          "losses": 145,
+          "mean_loss_pct": -0.06377,
+          "mean_loss_magnitude_pct": 0.06377,
+          "q10_trade_return_pct": -0.10898,
+          "worst_trade_return_pct": -0.234517
+        },
+        "validation_trade_loss_summary": {
+          "trades": 170,
+          "losses": 91,
+          "mean_loss_pct": -0.066707,
+          "mean_loss_magnitude_pct": 0.066707,
+          "q10_trade_return_pct": -0.109099,
+          "worst_trade_return_pct": -0.234517
+        },
+        "cost_multiplier": 4
+      },
+      "5x": {
+        "full": {
+          "total_return": 0.473731,
+          "annual": 0.077946,
+          "sharpe": 0.5672,
+          "mdd": -0.193931,
+          "days": 1303
+        },
+        "rolling_1y": {
+          "windows": 1052,
+          "positive_rate": 0.8565,
+          "return_p05": -0.0254,
+          "return_median": 0.0551,
+          "return_worst": -0.0895,
+          "mdd_p05": -0.1939,
+          "mdd_worst": -0.1939
+        },
+        "recent_12m": {
+          "total_return": 0.040071,
+          "mdd": -0.193931
+        },
+        "discovery": {
+          "total_return": 0.029213,
+          "annual": 0.011603,
+          "sharpe": 0.1568,
+          "mdd": -0.123448,
+          "days": 630
+        },
+        "validation": {
+          "total_return": 0.4319,
+          "annual": 0.14388,
+          "sharpe": 0.8386,
+          "mdd": -0.193931,
+          "days": 674
+        },
+        "concentration": {
+          "distinct_symbols": 59,
+          "n_trades": 290,
+          "total_pnl_amount": 473730.9,
+          "gross_profit": 1641865.97,
+          "gross_loss": 1168135.07,
+          "net_to_gross": 0.2885,
+          "net_shares": {
+            "top1_net_share": 0.370374,
+            "top3_net_share": 0.820566,
+            "top5_net_share": 1.175485
+          },
+          "gross_profit_shares": {
+            "top1_gross_share": 0.106865,
+            "top3_gross_share": 0.23676,
+            "top5_gross_share": 0.339165
+          },
+          "top_industry_gross_share": 0.192132,
+          "max_symbol_loss_to_gross": 0.039256,
+          "top_symbols": [
+            {
+              "symbol": "601698.SH",
+              "name": "中国卫通",
+              "n_trades": 11,
+              "pnl_amount": 175457.79,
+              "wins": 8
+            },
+            {
+              "symbol": "688981.SH",
+              "name": "中芯国际",
+              "n_trades": 3,
+              "pnl_amount": 121977.4,
+              "wins": 2
+            },
+            {
+              "symbol": "601088.SH",
+              "name": "中国神华",
+              "n_trades": 16,
+              "pnl_amount": 91292.21000000002,
+              "wins": 11
+            },
+            {
+              "symbol": "601857.SH",
+              "name": "中国石油",
+              "n_trades": 16,
+              "pnl_amount": 85655.12,
+              "wins": 11
+            },
+            {
+              "symbol": "601898.SH",
+              "name": "中煤能源",
+              "n_trades": 9,
+              "pnl_amount": 82481.0,
+              "wins": 5
+            }
+          ]
+        },
+        "validation_concentration": {
+          "distinct_symbols": 44,
+          "n_trades": 170,
+          "total_pnl_amount": 322546.94,
+          "gross_profit": 1150969.26,
+          "gross_loss": 828422.32,
+          "net_to_gross": 0.2802,
+          "net_shares": {
+            "top1_net_share": 0.394331,
+            "top3_net_share": 1.061675,
+            "top5_net_share": 1.454293
+          },
+          "gross_profit_shares": {
+            "top1_gross_share": 0.110507,
+            "top3_gross_share": 0.297523,
+            "top5_gross_share": 0.40755
+          },
+          "top_industry_gross_share": 0.16142,
+          "max_symbol_loss_to_gross": 0.055298,
+          "top_symbols": [
+            {
+              "symbol": "601698.SH",
+              "name": "中国卫通",
+              "n_trades": 8,
+              "pnl_amount": 127190.1,
+              "wins": 5
+            },
+            {
+              "symbol": "688981.SH",
+              "name": "中芯国际",
+              "n_trades": 1,
+              "pnl_amount": 124419.84,
+              "wins": 1
+            },
+            {
+              "symbol": "601898.SH",
+              "name": "中煤能源",
+              "n_trades": 5,
+              "pnl_amount": 90830.17,
+              "wins": 4
+            },
+            {
+              "symbol": "601100.SH",
+              "name": "XD恒立液",
+              "n_trades": 4,
+              "pnl_amount": 69049.0,
+              "wins": 2
+            },
+            {
+              "symbol": "688396.SH",
+              "name": "华润微",
+              "n_trades": 5,
+              "pnl_amount": 57588.5,
+              "wins": 4
+            }
+          ]
+        },
+        "trade_loss_summary": {
+          "trades": 290,
+          "losses": 149,
+          "mean_loss_pct": -0.063656,
+          "mean_loss_magnitude_pct": 0.063656,
+          "q10_trade_return_pct": -0.110525,
+          "worst_trade_return_pct": -0.235845
+        },
+        "validation_trade_loss_summary": {
+          "trades": 170,
+          "losses": 92,
+          "mean_loss_pct": -0.067587,
+          "mean_loss_magnitude_pct": 0.067587,
+          "q10_trade_return_pct": -0.110644,
+          "worst_trade_return_pct": -0.235845
+        },
+        "cost_multiplier": 5
+      }
+    }
+  },
+  "variants": {
+    "control": {
+      "overrides": {},
+      "runs": {
+        "3x": {
+          "full": {
+            "total_return": 0.633356,
+            "annual": 0.099617,
+            "sharpe": 0.7003,
+            "mdd": -0.188447,
+            "days": 1303
+          },
+          "rolling_1y": {
+            "windows": 1052,
+            "positive_rate": 0.9325,
+            "return_p05": -0.0049,
+            "return_median": 0.0769,
+            "return_worst": -0.068,
+            "mdd_p05": -0.1884,
+            "mdd_worst": -0.1884
+          },
+          "recent_12m": {
+            "total_return": 0.066995,
+            "mdd": -0.188447
+          },
+          "discovery": {
+            "total_return": 0.072544,
+            "annual": 0.028455,
+            "sharpe": 0.2981,
+            "mdd": -0.109851,
+            "days": 630
+          },
+          "validation": {
+            "total_return": 0.52288,
+            "annual": 0.170571,
+            "sharpe": 0.9712,
+            "mdd": -0.188447,
+            "days": 674
+          },
+          "concentration": {
+            "distinct_symbols": 59,
+            "n_trades": 290,
+            "total_pnl_amount": 633355.82,
+            "gross_profit": 1808342.78,
+            "gross_loss": 1174986.96,
+            "net_to_gross": 0.3502,
+            "net_shares": {
+              "top1_net_share": 0.298258,
+              "top3_net_share": 0.673281,
+              "top5_net_share": 0.976915
+            },
+            "gross_profit_shares": {
+              "top1_gross_share": 0.104462,
+              "top3_gross_share": 0.235811,
+              "top5_gross_share": 0.342156
+            },
+            "top_industry_gross_share": 0.192634,
+            "max_symbol_loss_to_gross": 0.035788,
+            "top_symbols": [
+              {
+                "symbol": "601698.SH",
+                "name": "中国卫通",
+                "n_trades": 11,
+                "pnl_amount": 188903.72999999998,
+                "wins": 8
+              },
+              {
+                "symbol": "688981.SH",
+                "name": "中芯国际",
+                "n_trades": 3,
+                "pnl_amount": 134592.18000000002,
+                "wins": 2
+              },
+              {
+                "symbol": "601088.SH",
+                "name": "中国神华",
+                "n_trades": 16,
+                "pnl_amount": 102930.53,
+                "wins": 12
+              },
+              {
+                "symbol": "601857.SH",
+                "name": "中国石油",
+                "n_trades": 16,
+                "pnl_amount": 97929.85,
+                "wins": 11
+              },
+              {
+                "symbol": "601898.SH",
+                "name": "中煤能源",
+                "n_trades": 9,
+                "pnl_amount": 94378.26000000001,
+                "wins": 5
+              }
+            ]
+          },
+          "validation_concentration": {
+            "distinct_symbols": 44,
+            "n_trades": 170,
+            "total_pnl_amount": 430638.53,
+            "gross_profit": 1279474.78,
+            "gross_loss": 848836.25,
+            "net_to_gross": 0.3366,
+            "net_shares": {
+              "top1_net_share": 0.32246,
+              "top3_net_share": 0.874559,
+              "top5_net_share": 1.201209
+            },
+            "gross_profit_shares": {
+              "top1_gross_share": 0.108532,
+              "top3_gross_share": 0.294354,
+              "top5_gross_share": 0.404296
+            },
+            "top_industry_gross_share": 0.159619,
+            "max_symbol_loss_to_gross": 0.050568,
+            "top_symbols": [
+              {
+                "symbol": "601698.SH",
+                "name": "中国卫通",
+                "n_trades": 8,
+                "pnl_amount": 138863.65,
+                "wins": 5
+              },
+              {
+                "symbol": "688981.SH",
+                "name": "中芯国际",
+                "n_trades": 1,
+                "pnl_amount": 136369.64,
+                "wins": 1
+              },
+              {
+                "symbol": "601898.SH",
+                "name": "中煤能源",
+                "n_trades": 5,
+                "pnl_amount": 101385.64000000001,
+                "wins": 4
+              },
+              {
+                "symbol": "601100.SH",
+                "name": "XD恒立液",
+                "n_trades": 4,
+                "pnl_amount": 76324.12,
+                "wins": 2
+              },
+              {
+                "symbol": "688396.SH",
+                "name": "华润微",
+                "n_trades": 5,
+                "pnl_amount": 64343.619999999995,
+                "wins": 4
+              }
+            ]
+          },
+          "trade_loss_summary": {
+            "trades": 290,
+            "losses": 145,
+            "mean_loss_pct": -0.062144,
+            "mean_loss_magnitude_pct": 0.062144,
+            "q10_trade_return_pct": -0.107432,
+            "worst_trade_return_pct": -0.233188
+          },
+          "validation_trade_loss_summary": {
+            "trades": 170,
+            "losses": 91,
+            "mean_loss_pct": -0.065086,
+            "mean_loss_magnitude_pct": 0.065086,
+            "q10_trade_return_pct": -0.107551,
+            "worst_trade_return_pct": -0.233188
+          },
+          "cost_multiplier": 3
+        },
+        "4x": {
+          "full": {
+            "total_return": 0.552455,
+            "annual": 0.088858,
+            "sharpe": 0.635,
+            "mdd": -0.191331,
+            "days": 1303
+          },
+          "rolling_1y": {
+            "windows": 1052,
+            "positive_rate": 0.903,
+            "return_p05": -0.0146,
+            "return_median": 0.0663,
+            "return_worst": -0.0771,
+            "mdd_p05": -0.1913,
+            "mdd_worst": -0.1913
+          },
+          "recent_12m": {
+            "total_return": 0.053862,
+            "mdd": -0.191331
+          },
+          "discovery": {
+            "total_return": 0.049654,
+            "annual": 0.019605,
+            "sharpe": 0.2242,
+            "mdd": -0.115007,
+            "days": 630
+          },
+          "validation": {
+            "total_return": 0.479017,
+            "annual": 0.157831,
+            "sharpe": 0.9086,
+            "mdd": -0.191331,
+            "days": 674
+          },
+          "concentration": {
+            "distinct_symbols": 59,
+            "n_trades": 290,
+            "total_pnl_amount": 552455.27,
+            "gross_profit": 1721058.6,
+            "gross_loss": 1168603.33,
+            "net_to_gross": 0.321,
+            "net_shares": {
+              "top1_net_share": 0.327858,
+              "top3_net_share": 0.736444,
+              "top5_net_share": 1.062393
+            },
+            "gross_profit_shares": {
+              "top1_gross_share": 0.105241,
+              "top3_gross_share": 0.236397,
+              "top5_gross_share": 0.341025
+            },
+            "top_industry_gross_share": 0.192329,
+            "max_symbol_loss_to_gross": 0.03683,
+            "top_symbols": [
+              {
+                "symbol": "601698.SH",
+                "name": "中国卫通",
+                "n_trades": 11,
+                "pnl_amount": 181126.65,
+                "wins": 8
+              },
+              {
+                "symbol": "688981.SH",
+                "name": "中芯国际",
+                "n_trades": 3,
+                "pnl_amount": 128271.48,
+                "wins": 2
+              },
+              {
+                "symbol": "601088.SH",
+                "name": "中国神华",
+                "n_trades": 16,
+                "pnl_amount": 97454.09999999999,
+                "wins": 12
+              },
+              {
+                "symbol": "601857.SH",
+                "name": "中国石油",
+                "n_trades": 16,
+                "pnl_amount": 91688.73999999999,
+                "wins": 11
+              },
+              {
+                "symbol": "601898.SH",
+                "name": "中煤能源",
+                "n_trades": 9,
+                "pnl_amount": 88383.67000000001,
+                "wins": 5
+              }
+            ]
+          },
+          "validation_concentration": {
+            "distinct_symbols": 44,
+            "n_trades": 170,
+            "total_pnl_amount": 376601.52,
+            "gross_profit": 1213092.07,
+            "gross_loss": 836490.55,
+            "net_to_gross": 0.3104,
+            "net_shares": {
+              "top1_net_share": 0.351152,
+              "top3_net_share": 0.9524,
+              "top5_net_share": 1.307196
+            },
+            "gross_profit_shares": {
+              "top1_gross_share": 0.109014,
+              "top3_gross_share": 0.29567,
+              "top5_gross_share": 0.405816
+            },
+            "top_industry_gross_share": 0.160695,
+            "max_symbol_loss_to_gross": 0.052168,
+            "top_symbols": [
+              {
+                "symbol": "601698.SH",
+                "name": "中国卫通",
+                "n_trades": 8,
+                "pnl_amount": 132244.54,
+                "wins": 5
+              },
+              {
+                "symbol": "688981.SH",
+                "name": "中芯国际",
+                "n_trades": 1,
+                "pnl_amount": 130381.43,
+                "wins": 1
+              },
+              {
+                "symbol": "601898.SH",
+                "name": "中煤能源",
+                "n_trades": 5,
+                "pnl_amount": 96049.49,
+                "wins": 4
+              },
+              {
+                "symbol": "601100.SH",
+                "name": "XD恒立液",
+                "n_trades": 4,
+                "pnl_amount": 72647.87999999999,
+                "wins": 2
+              },
+              {
+                "symbol": "688396.SH",
+                "name": "华润微",
+                "n_trades": 5,
+                "pnl_amount": 60968.82,
+                "wins": 4
+              }
+            ]
+          },
+          "trade_loss_summary": {
+            "trades": 290,
+            "losses": 145,
+            "mean_loss_pct": -0.06377,
+            "mean_loss_magnitude_pct": 0.06377,
+            "q10_trade_return_pct": -0.10898,
+            "worst_trade_return_pct": -0.234517
+          },
+          "validation_trade_loss_summary": {
+            "trades": 170,
+            "losses": 91,
+            "mean_loss_pct": -0.066707,
+            "mean_loss_magnitude_pct": 0.066707,
+            "q10_trade_return_pct": -0.109099,
+            "worst_trade_return_pct": -0.234517
+          },
+          "cost_multiplier": 4
+        },
+        "5x": {
+          "full": {
+            "total_return": 0.473731,
+            "annual": 0.077946,
+            "sharpe": 0.5672,
+            "mdd": -0.193931,
+            "days": 1303
+          },
+          "rolling_1y": {
+            "windows": 1052,
+            "positive_rate": 0.8565,
+            "return_p05": -0.0254,
+            "return_median": 0.0551,
+            "return_worst": -0.0895,
+            "mdd_p05": -0.1939,
+            "mdd_worst": -0.1939
+          },
+          "recent_12m": {
+            "total_return": 0.040071,
+            "mdd": -0.193931
+          },
+          "discovery": {
+            "total_return": 0.029213,
+            "annual": 0.011603,
+            "sharpe": 0.1568,
+            "mdd": -0.123448,
+            "days": 630
+          },
+          "validation": {
+            "total_return": 0.4319,
+            "annual": 0.14388,
+            "sharpe": 0.8386,
+            "mdd": -0.193931,
+            "days": 674
+          },
+          "concentration": {
+            "distinct_symbols": 59,
+            "n_trades": 290,
+            "total_pnl_amount": 473730.9,
+            "gross_profit": 1641865.97,
+            "gross_loss": 1168135.07,
+            "net_to_gross": 0.2885,
+            "net_shares": {
+              "top1_net_share": 0.370374,
+              "top3_net_share": 0.820566,
+              "top5_net_share": 1.175485
+            },
+            "gross_profit_shares": {
+              "top1_gross_share": 0.106865,
+              "top3_gross_share": 0.23676,
+              "top5_gross_share": 0.339165
+            },
+            "top_industry_gross_share": 0.192132,
+            "max_symbol_loss_to_gross": 0.039256,
+            "top_symbols": [
+              {
+                "symbol": "601698.SH",
+                "name": "中国卫通",
+                "n_trades": 11,
+                "pnl_amount": 175457.79,
+                "wins": 8
+              },
+              {
+                "symbol": "688981.SH",
+                "name": "中芯国际",
+                "n_trades": 3,
+                "pnl_amount": 121977.4,
+                "wins": 2
+              },
+              {
+                "symbol": "601088.SH",
+                "name": "中国神华",
+                "n_trades": 16,
+                "pnl_amount": 91292.21000000002,
+                "wins": 11
+              },
+              {
+                "symbol": "601857.SH",
+                "name": "中国石油",
+                "n_trades": 16,
+                "pnl_amount": 85655.12,
+                "wins": 11
+              },
+              {
+                "symbol": "601898.SH",
+                "name": "中煤能源",
+                "n_trades": 9,
+                "pnl_amount": 82481.0,
+                "wins": 5
+              }
+            ]
+          },
+          "validation_concentration": {
+            "distinct_symbols": 44,
+            "n_trades": 170,
+            "total_pnl_amount": 322546.94,
+            "gross_profit": 1150969.26,
+            "gross_loss": 828422.32,
+            "net_to_gross": 0.2802,
+            "net_shares": {
+              "top1_net_share": 0.394331,
+              "top3_net_share": 1.061675,
+              "top5_net_share": 1.454293
+            },
+            "gross_profit_shares": {
+              "top1_gross_share": 0.110507,
+              "top3_gross_share": 0.297523,
+              "top5_gross_share": 0.40755
+            },
+            "top_industry_gross_share": 0.16142,
+            "max_symbol_loss_to_gross": 0.055298,
+            "top_symbols": [
+              {
+                "symbol": "601698.SH",
+                "name": "中国卫通",
+                "n_trades": 8,
+                "pnl_amount": 127190.1,
+                "wins": 5
+              },
+              {
+                "symbol": "688981.SH",
+                "name": "中芯国际",
+                "n_trades": 1,
+                "pnl_amount": 124419.84,
+                "wins": 1
+              },
+              {
+                "symbol": "601898.SH",
+                "name": "中煤能源",
+                "n_trades": 5,
+                "pnl_amount": 90830.17,
+                "wins": 4
+              },
+              {
+                "symbol": "601100.SH",
+                "name": "XD恒立液",
+                "n_trades": 4,
+                "pnl_amount": 69049.0,
+                "wins": 2
+              },
+              {
+                "symbol": "688396.SH",
+                "name": "华润微",
+                "n_trades": 5,
+                "pnl_amount": 57588.5,
+                "wins": 4
+              }
+            ]
+          },
+          "trade_loss_summary": {
+            "trades": 290,
+            "losses": 149,
+            "mean_loss_pct": -0.063656,
+            "mean_loss_magnitude_pct": 0.063656,
+            "q10_trade_return_pct": -0.110525,
+            "worst_trade_return_pct": -0.235845
+          },
+          "validation_trade_loss_summary": {
+            "trades": 170,
+            "losses": 92,
+            "mean_loss_pct": -0.067587,
+            "mean_loss_magnitude_pct": 0.067587,
+            "q10_trade_return_pct": -0.110644,
+            "worst_trade_return_pct": -0.235845
+          },
+          "cost_multiplier": 5
+        }
+      },
+      "validation_positive_symbols": 24
+    },
+    "industry_shrink_05": {
+      "overrides": {
+        "neutralize": {
+          "industry": "industry_l1",
+          "shrink": 0.5
+        }
+      },
+      "runs": {
+        "3x": {
+          "full": {
+            "total_return": 0.447954,
+            "annual": 0.074271,
+            "sharpe": 0.5732,
+            "mdd": -0.161613,
+            "days": 1303
+          },
+          "rolling_1y": {
+            "windows": 1052,
+            "positive_rate": 0.9259,
+            "return_p05": -0.0136,
+            "return_median": 0.0817,
+            "return_worst": -0.0928,
+            "mdd_p05": -0.1616,
+            "mdd_worst": -0.1616
+          },
+          "recent_12m": {
+            "total_return": 0.097828,
+            "mdd": -0.161613
+          },
+          "discovery": {
+            "total_return": 0.118522,
+            "annual": 0.045897,
+            "sharpe": 0.4434,
+            "mdd": -0.108115,
+            "days": 630
+          },
+          "validation": {
+            "total_return": 0.294524,
+            "annual": 0.101486,
+            "sharpe": 0.6729,
+            "mdd": -0.161613,
+            "days": 674
+          },
+          "concentration": {
+            "distinct_symbols": 56,
+            "n_trades": 288,
+            "total_pnl_amount": 457197.48,
+            "gross_profit": 1512437.19,
+            "gross_loss": 1055239.71,
+            "net_to_gross": 0.3023,
+            "net_shares": {
+              "top1_net_share": 0.19944,
+              "top3_net_share": 0.547529,
+              "top5_net_share": 0.816357
+            },
+            "gross_profit_shares": {
+              "top1_gross_share": 0.060289,
+              "top3_gross_share": 0.165514,
+              "top5_gross_share": 0.246778
+            },
+            "top_industry_gross_share": 0.21643,
+            "max_symbol_loss_to_gross": 0.037413,
+            "top_symbols": [
+              {
+                "symbol": "601088.SH",
+                "name": "中国神华",
+                "n_trades": 15,
+                "pnl_amount": 91183.65,
+                "wins": 11
+              },
+              {
+                "symbol": "688396.SH",
+                "name": "华润微",
+                "n_trades": 7,
+                "pnl_amount": 81496.57999999999,
+                "wins": 5
+              },
+              {
+                "symbol": "601319.SH",
+                "name": "中国人保",
+                "n_trades": 14,
+                "pnl_amount": 77648.71999999999,
+                "wins": 11
+              },
+              {
+                "symbol": "601857.SH",
+                "name": "中国石油",
+                "n_trades": 16,
+                "pnl_amount": 73282.87999999999,
+                "wins": 10
+              },
+              {
+                "symbol": "601816.SH",
+                "name": "京沪高铁",
+                "n_trades": 12,
+                "pnl_amount": 49624.64,
+                "wins": 9
+              }
+            ]
+          },
+          "validation_concentration": {
+            "distinct_symbols": 45,
+            "n_trades": 168,
+            "total_pnl_amount": 229998.56,
+            "gross_profit": 946480.39,
+            "gross_loss": 716481.83,
+            "net_to_gross": 0.243,
+            "net_shares": {
+              "top1_net_share": 0.356482,
+              "top3_net_share": 0.740765,
+              "top5_net_share": 1.064856
+            },
+            "gross_profit_shares": {
+              "top1_gross_share": 0.086627,
+              "top3_gross_share": 0.180009,
+              "top5_gross_share": 0.258764
+            },
+            "top_industry_gross_share": 0.203396,
+            "max_symbol_loss_to_gross": 0.064694,
+            "top_symbols": [
+              {
+                "symbol": "688396.SH",
+                "name": "华润微",
+                "n_trades": 6,
+                "pnl_amount": 81990.43,
+                "wins": 5
+              },
+              {
+                "symbol": "601816.SH",
+                "name": "京沪高铁",
+                "n_trades": 8,
+                "pnl_amount": 44478.77,
+                "wins": 6
+              },
+              {
+                "symbol": "601319.SH",
+                "name": "中国人保",
+                "n_trades": 8,
+                "pnl_amount": 43905.770000000004,
+                "wins": 6
+              },
+              {
+                "symbol": "601898.SH",
+                "name": "中煤能源",
+                "n_trades": 1,
+                "pnl_amount": 40389.67,
+                "wins": 1
+              },
+              {
+                "symbol": "600585.SH",
+                "name": "海螺水泥",
+                "n_trades": 1,
+                "pnl_amount": 34150.68,
+                "wins": 1
+              }
+            ]
+          },
+          "trade_loss_summary": {
+            "trades": 288,
+            "losses": 131,
+            "mean_loss_pct": -0.06487,
+            "mean_loss_magnitude_pct": 0.06487,
+            "q10_trade_return_pct": -0.108612,
+            "worst_trade_return_pct": -0.233369
+          },
+          "validation_trade_loss_summary": {
+            "trades": 168,
+            "losses": 82,
+            "mean_loss_pct": -0.065222,
+            "mean_loss_magnitude_pct": 0.065222,
+            "q10_trade_return_pct": -0.103234,
+            "worst_trade_return_pct": -0.233369
+          },
+          "cost_multiplier": 3
+        },
+        "4x": {
+          "full": {
+            "total_return": 0.377356,
+            "annual": 0.063928,
+            "sharpe": 0.5039,
+            "mdd": -0.165398,
+            "days": 1303
+          },
+          "rolling_1y": {
+            "windows": 1052,
+            "positive_rate": 0.904,
+            "return_p05": -0.0215,
+            "return_median": 0.07,
+            "return_worst": -0.1007,
+            "mdd_p05": -0.1654,
+            "mdd_worst": -0.1654
+          },
+          "recent_12m": {
+            "total_return": 0.084515,
+            "mdd": -0.165398
+          },
+          "discovery": {
+            "total_return": 0.095466,
+            "annual": 0.037205,
+            "sharpe": 0.371,
+            "mdd": -0.112339,
+            "days": 630
+          },
+          "validation": {
+            "total_return": 0.257324,
+            "annual": 0.089525,
+            "sharpe": 0.604,
+            "mdd": -0.165398,
+            "days": 674
+          },
+          "concentration": {
+            "distinct_symbols": 56,
+            "n_trades": 288,
+            "total_pnl_amount": 386264.99,
+            "gross_profit": 1438742.68,
+            "gross_loss": 1052477.69,
+            "net_to_gross": 0.2685,
+            "net_shares": {
+              "top1_net_share": 0.224016,
+              "top3_net_share": 0.613006,
+              "top5_net_share": 0.906245
+            },
+            "gross_profit_shares": {
+              "top1_gross_share": 0.060143,
+              "top3_gross_share": 0.164576,
+              "top5_gross_share": 0.243303
+            },
+            "top_industry_gross_share": 0.217311,
+            "max_symbol_loss_to_gross": 0.039707,
+            "top_symbols": [
+              {
+                "symbol": "601088.SH",
+                "name": "中国神华",
+                "n_trades": 15,
+                "pnl_amount": 86529.67000000001,
+                "wins": 11
+              },
+              {
+                "symbol": "688396.SH",
+                "name": "华润微",
+                "n_trades": 7,
+                "pnl_amount": 77377.87000000001,
+                "wins": 5
+              },
+              {
+                "symbol": "601319.SH",
+                "name": "中国人保",
+                "n_trades": 14,
+                "pnl_amount": 72875.08,
+                "wins": 10
+              },
+              {
+                "symbol": "601857.SH",
+                "name": "中国石油",
+                "n_trades": 16,
+                "pnl_amount": 67727.04000000001,
+                "wins": 10
+              },
+              {
+                "symbol": "601816.SH",
+                "name": "京沪高铁",
+                "n_trades": 12,
+                "pnl_amount": 45541.189999999995,
+                "wins": 9
+              }
+            ]
+          },
+          "validation_concentration": {
+            "distinct_symbols": 45,
+            "n_trades": 168,
+            "total_pnl_amount": 185231.72,
+            "gross_profit": 893463.6,
+            "gross_loss": 708231.88,
+            "net_to_gross": 0.2073,
+            "net_shares": {
+              "top1_net_share": 0.421434,
+              "top3_net_share": 0.862898,
+              "top5_net_share": 1.247861
+            },
+            "gross_profit_shares": {
+              "top1_gross_share": 0.087371,
+              "top3_gross_share": 0.178895,
+              "top5_gross_share": 0.258705
+            },
+            "top_industry_gross_share": 0.203579,
+            "max_symbol_loss_to_gross": 0.067938,
+            "top_symbols": [
+              {
+                "symbol": "688396.SH",
+                "name": "华润微",
+                "n_trades": 6,
+                "pnl_amount": 78062.86,
+                "wins": 5
+              },
+              {
+                "symbol": "601816.SH",
+                "name": "京沪高铁",
+                "n_trades": 8,
+                "pnl_amount": 41156.329999999994,
+                "wins": 6
+              },
+              {
+                "symbol": "601319.SH",
+                "name": "中国人保",
+                "n_trades": 8,
+                "pnl_amount": 40616.81999999999,
+                "wins": 5
+              },
+              {
+                "symbol": "601898.SH",
+                "name": "中煤能源",
+                "n_trades": 1,
+                "pnl_amount": 38484.8,
+                "wins": 1
+              },
+              {
+                "symbol": "600585.SH",
+                "name": "海螺水泥",
+                "n_trades": 1,
+                "pnl_amount": 32822.59,
+                "wins": 1
+              }
+            ]
+          },
+          "trade_loss_summary": {
+            "trades": 288,
+            "losses": 133,
+            "mean_loss_pct": -0.065503,
+            "mean_loss_magnitude_pct": 0.065503,
+            "q10_trade_return_pct": -0.110158,
+            "worst_trade_return_pct": -0.234699
+          },
+          "validation_trade_loss_summary": {
+            "trades": 168,
+            "losses": 84,
+            "mean_loss_pct": -0.065271,
+            "mean_loss_magnitude_pct": 0.065271,
+            "q10_trade_return_pct": -0.104789,
+            "worst_trade_return_pct": -0.234699
+          },
+          "cost_multiplier": 4
+        },
+        "5x": {
+          "full": {
+            "total_return": 0.313623,
+            "annual": 0.054217,
+            "sharpe": 0.4391,
+            "mdd": -0.176542,
+            "days": 1303
+          },
+          "rolling_1y": {
+            "windows": 1052,
+            "positive_rate": 0.8793,
+            "return_p05": -0.029,
+            "return_median": 0.0592,
+            "return_worst": -0.1081,
+            "mdd_p05": -0.1676,
+            "mdd_worst": -0.1676
+          },
+          "recent_12m": {
+            "total_return": 0.071241,
+            "mdd": -0.167638
+          },
+          "discovery": {
+            "total_return": 0.074147,
+            "annual": 0.029071,
+            "sharpe": 0.3025,
+            "mdd": -0.115243,
+            "days": 630
+          },
+          "validation": {
+            "total_return": 0.222945,
+            "annual": 0.078273,
+            "sharpe": 0.5404,
+            "mdd": -0.176542,
+            "days": 674
+          },
+          "concentration": {
+            "distinct_symbols": 56,
+            "n_trades": 288,
+            "total_pnl_amount": 322188.43,
+            "gross_profit": 1372181.44,
+            "gross_loss": 1049993.01,
+            "net_to_gross": 0.2348,
+            "net_shares": {
+              "top1_net_share": 0.255583,
+              "top3_net_share": 0.69586,
+              "top5_net_share": 1.022022
+            },
+            "gross_profit_shares": {
+              "top1_gross_share": 0.060011,
+              "top3_gross_share": 0.163388,
+              "top5_gross_share": 0.239971
+            },
+            "top_industry_gross_share": 0.217435,
+            "max_symbol_loss_to_gross": 0.041822,
+            "top_symbols": [
+              {
+                "symbol": "601088.SH",
+                "name": "中国神华",
+                "n_trades": 15,
+                "pnl_amount": 82346.01000000002,
+                "wins": 10
+              },
+              {
+                "symbol": "688396.SH",
+                "name": "华润微",
+                "n_trades": 7,
+                "pnl_amount": 73354.01000000001,
+                "wins": 5
+              },
+              {
+                "symbol": "601319.SH",
+                "name": "中国人保",
+                "n_trades": 14,
+                "pnl_amount": 68498.02,
+                "wins": 10
+              },
+              {
+                "symbol": "601857.SH",
+                "name": "中国石油",
+                "n_trades": 16,
+                "pnl_amount": 62552.43,
+                "wins": 10
+              },
+              {
+                "symbol": "601898.SH",
+                "name": "中煤能源",
+                "n_trades": 2,
+                "pnl_amount": 42533.1,
+                "wins": 2
+              }
+            ]
+          },
+          "validation_concentration": {
+            "distinct_symbols": 45,
+            "n_trades": 168,
+            "total_pnl_amount": 145758.45,
+            "gross_profit": 845328.7,
+            "gross_loss": 699570.25,
+            "net_to_gross": 0.1724,
+            "net_shares": {
+              "top1_net_share": 0.509268,
+              "top3_net_share": 1.029469,
+              "top5_net_share": 1.502711
+            },
+            "gross_profit_shares": {
+              "top1_gross_share": 0.087812,
+              "top3_gross_share": 0.177509,
+              "top5_gross_share": 0.25911
+            },
+            "top_industry_gross_share": 0.202778,
+            "max_symbol_loss_to_gross": 0.069402,
+            "top_symbols": [
+              {
+                "symbol": "688396.SH",
+                "name": "华润微",
+                "n_trades": 6,
+                "pnl_amount": 74230.15000000001,
+                "wins": 5
+              },
+              {
+                "symbol": "601816.SH",
+                "name": "京沪高铁",
+                "n_trades": 8,
+                "pnl_amount": 38153.060000000005,
+                "wins": 6
+              },
+              {
+                "symbol": "601319.SH",
+                "name": "中国人保",
+                "n_trades": 8,
+                "pnl_amount": 37670.600000000006,
+                "wins": 5
+              },
+              {
+                "symbol": "601898.SH",
+                "name": "中煤能源",
+                "n_trades": 1,
+                "pnl_amount": 36926.13,
+                "wins": 1
+              },
+              {
+                "symbol": "600585.SH",
+                "name": "海螺水泥",
+                "n_trades": 1,
+                "pnl_amount": 32052.87,
+                "wins": 1
+              }
+            ]
+          },
+          "trade_loss_summary": {
+            "trades": 288,
+            "losses": 139,
+            "mean_loss_pct": -0.064257,
+            "mean_loss_magnitude_pct": 0.064257,
+            "q10_trade_return_pct": -0.111701,
+            "worst_trade_return_pct": -0.236026
+          },
+          "validation_trade_loss_summary": {
+            "trades": 168,
+            "losses": 86,
+            "mean_loss_pct": -0.065345,
+            "mean_loss_magnitude_pct": 0.065345,
+            "q10_trade_return_pct": -0.106342,
+            "worst_trade_return_pct": -0.236026
+          },
+          "cost_multiplier": 5
+        }
+      },
+      "validation_positive_symbols": 26,
+      "frozen_gate_result": {
+        "thresholds_unchanged_from_r270": true,
+        "decision": {
+          "P1": true,
+          "P2": null,
+          "G1": true,
+          "G2": true,
+          "G3": true,
+          "G4": true,
+          "G5": true,
+          "G6": true,
+          "G7": true,
+          "G8": false,
+          "R1": false,
+          "R2": true,
+          "C1": true,
+          "C2": true,
+          "C3": true,
+          "C4": false,
+          "C5": true,
+          "C6": true,
+          "C7": true,
+          "C8": false,
+          "L1": false,
+          "L2": false,
+          "L3": false,
+          "L4": false
+        },
+        "all_pass": false
+      }
+    }
+  },
+  "candidate_runs": {
+    "control": {
+      "3x": {
+        "cached": true,
+        "curve": {
+          "path": "data/research/r271_cache/ai_hs300_macro_gate_quality_control_3x_2021-06-01_2026-10-16.parquet",
+          "size_bytes": 8295,
+          "sha256": "db742d445b8c1e8ca2598008976bf3d2fcfc5ac9b72768b91ed226db95802112"
+        },
+        "trades": {
+          "path": "data/research/r271_cache/ai_hs300_macro_gate_quality_control_3x_2021-06-01_2026-10-16.trades.json",
+          "size_bytes": 63404,
+          "sha256": "d11bb39184003b1380cda54b794612e6e9a9defe6f3827b036831c406b8ab839"
+        },
+        "cache_manifest": {
+          "path": "data/research/r271_cache/ai_hs300_macro_gate_quality_control_3x_2021-06-01_2026-10-16.manifest.json",
+          "size_bytes": 1246,
+          "sha256": "775ad7bf8d88cbb27c9f639bef7f857fbe98723137b7998dc0f390eca6b16ac6"
+        }
+      },
+      "4x": {
+        "cached": true,
+        "curve": {
+          "path": "data/research/r271_cache/ai_hs300_macro_gate_quality_control_4x_2021-06-01_2026-10-16.parquet",
+          "size_bytes": 8302,
+          "sha256": "7331c5a26200f9ea78b516a6757b5c6f8eab04e75bce644387eace5a1659f962"
+        },
+        "trades": {
+          "path": "data/research/r271_cache/ai_hs300_macro_gate_quality_control_4x_2021-06-01_2026-10-16.trades.json",
+          "size_bytes": 63408,
+          "sha256": "34da09e8a22d8fa2733f3bc746c0646e780bdfe8c85a524445747f7fb2c8298e"
+        },
+        "cache_manifest": {
+          "path": "data/research/r271_cache/ai_hs300_macro_gate_quality_control_4x_2021-06-01_2026-10-16.manifest.json",
+          "size_bytes": 1246,
+          "sha256": "7135cfe698cbbc0df75c2360519ce59fcc6da20a19e380275f2d780db7167774"
+        }
+      },
+      "5x": {
+        "cached": true,
+        "curve": {
+          "path": "data/research/r271_cache/ai_hs300_macro_gate_quality_control_5x_2021-06-01_2026-10-16.parquet",
+          "size_bytes": 8303,
+          "sha256": "02780d5d851713d4cfd8ebdaf6e939562cdef90510de2c373c90410225ec1897"
+        },
+        "trades": {
+          "path": "data/research/r271_cache/ai_hs300_macro_gate_quality_control_5x_2021-06-01_2026-10-16.trades.json",
+          "size_bytes": 63383,
+          "sha256": "8a4600676ab4b235b3e53b4d601e9b0a3c6323cdc6d77f140ecfa1e821f37048"
+        },
+        "cache_manifest": {
+          "path": "data/research/r271_cache/ai_hs300_macro_gate_quality_control_5x_2021-06-01_2026-10-16.manifest.json",
+          "size_bytes": 1246,
+          "sha256": "ab2fb945cf151cc68bdf26786c69718dce1ec80574ecc834c1605a27463525d1"
+        }
+      }
+    },
+    "industry_shrink_05": {
+      "3x": {
+        "cached": true,
+        "curve": {
+          "path": "data/research/r271_cache/ai_hs300_macro_gate_quality_industry_shrink_05_3x_2021-06-01_2026-10-16.parquet",
+          "size_bytes": 8216,
+          "sha256": "f5b64035a801080c731154aa43acb1d66fe80bbb486183927cf65d4ab2829ce1"
+        },
+        "trades": {
+          "path": "data/research/r271_cache/ai_hs300_macro_gate_quality_industry_shrink_05_3x_2021-06-01_2026-10-16.trades.json",
+          "size_bytes": 62941,
+          "sha256": "0fc8e3803ef0340c118f5e2defc26726d9da694ae5c8edc3ff62ee5b4352c604"
+        },
+        "cache_manifest": {
+          "path": "data/research/r271_cache/ai_hs300_macro_gate_quality_industry_shrink_05_3x_2021-06-01_2026-10-16.manifest.json",
+          "size_bytes": 1367,
+          "sha256": "7f3c4b050ee97c43486268de8c9205d710f5a909056d7e4dbafa6334deb088b0"
+        }
+      },
+      "4x": {
+        "cached": true,
+        "curve": {
+          "path": "data/research/r271_cache/ai_hs300_macro_gate_quality_industry_shrink_05_4x_2021-06-01_2026-10-16.parquet",
+          "size_bytes": 8238,
+          "sha256": "18555d4496056d42e0179b431bac9776f013a922faf787a040ef4f8cd2f19774"
+        },
+        "trades": {
+          "path": "data/research/r271_cache/ai_hs300_macro_gate_quality_industry_shrink_05_4x_2021-06-01_2026-10-16.trades.json",
+          "size_bytes": 62944,
+          "sha256": "f4d32814be904fc21ad615e1292f86ef919f8146420bee398134d0122fc2fb60"
+        },
+        "cache_manifest": {
+          "path": "data/research/r271_cache/ai_hs300_macro_gate_quality_industry_shrink_05_4x_2021-06-01_2026-10-16.manifest.json",
+          "size_bytes": 1367,
+          "sha256": "f726081ddd392041b83cd6feb5a256867b1f22c998653cbc5590abf2718931c5"
+        }
+      },
+      "5x": {
+        "cached": true,
+        "curve": {
+          "path": "data/research/r271_cache/ai_hs300_macro_gate_quality_industry_shrink_05_5x_2021-06-01_2026-10-16.parquet",
+          "size_bytes": 8208,
+          "sha256": "d8dfad19dfed262036e6ec1a4ef35669adc9fa868ab18cdf4d8c24cf6b79b1a9"
+        },
+        "trades": {
+          "path": "data/research/r271_cache/ai_hs300_macro_gate_quality_industry_shrink_05_5x_2021-06-01_2026-10-16.trades.json",
+          "size_bytes": 62936,
+          "sha256": "00294bc4a5b179c1149853e6d7a6be4258f2c5cc7f7001ba16a51792c0ef5ae5"
+        },
+        "cache_manifest": {
+          "path": "data/research/r271_cache/ai_hs300_macro_gate_quality_industry_shrink_05_5x_2021-06-01_2026-10-16.manifest.json",
+          "size_bytes": 1367,
+          "sha256": "3c1f88390fc132403391f7e72e8a8e64ee6f3593e5304051b98a4b9a9e81a6c7"
+        }
+      }
+    }
+  },
+  "decision": {
+    "decision": {
+      "P1": true,
+      "P2": null,
+      "G1": true,
+      "G2": true,
+      "G3": true,
+      "G4": true,
+      "G5": true,
+      "G6": true,
+      "G7": true,
+      "G8": false,
+      "R1": false,
+      "R2": true,
+      "C1": true,
+      "C2": true,
+      "C3": true,
+      "C4": false,
+      "C5": true,
+      "C6": true,
+      "C7": true,
+      "C8": false,
+      "L1": false,
+      "L2": false,
+      "L3": false,
+      "L4": false
+    },
+    "all_pass_before_panel": false,
+    "all_pass": false,
+    "passing_variants": [],
+    "production_state": "pause_production",
+    "research_candidate_only_if_all_gates_pass": true
+  },
+  "provenance": {
+    "preregistration_sha256": "ce1d3edc7a61792bf3fb9065cb003f725e4b6a8476745b134b6c97e6b1a5b87a",
+    "runner_sha256": "d68b801e7914d4578f391ab44e7f064930dbf6e77bf5698822cca3c10d6dd0de",
+    "panel_registrar_sha256": "d36998c88f809bdc84a3672fea0cac57782aed8f847ba5e9bdb4933df5dfc7b0",
+    "strategy_source": {
+      "path": "data/strategies/ai/ai_hs300_macro_gate_quality.py",
+      "size_bytes": 2640,
+      "sha256": "b1c2b43ef9861053d3f4e4dd2ac4a3aeb7d0eae301b5400bdb0dbf65169b87ec"
+    },
+    "candidate_strategy_source": {
+      "path": "data/strategies/ai/ai_hs300_macro_gate_quality_r271_industry_shrink05.py",
+      "size_bytes": 2760,
+      "sha256": "6e8cdaf9c2917bf0178ddd4745c00f2399cd6413a32873427860a6a9687594ef"
+    },
+    "historical_membership": {
+      "path": "data/research/r78_daily_membership/daily_snapshots.parquet",
+      "size_bytes": 44603,
+      "sha256": "f4417807dfb7ede462fe6cc70ac2262d2f171320de7f2cfc6bfaef96d89234ef"
+    },
+    "strategy_backtest_service": {
+      "path": "backend/app/backtest/strategy.py",
+      "size_bytes": 128098,
+      "sha256": "318b6548354c587965c321921faafcbb7c4be0012fefe3ada0ced97fae06fd4e"
+    },
+    "backtest_engine": {
+      "path": "backend/app/backtest/engine.py",
+      "size_bytes": 153584,
+      "sha256": "79962c45a4b6e64d77b625be144997efc4c12fda85e33242224fdb44d3c62bf3"
+    },
+    "scoring_neutralization": {
+      "path": "backend/app/strategy/scoring.py",
+      "size_bytes": 21696,
+      "sha256": "60b8293d94626fedd7d407628fddfa251c0e09e7edeab26aaa0d444df8f5c5e3"
+    },
+    "industry_snapshot": {
+      "path": "data/ext_data/ext_hy_ths/part.parquet",
+      "size_bytes": 103700,
+      "sha256": "8c3d96b4658dd5881aeaa42e83541e67d65bef0e0c5797adf1fc586857afb1c9"
+    },
+    "r266_controls": {
+      "3x": {
+        "curve": {
+          "path": "data/research/r266_cache/ai_hs300_macro_gate_quality_3x_2021-06-01_2026-10-16.parquet",
+          "size_bytes": 8295,
+          "sha256": "db742d445b8c1e8ca2598008976bf3d2fcfc5ac9b72768b91ed226db95802112"
+        },
+        "trades": {
+          "path": "data/research/r266_cache/ai_hs300_macro_gate_quality_3x_2021-06-01_2026-10-16.trades.json",
+          "size_bytes": 63404,
+          "sha256": "d11bb39184003b1380cda54b794612e6e9a9defe6f3827b036831c406b8ab839"
+        }
+      },
+      "4x": {
+        "curve": {
+          "path": "data/research/r266_cache/ai_hs300_macro_gate_quality_4x_2021-06-01_2026-10-16.parquet",
+          "size_bytes": 8303,
+          "sha256": "b4028a3c21cf030ac484a7b525cd10d8a964d8913b530e61371dfe8967a885d6"
+        },
+        "trades": {
+          "path": "data/research/r266_cache/ai_hs300_macro_gate_quality_4x_2021-06-01_2026-10-16.trades.json",
+          "size_bytes": 63408,
+          "sha256": "34da09e8a22d8fa2733f3bc746c0646e780bdfe8c85a524445747f7fb2c8298e"
+        }
+      },
+      "5x": {
+        "curve": {
+          "path": "data/research/r266_cache/ai_hs300_macro_gate_quality_5x_2021-06-01_2026-10-16.parquet",
+          "size_bytes": 8303,
+          "sha256": "728f68b2a913677ca3e51b37d0bb4d5fd55f297017f2f2b9bd7eb09b879ac025"
+        },
+        "trades": {
+          "path": "data/research/r266_cache/ai_hs300_macro_gate_quality_5x_2021-06-01_2026-10-16.trades.json",
+          "size_bytes": 63383,
+          "sha256": "8a4600676ab4b235b3e53b4d601e9b0a3c6323cdc6d77f140ecfa1e821f37048"
+        }
+      }
+    }
+  },
+  "known_limitations": [
+    "R98 previously tested full industry neutralization and industry plus size neutralization; those older results used pre-R125 holder data and 2x costs. R271 is an exploratory updated-score test, not a fresh confirmatory experiment.",
+    "R270's initial results had already been exposed before its final byte-identical recalculation; that audit does not restore independence.",
+    "R271 reuses a strategy and validation interval examined across many prior rounds; validation is not an untouched holdout.",
+    "Industry classification is a current snapshot, not point-in-time historical industry membership.",
+    "Score neutralization is not portfolio-level industry neutrality and does not enforce industry quotas.",
+    "Macro factor source data may be revised; historical HS300 membership is used.",
+    "Only 290 R266 baseline trades are available; concentration and tail estimates have sampling uncertainty.",
+    "Panel reload and passing historical backtest do not authorize paper or production deployment."
+  ],
+  "panel_check_pending": true,
+  "all_pass": false,
+  "passing_variants": [],
+  "paper_trading_candidate": false
+}

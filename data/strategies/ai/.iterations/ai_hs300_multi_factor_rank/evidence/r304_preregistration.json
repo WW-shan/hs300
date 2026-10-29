@@ -1,0 +1,54 @@
+{
+  "round": "R304",
+  "title": "Official historical HS300 membership source feasibility",
+  "date": "2026-10-29",
+  "classification": "pre-registered source discovery; no alpha search and no return backtest",
+  "question": "Can official CSI index-provider records reconstruct date-effective HS300 membership across the available research window, including routine and exceptional constituent changes, with auditable publication/effective dates?",
+  "hypotheses": {
+    "H1": "The CSI index provider publishes official historical routine adjustment notices or historical sample files that can be retrieved and verified.",
+    "H2": "A complete reconstruction also requires coverage of exceptional membership changes between routine semiannual reviews.",
+    "H3": "If official records do not cover the required events and effective dates, a defensible point-in-time HS300 universe cannot be reconstructed from this source alone."
+  },
+  "scope": {
+    "window": ["2018-01-02", "2026-10-27"],
+    "primary_source": "China Securities Index Co. (CSI), official index provider",
+    "secondary_source_use": "Search engines may locate official CSI documents only; non-official membership histories cannot establish the primary-source claim.",
+    "required_fields": ["index code", "sample code", "publication date", "effective date", "added/removed status or complete dated sample", "retrieval URL", "content hash"]
+  },
+  "method": [
+    "Freeze and register this source-discovery question before external queries.",
+    "Search CSI's official web domain for routine semiannual adjustment notices and historical constituent files in the fixed window.",
+    "Inspect accessible official source documents and record exact dates, downloadable payload hashes, and coverage gaps.",
+    "Check whether the official history includes temporary/exceptional changes or whether a complete daily reconstruction would still be ambiguous."
+  ],
+  "execution_addendum": {
+    "classification": "prospective amendment after panel registration but before the fixed official API query; exploratory endpoint discovery occurred before this amendment",
+    "deviation": "Initial unarchived reconnaissance fetched the official CSI JavaScript bundle and homepage, inspected endpoint strings, and made search-engine requests whose raw responses were not retained. Those probes are exploratory and are excluded from the evidence basis. A scratch homepage response was written to an untracked temp file and will be preserved as a hashed exploratory artifact rather than deleted.",
+    "fixed_query": "Use the official CSI frontend-discovered endpoint /csindex-home/announcement/queryAnnouncementByVo. Send one primary request with page={page:1,rows:100,desc:\"\"} and one control request matching the homepage UI default page={page:1,rows:5,desc:\"\"}; both use lang=cn and empty classlist/indexlist/related_topics/typelist. Retain the full official JSON responses and hashes. Search only within those retained responses for HS300/000300 sample-change records.",
+    "limits": "If the endpoint returns only recent records, reports, or incomplete archive pages, classify the coverage as insufficient; do not infer a complete historical event series from absence of search results."
+  },
+  "decision_rule": {
+    "feasible": "Only if the official source provides complete coverage of every effective membership event in the target window, with unambiguous effective dates and a verifiable seed membership.",
+    "no_go": "If any period or exceptional event lacks official, date-effective evidence, do not reconstruct missing membership from current constituents or non-official guesses.",
+    "next_step_if_feasible": "Create a separately frozen research-only membership artifact outside the production current-members service; independently validate transitions and use it only in a pre-registered system backtest."
+  },
+  "prohibited_in_this_round": [
+    "No mining job, factor return calculation, strategy backtest, or candidate promotion/publication.",
+    "No use of current membership as a historical proxy.",
+    "No production membership changes, provider sync, data rebuild, or strategy/cache mutation.",
+    "No silent filling of missing adjustment events from third-party websites."
+  ],
+  "panel_registration": {
+    "required": true,
+    "candidate_name": "R304 中证官方历史成分数据源可行性（无收益回测）",
+    "candidate_kind": "factor",
+    "status": "pending",
+    "retry_after_post": false
+  },
+  "success_criteria": [
+    "Query plan, scope and feasibility rule are frozen before any external search.",
+    "All panel registration request/response and post-registration GET evidence are retained.",
+    "Official source documents are retained verbatim or with stable official URLs and SHA-256 hashes.",
+    "Conclusion explicitly says whether complete point-in-time reconstruction is feasible and why."
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "round": "R293",
+  "status": "frozen_before_results",
+  "frozen_at_utc": "2026-10-28T16:53:47.230648+00:00",
+  "research_question": "Do any scheduled, manual, repair, financial-sync, or history-extension application paths automatically rebuild the R257 dependency chain after daily/enriched updates, and what are the builders' write/cache side effects?",
+  "hypothesis": "The application refreshes enriched data through several paths, while alt_hs300, R253, and R257 builders remain separate offline scripts; a base rebuild can remove the live partition tree before the full replacement is ready.",
+  "method": [
+    "Trace scheduler registration and execution, pipeline stages, public refresh/repair endpoints, direct daily K-line endpoints, financial-share recomputation, and history extension.",
+    "Search application and test sources for direct or indirect builder invocation; inspect imports and subprocess/runpy invocation paths.",
+    "Inspect each builder's inputs, date/universe scope, delete/overwrite semantics, configuration writes, and extension/strategy cache invalidation.",
+    "Inspect related tests as source evidence only; do not execute tests or builders."
+  ],
+  "decision_rules": [
+    "Classify a path as automatic only if reachable in application code from a scheduler/API/job entry without a separate operator command.",
+    "Distinguish K-line persistence, enriched recomputation, and each extension factor builder.",
+    "Report exact write scopes and whether publication is per-file atomic or whole-dataset atomic.",
+    "Do not infer historical PIT, old-value reproduction, returns, or alpha from this source audit."
+  ],
+  "exclusions": [
+    "No provider/network data pulls, backtest, screening, matching, paper trade, or order creation.",
+    "No factor builder execution, no reads of factor values or returns, and no writes to production market/enriched/extension data or caches.",
+    "No code changes, gate relaxation, strategy status change, or production activation."
+  ],
+  "input_snapshot": {
+    "file": "r293_input_snapshot.json",
+    "sha256": "2a572056b215b046a0ad65dd661b2f8dbfb3cd5b482ae661871ba8baeb9cd989"
+  },
+  "freeze_script_sha256": "c1d1fba0227f665af3168ac932a50451840c3c38d4c358b3ded6c0c95ace2a1c",
+  "panel_candidate": {
+    "kind": "strategy",
+    "name": "R293 派生因子刷新调用链只读审计",
+    "source_id": "ai_hs300_quality_relative_strength_h20_sl20",
+    "config": {
+      "asset_type": "stock",
+      "commission_pct": 0.0006,
+      "end": "2026-10-19",
+      "fees_pct": 0.0006,
+      "holding_days": 20,
+      "initial_capital": 1000000.0,
+      "matching": "open_t+1",
+      "max_exposure_pct": 1.0,
+      "max_positions": 10,
+      "minute_fill": false,
+      "mode": "position",
+      "overrides": {},
+      "params": {},
+      "position_sizing": "equal",
+      "slippage_bps": 15.0,
+      "stamp_tax_pct": 0.001,
+      "start": "2026-10-19",
+      "strategy_id": "ai_hs300_quality_relative_strength_h20_sl20"
+    },
+    "metrics": {},
+    "data_as_of": "2026-10-19",
+    "status": "pending"
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "round": "R273",
+  "registered_at": "2026-10-28",
+  "status": "pre_registered_after_setup_evidence_correction_before_backtest",
+  "setup_correction": {
+    "supersedes_preregistrations": [
+      {
+        "path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r273_preregistration.json",
+        "sha256": "910cd33abefa4809446e8f1e112b0ad9ad71b6219d227553bc2996b2d0c6688d"
+      },
+      {
+        "path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r273_preregistration_v2.json",
+        "sha256": "73db8aef1972acb14ee643a1c4233d15e5fef4c2cd7331ce53a6c1bfc143b017"
+      }
+    ],
+    "failed_setup_evidence": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r273_panel_registration.json",
+    "failed_setup_evidence_sha256": "b8da45508295e9a063d15a500edc9802f179dd941af31210f4c9b81c29e533c2",
+    "cause": "The first proof check wrongly required the existing public R266 control to be research-only and omitted the csg_ signal-column prefix; panel registration itself succeeded, no backtest was run, and no result was read. The second freeze then caught a correction needed in the registrar and occurred before any backtest.",
+    "hypothesis_thresholds_data_window_and_candidate_source_unchanged": true
+  },
+  "classification": "single_variant_exploratory_test_not_independent_confirmation",
+  "hypothesis": "R266's three macro gates constrain new entries but do not immediately exit existing positions. Keep R266 entry, ranking, universe, sizing and max-hold unchanged; exit positions when any gate is closed, using the system's next-session open. This may reduce risk exposure but can sell before a rapid reopening/rebound.",
+  "strategy": "ai_hs300_macro_gate_quality_r273_gate_exit",
+  "control_round": "R266",
+  "execution": {
+    "window": [
+      "2021-06-01",
+      "2026-10-16"
+    ],
+    "discovery": [
+      "2021-06-01",
+      "2023-12-31"
+    ],
+    "validation": [
+      "2024-01-01",
+      "2026-10-16"
+    ],
+    "membership": "r78_daily_membership",
+    "matching": "entry and exit open_t+1",
+    "costs": {
+      "3x": "0.0006 commission + 0.001 stamp tax + 15bp slippage",
+      "4x": "proportionally scaled",
+      "5x": "proportionally scaled"
+    },
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "max_hold_days": 35,
+    "gate_thresholds": {
+      "erp_min": 5.5,
+      "credit_spread_5y_low_min": -0.8,
+      "term_spread_10y_2y_min": 0.3
+    },
+    "exit_logic": "OR of ERP < 5.5, credit spread factor < -0.8, or term spread < 0.3; next tradable session open fill.",
+    "only_changed_behavior": "add T+1 exits on any closed original entry gate; entry filter/ranking remain unchanged",
+    "candidate_cache_namespace": "data/research/r273_cache/",
+    "strategy_source_sha256": "8b6c373ede5dc9a71188a03e405bee042ff9be6422ae57c32c70dbec97a5a8e9",
+    "signal_sources": {
+      "data/user_data/custom_signals/r273_macro_exit_erp.json": "75da4752bc625d1ae3c2dbac22e4edc68aa6cc7be8919bdf078bfacabd7d0466",
+      "data/user_data/custom_signals/r273_macro_exit_credit.json": "fcd0c924dec45de28f9f342752e61568edb90dff00e7c764c02d49d18722d231",
+      "data/user_data/custom_signals/r273_macro_exit_term.json": "fd496966085b8221cb2329aa636d329d859636b9df7ec5ee543b2f42f3372fe8"
+    },
+    "control_cache_hashes": {
+      "3x": {
+        "curve": "db742d445b8c1e8ca2598008976bf3d2fcfc5ac9b72768b91ed226db95802112",
+        "trades": "d11bb39184003b1380cda54b794612e6e9a9defe6f3827b036831c406b8ab839"
+      },
+      "4x": {
+        "curve": "b4028a3c21cf030ac484a7b525cd10d8a964d8913b530e61371dfe8967a885d6",
+        "trades": "34da09e8a22d8fa2733f3bc746c0646e780bdfe8c85a524445747f7fb2c8298e"
+      },
+      "5x": {
+        "curve": "728f68b2a913677ca3e51b37d0bb4d5fd55f297017f2f2b9bd7eb09b879ac025",
+        "trades": "8a4600676ab4b235b3e53b4d601e9b0a3c6323cdc6d77f140ecfa1e821f37048"
+      }
+    },
+    "control_evidence_sha256": "32fea04080242d0029e99e59e790b49e85d0d9245d8f7ca8f05d44ef749ca2a0",
+    "control_strategy_sha256": "b1c2b43ef9861053d3f4e4dd2ac4a3aeb7d0eae301b5400bdb0dbf65169b87ec",
+    "historical_membership_sha256": "f4417807dfb7ede462fe6cc70ac2262d2f171320de7f2cfc6bfaef96d89234ef",
+    "macro_data": {
+      "config_sha256": "2dd24cf1a19266179273933eb5b80bc0c2dcd0ad64ad998599756d40dfc78658",
+      "partition_count": 2132,
+      "total_size_bytes": 306190733,
+      "inventory_sha256": "b51d74f61c76e3d7ca45da0d2e411deec2fa322efe33f8c933f1cb1601a90f3a"
+    },
+    "system_source_sha256": {
+      "strategy_service": "318b6548354c587965c321921faafcbb7c4be0012fefe3ada0ced97fae06fd4e",
+      "backtest_engine": "79962c45a4b6e64d77b625be144997efc4c12fda85e33242224fdb44d3c62bf3",
+      "strategy_engine": "68894cd5f0212b6b1fc49cfe94e8480f1754271cb80b1ee1c7eaafc8feab0399",
+      "custom_signals": "9fb796a602bb4310d8f73ba512922b39532518c95ba1060ad1d3737edf814c2d",
+      "indicator_pipeline": "4460ac88ad326590d59bd1e961981e8cc679272263fc326fcf18df7c0b168880",
+      "historical_membership_source": "94c615bedbe9c5afa7fd3720e36bc20a3a8ede9046715efc9bbf6841458bd1ae"
+    },
+    "system_path": "custom signal registry -> StrategyDependencyResolver -> StrategyBacktestService -> BacktestEngine -> T+1 signal exit"
+  },
+  "gates": {
+    "P1": "R266 control curve/trade cache hashes at 3x/4x/5x match finalized evidence and 3x R265 parity.",
+    "P2": "Live panel reload succeeds; candidate/control and all 3 exit signals/4 factors are registered; zero strategy load errors.",
+    "G1": "3x full return is positive and retains >=70% of R266 full return.",
+    "G2": "3x maximum drawdown >= -25%.",
+    "G3": "3x rolling one-year positive-return rate >=70%.",
+    "G4": "3x validation return >0.",
+    "G5": "3x validation annualized return >=5%.",
+    "G6": "4x full return >0.",
+    "G7": "5x full return >0.",
+    "G8": "3x validation return retains >=70% of R266 validation return using prior-close-rebased basis.",
+    "R1": "3x Sharpe >= R266 control.",
+    "R2": "3x MDD >= R266 MDD - 3 percentage points.",
+    "L1": "3x full mean losing-trade loss magnitude improves >=1pp versus R266.",
+    "L2": "3x validation-entry mean losing-trade loss magnitude improves >=1pp versus R266.",
+    "L3": "3x worst full completed trade is less negative than R266.",
+    "L4": "3x worst validation-entry completed trade is less negative than R266.",
+    "C1": "At least 30 distinct traded symbols.",
+    "C2": "Largest symbol net P&L share <=25%.",
+    "C3": "Top three symbols net P&L share <=55%.",
+    "C4": "Top five symbols net P&L share <=75%.",
+    "C5": "At least 8 validation-entry symbols have positive P&L.",
+    "C6": "Largest industry gross-profit share <=45%.",
+    "C7": "Largest single-symbol loss <=20% of gross profit.",
+    "C8": "Validation-period largest symbol net P&L share <=35%."
+  },
+  "decision_rule": "Only this frozen candidate is run; every P/G/R/L/C gate must pass. Any failed or unknown gate rejects it. No threshold changes or follow-up grid in this round.",
+  "known_limitations": [
+    "R266 and its validation interval have been used by extensive prior research; this is exploratory, not independent confirmation or an untouched holdout.",
+    "Macro time series are aligned to stored dates; publication timestamps and PIT release lags are not independently established here.",
+    "Historical HS300 membership and macro-source data can have revision risk.",
+    "Daily OHLC cannot reproduce queue priority; T+1 exits remain blocked by suspension or limit-down execution constraints.",
+    "Exit signals use the stored daily gate state; positions can remain exposed until the next tradable open.",
+    "A passing research test does not authorize paper trading or production; production remains pause_production."
+  ],
+  "runner_sha256": "3da5b3b0189cd914b3f89529aacd6d1d9da2dd5a62c0d2e3fca93b809e34c881",
+  "panel_registrar_sha256": "6fce023f9b9c5d4cfa238b7ed6a1322578e0ed4f2c316d1f55ca494f68d6d7cc"
+}

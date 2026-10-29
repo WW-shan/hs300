@@ -1,0 +1,90 @@
+{
+  "round": "R301",
+  "amendment": "A1",
+  "created_at_utc": "2026-10-29",
+  "parent_preregistration": "r301_preregistration.json",
+  "parent_preregistration_sha256": "f62d5be86efe43183b4432f1af2acda6c0a87fda70044ea9b7bb4dedb26b8171",
+  "supersedes_parent_rules": [
+    "factor.pit_rule",
+    "side_effect_boundary",
+    "panel_candidate_intent.registration_policy"
+  ],
+  "purpose": "Resolve implementation ambiguities before the first R301 coverage or correlation calculation. This amendment does not inspect signal values or outcomes.",
+  "related_prior_evidence": {
+    "R82": "The standalone receivable-growth-low signal had discovery mean IC 0.0496 but validation mean IC -0.0143, validation five-group monotonic rho -0.9, and failed all gates. R301 does not repeat this factor; its incremental-rank gate tests whether revenue growth contributes non-duplicate information beyond receivable growth.",
+    "R242": "Working-capital-change-low passed data coverage/independence checks but failed the overall predictive/strategy gate set (all_pass=false). R301 does not redefine that formula.",
+    "R248": "Single-quarter revenue-growth acceleration was previously tested and failed its overall gate set (all_pass=false), despite passing several individual gates. R301 is a level-growth-minus-receivables-growth signal, not a retest or rescue of revenue-growth acceleration; the existing negative result remains binding context."
+  },
+  "study_design_clarifications": {
+    "revenue_component": "Use current cumulative YTD revenue divided by cumulative YTD revenue for the same fiscal quarter exactly four fiscal quarters earlier minus one. Do not use reported revenue_yoy; Q2/Q3 comparisons are cumulative same-period growth, as frozen in the parent formula.",
+    "receivables_component": "Use current-period accounts_receivable divided by accounts_receivable for exactly four fiscal quarters earlier minus one.",
+    "sample_clock": "The cutoff 2026-10-14 is deliberately fixed from the already frozen parent registration and prior analysis. Later partitions are not read to define or extend this sample.",
+    "nonfinite_rule": "The denominator conditions in value_rule apply to current cumulative revenue (>0), prior-year cumulative revenue (>0), prior-year receivables (>0), and current receivables (>=0). Require all four source fields finite and resulting value finite."
+  },
+  "supersedes": {
+    "pit_rule": "For each symbol and current fiscal period, independently calculate financial_pit_date for current income, current balance sheet, exact four-quarter-lag income, and exact four-quarter-lag balance sheet. Set signal effective_date to max(four PIT dates) + one calendar day. Require exact fiscal period index difference of four for each annual comparison. Backward as-of attach only on dates >= effective_date. Expire when signal_date - current period_end > 180 calendar days.",
+    "value_rule": "Require all four source fields to be present and finite; current cumulative revenue > 0, prior-year cumulative revenue > 0, prior-year accounts_receivable > 0, and current accounts_receivable >= 0. Do not clip or winsorize. Reject any non-finite resulting growth or spread.",
+    "source_column_rule": "Select and rename only the required symbol, period_end, announce_date, revenue, and accounts_receivable columns before joins. Assert unique symbol-period keys in each source and unique output columns after joins.",
+    "universe_rule": "Use exact daily R78 query_date membership. Join the current ext_hy_ths industry map; exclude first-level industries 银行 and 非银金融. Rows with no industry classification are excluded from the eligible denominator and reported separately. State that this classification is not PIT.",
+    "F2_rule": "For each frozen comparator, calculate average absolute monthly cross-sectional Spearman correlation over month-end dates with at least 30 paired finite members; report every date, count, and coefficient. F2 fails if a comparator has fewer than 30 eligible month-ends or if the maximum comparator mean exceeds 0.70.",
+    "F3_rule": "On each month-end with at least 30 paired finite candidate and receivable_growth_yoy_low values, rank both cross-sections, regress candidate ranks on an intercept and the existing factor ranks by OLS, and report residual rank standard deviation, its ratio to candidate rank standard deviation, and candidate-old Spearman correlation. F3 passes only if at least 30 paired names and a finite residual rank standard deviation greater than zero are present on at least 80% of all month-ends. This checks non-duplicate rank information only and does not use returns.",
+    "F4_rule": "Before data analysis, run deterministic synthetic checks for exact four-quarter matching, missing/duplicate source keys and duplicate output columns, exclusion through the PIT date with availability beginning the following calendar day, and expiry on age 180 versus age 181.",
+    "date_rule": "Build the full, discovery, validation and recent-252 denominators from distinct R78 query_date values in the frozen sample; recent-252 means the final 252 such dates ending 2026-10-14. For each coverage window report member-row coverage and trading dates with at least one valid name."
+  },
+  "panel_registration": {
+    "required": true,
+    "sequence": "Freeze the parent preregistration hash, this amendment hash and input manifest; GET the candidate panel and save its response; verify no matching R301 exists and prior candidates are unchanged; POST the single factor research candidate exactly once with empty metrics and pending status; GET once for readback and save the proof. Do not retry POST after dispatch.",
+    "interpretation": "This records a feasibility-stage research item only. It is not a registered factor implementation, backtest, result, validation, deployment or alpha claim.",
+    "request_body": {
+      "kind": "factor",
+      "name": "R301 可行性预注册（未生成因子/无回测结果）",
+      "source_id": "r301_collection_quality_growth_spread",
+      "config": {
+        "factor_name": "r301_collection_quality_growth_spread",
+        "start": "2022-07-01",
+        "end": "2026-10-14",
+        "n_groups": 5,
+        "rebalance": "monthly",
+        "weight": 1.0,
+        "fees_pct": 0.0,
+        "slippage_bps": 0.0,
+        "asset_type": "stock"
+      },
+      "metrics": {},
+      "data_as_of": "2026-10-14",
+      "status": "pending"
+    },
+    "api": "http://127.0.0.1:3018/api/backtest/candidates"
+  },
+  "evidence_scope": {
+    "allowed_new_files": [
+      "r301_preregistration.json.sha256",
+      "r301_preregistration_amendment.json",
+      "r301_preregistration_amendment.json.sha256",
+      "r301_input_manifest.jsonl",
+      "r301_input_manifest.jsonl.sha256",
+      "r301_panel_registration_intent.json",
+      "r301_panel_registration_intent.json.sha256",
+      "r301_panel_registration_post.json",
+      "r301_panel_registration_post.json.sha256",
+      "r301_panel_readback.json",
+      "r301_panel_readback.json.sha256",
+      "r301_feasibility.py",
+      "r301_feasibility.py.sha256",
+      "r301_freeze_inputs.py",
+      "r301_freeze_inputs.py.sha256",
+      "r301_panel_register_once.py",
+      "r301_panel_register_once.py.sha256",
+      "r301_feasibility_synthetic_checks.py",
+      "r301_feasibility_synthetic_checks.py.sha256",
+      "r301_feasibility_result.json",
+      "r301_feasibility_result.json.sha256",
+      "r301_result.md",
+      "r301_result.md.sha256",
+      "r301_round_index.md",
+      "r301_round_index.md.sha256"
+    ],
+    "prohibited": "No forward returns, strategy result caches, or trade outcomes; no backtest, provider or builder calls; no writes to market data, formal factor partitions, strategies, R300, production state, LEDGER.md or RESEARCH_SUMMARY.md. The single pending panel registration above is the only external state write. R82, R242 and R248 negative conclusions remain binding context and may not be erased by feasibility results."
+  },
+  "decision_rule_unchanged": "Any failed F gate rejects this direction before outcome data is read. Passing feasibility never constitutes alpha and requires a separately frozen predictive test registration."
+}

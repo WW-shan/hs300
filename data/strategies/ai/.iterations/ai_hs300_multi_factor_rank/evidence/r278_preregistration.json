@@ -1,0 +1,66 @@
+{
+    "round":  "R278",
+    "classification":  "preregistered_read_only_prospective_data_readiness_audit",
+    "question":  "Can the system\u0027s registered AkShare provider supply sufficiently fresh and auditable quotes, daily bars, and minute bars to begin prospective observation of the frozen R275 term-spread candidate?",
+    "motivation":  "R277 found that the previous AkShare full-market snapshot had no vendor timestamps and the market data partitions were stale. Before changing strategy entry rules or starting any forward observation, check whether the provider now supplies independently time-anchored data.",
+    "target_candidate":  "ai_hs300_macro_gate_quality_r275_remove_term",
+    "comparison_candidate":  "ai_hs300_macro_gate_quality",
+    "frozen_candidate_logic_sha256":  "c707832dda70fa51f461814d623d88eba94dd32a45e1dbede61da7b18bcdd2d8",
+    "scope":  {
+                  "provider":  "akshare",
+                  "market_samples":  [
+                                         "600519.SH",
+                                         "000001.SZ",
+                                         "300750.SZ"
+                                     ],
+                  "endpoints":  [
+                                    "realtime snapshot",
+                                    "daily bars",
+                                    "1-minute bars",
+                                    "trading calendar"
+                                ],
+                  "panel_modules":  [
+                                        "/api/strategies",
+                                        "/api/factors",
+                                        "/api/settings/capability-matrix",
+                                        "/api/settings/data-sources",
+                                        "/api/overview/market",
+                                        "/api/paper/accounts"
+                                    ],
+                  "side_effects_allowed":  [
+                                               "read provider data",
+                                               "read panel state",
+                                               "write this round\u0027s evidence files"
+                                           ],
+                  "side_effects_prohibited":  [
+                                                  "enable background quote polling",
+                                                  "write daily or enriched market data",
+                                                  "run historical backtests or parameter scans",
+                                                  "create paper accounts",
+                                                  "place orders",
+                                                  "change or publish strategy code",
+                                                  "send external notifications"
+                                              ]
+              },
+    "frozen_readiness_criteria":  {
+                                      "panel_registration":  "The frozen control and candidate are present in the panel; the candidate and its source file are research-only; all four stock scoring factors exist; strategy load errors are zero.",
+                                      "quote_time_anchor":  "All three sample stocks have a realtime quote. If provider timestamps are absent, each must have a same-trading-day latest minute bar captured in the same probe, within 15 minutes during continuous trading or within 35 minutes during lunch/close, and quote price must be within 0.5% of that minute close.",
+                                      "daily_freshness":  "All three daily series reach the latest completed trading day reported by the provider calendar.",
+                                      "prospective_collection":  "The system must have an auditable observation path that records dated inputs and capture times without paper auto-orders. A read-only one-shot probe alone does not pass this criterion.",
+                                      "decision":  "All four criteria must pass to start prospective observation. Failure means data-readiness hold; it does not justify loosening candidate entry thresholds."
+                                  },
+    "analysis_plan":  [
+                          "Read the currently registered provider directly through the system provider registry and record local capture times separately from vendor timestamps.",
+                          "Hash a canonicalized full-market quote response; report timestamp coverage and sample quote/minute alignment.",
+                          "Compare sample daily-bar maxima with the provider\u0027s own trading calendar.",
+                          "Capture current panel registration, capability routing, quote-service state, and paper-account state.",
+                          "Do not backtest or alter strategy gates in this operational readiness audit."
+                      ],
+    "runner_sha256":  "8811195a0b5472fbbc7ad5717e0ee4a41faecd04683db16cac967e6a581e3e68",
+    "prior_evidence_referenced":  {
+                                      "r277_statistics_sha256":  "5d5dc75d349dfc858788a9439488c5c85b8cfa304e95c02f6ed8c152682d8f91",
+                                      "r277_freshness_probe_sha256":  "44be89ffced3e7d9dd218b88c4e48010ffd083f19bbe6ec52f00f303a0aeb80f",
+                                      "r276_pit_audit_sha256":  "9783ccaccb81a1137c229ceac150bd67f074d2fbccc05b2a1ca83e836b9ff7a7"
+                                  },
+    "production_status":  "pause_production"
+}

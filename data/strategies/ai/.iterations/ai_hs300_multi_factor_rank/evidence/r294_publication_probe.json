@@ -1,0 +1,43 @@
+{
+  "captured_at_utc": "2026-10-28T17:22:46.274063+00:00",
+  "classification": "synthetic_same_volume_directory_switch_probe",
+  "limitations": [
+    "Synthetic text files only; no parquet, production data, or running application readers were involved.",
+    "The rollback path is tested only for a caught process-level exception, not process kill, OS crash, or power loss.",
+    "Three factor trees still require multiple namespace changes; this probe does not prove a multi-tree transaction.",
+    "No cache, DuckDB view, or API reader was running in this probe."
+  ],
+  "overall_pass": true,
+  "production_paths_touched": false,
+  "rollback_case": {
+    "backup_cleared_by_restore": true,
+    "failure_injected": true,
+    "live_files": {
+      "marker.txt": "046edfca98c472e990d38e5a221d15e19f291378639e1fb528527b928c7c6d0e",
+      "nested/generation.txt": "c5e3cb1927df7f3729cd18f37053b29a418c78eeca2fcac53ef5c87daff2fec5"
+    },
+    "old_live_tree_restored": true,
+    "passed": true,
+    "staged_files": {
+      "marker.txt": "95420bca8b21d9b1a6e8320ede14ea4bc6bd5cee29dec0320f203b6cae142e99",
+      "nested/generation.txt": "03d3a27820b238f507c31a309ebdc6414cc9c80e1077e0dd540c0016490e8916"
+    },
+    "staged_tree_preserved": true
+  },
+  "round": "R294",
+  "same_volume": true,
+  "staging_root": "data/.staging",
+  "success_case": {
+    "backup_files": {
+      "marker.txt": "3e5abf2dfbd859f79c02a26a1e462a6c119be97400495831c90961df2310c144",
+      "nested/generation.txt": "fb43f0aecf34fd1ee512e8edd6bb4d1784bbb382f553e3d98a989dcf59908076"
+    },
+    "live_files": {
+      "marker.txt": "705519bc8d80a668d8994dd257fa8e29aac163a556a3fe6ed1ae83eaf9847f15",
+      "nested/generation.txt": "41d2560a9d42f2d1b654e5e8d534dd388a5b28bde66576f22b2c8b3eca45d9a1"
+    },
+    "new_tree_complete": true,
+    "old_tree_retained_for_rollback": true,
+    "passed": true
+  }
+}

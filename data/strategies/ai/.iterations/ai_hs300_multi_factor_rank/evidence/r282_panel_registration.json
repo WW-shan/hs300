@@ -1,0 +1,222 @@
+{
+  "api_base": "http://127.0.0.1:3018",
+  "backtest_status": {
+    "available": true
+  },
+  "candidate": {
+    "asset_types": [
+      "stock"
+    ],
+    "basic_filter": {
+      "amount_max": null,
+      "amount_min": 20000000.0,
+      "boards": [
+        "沪主板",
+        "深主板",
+        "创业板",
+        "科创板",
+        "北交所"
+      ],
+      "exclude_new_days": 60,
+      "exclude_st": true,
+      "float_cap_max": null,
+      "float_cap_min": null,
+      "market_cap_min": 1000000000.0,
+      "price_max": 500,
+      "price_min": 3,
+      "turnover_max": null,
+      "turnover_min": null
+    },
+    "composite_children": null,
+    "descending": true,
+    "description": "研究候选：保留 ERP 与信用利差门禁，只移除期限利差入场门禁。",
+    "display_limit": null,
+    "entry_signals": [],
+    "execution_backend": "polars_expr",
+    "exit_signals": [],
+    "id": "ai_hs300_macro_gate_quality_r275_remove_term",
+    "limit": 30,
+    "max_hold_days": 35,
+    "minute_exit_trigger_supported_signals": [
+      "signal_ma10_breakdown",
+      "signal_ma20_breakdown",
+      "signal_ma5_breakdown",
+      "signal_ma_dead_5_20"
+    ],
+    "name": "R275 宏观门禁消融 - 期限利差",
+    "order_by": "score",
+    "overlay_filter": [],
+    "params": [],
+    "params_defaults": {},
+    "research_only": true,
+    "scoring": {
+      "ext_alt_hs300_holder_top10_free_float_share": 0.35,
+      "uf_cash_quality": 0.2,
+      "uf_low_vol": 0.2,
+      "uf_quality_value_defensive": 0.25
+    },
+    "scoring_directions": {},
+    "source": "ai",
+    "stop_loss": null,
+    "tags": [
+      "R275",
+      "期限利差",
+      "研究"
+    ],
+    "take_profit": null,
+    "timeframes": [
+      "1d"
+    ],
+    "trailing_stop": null,
+    "trailing_take_profit_activate": null,
+    "trailing_take_profit_drawdown": null,
+    "version": "1.0.0"
+  },
+  "capability_response_sha256": "8cef8f3555618414dff35e06820e614971d316683c41c7b8588af1993c10923c",
+  "captured_at_utc": "2026-10-28T06:52:05.058098+00:00",
+  "classification": "read_only_live_panel_registration_proof_R282",
+  "control": {
+    "asset_types": [
+      "stock"
+    ],
+    "basic_filter": {
+      "amount_max": null,
+      "amount_min": 20000000.0,
+      "boards": [
+        "沪主板",
+        "深主板",
+        "创业板",
+        "科创板",
+        "北交所"
+      ],
+      "exclude_new_days": 60,
+      "exclude_st": true,
+      "float_cap_max": null,
+      "float_cap_min": null,
+      "market_cap_min": 1000000000.0,
+      "price_max": 500,
+      "price_min": 3,
+      "turnover_max": null,
+      "turnover_min": null
+    },
+    "composite_children": null,
+    "descending": true,
+    "description": "ERP、信用利差、期限利差同时满足时持有股东集中度+质量价值+低波动（实验）",
+    "display_limit": null,
+    "entry_signals": [],
+    "execution_backend": "polars_expr",
+    "exit_signals": [],
+    "id": "ai_hs300_macro_gate_quality",
+    "limit": 30,
+    "max_hold_days": 35,
+    "minute_exit_trigger_supported_signals": [
+      "signal_ma10_breakdown",
+      "signal_ma20_breakdown",
+      "signal_ma5_breakdown",
+      "signal_ma_dead_5_20"
+    ],
+    "name": "HS300宏观三闸门质量",
+    "order_by": "score",
+    "overlay_filter": [],
+    "params": [
+      {
+        "default": 5.5,
+        "id": "erp_min",
+        "label": "ERP最低阈值",
+        "max": 9.0,
+        "min": 3.0,
+        "step": 0.1,
+        "type": "float"
+      },
+      {
+        "default": 0.8,
+        "id": "credit_max",
+        "label": "信用利差最高阈值",
+        "max": 1.5,
+        "min": 0.2,
+        "step": 0.05,
+        "type": "float"
+      },
+      {
+        "default": 0.3,
+        "id": "term_min",
+        "label": "期限利差最低阈值",
+        "max": 1.5,
+        "min": 0.0,
+        "step": 0.05,
+        "type": "float"
+      }
+    ],
+    "params_defaults": {
+      "credit_max": 0.8,
+      "erp_min": 5.5,
+      "term_min": 0.3
+    },
+    "research_only": false,
+    "scoring": {
+      "ext_alt_hs300_holder_top10_free_float_share": 0.35,
+      "uf_cash_quality": 0.2,
+      "uf_low_vol": 0.2,
+      "uf_quality_value_defensive": 0.25
+    },
+    "scoring_directions": {},
+    "source": "ai",
+    "stop_loss": null,
+    "tags": [
+      "ERP",
+      "信用利差",
+      "期限利差",
+      "宏观",
+      "质量",
+      "沪深300",
+      "实验"
+    ],
+    "take_profit": null,
+    "timeframes": [
+      "1d"
+    ],
+    "trailing_stop": null,
+    "trailing_take_profit_activate": null,
+    "trailing_take_profit_drawdown": null,
+    "version": "1.0.0"
+  },
+  "data_sources_response_sha256": "12d0eb6188eb0fefd6e0f5a711917d37fc0d7d7a6922709c11f1600eaecb2006",
+  "factor_count": 229,
+  "required_factor_ids_registered": {
+    "ext_alt_hs300_credit_spread_5y_low": true,
+    "ext_alt_hs300_equity_risk_premium": true,
+    "ext_alt_hs300_holder_top10_free_float_share": true,
+    "uf_cash_quality": true,
+    "uf_low_vol": true,
+    "uf_quality_value_defensive": true
+  },
+  "response_proofs": {
+    "/api/backtest/status": {
+      "http_status": 200,
+      "response_bytes": 18,
+      "response_sha256": "631f4d836f9d199ee9721cc528112d8b61d2b90455bb214dd364596b487fe6b6"
+    },
+    "/api/factors?asset_type=stock": {
+      "http_status": 200,
+      "response_bytes": 86789,
+      "response_sha256": "73f3d757e5782b762e420132b502a8df047ca9d3cddb03d32b28edcda37e5859"
+    },
+    "/api/settings/capability-matrix": {
+      "http_status": 200,
+      "response_bytes": 5597,
+      "response_sha256": "8cef8f3555618414dff35e06820e614971d316683c41c7b8588af1993c10923c"
+    },
+    "/api/settings/data-sources": {
+      "http_status": 200,
+      "response_bytes": 3012,
+      "response_sha256": "12d0eb6188eb0fefd6e0f5a711917d37fc0d7d7a6922709c11f1600eaecb2006"
+    },
+    "/api/strategies?include_research=true": {
+      "http_status": 200,
+      "response_bytes": 318740,
+      "response_sha256": "bd2943d5ed8b05ed0a4cc31878d6a65a96ba842d5c43fb4b2f7ea49c540be227"
+    }
+  },
+  "strategy_count_including_research": 223,
+  "strategy_load_errors": []
+}

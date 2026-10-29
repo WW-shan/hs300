@@ -1,0 +1,36 @@
+{
+  "round": "R304",
+  "amendment_id": "R304-A6",
+  "date": "2026-10-29",
+  "classification": "prospective local-evidence reconciliation; no additional official requests",
+  "reason": "The archived evidence now contains routine notice bodies, a subset of official attachments, an official 2018-2026 listing archive, and A4/A5 browser artifacts. Before writing a machine audit, freeze a reproducible reconciliation of only those already-stored files and verify the existing panel entry without creating another candidate.",
+  "scope": {
+    "local_root": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r304_official_archive",
+    "allowed_inputs": [
+      "Existing pages/page-001.json through page-043.json and their sidecars",
+      "Existing details/notice-*.json and details/notice-*.raw.json and their sidecars",
+      "Existing attachments and request_receipts, without modifying them",
+      "Existing R304 A4/A5 evidence and preregistration files for classification and panel identity only"
+    ],
+    "panel_candidate_id": "1ed2c75285b74fc6a521cc73f75f7320",
+    "panel_action": "one read-only GET of the existing candidate list; preserve raw response and SHA-256; no POST and no status change"
+  },
+  "frozen_checks": [
+    "Verify SHA-256 sidecars for every archived page, notice body/raw response, and downloaded attachment; report pre-existing anomalies without repairing files.",
+    "Check page totals, date coverage, duplicate listing IDs, and identify official pre-window routine-adjustment listing candidates without requesting their details.",
+    "Parse only 000300/沪深300-specific adjustment tables from the eight 2018-2021 notice bodies and the available 2022-2026 attachments; exclude other-index tables and reserve-candidate tables.",
+    "Compare additions/removals against the notice's stated count and effective date; retain unresolved items as gaps.",
+    "For exceptional notices 15546, 1006022, and 3006227, distinguish publication/attachment evidence from the delisting-effective date; do not infer the latter from the announcement date.",
+    "Do not claim a 2018-01-02 seed membership from an adjustment delta, current members, or an uninspected listing title."
+  ],
+  "prohibited": [
+    "No HTTP requests to CSI, search engines, exchanges, or third parties; no browser navigation or attachment retry.",
+    "No changes to archived source files, production data, strategies, caches, or candidate status.",
+    "No alpha search, factor-return calculation, or backtest.",
+    "No additional panel POST or candidate registration."
+  ],
+  "decision_rule": {
+    "feasible": "Remain blocked unless a complete official date-effective event chain and auditable 2018-01-02 membership are both established.",
+    "no_go": "Any missing seed, routine event, exceptional event, or unambiguous effective date keeps PIT reconstruction no-go; do not fill gaps with current membership or third-party histories."
+  }
+}

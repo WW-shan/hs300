@@ -1,0 +1,66 @@
+{
+  "classification": "retrospective exploratory hypothesis, proposed after inspection of R46/R49; this is not independent discovery or confirmatory evidence",
+  "date": "2026-10-29",
+  "decision_rules": {
+    "fail_closed": "Any unrecovered event list, ambiguous announcement time/effective date, unverified membership provenance, or missing/duplicate required rows stops the return study. Do not drop inconvenient events or relax these gates after seeing outcomes.",
+    "interpretation": "Passing establishes only data feasibility. Any return analysis requires a separate panel registration and frozen analysis specification first.",
+    "pass_to_next_stage_only_if": [
+      "All 17 routine events have an independently auditable official addition list, publication date, and after-close effective date.",
+      "Every event window has complete daily-bar row coverage for all included additions, with duplicate and missing code-date rows reported.",
+      "The announced additions can be distinguished from pre-event members using data whose source and as-of timing are documented.",
+      "A valid control universe can be formed from information available by each announcement date."
+    ]
+  },
+  "hypothesis": "After CSI publicly announces routine HS300 constituent additions, additions may exhibit positive equal-weight drift from the first executable session after the publication date until the last session before after-close implementation, relative to a pre-specified market and industry control. This round only checks event-list and data coverage and will not inspect price, return, or performance fields.",
+  "motivation_and_bias": {
+    "disclosure": "Those results motivated this post hoc pre-implementation question. They are not evidence for this hypothesis, and this sample must be treated as exploratory.",
+    "prior_work": [
+      "R46 reported negative post-implementation drift.",
+      "R49 did not find a significant result after style matching."
+    ]
+  },
+  "panel": {
+    "baseline_readback": "r304_A11_panel_readback.json",
+    "baseline_readback_sha256": "0e4c58ac8aca404a73d6fe855facd3ed866d2142ae27ca94c6bdaaaa2b6765be",
+    "candidate": {
+      "config": {
+        "asset_type": "stock",
+        "end": "2026-10-29",
+        "factor_name": "r304_a14_preimplementation_drift_feasibility",
+        "fees_pct": 0.0,
+        "n_groups": 5,
+        "rebalance": "event_feasibility_only",
+        "slippage_bps": 0.0,
+        "start": "2018-06-01",
+        "weight": 1.0
+      },
+      "data_as_of": "2026-10-29",
+      "kind": "factor",
+      "metrics": {},
+      "name": "R304-A14 公告至生效前调入股漂移可行性（事后假设，无收益）",
+      "source_id": "r304_a14_preimplementation_drift_feasibility",
+      "status": "pending"
+    },
+    "candidate_count_expected_before": 21,
+    "coverage_audit_script": "audit_r304_a14_event_coverage.py",
+    "coverage_audit_script_sha256": "43e4054e0bbb7ae1417979df6cfe8cdb43db57bb2ff656fd3d7070f5e595e055",
+    "expected_A13_id": "ecd1805dde7a4a8d971718116bd773f6",
+    "expected_A13_status": "pending",
+    "method": "GET current panel and save raw response; require exactly the 20 IDs/statuses in the frozen A11 readback plus the unique pending A13 candidate recorded in its registration proof; verify no duplicate R304-A14; save one exact POST intent; issue one POST with no retry; GET readback and save raw response; verify the new candidate is unique and pending and every pre-existing status is unchanged.",
+    "prior_A13_readback": "r304_A13_panel_registration.json",
+    "registration_required": true
+  },
+  "prohibited": [
+    "No OHLCV, adjusted-price, or return reads in this round.",
+    "No backtest, factor calculation, alpha scan, or candidate performance update.",
+    "No live official-network request during panel registration.",
+    "No changes to production data, strategies, cache, or existing candidate statuses."
+  ],
+  "record_type": "posthoc_hypothesis_feasibility_preregistration",
+  "round": "R304-A14",
+  "scope": {
+    "event_timing": "Use the official publication calendar date and stated after-close effective date. The candidate return window, if a later separately registered analysis is approved by its feasibility gate, begins at the first executable session strictly after publication and ends at the final session strictly before implementation.",
+    "event_universe": "17 routine semiannual HS300 adjustment announcements from 2018-06 through 2026-06, including notice 14225 (2022-06). Exclude separately classified temporary adjustments in 2025-02, 2025-07, and 2026-09.",
+    "this_round_only": "Recover and reconcile the addition/removal code lists, verify event date boundaries, and inspect only date/code/schema/row-presence coverage in local historical membership and daily-bar storage. Do not read OHLCV, adjusted prices, returns, performance metrics, or calculate any return."
+  }
+}

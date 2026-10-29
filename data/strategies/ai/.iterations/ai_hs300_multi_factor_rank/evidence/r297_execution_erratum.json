@@ -1,0 +1,58 @@
+{
+  "round": "R297",
+  "classification": "precompute_method_correction_and_execution_boundary_erratum",
+  "captured_at_utc": "2026-10-28T20:28:36+00:00",
+  "original_preregistration_sha256": "66c938113d29176ac579348c841ad8fb66a525118e016d9ba693c7627f37b97a",
+  "original_manifest_sha256": "1b011b54d04bc9f9dd4c55647279a404b4a323e529c09acc45cbe8b6e32a55f4",
+  "original_v1_audit_retained_unchanged": true,
+  "original_v1_runner_retained_unchanged": true,
+  "prior_attempts": [
+    {
+      "attempt": 1,
+      "stop_reason": "The mutable TTL cache raw bytes changed after preregistration; the audit aborted before factor computation.",
+      "factor_computation_started": false,
+      "staging_created": false,
+      "backtest_or_returns_read": false
+    },
+    {
+      "attempt": 2,
+      "stop_reason": "A diagnostic assertion incorrectly expected the symbol to be absent from every R157 snapshot. The symbol does occur in earlier R157 rows, while the latest production R78 as-of snapshot remains 2026-10-14 with 300 rows and excludes it.",
+      "factor_ranking_started": false,
+      "staging_created_or_written": false,
+      "backtest_or_returns_read": false
+    }
+  ],
+  "scope_correction": {
+    "only_exemption": "raw byte hash and mtime of the mutable current-members TTL cache",
+    "semantic_members_and_names_must_equal_frozen_official_snapshot": true,
+    "other_original_manifest_inputs_remain_frozen": 2639,
+    "formal_factor_partitions_remain_frozen": 6396,
+    "original_manifest_or_preregistration_modified": false
+  },
+  "method_correction": {
+    "production_membership_diagnostic": "Use only the latest R78 snapshot with query_date <= target; report earlier R157 presence separately as historical diagnostic.",
+    "earlier_r157_rows_for_symbol": 30,
+    "latest_r78_snapshot_date": "2026-10-14",
+    "latest_r78_snapshot_rows": 300,
+    "symbol_present_in_latest_r78_snapshot": false,
+    "official_next_day_list_used_on_target": "explicitly labelled counterfactual coverage only; never interpreted as historical membership, PIT signal or alpha"
+  },
+  "v2_audit_script_sha256": "4c56acec14251e1d2e5289d2f04c701a22883652a020f8de0f93b4756c20dac4",
+  "v2_runner_script_sha256": "37a20fc7eebc3a25eb47c371b667d9dcfc7c38d12c68ccfdc979a87ec862fac1",
+  "expected_outputs": {
+    "machine_result": "r297_counterfactual_membership_audit_v2.json",
+    "readable_report": "r297_result_v2.md",
+    "panel_recheck": "r297_panel_status_recheck.json"
+  },
+  "expected_execution_limits": {
+    "temporary_writes_only_under_data_staging": true,
+    "provider_or_network_data_pull": false,
+    "backtest_screener_strategy_runner_matcher": false,
+    "returns_or_trade_logs_read": false,
+    "formal_data_or_factor_write": false
+  },
+  "not_preregistered": [
+    "The v2 script was created after the original preregistration and is not represented as pre-frozen. Its SHA-256 is recorded here before execution.",
+    "The panel GET status recheck and its response hash are recorded immediately before the isolated audit."
+  ]
+}

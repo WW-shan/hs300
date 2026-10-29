@@ -1,0 +1,67 @@
+{
+  "round": "R283",
+  "registered_at": "2026-10-28",
+  "classification": "frozen_candidate_system_backtest_route_smoke_and_factor_assembly_check_not_alpha_test",
+  "question": "Can the standard system strategy backtest endpoint execute the already panel-registered, frozen R275 research candidate and matched control with their registered extension and PIT scoring inputs?",
+  "purpose": "Verify the discovered route with one fixed 3x cost scenario per strategy and save the complete API responses. This is an execution-path and data-assembly check; it is not a new hypothesis test, threshold search, or alpha confirmation.",
+  "frozen_inputs": {
+    "candidate_id": "ai_hs300_macro_gate_quality_r275_remove_term",
+    "candidate_source_sha256": "c707832dda70fa51f461814d623d88eba94dd32a45e1dbede61da7b18bcdd2d8",
+    "control_id": "ai_hs300_macro_gate_quality",
+    "candidate_research_only": true,
+    "cost_scenario": "3x",
+    "start": "2026-04-20",
+    "end": "2026-10-16",
+    "matching": "open_t+1",
+    "commission_pct": 0.0006,
+    "fees_pct": 0.0006,
+    "stamp_tax_pct": 0.001,
+    "slippage_bps": 15.0,
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "mode": "position",
+    "holding_days": 5,
+    "asset_type": "stock",
+    "hs300": true
+  },
+  "scope": {
+    "panel_gets_before_execution": [
+      "/api/strategies?include_research=true",
+      "/api/factors?asset_type=stock",
+      "/api/settings/capability-matrix",
+      "/api/settings/data-sources",
+      "/api/backtest/status"
+    ],
+    "execution_endpoint": "POST /api/backtest/strategy/run",
+    "local_checks": [
+      "frozen candidate/control source hashes",
+      "frozen R275 preregistration and panel proof hashes",
+      "frozen R275 cost and date-window parity",
+      "data partition dates and current HS300 membership date"
+    ]
+  },
+  "side_effects_allowed": [
+    "write this preregistration and SHA-256 sidecar",
+    "save sanitized read-only panel response proofs and hashes",
+    "execute exactly one 3x backtest for the candidate and one matched 3x backtest for the control through the system API",
+    "save both complete API responses as immutable R283 evidence with hashes",
+    "write an audit summary and append the R283 result to LEDGER.md and RESEARCH_SUMMARY.md with final hashes"
+  ],
+  "side_effects_prohibited": [
+    "reload or modify any strategy, factor, setting, preference, or panel registration",
+    "run additional costs, date windows, parameter values, optimizations, scans, or repeated requests",
+    "pull or synchronize data, write market/enriched/extension/financial data, or run screener endpoints",
+    "write or clear strategy caches, matrix caches, or research candidate stores",
+    "start realtime, paper trading, account, order, or notification hooks",
+    "change the frozen candidate, research_only state, production status, or gates",
+    "interpret this current-membership historical run as survivorship-free evidence or alpha confirmation"
+  ],
+  "known_limitations": [
+    "The API's hs300=true applies the current official membership across the historical interval, creating survivor bias; this run only smoke-checks execution and field assembly.",
+    "The tested window and 3x cost scenario were previously examined in R275; results are reproducibility/route evidence, not independent evidence.",
+    "Current enriched and alt_hs300 partitions end 2026-10-19 and are sparse on the latest date; this does not provide a current prospective signal check.",
+    "No signal persistence or forward paper archive is created by these synchronous backtest API calls."
+  ],
+  "decision_rule": "Do not repeat failed requests or vary inputs. Save each response exactly once. If the candidate or control returns an API error, record the error response and stop. Report route completion and input coverage separately from performance. Preserve research_only and pause_production.",
+  "production_status": "pause_production"
+}

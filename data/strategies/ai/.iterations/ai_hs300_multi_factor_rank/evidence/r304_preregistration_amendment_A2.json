@@ -1,0 +1,18 @@
+{
+  "round": "R304",
+  "amendment_id": "R304-A2",
+  "classification": "prospective data-normalization amendment after complete page retrieval; before any detail or attachment fetch",
+  "date": "2026-10-29",
+  "parent_preregistration_sha256": "d7c116125264a78462b41089a467eecea49fe98c73897c4a266c80103e41b49f",
+  "previous_amendment_sha256": "7e4bb078a2fa740afac228217b4ad39eb81881594e7440324ac82095fcb358bf",
+  "reason": "The 43 official pages returned the declared total of 4,216 rows, but 10 notice IDs appeared twice across page boundaries. Each repeated pair has identical publication date, title, theme, and notice type. The first collector correctly stopped before details because it required row count to equal unique-ID count.",
+  "normalization": "Retain all 4,216 page rows unchanged. For follow-on candidate-detail work, deduplicate by notice ID only after proving every repeated ID has identical source listing fields. Any same-ID conflicting fields is a hard failure.",
+  "selection": "Within 2018-01-02 through 2026-10-27, select unique notice IDs whose listing titles contain 沪深300, 000300, or CSI 300. This is a broad retrieval filter only; it includes unrelated products such as HS300 bond indices. Classification as an HS300 equity-membership adjustment requires the official notice detail or attachment to identify index code 000300/沪深300 and a sample change.",
+  "collection": "Fetch each selected official notice detail once, retain the full raw JSON response and SHA-256. Download all linked official CSI OSS attachments once and hash their raw bytes. Do not fetch details for notices excluded by the frozen title filter.",
+  "scope_and_limits": [
+    "Do not re-fetch the 43 listing pages; their original responses are already retained.",
+    "Do not treat duplicate rows as separate notices.",
+    "Do not claim complete membership reconstruction from listing titles, publication coverage, or adjustment announcements alone.",
+    "Do not run alpha mining, factor returns, or strategy backtests in R304."
+  ]
+}

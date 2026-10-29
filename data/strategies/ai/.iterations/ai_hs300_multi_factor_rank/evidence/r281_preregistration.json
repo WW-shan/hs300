@@ -1,0 +1,64 @@
+{
+  "round": "R281",
+  "registered_at": "2026-10-28",
+  "classification": "read_only_runtime_factor_assembly_and_pit_fundamentals_audit_not_alpha_test",
+  "question": "Do the system's ordinary strategy and screener execution paths assemble the frozen R275 candidate's extension and PIT financial inputs, and can those paths be proven safe for isolated research execution?",
+  "hypothesis": "R280 likely overstated missing extension-factor assembly by comparing physical Parquet schemas with runtime indicator frames; ordinary indicator computation may attach extension columns, while financial PIT factors may remain backtest-only. Current date skew and the absence of a proven isolated execution/archive path are expected to keep the candidate not ready.",
+  "frozen_candidate": {
+    "strategy_id": "ai_hs300_macro_gate_quality_r275_remove_term",
+    "source_sha256": "c707832dda70fa51f461814d623d88eba94dd32a45e1dbede61da7b18bcdd2d8",
+    "required_extension_columns": [
+      "ext_alt_hs300_holder_top10_free_float_share",
+      "ext_alt_hs300_equity_risk_premium",
+      "ext_alt_hs300_credit_spread_5y_low"
+    ],
+    "required_financial_columns": [
+      "roe_latest",
+      "pb_latest",
+      "debt_ratio_latest",
+      "ocf_ni",
+      "accrual"
+    ]
+  },
+  "scope": {
+    "read_only_panel_gets": [
+      "/api/strategies?include_research=true",
+      "/api/factors?asset_type=stock",
+      "/api/settings/capability-matrix",
+      "/api/settings/data-sources"
+    ],
+    "source_paths": [
+      "backend/app/indicators/pipeline.py",
+      "backend/app/factors/ext_factors.py",
+      "backend/app/services/screener.py",
+      "backend/app/strategy/engine.py",
+      "backend/app/strategy/scoring.py",
+      "backend/app/api/screener.py",
+      "backend/app/backtest/fundamentals.py"
+    ],
+    "local_inputs": [
+      "data/kline_daily_enriched/date=*/part.parquet",
+      "data/ext_data/alt_hs300/timeseries/date=*/part.parquet",
+      "data/ext_data/alt_hs300/config.json",
+      "data/hs300/current_members.json",
+      "local financial parquet datasets discoverable under data/"
+    ]
+  },
+  "side_effects_allowed": [
+    "write this preregistration and its SHA-256 sidecar",
+    "GET the four listed live panel APIs and save sanitized response proofs with hashes",
+    "read source code and local file names, schemas, dates, and hashes",
+    "write R281 audit/result evidence, SHA-256 sidecars, and append-only research log notes"
+  ],
+  "side_effects_prohibited": [
+    "reload or modify strategies, factors, settings, or panel state",
+    "invoke strategy/screener execution or generate/archive signals",
+    "run backtests, IC/outcome analyses, or parameter scans",
+    "pull/synchronize data or write market, enriched, extension, financial, or shared cache data",
+    "start realtime/quote/paper-trading hooks, accounts, orders, or notifications",
+    "change frozen candidate logic, research_only state, production status, or gates"
+  ],
+  "audit_protocol_note": "Before this preregistration was written, preliminary read-only source inspection and one unsaved GET to /api/strategies?include_research=true were performed to orient the continuation. No state-changing action or execution occurred; all formal R281 captures happen after registration.",
+  "decision_rule": "Any unproven or missing input/path fails readiness. Do not generate a signal or claim alpha in R281. Preserve R275 research_only and pause_production.",
+  "production_status": "pause_production"
+}

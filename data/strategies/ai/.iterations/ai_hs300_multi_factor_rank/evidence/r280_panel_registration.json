@@ -1,0 +1,549 @@
+{
+  "api_base": "http://127.0.0.1:3018",
+  "backtest_run": false,
+  "candidate_source": {
+    "path": "data/strategies/ai/ai_hs300_macro_gate_quality_r275_remove_term.py",
+    "required_features": [
+      "ext_alt_hs300_credit_spread_5y_low",
+      "ext_alt_hs300_equity_risk_premium",
+      "ext_alt_hs300_holder_top10_free_float_share",
+      "ma60"
+    ],
+    "research_only": true,
+    "scoring": {
+      "ext_alt_hs300_holder_top10_free_float_share": 0.35,
+      "uf_cash_quality": 0.2,
+      "uf_low_vol": 0.2,
+      "uf_quality_value_defensive": 0.25
+    },
+    "sha256": "c707832dda70fa51f461814d623d88eba94dd32a45e1dbede61da7b18bcdd2d8"
+  },
+  "capabilities": [
+    {
+      "candidates": [
+        {
+          "available": true,
+          "display": "TickFlow",
+          "kind": "builtin",
+          "name": "tickflow",
+          "note": null,
+          "status": "ok"
+        },
+        {
+          "available": true,
+          "display": "AkShare",
+          "kind": "plugin",
+          "name": "akshare",
+          "note": null,
+          "status": "ok"
+        }
+      ],
+      "current": "tickflow",
+      "current_display": "TickFlow",
+      "default": "tickflow",
+      "desc": "历史K线与实时覆写",
+      "effective": "tickflow",
+      "effective_display": "TickFlow",
+      "field": "daily_data_provider",
+      "id": "daily",
+      "label": "日K",
+      "pending": [
+        {
+          "available": false,
+          "display": "fuyao",
+          "kind": "plugin",
+          "name": "fuyao",
+          "note": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 FUYAO_API_KEY)",
+          "status": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 FUYAO_API_KEY)"
+        },
+        {
+          "available": false,
+          "display": "TdxQuant (TdxAiData)",
+          "kind": "plugin",
+          "name": "tdxquant",
+          "note": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 TDXQUANT_API_KEY)",
+          "status": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 TDXQUANT_API_KEY)"
+        }
+      ],
+      "tf_available": true,
+      "tf_tier": "none",
+      "usable": true
+    },
+    {
+      "candidates": [
+        {
+          "available": true,
+          "display": "AkShare",
+          "kind": "plugin",
+          "name": "akshare",
+          "note": null,
+          "status": "ok"
+        }
+      ],
+      "current": "akshare",
+      "current_display": "AkShare",
+      "default": "tickflow",
+      "desc": "前复权计算基准",
+      "effective": "akshare",
+      "effective_display": "AkShare",
+      "field": "adj_factor_provider",
+      "id": "adj_factor",
+      "label": "除权因子",
+      "pending": [
+        {
+          "available": false,
+          "display": "fuyao",
+          "kind": "plugin",
+          "name": "fuyao",
+          "note": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 FUYAO_API_KEY)",
+          "status": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 FUYAO_API_KEY)"
+        },
+        {
+          "available": false,
+          "display": "TdxQuant (TdxAiData)",
+          "kind": "plugin",
+          "name": "tdxquant",
+          "note": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 TDXQUANT_API_KEY)",
+          "status": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 TDXQUANT_API_KEY)"
+        }
+      ],
+      "tf_available": false,
+      "tf_tier": "starter",
+      "usable": true
+    },
+    {
+      "candidates": [
+        {
+          "available": true,
+          "display": "AkShare",
+          "kind": "plugin",
+          "name": "akshare",
+          "note": null,
+          "status": "ok"
+        }
+      ],
+      "current": "akshare",
+      "current_display": "AkShare",
+      "default": "tickflow",
+      "desc": "全市场实时快照",
+      "effective": "akshare",
+      "effective_display": "AkShare",
+      "field": "realtime_data_provider",
+      "id": "realtime",
+      "label": "实时行情",
+      "pending": [
+        {
+          "available": false,
+          "display": "fuyao",
+          "kind": "plugin",
+          "name": "fuyao",
+          "note": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 FUYAO_API_KEY)",
+          "status": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 FUYAO_API_KEY)"
+        },
+        {
+          "available": false,
+          "display": "TdxQuant (TdxAiData)",
+          "kind": "plugin",
+          "name": "tdxquant",
+          "note": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 TDXQUANT_API_KEY)",
+          "status": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 TDXQUANT_API_KEY)"
+        }
+      ],
+      "tf_available": false,
+      "tf_tier": "starter",
+      "usable": true
+    },
+    {
+      "candidates": [
+        {
+          "available": true,
+          "display": "AkShare",
+          "kind": "plugin",
+          "name": "akshare",
+          "note": null,
+          "status": "ok"
+        }
+      ],
+      "current": "akshare",
+      "current_display": "AkShare",
+      "default": "tickflow",
+      "desc": "分时图与分钟回测",
+      "effective": "akshare",
+      "effective_display": "AkShare",
+      "field": "minute_data_provider",
+      "id": "minute",
+      "label": "分钟K",
+      "pending": [
+        {
+          "available": false,
+          "display": "TdxQuant (TdxAiData)",
+          "kind": "plugin",
+          "name": "tdxquant",
+          "note": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 TDXQUANT_API_KEY)",
+          "status": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 TDXQUANT_API_KEY)"
+        }
+      ],
+      "tf_available": false,
+      "tf_tier": "pro",
+      "usable": true
+    },
+    {
+      "candidates": [],
+      "current": "tickflow",
+      "current_display": "TickFlow",
+      "default": "tickflow",
+      "desc": "连板梯队封单与盘口深度",
+      "effective": "tickflow",
+      "effective_display": "TickFlow",
+      "field": "depth5_data_provider",
+      "id": "depth5",
+      "label": "五档盘口",
+      "pending": [
+        {
+          "available": false,
+          "display": "TdxQuant (TdxAiData)",
+          "kind": "plugin",
+          "name": "tdxquant",
+          "note": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 TDXQUANT_API_KEY)",
+          "status": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 TDXQUANT_API_KEY)"
+        }
+      ],
+      "tf_available": false,
+      "tf_tier": "pro",
+      "usable": false
+    },
+    {
+      "candidates": [
+        {
+          "available": true,
+          "display": "AkShare",
+          "kind": "plugin",
+          "name": "akshare",
+          "note": null,
+          "status": "ok"
+        }
+      ],
+      "current": "akshare",
+      "current_display": "AkShare",
+      "default": "tickflow",
+      "desc": "财务指标与三大报表",
+      "effective": "akshare",
+      "effective_display": "AkShare",
+      "field": "financial_data_provider",
+      "id": "financial",
+      "label": "财务数据",
+      "pending": [
+        {
+          "available": false,
+          "display": "fuyao",
+          "kind": "plugin",
+          "name": "fuyao",
+          "note": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 FUYAO_API_KEY)",
+          "status": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 FUYAO_API_KEY)"
+        }
+      ],
+      "tf_available": false,
+      "tf_tier": "expert",
+      "usable": true
+    },
+    {
+      "candidates": [],
+      "current": "tickflow",
+      "current_display": "TickFlow",
+      "default": "tickflow",
+      "desc": "盘中全市场当日分钟落盘 (冷启动全天 + 标的池增量)",
+      "effective": "tickflow",
+      "effective_display": "TickFlow",
+      "field": "full_minute_data_provider",
+      "id": "full_minute",
+      "label": "全量分钟",
+      "pending": [
+        {
+          "available": false,
+          "display": "TdxQuant (TdxAiData)",
+          "kind": "plugin",
+          "name": "tdxquant",
+          "note": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 TDXQUANT_API_KEY)",
+          "status": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 TDXQUANT_API_KEY)"
+        }
+      ],
+      "tf_available": false,
+      "tf_tier": "expert",
+      "usable": false
+    }
+  ],
+  "capability_http_status": 200,
+  "capture_started_at_utc": "2026-10-28T06:01:18.226817+00:00",
+  "captured_at_utc": "2026-10-28T06:01:18.298682+00:00",
+  "checks": {
+    "candidate_registered_and_research_only": true,
+    "candidate_source_matches_r275_freeze": true,
+    "control_registered": true,
+    "factors_api_ok": true,
+    "four_scoring_factors_registered": true,
+    "strategies_api_ok": true,
+    "zero_strategy_load_errors": true
+  },
+  "classification": "read_only_live_panel_registration_proof_existing_frozen_candidate",
+  "control_source": {
+    "path": "data/strategies/ai/ai_hs300_macro_gate_quality.py",
+    "required_features": [
+      "ext_alt_hs300_credit_spread_5y_low",
+      "ext_alt_hs300_equity_risk_premium",
+      "ext_alt_hs300_holder_top10_free_float_share",
+      "ext_alt_hs300_term_spread_10y_2y",
+      "ma60"
+    ],
+    "research_only": false,
+    "scoring": {
+      "ext_alt_hs300_holder_top10_free_float_share": 0.35,
+      "uf_cash_quality": 0.2,
+      "uf_low_vol": 0.2,
+      "uf_quality_value_defensive": 0.25
+    },
+    "sha256": "b1c2b43ef9861053d3f4e4dd2ac4a3aeb7d0eae301b5400bdb0dbf65169b87ec"
+  },
+  "data_sources_http_status": 200,
+  "factor_count": 229,
+  "plugins": [
+    {
+      "api_key_env": "",
+      "api_key_masked": "",
+      "available": true,
+      "billing": "",
+      "billing_note": "",
+      "datasets": [
+        "daily",
+        "adj_factor",
+        "financial",
+        "minute",
+        "realtime"
+      ],
+      "description": "AkShare Sina 原始日K、近期分钟K、A股/指数快照、股票除权事件、季度财报和 CNINFO 公告时点股本；不提供全市场分钟流和五档盘口。",
+      "display_name": "AkShare",
+      "homepage": "https://github.com/akfamily/akshare",
+      "install_hint": "在数据源卡片中安装 AkShare 依赖；无需 API Key。",
+      "key_manage_url": "",
+      "name": "akshare",
+      "runtime": "python",
+      "status": "ok",
+      "usage_notes": []
+    },
+    {
+      "api_key_env": "FUYAO_API_KEY",
+      "api_key_masked": "",
+      "available": false,
+      "billing": "",
+      "billing_note": "",
+      "datasets": [
+        "realtime",
+        "daily",
+        "adj_factor",
+        "financial"
+      ],
+      "description": "同花顺官方金融数据 API。提供实时快照、日K(原始价)、除权因子、财务三表与指标;未接入分钟与股本,自动回退 TickFlow。",
+      "display_name": "fuyao",
+      "homepage": "https://fuyao.aicubes.cn",
+      "install_hint": "点击卡片中的输入框配置 API Key(https://fuyao.aicubes.cn 申请),或在 .env 中配置 FUYAO_API_KEY",
+      "key_manage_url": "",
+      "name": "fuyao",
+      "runtime": "none",
+      "status": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 FUYAO_API_KEY)",
+      "usage_notes": []
+    },
+    {
+      "api_key_env": "TDXQUANT_API_KEY",
+      "api_key_masked": "",
+      "available": false,
+      "billing": "points",
+      "billing_note": "积分消耗与轮询频率、拉取范围直接相关: 间隔越短、范围越大消耗越高。建议实时轮询间隔 ≥60 秒, 全量分钟按需启用; 具体扣减以商城「积分明细」为准。",
+      "datasets": [
+        "realtime",
+        "depth5",
+        "daily",
+        "adj_factor",
+        "minute",
+        "full_minute"
+      ],
+      "description": "通达信 TdxAiData 数据服务(原生 TCP 协议, 依赖已内置): 全市场实时快照、五档盘口、日K、除权因子、分钟K、全量分钟六项能力; 按积分计费, 未接入财务, 自动回退 TickFlow。",
+      "display_name": "TdxQuant (TdxAiData)",
+      "homepage": "https://help.tdx.com.cn/quant/",
+      "install_hint": "依赖已内置; 在下方输入框填写数据服务 Key(通达信个人版商城-会员中心-积分和Key管理创建), 或配置环境变量 TDXQUANT_API_KEY",
+      "key_manage_url": "https://vip.tdx.com.cn/site/app/pc-mall/main.html#/aiKey",
+      "name": "tdxquant",
+      "runtime": "python",
+      "status": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 TDXQUANT_API_KEY)",
+      "usage_notes": [
+        "实时快照: 五市场全 A 股票池, 600 只/批, 全市场一轮约 10 批(30-60 秒)",
+        "五档盘口: 随快照返回, 不产生额外请求",
+        "日K / 除权因子: count 模式单标的拉取(原始价); 因子按交易所公式推导, 带涨跌停自检",
+        "分钟K: 1m 逐标的, 240 根/日, 深度约 40 交易日",
+        "全量分钟: 逐标的拉取, 全市场一轮约 10 分钟量级(上游无批量端点)"
+      ]
+    }
+  ],
+  "preregistration_sha256": "b607f04b6813aff0c681be60a7ae411c172a18d11e52d5d55eaa7bbf63d22a3a",
+  "production_status": "pause_production",
+  "registered_candidate": {
+    "asset_types": [
+      "stock"
+    ],
+    "basic_filter": {
+      "amount_max": null,
+      "amount_min": 20000000.0,
+      "boards": [
+        "沪主板",
+        "深主板",
+        "创业板",
+        "科创板",
+        "北交所"
+      ],
+      "exclude_new_days": 60,
+      "exclude_st": true,
+      "float_cap_max": null,
+      "float_cap_min": null,
+      "market_cap_min": 1000000000.0,
+      "price_max": 500,
+      "price_min": 3,
+      "turnover_max": null,
+      "turnover_min": null
+    },
+    "composite_children": null,
+    "descending": true,
+    "description": "研究候选：保留 ERP 与信用利差门禁，只移除期限利差入场门禁。",
+    "display_limit": null,
+    "entry_signals": [],
+    "execution_backend": "polars_expr",
+    "exit_signals": [],
+    "id": "ai_hs300_macro_gate_quality_r275_remove_term",
+    "limit": 30,
+    "max_hold_days": 35,
+    "minute_exit_trigger_supported_signals": [
+      "signal_ma10_breakdown",
+      "signal_ma20_breakdown",
+      "signal_ma5_breakdown",
+      "signal_ma_dead_5_20"
+    ],
+    "name": "R275 宏观门禁消融 - 期限利差",
+    "order_by": "score",
+    "overlay_filter": [],
+    "params": [],
+    "params_defaults": {},
+    "research_only": true,
+    "scoring": {
+      "ext_alt_hs300_holder_top10_free_float_share": 0.35,
+      "uf_cash_quality": 0.2,
+      "uf_low_vol": 0.2,
+      "uf_quality_value_defensive": 0.25
+    },
+    "scoring_directions": {},
+    "source": "ai",
+    "stop_loss": null,
+    "tags": [
+      "R275",
+      "期限利差",
+      "研究"
+    ],
+    "take_profit": null,
+    "timeframes": [
+      "1d"
+    ],
+    "trailing_stop": null,
+    "trailing_take_profit_activate": null,
+    "trailing_take_profit_drawdown": null,
+    "version": "1.0.0"
+  },
+  "registration_pass": true,
+  "reload_performed": false,
+  "required_factors": {
+    "ext_alt_hs300_holder_top10_free_float_share": {
+      "asset_types": [
+        "etf",
+        "stock"
+      ],
+      "dependencies": [],
+      "direction": "none",
+      "formula": "扩展表「HS300另类因子」字段 holder_top10_free_float_share (时序·按交易日对齐)",
+      "group": "扩展数据",
+      "id": "ext_alt_hs300_holder_top10_free_float_share",
+      "kind": "base",
+      "label": "HS300另类因子·前十大流通股东持股比例合计",
+      "pit": false,
+      "scale_free": false,
+      "stability": "stable",
+      "unit": "none",
+      "version": 1,
+      "warmup_bars": 1
+    },
+    "uf_cash_quality": {
+      "asset_types": [
+        "etf",
+        "stock"
+      ],
+      "dependencies": [
+        "accrual",
+        "ocf_ni"
+      ],
+      "direction": "high",
+      "formula": "ocf_ni - accrual",
+      "group": "财务",
+      "id": "uf_cash_quality",
+      "kind": "custom",
+      "label": "现金质量",
+      "pit": false,
+      "scale_free": true,
+      "stability": "experimental",
+      "unit": "none",
+      "version": 1,
+      "warmup_bars": 1
+    },
+    "uf_low_vol": {
+      "asset_types": [
+        "etf",
+        "stock"
+      ],
+      "dependencies": [
+        "annual_vol_20d"
+      ],
+      "direction": "high",
+      "formula": "0 - annual_vol_20d",
+      "group": "波动率",
+      "id": "uf_low_vol",
+      "kind": "custom",
+      "label": "低波动",
+      "pit": false,
+      "scale_free": true,
+      "stability": "experimental",
+      "unit": "none",
+      "version": 1,
+      "warmup_bars": 1
+    },
+    "uf_quality_value_defensive": {
+      "asset_types": [
+        "etf",
+        "stock"
+      ],
+      "dependencies": [
+        "debt_ratio_latest",
+        "pb_latest",
+        "roe_latest"
+      ],
+      "direction": "high",
+      "formula": "roe_latest / (100 * pb_latest) - debt_ratio_latest / 100",
+      "group": "财务",
+      "id": "uf_quality_value_defensive",
+      "kind": "custom",
+      "label": "质量价值防守",
+      "pit": false,
+      "scale_free": true,
+      "stability": "experimental",
+      "unit": "none",
+      "version": 1,
+      "warmup_bars": 1
+    }
+  },
+  "round": "R280",
+  "signal_generated": false,
+  "strategy_count_including_research": 223,
+  "strategy_load_errors": []
+}

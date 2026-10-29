@@ -1,0 +1,60 @@
+{
+  "classification": "posthoc_exploratory_hypothesis_feasibility_only_not_alpha",
+  "code_date_coverage": {
+    "daily_partitions_checked": "2,139 partition dates available; only symbol/date read for the event windows",
+    "expected_stock_session_rows": 2813,
+    "missing_example": "600745 on 2020-06-10",
+    "missing_stock_session_rows": 1,
+    "otherwise_complete_event_windows": "16/17, counting the locally reconstructed 2022-06 list; this does not pass the official-list gate"
+  },
+  "date": "2026-10-29",
+  "decision": "NO-GO for return calculations or system backtest: one official addition list is not archived and one required stock-day row is missing. Do not drop the event or relax gates after seeing outcomes.",
+  "events": {
+    "notice_14225": "The official notice states 28 additions and 2022-06-10 after-close implementation; its official code list was not archived. R78 locally reproduces 28 additions from the 2022-06-10 and 2022-06-13 snapshots, but this does not count as official-list closure.",
+    "official_addition_lists_complete": 16,
+    "routine_event_count": 17,
+    "temporary_changes_excluded": [
+      "2025-02 notice 15546",
+      "2025-07 notice 1006022",
+      "2026-09 notice 3006227"
+    ]
+  },
+  "evidence": {
+    "coverage_audit": "r304_A14_event_coverage_corrected.json",
+    "coverage_script": "audit_r304_a14_event_coverage.py",
+    "panel_intent": "r304_A14_panel_registration_intent.json",
+    "panel_post": "r304_A14_panel_registration_post.json",
+    "panel_readback": "r304_A14_panel_registration_readback.json",
+    "preregistration": "r304_A14_preregistration.json"
+  },
+  "evidence_sha256": {
+    "audit_r304_a14_event_coverage.py": "fe79862af66d3fa15c52279c45c6ca2b909c07d22e985d7a187c91d843528f6b",
+    "r304_A14_panel_registration_intent.json": "7ad2cd1590688ffc84f4c89167fdf86ceb3ed4113c9cbfd75bf7967e9ec7fb4d",
+    "r304_A14_panel_registration_post.json": "66f61e26c4df860735b2a041bcdd8471aad550f5b45ec92fbaa238acb4b37f22",
+    "r304_A14_panel_registration_readback.json": "c158627bb1a7d94f2a8e2c00afbe8faea84ade8fae9b08f82ed00f49cec9ac76",
+    "r304_A14_preregistration.json": "bdaebb6ae00f0d81eb90fb3225601fbcd28ef2ce8647d6a8297fa9a8a3381f95"
+  },
+  "hypothesis": "New HS300 additions may have pre-implementation drift from the first trading session strictly after official publication through the last session strictly before after-close implementation, relative to a pre-specified market/industry control.",
+  "membership_crosscheck": {
+    "exact_transition_matches_including_local_14225": "11/11",
+    "preannouncement_member_counts": "R157/R78 each supply 300 names on snapshots queried before all 17 announcements, with update_date no later than query_date. Control provenance and industry matching remain unvalidated.",
+    "timing_caveat": "The saved R78 snapshots omit dates from 2018-2020 and do not always capture the first post-effective session. Exact code sets match within 180 calendar days, but this is not an official event-date PIT membership series; the 2022-12 match appears on 2023-03-20."
+  },
+  "motivation_and_bias": "The question was proposed after seeing R46/R49. Those results motivate an exploratory hypothesis and are not evidence for it.",
+  "panel": {
+    "R304_and_A13_pending": true,
+    "candidate_count_after": 22,
+    "candidate_count_before": 21,
+    "candidate_id": "7e600177b497423e9c204996eacb2de1",
+    "candidate_status": "pending",
+    "existing_statuses_unchanged": true,
+    "preflight_post_readback_http": [
+      200,
+      200,
+      200
+    ]
+  },
+  "preregistration_sha256": "bdaebb6ae00f0d81eb90fb3225601fbcd28ef2ce8647d6a8297fa9a8a3381f95",
+  "round": "R304-A14",
+  "work_done": "Read only symbol/date from daily-bar partitions; did not read OHLCV/adjusted prices/returns, run a backtest or alpha scan, or modify production data/strategies."
+}

@@ -1,0 +1,102 @@
+{
+  "classification": "posthoc_method_audit_not_independent_alpha_confirmation",
+  "decision_rules": [
+    "If A1-A4 pass, conclude only that the arithmetic audit is reproducible.",
+    "If alternate C2-C4 differ from the frozen verdict, record the original gates as denominator-sensitive; do not relax, replace, or retroactively pass them.",
+    "Any data mismatch, missing trade log, non-positive denominator where a share is required, or failed reconciliation makes the audit incomplete and must not be repaired by changing the frozen files.",
+    "R295 cannot establish or reject alpha because the sample and outcomes were previously inspected; no production or paper-trading promotion follows."
+  ],
+  "fixed_context": {
+    "cost": "R257 3x: 6bp fees + 6bp commission + 15bp slippage + 10bp stamp tax",
+    "discovery": [
+      "2023-05-04",
+      "2024-12-31"
+    ],
+    "full_sample": "additive concatenation of the two independently initialized trade sets; not a compounded portfolio return",
+    "matched_control": "ai_hs300_quality_relative_strength_control",
+    "matching": "open_t+1",
+    "strategy": "ai_hs300_quality_relative_strength_h20_sl20",
+    "validation": [
+      "2025-01-02",
+      "2026-10-16"
+    ]
+  },
+  "freeze_script_sha256": "aa9f520887d3b3fbb7a932a6c92120fd912522d9183bb40bdc36d3a5dfd665d1",
+  "frozen_at_utc": "2026-10-28T18:33:00.345979+00:00",
+  "frozen_inputs": {
+    "manifest": "r295_input_snapshot.json",
+    "manifest_sha256": "567c67f8bdc2424e9f89c4345371948db61bb56d48b6a08571e15d610b2eea90",
+    "source_files_sha256": {
+      "data/research/r257_cache/ai_hs300_quality_relative_strength_control_3x_2023-05-04_2024-12-31.trades.json": "6dc762867f3ad1746d1267a56a91f4a9269276ee8ac4ed673eed85ff7351d43a",
+      "data/research/r257_cache/ai_hs300_quality_relative_strength_control_3x_2025-01-02_2026-10-16.trades.json": "227fd266325844bbdea84006816b4a7026544ed44386be7bd1a6a5ae36dbbf80",
+      "data/research/r257_cache/ai_hs300_quality_relative_strength_h20_sl20_3x_2023-05-04_2024-12-31.trades.json": "459b538b0b555278ef81a47e804029c9fd724c278c79e9593a7620e1ae9f44a1",
+      "data/research/r257_cache/ai_hs300_quality_relative_strength_h20_sl20_3x_2025-01-02_2026-10-16.trades.json": "865683f80a1ed58f436d902462f5a0fb35019ce00d0b2c2b697505ea499e77fa",
+      "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r257_preregistration.json": "6a70e8726384da28d7c852d8b26340224d23568671dcbfb0fe7b8ac91d49e07e",
+      "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r257_quality_relative_strength.json": "dd6750b298953d57323266f1e1e594985d467d10662794c1cd827daf69cb933c",
+      "scripts/backtest_r239_concentration_audit.py": "9c54f8de1c05331de39174d5d24d57a13544ac084b156ce2cae6e0c7830fbb45",
+      "scripts/backtest_r257_quality_relative_strength.py": "b6024054f4e24816429f0ad06eb44c2e1f383bbf7a924f36cde9cc6ec03a5225"
+    },
+    "trade_files_by_role": {
+      "candidate_discovery": "data/research/r257_cache/ai_hs300_quality_relative_strength_h20_sl20_3x_2023-05-04_2024-12-31.trades.json",
+      "candidate_validation": "data/research/r257_cache/ai_hs300_quality_relative_strength_h20_sl20_3x_2025-01-02_2026-10-16.trades.json",
+      "control_discovery": "data/research/r257_cache/ai_hs300_quality_relative_strength_control_3x_2023-05-04_2024-12-31.trades.json",
+      "control_validation": "data/research/r257_cache/ai_hs300_quality_relative_strength_control_3x_2025-01-02_2026-10-16.trades.json"
+    }
+  },
+  "hypotheses": [
+    "A positive-contributor denominator yields bounded shares that sum to 100%, unlike top-positive-symbol P&L divided by portfolio net P&L.",
+    "A change in C2-C4 classification under an alternate denominator demonstrates metric sensitivity, not that either threshold is universally correct.",
+    "Static top-contributor removal from archived trade P&L is attribution only and cannot reproduce a path-dependent portfolio counterfactual."
+  ],
+  "method": [
+    "Read only the four frozen 3x system-backtest trade logs: R257 candidate/control in the preregistered discovery and validation segments.",
+    "Re-aggregate each trade's stored pnl_amount by symbol; separately report total net trade P&L, gross positive trade P&L, gross losses, and the sum of positive symbol-level net P&L.",
+    "For top 1/3/5 positive-contributor symbols, calculate legacy share = top-symbol net contribution / total portfolio net P&L; alternate share = top-symbol net contribution / sum of positive symbol-level net P&L; and gross-profit share = top-symbol net contribution / gross positive trade P&L.",
+    "Report static attribution after subtracting the top 1/3/5 positive symbol-level contributors from segment trade P&L. Do not call it a rerun, counterfactual equity curve, or executable strategy result.",
+    "Reconcile candidate full-sample and validation totals and legacy shares against the frozen R257 result JSON."
+  ],
+  "panel_candidate": {
+    "config": {
+      "asset_type": "stock",
+      "commission_pct": 0.0006,
+      "end": "2026-10-16",
+      "fees_pct": 0.0006,
+      "holding_days": 20,
+      "initial_capital": 1000000.0,
+      "matching": "open_t+1",
+      "max_exposure_pct": 1.0,
+      "max_positions": 10,
+      "minute_fill": false,
+      "mode": "position",
+      "overrides": {},
+      "params": {},
+      "position_sizing": "equal",
+      "slippage_bps": 15.0,
+      "stamp_tax_pct": 0.001,
+      "start": "2023-05-04",
+      "strategy_id": "ai_hs300_quality_relative_strength_h20_sl20"
+    },
+    "data_as_of": "2026-10-16",
+    "kind": "strategy",
+    "metrics": {},
+    "name": "R295 R257集中度门槛口径与头部归因审计",
+    "source_id": "ai_hs300_quality_relative_strength_h20_sl20",
+    "status": "pending"
+  },
+  "precommitted_checks": {
+    "A1": "all four trade files match frozen size, mtime_ns, and SHA-256 before and after audit",
+    "A2": "candidate validation/full totals and legacy top1/top3/top5 shares reproduce the frozen R257 concentration artifact at its stored precision",
+    "A3": "alternate denominator is positive when shares are reported, all alternate shares lie in [0,1], and top1 <= top3 <= top5",
+    "A4": "candidate and matched control are reported for both frozen segments and the combined additive trade-P&L attribution",
+    "A5": "any denominator-dependent gate classification is labelled metric-sensitive; it does not revise the original frozen R257 decision"
+  },
+  "prior_knowledge_disclosure": "R257 preregistration, result JSON, gate implementation, and initial summary metrics had already been inspected before this round. This is explicitly a post-hoc methodological audit; the preregistration does not make the historical outcomes blind or independent. The freeze script only fingerprints the archived source files and does not parse trade outcomes.",
+  "research_question": "Do R257's C2-C4 thresholds measure dependence on a small number of winners, or are their pass/fail results materially driven by using total net P&L as the denominator?",
+  "round": "R295",
+  "scope_exclusions": [
+    "No provider, builder, strategy engine, backtest service, screener, or signal generator is called in R295.",
+    "No market, extension-factor, strategy, cache, paper account, or production data is written or changed.",
+    "No new alpha, independent sample, benchmark excess return, or deployable portfolio conclusion is tested."
+  ],
+  "status": "frozen_before_r295_recalculation"
+}

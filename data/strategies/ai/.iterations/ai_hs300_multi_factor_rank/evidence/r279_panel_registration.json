@@ -1,0 +1,148 @@
+{
+  "akshare_plugin": {
+    "api_key_env": "",
+    "api_key_masked": "",
+    "available": true,
+    "billing": "",
+    "billing_note": "",
+    "datasets": [
+      "daily",
+      "adj_factor",
+      "financial",
+      "minute",
+      "realtime"
+    ],
+    "description": "AkShare Sina 原始日K、近期分钟K、A股/指数快照、股票除权事件、季度财报和 CNINFO 公告时点股本；不提供全市场分钟流和五档盘口。",
+    "display_name": "AkShare",
+    "homepage": "https://github.com/akfamily/akshare",
+    "install_hint": "在数据源卡片中安装 AkShare 依赖；无需 API Key。",
+    "key_manage_url": "",
+    "name": "akshare",
+    "runtime": "python",
+    "status": "ok",
+    "usage_notes": []
+  },
+  "api_base": "http://127.0.0.1:3018",
+  "backtest_run": false,
+  "candidate_registered": true,
+  "candidate_research_only": true,
+  "candidate_source_path": "data/strategies/ai/ai_hs300_macro_gate_quality_r275_remove_term.py",
+  "candidate_source_sha256": "c707832dda70fa51f461814d623d88eba94dd32a45e1dbede61da7b18bcdd2d8",
+  "capability_http_status": 200,
+  "captured_at_utc": "2026-10-28T05:25:23.023406+00:00",
+  "classification": "read_only_live_panel_registration_proof",
+  "control_registered": true,
+  "daily_capability": {
+    "candidates": [
+      {
+        "available": true,
+        "display": "TickFlow",
+        "kind": "builtin",
+        "name": "tickflow",
+        "note": null,
+        "status": "ok"
+      },
+      {
+        "available": true,
+        "display": "AkShare",
+        "kind": "plugin",
+        "name": "akshare",
+        "note": null,
+        "status": "ok"
+      }
+    ],
+    "current": "tickflow",
+    "current_display": "TickFlow",
+    "default": "tickflow",
+    "desc": "历史K线与实时覆写",
+    "effective": "tickflow",
+    "effective_display": "TickFlow",
+    "field": "daily_data_provider",
+    "id": "daily",
+    "label": "日K",
+    "pending": [
+      {
+        "available": false,
+        "display": "fuyao",
+        "kind": "plugin",
+        "name": "fuyao",
+        "note": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 FUYAO_API_KEY)",
+        "status": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 FUYAO_API_KEY)"
+      },
+      {
+        "available": false,
+        "display": "TdxQuant (TdxAiData)",
+        "kind": "plugin",
+        "name": "tdxquant",
+        "note": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 TDXQUANT_API_KEY)",
+        "status": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 TDXQUANT_API_KEY)"
+      }
+    ],
+    "tf_available": true,
+    "tf_tier": "none",
+    "usable": true
+  },
+  "data_sources_http_status": 200,
+  "factor_count": 229,
+  "factors_http_status": 200,
+  "orders_placed": false,
+  "panel_capture_started_utc": "2026-10-28T05:25:22.934431+00:00",
+  "paper_account_created": false,
+  "preregistration_sha256": "2faed5b7153c6e237499d464931a84ca114420df6b2d1a40c71742f53eac47cd",
+  "production_status": "pause_production",
+  "quote_polling_changed": false,
+  "realtime_capability": {
+    "candidates": [
+      {
+        "available": true,
+        "display": "AkShare",
+        "kind": "plugin",
+        "name": "akshare",
+        "note": null,
+        "status": "ok"
+      }
+    ],
+    "current": "akshare",
+    "current_display": "AkShare",
+    "default": "tickflow",
+    "desc": "全市场实时快照",
+    "effective": "akshare",
+    "effective_display": "AkShare",
+    "field": "realtime_data_provider",
+    "id": "realtime",
+    "label": "实时行情",
+    "pending": [
+      {
+        "available": false,
+        "display": "fuyao",
+        "kind": "plugin",
+        "name": "fuyao",
+        "note": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 FUYAO_API_KEY)",
+        "status": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 FUYAO_API_KEY)"
+      },
+      {
+        "available": false,
+        "display": "TdxQuant (TdxAiData)",
+        "kind": "plugin",
+        "name": "tdxquant",
+        "note": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 TDXQUANT_API_KEY)",
+        "status": "缺少 API Key(可在下方输入框直接填写,或配置环境变量 TDXQUANT_API_KEY)"
+      }
+    ],
+    "tf_available": false,
+    "tf_tier": "starter",
+    "usable": true
+  },
+  "registration_pass": true,
+  "reload_performed": false,
+  "required_factor_registration": {
+    "ext_alt_hs300_holder_top10_free_float_share": true,
+    "uf_cash_quality": true,
+    "uf_low_vol": true,
+    "uf_quality_value_defensive": true
+  },
+  "round": "R279",
+  "strategies_http_status": 200,
+  "strategy_count_including_research": 223,
+  "strategy_load_errors": []
+}

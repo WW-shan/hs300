@@ -1,0 +1,25 @@
+{
+  "round": "R304",
+  "amendment_id": "R304-A11",
+  "date": "2026-10-29",
+  "classification": "single final read-only panel state check after A9/A10 evidence capture",
+  "reason": "A9 performed a unique pending panel read before the official notice request, and A10 made one fixed attachment GET without panel writes. This bounded final GET verifies that the already registered R304 candidate and protected panel state remain unchanged after evidence collection.",
+  "method": [
+    "Issue exactly one GET to the local panel candidate endpoint; save raw response, parsed proof, timestamp, and SHA-256 sidecars.",
+    "Require exactly one R304 candidate with ID 1ed2c75285b74fc6a521cc73f75f7320 and status pending; verify existing protected candidate IDs and statuses match the A9 readback.",
+    "Do not POST, retry, or alter candidate status. No external request is permitted in A11."
+  ],
+  "panel": {
+    "endpoint": "http://127.0.0.1:3018/api/backtest/candidates",
+    "candidate_id": "1ed2c75285b74fc6a521cc73f75f7320",
+    "baseline_readback": "r304_A9_panel_readback.json",
+    "baseline_readback_sha256": "f455ffc795d286a5bbb4bf30530c4751d0824b1fade069f9b2ace57822c92a8b",
+    "post_count": 0,
+    "get_count": 1
+  },
+  "scope": {
+    "official_requests": 0,
+    "alpha_search_or_backtest": false,
+    "production_mutation": false
+  }
+}

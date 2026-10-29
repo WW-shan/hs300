@@ -1,0 +1,45 @@
+{
+  "round": "R303",
+  "title": "Nested mining universe feasibility audit",
+  "date": "2026-10-29",
+  "classification": "pre-registered feasibility audit; no alpha search and no return backtest",
+  "question": "Can the existing nested mining API validate factor candidates on a historically valid, date-varying HS300 universe using the system's actual execution and cost rules?",
+  "hypotheses": {
+    "H1": "The mining factor panel receives all enriched stock symbols unless a static symbols list is provided.",
+    "H2": "The mining request has no date-varying membership input and does not apply the system HS300 mask.",
+    "H3": "The local HS300 membership store contains only the current official snapshot, so substituting current members for historical membership would introduce survivor bias."
+  },
+  "method": [
+    "Read the mining API/runtime, HS300 membership service, standard strategy backtest membership mask, and focused tests.",
+    "Capture source hashes and inventory every local enriched daily partition without reading return metrics.",
+    "Read the live official-membership endpoint, mining availability endpoint, and 3018 candidate panel; preserve complete response evidence.",
+    "Check whether a historical, date-keyed HS300 membership archive exists under data/hs300."
+  ],
+  "decision_rule": {
+    "eligible_for_alpha_search": "Only if the mining factor-training panel and candidate evaluator both apply date-keyed historical HS300 membership, and the membership input is available and hash-frozen.",
+    "no_go": "If either search or evaluation uses all symbols, a current static symbol list, or current members backfilled over history, do not run the alpha search or describe its output as HS300 alpha."
+  },
+  "costs_to_verify": {
+    "commission_pct_default": 0.0002,
+    "stamp_tax_pct_default": 0.0005,
+    "slippage_bps_default": 5.0,
+    "note": "These are the mining API defaults; the audit verifies plumbing and records them but does not execute a candidate backtest."
+  },
+  "prohibited_in_this_round": [
+    "No alpha search, mining job, factor return calculation, strategy backtest, or candidate promotion/publication.",
+    "No provider call, data sync, enriched/factor rebuild, cache mutation, or strategy/data write.",
+    "No use of current HS300 members as a historical universe."
+  ],
+  "panel_registration": {
+    "required": true,
+    "candidate_name": "R303 嵌套挖掘股票池能力审计（无收益回测）",
+    "candidate_kind": "factor",
+    "status": "pending",
+    "retry_after_post": false
+  },
+  "success_criteria": [
+    "Complete frozen input inventory and source-code hashes are saved with SHA-256 sidecars.",
+    "The live panel registration is attempted at most once and its GET readback is retained.",
+    "The conclusion clearly separates a research-scope blocker from alpha performance and from candidate promotion gates."
+  ]
+}

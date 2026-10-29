@@ -1,0 +1,45 @@
+{
+  "round": "R272",
+  "status": "pre_outcome_execution_compatibility_locked",
+  "locked_at": "2026-10-27T22:59:29.631330+00:00",
+  "classification": "non_outcome_execution_adapter_for_frozen_source_lock_key_mismatch",
+  "lock": {
+    "path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r272_implementation_correction_final_v3.json",
+    "sha256": "68f30a5f4cf64799ea54e545b9bc6704a4a53a676188402f28c5eff1a0fb0417"
+  },
+  "runner": {
+    "path": "scripts/backtest_r272_operating_margin_improvement.py",
+    "sha256": "9f357d9c445fa6194dc589a863d194d331c6f01f2206854ff88233ad2e4a1c40"
+  },
+  "builder": {
+    "path": "scripts/build_r272_operating_margin_factor.py",
+    "sha256": "fb174accfc72c2eb581ce2ee182505f229804e9f7d59daf20d487c55263c85c3"
+  },
+  "adapter": {
+    "path": "scripts/run_r272_locked.py",
+    "sha256": "c4556f3783bf30e9831c1cc80f43a34f99564823f6bf404625c20b404a5acb51"
+  },
+  "source_mismatch": {
+    "runner_lookup_key": "corrected_source_sha256",
+    "actual_lock_key": "corrected_source_hashes",
+    "registered_and_corrected_source_hashes_match": true
+  },
+  "behavior": "At runtime only, provide a dict view that aliases the runner's singular corrected_source_sha256 lookup to the existing lock's corrected_source_hashes key. The lock file, research runner, preregistration, strategy, factor, inputs, gates, execution, and output logic remain unchanged.",
+  "preflight": {
+    "factor_audit": {
+      "path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r272_corrected_factor_audit_v2.json",
+      "sha256": "d83b3dc96a5062556780a7748e9a71a7812b0e435c846ee32bc6240b84cca4b4",
+      "passed": true
+    },
+    "panel_registration": {
+      "path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r272_panel_registration.json",
+      "sha256": "d3b22ef82df2674831bf2da9c88c4603cf4e18c6a84f29a1f7e04ec6492c6e06",
+      "passed": true
+    }
+  },
+  "scope": {
+    "outcome_data_read_before_lock": false,
+    "backtest_run": false,
+    "production_status": "pause_production"
+  }
+}

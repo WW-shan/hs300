@@ -1,0 +1,20 @@
+{
+  "round": "R304",
+  "amendment_id": "R304-A3",
+  "classification": "prospective execution-recovery amendment after partial detail capture; no repeat of successful requests",
+  "date": "2026-10-29",
+  "parent_preregistration_sha256": "d7c116125264a78462b41089a467eecea49fe98c73897c4a266c80103e41b49f",
+  "reason": "The detail collector saved the first 39 of 71 selected official notice details, then stopped before dispatching an attachment request because urllib rejected Chinese characters in an official OSS URL. No request was issued for that failing URL. Existing detail JSON/raw files and successfully saved attachments remain intact.",
+  "recovery_scope": [
+    "Read all 43 already-frozen listing pages and repeat the exact A2 unique-ID and title selection in memory only.",
+    "For notice IDs with a valid already-saved detail response whose raw response hash matches its sidecar, do not re-request the detail endpoint.",
+    "For selected notice IDs with no saved detail response, request each detail once and retain raw JSON and hash.",
+    "For each official CSI OSS attachment URL without a saved local file, encode the Unicode URL to valid percent-encoded ASCII before dispatch, request once, and preserve response status/hash/body evidence.",
+    "Write one append-only receipt per detail/attachment request; never retry a dispatched request automatically, including after a timeout."
+  ],
+  "prohibited": [
+    "Do not rerun the listing archive requests.",
+    "Do not repeat successful detail or attachment requests.",
+    "Do not run mining, factor-return calculations, or strategy backtests."
+  ]
+}

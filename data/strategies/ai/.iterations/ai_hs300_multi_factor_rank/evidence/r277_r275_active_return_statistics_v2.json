@@ -1,0 +1,328 @@
+{
+  "round": "R277",
+  "classification": "post_hoc_paired_active_return_statistics_not_preregistered_alpha_confirmation",
+  "question": "Does the R275 candidate-family return lift over R266 remain statistically distinguishable from zero after serial-dependence and three-candidate selection adjustments?",
+  "method": {
+    "comparison": "paired daily simple returns: candidate minus R266 control, both with 3x frozen execution costs",
+    "window": [
+      "2021-06-01",
+      "2026-10-16"
+    ],
+    "hac_lags_trading_days": [
+      5,
+      20,
+      35,
+      60
+    ],
+    "bootstrap": "circular moving-block bootstrap on paired active returns; centered null for one-sided p; 20,000 replications per candidate and block length",
+    "block_lengths_trading_days": [
+      20,
+      40,
+      60
+    ],
+    "selection_adjustment": "Holm family-wise adjustment over the three preregistered R275 candidates, separately for each HAC lag",
+    "seed": 2772026
+  },
+  "inputs": {
+    "r275_result_sha256": "e119d58593ee0ccb73e0bd8288bfdc3b10c21049295a7de3d2fcb0db6f5f4821",
+    "r275_preregistration_sha256": "97f192c0cf5eb81e4e9e64db770366852681c93d6214b1260822bbcd28182f11",
+    "r266_result_sha256": "32fea04080242d0029e99e59e790b49e85d0d9245d8f7ca8f05d44ef749ca2a0",
+    "r266_curve_sha256": "db742d445b8c1e8ca2598008976bf3d2fcfc5ac9b72768b91ed226db95802112",
+    "r275_candidate_curve_sha256": {
+      "erp": "7dec6df365753bb1fea25984d6d4e5505950f32d779b05e9d6c5782c64a82031",
+      "credit": "e187b0cfba009bd87272c6ccce8e89b10520023184e26b6a1df59396980b0def",
+      "term": "e28a93e142a3b2e62bb2b2b93e354e04c2d680d11fcdbc56bc178b3f0f4f9f60"
+    }
+  },
+  "candidate_family": {
+    "erp": {
+      "strategy_id": "ai_hs300_macro_gate_quality_r275_remove_erp",
+      "curve_sha256": "7dec6df365753bb1fea25984d6d4e5505950f32d779b05e9d6c5782c64a82031",
+      "curve_days": 1303,
+      "daily_observations": 1302,
+      "candidate_total_return": 0.68860922,
+      "control_total_return": 0.6333558300000002,
+      "relative_terminal_wealth_vs_control": 0.033828140191595635,
+      "mean_daily_active_return": 3.739795844545275e-05,
+      "annualized_active_arithmetic_mean_diagnostic": 0.009424285528254094,
+      "hac_tests": {
+        "5": {
+          "mean_daily_active_return": 3.739795844545275e-05,
+          "hac_lag_days": 5,
+          "standard_error": 0.00015480353068090521,
+          "z_statistic_normal_approx": 0.24158336880920853,
+          "p_one_sided_normal_approx": 0.40455150509871185,
+          "p_two_sided_normal_approx": 0.8091030101974237
+        },
+        "20": {
+          "mean_daily_active_return": 3.739795844545275e-05,
+          "hac_lag_days": 20,
+          "standard_error": 0.00015223815299226557,
+          "z_statistic_normal_approx": 0.24565431010814187,
+          "p_one_sided_normal_approx": 0.40297492186066397,
+          "p_two_sided_normal_approx": 0.8059498437213279
+        },
+        "35": {
+          "mean_daily_active_return": 3.739795844545275e-05,
+          "hac_lag_days": 35,
+          "standard_error": 0.00014653418245751424,
+          "z_statistic_normal_approx": 0.2552166178447532,
+          "p_one_sided_normal_approx": 0.3992778983918244,
+          "p_two_sided_normal_approx": 0.7985557967836489
+        },
+        "60": {
+          "mean_daily_active_return": 3.739795844545275e-05,
+          "hac_lag_days": 60,
+          "standard_error": 0.00011804396156785456,
+          "z_statistic_normal_approx": 0.3168138204507436,
+          "p_one_sided_normal_approx": 0.37569243840317623,
+          "p_two_sided_normal_approx": 0.7513848768063525
+        }
+      },
+      "circular_block_bootstrap": {
+        "20": {
+          "block_length_days": 20,
+          "replications": 20000,
+          "annualized_active_mean_ci_95": [
+            -0.06300881442595689,
+            0.08714461228032797
+          ],
+          "annualized_active_mean_point": 0.009424285528254094,
+          "p_one_sided_centered_block_bootstrap": 0.40297985100744965
+        },
+        "40": {
+          "block_length_days": 40,
+          "replications": 20000,
+          "annualized_active_mean_ci_95": [
+            -0.058679321009920446,
+            0.08190992201998516
+          ],
+          "annualized_active_mean_point": 0.009424285528254094,
+          "p_one_sided_centered_block_bootstrap": 0.3895805209739513
+        },
+        "60": {
+          "block_length_days": 60,
+          "replications": 20000,
+          "annualized_active_mean_ci_95": [
+            -0.05053188231888559,
+            0.07103245039788765
+          ],
+          "annualized_active_mean_point": 0.009424285528254094,
+          "p_one_sided_centered_block_bootstrap": 0.38203089845507726
+        }
+      },
+      "holm_adjusted_p_one_sided_by_hac_lag": {
+        "5": 0.8091030101974237,
+        "20": 0.8059498437213279,
+        "35": 0.8134548249755484,
+        "60": 0.8407762652856291
+      }
+    },
+    "credit": {
+      "strategy_id": "ai_hs300_macro_gate_quality_r275_remove_credit",
+      "curve_sha256": "e187b0cfba009bd87272c6ccce8e89b10520023184e26b6a1df59396980b0def",
+      "curve_days": 1303,
+      "daily_observations": 1302,
+      "candidate_total_return": 0.30471548000000004,
+      "control_total_return": 0.6333558300000002,
+      "relative_terminal_wealth_vs_control": -0.2012056062517621,
+      "mean_daily_active_return": -0.00017930740476607918,
+      "annualized_active_arithmetic_mean_diagnostic": -0.04518546600105196,
+      "hac_tests": {
+        "5": {
+          "mean_daily_active_return": -0.00017930740476607918,
+          "hac_lag_days": 5,
+          "standard_error": 0.00018137191772033632,
+          "z_statistic_normal_approx": -0.988617240308169,
+          "p_one_sided_normal_approx": 0.8385747760613287,
+          "p_two_sided_normal_approx": 0.3228504478773427
+        },
+        "20": {
+          "mean_daily_active_return": -0.00017930740476607918,
+          "hac_lag_days": 20,
+          "standard_error": 0.00019639097017050937,
+          "z_statistic_normal_approx": -0.9130124700254905,
+          "p_one_sided_normal_approx": 0.8193820084284424,
+          "p_two_sided_normal_approx": 0.36123598314311506
+        },
+        "35": {
+          "mean_daily_active_return": -0.00017930740476607918,
+          "hac_lag_days": 35,
+          "standard_error": 0.00021095608975596597,
+          "z_statistic_normal_approx": -0.8499750112618318,
+          "p_one_sided_normal_approx": 0.8023305103120003,
+          "p_two_sided_normal_approx": 0.3953389793759993
+        },
+        "60": {
+          "mean_daily_active_return": -0.00017930740476607918,
+          "hac_lag_days": 60,
+          "standard_error": 0.00021918613258801973,
+          "z_statistic_normal_approx": -0.8180599869568562,
+          "p_one_sided_normal_approx": 0.7933385324362245,
+          "p_two_sided_normal_approx": 0.41332293512755086
+        }
+      },
+      "circular_block_bootstrap": {
+        "20": {
+          "block_length_days": 20,
+          "replications": 20000,
+          "annualized_active_mean_ci_95": [
+            -0.14435674662740416,
+            0.047222901306963196
+          ],
+          "annualized_active_mean_point": -0.04518546600105196,
+          "p_one_sided_centered_block_bootstrap": 0.8250587470626468
+        },
+        "40": {
+          "block_length_days": 40,
+          "replications": 20000,
+          "annualized_active_mean_ci_95": [
+            -0.15903274114907273,
+            0.05157063041603279
+          ],
+          "annualized_active_mean_point": -0.04518546600105196,
+          "p_one_sided_centered_block_bootstrap": 0.8038598070096495
+        },
+        "60": {
+          "block_length_days": 60,
+          "replications": 20000,
+          "annualized_active_mean_ci_95": [
+            -0.1613703327603086,
+            0.05417039952341468
+          ],
+          "annualized_active_mean_point": -0.04518546600105196,
+          "p_one_sided_centered_block_bootstrap": 0.800009999500025
+        }
+      },
+      "holm_adjusted_p_one_sided_by_hac_lag": {
+        "5": 0.8385747760613287,
+        "20": 0.8193820084284424,
+        "35": 0.8134548249755484,
+        "60": 0.8407762652856291
+      }
+    },
+    "term": {
+      "strategy_id": "ai_hs300_macro_gate_quality_r275_remove_term",
+      "curve_sha256": "e28a93e142a3b2e62bb2b2b93e354e04c2d680d11fcdbc56bc178b3f0f4f9f60",
+      "curve_days": 1303,
+      "daily_observations": 1302,
+      "candidate_total_return": 0.9045825600000001,
+      "control_total_return": 0.6333558300000002,
+      "relative_terminal_wealth_vs_control": 0.16605489448064725,
+      "mean_daily_active_return": 0.00011888880469123936,
+      "annualized_active_arithmetic_mean_diagnostic": 0.02995997878219232,
+      "hac_tests": {
+        "5": {
+          "mean_daily_active_return": 0.00011888880469123936,
+          "hac_lag_days": 5,
+          "standard_error": 0.00017612984198429527,
+          "z_statistic_normal_approx": 0.6750065937255548,
+          "p_one_sided_normal_approx": 0.24983578786620456,
+          "p_two_sided_normal_approx": 0.4996715757324091
+        },
+        "20": {
+          "mean_daily_active_return": 0.00011888880469123936,
+          "hac_lag_days": 20,
+          "standard_error": 0.00018426676427618933,
+          "z_statistic_normal_approx": 0.6451993942491017,
+          "p_one_sided_normal_approx": 0.2593989893493903,
+          "p_two_sided_normal_approx": 0.5187979786987806
+        },
+        "35": {
+          "mean_daily_active_return": 0.00011888880469123936,
+          "hac_lag_days": 35,
+          "standard_error": 0.00019511277289962093,
+          "z_statistic_normal_approx": 0.6093337864272151,
+          "p_one_sided_normal_approx": 0.2711516083251828,
+          "p_two_sided_normal_approx": 0.5423032166503656
+        },
+        "60": {
+          "mean_daily_active_return": 0.00011888880469123936,
+          "hac_lag_days": 60,
+          "standard_error": 0.00020425067732208997,
+          "z_statistic_normal_approx": 0.5820730009318866,
+          "p_one_sided_normal_approx": 0.2802587550952097,
+          "p_two_sided_normal_approx": 0.5605175101904194
+        }
+      },
+      "circular_block_bootstrap": {
+        "20": {
+          "block_length_days": 20,
+          "replications": 20000,
+          "annualized_active_mean_ci_95": [
+            -0.06055036204809043,
+            0.12100835769555023
+          ],
+          "annualized_active_mean_point": 0.02995997878219232,
+          "p_one_sided_centered_block_bootstrap": 0.26253687315634217
+        },
+        "40": {
+          "block_length_days": 40,
+          "replications": 20000,
+          "annualized_active_mean_ci_95": [
+            -0.06913410802802755,
+            0.12429627252867173
+          ],
+          "annualized_active_mean_point": 0.02995997878219232,
+          "p_one_sided_centered_block_bootstrap": 0.27513624318784063
+        },
+        "60": {
+          "block_length_days": 60,
+          "replications": 20000,
+          "annualized_active_mean_ci_95": [
+            -0.07469225128620204,
+            0.12749222088647424
+          ],
+          "annualized_active_mean_point": 0.02995997878219232,
+          "p_one_sided_centered_block_bootstrap": 0.2855857207139643
+        }
+      },
+      "holm_adjusted_p_one_sided_by_hac_lag": {
+        "5": 0.7495073635986137,
+        "20": 0.778196968048171,
+        "35": 0.8134548249755484,
+        "60": 0.8407762652856291
+      }
+    }
+  },
+  "holm_adjusted_p_values": {
+    "5": {
+      "term": 0.7495073635986137,
+      "erp": 0.8091030101974237,
+      "credit": 0.8385747760613287
+    },
+    "20": {
+      "term": 0.778196968048171,
+      "erp": 0.8059498437213279,
+      "credit": 0.8193820084284424
+    },
+    "35": {
+      "term": 0.8134548249755484,
+      "erp": 0.8134548249755484,
+      "credit": 0.8134548249755484
+    },
+    "60": {
+      "term": 0.8407762652856291,
+      "erp": 0.8407762652856291,
+      "credit": 0.8407762652856291
+    }
+  },
+  "interpretation": {
+    "term_hac_35d_unadjusted_one_sided_p": 0.2711516083251828,
+    "term_hac_35d_holm_adjusted_one_sided_p": 0.8134548249755484,
+    "term_60d_block_bootstrap_annualized_active_mean_ci_95": [
+      -0.07469225128620204,
+      0.12749222088647424
+    ],
+    "term_60d_block_bootstrap_one_sided_p": 0.2855857207139643,
+    "conclusion": "The point estimate of paired arithmetic active return is positive, but confidence intervals include zero and tests do not reject no positive mean; this is weak/non-significant evidence, not statistical confirmation."
+  },
+  "limitations": [
+    "This is a post-hoc statistical audit of already observed outcomes, not an independent holdout or preregistered test.",
+    "HAC normal-approximation p-values and block-bootstrap intervals depend on return-stationarity assumptions; multiple lag/block choices are sensitivity checks, not independent replications.",
+    "R266 is a related strategy control rather than a broad investable benchmark; active return does not by itself identify causal macro alpha.",
+    "Macro point-in-time availability is unproven, and published-data/revision timing may bias the historical comparison."
+  ],
+  "decision": "diagnostic_only; statistical significance cannot cure the exploratory selection, macro PIT uncertainty, or reused historical validation window",
+  "production_status": "pause_production"
+}

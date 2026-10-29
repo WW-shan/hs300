@@ -1,0 +1,36 @@
+{
+  "round": "R304",
+  "amendment_id": "R304-A8",
+  "date": "2026-10-29",
+  "classification": "prospective single official detail-API request after the one browser navigation did not reach its target",
+  "parent_amendment": "R304-A7",
+  "reason": "A7 dispatched exactly one navigation for official notice 12589, but the browser remained on the official homepage and no notice-detail API request was observed. The navigation was not retried. The local official listing identifies this pre-window 2017 routine adjustment as relevant to the missing 2018-01-02 membership boundary. A single request to the official detail API is a distinct, bounded retrieval method for the same fixed notice ID.",
+  "fixed_target": {
+    "notice_id": "12589",
+    "publish_date": "2017-11-27",
+    "official_listing_title": "沪深300、上证50和中证500等指数2017年第二次定期调整样本股",
+    "official_api_url": "https://www.csindex.com.cn/csindex-home/announcement/queryAnnouncementById?id=12589",
+    "listing_evidence": "r304_official_archive/pages/page-026.json"
+  },
+  "method": [
+    "Use the already preserved A7 final readback as the panel preflight: exactly one matching R304 candidate, status pending; do not issue another panel request for this amendment.",
+    "Issue exactly one HTTP GET to the fixed official CSI detail API URL with a standard browser user agent and official origin/referer headers. Persist dispatch intent before sending. Never retry after dispatch, including timeout, HTTP error, or empty response.",
+    "Capture request URL, timestamp, HTTP status, response headers, raw response bytes, parsed JSON when possible, and SHA-256 sidecars. Do not request attachments or any other notice.",
+    "Classify only from article content whether 000300/沪深300 is named, whether the document provides a complete adjustment delta or dated membership, the stated effective date, and whether an auditable 2018-01-02 seed follows.",
+    "Keep historical-membership feasibility no-go unless the seed and every intervening event/effective date are independently closed."
+  ],
+  "prohibited": [
+    "No second request to notice 12589 or any other official endpoint; no browser navigation, listing refresh, attachment download, search engine, or third-party source.",
+    "No panel POST, candidate duplication, or status transition.",
+    "No production data or strategy changes, factor-return calculations, alpha search, or backtest."
+  ],
+  "decision_rule": {
+    "seed_supported": "Only if official content yields complete, auditable membership on or before 2018-01-02, or a complete independently closed transition chain to that date.",
+    "no_go": "An adjustment list and effective date alone do not establish a seed. Any unresolved state or event keeps PIT reconstruction no-go."
+  },
+  "panel": {
+    "candidate_id": "1ed2c75285b74fc6a521cc73f75f7320",
+    "required_status_from_latest_A7_readback": "pending",
+    "registration_action": "no new registration; use latest A7 read-only readback evidence"
+  }
+}

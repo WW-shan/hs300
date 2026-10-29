@@ -1,0 +1,66 @@
+{
+  "candidate_source_sha256": "c707832dda70fa51f461814d623d88eba94dd32a45e1dbede61da7b18bcdd2d8",
+  "classification": "preregistered_read_only_macro_source_freshness_and_provenance_audit",
+  "control_candidate": "ai_hs300_macro_gate_quality",
+  "frozen_criteria": {
+    "daily_freshness": "All three sample daily series reach the system provider's latest completed trading day.",
+    "decision": "This is a source-readiness audit, not an alpha test. No backtest or candidate promotion is allowed regardless of source freshness.",
+    "macro_observation_freshness": "All queried macro input endpoints return observations no more than five calendar days behind the provider's latest completed trading day.",
+    "macro_timing_provenance": "Source responses expose vendor publication/collection timestamps (separate from this audit's local capture time); otherwise fail.",
+    "panel_registration": "Control and candidate registered, candidate/source research-only, four required factors present, zero strategy load errors, source SHA unchanged.",
+    "prospective_collection": "No prospective signal collector is created in this round; this criterion remains false."
+  },
+  "hypothesis": "The research is currently limited by macro source/cache freshness and timestamp provenance, not by a lack of candidate strategy registration.",
+  "motivation": "R276 could not establish macro point-in-time availability; R277/R278 showed stale local macro partitions and no proven prospective collection path. Inspect whether the current source/cache chain itself is capable of supporting a valid next test before doing any outcome analysis.",
+  "prior_evidence_referenced": {
+    "r276_macro_pit_audit_sha256": "9783ccaccb81a1137c229ceac150bd67f074d2fbccc05b2a1ca83e836b9ff7a7",
+    "r277_statistics_sha256": "5d5dc75d349dfc858788a9439488c5c85b8cfa304e95c02f6ed8c152682d8f91",
+    "r278_readiness_audit_sha256": "9bd9219c45a6d1264bec3b5f33f3da3f966309e8af52f2d03f50bdb846d1eb47"
+  },
+  "production_status": "pause_production",
+  "question": "Can the frozen R275 term-spread candidate's current macro inputs be refreshed from available sources with fresh observations and defensible point-in-time provenance, without changing production state or inspecting returns?",
+  "round": "R279",
+  "runner_path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r279_macro_source_audit.py",
+  "runner_sha256": "9a2bf58645c306e427d1a2b5a099625a1759e9f53b6030cc5d2ff6de84da342c",
+  "scope": {
+    "local_sources": [
+      "data/research/macro/bond_10y.parquet",
+      "data/research/r93_erp/hs300_pe.parquet",
+      "data/research/r92_credit_spread/*.parquet",
+      "data/ext_data/alt_hs300/timeseries"
+    ],
+    "macro_fields": [
+      "equity_risk_premium",
+      "credit_spread_5y_low",
+      "term_spread_10y_2y"
+    ],
+    "panel_modules": [
+      "/api/strategies?include_research=true",
+      "/api/factors?asset_type=stock",
+      "/api/settings/capability-matrix",
+      "/api/settings/data-sources"
+    ],
+    "system_provider": "registered AkShare provider; read three sample daily-bar series and trading calendar",
+    "upstream_macro_endpoints": [
+      "ak.bond_china_yield",
+      "ak.stock_index_pe_lg(symbol='沪深300')"
+    ]
+  },
+  "side_effects_allowed": [
+    "read live panel APIs",
+    "read through the registered provider",
+    "read public AkShare macro endpoints without caching",
+    "read local cache metadata and schemas",
+    "write R279 evidence files only"
+  ],
+  "side_effects_prohibited": [
+    "rewrite or refresh any local macro/history cache",
+    "write market partitions or extension data",
+    "enable quote polling",
+    "run backtests or parameter scans",
+    "publish or modify candidate strategy",
+    "create paper accounts or orders",
+    "send notifications"
+  ],
+  "target_candidate": "ai_hs300_macro_gate_quality_r275_remove_term"
+}

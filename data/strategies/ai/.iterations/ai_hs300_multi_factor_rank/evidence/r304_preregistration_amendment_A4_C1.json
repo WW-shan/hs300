@@ -1,0 +1,24 @@
+{
+  "round": "R304",
+  "amendment_id": "R304-A4-C1",
+  "date": "2026-10-29",
+  "classification": "pre-target-navigation correction to the official SPA route identified from the live official homepage",
+  "parent_amendment": "R304-A4",
+  "reason": "The R304-A4 route template used a server-style path. Before navigating to any fixed target, the official CSI homepage and the previously frozen official frontend bundle confirm that the public site is a hash-routed SPA and links article details as #/about/newsDetail?id={notice_id}. No fixed target ID has been navigated yet.",
+  "route_correction": {
+    "incorrect_unexecuted_route": "https://www.csindex.com.cn/csindex-home/about/newsDetail?id={notice_id}",
+    "observed_official_route_template": "https://www.csindex.com.cn/#/about/newsDetail?id={notice_id}",
+    "evidence": [
+      "The live official homepage snapshot contains links with href https://www.csindex.com.cn/#/about/newsDetail?id=3006275.",
+      "The frozen official frontend bundle defines the official route /about/newsDetail and emits router links named newsDetail with the notice ID query parameter."
+    ]
+  },
+  "scope": "This corrects only the URL routing needed to render the same 32 fixed official notice IDs already enumerated in R304-A4. Target order, one-navigation-per-ID limit, official-origin restriction, evidence capture, and decision rule are unchanged.",
+  "prohibited": [
+    "Do not navigate to the incorrect server-style route.",
+    "Do not add or remove any target ID, refresh listing pages, or repeat successful details.",
+    "Do not retry any dispatched target navigation.",
+    "No additional panel POST, mining, factor-return calculation, alpha search, or backtest."
+  ],
+  "pre_navigation_status": "No A4 target navigation has been dispatched at the time of this correction; the only browser page loaded is the official CSI homepage used to identify its public SPA route."
+}

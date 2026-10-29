@@ -4959,3 +4959,321 @@ R225 预注册 `ext_alt_hs300_sga_ratio_stability_4q_low`：将累计销售费�
 面板 reload 实测成功：策略存在、引用 4 因子齐全、228 因子、215 策略、加载错误 0。R269 全部结果、缓存和源文件哈希见 evidence/r269_score_weight_sizing.json，面板响应见 evidence/r269_panel_registration.json，预注册见 evidence/r269_preregistration.json。
 
 逐笔诊断为 145 盈/145 亏；亏损单平均 -6.21%、中位数 -4.71%，280/290 笔按最长持有退出。这支持下一轮研究持仓损失管理，但不支持放宽原集中度门槛。score_weight 在引擎单票等权目标封顶下效果近乎等权；仍无部署候选，保持 pause_production。
+
+# R270-R274：止损与宏观门禁研究阶段性结论（2026-10-28）
+
+- **R270 固定止损**：20% 止损在三档成本下仍有正收益（3x +45.72%、4x +38.06%、5x +31.92%），最大回撤 -19.53%；但 Sharpe 低于无止损对照，平均亏损没有改善，且仅触发 5 笔止损，净 P&L 头部集中度仍失败，未采纳。10%/15% 的收益门槛失败。
+- **R271 行业内收缩评分**：行业收缩降低回撤，但 3x 收益降至 +44.80%（对照 +63.34%），Sharpe 0.5732，验证收益留存与集中度等门槛失败；未采纳。
+- **R272 营业利润率改善因子**：构建/覆盖率与 PIT 审计达到可用性门槛，但发现集 IC 为 -0.0023；全样本收益 +15.63%、最大回撤 -29.58%、5x 仅 +0.54%，单票净贡献 85.31%，IC、收益、成本及集中度多项失败。财报因子不等于可执行 alpha，未采纳。
+- **R273 宏观闸门退出**：203 笔提前退出降低平均亏损（6.21% 至 4.12%），但全样本收益由 +63.34% 降至 +28.79%，Sharpe 与验证收益下降，头部集中度恶化；不采用“宏观门禁关闭即退出”。
+- **R274 移除三项宏观入场闸门**：3x 收益 +85.98%、Sharpe 0.7734、验证收益 +80.52%，高于对照 +63.34%/+0.7003/+52.29%；4x/5x 为 +75.81%/+64.69%。这证明原门禁在历史执行中抑制了收益。但发现集只有 +3.03%，验证集不是未触碰样本；最大回撤恶化至 -22.01%，平均亏损增至 6.95%、最差单笔 -28.32%，前三/前五集中度 56.75%/78.05% 失败，因此仍不能称为已确认 alpha 或部署候选。
+
+R274 的系统面板注册、预注册哈希、结果和逐笔缓存证据见 `evidence/r274_preregistration.json`、`evidence/r274_panel_registration.json`、`evidence/r274_no_macro_gate.json`、`data/research/r274_cache/`。当前研究最重要的进展不是“已找到可部署 alpha”，而是**确认入场宏观门禁有明显的历史收益机会成本**；下一步应转向严格时间外确认和数据发布时点审计，不在已反复使用的历史验证区间上继续调阈值。
+
+与本地沪深300价格指数（不含股息）的后验描述性比较：R274 全期 +85.98%、指数 -21.92%；验证段 R274 +80.52%、指数 +21.55%；发现段 R274 仅 +3.03%。日收益 beta 0.6164、年化截距诊断 15.51%。相对收益有研究价值，但发现/验证差异明显、历史区间已反复查看，且基准不是含股息总回报，不能把这当作有效 alpha 的独立证明。逐日对齐和年度统计见 `evidence/r274_vs_hs300_audit.json`。
+
+
+# R275-R276：期限利差门禁的候选信号有历史表现，但还不是已确认 alpha
+
+R275 将移除 ERP、信用利差、期限利差门禁分别消融。期限利差候选 3x 收益 +90.46%、Sharpe 0.8927、最大回撤 -13.90%，发现/验证集收益 +10.80%/+71.89%，4x/5x 收益 +81.00%/+72.08%，单票/前三/前五净贡献 19.29%/45.79%/60.82%；在本轮冻结的历史门槛中通过。ERP 候选有部分收益增量但风险调整与集中度失败；信用利差候选收益与多项风险门槛失败。R275 的三候选注册、系统回测和证据分别见 `evidence/r275_panel_registration_v3d.json`、`evidence/r275_single_gate_ablation_v3d.json` 与 `data/research/r275_cache_v3d/`。
+
+R276 核对了 2,132 个宏观数据分区与原始源文件哈希，并回看逐年净值：期限候选在 2022/2023/2024/2025/2026 约为 -0.43%/+11.28%/+30.48%/+9.88%/+19.89%，R266 对照约为 +3.23%/+3.90%/+39.06%/+10.21%/-0.63%。候选并非各年都优于对照，2024 年落后；年度净值与按入场年份统计的已平仓盈亏不是同一口径。三个宏观值在每个日期的 557 个标的中完全一致。宏观缓存按观测日期保存，没有供应商采集时间、原始发布时间或历史修订版本；因此无法确认时点数据无前视，也无法排除回填修订。逐年表现是事后诊断，不能用于进一步调参。完整审计含原始输入、分区与 3x 曲线/成交哈希，见 `evidence/r276_macro_pit_audit_v5.json`。
+
+目前只能说“移除期限利差门禁的策略在已研究历史样本中表现突出”，不能说有效 alpha 已确认。历史验证段曾被多轮研究使用，宏观 PIT 未证明，所以该版本继续 research-only，生产状态保持 `pause_production`。下一步冻结规则做前瞻纸面观察，逐日保存信号、输入到达时间、系统结果与面板注册证明；不下单，也不在已查看的历史区间上继续搜参数。R276 v5 审计 SHA-256 为 `9783ccaccb81a1137c229ceac150bd67f074d2fbccc05b2a1ca83e836b9ff7a7`。
+
+
+# R277：配对主动收益未显著，前瞻观察尚未启动（2026-10-28）
+
+对 R275 三个候选与 R266 做配对日主动收益事后检验。期限利差候选累计收益 +90.46%，对照 +63.34%，但 35 日 HAC 单侧 p=0.271，三候选 Holm 校正 p=0.813；60 日区块 bootstrap 的年化算术主动均值 95% 区间为 [-7.47%, +12.75%]，包含零。该统计是对已反复查看历史窗的事后诊断，不能视为独立 alpha 确认。完整结果和哈希见 `evidence/r277_r275_active_return_statistics_v2.json`。
+
+R277 重新核对了系统面板：223 个策略、229 个因子、零加载错误，三个 R275 候选均以 research-only 注册。只读运行状态检查显示实时行情开关关闭、轮询未运行、行情年龄为空，数据只到 2026-10-19；宏观输入仍缺发布/采集时间及修订历史。因而目前没有新鲜前瞻行情，不具备纸面观察条件；未另跑回测、未建模拟账户、未下单。面板与数据新鲜度证据见 `evidence/r277_panel_registration.json`、`evidence/r277_macro_freshness_probe.json`。
+
+聚焦测试 9 passed；全量后端测试 3025 passed、6 skipped、1 xfailed、2 failed，失败为已有的自定义信号 prompt 字段断言与 DuckDB turnover 筛选内存分配错误；Ruff 和差异空白检查通过。结论仍是 research-only / `pause_production`。下一步等新鲜行情与可追溯的宏观数据到达时间记录具备后，再冻结规则开始无真实订单的前瞻观察，不在已研究的历史区间继续扫阈值。
+
+# R278 结果（2026-10-28）— AkShare 行情可读，但前瞻采集条件未满足
+
+**预注册问题**：检查系统注册的 AkShare 是否能给冻结的 R275 期限利差候选提供可审计的行情和前瞻观察条件。四项门槛预先锁定；只读检查，不启动轮询、不写行情、不回测、不建模拟账户、不下单。预注册 SHA-256 `033674fae0676802a29d00a2fbc352b148d586015714717450582416700a9d67`。
+
+**数据结果**：经系统 provider registry 读取 AkShare，全市场快照 5,575 行，供应商 timestamp 非空 0；分钟线 2,142 行。12:18 北京时间检查 600519.SH、000001.SZ、300750.SZ，实时价与分钟收盘价相同，但最新分钟 bar 为 11:30，滞后约 48.5 分钟，超过预注册午休 35 分钟上限，quote_time_anchor 未通过。三只日线均到交易日历确认的最新完成交易日 2026-10-27。
+
+**面板与安全边界**：面板登记候选与四个因子均通过，策略总数 223、加载错误 0，R275 候选保持 research-only。AkShare realtime 能力可用，但实时行情轮询处于关闭/停止；paper accounts 为 0。普通策略运行接口拒绝 research-only 候选；现有实时管线会联动行情落盘、监控和 paper hook，未找到已验证的独立前瞻信号归档模式，所以 prospective_collection 未通过。
+
+**结论**：四项 readiness 为 panel=true、quote_time_anchor=false、daily_freshness=true、prospective_collection=false；`all_pass=false`。本轮不是 alpha 检验；不放宽门禁、不发布策略、不回测，保持 research-only / `pause_production`。没有改动行情分区、模拟账户或订单。
+
+证据：`evidence/r278_preregistration.json`（SHA `033674fae0676802a29d00a2fbc352b148d586015714717450582416700a9d67`）、`evidence/r278_readiness_audit.json`（SHA `fa64cd1f0ba94ed81014420d50b816d65cf6ecfbf12fc69dff8d1ec9769c65a2`）、`evidence/r278_panel_registration.json`（SHA `e2cfa2870f33486d66a019e933342d27b245c144375991d06a30aab47915b808`）。
+# R278 结果（2026-10-28）— AkShare 行情可读，但前瞻采集条件未满足
+
+**预注册问题**：检查系统注册的 AkShare 是否能给冻结的 R275 期限利差候选提供可审计的行情和前瞻观察条件。四项门槛预先锁定；只读检查，不启动轮询、不写行情、不回测、不建模拟账户、不下单。预注册 SHA-256 `033674fae0676802a29d00a2fbc352b148d586015714717450582416700a9d67`。
+
+**数据结果**：经系统 provider registry 读取 AkShare，全市场快照 5,575 行，供应商 timestamp 非空 0；分钟线 2,142 行。12:18 北京时间检查 600519.SH、000001.SZ、300750.SZ，实时价与分钟收盘价相同，但最新分钟 bar 为 11:30，滞后约 48.5 分钟，超过预注册午休 35 分钟上限，quote_time_anchor 未通过。三只日线均到交易日历确认的最新完成交易日 2026-10-27。
+
+**面板与安全边界**：面板登记候选与四个因子均通过，策略总数 223、加载错误 0，R275 候选保持 research-only。AkShare realtime 能力可用，但实时行情轮询处于关闭/停止；paper accounts 为 0。普通策略运行接口拒绝 research-only 候选；现有实时管线会联动行情落盘、监控和 paper hook，未找到已验证的独立前瞻信号归档模式，所以 prospective_collection 未通过。
+
+**结论**：四项 readiness 为 panel=true、quote_time_anchor=false、daily_freshness=true、prospective_collection=false；`all_pass=false`。本轮不是 alpha 检验；不放宽门禁、不发布策略、不回测，保持 research-only / `pause_production`。没有改动行情分区、模拟账户或订单。
+
+证据：`evidence/r278_preregistration.json`（SHA `033674fae0676802a29d00a2fbc352b148d586015714717450582416700a9d67`）、`evidence/r278_readiness_audit.json`（SHA `7ad44b76fa13622a9f951e85e56be3821536ecfe6c4092bde4834174238b8edc`）、`evidence/r278_panel_registration.json`（SHA `67ef85121c6a61a00fd95611fb5f428d8c5642d2f75b6da0d5eb3a54de2f4517`）。
+# R278 结果（2026-10-28）— AkShare 行情可读，但前瞻采集条件未满足
+
+**预注册问题**：检查系统注册的 AkShare 是否能给冻结的 R275 期限利差候选提供可审计的行情和前瞻观察条件。四项门槛预先锁定；只读检查，不启动轮询、不写行情、不回测、不建模拟账户、不下单。预注册 SHA-256 `f4a1833c581e2fe47421e9f5284bd314b9e60f3d255a873395e7d73e0a07e525`。
+
+**数据结果**：经系统 provider registry 读取 AkShare，全市场快照 5,575 行，供应商 timestamp 非空 0；分钟线 2,142 行。12:18 北京时间检查 600519.SH、000001.SZ、300750.SZ，实时价与分钟收盘价相同，但最新分钟 bar 为 11:30，滞后约 48.5 分钟，超过预注册午休 35 分钟上限，quote_time_anchor 未通过。三只日线均到交易日历确认的最新完成交易日 2026-10-27。
+
+**面板与安全边界**：面板登记候选与四个因子均通过，策略总数 223、加载错误 0，R275 候选保持 research-only。AkShare realtime 能力可用，但实时行情轮询处于关闭/停止；paper accounts 为 0。普通策略运行接口拒绝 research-only 候选；现有实时管线会联动行情落盘、监控和 paper hook，未找到已验证的独立前瞻信号归档模式，所以 prospective_collection 未通过。
+
+**结论**：四项 readiness 为 panel=true、quote_time_anchor=false、daily_freshness=true、prospective_collection=false；`all_pass=false`。本轮不是 alpha 检验；不放宽门禁、不发布策略、不回测，保持 research-only / `pause_production`。没有改动行情分区、模拟账户或订单。
+
+证据：`evidence/r278_preregistration.json`（SHA `f4a1833c581e2fe47421e9f5284bd314b9e60f3d255a873395e7d73e0a07e525`）、`evidence/r278_readiness_audit.json`（SHA `2fe2d181fd2c5e914b1c04586c64d95439da08e6bcee24611ef38f4634071107`）、`evidence/r278_panel_registration.json`（SHA `a58153e22299f43d30577cbb338080f69c196af8f20640eefe30d611b8f96063`）。
+# R278 结果（2026-10-28）— AkShare 行情可读，但前瞻采集条件未满足
+
+**预注册问题**：检查系统注册的 AkShare 是否能给冻结的 R275 期限利差候选提供可审计的行情和前瞻观察条件。四项门槛预先锁定；只读检查，不启动轮询、不写行情、不回测、不建模拟账户、不下单。预注册 SHA-256 `f4a1833c581e2fe47421e9f5284bd314b9e60f3d255a873395e7d73e0a07e525`。
+
+**数据结果**：经系统 provider registry 读取 AkShare，全市场快照 5,575 行，供应商 timestamp 非空 0；分钟线 2,142 行。12:18 北京时间检查 600519.SH、000001.SZ、300750.SZ，实时价与分钟收盘价相同，但最新分钟 bar 为 11:30，滞后约 48.5 分钟，超过预注册午休 35 分钟上限，quote_time_anchor 未通过。三只日线均到交易日历确认的最新完成交易日 2026-10-27。
+
+**面板与安全边界**：面板登记候选与四个因子均通过，策略总数 223、加载错误 0，R275 候选保持 research-only。AkShare realtime 能力可用，但实时行情轮询处于关闭/停止；paper accounts 为 0。普通策略运行接口拒绝 research-only 候选；现有实时管线会联动行情落盘、监控和 paper hook，未找到已验证的独立前瞻信号归档模式，所以 prospective_collection 未通过。
+
+**结论**：四项 readiness 为 panel=true、quote_time_anchor=false、daily_freshness=true、prospective_collection=false；`all_pass=false`。本轮不是 alpha 检验；不放宽门禁、不发布策略、不回测，保持 research-only / `pause_production`。没有改动行情分区、模拟账户或订单。
+
+证据：`evidence/r278_preregistration.json`（SHA `f4a1833c581e2fe47421e9f5284bd314b9e60f3d255a873395e7d73e0a07e525`）、`evidence/r278_readiness_audit.json`（SHA `9bd9219c45a6d1264bec3b5f33f3da3f966309e8af52f2d03f50bdb846d1eb47`）、`evidence/r278_panel_registration.json`（SHA `eb536b0d294d07c0dd6dde8e7f8a66e74f09cb362b5bdd98d28f31e0e1d08bcf`）。
+# R278 结果（2026-10-28）— AkShare 行情可读，但前瞻采集条件未满足
+
+**预注册问题**：检查系统注册的 AkShare 是否能给冻结的 R275 期限利差候选提供可审计的行情和前瞻观察条件。四项门槛预先锁定；只读检查，不启动轮询、不写行情、不回测、不建模拟账户、不下单。预注册 SHA-256 `f4a1833c581e2fe47421e9f5284bd314b9e60f3d255a873395e7d73e0a07e525`。
+
+**数据结果**：经系统 provider registry 读取 AkShare，全市场快照 5,575 行，供应商 timestamp 非空 0；分钟线 2,142 行。12:18 北京时间检查 600519.SH、000001.SZ、300750.SZ，实时价与分钟收盘价相同，但最新分钟 bar 为 11:30，滞后约 48.5 分钟，超过预注册午休 35 分钟上限，quote_time_anchor 未通过。三只日线均到交易日历确认的最新完成交易日 2026-10-27。
+
+**面板与安全边界**：面板登记候选与四个因子均通过，策略总数 223、加载错误 0，R275 候选保持 research-only。AkShare realtime 能力可用，但实时行情轮询处于关闭/停止；paper accounts 为 0。普通策略运行接口拒绝 research-only 候选；现有实时管线会联动行情落盘、监控和 paper hook，未找到已验证的独立前瞻信号归档模式，所以 prospective_collection 未通过。
+
+**结论**：四项 readiness 为 panel=true、quote_time_anchor=false、daily_freshness=true、prospective_collection=false；`all_pass=false`。本轮不是 alpha 检验；不放宽门禁、不发布策略、不回测，保持 research-only / `pause_production`。没有改动行情分区、模拟账户或订单。
+
+证据：`evidence/r278_preregistration.json`（SHA `f4a1833c581e2fe47421e9f5284bd314b9e60f3d255a873395e7d73e0a07e525`）、`evidence/r278_readiness_audit.json`（SHA `9bd9219c45a6d1264bec3b5f33f3da3f966309e8af52f2d03f50bdb846d1eb47`）、`evidence/r278_panel_registration.json`（SHA `eb536b0d294d07c0dd6dde8e7f8a66e74f09cb362b5bdd98d28f31e0e1d08bcf`）。
+
+# R280：R275 盘后信号快照仍不可运行（2026-10-28）
+
+只读核对面板与系统策略/筛选链路，没有生成信号。3018 面板仍注册 R275 期限候选（research-only）、R266 对照及四项评分因子，223 个策略、229 个因子、零加载错误。enriched 日线和 HS300 另类因子数据都停在 2026-10-19；官方当前成分与系统 AkShare 样本日线到 2026-10-27，无法日期对齐。三个策略另类输入虽存在于旧的 alt_hs300 分区，却没有进入标准策略上下文。两个财务评分因子所需的五个 PIT 列不在 enriched 帧；PIT 装配只在回测实现中查到。公共预设接口拒绝 research-only，批量接口跳过候选且常规盘后执行会写共享策略缓存；目前没有证明可隔离执行并归档的现成路径。因此判定 not_ready_no_signal_generated，不回测、不放宽门禁、不启动实时/paper 路径，生产仍 pause_production。
+
+初版扩展字段映射误把因子 ID 当作分区物理列名，原始证据已保留；独立更正审计确认三项另类字段在其源分区中存在，但仍不在标准策略帧中，总体结论不变。完整记录和哈希见 `evidence/r280_result.md` 及相关 `r280_*` 证据文件。
+
+
+## R281 运行帧扩展因子与普通策略财务 PIT 桥接审计（2026-10-28）
+
+3018 面板的四个只读 API 均返回 HTTP 200：223 个策略、229 个因子、0 个策略加载错误；R275 保持 research-only，所需扩展/自定义因子已注册，冻结源码 SHA-256 与候选一致。面板证明 SHA-256 为 e47cda241816352c2ee552e30716807ac4dc75d1ffc0a4d61f172c31bec7654d。
+
+R280 把 enriched Parquet 物理列缺失误判为运行时扩展因子没有装配。正常启动预热经 compute_enriched_history_window -> compute_signals -> attach_ext_columns(include_snapshot=False)，按 (symbol,date) 把扩展时序列加入完整运行帧；策略冷读慢路径也会调用 compute_signals。另一方面，预热失败可能降级到窄 Parquet 帧，缓存命中也可能跳过重新 join；配置读取失败时扩展列会被跳过，而通用 REQUIRED_FEATURES 检查没有验证必需列，导致过滤报错或评分腿被跳过。故装配路径存在，但缺列失败保护不完整。
+
+本地 alt_hs300 与 enriched 最新分区均为 2026-10-19，晚于当前名单日期 2026-10-27。候选另类字段在 300 只名单上有值，但该日 enriched 只有 28 行，其中仅 3 行匹配当前 HS300；即使运行时 join 正确，也无法补齐行情缺口或日期错配。财务表可由系统回测 PIT helper 读取；仅在这 3 个标的交集上，五个字段 roe_latest、pb_latest、debt_ratio_latest、ocf_ni、accrual 均为 3/3 非空。这不证明全池完整。普通 ScreenerService.build_strategy_context 与 StrategyEngine 评分链未调用 PIT helper，该 helper 只出现于回测和 mining runtime。
+
+普通策略入口拒绝 research-only；批量路径会跳过候选并写共享 strategy_cache.json。没有验证出能够同时隔离共享缓存、实时/paper hooks 并保留独立归档的运行路径，因此本轮没有执行候选、生成信号、回测或生产写入。结论为 not_ready_no_signal_generated、all_pass=false；R275 继续 research-only，生产维持 pause_production。
+
+预注册 SHA-256 为 197fdf354f03352d65833aa3412fcadb47cbb1ea0c9a40e3d5546b637be68112；机器结果 SHA-256 为 4324fde1280b4dc3bb189f8a45e16a70f690b7aa8ec8f86287d214bbbafcb023；结果报告和审计脚本见 evidence/r281_result.md、evidence/r281_runtime_assembly_audit.py。审计结果 SHA-256 为 ddac0b640d50b0ae1a25ded9c188a807c0caea191434f3b9467b7b4dd5cabb60。
+
+# R282 门禁与历史回测通路（2026-10-28）
+
+3018 面板五个只读 API 均返回 200：223 个策略、229 个因子、0 个加载错误；冻结的 R275 候选已登记且保持 `research_only=true`，源码 SHA 与冻结值一致。普通筛选 `/api/screener/run_preset` 拒绝候选、`run_all` 跳过研究候选并会写共享策略缓存；但策略回测 `/api/backtest/strategy/run` / SSE 路径没有 `research_only` 守卫，worker 会加载 AI 策略。R275 的 `polars_expr` 回测链能从系统回测加载口按时序装配扩展因子、附加 PIT 财务字段，并物化注册的自定义评分因子；它使用隔离 worker/内存 panel cache，不走 matrix-native 磁盘缓存，也不把结果写入 screener 或 candidate store。此为源码路径审计，R282 没有运行回测或生成信号。
+
+因此 `research_only` 只挡普通筛选，并未全局封死系统历史回测。有效新验证仍被数据阻塞：enriched 与 `alt_hs300` 停在 2026-10-19，官方当前成分为 2026-10-27；最新 enriched 共 28 行、仅 3 行匹配当前成分。R282 判定 `backtest_path_available_unexecuted_forward_readiness_false`；不支持放宽门禁或宣称 alpha。R275 保持 research-only，生产保持 `pause_production`。完整结果及 API/源码证明见 `evidence/r282_result.md`、`r282_panel_registration.json` 与 `r282_isolation_audit.json`，对应 SHA sidecar 随文件保存。
+
+
+
+
+
+
+
+
+## R283 系统回测执行与门禁对照（2026-10-28）
+
+通过系统回测 API，按冻结输入各执行一次 R275 research-only 候选与匹配对照（2026-04-20 至 2026-10-16，3x 成本，open_t+1，当前官方 HS300）。面板有 223 个策略、229 个因子、零加载错误；候选源码哈希与冻结值一致。两次请求均 HTTP 200，完整响应、执行意图和执行记录均留有 SHA-256 证明。候选原始请求体此前没有归档，本轮明确标注为依据冻结预注册重建。
+
+两组输出逐项完全相同：总收益 -5.53%、年化 -11.26%、Sharpe -0.76、最大回撤 -15.41%、40 笔交易；净值、交易、因子归因和 selection 计数也相同。标准 polars_expr 回测完成评分与因子归因装配，但本窗口未证明期限利差门禁改变候选或收益。回包没有逐行过滤掩码，无法区分该期间门禁未排除候选，还是仍需诊断过滤执行。该窗口属于已查看历史数据，且用当前 HS300 成分回滤历史，不是独立 alpha 证据。候选保持 research-only，生产维持 pause_production。
+
+详细结论见 evidence/r283_result.md；对比及哈希见 evidence/r283_comparison.json、evidence/r283_execution_record.json 和两份完整回测响应，证据均有 sidecar。
+
+
+## R284：期限利差门槛在 R283 窗口未起作用（2026-10-28）
+
+系统面板已登记 R284（候选 ID `66003d25c28b448a9a3c1ad7e6e69474`，POST/读回 HTTP 200）。对 R283 同一窗口的 120 个交易日、36,000 行本地数据逐日复算后，期限利差范围为 0.3921–0.5208，所有日期均高于冻结阈值 0.3。仅由持股非空、ERP、信用利差构成的宽口径子掩码（不含 MA60）及加入期限条件的对照各通过 30,292 行，差异为零；由于期限条件每天都通过，叠加 MA60 和后续选股限制也不会产生门槛差异。这解释了两次回测相同：该门槛在该窗口没有筛掉观测。该计数不是完整系统 candidate mask，且不能说明其他门槛不严，也不是 alpha 或收益验证。窗口重复使用、当前成分回滤造成幸存者偏差，宏观发布时间和 PIT 仍未证实；候选维持 research-only，生产维持 `pause_production`。本轮只读，无回测、provider 拉取或缓存/行情写入。完整结论与逐日哈希证据见 `evidence/r284_result.md`、`r284_gate_mask_diagnostic.json`；相关文件均有 SHA-256 sidecar。
+
+
+## R285：现有宏观数据链不能证明 PIT（2026-10-28）
+
+R285 已登记面板（候选 ID `7890111615854e2083f80d6f3d557649`，POST/读回 HTTP 200）。源码和本地缓存审计确认：原始宏观表没有来源发布时间、采集时间或修订版本；`alt_hs300` 未配置拉取；现有同日时序写入会按 symbol 保留最后一行、覆盖之前值；拉取只解析 JSON 行，不归档 HTTP 响应头/原文，配置中的 `last_run` 不是逐行时间戳。因此简单启用定时拉取不能形成版本可追溯的 PIT 记录。后续若继续，需先设计独立的追加式逐次采集日志，并区分观测日期、本地接收时间和可验证的来源发布时间。未调用 provider、回测、修改缓存/轮询或改策略；R275 维持 research-only，生产维持 `pause_production`。证据见 `evidence/r285_result.md` 与 `r285_macro_provenance_audit.json`，均有 SHA-256 sidecar。
+
+
+## R285：现有宏观数据链不能证明 PIT（2026-10-28）
+
+R285 已登记面板（候选 ID `7890111615854e2083f80d6f3d557649`，POST/读回 HTTP 200）。源码和本地缓存审计确认：原始宏观表没有来源发布时间、采集时间或修订版本；`alt_hs300` 未配置拉取；现有同日时序写入会按 symbol 保留最后一行、覆盖之前值；拉取只解析 JSON 行，不归档 HTTP 响应头/原文，配置中的 `last_run` 不是逐行时间。因此单纯启用定时拉取不能形成可追溯 PIT 记录。继续研究需先设计独立的追加式逐次采集日志，并区分观测日期、本地接收时间和可核验的来源发布时间。本轮未调用 provider、回测、写缓存/行情或改策略；R275 维持 research-only，生产维持 `pause_production`。详细证据见 `evidence/r285_result.md` 与 `r285_macro_provenance_audit.json`，文件有 SHA-256 sidecar。
+
+## R286 宏观门禁覆盖率与重叠诊断（2026-10-28）
+
+R286 通过本机 3018 面板登记并读回（HTTP 200），候选 ID `c651d84a828b451ba59af7ea3f3bd8d7`，最终状态 `validated`；此状态仅表示本轮诊断完成，不代表 alpha 或生产审批。按冻结预注册检查 2021-01-04 至 2026-10-14 的 1,398 个 R78 历史成分日，历史成分与扩展/行情分区逐日对齐。415,800 条 MA60、前十大股东字段和三项宏观输入都非空的预门槛成分行中，ERP≥5.5、信用利差≥-0.8、期限利差≥0.3 联合通过 244,925 行（58.90%）。门槛按市场日期通过率分别为 75.68%、93.92%、86.05%；在其他两门槛通过的前提下，单独移除 ERP、信用利差、期限利差分别增加 87,509、12,503、58,166 条特征合格行。
+
+这只说明门槛对历史输入的筛选活跃度，不包含未来收益，亦未复现完整基础过滤、排序和组合执行，不能证明被放行的行盈利或支持直接放宽门槛。宏观源的供应商发布时间和修订 vintage 仍不可追溯，候选继续 research-only，生产维持 pause_production。本轮没有回测、读取收益/交易记录、调用 provider、写行情或缓存、启动轮询或创建模拟账户/订单。
+
+审计初版存在把全部门槛通过行误作门槛前队列的错误，初版哈希和文件原样保留；更正版本按预注册重算，来源哈希、分区清单和计数恒等式检查均通过。详见 `evidence/r286_round_index.md`、`evidence/r286_result_v2.md`、`evidence/r286_gate_exposure_audit_v2.json`、`evidence/r286_input_snapshot.json` 与 `evidence/r286_panel_final_readback.json`，各证据附 SHA-256 sidecar。
+
+## R287 系统候选掩码与评分覆盖（2026-10-28）
+
+在 2026-10-14 R78 历史名单上，官方名单为 300 只，但系统目标日 enriched 面板中只有 299 只（缺 601059.SH）。R275 三门禁对照与只移除期限利差门禁的版本最终都通过 287 只；该日移除期限利差门禁新增 0 只。这个单日系统诊断不能代表所有市场日期。此前 R286 输入级多日诊断已显示门禁在部分日期会筛掉记录，下一步应做多日完整系统掩码。
+
+评分覆盖发现 21 个候选缺现金质量输入（266/287 非空）。系统合成 score 对空值填 0，因此 score 列非空不等于因子完整。候选继续 research-only，面板 pending，生产继续 pause_production；无收益读取或成交回测。R287 面板、执行、覆盖对账和哈希索引见 evidence/r287_round_index.md。
+
+## R288 多日系统候选掩码诊断
+
+## 范围
+
+本轮按 R78 的 1398 个逐日历史成分日（2021-01-04 至 2026-10-14）加载系统回测候选所需的特征，不调用回测执行器、撮合器或筛选器，不读取收益。控制组为原 R275 规则，候选组仅移除期限利差门禁。
+
+执行方式：每块最多 60 个正式交易日，并沿用系统面板加载器为每块保留 120 个自然日预热；逐块对账后释放 panel 与临时数组。此前全窗执行发生 MemoryError；20 日预演覆盖 2021-01-04 至 2021-01-29，系统正式面板 8,339 行，R78 成分 5,819/6,000 行出现在系统面板内，对照组和候选组均 0 个合格成分股日。该预演只覆盖首段，不是全窗结论；它和内存修订均已写入 amendment。样本、门槛、指标和输入冻结不变。
+
+## 系统候选掩码
+
+| 指标 | R275 控制组 | 移除期限利差 |
+| --- | ---: | ---: |
+| 逐日历史成分行 | 419,400 | 419,400 |
+| 通过系统候选掩码的成分股日 | 237,589 | 294,375 |
+| 期限利差消融增加 | - | 56,786 |
+| 有新增候选的交易日 | - | 195/1,398 |
+| 单日最多新增 | - | 295 |
+
+这里的计数是通过系统基础过滤、策略过滤和逐日历史成分掩码后的股票日。它还没有经过排名截断、持仓数、可交易性、撮合、手续费和滑点。
+
+## 评分输入覆盖
+
+- ext_alt_hs300_holder_top10_free_float_share: 候选可用 294,375/294,375，其中期限门禁释放部分可用 56,786/56,786。
+- uf_quality_value_defensive: 候选可用 294,375/294,375，其中期限门禁释放部分可用 56,786/56,786。
+- uf_low_vol: 候选可用 294,375/294,375，其中期限门禁释放部分可用 56,786/56,786。
+- uf_cash_quality: 候选可用 275,337/294,375，其中期限门禁释放部分可用 53,397/56,786。
+
+系统合成分数非空行数不能证明每个加权输入都完整；逐因子覆盖已单列。
+
+## 口径限制
+
+- `exclude_new_days=60` 虽配置在策略中，系统 `_basic_filter_expr` 没有执行这条规则。
+- `market_cap_min` 使用当前 instruments 股本，不是历史 PIT 股本。
+- 扩展宏观数据没有可验证的供应商发布时间和修订版本；财务 PIT 也没有原始数据修订版本。
+- 本轮只诊断门禁对系统候选集合的影响，不计算新增股票日的收益，不判断 alpha。候选保持 `research_only`，面板状态保持 `pending`，生产保持 `pause_production`。
+
+审计 JSON SHA-256：`8dd01dfbae23985336b17edb53defd472bdc2318e4124923631a107433570402`。共处理 24 块，最大正式面板 27,049 行。预注册、amendment、输入快照、面板登记与回读、原/修订运行器和本报告均保存 SHA-256 sidecar。
+
+## R289 门禁释放信号的实际成交归因
+
+将 R288 新增的 56,786 个成分股日按精确 `(信号日, 股票)` 与 R275 remove-term 3x 实际成交关联，并按交易曲线日历将 T+1 开盘成交映射回前一信号日。R275 310 笔成交中有 60 笔命中新放行集合，覆盖 29 只股票、6 个信号日，占总成交 19.35%、占放行股票日 0.11%。匹配成交胜率 55.00%、单笔平均/中位收益 2.47%/0.93%，其他成交为 52.40%、2.21%/0.58%；R266 对照无相同股票和成交日的匹配交易。该小幅差异是重复查看历史区间后的事后描述，且容量、宏观 PIT 与 OHLC 撮合限制未消除，不是独立 alpha 证据。逐笔 PnL 合计不等于组合净值增量。R289 面板候选 `58dc4329c85e4df88271aa9b42276089` 和 R288 均为 pending，生产维持 pause_production。完整证据见 `evidence/r289_result.md` 和 `evidence/r289_trade_attribution.json`。
+
+
+## R290 R257当前信号装配核正（2026-10-29）
+
+更正审计直接检查2026-10-27行情分区内5,570行，日期全部为10-27，官方当前300只成分均有行情。按系统生产attach_ext_columns(..., include_snapshot=False)和精确(symbol, date)连接后，R257复合因子仍为0/300；在内存中重算的行业相对强度覆盖为547/557，扩展因子分区最新日期仍是10-19。R290的“日期不对齐”原注释已更正，v1/v2原始证据保留。该结果说明系统接线可直接审计，当前无新鲜信号；不支持放宽门禁。候选保持research-only，生产保持pause_production。更正结果见evidence/r290_system_attachment_audit_corrected.json，SHA-256 125caf0e6c7a082a901b4f7347d070f50c3580c701fb1782a2d952999f047eb8；更正说明见evidence/r290_erratum.md。
+
+## R291 R257基础因子覆盖骤降根因（2026-10-29）
+
+冻结的557只研究股票中，生产行业计算函数对2026-10-19重算得到546/557个非空行业相对强度值，保存的alt_hs300同日分区只有28/557。同行情窗口相关的多个基础字段也从10-16的约547/557降至10-19的0或28/557；行业映射覆盖5,580/5,580个代码。10-19行情分区当前写入时间比派生分区晚8.47天，支持行情刷新后派生因子未同步重建。由于没有刷新前行情副本，无法确认当时具体输入变化。
+
+用当前行情重算行业值，并与已有质量因子输入在内存中重建R257，10-19得到249个复合值，保存分区只有2个；重叠的两个值都不相等。因此确认可恢复覆盖，不能声称复现旧因子值或历史信号。R291候选4b5134a2f8a1441d8034dbb484b8e238已在3018面板单次POST并读回成功，HTTP 200、候选数7→8、状态pending；R288–R290也保持pending。本轮未运行builder主流程、provider、回测或撮合，未读收益/成交，未写行情、扩展因子或策略；R257保持研究状态，生产保持pause_production。
+
+预注册SHA-256 65e98bf99b0b4e9b3ddec2829ea0263dba8af5412f3f574e7623224da7feae59；输入清单2,626个文件，SHA-256 1ad023b966d60cd758a499d9fff45b8b5b6fab5061f1471a9e6a01fb4543d9e7；最终审计evidence/r291_root_cause_audit_v2.json SHA-256 7a5c428acd3c15f75b723105dab79eb20cad49660f34876d18a7503c960943b7。完整报告及其哈希sidecar保存在evidence/r291_result.md。
+
+## R292隔离重建和系统装配验证（2026-10-29）
+
+只针对冻结的2026-10-19日期，在临时目录用当前enriched行情运行生产行业计算函数，并将结果送入生产R257复合函数和系统真实attach_ext_columns(..., include_snapshot=False)。行业相对强度重算为546/557，旧基础分区只有28/557；R257复合值由旧分区的2个恢复到249个，系统装配也得到249个，逐值249/249完全一致。
+
+这证明该历史日期的覆盖与装配可以在隔离环境恢复，不等于复现旧数值、PIT信号、收益或alpha。冻结的2,154个输入文件执行前后哈希、大小、修改时间均未变化；输出只写入临时目录，未调用provider/builder主流程或回测/撮合，未读收益/成交，也未写正式数据或策略。R292面板候选cd6f5bc7773b44c9bedb69430f363220单次POST/读回均HTTP 200，候选数8→9、状态pending；R288–R291仍pending。R257仍为研究状态，生产保持pause_production。
+
+预注册SHA-256 1133f16932db6b27f58f8e7dd93068ba929999906dac62213327e205ad516203；输入清单SHA-256 6cf5e261461f65232de650e922ba9a1443cae81bf94255a37a2ba4f2f7d8dc62；机器结果SHA-256 4388308ed15522e467cdbb7c327fbc3f67eaba274f263a3e3cffc7b682f67a99。详见evidence/r292_result.md和evidence/r292_round_index.md。
+
+## R293 派生因子刷新调用链审计（2026-10-29）
+
+只读审计确认：工作日盘后管道、日线修复、enriched 全量重建、历史扩展和手动财务股本更新均可能更新 K 线/enriched，但没有发现它们调用 build_alt_factor_data.py、R253 或 R257 builder。/api/kline/sync 和 /sync_batch 只写日线、刷新日线视图，连 enriched 都不会重算。通用扩展 pull scheduler 只更新配置指定的原始扩展分区，不做派生计算；本地 alt_hs300、alt_hs300_minrank 和 alt_hs300_qrs 配置均没有 pull。当前 enriched 最新分区为 2026-10-27，三层扩展最新分区为 2026-10-19。
+
+根因链路因此更清晰：系统刷新 K 线/enriched 与研究派生 builder 是彼此独立的流程，缺少依赖触发。且基础 alt_hs300 builder 会先删除正式时序目录，再逐分区写入；R253/R257 虽逐文件原子替换，但不清掉不再存在的旧日期。不能直接在线运行基础 builder。若要自动保持覆盖，需先实现安全的隔离构建、依赖顺序、覆盖/日期校验和整体原子发布，再接入明确的后台刷新机制。本轮不改代码、不运行 builder/provider/回测或触碰门禁；R257 保持 research-only，生产 pause_production。
+
+R293 面板候选 dbc1248434fb457f8312eadf47d459da 单次注册并读回成功（HTTP 200，数量 9→10，pending）；R288–R292 预检均为 pending，无重复候选。详见 evidence/r293_result.md、evidence/r293_input_snapshot.json、evidence/r293_builder_reference_search.txt 和对应 sidecar。
+
+R293 冻结后补充范围审计：额外冻结了启动、扩展 pull/API/config、因子缓存、repository、策略缓存、原子 Parquet writer 与三个本地扩展配置共 12 个文件；三个 pull 均关闭，源码 builder 引用搜索为 128 处。补充后确认 builder 清因子帧/注册同步/策略结果缓存，但不会清活动 repository enriched 内存缓存，也不刷新 API DuckDB 视图。原 R293 冻结文件未覆盖，后冻结范围作为单独 addendum 留档，详见 evidence/r293_scope_addendum.json 和 r293_result.md。
+
+## R294 单目录发布探针与缓存一致性
+
+在 data/.staging 下只用合成文件验证 Windows 同卷目录切换：成功后新目录逐文件哈希完整，旧目录备份完整；切换中注入异常后旧目录恢复、新 staged 目录保留。探针通过，结果 SHA-256 07b665ef7584c200d6622d9804f581fe617e06f3afe077855f1497e159dbf83d。证据只支持单目录、进程仍存活时捕获异常的 rollback；不证明断电、进程崩溃、并发 reader 或三层目录事务。正式行情/enriched/因子数据及缓存未触碰。
+
+安全构建还需同一输入 generation 冻结、与 enriched 交易日期精确对账、schema/主键/有效值覆盖校验、R253/R257 逐层依赖键对账，以及完整 generation 发布后统一刷新因子帧、registry、策略结果缓存、repository 内存缓存和需要的 DuckDB view。固定路径的三次 rename 不是单一原子操作；可研究单个 generation manifest 指针或带锁+journal+恢复流程的替换协议。上述仍是设计要求，本轮没有实现或做全历史 builder。
+
+R294 面板候选 4df004f0146b4e818f1f8ac16b31ebde 在 3018 单次 POST/GET 均 HTTP 200，候选数 10→11，状态 pending；R288–R293 仍 pending。预注册 SHA-256 3eb43c621aa8473a6f2b59c51ab4ec11b821b4a70c62ba853d9889890efe8c5c；输入快照 350c6441f042aa8ead29ccd8f95beac8b5051d782b41c726acfdfe1df4a6583c；面板读回 7c99c64aa8036f3e9ce467905ce2b3e475e60c44acc7d027af48e8821374689b。R257 仍为 research-only，生产 pause_production。完整索引见 evidence/r294_round_index.md。
+
+证据复核发现预注册写明每层冻结两份分区，但首版快照实际只纳入每层末日一份；原始快照未覆盖，已另做事后更正，为每层补充首尾分区共六个文件哈希（SHA-256 3752e31273433d5dd24a7fa0c32ccfb7bd748c7760cf2dd15feb457574440d77）。
+
+# 更新（2026-10-29，R295–R297）
+
+## 最新研究结论
+
+- R295 复核 R257 集中度指标的分母。按原预注册的组合净 P&L 分母，C2/C3/C4 仍失败；替代分母只描述盈利股票内部贡献，不能替代集中度门槛。该轮是在看过结果后的事后核算，不是独立确认。
+- R296–R297 在临时目录恢复并核对 R253/R257 的单日因子覆盖与生产装配。R296 对 2026-10-14 历史有效名单覆盖 249/249；R297 用 2026-10-28 官方名单对 2026-10-27 做反事实核验，覆盖 250/250，装配逐值一致。名单日期晚于目标日，不能视作 PIT 或历史成分重建。
+- 上述轮次没有产生新的收益或预测力检验，也没有找到新的有效 alpha。R257 保持 `research-only`，生产保持 `pause_production`。
+
+## 下一阶段研究重点
+
+优先使用可按交易日重建的行情输入设计一项事前冻结的系统回测，对照预注册候选与基准，并留出未参与选因子的时间段；宏观信号线只有在输入发布时间、采集时间与修订版本可审计后才可作为 PIT 验证。因子覆盖、反事实名单和历史事后归因均不作为收益证据。系统回测、交易执行口径、面板单次登记/GET 回读、输入清单和逐文件 SHA-256 继续作为每轮研究交付项。
+
+## R298 R257发现期前一年补充回测及集中度更正（2026-10-29）
+
+对冻结 R257 候选及匹配对照执行系统回测，窗口为 2022-05-05 至 2023-04-28（243 个交易日）。候选收益 -21.51%、Sharpe -1.2321、最大回撤 -32.83%；对照收益 -7.25%、Sharpe -0.2924、最大回撤 -24.20%。候选 4x/5x 成本收益为 -23.17%/-24.78%，131 笔交易、69 只股票，净 P&L -215,076.93（系统账本金额单位）。预注册总体门槛未通过；这不是独立确认，也不支持放宽门禁。
+
+首版结果报告的集中度函数在净 P&L 非正时将分母设为 1，导致货币金额被格式化成百分比。首版与原始机器结果保留；更正稿将 C2–C4 判为失败，因为预注册净 P&L 分母非正、比例无意义。事后毛盈利贡献比不代替该门槛。冻结清单最终复核 10,710/10,713 项一致，其余 3 项是 addendum 记录的执行脚本差异，无其他变化。
+
+3018 面板只读最终回查：HTTP 200、15 个候选、唯一 R298 为 `01aae1c6f0314612bec472bdd3140a69` 且 pending，R288–R297 保护候选仍 pending。完整报告、机器结果、清单审计和面板回读及 SHA-256 sidecar 见 `evidence/r298_result_v2.md`、`evidence/r298_temporal_holdout_backtest.json`、`evidence/r298_final_integrity_audit.json`、`evidence/r298_panel_final_readback.json`。R257 仍 `research-only`，生产仍 `pause_production`。
+
+本轮证据索引 `evidence/r298_round_index.md` SHA-256 `5a8fafaa0576bcf03494110981339e940ff39e1d720ce7168614de6f18fb9674`；集中度更正机器说明 `evidence/r298_concentration_semantics_erratum.json` SHA-256 `a18abfbd2790b4663750b449d7f6eccbd7f9e55115c278a2546e769c588cef27`。
+
+## R299?R257 ??????????????????
+
+???????????????????? +42.74%?Sharpe 0.5983????? -23.76%??????? -6.84%?4x/5x ????????? +31.47%/+19.62%?????? C2-C4 ?????????? alpha ???R257 ?? research-only????? pause_production????????????????????????????????PIT ?????????????????????????????????? evidence/r299_result_v2.md???? evidence/r299_round_index_v2.md?
+
+## R304-A12 收尾（2026-10-29）
+
+同一官方 XLSX 固定地址按 A12 单次读取，HTTP 200、547,462 字节，与 A10 文件 SHA-256 完全相同；没有新的独立 PIT 名单证据。A10 仅核出 24 入/24 出，仍缺 2018-01-02 完整成员种子，因此 no-go；未跑收益回测或 alpha 搜索。A11 最终只读面板 20 项、R304 唯一且 pending，既有状态未变，未 POST。见 `evidence/r304_A12_final_report_addendum.md` 与 `evidence/r304_A12_final_record_addendum.json`。
+
+
+## R304 官方历史成分 PIT 来源可行性（2026-10-29）
+
+R304 继续为 NO-GO：现有官方材料不足以构造 2018-01-02 的完整 HS300 成分初始状态。A9 对官方公告 12590 的单次详情 GET 确认 2017-12-11 调整 24 只；A10 对固定 XLSX 链接单次 GET 得到 HTTP 200、547,462 字节，审计确认调入 24 只、调出 24 只，但这只是 delta，不含调前或调后的完整 300 只快照。A12 再次取得相同内容，没有新增 PIT 名单证据。
+
+A6 更正了 2022-2026 八次定期调整生效日；A7 的浏览器记录不完整，无法判断目标详情 API 是否发出，不将其表述为“未发生”。面板 A11 只读回查为 20 项、R304 唯一且 pending，未 POST。PIT 成分重建门槛未满足，因此没有收益计算、回测或 alpha 搜索，也没有生产写入。预注册、原始响应、更正和面板证明见 evidence/r304_final_report.md、evidence/r304_A6_A7_erratum.md 与 evidence/r304_A12_final_record_addendum.json。
+
+## R304-A13 成分查询能力核验
+
+A13 静态 chunk 下载在发出请求前没有单独预注册。先前 PowerShell `Invoke-WebRequest` 报 `NullReferenceException`，现存记录无法确认请求是否已 dispatch；随后 Python 获取到该静态 JS 文件 HTTP 200、16,208 字节，SHA-256 `102121a3f8726caa4f00d7fab6434ff8072b367ba878a03fc1e88bf94f8098dc`。因此至少一次请求已确认成功，总请求数为 1 次已确认、最多可能 2 次；不得表述为“确定只请求一次”。下载文件时间戳为 2026-10-29T07:57:48.011377+00:00，它不是精确的网络 dispatch 时间。此次是页面静态资源，不是成分查询 API；没有调用页面所列 API。
+
+原 `r304_A13_local_route_probe.json` 记录的是下载 chunk **之前**对主页 bundle 的本地解析，`network_requests=0` 只适用于那一步，不覆盖后续静态资源请求。原件与其 SHA sidecar均保留。由于 chunk 和探查脚本当时没有 sidecar，本次只在事后追加哈希 sidecar；它们证明当前文件内容，不证明请求发生时的时间顺序。
+
+## 静态调用契约
+
+- 主页 bundle SHA-256：`232cafcfdb4da07c7b2ce24efae30318b59a8168edd023566364579445f2d998`；chunk SHA-256：`102121a3f8726caa4f00d7fab6434ff8072b367ba878a03fc1e88bf94f8098dc`。
+- 页面把 `sampleTable` 映射为 POST `/indexInfo/index-sample-information`。页面调用时只传 `searchInput`、`pageNum`、`pageSize`、`sortField`、`sortOrder`。代码中未发现日期/生效日参数。
+- 页面另行 GET `/csindex-home/indexInfo/index-sample-information-trade-date-new`，结果只赋给显示用的 `updateDate`；没有传入成分查询请求。
+- 这说明已观察页面的查询契约没有历史日期字段；不能据此断言服务端不接受额外参数，也不能断言没有其他官方历史接口。未发 API 请求，不猜参数、不继续探测。
+
+PIT 结论保持 no-go；无收益回测、Alpha 搜索或生产写入。完整偏差与哈希证明见 `evidence/r304_A13_deviation_audit.md`、`evidence/r304_A13_deviation_audit.json`。
+
+## R304-A13 面板登记收尾与最终核验
+
+A13 静态成分查询契约审计已留档，并按事后偏差单独登记。面板 GET/POST/GET 均 HTTP 200，候选数 20→21；A13 pending，原 R304 pending，A11 既有候选状态全部未变。页面成分 POST 只见关键词/分页/排序参数，页面日期 GET 只更新显示字段；本轮未调用 API，不能据此断言服务端或其他官方接口没有历史能力。chunk 下载未预注册，PowerShell dispatch 不确定，Python 成功一次，总请求数可能 1–2。A12 29 项哈希 28 项匹配，唯一差异为事后追加的 A12 amendment；旧记录和 sidecar 保留。面板最终 GET 原始 body 未保存，只留响应 SHA 与读回摘要。PIT 仍 no-go，无收益回测/Alpha 搜索/生产写入。完整证明见 evidence/r304_A13_final_report_addendum.md、evidence/r304_A13_final_record_addendum.json。
+
+R304-A13_FINAL_INTEGRITY_CHECK: All 11 registered A13 evidence files and sidecars match; the finalizer and final record/report sidecars also match. Panel readback is 20->21; A13 and original R304 are pending; prior statuses are unchanged. The panel GET raw body was not archived; only its response hash and candidate summary remain. Each ledger contains one A13 closeout entry. This was local-only validation: no network request, backtest, alpha search, or production write. Details: evidence/r304_A13_final_integrity_addendum.json.
+
+## R304-A14 公告至生效前调入股漂移可行性（2026-10-29）
+
+研究问题是在查看 R46/R49 后提出的事后探索假设，不能作为独立发现或确认性证据。已完成面板 GET/POST/GET 登记，候选数 21→22，R304-A14 ID `7e600177b497423e9c204996eacb2de1` 为 `pending`；原 R304、A13 和其他候选状态未变，原始意图、POST 响应证明、完整 GET 读回均留证。登记 intent 的预注册哈希为 `78d2f800f273eb2ed21fd8d2d84f7c451853c7f12978a6688463d025b702ffe0`。之后在当前预注册文档追加审计脚本引用，故当前 SHA 不同；原登记字节没有另存，原哈希只在 intent 中保留。
+
+17 组常规定期事件中，官方名单可审计闭合 16 组；2022-06 公告 ID 14225 虽确认 28 只调入及 6 月 10 日收市后生效，但官方代码表未归档。R78 的 6 月 10 日至 13 日差异复原出 28 只，仅作本地比对。2025-02、2025-07、2026-09临时调样单独排除。仅读 `symbol/date` 做行覆盖，2,813 个预期代码-日期记录缺 1 条：`600745` 于 `2020-06-10`；其他16组窗口齐全（其中2022-06仍依赖本地复原名单）。R78 保存成员对11个可比较事件的名单差异在最多180日后均匹配，但快照时点不精确，2022-12 对应名单到2023-03-20才可见。所有事件前都有300只成员查询快照，更新日不晚于查询日；对照池来源与行业匹配仍未验证。
+
+预注册要求官方名单闭合且窗口行完整，故本轮 **NO-GO**，未计算收益、未运行系统回测、未做 alpha 扫描。不得删除事件或事后改门槛。证据与哈希见 `evidence/r304_A14_result.md`、`evidence/r304_A14_result.json`、`evidence/r304_A14_event_coverage_corrected.json` 及相邻 panel intent/POST/readback 记录。
+
+## R305 最新进度（2026-10-29）
+
+目前没有经过留出期、交易成本和集中度验证的有效 alpha。R257 修正费用后全样本收益为正，但 C2–C4 集中度门槛仍失败，发现期前补充区间亏损；生产继续 pause_production。R304-A14 因一份官方调入清单未闭合、一个成分股日缺行情，按预注册规则停在收益计算之前，保持 NO-GO。
+
+R305 对 R78 的 419,700 个成员日与主日线作精确日期/代码连接：416,114 行存在，3,586 行缺失，覆盖率 99.14558%；enriched 日线也缺同样的 3,586 行。旧 R40 辅助缓存匹配到 3,046 行，其中来源标记 2,988 行可交易、58 行非交易，另有 540 行无法解释。来源状态不是独立停牌证明，不能将全部缺口当作停牌或直接补价。R305 已登记到面板，候选数 22→23，新候选 cc701e29d6b1450982d2375dd50ce08b 为 pending，旧候选状态未变；最终检查确认 2,141 个相关输入文件哈希未变。
+
+证据审查发现预注册前曾读取 OHLC 字段作空值/有效值探索，并展示辅助行情缓存样例。首版报告的范围说法过宽，原报告和哈希均保留，另有范围偏差更正。冻结审计脚本只读日期、代码和辅助来源交易状态；没有计算前瞻收益、运行回测或 alpha 扫描。因此 R305 是事后数据诊断，不是 alpha 证据。A14 仍为 NO-GO，R257 未通过原门槛，生产继续 pause_production。详见 r305_result.md、r305_member_bar_gap_audit.json、r305_scope_deviation_addendum.md/json 及相关哈希 sidecar。
+
+## R306 最新进度（2026-10-29）
+
+R306 冻结了“向上跳空后，收盘保留比例是否能预测随后五个交易日”的条件化探索假设，并明确其受 R25/R170 启发、非独立发现。预注册 SHA-256 为 `f1cfdb109ce759c58406a34b76ba8f22f2d5b610d6c2d1a6459464b22801caf6`。面板 GET 预检 HTTP 200、23 项、保护候选状态正常；唯一 POST 被 HTTP 400 拒绝，因为 factor config 不允许 `gap_threshold`、`holding_sessions`。最终 GET 仍 23 项、无 R306 候选、既有状态未变；按 no-retry 纪律没有再次 POST。
+
+因此 R306 只完成假设冻结和登记契约诊断，未完成面板登记或数据可行性检查；没有读取前瞻收益、运行系统回测或 alpha 扫描。失败原因是候选 API schema 不兼容，不是研究门槛结果。必须在新轮次调整登记映射后再启动，不可修改已冻结 R306 并重试。总体仍无经过样本外、成本和集中度验证的新 Alpha；R257 research-only，生产 pause_production。证据见 `evidence/r306_panel_registration_failure_addendum.md` 及配套预注册、原始 GET/POST/GET 和 SHA-256 sidecar。
