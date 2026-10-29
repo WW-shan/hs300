@@ -1,0 +1,108 @@
+{
+  "round": "R307",
+  "date": "2026-10-29",
+  "classification": "newly frozen registration-compatible version of the exploratory conditional hypothesis; motivated by prior R25/R170 results and not an independent discovery claim",
+  "question": "Among exact daily HS300 members with a positive opening gap of at least 0.5%, does the fraction of that gap still present at the close predict the next five-session return, after matching on gap-size bins?",
+  "hypothesis": {
+    "signal_time": "after close on signal date t",
+    "universe": "exact (query_date, symbol) rows from data/research/r78_daily_membership/daily_snapshots.parquet; never use current members as historical membership",
+    "price_source": "data/kline_daily_enriched; open and close are the project's adjusted prices",
+    "previous_close": "close on the immediately preceding exchange trading date; if the symbol lacks a bar on that date, exclude it rather than bridging a suspension",
+    "gap_return": "open_t / close_previous_exchange_session - 1",
+    "event": "valid positive prices and gap_return >= 0.005",
+    "factor": "clip((close_t - close_previous_exchange_session) / (open_t - close_previous_exchange_session), -1, 2); higher means a larger share of the opening gap was retained by the close",
+    "forward_return": "open_(t+1) to open_(t+6), five exchange sessions after the signal close; require every intervening exchange-session bar to exist and do not forward-fill",
+    "holding_interpretation": "buy at next-session open, exit at the open after five complete sessions; all signal inputs are known at t close"
+  },
+  "design": {
+    "sampling": "non-overlapping signal dates: every fifth exchange session, anchored to the first session in the R78 daily-membership date calendar; split windows do not reset the anchor",
+    "splits": {
+      "discovery": [
+        "2021-01-04",
+        "2022-12-30"
+      ],
+      "validation": [
+        "2023-01-03",
+        "2024-12-31"
+      ],
+      "holdout": [
+        "2025-01-02",
+        "2026-09-30"
+      ]
+    },
+    "primary_metric": "date-wise Spearman rank IC between factor and five-session forward return, summarized over the non-overlapping sampled dates",
+    "primary_comparator": "within each signal date, sort event names into five equal-count opening-gap-return bins; demean factor ranks and forward-return ranks within each bin, then compute pooled residual Spearman correlation for that date",
+    "portfolio_diagnostic": "within each signal date, top factor quintile minus bottom factor quintile among eligible gap events, equal weighted; report gross and after 30 bp round-trip costs",
+    "cost_model": "30 bp round-trip deduction per completed position for the portfolio diagnostic; no leverage",
+    "data_gaps": "missing current-session, immediately previous-session, or any holding-period bar excludes that observation and is reported by split; no forward fill, current-member substitution, or inferred suspension",
+    "related_work": [
+      "R25 tested monthly gap_return, intraday_return, and close_position separately; gap_return and close_position failed their full factor gate",
+      "R170 tested a 20-session sum of overnight log return minus intraday log return and failed the overall gate, including discovery and validation performance"
+    ],
+    "novelty_limit": "This is a conditional normalization of a single-session upward gap and its close outcome, inspired by R25/R170. It is not independent confirmation and may overlap economically with prior gap and intraday-return work."
+  },
+  "feasibility_gates": {
+    "F1_exact_membership_and_price_coverage": "in every split, valid current-day and immediately preceding-session member bars cover at least 98% of R78 member-date keys on sampled signal dates",
+    "F2_event_sample": "at least 60 sampled dates and 3000 eligible forward-return observations in each split, with median at least 20 observations per sampled date",
+    "F3_forward_bar_coverage": "at least 98% of otherwise eligible signal events have all five holding-period bars; excluded counts and rates are reported",
+    "failure_action": "if any feasibility gate fails, stop before computing or reading forward-return values; preserve the failed feasibility evidence and do not relax thresholds"
+  },
+  "decision_gates": {
+    "G1_discovery": "mean weekly-sampled IC >= 0.025 and positive-IC date rate >= 55%",
+    "G2_validation": "mean weekly-sampled IC >= 0.015 and positive-IC date rate >= 52%",
+    "G3_holdout": "mean weekly-sampled IC >= 0.010 and positive-IC date rate >= 52%",
+    "G4_gap_size_increment": "gap-size-bin residual IC >= 0.010 in both validation and holdout",
+    "G5_net_spread": "top-minus-bottom quintile mean after-cost return > 0 and positive-date rate >= 52% in both validation and holdout",
+    "decision": "all feasibility gates and G1-G5 must pass; otherwise reject as an effective-alpha candidate. No parameter search, threshold changes, or alternate holding periods after results."
+  },
+  "panel": {
+    "endpoint": "http://127.0.0.1:3018/api/backtest/candidates",
+    "expected_count_before": 23,
+    "protected_candidates": {
+      "R304": {
+        "id": "1ed2c75285b74fc6a521cc73f75f7320",
+        "status": "pending"
+      },
+      "R304-A13": {
+        "id": "ecd1805dde7a4a8d971718116bd773f6",
+        "status": "pending"
+      },
+      "R304-A14": {
+        "id": "7e600177b497423e9c204996eacb2de1",
+        "status": "pending"
+      },
+      "R305": {
+        "id": "cc701e29d6b1450982d2375dd50ce08b",
+        "status": "pending"
+      }
+    },
+    "candidate": {
+      "kind": "factor",
+      "name": "R307 ????????????????",
+      "source_id": "r307_single_session_gap_retention_preregistered_v1",
+      "config": {
+        "asset_type": "stock",
+        "start": "2021-01-04",
+        "end": "2026-09-30",
+        "factor_name": "single_session_gap_retention_gap005_h5",
+        "n_groups": 5,
+        "rebalance": "weekly_nonoverlapping_exact_r78_membership",
+        "weight": 1.0,
+        "fees_pct": 0.0,
+        "slippage_bps": 0.0
+      },
+      "metrics": {},
+      "data_as_of": "2026-10-14",
+      "status": "pending"
+    },
+    "method": "Use the same one-shot GET/intent/POST/GET workflow as R306, but only fields accepted by backend/app/backtest/candidates.py factor config allowlist. The full method and all thresholds remain defined in this preregistration; panel config is a compact index only."
+  },
+  "prohibitions": [
+    "Do not use hs300=true because the system applies the current HS300 list across the full backtest interval.",
+    "Do not calculate forward returns unless every feasibility gate passes.",
+    "Do not treat panel registration as alpha evidence or validation.",
+    "Do not publish, deploy, or change production status from this exploration.",
+    "The panel config is only an index and must not be mistaken as the complete research contract; use this frozen JSON for the complete definitions."
+  ],
+  "parent_round": "R306 was frozen but its single panel POST was rejected because the factor candidate config contained unsupported research-only fields; no retry was issued and no data feasibility/return analysis was run."
+}
