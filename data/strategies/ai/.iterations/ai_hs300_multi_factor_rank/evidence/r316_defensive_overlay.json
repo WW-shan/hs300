@@ -1,0 +1,486 @@
+{
+  "D1": true,
+  "G1": true,
+  "candidate_parity": {
+    "base_mdd": -0.196175,
+    "base_total_return": 0.485354,
+    "r315_candidate_mdd": -0.196175,
+    "r315_candidate_total_return": 0.485354
+  },
+  "classification": "preregistered defensive-overlay audit; no factor or risk-parity changes",
+  "data": {
+    "candidate_dates": 1301,
+    "candidate_index_coverage": 1.0,
+    "index": {
+      "end": "2026-10-14",
+      "rows": 2128,
+      "start": "2018-01-02"
+    },
+    "index_dates": 2128
+  },
+  "decision": {
+    "parameter_search": false,
+    "production_write": false,
+    "provider_call": false,
+    "selected_mode": null,
+    "status": "no_defensive_overlay_passed"
+  },
+  "gates": {
+    "base": {
+      "G2_return": true,
+      "G3_drawdown": true,
+      "G4_bootstrap_positive": false,
+      "G5_bootstrap_tail": false,
+      "G6_actual_rolling": false,
+      "G7_recent": true,
+      "G8_stress": true,
+      "G9_no_leverage": true
+    },
+    "dd10_half": {
+      "G2_return": true,
+      "G3_drawdown": true,
+      "G4_bootstrap_positive": false,
+      "G5_bootstrap_tail": true,
+      "G6_actual_rolling": false,
+      "G7_recent": true,
+      "G8_stress": true,
+      "G9_no_leverage": true
+    },
+    "ma200_half": {
+      "G2_return": true,
+      "G3_drawdown": true,
+      "G4_bootstrap_positive": false,
+      "G5_bootstrap_tail": true,
+      "G6_actual_rolling": false,
+      "G7_recent": true,
+      "G8_stress": true,
+      "G9_no_leverage": true
+    },
+    "ma200_quarter": {
+      "G2_return": true,
+      "G3_drawdown": true,
+      "G4_bootstrap_positive": false,
+      "G5_bootstrap_tail": true,
+      "G6_actual_rolling": false,
+      "G7_recent": true,
+      "G8_stress": true,
+      "G9_no_leverage": true
+    }
+  },
+  "input_isolation": {
+    "production_after": {
+      "bytes": 47509609,
+      "files": 2133,
+      "sha256": "4014f2da3a00c70675db7603d410227b7f4081896ea29cb93f2e8920d3dbba79"
+    },
+    "production_before": {
+      "bytes": 47509609,
+      "files": 2133,
+      "sha256": "4014f2da3a00c70675db7603d410227b7f4081896ea29cb93f2e8920d3dbba79"
+    },
+    "r40_after": {
+      "bytes": 49897492,
+      "files": 1544,
+      "sha256": "a76db8149205486b06fbc664692f8b85bb365671f5888b6a12128909cffff707"
+    },
+    "r40_before": {
+      "bytes": 49897492,
+      "files": 1544,
+      "sha256": "a76db8149205486b06fbc664692f8b85bb365671f5888b6a12128909cffff707"
+    },
+    "stable": true
+  },
+  "limits": [
+    "Standalone MA200/index timing previously failed in R56; this is a defensive overlay test, not a new alpha claim.",
+    "All variants use overlapping historical data and are not independent confirmation.",
+    "R40 local snapshot and canonical data drift remain unresolved.",
+    "No production or paper execution is authorized by this round."
+  ],
+  "passers": [],
+  "preregistration_sha256": "04fd897198d36627df3a5c9a512da337d3c342fc5fa400faa02da0750c86ec9c",
+  "round": "R316",
+  "runner_sha256": "ff277991c18c2f1a7828e72a70b23406dd1dafccbafbb10c6811a44f50ae1136",
+  "selected": null,
+  "variants": {
+    "base": {
+      "actual_rolling_252": {
+        "positive_rate": 0.636797,
+        "return_median": 0.067045,
+        "return_p05": -0.075849,
+        "return_worst": -0.127927,
+        "windows": 1049
+      },
+      "bootstrap": {
+        "blocks_needed": 13,
+        "mdd_median": -0.109464,
+        "mdd_p05": -0.20006,
+        "mdd_worst": -0.300236,
+        "paths": 1000,
+        "positive_rate": 0.711,
+        "return_best": 0.933361,
+        "return_median": 0.069436,
+        "return_p05": -0.13115,
+        "return_p25": -0.018743,
+        "return_p75": 0.189089,
+        "return_p95": 0.438923,
+        "return_worst": -0.26756,
+        "sharpe_median": 0.5621,
+        "sharpe_p05": -1.0266
+      },
+      "full": {
+        "annual": 0.079714,
+        "days": 1301,
+        "mdd": -0.196175,
+        "sharpe": 0.6116,
+        "total_return": 0.485354
+      },
+      "recent": {
+        "annual_mean": 0.098344,
+        "days_mean": 160.2,
+        "mdd_mean": -0.05552,
+        "mdd_worst": -0.068464,
+        "phases": [
+          {
+            "annual": 0.221833,
+            "days": 243,
+            "mdd": -0.060033,
+            "sharpe": 1.653,
+            "total_return": 0.212158
+          },
+          {
+            "annual": 0.108042,
+            "days": 199,
+            "mdd": -0.052392,
+            "sharpe": 0.9611,
+            "total_return": 0.083948
+          },
+          {
+            "annual": 0.033236,
+            "days": 157,
+            "mdd": -0.068464,
+            "sharpe": 0.3722,
+            "total_return": 0.020446
+          },
+          {
+            "annual": 0.137872,
+            "days": 121,
+            "mdd": -0.047821,
+            "sharpe": 1.4491,
+            "total_return": 0.063435
+          },
+          {
+            "annual": -0.009265,
+            "days": 81,
+            "mdd": -0.048889,
+            "sharpe": -0.0641,
+            "total_return": -0.002951
+          }
+        ],
+        "positive_phases": 4,
+        "sharpe_mean": 0.8743,
+        "sharpe_min": -0.0641,
+        "total_return_max": 0.212158,
+        "total_return_mean": 0.075407,
+        "total_return_min": -0.002951
+      },
+      "stress": {
+        "annual": 0.066632,
+        "days": 1301,
+        "mdd": -0.213706,
+        "sharpe": 0.5258,
+        "total_return": 0.394828
+      },
+      "weights": {
+        "annual_turnover": 0.700274,
+        "max": 1.0,
+        "mean": 0.891854,
+        "min": 0.400045
+      }
+    },
+    "dd10_half": {
+      "actual_rolling_252": {
+        "positive_rate": 0.584366,
+        "return_median": 0.038242,
+        "return_p05": -0.078649,
+        "return_worst": -0.130467,
+        "windows": 1049
+      },
+      "bootstrap": {
+        "blocks_needed": 13,
+        "mdd_median": -0.090819,
+        "mdd_p05": -0.167229,
+        "mdd_worst": -0.257136,
+        "paths": 1000,
+        "positive_rate": 0.711,
+        "return_best": 0.702155,
+        "return_median": 0.059807,
+        "return_p05": -0.107026,
+        "return_p25": -0.011661,
+        "return_p75": 0.150607,
+        "return_p95": 0.317912,
+        "return_worst": -0.21886,
+        "sharpe_median": 0.5912,
+        "sharpe_p05": -0.9725
+      },
+      "full": {
+        "annual": 0.062541,
+        "days": 1301,
+        "mdd": -0.176007,
+        "sharpe": 0.5831,
+        "total_return": 0.367447
+      },
+      "recent": {
+        "annual_mean": 0.098344,
+        "days_mean": 160.2,
+        "mdd_mean": -0.05552,
+        "mdd_worst": -0.068464,
+        "phases": [
+          {
+            "annual": 0.221833,
+            "days": 243,
+            "mdd": -0.060033,
+            "sharpe": 1.653,
+            "total_return": 0.212158
+          },
+          {
+            "annual": 0.108042,
+            "days": 199,
+            "mdd": -0.052392,
+            "sharpe": 0.9611,
+            "total_return": 0.083948
+          },
+          {
+            "annual": 0.033236,
+            "days": 157,
+            "mdd": -0.068464,
+            "sharpe": 0.3722,
+            "total_return": 0.020446
+          },
+          {
+            "annual": 0.137872,
+            "days": 121,
+            "mdd": -0.047821,
+            "sharpe": 1.4491,
+            "total_return": 0.063435
+          },
+          {
+            "annual": -0.009265,
+            "days": 81,
+            "mdd": -0.048889,
+            "sharpe": -0.0641,
+            "total_return": -0.002951
+          }
+        ],
+        "positive_phases": 4,
+        "sharpe_mean": 0.8743,
+        "sharpe_min": -0.0641,
+        "total_return_max": 0.212158,
+        "total_return_mean": 0.075407,
+        "total_return_min": -0.002951
+      },
+      "stress": {
+        "annual": 0.044071,
+        "days": 1301,
+        "mdd": -0.186859,
+        "sharpe": 0.447,
+        "total_return": 0.249174
+      },
+      "weights": {
+        "annual_turnover": 0.77964,
+        "max": 1.0,
+        "mean": 0.73214,
+        "min": 0.391442
+      }
+    },
+    "ma200_half": {
+      "actual_rolling_252": {
+        "positive_rate": 0.582459,
+        "return_median": 0.027471,
+        "return_p05": -0.073818,
+        "return_worst": -0.099253,
+        "windows": 1049
+      },
+      "bootstrap": {
+        "blocks_needed": 13,
+        "mdd_median": -0.082394,
+        "mdd_p05": -0.154633,
+        "mdd_worst": -0.275009,
+        "paths": 1000,
+        "positive_rate": 0.743,
+        "return_best": 0.61222,
+        "return_median": 0.068326,
+        "return_p05": -0.095097,
+        "return_p25": -0.001383,
+        "return_p75": 0.14636,
+        "return_p95": 0.298264,
+        "return_worst": -0.237808,
+        "sharpe_median": 0.6883,
+        "sharpe_p05": -0.9501
+      },
+      "full": {
+        "annual": 0.06721,
+        "days": 1301,
+        "mdd": -0.168972,
+        "sharpe": 0.6491,
+        "total_return": 0.398729
+      },
+      "recent": {
+        "annual_mean": 0.113162,
+        "days_mean": 160.2,
+        "mdd_mean": -0.047226,
+        "mdd_worst": -0.060033,
+        "phases": [
+          {
+            "annual": 0.239814,
+            "days": 243,
+            "mdd": -0.060033,
+            "sharpe": 1.8232,
+            "total_return": 0.229283
+          },
+          {
+            "annual": 0.125945,
+            "days": 199,
+            "mdd": -0.046799,
+            "sharpe": 1.1639,
+            "total_return": 0.097685
+          },
+          {
+            "annual": 0.061649,
+            "days": 157,
+            "mdd": -0.042702,
+            "sharpe": 0.6907,
+            "total_return": 0.037728
+          },
+          {
+            "annual": 0.138335,
+            "days": 121,
+            "mdd": -0.043176,
+            "sharpe": 1.5713,
+            "total_return": 0.063641
+          },
+          {
+            "annual": 6.8e-05,
+            "days": 81,
+            "mdd": -0.04342,
+            "sharpe": 0.0389,
+            "total_return": 2.2e-05
+          }
+        ],
+        "positive_phases": 5,
+        "sharpe_mean": 1.0576,
+        "sharpe_min": 0.0389,
+        "total_return_max": 0.229283,
+        "total_return_mean": 0.085672,
+        "total_return_min": 2.2e-05
+      },
+      "stress": {
+        "annual": 0.058254,
+        "days": 1301,
+        "mdd": -0.180579,
+        "sharpe": 0.5726,
+        "total_return": 0.339222
+      },
+      "weights": {
+        "annual_turnover": 1.233643,
+        "max": 1.0,
+        "mean": 0.648635,
+        "min": 0.25
+      }
+    },
+    "ma200_quarter": {
+      "actual_rolling_252": {
+        "positive_rate": 0.516683,
+        "return_median": 0.003199,
+        "return_p05": -0.092689,
+        "return_worst": -0.111926,
+        "windows": 1049
+      },
+      "bootstrap": {
+        "blocks_needed": 13,
+        "mdd_median": -0.073877,
+        "mdd_p05": -0.146177,
+        "mdd_worst": -0.262682,
+        "paths": 1000,
+        "positive_rate": 0.741,
+        "return_best": 0.468039,
+        "return_median": 0.064761,
+        "return_p05": -0.089809,
+        "return_p25": -0.002949,
+        "return_p75": 0.123282,
+        "return_p95": 0.249445,
+        "return_worst": -0.224849,
+        "sharpe_median": 0.6925,
+        "sharpe_p05": -0.9419
+      },
+      "full": {
+        "annual": 0.059769,
+        "days": 1301,
+        "mdd": -0.175056,
+        "sharpe": 0.6325,
+        "total_return": 0.349142
+      },
+      "recent": {
+        "annual_mean": 0.121974,
+        "days_mean": 160.2,
+        "mdd_mean": -0.047226,
+        "mdd_worst": -0.060033,
+        "phases": [
+          {
+            "annual": 0.250079,
+            "days": 243,
+            "mdd": -0.060033,
+            "sharpe": 1.9066,
+            "total_return": 0.239055
+          },
+          {
+            "annual": 0.136275,
+            "days": 199,
+            "mdd": -0.046799,
+            "sharpe": 1.2682,
+            "total_return": 0.10559
+          },
+          {
+            "annual": 0.077719,
+            "days": 157,
+            "mdd": -0.042702,
+            "sharpe": 0.8723,
+            "total_return": 0.047424
+          },
+          {
+            "annual": 0.138445,
+            "days": 121,
+            "mdd": -0.043176,
+            "sharpe": 1.6122,
+            "total_return": 0.063691
+          },
+          {
+            "annual": 0.007352,
+            "days": 81,
+            "mdd": -0.04342,
+            "sharpe": 0.1368,
+            "total_return": 0.002328
+          }
+        ],
+        "positive_phases": 5,
+        "sharpe_mean": 1.1592,
+        "sharpe_min": 0.1368,
+        "total_return_max": 0.239055,
+        "total_return_mean": 0.091618,
+        "total_return_min": 0.002328
+      },
+      "stress": {
+        "annual": 0.052855,
+        "days": 1301,
+        "mdd": -0.183274,
+        "sharpe": 0.5676,
+        "total_return": 0.304345
+      },
+      "weights": {
+        "annual_turnover": 1.530874,
+        "max": 1.0,
+        "mean": 0.527025,
+        "min": 0.125
+      }
+    }
+  }
+}

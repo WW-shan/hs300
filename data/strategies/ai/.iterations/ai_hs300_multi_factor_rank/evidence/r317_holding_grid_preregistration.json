@@ -1,0 +1,48 @@
+{
+  "bootstrap": {
+    "method": "circular 20-trading-day block bootstrap of each cell daily return sequence",
+    "path_days": 252,
+    "paths": 1000,
+    "seed": 20261105
+  },
+  "classification": "preregistered holding-profile selection across the existing 3x3 risk-parameter grid; no new factor or weight search",
+  "created_at_utc": "2026-11-05T11:27:45.376956+00:00",
+  "gates": {
+    "D1": "full daily returns >=1,300; all nine cells reproduce R314 full stats; 1,000 deterministic bootstrap paths",
+    "G1_full_return": "full 2x annual >=5%",
+    "G2_full_drawdown": "full 2x MDD >= -22%",
+    "G3_bootstrap_positive": "bootstrap 1-year positive rate >=80%",
+    "G4_bootstrap_tail": "bootstrap 1-year return P5 >= -12%",
+    "G5_bootstrap_median": "bootstrap 1-year return median >=5%",
+    "G6_actual_rolling": "actual rolling 252-day positive rate >=70%",
+    "G7_recent": "recent five-start mean >0 and at least 4/5 positive",
+    "G8_stress": "full 3x return >0 and MDD >= -30%",
+    "G9_no_leverage": "all overlay weights in [0,1.0]"
+  },
+  "grid": {
+    "center": "rp60_vol15",
+    "risk_parity_lookbacks": [
+      40,
+      60,
+      90
+    ],
+    "target_annual_vols": [
+      0.12,
+      0.15,
+      0.18
+    ]
+  },
+  "known_limitations": [
+    "All nine cells share the same history and are not independent out-of-sample evidence.",
+    "The grid was already used for parameter-plateau robustness; this round reuses it only to evaluate holding experience.",
+    "R40 local snapshot, industry/factor snapshot bias and canonical data drift remain.",
+    "A selected cell would still remain a paper-review candidate, not production authorization."
+  ],
+  "question": "R315 显示中心 60 日/15% 风险预算的随机一年正收益率只有 71.1%、真实滚动一年 63.7%。在 R314 已冻结的 3x3 风险参数邻域中，是否存在同时保留收益和回撤、但年度持有体验更好的格子？",
+  "round": "R317",
+  "selection_rule": "All cells are judged by G1-G9. Among passers, choose the highest bootstrap positive rate, tie-break by bootstrap median. Do not select a grid cell on raw return or maximum Sharpe. If none pass, keep rp60_vol15 unchanged and record negative knowledge.",
+  "source_rounds": {
+    "holding_bootstrap": "r315_holding_bootstrap.json",
+    "parameter_stats": "r314_parameter_plateau.json"
+  }
+}

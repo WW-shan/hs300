@@ -1,0 +1,61 @@
+{
+  "base_candidate": {
+    "A": "ai_hs300_macro_gate_quality",
+    "B": "ai_hs300_industry_relative_strength_quality_h20_sl20",
+    "portfolio": "60d inverse-vol risk parity A bounds [0.2,0.8], then 15% vol target [0.2,1.0], monthly"
+  },
+  "bootstrap": {
+    "method": "circular 20-trading-day block bootstrap of each variant daily return sequence",
+    "path_days": 252,
+    "paths": 1000,
+    "seed": 20261105
+  },
+  "classification": "preregistered defensive-overlay audit on the frozen R312/R314 candidate; no factor or risk-parity changes",
+  "created_at_utc": "2026-11-05T11:25:56.276373+00:00",
+  "execution": {
+    "leverage": "total exposure <= 1.0 at all times",
+    "overlay_round_trip_cost": "0.52% on absolute exposure turnover",
+    "periods": {
+      "full": [
+        "2021-06-01",
+        "2026-10-14"
+      ],
+      "recent_starts": [
+        "2025-10-14",
+        "2025-12-15",
+        "2026-02-13",
+        "2026-04-15",
+        "2026-06-15"
+      ]
+    },
+    "rebalance": "monthly",
+    "signal_timing": "only prior month-end index or portfolio state; no same-day future information"
+  },
+  "gates": {
+    "D1_data": ">=1,300 full-path returns; >=95% of candidate trading dates present in HS300 index; all variants produce finite returns",
+    "G1_execution": "all four variants complete full, five recent fresh starts and 3x stress runs",
+    "G2_return": "full 2x annual return >=5%",
+    "G3_drawdown": "full 2x MDD >= -25%",
+    "G4_bootstrap_positive": "bootstrap 1-year positive rate >=80%",
+    "G5_bootstrap_tail": "bootstrap 1-year return P5 >= -12%",
+    "G6_actual_rolling": "actual rolling 252-day positive rate >=70%",
+    "G7_recent": "recent five-start mean >0 and at least 4/5 positive",
+    "G8_stress": "full 3x return >0 and MDD >= -30%",
+    "G9_no_leverage": "all simulated total-exposure weights <=1.0 and >=0"
+  },
+  "known_limitations": [
+    "HS300 MA200 and drawdown rules are risk overlays, not alpha signals; R56 previously found standalone index timing rules failed return/Sharpe gates.",
+    "All variants reuse the same historical path and are not independent confirmation.",
+    "R40 local snapshot and canonical data drift remain unresolved.",
+    "A passing overlay still requires paper-trading review before any production change."
+  ],
+  "question": "R315 显示候选完整路径最近一年为正，但随机一年正收益率只有 71.1%、真实滚动一年只有 63.7%。在不加杠杆、不改选股和风险平价参数的前提下，加入简单的趋势/回撤软降仓，能否改善一年持有体验？",
+  "round": "R316",
+  "selection_rule": "All variants are judged by G2-G9. Among passers, choose the highest bootstrap positive rate, tie-break by bootstrap median return. If no overlay beats base on the stated gates, keep the base candidate unchanged and record negative knowledge.",
+  "variants": {
+    "base": "No additional defensive overlay.",
+    "dd10_half": "At each month-end, if the candidate portfolio drawdown from its prior peak <= -10%, multiply total exposure by 0.50 for the next month; otherwise 1.0.",
+    "ma200_half": "At each month-end, if HS300 close <= 200-day MA, multiply total exposure by 0.50 for the next month; otherwise 1.0.",
+    "ma200_quarter": "At each month-end, if HS300 close <= 200-day MA, multiply total exposure by 0.25 for the next month; otherwise 1.0."
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "bootstrap": {
+    "method": "circular 20-trading-day block bootstrap from the candidate daily return sequence",
+    "metrics": [
+      "total_return",
+      "max_drawdown",
+      "sharpe"
+    ],
+    "path_length_days": 252,
+    "paths": 1000,
+    "seed": 20261105
+  },
+  "candidate": {
+    "A": "ai_hs300_macro_gate_quality",
+    "B": "ai_hs300_industry_relative_strength_quality_h20_sl20",
+    "portfolio": "60d inverse-vol risk parity A bounds [0.2,0.8], then 15% vol target [0.2,1.0], monthly; no leverage"
+  },
+  "classification": "preregistered holding-experience and random-path audit of the frozen R312/R314 candidate; no parameter search",
+  "created_at_utc": "2026-11-05T11:23:43.798381+00:00",
+  "decision_rule": "D1 + G1-G7 all pass -> candidate retains paper-review status with acceptable random-year profile. Any failure -> record holding-experience weakness; do not change parameters after seeing results.",
+  "gates": {
+    "D1": "> = 1,300 daily returns; 1,000 deterministic paths generated; no NaN/infinite return",
+    "G1": "bootstrap 1-year positive return rate >= 85%",
+    "G2": "bootstrap 1-year total return P5 >= -15%",
+    "G3": "bootstrap 1-year total return median >= +5%",
+    "G4": "bootstrap 1-year MDD P5 >= -30%",
+    "G5": "actual rolling 252-day positive rate >= 75%",
+    "G6": "actual worst rolling 252-day return >= -20%",
+    "G7": "actual 2025-10-14 to 2026-10-14 return > 0",
+    "G8": "calendar 2022-2025 each report; total monthly win rate is descriptive, not gating"
+  },
+  "known_limitations": [
+    "Block bootstrap reuses historical returns and cannot create new regimes.",
+    "Overlapping history and current factor snapshots remain.",
+    "R40 is a local research snapshot and canonical data drift remains unresolved.",
+    "Bootstrap is a risk diagnostic, not independent alpha confirmation."
+  ],
+  "round": "R315",
+  "window": {
+    "end": "2026-10-14",
+    "recent_start": "2025-10-14",
+    "start": "2021-06-01"
+  }
+}

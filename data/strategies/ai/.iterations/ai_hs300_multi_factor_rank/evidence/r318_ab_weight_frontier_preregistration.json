@@ -1,0 +1,56 @@
+{
+  "bootstrap": {
+    "method": "circular 20-trading-day block bootstrap",
+    "path_days": 252,
+    "paths": 1000,
+    "seed": 20261105
+  },
+  "classification": "preregistered A/B risk-budget frontier audit; no factor changes and no return-maximizing selection",
+  "common_rule": "After A/B allocation, apply the same 60d 15% volatility target with total exposure [0.2,1.0], monthly rebalance and 0.52% overlay turnover cost.",
+  "created_at_utc": "2026-11-05T11:28:44.439453+00:00",
+  "gates": {
+    "D1": "all five variants complete; current cap08 reproduces R312 full stats; all variants use finite returns",
+    "G1_full_return": "full 2x annual >=5%",
+    "G2_full_drawdown": "full 2x MDD >= -22%",
+    "G3_bootstrap_positive": "bootstrap 1-year positive rate >=80%",
+    "G4_bootstrap_tail": "bootstrap 1-year return P5 >= -12%",
+    "G5_bootstrap_median": "bootstrap 1-year return median >=5%",
+    "G6_actual_rolling": "actual rolling 252-day positive rate >=70%",
+    "G7_recent": "recent five-start mean >0 and >=4/5 positive",
+    "G8_stress": "full 3x return >0 and MDD >= -30%",
+    "G9_no_leverage": "all total exposures within [0,1.0]"
+  },
+  "known_limitations": [
+    "This is a post-R315 risk-budget adjustment, not independent alpha discovery.",
+    "All variants share the same history and underlying A/B legs.",
+    "R40 local snapshot and canonical data drift remain unresolved.",
+    "A passing variant would still be research/paper-review only."
+  ],
+  "periods": {
+    "full": [
+      "2021-06-01",
+      "2026-10-14"
+    ],
+    "recent_starts": [
+      "2025-10-14",
+      "2025-12-15",
+      "2026-02-13",
+      "2026-04-15",
+      "2026-06-15"
+    ]
+  },
+  "question": "R317 显示调整风险平价窗口和目标波动率不能改善年度持有体验。把更防守的 A 腿权重上限从 80% 提高到 90%/100%，或固定 A 权重，能否减少 2022/2023 负年，同时保留足够收益和回撤？",
+  "round": "R318",
+  "selection_rule": "All variants judged by G1-G9. Among passers, choose the highest bootstrap positive rate, tie-break by bootstrap median. Do not select on raw full-period return. If none pass, keep current cap08 and record negative knowledge.",
+  "sleeves": {
+    "A": "ai_hs300_macro_gate_quality",
+    "B": "ai_hs300_industry_relative_strength_quality_h20_sl20"
+  },
+  "variants": {
+    "fixed70": "A weight fixed at 70% every month",
+    "fixed80": "A weight fixed at 80% every month",
+    "rp_cap08": "60d inverse-vol risk parity with A bounds [0.2,0.8] (current candidate)",
+    "rp_cap09": "same risk parity with A bounds [0.2,0.9]",
+    "rp_cap10": "same risk parity with A bounds [0.2,1.0]"
+  }
+}
