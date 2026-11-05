@@ -1,0 +1,56 @@
+{
+  "best_diagnostic": {
+    "annual_2x": 0.084034,
+    "annual_5x": 0.013109,
+    "candidate": "r358_b_core_earnings_gate",
+    "control_annual_2x": 0.085299,
+    "control_distinct_symbols_5x": 147,
+    "control_mdd_2x": -0.394332,
+    "control_sharpe_2x": 0.4227,
+    "distinct_symbols_5x": 139,
+    "fresh_positive": 5,
+    "mdd_2x": -0.407532,
+    "mdd_5x": -0.479368,
+    "recent_year_return": -0.03052428390781259,
+    "return_2022": -0.08928943,
+    "return_2023": -0.050859,
+    "sharpe_2x": 0.4145,
+    "sharpe_5x": 0.1959,
+    "top1_net_share_5x": 2.078601,
+    "top3_net_share_5x": 4.83446,
+    "top5_net_share_5x": 7.26497,
+    "why_not_promoted": [
+      "2x return and Sharpe below control",
+      "2022, 2023 and recent-year returns failed",
+      "5x Sharpe and MDD failed",
+      "5x concentration and breadth failed"
+    ]
+  },
+  "evidence": {
+    "backtest": "r358_b_core_earnings_backtest.json",
+    "backtest_sha256": "9ce56b09e480049eb59d83d7ac8c4d7bfe43e038c6e248cae5173ad55b19a533",
+    "preflight": "r358_b_core_earnings_preflight_v2.json",
+    "preflight_erratum": "r358_preflight_erratum_A1.json",
+    "preregistration": "r358_b_core_earnings_preregistration.json",
+    "result": "r358_result.md",
+    "result_sha256": "15a87e75a5e8a46903e2992f8a32365edf81ef1ad58d7625ea2f721b16d7b9e9"
+  },
+  "known_limitations": [
+    "Standalone B-sleeve screen only; no portfolio integration was attempted after the screen failed.",
+    "Core earnings coverage is 92.0%-95.5% among B candidates; missing values fail the gate.",
+    "Financial statements are current snapshots with restatement risk; announcement dates are normalized PIT dates.",
+    "B standalone drawdowns are intentionally reported before portfolio risk budgeting and are not comparable to the final three-sleeve portfolio MDD."
+  ],
+  "negative_knowledge": [
+    "The core-earnings gate does not transfer from A to B: it improved 2023 but hurt 2022, recent-year and long-run returns.",
+    "A near-zero 5x net profit amplified concentration ratios, and the gate also reduced distinct symbols versus B control.",
+    "Do not test the factor on C, scan its threshold, change profit definitions or reweight the B sleeve."
+  ],
+  "no_leverage": true,
+  "order_file_generated": false,
+  "paper_target_generated": false,
+  "production_enabled": false,
+  "round": "R358",
+  "selected": null,
+  "status": "research_only_no_candidate_after_r358_b_core_earnings"
+}
