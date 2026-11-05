@@ -1,0 +1,59 @@
+{
+  "round": "R327",
+  "classification": "preregistered single-variant stock diversification follow-up to R326; no TopN grid and no risk-rule changes",
+  "created_at_utc": "2026-11-05T12:39:30.000000+00:00",
+  "question": "R326 的黄金候选仅因前五股票贡献 75.60% 超过 75% 失败，同时黄金贡献 74.59% 接近上限。把 A/B 每个袖的持仓上限从固定 10 只改为固定 20 只、其余规则完全不变，能否在保留 R325 收益/回撤/年度稳定性的同时通过股票与黄金集中度门槛？",
+  "source_rounds": ["R312", "R325", "R326"],
+  "intervention": {
+    "only_change": "max_positions_per_sleeve: 10 -> 20",
+    "unchanged": [
+      "A/B strategy scores and exits",
+      "equal position sizing per sleeve",
+      "R312 A/B 60d inverse-vol risk parity with A bounds [0.2,0.8]",
+      "15% total volatility target with gross exposure [0.2,1.0]",
+      "R325 60d inverse-vol between equity composite and gold ETF",
+      "monthly rebalance and 10bp/30bp allocator costs",
+      "gold ETF 518880.SH and robustness ETF 159937.SZ",
+      "all performance and concentration gates"
+    ]
+  },
+  "periods": {
+    "full": ["2021-06-01", "2026-10-14"],
+    "recent_start": "2025-10-14"
+  },
+  "performance_gates": {
+    "D1_data": "both gold ETF series cover >=95% of aligned dates with no duplicate, null or nonpositive close",
+    "G1_return": "full-path annual >=6.0%",
+    "G2_drawdown": "full-path MDD >= -18.0%",
+    "G3_sharpe": "full-path Sharpe >=0.70",
+    "G4_calendar_stability": "2022 and 2023 returns each >=0",
+    "G5_bootstrap": "20-day block bootstrap 1000 paths: positive rate >=80%, return P5 >= -12%",
+    "G6_rolling_year": "rolling 252-day positive rate >=70%, worst >= -15%",
+    "G7_recent_year": "2025-10-14 to 2026-10-14 return >0",
+    "G8_stress": "3x allocator cost return >0 and MDD >= -25%",
+    "G9_incremental": "versus frozen R312: Sharpe +0.05 or MDD +3pp; annual >= R312 annual -1pp",
+    "G10_no_leverage": "all equity and gold asset weights >=0 and sum <=1",
+    "R1_robustness": "159937.SZ variant: 2022 and 2023 each >=0 and MDD >= -20%"
+  },
+  "concentration_gates": {
+    "C1_stock_coverage": ">=80 distinct stock symbols",
+    "C2_top1": "largest positive stock contribution <=25%",
+    "C3_top3": "top three positive stock contributions <=55%",
+    "C4_top5": "top five positive stock contributions <=75%",
+    "C5_recent_breadth": ">=8 recent-year positive stock symbols",
+    "C6_industry": "largest industry gross-profit share <=45%",
+    "C7_loss": "largest stock loss <=20% of stock gross profit",
+    "C8_gold_contribution": "approximate gold PnL share <=75%",
+    "C9_gold_weight": "mean target gold weight <=55% and maximum <=75%",
+    "C10_etf_liquidity": "coverage >=95%; median daily amount >=100m CNY; minimum 20-day average >=50m CNY",
+    "C11_turnover": "annualized allocator turnover <=1.0x",
+    "C12_no_leverage": "monthly equity + gold weights nonnegative and sum <=1.0"
+  },
+  "selection_rule": "All performance and concentration gates pass -> candidate_for_paper_trading_review. Any failure -> selected=null and record negative knowledge. No other TopN values, weights, windows, ETF choices or thresholds may be tested after seeing results.",
+  "known_limitations": [
+    "R327 is a post-R326 diversification response and therefore has additional multiple-testing risk.",
+    "The gold ETF tailwind remains sample-period dependent.",
+    "Attribution remains an approximate contribution-share diagnostic.",
+    "R40 local data, current factor snapshots and canonical data drift remain unresolved."
+  ]
+}

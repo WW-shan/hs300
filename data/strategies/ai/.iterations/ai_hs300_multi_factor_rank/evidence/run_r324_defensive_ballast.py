@@ -153,9 +153,8 @@ def build_ballast(ab_curve: pl.DataFrame, bond: pl.DataFrame, *, round_trip_cost
     cash_weight = 1.0 - gross
     equity_growth = 1.0
     bond_growth = 1.0
-    value = 1.0
     initial_turnover = 0.5 * (equity_weight + bond_weight + cash_weight)
-    value *= 1.0 - round_trip_cost * initial_turnover
+    segment_base = 1.0 * (1.0 - round_trip_cost * initial_turnover)
     rows = [{"date": dates[0], "value": 1.0}]
     rebalances = [
         {
@@ -172,10 +171,11 @@ def build_ballast(ab_curve: pl.DataFrame, bond: pl.DataFrame, *, round_trip_cost
 
     for i in range(1, len(dates)):
         if (dates[i].year, dates[i].month) != (dates[i - 1].year, dates[i - 1].month):
-            total_before = equity_weight * equity_growth + bond_weight * bond_growth + cash_weight
-            actual_equity = equity_weight * equity_growth / total_before
-            actual_bond = bond_weight * bond_growth / total_before
-            actual_cash = cash_weight / total_before
+            growth = equity_weight * equity_growth + bond_weight * bond_growth + cash_weight
+            total_before = segment_base * growth
+            actual_equity = equity_weight * equity_growth / growth
+            actual_bond = bond_weight * bond_growth / growth
+            actual_cash = cash_weight / growth
             history_edge = max(0, i - 1)
             equity_share, gross, target_equity, target_bond = trailing_weights(
                 ab_returns[:history_edge], bond_returns[:history_edge]
@@ -187,7 +187,7 @@ def build_ballast(ab_curve: pl.DataFrame, bond: pl.DataFrame, *, round_trip_cost
                 + abs(target_cash - actual_cash)
             )
             total_turnover += turnover
-            value = total_before * (1.0 - round_trip_cost * turnover)
+            segment_base = total_before * (1.0 - round_trip_cost * turnover)
             equity_growth = 1.0
             bond_growth = 1.0
             equity_weight = target_equity
@@ -206,7 +206,7 @@ def build_ballast(ab_curve: pl.DataFrame, bond: pl.DataFrame, *, round_trip_cost
             )
         equity_growth *= 1.0 + ab_returns[i - 1]
         bond_growth *= 1.0 + bond_returns[i - 1]
-        value = equity_weight * equity_growth + bond_weight * bond_growth + cash_weight
+        value = segment_base * (equity_weight * equity_growth + bond_weight * bond_growth + cash_weight)
         rows.append({"date": dates[i], "value": value})
 
     curve = pl.DataFrame(rows)
@@ -261,6 +261,12 @@ def self_test() -> None:
     assert all(math.isfinite(value) and value > 0 for value in result["curve"]["value"].to_list())
     assert result["weight_summary"]["max_weight_sum"] <= 1.0 + 1e-12
     assert result["weight_summary"]["min_target_weight"] >= 0.0
+    compounding = pl.DataFrame({
+        "date": dates,
+        "value": [1.001**index for index in range(130)],
+    })
+    compounding_result = build_ballast(compounding, bond, round_trip_cost=0.0)
+    assert compounding_result["curve"]["value"][-1] > 1.05
 
 
 def main() -> int:

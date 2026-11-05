@@ -67,14 +67,14 @@
     "G10_no_leverage": true,
     "G1_return": false,
     "G2_drawdown": true,
-    "G3_sharpe": false,
-    "G4_calendar_stability": false,
-    "G5_bootstrap": false,
-    "G6_rolling_year": false,
+    "G3_sharpe": true,
+    "G4_calendar_stability": true,
+    "G5_bootstrap": true,
+    "G6_rolling_year": true,
     "G7_recent_year": true,
     "G8_stress": true,
     "G9_incremental": false,
-    "R1_robustness": false
+    "R1_robustness": true
   },
   "input_isolation": {
     "production_after": {
@@ -133,52 +133,51 @@
   "primary_10y": {
     "bootstrap": {
       "blocks_needed": 13,
-      "mdd_median": -0.038868,
-      "mdd_p05": -0.070427,
-      "mdd_worst": -0.096718,
+      "mdd_median": -0.018055,
+      "mdd_p05": -0.03864,
+      "mdd_worst": -0.063448,
       "paths": 1000,
-      "positive_rate": 0.504,
-      "return_best": 0.099018,
-      "return_median": 0.000162,
-      "return_p05": -0.046934,
-      "return_p25": -0.018824,
-      "return_p75": 0.019789,
-      "return_p95": 0.055116,
-      "return_worst": -0.086602,
-      "sharpe_median": 0.0248,
-      "sharpe_p05": -0.954
+      "positive_rate": 0.95,
+      "return_best": 0.169695,
+      "return_median": 0.049135,
+      "return_p05": 0.00147,
+      "return_p25": 0.029019,
+      "return_p75": 0.074137,
+      "return_p95": 0.116291,
+      "return_worst": -0.044032,
+      "sharpe_median": 1.6367,
+      "sharpe_p05": 0.0609
     },
     "drawdown_duration": {
       "longest_underwater": {
-        "calendar_days": 744,
-        "end": "2026-10-14",
-        "recovered": false,
-        "start": "2024-09-30"
+        "calendar_days": 220,
+        "recovery": "2023-03-31",
+        "start": "2022-08-23"
       },
-      "max_peak_to_trough_calendar_days": 270,
-      "max_underwater_calendar_days": 744
+      "max_peak_to_trough_calendar_days": 92,
+      "max_underwater_calendar_days": 220
     },
     "recent_year": {
-      "annual": 0.000857,
+      "annual": 0.055743,
       "days": 243,
-      "mdd": -0.026355,
-      "sharpe": 0.0416,
-      "total_return": 0.000823
+      "mdd": -0.014382,
+      "sharpe": 1.9144,
+      "total_return": 0.053472
     },
     "rolling_252": {
-      "positive_rate": 0.515729,
-      "return_best": 0.036188,
-      "return_median": 0.000389,
-      "return_p05": -0.012452,
-      "return_worst": -0.032734,
+      "positive_rate": 0.999047,
+      "return_best": 0.128901,
+      "return_median": 0.053166,
+      "return_p05": 0.007222,
+      "return_worst": -0.00037,
       "windows": 1049
     },
     "stats": {
-      "annual": 0.000635,
+      "annual": 0.049782,
       "days": 1301,
-      "mdd": -0.044151,
-      "sharpe": 0.037,
-      "total_return": 0.00328
+      "mdd": -0.037696,
+      "sharpe": 1.5675,
+      "total_return": 0.284824
     },
     "turnover": {
       "annual": 0.351034,
@@ -196,23 +195,23 @@
       "rebalances": 64
     },
     "yearly": {
-      "2021": 0.002141,
-      "2022": -0.003419,
-      "2023": 0.012227,
-      "2024": 0.008985,
-      "2025": -0.009166,
-      "2026": -0.0073
+      "2021": 0.015494,
+      "2022": 0.003375,
+      "2023": 0.035299,
+      "2024": 0.114463,
+      "2025": 0.048653,
+      "2026": 0.042173
     }
   },
   "probe_sha256": "f9ed665635f825f6a54a9f651eee1ebc2d68fdac1837b6f54a1272ffa8238c36",
   "question": "R315-R319 已证明旧 A/B 内部调参无法改善年度稳定性。把 R312 冻结双袖作为权益复合袖，加入可交易的中长久期国债 ETF 做 60 日逆波动风险平价，并无杠杆限制总暴露，能否在不牺牲年化的前提下改善 2022/2023、随机一年正收益率和滚动一年正收益率？",
   "robustness_5y": {
     "stats": {
-      "annual": 0.000411,
+      "annual": 0.040827,
       "days": 1301,
-      "mdd": -0.04466,
-      "sharpe": 0.0314,
-      "total_return": 0.002123
+      "mdd": -0.036942,
+      "sharpe": 1.3388,
+      "total_return": 0.229281
     },
     "weights": {
       "equity_share_max": 0.5,
@@ -226,24 +225,24 @@
       "rebalances": 64
     },
     "yearly": {
-      "2021": 0.003452,
-      "2022": -0.005094,
-      "2023": 0.012557,
-      "2024": -0.001403,
-      "2025": 0.003677,
-      "2026": -0.010903
+      "2021": 0.015373,
+      "2022": 0.000146,
+      "2023": 0.026303,
+      "2024": 0.088136,
+      "2025": 0.051778,
+      "2026": 0.030574
     }
   },
   "round": "R324",
-  "runner_sha256": "ef21511fe30227b2a0c8ee5963a2750f25c8c3f53b524ed61280384a7616760a",
+  "runner_sha256": "7184c71b8c5922dbd92b91eb1c33287bacb1ed3c7f1cfe3c8a4ae8e30059c806",
   "selected": null,
   "stress_3x": {
     "stats": {
-      "annual": 0.000587,
+      "annual": 0.046362,
       "days": 1301,
-      "mdd": -0.043899,
-      "sharpe": 0.0359,
-      "total_return": 0.00303
+      "mdd": -0.038422,
+      "sharpe": 1.4652,
+      "total_return": 0.263378
     },
     "turnover": {
       "annual": 0.34973,

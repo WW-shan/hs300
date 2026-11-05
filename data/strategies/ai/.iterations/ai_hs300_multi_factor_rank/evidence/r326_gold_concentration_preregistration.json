@@ -1,0 +1,45 @@
+{
+  "round": "R326",
+  "classification": "preregistered stock, asset and ETF liquidity concentration audit of the R325 passing candidate; no strategy parameter changes",
+  "created_at_utc": "2026-11-05T12:34:39.600000+00:00",
+  "question": "R325 的权益复合袖 + 黄金 ETF 风险预算是否把收益集中在少数股票、单一行业或黄金资产本身？黄金 ETF 的成交额、权重和换手是否足以进入纸面执行复核？",
+  "candidate": {
+    "round": "R325",
+    "equity": "R312 A/B 60d inverse-vol risk parity, A bounds [0.2,0.8], then 15% vol target [0.2,1.0]",
+    "defensive_asset": "518880.SH 华安黄金ETF",
+    "portfolio": "R324/R325 60d inverse-vol between equity composite and gold, equity asset-weight bounds [0.2,0.8], 15% total-vol target, gross [0.2,1.0], monthly, no leverage",
+    "result_file": "r325_gold_ballast.json"
+  },
+  "periods": {
+    "full": ["2021-06-01", "2026-10-14"],
+    "recent_start": "2025-10-14"
+  },
+  "attribution": {
+    "stock_pnl": "each A/B trade pnl_amount multiplied by its holding-period average effective stock sleeve weight = R325 equity asset weight * A/B share",
+    "gold_pnl": "monthly approximation = portfolio NAV at rebalance * target gold asset weight * gold ETF monthly qfq return; summed over months",
+    "gold_contribution_share": "approximate gold PnL / (approximate gold PnL + scaled stock trade PnL)",
+    "limitation": "This is a contribution-share approximation, not a compounded attribution ledger; allocator costs, cash carry and intra-month weight drift are not separately allocated."
+  },
+  "gates": {
+    "C1_stock_coverage": "at least 80 distinct stock symbols",
+    "C2_top1": "largest positive stock-symbol net P&L share <=25%",
+    "C3_top3": "top three positive stock-symbol net P&L share <=55%",
+    "C4_top5": "top five positive stock-symbol net P&L share <=75%",
+    "C5_recent_breadth": "at least 8 distinct recent-12m stock symbols with positive attributed P&L",
+    "C6_industry": "largest industry gross-profit share <=45%",
+    "C7_loss": "largest single-stock loss <=20% of stock gross profit",
+    "C8_gold_contribution": "approximate gold PnL share <=75% of total approximate stock + gold PnL",
+    "C9_gold_weight": "mean monthly target gold weight <=55% and maximum monthly target gold weight <=75%",
+    "C10_etf_liquidity": "gold ETF coverage >=95% of aligned dates, median daily amount >=100 million CNY, and minimum 20-day average amount >=50 million CNY",
+    "C11_turnover": "annualized allocator turnover <=1.0x",
+    "C12_no_leverage": "all monthly target equity + gold weights are nonnegative and their sum <=1.0"
+  },
+  "selection_rule": "C1-C12 all pass -> candidate_for_paper_trading_review only. Any failure -> research_only_concentration_failed. No weight, gold ETF, window, cost or threshold changes after seeing results.",
+  "known_limitations": [
+    "Industry classification is a current snapshot, not historical PIT.",
+    "Stock PnL scaling and gold PnL decomposition are approximate contribution shares.",
+    "Gold ETF qfq prices and amounts are provider-reconstructed, not an official PIT archive.",
+    "R40 local research data, current factor versions and canonical data drift remain unresolved.",
+    "A pass does not authorize production; it only permits a separate paper-execution audit."
+  ]
+}

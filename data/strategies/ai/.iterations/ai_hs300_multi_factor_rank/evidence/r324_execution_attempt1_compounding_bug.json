@@ -1,0 +1,264 @@
+{
+  "baseline_r312": {
+    "same_dates_2x": {
+      "annual": 0.079714,
+      "days": 1301,
+      "mdd": -0.196175,
+      "sharpe": 0.6116,
+      "total_return": 0.485354
+    },
+    "same_dates_stress_3x": {
+      "annual": 0.066632,
+      "days": 1301,
+      "mdd": -0.213706,
+      "sharpe": 0.5258,
+      "total_return": 0.394828
+    },
+    "source_full_path_2x": {
+      "annual": 0.079714,
+      "days": 1301,
+      "mdd": -0.196175,
+      "sharpe": 0.6116,
+      "total_return": 0.485354
+    },
+    "yearly": {
+      "2021": 0.012266,
+      "2022": -0.056039,
+      "2023": -0.009206,
+      "2024": 0.182251,
+      "2025": 0.240254,
+      "2026": 0.069984
+    }
+  },
+  "classification": "preregistered defensive-asset ballast test; no parameter search",
+  "data": {
+    "primary_bond": "511260.SH",
+    "primary_coverage": 1.0,
+    "robustness_bond": "511010.SH",
+    "robustness_coverage": 1.0,
+    "treasury_cache_sha256": "a0a0575d502f34c3cce01a30631cd4b1fa4f3b8ccc5683203de9cd42bc6d0ec2"
+  },
+  "decision": {
+    "parameter_search": false,
+    "production_write": false,
+    "provider_call": false,
+    "status": "no_candidate_passed"
+  },
+  "defensive_asset_diagnostics": {
+    "correlation_with_equity": -0.228031,
+    "standalone_2x_dates": {
+      "annual": 0.046117,
+      "days": 1301,
+      "mdd": -0.022682,
+      "sharpe": 2.0662,
+      "total_return": 0.261857
+    },
+    "yearly": {
+      "2021": 0.034503,
+      "2022": 0.028324,
+      "2023": 0.045372,
+      "2024": 0.0928,
+      "2025": 0.003588,
+      "2026": 0.034621
+    }
+  },
+  "gates": {
+    "D1_data": true,
+    "G10_no_leverage": true,
+    "G1_return": false,
+    "G2_drawdown": true,
+    "G3_sharpe": false,
+    "G4_calendar_stability": false,
+    "G5_bootstrap": false,
+    "G6_rolling_year": false,
+    "G7_recent_year": true,
+    "G8_stress": true,
+    "G9_incremental": false,
+    "R1_robustness": false
+  },
+  "input_isolation": {
+    "production_after": {
+      "bytes": 47509609,
+      "files": 2133,
+      "sha256": "4014f2da3a00c70675db7603d410227b7f4081896ea29cb93f2e8920d3dbba79"
+    },
+    "production_before": {
+      "bytes": 47509609,
+      "files": 2133,
+      "sha256": "4014f2da3a00c70675db7603d410227b7f4081896ea29cb93f2e8920d3dbba79"
+    },
+    "r40_after": {
+      "bytes": 49897492,
+      "files": 1544,
+      "sha256": "a76db8149205486b06fbc664692f8b85bb365671f5888b6a12128909cffff707"
+    },
+    "r40_before": {
+      "bytes": 49897492,
+      "files": 1544,
+      "sha256": "a76db8149205486b06fbc664692f8b85bb365671f5888b6a12128909cffff707"
+    },
+    "stable": true
+  },
+  "limits": [
+    "Treasury ETF qfq prices are provider-adjusted and are not an official PIT archive.",
+    "The equity composite still uses R40 local research data, current industry snapshots and current factor versions.",
+    "The recent-year result is a slice of the full backtest, not a fresh-start path.",
+    "A pass is only a candidate for a separate concentration, liquidity and paper-execution audit."
+  ],
+  "periods": {
+    "full": [
+      "2021-06-01",
+      "2026-10-14"
+    ],
+    "recent_year": [
+      "2025-10-14",
+      "2026-10-14"
+    ]
+  },
+  "portfolio_rule": {
+    "equity_weight_bounds": [
+      0.2,
+      0.8
+    ],
+    "gross_exposure_bounds": [
+      0.2,
+      1.0
+    ],
+    "lookback_days": 60,
+    "main_round_trip_cost": 0.001,
+    "stress_round_trip_cost": 0.003,
+    "target_annual_volatility": 0.15
+  },
+  "preregistration_sha256": "6733cc9fb6377b271495f81b934ec906f19ebeae0defe55cf015cd0208c573e1",
+  "primary_10y": {
+    "bootstrap": {
+      "blocks_needed": 13,
+      "mdd_median": -0.038868,
+      "mdd_p05": -0.070427,
+      "mdd_worst": -0.096718,
+      "paths": 1000,
+      "positive_rate": 0.504,
+      "return_best": 0.099018,
+      "return_median": 0.000162,
+      "return_p05": -0.046934,
+      "return_p25": -0.018824,
+      "return_p75": 0.019789,
+      "return_p95": 0.055116,
+      "return_worst": -0.086602,
+      "sharpe_median": 0.0248,
+      "sharpe_p05": -0.954
+    },
+    "drawdown_duration": {
+      "longest_underwater": {
+        "calendar_days": 744,
+        "end": "2026-10-14",
+        "recovered": false,
+        "start": "2024-09-30"
+      },
+      "max_peak_to_trough_calendar_days": 270,
+      "max_underwater_calendar_days": 744
+    },
+    "recent_year": {
+      "annual": 0.000857,
+      "days": 243,
+      "mdd": -0.026355,
+      "sharpe": 0.0416,
+      "total_return": 0.000823
+    },
+    "rolling_252": {
+      "positive_rate": 0.515729,
+      "return_best": 0.036188,
+      "return_median": 0.000389,
+      "return_p05": -0.012452,
+      "return_worst": -0.032734,
+      "windows": 1049
+    },
+    "stats": {
+      "annual": 0.000635,
+      "days": 1301,
+      "mdd": -0.044151,
+      "sharpe": 0.037,
+      "total_return": 0.00328
+    },
+    "turnover": {
+      "annual": 0.351034,
+      "total": 1.81089
+    },
+    "weights": {
+      "equity_share_max": 0.5,
+      "equity_share_mean": 0.231271,
+      "equity_share_min": 0.2,
+      "gross_max": 1.0,
+      "gross_mean": 0.976923,
+      "gross_min": 0.5,
+      "max_weight_sum": 1.0,
+      "min_target_weight": 0.0,
+      "rebalances": 64
+    },
+    "yearly": {
+      "2021": 0.002141,
+      "2022": -0.003419,
+      "2023": 0.012227,
+      "2024": 0.008985,
+      "2025": -0.009166,
+      "2026": -0.0073
+    }
+  },
+  "probe_sha256": "f9ed665635f825f6a54a9f651eee1ebc2d68fdac1837b6f54a1272ffa8238c36",
+  "question": "R315-R319 已证明旧 A/B 内部调参无法改善年度稳定性。把 R312 冻结双袖作为权益复合袖，加入可交易的中长久期国债 ETF 做 60 日逆波动风险平价，并无杠杆限制总暴露，能否在不牺牲年化的前提下改善 2022/2023、随机一年正收益率和滚动一年正收益率？",
+  "robustness_5y": {
+    "stats": {
+      "annual": 0.000411,
+      "days": 1301,
+      "mdd": -0.04466,
+      "sharpe": 0.0314,
+      "total_return": 0.002123
+    },
+    "weights": {
+      "equity_share_max": 0.5,
+      "equity_share_mean": 0.22534,
+      "equity_share_min": 0.2,
+      "gross_max": 1.0,
+      "gross_mean": 0.976923,
+      "gross_min": 0.5,
+      "max_weight_sum": 1.0,
+      "min_target_weight": 0.0,
+      "rebalances": 64
+    },
+    "yearly": {
+      "2021": 0.003452,
+      "2022": -0.005094,
+      "2023": 0.012557,
+      "2024": -0.001403,
+      "2025": 0.003677,
+      "2026": -0.010903
+    }
+  },
+  "round": "R324",
+  "runner_sha256": "ef21511fe30227b2a0c8ee5963a2750f25c8c3f53b524ed61280384a7616760a",
+  "selected": null,
+  "stress_3x": {
+    "stats": {
+      "annual": 0.000587,
+      "days": 1301,
+      "mdd": -0.043899,
+      "sharpe": 0.0359,
+      "total_return": 0.00303
+    },
+    "turnover": {
+      "annual": 0.34973,
+      "total": 1.804161
+    },
+    "weights": {
+      "equity_share_max": 0.5,
+      "equity_share_mean": 0.23115,
+      "equity_share_min": 0.2,
+      "gross_max": 1.0,
+      "gross_mean": 0.976923,
+      "gross_min": 0.5,
+      "max_weight_sum": 1.0,
+      "min_target_weight": 0.0,
+      "rebalances": 64
+    }
+  }
+}
