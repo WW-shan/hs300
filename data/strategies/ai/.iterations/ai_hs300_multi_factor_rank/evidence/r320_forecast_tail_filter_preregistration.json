@@ -1,0 +1,64 @@
+{
+  "bootstrap": {
+    "method": "circular 20-trading-day block bootstrap",
+    "path_days": 252,
+    "paths": 1000,
+    "seed": 20261105
+  },
+  "classification": "preregistered negative-earnings-forecast tail-filter experiment; no scoring, weight, holding-period or risk-budget tuning",
+  "created_at_utc": "2026-11-05T11:56:05.137010+00:00",
+  "data": {
+    "coverage_partitions": 2129,
+    "factor": "ext_alt_hs300_forecast_surprise_60d",
+    "filter_rule": "retain only rows with forecast_surprise_60d >= 0; no-event zero rows pass; negative announcements are excluded from new entries",
+    "negative_share": 0.04021547035389491,
+    "no_event_value": 0.0,
+    "nonnull_coverage": 1.0,
+    "source_round": "R63"
+  },
+  "gates": {
+    "D1_data": "factor coverage >=95%, all four strategy runs produce finite outputs, filter removes between 1% and 10% of score universe rows",
+    "G1_full_return": "full 2x annual >=5%",
+    "G2_full_drawdown": "full 2x MDD >= -22%",
+    "G3_bootstrap_positive": "bootstrap 1-year positive rate >=80%",
+    "G4_actual_rolling": "actual rolling 252-day positive rate >=70%",
+    "G5_year_increment": "2022 and 2023 returns each improve by at least 1pp versus control",
+    "G6_recent": "recent five-start mean >0 and at least 4/5 positive",
+    "G7_stress": "full 3x return >0 and MDD >= -30%",
+    "G8_no_leverage": "all total exposures within [0,1.0]"
+  },
+  "known_limitations": [
+    "R63 already found high positive forecast surprise did not produce a stable long-only strategy; this round tests negative-tail exclusion, not positive surprise alpha.",
+    "The filter is sparse (about 4% negative rows) and may not materially change annual returns.",
+    "All variants share the same history and R40 local snapshot.",
+    "Canonical data drift, current industry snapshot and factor version drift remain unresolved.",
+    "A passing filtered variant cannot be deployed without a separate concentration and paper-execution review."
+  ],
+  "periods": {
+    "full": [
+      "2021-06-01",
+      "2026-10-14"
+    ],
+    "recent_starts": [
+      "2025-10-14",
+      "2025-12-15",
+      "2026-02-13",
+      "2026-04-15",
+      "2026-06-15"
+    ]
+  },
+  "portfolio_rule": "unchanged R312: A/B 60d inverse-vol risk parity (A bounds [0.2,0.8]), then 15% total volatility target [0.2,1.0], monthly, no leverage",
+  "question": "R315-R319 已证明旧 A/B 内部调参无法改善年度稳定性。用 R63 已构建的 PIT 业绩预告 surprise 做纯尾部过滤，剔除近 60 日负向预告股票，能否减少 2022/2023 负年并改善随机一年尾部，而不破坏完整收益和压力成本？",
+  "round": "R320",
+  "selection_rule": "Judge all variants by G1-G8. Among passers, choose highest bootstrap positive rate, tie-break by bootstrap median. If none pass, keep the original R312 candidate and record negative knowledge. If a filtered variant passes, it is only a candidate for a separate concentration audit.",
+  "strategy_files": {
+    "A_filter": "ai_hs300_macro_gate_quality_forecastfilter",
+    "B_filter": "ai_hs300_industry_relative_strength_quality_h20_sl20_forecastfilter"
+  },
+  "variants": {
+    "AB_filter": "A filtered + B filtered",
+    "A_filter": "A filtered + B original",
+    "B_filter": "A original + B filtered",
+    "control": "A original + B original"
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "analyst_eps_probe": {
+    "finding": "AkShare stock_research_report_em returns historical report rows but only the current 2026/2027/2028 forecast columns; historical report rows have no historical forecast values. Therefore a PIT EPS-revision history cannot be constructed from this interface.",
+    "status": "data_gap"
+  },
+  "classification": "preregistered walk-forward cross-sectional ridge meta-factor research; no hyperparameter search",
+  "controls": {
+    "benchmark": "equal-weight all eligible HS300 members with the same monthly signal dates and 0.52% cost",
+    "candidate_reference": "R312/R314 frozen A+B candidate metrics, not reoptimized in this round"
+  },
+  "created_at_utc": "2026-11-05T12:00:30.592488+00:00",
+  "feature_set": [
+    "holder_top10_free_float_share",
+    "holder_top10_share_chg_qoq",
+    "fund_count_low",
+    "fund_holding_ratio_low",
+    "fund_holding_ratio_chg_qoq_low",
+    "lhb_event_count_20d_low",
+    "analyst_rating_score_20d",
+    "analyst_rating_change_20d",
+    "forecast_surprise_60d",
+    "industry_mom_20d",
+    "industry_rps_20d",
+    "industry_breadth_20d",
+    "stock_rel_industry_20d",
+    "mainline_strength",
+    "margin_chg_1m_low",
+    "dividend_yield",
+    "equity_supply_ratio_180d_low",
+    "intangible_ratio_low",
+    "rd_intensity",
+    "mom20",
+    "mom60",
+    "mom120",
+    "vol20",
+    "turnover20",
+    "max_ret20",
+    "close_position20"
+  ],
+  "gates": {
+    "D1_data": ">=45 prediction months; feature panel and target coverage >=60% each month; all rows have signal_date < target_end",
+    "G1_return": "prediction-period annual return >=8%",
+    "G2_sharpe": "monthly Sharpe >=0.70",
+    "G3_drawdown": "monthly MDD >= -20%",
+    "G4_year": "2022H2 return >=0 and 2023 return >=0",
+    "G5_rolling": "rolling 12-month positive rate >=70%",
+    "G6_increment": "prediction-period annual return >= benchmark +3pp and Sharpe >= benchmark +0.15",
+    "G7_cost": "2x monthly cost (1.04%) still has positive prediction-period return",
+    "G8_integrity": "no training row has target_end >= current signal_date; no future feature rows"
+  },
+  "known_limitations": [
+    "Small monthly sample and many features create overfit risk; walk-forward reduces but does not eliminate it.",
+    "The model uses current R40 local snapshot and current factor/industry data versions.",
+    "Monthly open-to-open simulation is not a full tick execution model.",
+    "The target rank/model does not include transaction impact or capacity.",
+    "The analyst EPS revision data source is not usable historically and is not part of this model."
+  ],
+  "model": {
+    "alpha": 10.0,
+    "cost": "0.52% round-trip on full monthly turnover",
+    "prediction": "top 30 by predicted target rank; equal weight; no leverage; monthly rebalance",
+    "standardization": "training-fold feature means and standard deviations only",
+    "training": "expanding walk-forward; at each monthly prediction, use only rows whose target end date is strictly before the current signal date; minimum 12 signal months and 1,000 training rows",
+    "type": "ridge regression"
+  },
+  "periods": {
+    "prediction_end": "2026-08-31",
+    "prediction_start": "first month with 12 completed training months"
+  },
+  "preprocessing": "Each feature is cross-sectionally rank-transformed to [0,1] on each signal date; missing values imputed to 0.5. No global winsorization or future scaling.",
+  "question": "把现有 PIT 因子做成固定 walk-forward 横截面 ridge 元因子，月度选 Top30，能否比等权 HS300 基准和旧的 A/B 参数更稳定，尤其改善 2022-2023 的年度体验？",
+  "round": "R321",
+  "selection_rule": "Only the fixed ridge model is evaluated; if all gates pass, it becomes a candidate for a separate system backtest. Any failure records negative knowledge and no production change.",
+  "signal_dates": "2021-06-01 through 2026-08-31, last trading day of each month; forward target requires 20 trading sessions",
+  "target": "Forward 20-trading-session open-to-open return, rank-transformed within each signal date to [0,1]; only rows with a complete target are used.",
+  "universe": "R78 exact daily HS300 membership, monthly signal date last trading day"
+}

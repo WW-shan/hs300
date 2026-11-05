@@ -1,0 +1,43 @@
+{
+  "classification": "preregistered fixed top10 portfolio construction follow-up to R321; no feature/model hyperparameter changes",
+  "created_at_utc": "2026-11-05T12:04:19.995416+00:00",
+  "gates": {
+    "D1_data": "> =45 prediction months; feature coverage >=60% each month; no future target in training",
+    "G1_return": "prediction-period annual return >=8%",
+    "G2_sharpe": "monthly Sharpe >=0.70",
+    "G3_drawdown": "monthly MDD >= -30%",
+    "G4_year": "2022H2 return >=0 and 2023 return >=0",
+    "G5_rolling": "rolling 12-month positive rate >=70%",
+    "G6_increment": "annual >= benchmark +3pp and Sharpe >= benchmark +0.15",
+    "G7_cost": "2x monthly cost still positive",
+    "G8_integrity": "strict walk-forward target timing"
+  },
+  "known_limitations": [
+    "This is a post-R321 concentration follow-up, not independent alpha discovery.",
+    "Top10 increases idiosyncratic and single-stock risk.",
+    "Monthly open-to-open returns are not a full execution model.",
+    "R40 local snapshot and current factor/industry versions remain."
+  ],
+  "model": {
+    "features": "same 26 features as R321",
+    "preprocessing": "same rank transform and missing=0.5",
+    "rebalance": "monthly",
+    "ridge_alpha": 10.0,
+    "target": "same forward 20-session return rank",
+    "training": "same expanding walk-forward; target_end strictly before signal date; minimum 12 months / 1,000 rows"
+  },
+  "periods": {
+    "prediction_end": "2026-08-31",
+    "prediction_start": "same as R321 if data permits"
+  },
+  "portfolio": {
+    "cost": "0.52% round trip on full monthly turnover",
+    "leverage": "none",
+    "top_n": 10,
+    "weighting": "equal"
+  },
+  "question": "R321 的 walk-forward ridge 元因子 top30 年化仅约 -0.2%，但明显跑赢基准。固定改为 top10 是否能减少稀释、产生净正收益，同时保持可接受回撤？",
+  "round": "R322",
+  "selection_rule": "Only fixed top10 is evaluated. All gates must pass to become a candidate for a separate system backtest; otherwise record negative knowledge. No topN grid or feature changes after seeing results.",
+  "source_round": "R321"
+}
