@@ -1,0 +1,49 @@
+{
+  "classification": "preregistered fixed-strategy reproducibility audit on local R40 research snapshot; not alpha discovery and no parameter search",
+  "created_at_utc": "2026-11-05T10:01:53.985116+00:00",
+  "date": "2026-11-05",
+  "decision_rule": "If G1-G4 pass, classify as reproducible when absolute full-period return difference <=10pp and absolute MDD difference <=5pp; otherwise classify as not reproducible and retain the current data-drift blocker. This audit does not authorize a new strategy or paper trading.",
+  "execution": {
+    "alpha_scan": false,
+    "data_root": "temporary copy of data/research/r40_engine_data",
+    "parameter_grid": false,
+    "production_write": false,
+    "provider_calls": false,
+    "raw_copy": "copy data/kline_daily into the temporary root; never point writes back to production"
+  },
+  "fixed_strategy": {
+    "asset_type": "stock",
+    "commission_pct": 0.0004,
+    "end": "2026-10-14",
+    "fees_pct": 0.0004,
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0,
+    "max_positions": 10,
+    "mode": "position",
+    "overrides": {},
+    "params": {},
+    "position_sizing": "equal",
+    "slippage_bps": 10.0,
+    "stamp_tax_pct": 0.0005,
+    "start": "2021-06-01",
+    "strategy_id": "ai_hs300_industry_relative_strength_quality_h20_sl20",
+    "universe": "R78 exact daily HS300 membership"
+  },
+  "gates": {
+    "G1_r40_membership_coverage": "R40 exact R78 key coverage >= 99.5% (R308 measured 99.919%)",
+    "G2_strategy_execution": "BacktestService returns no error, non-empty equity curve, and at least 100 trades",
+    "G3_temporal_contract": "T+1 open entry/exit and no future signal timing violations",
+    "G4_production_isolation": "R40 and current production data trees are unchanged after the temporary-copy run",
+    "G5_reference_comparison": "Report return, Sharpe, MDD, phase/recent summaries, and absolute differences versus R102d; do not tune any parameter after seeing them"
+  },
+  "question": "Does the fixed R102 20-day/-20% strategy produce the same full-period risk/return conclusion on the local R40 enriched snapshot, which covers 99.919% of exact R78 member-day keys, as the previously recorded R102d result?",
+  "reference": {
+    "r102d_path": "evidence/r102d_sl20_validation.json",
+    "r102d_sha256": "5f192f99ffbdd046ce8810494481f64547370ff8282f89797c38dc933002fb32",
+    "r308_path": "evidence/r308_local_snapshot_recovery_addendum.json",
+    "r308_sha256": "c54992f516c135ab2eb56890980d3bbf9f282d348fb7d62f2d67d0a2b1ebdf75",
+    "r40_manifest": "data/research/r40_engine_data/manifest.json",
+    "r40_snapshot": "data/research/r40_engine_data"
+  },
+  "round": "R309"
+}

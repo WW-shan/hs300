@@ -1,0 +1,253 @@
+{
+  "classification": "fixed-candidate reproducibility audit on a private R40 snapshot; not alpha discovery",
+  "comparisons": {
+    "r274": {
+      "current": {
+        "max_drawdown": -0.2729,
+        "n_trades": 380,
+        "sharpe": 0.27,
+        "total_return": 0.1744
+      },
+      "mdd_delta_pp": -5.28,
+      "reference": {
+        "max_drawdown": -0.2201,
+        "n_trades": 379,
+        "sharpe": 0.77,
+        "total_return": 0.8598
+      },
+      "return_delta_pp": -68.54,
+      "sharpe_delta": -0.5
+    },
+    "r275": {
+      "current": {
+        "max_drawdown": -0.2524,
+        "n_trades": 310,
+        "sharpe": 0.25,
+        "total_return": 0.144
+      },
+      "mdd_delta_pp": -11.3404,
+      "reference": {
+        "max_drawdown": -0.138996,
+        "n_trades": null,
+        "sharpe": 0.8927,
+        "total_return": 0.904583
+      },
+      "return_delta_pp": -76.0583,
+      "sharpe_delta": -0.6427
+    }
+  },
+  "decision": {
+    "alpha_scan": false,
+    "note": "Even if reproducible, prior concentration and untouched-holdout gates remain unresolved.",
+    "parameter_search": false,
+    "production_write": false,
+    "provider_call": false,
+    "status": "not_reproducible_or_incomplete"
+  },
+  "gates": {
+    "G1_r40_membership_coverage": true,
+    "G2_strategy_execution": true,
+    "G3_temporal_contract": true,
+    "G4_production_isolation": true
+  },
+  "input_isolation": {
+    "production_daily_after": {
+      "bytes": 47509609,
+      "files": 2133,
+      "sha256": "4014f2da3a00c70675db7603d410227b7f4081896ea29cb93f2e8920d3dbba79"
+    },
+    "production_daily_before": {
+      "bytes": 47509609,
+      "files": 2133,
+      "sha256": "4014f2da3a00c70675db7603d410227b7f4081896ea29cb93f2e8920d3dbba79"
+    },
+    "production_raw_after": {
+      "bytes": 21205049,
+      "files": 2133,
+      "sha256": "8f642d63a2abce997f9bf658666f35f71ea912e8ba08375be4c44a8a1a28e92b"
+    },
+    "production_raw_before": {
+      "bytes": 21205049,
+      "files": 2133,
+      "sha256": "8f642d63a2abce997f9bf658666f35f71ea912e8ba08375be4c44a8a1a28e92b"
+    },
+    "r40_after": {
+      "bytes": 49897492,
+      "files": 1544,
+      "sha256": "a76db8149205486b06fbc664692f8b85bb365671f5888b6a12128909cffff707"
+    },
+    "r40_before": {
+      "bytes": 49897492,
+      "files": 1544,
+      "sha256": "a76db8149205486b06fbc664692f8b85bb365671f5888b6a12128909cffff707"
+    }
+  },
+  "limits": [
+    "R40 is a local research snapshot, not an official archive.",
+    "The references used 3x cost and end 2026-10-16; this audit ends 2026-10-14.",
+    "No candidate is promoted by this audit."
+  ],
+  "period": [
+    "2021-06-01",
+    "2026-10-14"
+  ],
+  "preregistration_sha256": "f8cac219975e12f359c80b0378be23b4b50d39fc0060874180c94ef95ffd1203",
+  "reproducible": {
+    "r274": false,
+    "r275": false
+  },
+  "results": {
+    "r274": {
+      "curve_rows": 1301,
+      "error": null,
+      "stats": {
+        "annual_return": 0.0316,
+        "avg_exposure": 0.9808,
+        "avg_holding_days": 34.2,
+        "avg_loss": 0.0714,
+        "avg_pnl": 0.006,
+        "avg_win": 0.1036,
+        "best": 1.6129,
+        "calmar": 0.12,
+        "execution": {
+          "buy_cash": 0,
+          "buy_exposure": 0,
+          "buy_invalid_price": 0,
+          "buy_limit_up": 33,
+          "buy_lot_size": 0,
+          "buy_no_slot": 207523,
+          "buy_same_day_reentry": 361,
+          "buy_score_filter": 0,
+          "buy_suspended": 2,
+          "pending_exit": 0,
+          "sell_invalid_price": 0,
+          "sell_limit_down": 0,
+          "sell_suspended": 0
+        },
+        "execution_backend": "polars_expr",
+        "feature_columns": 91,
+        "final_equity": 1174442.87,
+        "full_feature_fallback": false,
+        "initial_capital": 1000000.0,
+        "market_matrix_bytes": 26887767,
+        "market_matrix_shape": [
+          1301,
+          459
+        ],
+        "matrix_data_cache_hit": false,
+        "matrix_data_cache_status": "none",
+        "matrix_data_cache_timing_ms": {},
+        "max_drawdown": -0.2729,
+        "max_exposure": 0.9951,
+        "mc_maxdd_p50": -0.9467,
+        "mc_maxdd_p95": -0.9959,
+        "median_pnl": -0.0074,
+        "n_trades": 380,
+        "panel_columns": 11,
+        "panel_rows": 583933,
+        "pending_exit_positions": 0,
+        "profit_factor": 1.45,
+        "selection": {
+          "entry_candidates": 227182,
+          "entry_trigger_enabled": false,
+          "entry_trigger_filtered": 0,
+          "strategy_matches": 227182
+        },
+        "shared_market_data": false,
+        "sharpe": 0.27,
+        "sortino": 0.4,
+        "timing_ms": {
+          "load_panel": 4852.3,
+          "matrix_build": 367.6,
+          "signals_score": 316.4,
+          "simulate": 597.3,
+          "statistics": 4.1,
+          "total": 6209.7
+        },
+        "total_return": 0.1744,
+        "win_rate": 0.4421,
+        "worst": -0.2673
+      },
+      "strategy_id": "ai_hs300_macro_gate_quality_r274_no_macro_gate",
+      "timing_errors": [],
+      "trade_count": 380
+    },
+    "r275": {
+      "curve_rows": 1301,
+      "error": null,
+      "stats": {
+        "annual_return": 0.0264,
+        "avg_exposure": 0.8106,
+        "avg_holding_days": 34.6,
+        "avg_loss": 0.0654,
+        "avg_pnl": 0.0054,
+        "avg_win": 0.0859,
+        "best": 0.7059,
+        "calmar": 0.1,
+        "execution": {
+          "buy_cash": 0,
+          "buy_exposure": 0,
+          "buy_invalid_price": 0,
+          "buy_limit_up": 31,
+          "buy_lot_size": 0,
+          "buy_no_slot": 184095,
+          "buy_same_day_reentry": 276,
+          "buy_score_filter": 0,
+          "buy_suspended": 0,
+          "pending_exit": 1,
+          "sell_invalid_price": 0,
+          "sell_limit_down": 0,
+          "sell_suspended": 1
+        },
+        "execution_backend": "polars_expr",
+        "feature_columns": 91,
+        "final_equity": 1143981.19,
+        "full_feature_fallback": false,
+        "initial_capital": 1000000.0,
+        "market_matrix_bytes": 26887767,
+        "market_matrix_shape": [
+          1301,
+          459
+        ],
+        "matrix_data_cache_hit": false,
+        "matrix_data_cache_status": "none",
+        "matrix_data_cache_timing_ms": {},
+        "max_drawdown": -0.2524,
+        "max_exposure": 0.9957,
+        "mc_maxdd_p50": -0.8491,
+        "mc_maxdd_p95": -0.9781,
+        "median_pnl": -0.0039,
+        "n_trades": 310,
+        "panel_columns": 11,
+        "panel_rows": 583933,
+        "pending_exit_positions": 0,
+        "profit_factor": 1.31,
+        "selection": {
+          "entry_candidates": 201637,
+          "entry_trigger_enabled": false,
+          "entry_trigger_filtered": 0,
+          "strategy_matches": 201637
+        },
+        "shared_market_data": false,
+        "sharpe": 0.25,
+        "sortino": 0.36,
+        "timing_ms": {
+          "load_panel": 468.2,
+          "matrix_build": 367.0,
+          "signals_score": 300.9,
+          "simulate": 551.5,
+          "statistics": 2.9,
+          "total": 1731.2
+        },
+        "total_return": 0.144,
+        "win_rate": 0.4677,
+        "worst": -0.2356
+      },
+      "strategy_id": "ai_hs300_macro_gate_quality_r275_remove_term",
+      "timing_errors": [],
+      "trade_count": 310
+    }
+  },
+  "round": "R310",
+  "runner_sha256": "6f8bfa97c4022ef867f794a0952485f91d36f7f091a1f30313ab25cdef25e32d"
+}

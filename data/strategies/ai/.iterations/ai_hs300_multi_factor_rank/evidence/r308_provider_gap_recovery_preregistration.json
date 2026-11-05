@@ -1,0 +1,64 @@
+{
+  "classification": "preregistered read-only data provenance audit; not alpha or return evidence",
+  "classification_rules": {
+    "auxiliary_nontrading": "R305 auxiliary qfq key has tradestatus=0; this is only a source label",
+    "auxiliary_trading": "R305 auxiliary qfq key has tradestatus=1; this is only a source label",
+    "auxiliary_unresolved": "no exact auxiliary qfq key match in R305",
+    "provider_absent_empty_symbol": "provider returned no rows at all for the symbol in the requested window; cannot distinguish delisting, suspension, or source omission",
+    "provider_absent_for_returned_symbol": "provider returned at least one row for the symbol but not the exact key",
+    "provider_invalid_bar": "exact key returned but OHLC or volume fails the validity rule",
+    "provider_valid_bar": "exact key returned with positive open/high/low/close and non-negative volume"
+  },
+  "created_at_utc": "2026-11-05T09:56:37.789237+00:00",
+  "date": "2026-11-05",
+  "decision_rule": {
+    "never": "do not write provider rows into production data, do not run a factor backtest, and do not change any candidate status in this round",
+    "otherwise": "record the gap as unresolved; do not impute, backfill, or infer alpha",
+    "strong_recovery": "if provider_valid_bar covers at least 80% of all 3,586 absent keys, recommend a separate canonical backfill round only after explicit approval",
+    "unresolved_recovery": "if provider_valid_bar covers at least 50% of the 540 auxiliary-unresolved keys, recommend a separate provenance/backfill round for that subset"
+  },
+  "expected_scale": {
+    "absent_keys": 3586,
+    "auxiliary_nontrading": 58,
+    "auxiliary_tradable": 2988,
+    "auxiliary_unresolved": 540,
+    "symbol_union_from_r305": 49
+  },
+  "frozen_inputs": [
+    "data/research/r78_daily_membership/daily_snapshots.parquet",
+    "data/research/r40_prices/bootstrap_missing.parquet",
+    "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r305_member_bar_gap_audit.json",
+    "data/kline_daily/date=*/part.parquet"
+  ],
+  "gates": {
+    "P1_exact_absent_key_reconstruction": "R308 reconstructs exactly 3,586 absent keys with zero duplicate keys and matches the R305 aggregate",
+    "P2_provider_symbol_coverage": "at least 95% of the absent-key symbol union returns at least one provider row in the requested window",
+    "P3_classification_partition": "all four provider classifications sum exactly to the reconstructed absent-key count",
+    "P4_no_write_or_input_drift": "all frozen input hashes match before and after the audit; canonical daily and enriched directories are unchanged",
+    "P5_no_outcome_fields": "the result contains no return, forward outcome, adjusted price, or performance metric"
+  },
+  "question": "For the exact R78 member-day keys absent from canonical daily K-line partitions, can the project AkShare provider return a valid unadjusted daily bar, and how does that recovery differ between the 2,988 tradable, 58 non-trading, and 540 unresolved auxiliary buckets?",
+  "round": "R308",
+  "scope": {
+    "auxiliary_source": "data/research/r40_prices/bootstrap_missing.parquet, qfq rows only",
+    "canonical_bars": "data/kline_daily/date=*/part.parquet, filtered to R78 date range",
+    "join": "exact (date, symbol) equality; no forward fill, ticker rewriting, current-member substitution, or date shifting",
+    "membership_source": "data/research/r78_daily_membership/daily_snapshots.parquet",
+    "prohibited": [
+      "forward returns",
+      "alpha scans",
+      "backtests",
+      "production writes",
+      "imputation",
+      "price adjustment"
+    ],
+    "provider": "app.plugins.akshare.provider.AkShareProvider.get_daily",
+    "provider_asset_type": "stock",
+    "provider_price_mode": "unadjusted daily; only key presence and OHLC validity are inspected",
+    "provider_window": [
+      "2020-12-31",
+      "2026-10-14"
+    ],
+    "r305_reference": "evidence/r305_member_bar_gap_audit.json"
+  }
+}

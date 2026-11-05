@@ -18139,3 +18139,11 @@ R304-A14 冻结 NO-GO 不变：官方调入名单尚未闭合，A14 的 600745.S
 由于此前每轮必须先登记面板的会话要求未完成，本轮按研究纪律停在登记失败处：**没有运行数据覆盖/事件样本量可行性检查，没有读取 R306 前瞻收益，没有系统回测或 alpha 扫描**。该失败仅说明面板 schema 不接受这两个配置字段，不能判为假设的数据 NO-GO 或因子失败。R306 不是已完成研究结果；后续如重启，须作为新冻结版本登记，只把允许字段放入面板配置，并将完整定义保留在预注册/证据文件中。
 
 拒绝原始响应 SHA-256 为 `c9362948358c54bcf7056cf2d6aea27ab8dd69736279fe81c9787a3234ce5d26`；完整证明见 `evidence/r306_gap_retention_preregistration.json`、`evidence/r306_panel_registration_failure_addendum.md` 和 `evidence/r306_panel_registration_*.json` / `.raw.json`，均有 SHA-256 sidecar。R257 仍 research-only，生产继续 pause_production。
+
+# R308-R310：数据漂移、R40 快照复现与候选淘汰（2026-11-05）
+
+- **R308 NO-GO**：当前 `data/kline_daily` 与 R305 冻结输入的 2,141 个哈希不一致；按 R78 精确成员口径，当前重建缺口为 **86,182**，不是 R305 的 3,586。2020-12-31 仅 271 个 canonical 行、与 300 个成员交集 200；2026-10-14 缺 1 只。未调用 provider、未写行情、未回测。证据：`evidence/r308_data_drift_nogo.json`、`evidence/r308_result.md`。
+- **R308 本地恢复线索**：`data/research/r40_engine_data/kline_daily_enriched` 对 R78 的 419,700 个键覆盖 419,360 个（99.919%），对当前 86,182 个缺口覆盖 85,842 个（99.605%）；仍是本地研究快照，不是生产数据修复。证据：`evidence/r308_local_snapshot_recovery_addendum.json`。
+- **R309 可复现**：固定 R102 策略在 R40 临时数据根目录上完成 1,301 天、681 笔交易，收益 **+62.69%**、Sharpe **0.46**、MDD **-40.85%**；相对旧证据差异 +3.49pp / +0.01 / 0pp，G1~G4 全过。仍因 40% 以上回撤不可部署。证据：`evidence/r309_r40_reproducibility.json`。
+- **R310 不可复现**：R274 在 R40 上仅 +17.44% / Sharpe 0.27 / MDD -27.29%（旧 +85.98% / 0.77 / -22.01%）；R275 期限利差版仅 +14.40% / 0.25 / -25.24%（旧 +90.46% / 0.89 / -13.90%）。两者均判定为特定数据快照结果，不能继续作为候选或纸面交易依据。证据：`evidence/r310_r40_candidate_reproducibility.json`。
+- **当前结论**：没有同时满足低回撤、近一年稳定、数据可复现和集中度门槛的候选；生产继续保持 `pause_production`。下一步先解决 canonical 数据快照版本化，再在新快照上做冻结策略复验，不能回到旧候选上调参数。

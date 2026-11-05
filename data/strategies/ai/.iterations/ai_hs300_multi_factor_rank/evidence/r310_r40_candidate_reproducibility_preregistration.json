@@ -1,0 +1,59 @@
+{
+  "candidates": {
+    "r274": "ai_hs300_macro_gate_quality_r274_no_macro_gate",
+    "r275": "ai_hs300_macro_gate_quality_r275_remove_term"
+  },
+  "classification": "preregistered fixed-candidate reproducibility audit on the local R40 research snapshot; no parameter search and no alpha discovery",
+  "created_at_utc": "2026-11-05T10:03:29.782357+00:00",
+  "date": "2026-11-05",
+  "decision_rule": "If G1-G4 pass, classify each candidate as reproducible when absolute return difference <=10pp and absolute MDD difference <=5pp versus its frozen reference; otherwise record not reproducible. Passing this audit still does not overcome prior concentration/out-of-sample gates.",
+  "execution": {
+    "alpha_scan": false,
+    "data_root": "temporary copy of the R40 research snapshot",
+    "parameter_grid": false,
+    "production_write": false,
+    "provider_calls": false
+  },
+  "fixed_execution": {
+    "asset_type": "stock",
+    "commission_pct": 0.0006,
+    "end": "2026-10-14",
+    "fees_pct": 0.0006,
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0,
+    "max_hold_days": "strategy-defined (35 for both candidates)",
+    "max_positions": 10,
+    "mode": "position",
+    "overrides": {},
+    "params": {},
+    "position_sizing": "equal",
+    "slippage_bps": 15.0,
+    "stamp_tax_pct": 0.001,
+    "start": "2021-06-01",
+    "stop_loss": "strategy-defined (none for both candidates)",
+    "universe": "R78 exact daily HS300 membership"
+  },
+  "gates": {
+    "G1_r40_membership_coverage": "R40 exact R78 key coverage >= 99.5% (R308 measured 99.919%)",
+    "G2_strategy_execution": "both candidates return no error, non-empty equity curves, and at least 100 trades each",
+    "G3_temporal_contract": "T+1 open entry/exit and no future signal timing violations",
+    "G4_production_isolation": "production and R40 trees are unchanged after the temporary-copy runs",
+    "G5_reference_comparison": "report return, Sharpe, MDD, trade counts and absolute differences vs the frozen references; do not tune after seeing results"
+  },
+  "question": "Do the previously promising R274 no-macro-gate and R275 remove-term candidates reproduce on the local R40 enriched snapshot with exact R78 membership and frozen execution settings?",
+  "reference_files": {
+    "r274": {
+      "path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r274_no_macro_gate.json",
+      "sha256": "29ea83c6964ebdbdde87ed627a70cd2930bb0f602dbfa846caba72353829160b"
+    },
+    "r275": {
+      "path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r275_single_gate_ablation_v3d.json",
+      "sha256": "2fca331c072464c7159ce74642ec51982142fb7992381f4f471a2e7221583fd9"
+    },
+    "r40": {
+      "path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r308_local_snapshot_recovery_addendum.json",
+      "sha256": "c54992f516c135ab2eb56890980d3bbf9f282d348fb7d62f2d67d0a2b1ebdf75"
+    }
+  },
+  "round": "R310"
+}
