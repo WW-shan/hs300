@@ -1,0 +1,199 @@
+{
+  "amendment": {
+    "change": "Removed only the direct uf_merton_dd.is_not_null() filter condition. The filter now checks its raw PIT inputs (pb, debt ratio, volatility and other existing quality fields); materialize_scoring_columns computes the custom factor in the scoring stage.",
+    "coverage_unchanged": true,
+    "execution_failure_file": "r351_execution_attempt1_failure.json",
+    "execution_failure_sha256": "3dc976ff4906cf37b62e2f745a29c6f19d49eda0d0530cd7508e3449df878db3",
+    "new_preflight_file": "r351_merton_dd_preflight_v2.json",
+    "no_returns_or_trades_in_failed_attempt": true,
+    "original_preflight_sha256": "d75c953b953cef606b619eb9e0408e564c440ba6635e049d3faabaf31e4dff01",
+    "original_preregistration_sha256": "396f8815b124942a5c82e363107508741ca3669563c231b3458ff900ad30eaef",
+    "reason": "R351 attempt1 failed before any returns because the Python filter directly referenced the not-yet-materialized uf_merton_dd scoring column.",
+    "version": "A1"
+  },
+  "artifact_sha256": {
+    "candidate_strategy": "5fc8d375851b64e2d0d9988f31f11176688d8320d7addc985becda7131de29d9",
+    "factor_definition": "c11f7cc08b5cc76bf4f7120c360e3234bb59d8d7989ba5728f21d64f7f663e0a",
+    "strategy_A": "8cc54b21b2508bf35527687bac061518e8d8caac9887a7e86a07345bdc33526e",
+    "strategy_B": "e785a540c23ecbeab625ae5349c52293c8659011bf224f80960d6e728bcb382e",
+    "strategy_C_control": "6a120d44e00be96bccc1641bcec300f1bf62f1a1af56476bc37fc4561495051d"
+  },
+  "candidate_id": "r351_merton_dd_c_sleeve_cap10_gold_trend_proxy",
+  "classification": "single-factor substitution in the C sleeve of the R344 extended-window portfolio; structural credit-risk proxy",
+  "costs": {
+    "overlay_4x_round_trip": 0.002,
+    "overlay_5x_round_trip": 0.0025,
+    "overlay_conservative_3x_round_trip": 0.003,
+    "overlay_main_round_trip": 0.001,
+    "stock_main": "2x stock costs",
+    "stock_stress": "3x/4x/5x stock costs"
+  },
+  "diagnostics": [
+    "Report the 2022 partial return and drawdown versus R344 control",
+    "Report 5x top1/top3/top5 net contribution versus R344 control",
+    "Report C standalone return and drawdown as diagnostic only; portfolio gates remain authoritative",
+    "Report factor contribution and holdings overlap with the control C sleeve"
+  ],
+  "discipline": [
+    "One factor substitution only; no parameter scan of the Merton formula or structural assumptions",
+    "No leverage",
+    "No paper target or order file",
+    "Preserve execution failures and amendments",
+    "Use historical membership, T+1 open execution and the system StrategyBacktestService",
+    "The zero-drift one-year Merton proxy is frozen before returns; do not tune the horizon, drift or volatility proxy after results"
+  ],
+  "disclosure": "The factor and strategy files were written before any portfolio return, drawdown, trade or concentration result was computed. The coverage-only preflight inspected factor coverage and cross-sectional correlations only. The 2022-05-05 start is inherited from R344 earliest common C-sleeve window. This is a quasi-out-of-sample temporal extension, not an independent 2018-2026 sample.",
+  "economic_rationale": "The factor maps PIT PB and book leverage into a market-equity/book-debt ratio q, treats asset volatility as equity volatility times q/(1+q), and computes a zero-drift one-year structural distance-to-default proxy. It is not the previous book-solvency/vol ratio: candidate-only mean daily Spearman correlation with uf_solvency_buffer is 0.4779 and with the old low-vol leg is 0.4862; maximum mean absolute correlation with any retained scoring leg is 0.4862.",
+  "fresh_starts": [
+    "2022-05-05",
+    "2023-01-03",
+    "2024-01-02",
+    "2025-01-02",
+    "2025-11-05",
+    "2026-01-05"
+  ],
+  "gates": {
+    "absolute_performance_2x": {
+      "G10_no_leverage": "max weight sum <=1, min target weight >=0",
+      "G11_cap": "mean C sleeve weight <=10.5%",
+      "G1_annual": ">=12%",
+      "G2_mdd": ">= -15%",
+      "G3_sharpe": ">=1.25",
+      "G4_calendar": "2024 and 2025 both >=0",
+      "G5_recent": "recent-year total return >0",
+      "G6_bootstrap": "positive rate >=80%, P05 >= -12%",
+      "G7_rolling": "positive rate >=70%, worst >= -15%",
+      "G8_stress": "3x conservative total return >0 and MDD >= -25%"
+    },
+    "concentration": {
+      "C1": "distinct symbols >=80",
+      "C10": "R331 primary asset liquidity passes",
+      "C11": "portfolio annual turnover <=1.5x",
+      "C12": "max weight sum <=1, min target weight >=0",
+      "C2": "top1 net contribution <=25%",
+      "C3": "top3 net contribution <=55%",
+      "C4": "top5 net contribution <=75%",
+      "C5": "recent positive-contribution symbols >=8",
+      "C6": "top industry gross contribution <=45%",
+      "C7": "max symbol loss / gross profit <=20%",
+      "C8": "each asset contribution <=50%",
+      "C9": "each defensive sleeve mean <=40%, max <=50%"
+    },
+    "costs_and_concentration": {
+      "X1_4x": "total return >0 and MDD >= -25%",
+      "X2_5x_performance": "total return >0, Sharpe >=0.50, MDD >= -25%, 2024/2025 >=0, recent >0",
+      "X3_5x_concentration": "C1-C12 all pass at 5x"
+    },
+    "data": {
+      "D1_preflight": "R351 preflight all checks true and no returns evaluated before preregistration",
+      "D2_curves": "all A/B/C curves start on 2022-05-05 and extend through 2026-11-05",
+      "D3_input_isolation": "production and R40 input trees remain byte-hash stable during execution",
+      "D4_correlation": "mean pairwise A/B/C correlation < 0.85"
+    },
+    "robustness": {
+      "F1_fresh": "at least 5/6 fresh starts positive and every MDD >= -18%",
+      "F2_extension_phase": "2022-05-05 fresh-start path total return >0",
+      "P1_overlay": ">=7/9 overlay lookback/target variants pass core gates",
+      "P2_joint": ">=2/3 joint target variants pass core gates",
+      "P3_center": "60d/15% center passes",
+      "R1_dividend": "515080.SH replacement annual >=5%, MDD >= -20%, 2024/2025 >=0",
+      "R2_gold": "159937.SZ replacement through the same proxy annual >=5%, MDD >= -20%, 2024/2025 >=0",
+      "R3_treasury": "511010.SH replacement annual >=5%, MDD >= -20%, 2024/2025 >=0"
+    },
+    "satellite_cap_plateau": {
+      "P4": "at least 3/4 caps pass and the 10% center passes",
+      "grid": [
+        0.05,
+        0.1,
+        0.15,
+        0.2
+      ],
+      "per_cap_core": "2x annual >=12%, Sharpe >=1.25, MDD >= -15%; 5x annual >=10%, Sharpe >=1.10, MDD >= -15%; 5x C2-C4 pass; at least 5/6 fresh starts positive"
+    },
+    "temporal_extension": {
+      "T1_2022_partial_return": "2022-05-05..2022-12-31 total return >0",
+      "T2_2022_partial_mdd": "2022-05-05..2022-12-31 MDD >= -15%",
+      "T3_2023_full_year": "full calendar-year 2023 return >=0",
+      "T4_prewindow_return": "2022-05-05..2023-05-03 total return >0",
+      "T5_prewindow_sharpe": "2022-05-05..2023-05-03 Sharpe >=0.30",
+      "T6_prewindow_mdd": "2022-05-05..2023-05-03 MDD >= -15%"
+    },
+    "tradeoff_vs_r344_control": {
+      "G9_annual": "candidate annual >= R344 control annual -1.0pp",
+      "G9_mdd": "candidate MDD >= R344 control MDD -0.5pp",
+      "G9_sharpe": "candidate Sharpe >= R344 control Sharpe -0.10"
+    }
+  },
+  "hypothesis": "Replacing the C sleeve generic 15% low-volatility leg with an industry-neutral 15% Merton distance-to-default proxy improves the 2022 weak-market tail and net-of-5x-cost breadth without materially degrading long-window return or drawdown.",
+  "known_limitations": [
+    "The zero-drift one-year proxy is not a full KMV/Merton calibration and does not use a term structure of debt.",
+    "PB and debt ratio are PIT financial fields but market equity is inferred through PB rather than a full historical market-value balance sheet.",
+    "Financial firms are handled by within-industry neutralization rather than a separate credit model.",
+    "Current-snapshot industry classification is backfilled through history.",
+    "Membership is reconstructed and ETF qfq is not official PIT total return.",
+    "The common window starts in 2022 because TTM financial factors are unavailable earlier.",
+    "The 10% C cap, broad C design and gold trend rule were selected in prior post-hoc research."
+  ],
+  "preflight": {
+    "all_checks": true,
+    "candidate_days": 1093,
+    "candidate_rows": 122043,
+    "correlation_with_low_vol": 0.48617148712811986,
+    "correlation_with_solvency_buffer": 0.47789289960847836,
+    "file": "r351_merton_dd_preflight_v2.json",
+    "first_factor_date": "2022-05-05",
+    "maximum_mean_abs_component_correlation": 0.48617148712811986,
+    "minimum_daily_coverage": 1.0,
+    "no_returns_computed": true,
+    "sha256": "a86117246f08a4167afc002206be2ab9f498603c0ba78a8a1fdf706cc59eb651"
+  },
+  "reference_control": {
+    "result_file": "r344_extended_window.json",
+    "result_sha256": "2549f75ec759eb0a6cf40e3cd5534a6b45eac5d64c093676af47eef0b25153b3",
+    "result_status": "no_candidate_passed_temporal_extension",
+    "round": "R344",
+    "use": "fixed comparison construction; R344 remains a failed/no-candidate result and is not relabelled"
+  },
+  "round": "R351",
+  "selection_rule": "All D/G/T/X/C/R/F/P gates must pass. Otherwise record the result as research-only negative evidence and do not promote or generate paper targets. No threshold, weight, cap or window changes after results.",
+  "single_mutation": {
+    "added_component": {
+      "factor": "uf_merton_dd",
+      "formula": "log(1+q)*(1+q)/(annual_vol_20d*q) - 0.5*annual_vol_20d*q/(1+q), where q=pb_latest*(1-debt_ratio_latest/100)/(debt_ratio_latest/100)",
+      "neutralization": "industry_l1 demean plus within-industry z-score; all other scoring legs are excluded from neutralization",
+      "structural_assumptions": "one-year horizon, zero asset drift, debt point equal to book liabilities, asset volatility approximated from 20-day equity realized volatility and market leverage",
+      "weight": 0.15
+    },
+    "candidate": "C = ai_hs300_quality_momentum_merton_h60",
+    "control": "R344 extended-window construction with C = ai_hs300_quality_momentum_broad_h60",
+    "removed_component": {
+      "factor": "uf_low_vol",
+      "weight": 0.15
+    },
+    "unchanged": [
+      "A strategy and Top10",
+      "B strategy and Top10",
+      "60-day momentum weight 40% in C",
+      "quality-value weight 25% in C",
+      "cash-quality weight 20% in C",
+      "C Top50 and 60-day holding",
+      "C satellite cap 10%",
+      "monthly A/B/C inverse-volatility risk parity with [0.20, 0.60] bounds",
+      "equity sleeve at most 1/3",
+      "gold 200-day trend proxy and equal-weight defensive bucket",
+      "60-day 15% volatility target with [0.20, 1.00] gross bounds",
+      "no leverage"
+    ]
+  },
+  "status": "pre_registered_before_r351_portfolio_backtest_v2",
+  "window": {
+    "end": "2026-11-05",
+    "prewindow_extension": [
+      "2022-05-05",
+      "2023-05-03"
+    ],
+    "recent_year_start": "2025-11-05",
+    "start": "2022-05-05",
+    "warmup_start": "2020-06-01"
+  }
+}

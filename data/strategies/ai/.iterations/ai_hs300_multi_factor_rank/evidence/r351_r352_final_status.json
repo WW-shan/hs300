@@ -1,0 +1,61 @@
+{
+  "best_diagnostic": {
+    "annual_2x": 0.120066,
+    "candidate_id": "r351_merton_dd_c_sleeve_cap10_gold_trend_proxy",
+    "mdd_2x": -0.090558,
+    "return_2022": -0.001828,
+    "round": "R351",
+    "sharpe_2x": 1.2909,
+    "top5_net_share_5x": 1.178996,
+    "why_not_promoted": [
+      "2022 partial return below zero",
+      "5x top1/top3/top5 concentration failed",
+      "cap plateau 0/4",
+      "C standalone annual below control"
+    ]
+  },
+  "closed_lines": [
+    {
+      "line": "Merton distance-to-default proxy replaces C low-vol leg",
+      "result_file": "r351_merton_dd_backtest.json",
+      "result_sha256": "815b9098c99c781d3b9b860163b88bde93fb5413513a624197fb266d401e330c",
+      "round": "R351",
+      "status": "failed_2022_tail_and_5x_concentration"
+    },
+    {
+      "line": "intraday/overnight volatility share replaces C low-vol leg",
+      "result_file": "r352_intraday_risk_backtest.json",
+      "result_sha256": "60356a8efbc562c3eba2a473cbf4f32dc526dd4c139b66ad98bad5dcfe931555",
+      "round": "R352",
+      "status": "independent_but_no_incremental_c_alpha"
+    }
+  ],
+  "known_limitations": [
+    "Common window starts 2022-05-05 because TTM C-sleeve data starts then.",
+    "Industry classification uses a current snapshot backfilled through history.",
+    "ETF qfq caches are not official PIT total-return series.",
+    "5x net-contribution concentration remains fragile when net profit is thin."
+  ],
+  "latest_independent_factor": {
+    "c_sleeve_annual": 0.003158,
+    "control_c_sleeve_annual": 0.014851,
+    "finding": "independent risk composition but no C-sleeve return increment",
+    "id": "uf_intraday_risk_share",
+    "preflight_max_abs_component_correlation": 0.03436130571590947
+  },
+  "next_research_guidance": [
+    "Do not repeat single risk-factor substitutions in the same C sleeve without a new return source or a different portfolio role.",
+    "Institutional research-visit data is only available for roughly one recent year and individual fund-flow history is only 120 sessions; do not fabricate long history.",
+    "Further work should test a genuinely independent return source, or a portfolio-structure change that directly broadens 5x net-profit generation."
+  ],
+  "no_leverage": true,
+  "order_file_generated": false,
+  "paper_target_generated": false,
+  "production_enabled": false,
+  "rounds": [
+    "R351",
+    "R352"
+  ],
+  "selected": null,
+  "status": "research_only_no_candidate_after_r351_r352"
+}

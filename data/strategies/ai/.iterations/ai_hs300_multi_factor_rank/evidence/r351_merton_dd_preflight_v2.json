@@ -1,0 +1,200 @@
+{
+  "all_checks": true,
+  "candidate_strategy": {
+    "file": "data/strategies/ai/ai_hs300_quality_momentum_merton_h60.py",
+    "id": "ai_hs300_quality_momentum_merton_h60",
+    "max_hold_days": 60,
+    "neutralize": {
+      "exclude": [
+        "momentum_60d",
+        "uf_quality_value_defensive",
+        "uf_cash_quality"
+      ],
+      "industry": "industry_l1",
+      "shrink": 1.0,
+      "styles": []
+    },
+    "scoring": {
+      "momentum_60d": 0.4,
+      "uf_cash_quality": 0.2,
+      "uf_merton_dd": 0.15,
+      "uf_quality_value_defensive": 0.25
+    },
+    "sha256": "5fc8d375851b64e2d0d9988f31f11176688d8320d7addc985becda7131de29d9",
+    "stop_loss": null
+  },
+  "checks": {
+    "D10_all_values_finite": true,
+    "D11_low_component_correlation": true,
+    "D12_candidate_days": true,
+    "D13_inputs_byte_stable": true,
+    "D1_formula_compiles": true,
+    "D2_dependencies_are_backward_pit_inputs": true,
+    "D3_candidate_strategy_frozen": true,
+    "D4_only_merton_dd_leg_neutralized": true,
+    "D5_panel_loaded_with_warmup": true,
+    "D6_first_factor_date_at_window_start": true,
+    "D7_mean_candidate_coverage": true,
+    "D8_min_candidate_coverage": true,
+    "D9_every_year_coverage": true
+  },
+  "control_strategy": {
+    "file": "data/strategies/ai/ai_hs300_quality_momentum_broad_h60.py",
+    "id": "ai_hs300_quality_momentum_broad_h60",
+    "scoring": {
+      "momentum_60d": 0.4,
+      "uf_cash_quality": 0.2,
+      "uf_low_vol": 0.15,
+      "uf_quality_value_defensive": 0.25
+    },
+    "sha256": "6a120d44e00be96bccc1641bcec300f1bf62f1a1af56476bc37fc4561495051d"
+  },
+  "coverage": {
+    "by_year": [
+      {
+        "candidate_days": 165,
+        "candidate_rows": 12984,
+        "coverage": 1.0,
+        "finite_rate": 1.0,
+        "year": 2022
+      },
+      {
+        "candidate_days": 242,
+        "candidate_rows": 23732,
+        "coverage": 1.0,
+        "finite_rate": 1.0,
+        "year": 2023
+      },
+      {
+        "candidate_days": 242,
+        "candidate_rows": 32028,
+        "coverage": 1.0,
+        "finite_rate": 1.0,
+        "year": 2024
+      },
+      {
+        "candidate_days": 243,
+        "candidate_rows": 32423,
+        "coverage": 1.0,
+        "finite_rate": 1.0,
+        "year": 2025
+      },
+      {
+        "candidate_days": 201,
+        "candidate_rows": 20876,
+        "coverage": 1.0,
+        "finite_rate": 1.0,
+        "year": 2026
+      }
+    ],
+    "candidate_days": 1093,
+    "candidate_rows": 122043,
+    "component_coverage_mean": {
+      "cash_cov": 1.0,
+      "dd_cov": 1.0,
+      "momentum_cov": 1.0,
+      "quality_cov": 1.0
+    },
+    "dd_coverage_mean": 1.0,
+    "dd_coverage_min": 1.0,
+    "first_factor_date": "2022-05-05"
+  },
+  "factor": {
+    "dependencies": [
+      "annual_vol_20d",
+      "debt_ratio_latest",
+      "pb_latest"
+    ],
+    "direction": "high",
+    "file": "data/user_data/custom_factors/uf_merton_dd.json",
+    "formula": "log(1.0 + pb_latest * (1.0 - debt_ratio_latest / 100.0) / (debt_ratio_latest / 100.0)) * (1.0 + pb_latest * (1.0 - debt_ratio_latest / 100.0) / (debt_ratio_latest / 100.0)) / (annual_vol_20d * pb_latest * (1.0 - debt_ratio_latest / 100.0) / (debt_ratio_latest / 100.0)) - 0.5 * annual_vol_20d * pb_latest * (1.0 - debt_ratio_latest / 100.0) / (debt_ratio_latest / 100.0) / (1.0 + pb_latest * (1.0 - debt_ratio_latest / 100.0) / (debt_ratio_latest / 100.0))",
+    "id": "uf_merton_dd",
+    "interpretation": "zero-drift one-year Merton distance-to-default proxy from PIT PB, book leverage and 20d realized volatility; industry-neutralized only inside the candidate strategy",
+    "sha256": "c11f7cc08b5cc76bf4f7120c360e3234bb59d8d7989ba5728f21d64f7f663e0a"
+  },
+  "factor_structure": {
+    "correlation_days": 1093,
+    "daily_spearman_abs_p90": {
+      "cash": 0.23383132023184425,
+      "low_vol": 0.6100985461541802,
+      "momentum": 0.39346155735616894,
+      "quality": 0.3504724916963921,
+      "raw_vs_neutral": 0.7783397131791692,
+      "solvency_buffer": 0.57653732764848
+    },
+    "daily_spearman_mean": {
+      "cash": -0.08450906145821832,
+      "low_vol": 0.48617148712811986,
+      "momentum": -0.2382234163343704,
+      "quality": 0.23792431892236507,
+      "raw_vs_neutral": 0.685573715325149,
+      "solvency_buffer": 0.47789289960847836
+    },
+    "daily_spearman_median": {
+      "cash": -0.07034547542100304,
+      "low_vol": 0.4890597502264614,
+      "momentum": -0.25139351915518415,
+      "quality": 0.227554223641966,
+      "raw_vs_neutral": 0.6915216943498963,
+      "solvency_buffer": 0.4777490541089456
+    },
+    "max_abs_mean_component_correlation": 0.48617148712811986,
+    "unique_neutral_values": 109038
+  },
+  "input_isolation": {
+    "after": {
+      "alt_hs300": {
+        "bytes": 251443214,
+        "files": 2143,
+        "sha256": "2fed5684eb1742095094f00a8ff38afd7ed7242c9d2ee52b824dc5be88f1467e"
+      },
+      "candidate_strategy": "5fc8d375851b64e2d0d9988f31f11176688d8320d7addc985becda7131de29d9",
+      "control_strategy": "6a120d44e00be96bccc1641bcec300f1bf62f1a1af56476bc37fc4561495051d",
+      "factor_definition": "c11f7cc08b5cc76bf4f7120c360e3234bb59d8d7989ba5728f21d64f7f663e0a",
+      "financials": {
+        "balance_sheet": "9253a260bb045c37c0409617bdb3082624e7f21f253d35a147036e5eeac47283",
+        "cash_flow": "f34a3365dd92713d91a007b784b9ac8cd266cc7e7d19b5ab1df75a82381e3b5b",
+        "income": "9bf784d2939de14c4f9da2e96ad3fbecd3c87ae85e8c7dfea056b636ee8164e2",
+        "metrics": "d458c82807fbd0957344021930ba065b478dae78d7bb17a6aea9e4cab4757886"
+      },
+      "kline_daily_enriched": {
+        "bytes": 47704926,
+        "files": 2143,
+        "sha256": "8de93672101a09972d0ebe67c44e089240daa03eb861091b3c16005ae37baf7c"
+      },
+      "membership": "6e5114f16ecd936be0bf7fb62f474d169dca25f1bad78bb27fd0ea413d3ed748"
+    },
+    "before": {
+      "alt_hs300": {
+        "bytes": 251443214,
+        "files": 2143,
+        "sha256": "2fed5684eb1742095094f00a8ff38afd7ed7242c9d2ee52b824dc5be88f1467e"
+      },
+      "candidate_strategy": "5fc8d375851b64e2d0d9988f31f11176688d8320d7addc985becda7131de29d9",
+      "control_strategy": "6a120d44e00be96bccc1641bcec300f1bf62f1a1af56476bc37fc4561495051d",
+      "factor_definition": "c11f7cc08b5cc76bf4f7120c360e3234bb59d8d7989ba5728f21d64f7f663e0a",
+      "financials": {
+        "balance_sheet": "9253a260bb045c37c0409617bdb3082624e7f21f253d35a147036e5eeac47283",
+        "cash_flow": "f34a3365dd92713d91a007b784b9ac8cd266cc7e7d19b5ab1df75a82381e3b5b",
+        "income": "9bf784d2939de14c4f9da2e96ad3fbecd3c87ae85e8c7dfea056b636ee8164e2",
+        "metrics": "d458c82807fbd0957344021930ba065b478dae78d7bb17a6aea9e4cab4757886"
+      },
+      "kline_daily_enriched": {
+        "bytes": 47704926,
+        "files": 2143,
+        "sha256": "8de93672101a09972d0ebe67c44e089240daa03eb861091b3c16005ae37baf7c"
+      },
+      "membership": "6e5114f16ecd936be0bf7fb62f474d169dca25f1bad78bb27fd0ea413d3ed748"
+    },
+    "stable": true
+  },
+  "next": "If all checks pass, freeze R351 portfolio gates before running any return or drawdown backtest.",
+  "no_return_or_backtest_evaluated": true,
+  "round": "R351",
+  "status": "coverage_only_preflight_no_returns",
+  "window": {
+    "end": "2026-11-05",
+    "panel_warmup_start": "2020-06-01",
+    "start": "2022-05-05"
+  }
+}
