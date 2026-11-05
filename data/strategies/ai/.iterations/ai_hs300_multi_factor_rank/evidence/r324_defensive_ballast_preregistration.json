@@ -1,0 +1,74 @@
+{
+  "round": "R324",
+  "classification": "preregistered defensive-asset ballast follow-up to R315-R319; no A/B parameter search",
+  "created_at_utc": "2026-11-05T12:25:32.600000+00:00",
+  "question": "R315-R319 已证明旧 A/B 内部调参无法改善年度稳定性。把 R312 冻结双袖作为权益复合袖，加入可交易的中长久期国债 ETF 做 60 日逆波动风险平价，并无杠杆限制总暴露，能否在不牺牲年化的前提下改善 2022/2023、随机一年正收益率和滚动一年正收益率？",
+  "source_rounds": ["R312", "R315", "R317", "R318", "R319"],
+  "data": {
+    "primary_defensive_asset": {
+      "symbol": "511260.SH",
+      "name": "上证10年期国债ETF",
+      "price": "AkShare fund_etf_hist_em daily qfq close",
+      "reason": "上市早于回测起点，久期高于5年期国债ETF；作为独立利率收益源"
+    },
+    "robustness_defensive_asset": {
+      "symbol": "511010.SH",
+      "name": "国泰上证5年期国债ETF",
+      "price": "AkShare fund_etf_hist_em daily qfq close"
+    },
+    "equity_composite": "R312 A/B 60d inverse-vol risk parity, A bounds [0.2,0.8], then 15% vol target [0.2,1.0], frozen",
+    "probe_result": "r324_asset_probe.json",
+    "cache_path": "data/research/r324_defensive_assets/treasury_etf_qfq.parquet",
+    "cache_is_committed": false
+  },
+  "periods": {
+    "full": ["2021-06-01", "2026-10-14"],
+    "recent_year": ["2025-10-14", "2026-10-14"]
+  },
+  "portfolio_rule": {
+    "rebalance": "monthly, first common trading day; target uses returns strictly before that day",
+    "lookback_days": 60,
+    "asset_weights": "inverse-volatility between the frozen R312 equity composite and the selected treasury ETF",
+    "equity_weight_bounds": [0.2, 0.8],
+    "volatility_estimate": "trailing 60-day covariance using the inverse-vol asset weights",
+    "target_annual_volatility": 0.15,
+    "gross_exposure_bounds": [0.2, 1.0],
+    "warmup": "first 60 aligned returns use equity weight 0.5 and gross exposure 0.5",
+    "leverage": "not allowed; equity and treasury weights are nonnegative and their sum is <= 1.0",
+    "main_round_trip_cost": 0.001,
+    "stress_round_trip_cost": 0.003,
+    "cost_application": "round-trip cost times one-way portfolio turnover including cash movement"
+  },
+  "variants": {
+    "primary_10y": "frozen R312 composite + 511260.SH under the portfolio_rule",
+    "robustness_5y": "same rule with 511010.SH instead of 511260.SH; robustness check only, not selected on performance"
+  },
+  "gates": {
+    "D1_data": "both ETF series cover >=95% of aligned R312 dates; no duplicate dates, null close, or nonpositive close",
+    "G1_return": "primary full-path annual return >=6.0%",
+    "G2_drawdown": "primary full-path MDD >= -18.0%",
+    "G3_sharpe": "primary full-path Sharpe >=0.70",
+    "G4_calendar_stability": "primary calendar 2022 return >=0 and calendar 2023 return >=0",
+    "G5_bootstrap": "20-day circular block bootstrap, 1000 paths, 252 days: positive rate >=80% and return P5 >= -12%",
+    "G6_rolling_year": "actual rolling 252-day positive rate >=70% and worst rolling 252-day return >= -15%",
+    "G7_recent_year": "2025-10-14 to 2026-10-14 return >0",
+    "G8_stress": "3x allocator round-trip cost full-path return >0 and MDD >= -25%",
+    "G9_incremental": "versus frozen R312 on the same dates: Sharpe improves by >=0.05 or MDD improves by >=3pp; annual return is no worse than R312 minus 1.0pp",
+    "G10_no_leverage": "every monthly equity and treasury weight is >=0 and their sum is <=1.0",
+    "R1_robustness": "5Y robustness variant has calendar 2022 and 2023 each >=0 and MDD >= -20%"
+  },
+  "selection_rule": "D1 + G1-G10 + R1 all pass -> R324 becomes candidate_for_concentration_audit only. Any failure -> selected=null, retain R312 holding-profile caveat, and record negative knowledge. No weight, window, target-vol, ETF or gate changes after seeing results.",
+  "bootstrap": {
+    "method": "circular 20-trading-day block bootstrap from the primary daily return sequence",
+    "paths": 1000,
+    "path_days": 252,
+    "seed": 20261105
+  },
+  "known_limitations": [
+    "Treasury ETF qfq prices are provider-adjusted and are not an official point-in-time archive.",
+    "The portfolio rule is tested after R315 failure, so R324 is a targeted follow-up rather than independent discovery.",
+    "The equity composite uses R40 local research data, current industry snapshots and current factor versions.",
+    "Canonical data drift remains unresolved.",
+    "A pass is only a candidate for a separate concentration, liquidity and paper-execution audit."
+  ]
+}
