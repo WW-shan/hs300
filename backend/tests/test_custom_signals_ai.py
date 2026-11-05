@@ -25,6 +25,11 @@ VALID_JSON = '''{
 }'''
 
 
+def _listed_fields(field_section: str) -> set[str]:
+    """Extract field IDs at entry boundaries, not parentheses inside labels."""
+    return set(re.findall(r"(?:^|: |, )([a-z0-9_]+)\(", field_section, re.MULTILINE))
+
+
 # ── build_messages ──────────────────────────────────────────
 
 
@@ -50,7 +55,7 @@ def test_build_messages_only_contains_whitelisted_fields():
     for field in ("ma20", "rsi_14", "boll_upper"):
         assert field in field_section
     # 字段清单里出现的每个 key( 都必须在白名单内 (物理列 ∪ 因子)
-    keys = set(re.findall(r"([a-z0-9_]+)\(", field_section))
+    keys = _listed_fields(field_section)
     assert keys and keys <= allowed_fields()
 
 
@@ -61,7 +66,7 @@ def test_build_messages_contains_factor_fields():
     system = build_messages("动量强的票")[0]["content"]
     field_section = system.split("运算符（op）", 1)[0]
     factor_ids = {s.id for s in all_factors()}
-    listed = set(re.findall(r"([a-z0-9_]+)\(", field_section))
+    listed = _listed_fields(field_section)
     assert factor_ids & listed, "提示词应包含至少一个因子字段"
     assert "因子·动量" in field_section
     assert "预计算的因子值" in system
