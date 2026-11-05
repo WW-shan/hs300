@@ -7,6 +7,7 @@ from pathlib import Path
 import polars as pl
 
 from app.backtest.engine import BacktestEngine, MatcherConfig
+from app.factors import ext_factors
 from app.backtest.strategy import StrategyDependencyResolver
 from app.indicators import pipeline
 from app.factors.store import load_into_registry
@@ -22,12 +23,19 @@ SIGNAL_IDS = (
     "r273_macro_exit_credit",
     "r273_macro_exit_term",
 )
+MACRO_COLUMNS = frozenset({
+    "ext_alt_hs300_equity_risk_premium",
+    "ext_alt_hs300_credit_spread_5y_low",
+    "ext_alt_hs300_term_spread_10y_2y",
+})
+_ORIGINAL_ALLOWED_FIELDS = custom_signals.allowed_fields
+
+
+def _allowed_with_macro_fields() -> frozenset[str]:
+    return _ORIGINAL_ALLOWED_FIELDS() | MACRO_COLUMNS
 
 
 def _signals() -> list[dict]:
-    # 该测试只构造信号表达式，不会启动应用；必须显式加载仓库 data 下的
-    # ext_alt_hs300 字段，否则 allowed_fields() 会使用测试环境的默认数据目录。
-    load_into_registry(ROOT / "data")
     fixture_dir = Path(__file__).resolve().parent / "fixtures" / "custom_signals"
     signals = [
         json.loads((fixture_dir / f"{signal_id}.json").read_text(encoding="utf-8"))
@@ -38,7 +46,8 @@ def _signals() -> list[dict]:
     return signals
 
 
-def test_r273_exit_signals_trigger_independently_and_or_compose():
+def test_r273_exit_signals_trigger_independently_and_or_compose(monkeypatch):
+    monkeypatch.setattr(custom_signals, "allowed_fields", _allowed_with_macro_fields)
     signals = _signals()
     expressions = custom_signals.build_expressions(signals)
     frame = pl.DataFrame(
@@ -64,6 +73,8 @@ def test_r273_exit_signals_trigger_independently_and_or_compose():
 def test_r273_strategy_resolves_signal_and_factor_dependencies(monkeypatch):
     data_dir = ROOT / "data"
     load_into_registry(data_dir)
+    monkeypatch.setattr(custom_signals, "allowed_fields", _allowed_with_macro_fields)
+    monkeypatch.setattr(ext_factors, "ext_factor_ids", lambda *_args, **_kwargs: MACRO_COLUMNS)
     definitions = [*SEED_SIGNALS, *_signals()]
     monkeypatch.setattr(pipeline, "_custom_signal_exprs", custom_signals.build_expressions(definitions))
     prev_fields = custom_signals.prev_day_fields(definitions)
