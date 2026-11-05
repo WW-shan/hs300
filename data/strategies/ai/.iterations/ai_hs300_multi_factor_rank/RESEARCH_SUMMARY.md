@@ -5360,3 +5360,10 @@ R306 冻结了“向上跳空后，收盘保留比例是否能预测随后五个
 - **R343 黄金 200 日趋势代理**：在 R342 上只改黄金防守资产的月初趋势规则。2× 总收益 +56.30%、年化 +14.17%、Sharpe 1.4596、MDD -8.53%；5× 年化 +12.73%、Sharpe 1.3244、MDD -8.89%，5× top1/top3/top5 16.38%/44.11%/63.77%。overlay 9/9、joint 3/3、cap 4/4、资产替换和五个 fresh-start 全过。
 - **R343 取舍与状态**：A+B 对照 2× 年化 +14.67%、Sharpe 1.5049、MDD -8.31%，头条指标略优；R343 的入选理由是 5× 净贡献集中度和近端稳定性，不是全面超越。5× 2023 为 -1.67%，两个最近 fresh-start 仅 +0.11%/+0.74%，仍脆弱。
 - **当前最终状态**：`selected=r343_abc_cap10_gold_trend_proxy_posthoc`，仅进入 `candidate_for_paper_trading_review`；黄金趋势、10% C 帽和 C 袖均为事后选择，共同窗口 2023-05 至 2026-11，ETF qfq 非官方 PIT。无纸面目标、无订单、生产未授权。
+
+# 更新（2026-11-05，R344-R346）
+
+- **R344 时序扩展失败**：只读预检确认 C 袖从 2022-05-05 可用，扩展后 2× 年化 +11.99%、Sharpe 1.2890、MDD -9.09%，但 2022 段为 **-0.06%**，5× top1/top3/top5 为 37.68%/82.88%/115.12%，C cap plateau 0/4。`all_pass=false`，R343 被降级为 `research_only_temporal_extension_failed`。
+- **R345 A Top20 失败**：2× 年化 +11.21%、6/6 fresh-start，但 5× top5 仍为 119.36%，cap plateau 0/4。
+- **R346 A/B Top20 失败**：5× top5 降到 80.67%、top1/top3 通过，但 C4 仍失败；fresh-start 仅 4/6，cap plateau 0/4。首轮执行缺少策略哈希，fail-closed 后由 A1 勘误补齐，未产生收益。
+- **当前最终状态**：`r346_final_status.json` 标记为 `research_only_topn_scaling_failed`。停止继续扫 TopN；下一步必须引入新的选股/因子或风险预算结构，并在 2022-05-05 扩展窗口重新预注册。

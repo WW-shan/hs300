@@ -1,0 +1,154 @@
+{
+  "round": "R346",
+  "candidate_id": "r346_ab_top20_extended_posthoc",
+  "status": "pre_registered_before_r346_portfolio_backtest",
+  "classification": "controlled A/B Top20 diversification test after R345 A-only Top20 failed 5x concentration",
+  "hypothesis": "Expanding both A and B to Top20, while retaining the 10% C satellite and gold trend proxy, will reduce 5x top1/top3/top5 net contribution enough to pass the extended-window gates without losing the 2x breadth and fresh-start stability.",
+  "disclosure": "R345 changed only A from Top10 to Top20. It passed all temporal-extension gates and 6/6 fresh starts, but 5x top1/top3/top5 were 30.01%/78.88%/119.36% and the cap plateau was 0/4. R346 changes only A and B max_positions from 10 to 20; C at 50, the 10% cap, gold 200-day rule, scoring, overlay, costs and dates stay frozen. This is a controlled retest in the new R344/R345 portfolio, not a reuse of the old R336 base.",
+  "preflight": {
+    "file": "r344_window_preflight.json",
+    "sha256": "307fc9f3604310c9a29a8148880c0a0ec4d997ca698778390a5cfb302eb94098",
+    "all_checks": true,
+    "no_returns_computed": true
+  },
+  "base_candidate": {
+    "id": "r345_a_top20_extended_posthoc",
+    "result_file": "r345_a_top20_extended.json",
+    "result_sha256": "28592c232299f254c1757162aa16e1802fecabf9a79571b356b6a12edec2f9ee",
+    "status": "no_candidate_passed",
+    "changed_dimension": "A/B max_positions 10 -> 20",
+    "strategy_sha256": {
+      "A": "8cc54b21b2508bf35527687bac061518e8d8caac9887a7e86a07345bdc33526e",
+      "B": "e785a540c23ecbeab625ae5349c52293c8659011bf224f80960d6e728bcb382e",
+      "C": "6a120d44e00be96bccc1641bcec300f1bf62f1a1af56476bc37fc4561495051d"
+    }
+  },
+  "window": {
+    "start": "2022-05-05",
+    "end": "2026-11-05",
+    "pre_window_extension": [
+      "2022-05-05",
+      "2023-05-03"
+    ],
+    "original_selection_window": [
+      "2023-05-04",
+      "2026-11-05"
+    ],
+    "recent_year_start": "2025-11-05"
+  },
+  "fixed_construction": {
+    "sleeves": {
+      "A": {
+        "strategy_id": "ai_hs300_macro_gate_quality",
+        "max_positions": 20
+      },
+      "B": {
+        "strategy_id": "ai_hs300_industry_relative_strength_quality_h20_sl20",
+        "max_positions": 20
+      },
+      "C": {
+        "strategy_id": "ai_hs300_quality_momentum_broad_h60",
+        "max_positions": 50
+      }
+    },
+    "sleeve_weighting": "monthly 60-day inverse-volatility risk parity across A/B/C with original [0.20,0.60] bounds; then cap C at 10% and redistribute excess proportionally to A/B",
+    "equity_risk_share": "monthly equity sleeve at most 1/3",
+    "defensive_bucket": "gold 200-day trend proxy / 511260.SH / 510880.SH equal 1/3 monthly; when gold is OFF, its third is replaced by 50% 511260.SH plus 50% 510880.SH",
+    "overlay": "60-day lookback, 15% balance-vol target, gross [0.2,1.0], no leverage",
+    "costs": "2x/3x/4x/5x stock costs; 3x conservative overlay 0.30%; overlay 0.10%/0.15%/0.20%/0.25%"
+  },
+  "fresh_starts": [
+    "2022-05-05",
+    "2023-01-03",
+    "2024-01-02",
+    "2025-01-02",
+    "2025-11-05",
+    "2026-01-05"
+  ],
+  "gates": {
+    "data": {
+      "D1_preflight": "R344 coverage-only preflight all_checks true",
+      "D2_curves": "all A/B/C curves start 2022-05-05 and reach 2026-11-05",
+      "D3_input_isolation": "input trees remain byte-hash stable",
+      "D4_ab_top20_available": "A and B strategy limits are >=20 and max_positions=20 is frozen",
+      "D5_correlation": "mean pairwise A/B/C correlation <0.85"
+    },
+    "absolute_performance_2x": {
+      "G1_annual": ">=6%",
+      "G2_mdd": ">= -18%",
+      "G3_sharpe": ">=0.70",
+      "G4_calendar": "2024 and 2025 both >=0",
+      "G5_recent": "recent-year total return >0",
+      "G6_bootstrap": "positive rate >=80%, P05 >= -12%",
+      "G7_rolling": "positive rate >=70%, worst >= -15%",
+      "G8_stress": "3x conservative total return >0 and MDD >= -25%",
+      "G10_no_leverage": "max weight sum <=1, min target weight >=0",
+      "G11_cap": "mean C sleeve weight <=10.5%"
+    },
+    "tradeoff_vs_two_sleeve_control": {
+      "G9_annual": "candidate annual >= A+B control annual -1.0pp",
+      "G9_sharpe": "candidate Sharpe >= A+B control Sharpe -0.10",
+      "G9_mdd": "candidate MDD >= A+B control MDD -0.5pp"
+    },
+    "temporal_extension": {
+      "T1_2022_partial_return": "2022-05-05..2022-12-31 total return >0",
+      "T2_2022_partial_mdd": "2022-05-05..2022-12-31 MDD >= -15%",
+      "T3_2023_full_year": "full 2023 return >=0",
+      "T4_prewindow_return": "2022-05-05..2023-05-03 total return >0",
+      "T5_prewindow_sharpe": "2022-05-05..2023-05-03 Sharpe >=0.30",
+      "T6_prewindow_mdd": "2022-05-05..2023-05-03 MDD >= -15%"
+    },
+    "costs_and_concentration": {
+      "X1_4x": "total return >0 and MDD >= -25%",
+      "X2_5x_performance": "total return >0, Sharpe >=0.50, MDD >= -25%, 2024/2025 >=0, recent >0",
+      "X3_5x_concentration": "C1-C12 all pass at 5x"
+    },
+    "concentration": {
+      "C1": "distinct symbols >=80",
+      "C2": "top1 net <=25%",
+      "C3": "top3 net <=55%",
+      "C4": "top5 net <=75%",
+      "C5": "recent positive-contribution symbols >=8",
+      "C6": "top industry gross <=45%",
+      "C7": "max symbol loss / gross profit <=20%",
+      "C8": "each asset contribution <=50%",
+      "C9": "each defensive sleeve mean <=40%, max <=50%",
+      "C10": "R331 primary asset liquidity passes",
+      "C11": "portfolio annual turnover <=1.5x",
+      "C12": "max weight sum <=1, min target weight >=0"
+    },
+    "robustness": {
+      "R1_dividend": "515080.SH replacement annual >=5%, MDD >= -20%, 2024/2025 >=0",
+      "R2_gold": "159937.SZ replacement through same proxy annual >=5%, MDD >= -20%, 2024/2025 >=0",
+      "R3_treasury": "511010.SH replacement annual >=5%, MDD >= -20%, 2024/2025 >=0",
+      "F1_fresh": "at least 5/6 fresh starts positive and every MDD >= -18%",
+      "F2_extension_phase": "2022-05-05 fresh-start path total return >0",
+      "P1_overlay": ">=7/9 overlay variants pass core gates",
+      "P2_joint": ">=2/3 joint variants pass core gates",
+      "P3_center": "60d/15% center passes"
+    },
+    "satellite_cap_plateau": {
+      "grid": [
+        0.05,
+        0.1,
+        0.15,
+        0.2
+      ],
+      "per_cap_core": "2x annual >=12%, Sharpe >=1.25, MDD >= -15%; 5x annual >=10%, Sharpe >=1.10, MDD >= -15%; 5x C2-C4 pass; at least 5/6 fresh starts positive",
+      "P4": "at least 3/4 caps pass and the 10% center passes"
+    }
+  },
+  "selection_rule": "All D/G/T/X/C/R/F/P gates and P4 must pass. Otherwise record the A/B Top20 structural change as negative and do not promote. No threshold changes after results.",
+  "discipline": [
+    "Only A and B max_positions change from 10 to 20.",
+    "No score, C position, holding period, stop-loss, C cap, gold rule, overlay, asset or cost changes.",
+    "No further TopN grid in this round.",
+    "No leverage; no paper target or order file."
+  ],
+  "known_limitations": [
+    "The A/B Top20 change is a response to R345 and is post-hoc.",
+    "The extension is quasi-out-of-sample, not independent.",
+    "The common window begins in 2022 because TTM financial factors are unavailable earlier.",
+    "Current-snapshot industry classification, reconstructed membership and ETF qfq caches are not full vendor PIT data."
+  ]
+}
