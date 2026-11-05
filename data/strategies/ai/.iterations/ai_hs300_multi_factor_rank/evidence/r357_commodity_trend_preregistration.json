@@ -1,0 +1,71 @@
+{
+  "round": "R357",
+  "classification": "pre-registered portfolio-level independent defensive-source screen; stock sleeves frozen",
+  "created_at": "2026-11-06T01:05:00+08:00",
+  "hypothesis": "A commodity basket can provide an independent return source when gold is weak. Rotating only the existing one-third defensive alt slot between gold and a three-ETF commodity basket, while preserving the safe treasury+dividend fallback, may improve 2022-2026 returns and 5x net-profit breadth without changing equity selection.",
+  "fixed_construction": {
+    "stock_sleeves": {
+      "A": {"strategy_id": "ai_hs300_macro_gate_quality", "max_positions": 10, "max_hold_days": 35, "stop_loss": null},
+      "B": {"strategy_id": "ai_hs300_industry_relative_strength_quality_h20_sl20", "max_positions": 10, "max_hold_days": 20, "stop_loss": -0.2},
+      "C": {"strategy_id": "ai_hs300_quality_momentum_broad_h60", "max_positions": 50, "max_hold_days": 60, "stop_loss": null}
+    },
+    "sleeve_risk_parity": "three-sleeve 60-day inverse-volatility risk parity, raw weights bounded [0.20,0.60], C capped at 0.10, excess returned proportionally to A/B",
+    "equity_cap": 1.0,
+    "equity_weight_max": 0.3333333333333333,
+    "defensive_bucket": {
+      "gold": "518880.SH",
+      "treasury": "511260.SH",
+      "dividend": "510880.SH",
+      "commodity_basket": ["159980.SZ", "159985.SZ", "159981.SZ"],
+      "commodity_basket_method": "equal-weight buy-and-hold index normalized to 100 at the first common date; no internal rebalance-alpha assumption",
+      "signal": "At month-end T close, each asset is ON when close > its own 200-trading-day simple moving average. Signal applies to subsequent returns only.",
+      "state_weights": {
+        "gold_on_commodity_on": {"gold": 0.5, "commodity": 0.5},
+        "gold_on_commodity_off": {"gold": 1.0},
+        "gold_off_commodity_on": {"commodity": 1.0},
+        "both_off": {"treasury": 0.5, "dividend": 0.5}
+      },
+      "slot_share_of_defensive_bucket": 0.3333333333333333,
+      "treasury_and_dividend_other_slots": "unchanged equal third outside the alt slot"
+    },
+    "vol_target": "60-day lookback, 15% annual target, gross exposure [0.20,1.00], monthly rebalance",
+    "switch_cost": "on every month-end state change deduct one-third of the overlay round-trip cost from the alt-slot return as a conservative full-slot turnover charge",
+    "no_leverage": true
+  },
+  "period": {"start": "2022-05-05", "end": "2026-11-05", "recent_start": "2025-11-05"},
+  "overlay_cost": {"2x": 0.001, "3x_conservative": 0.003, "4x": 0.002, "5x": 0.0025},
+  "fresh_start_dates": ["2022-05-05", "2023-01-03", "2024-01-02", "2025-01-02", "2025-11-05", "2026-01-05"],
+  "preflight_checks": {
+    "D1_each_asset_coverage_at_least_0.95": true,
+    "D2_common_calendar_days_at_least_1000": true,
+    "D3_no_duplicate_dates_or_null_nonpositive_close": true,
+    "D4_primary_commodity_median_daily_amount_at_least_10m_cny": true,
+    "D5_primary_commodity_min_20day_average_amount_at_least_5m_cny": true,
+    "D6_causal_month_end_signal_and_at_least_one_commodity_only_month": true,
+    "D7_inputs_byte_stable": true,
+    "no_return_or_backtest_evaluated": true
+  },
+  "performance_gates": {
+    "G1_2x_annual_at_least_0.12": true,
+    "G2_2x_sharpe_at_least_1.10": true,
+    "G3_2x_mdd_at_least_minus_0.12": true,
+    "G4_2022_segment_return_positive": true,
+    "G5_2023_return_nonnegative": true,
+    "G6_recent_year_return_positive": true,
+    "G7_3x_total_return_positive": true,
+    "G8_4x_total_return_positive": true,
+    "G9_5x_total_return_positive": true,
+    "G10_5x_annual_at_least_0.10": true,
+    "G11_5x_sharpe_at_least_0.90": true,
+    "G12_5x_mdd_at_least_minus_0.15": true,
+    "G13_5x_top1_net_share_at_most_0.25": true,
+    "G14_5x_top3_net_share_at_most_0.55": true,
+    "G15_5x_top5_net_share_at_most_0.75": true,
+    "G16_5x_distinct_symbols_at_least_80": true,
+    "G17_each_asset_contribution_at_most_0.50": true,
+    "G18_fresh_starts_at_least_5_of_6_positive": true
+  },
+  "selection_rule": "Select the dual-trend alt-slot portfolio only if every preflight and performance gate passes. Otherwise selected=null and the commodity line closes without threshold or weight scans.",
+  "post_selection_rule": "A pass would require a separate R358 robustness round covering parameter plateau, C-cap plateau, asset replacement and full cost stress before any paper-trading review.",
+  "production_write": false
+}
