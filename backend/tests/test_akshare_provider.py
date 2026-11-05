@@ -648,6 +648,11 @@ def test_share_change_history_uses_effective_and_announcement_dates(monkeypatch)
 
     monkeypatch.setattr(provider_mod, "_akshare", lambda: FakeAkShare)
     monkeypatch.setattr(provider_mod, "_today_cn", lambda: date(2026, 10, 1))
+    monkeypatch.setattr(
+        provider_mod,
+        "_current_hs300_symbols",
+        lambda: {"600519.SH"},
+    )
     frame = provider_mod.AkShareProvider().get_financials(
         "shares", ["600519.SH"], latest_only=False
     )
