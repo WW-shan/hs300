@@ -1,0 +1,52 @@
+{
+  "round": "R339",
+  "status": "pre_registered_before_c_sleeve_screen",
+  "classification": "limited post-hoc screen of currently materialized independent strategy dimensions for a third equity profit source",
+  "purpose": "R338 could not run because the R257 QRS factor is absent from the current alt_hs300 schema. R339 screens only strategy definitions whose required columns are verified present before any screen return is read.",
+  "common_window": {
+    "start": "2023-05-04",
+    "end": "2026-11-05",
+    "recent_year_start": "2025-11-05"
+  },
+  "common_execution": {
+    "matching": "open_t+1",
+    "stock_costs": "2x and 5x",
+    "hs300": "daily historical membership",
+    "max_positions": 10,
+    "position_sizing": "equal",
+    "sleeve_role_if_selected": "third C sleeve in a subsequent separately preregistered portfolio test"
+  },
+  "candidates": [
+    {"id": "ai_hs300_holder_quality", "dimension": "shareholder concentration + quality/cash"},
+    {"id": "ai_hs300_dividend_quality", "dimension": "dividend growth + quality/cash"},
+    {"id": "ai_hs300_industry_momentum_quality", "dimension": "industry momentum/RPS/breadth + quality/low-vol"},
+    {"id": "ai_hs300_financial_quality_value", "dimension": "pure accounting quality/value/low-vol"},
+    {"id": "ai_hs300_low_fund_crowding_quality", "dimension": "fund crowding + quality/cash"},
+    {"id": "ai_hs300_earnings_surprise_quality", "dimension": "forecast/express surprise PEAD + quality/cash"},
+    {"id": "ai_hs300_insider_net_quality", "dimension": "insider net buying/selling + quality/low-vol"},
+    {"id": "ai_hs300_sga_nonfin_quality_h5_sl20", "dimension": "nonfinancial operating efficiency + quality/cash"}
+  ],
+  "eligibility_gates": {
+    "D1": "strategy loads and produces a full common-window curve at both 2x and 5x",
+    "E1": "5x total return >=10% over the common window",
+    "E2": "5x Sharpe >=0.20",
+    "E3": "recent-year total return at 2x >0",
+    "E4": "maximum pairwise daily-return correlation with existing A and B <=0.80",
+    "E5": "5x distinct symbols >=30",
+    "E6": "5x top1 net contribution <=60% and top5 net contribution <=150%",
+    "E7": "2x Sharpe >=0.40"
+  },
+  "selection_rule": "If one or more candidates pass E1-E7, select the eligible candidate with highest 5x Sharpe; ties go to lower maximum correlation with A/B. If none pass, record a negative screen and do not force a third sleeve. No threshold may change after results.",
+  "anti_cherry_pick": [
+    "Candidate list is fixed before running any candidate return.",
+    "No strategy parameter, holding period, stop-loss, TopN or cost override is changed.",
+    "Only 2x and 5x are run; 3x/4x are not candidate-selection inputs.",
+    "The selected C sleeve must be re-tested in a separately preregistered three-sleeve portfolio round."
+  ],
+  "known_limitations": [
+    "The screen is in-sample and post-hoc.",
+    "Several candidates previously produced weak or negative event/factor results; they remain in the fixed screen to avoid selecting only past winners.",
+    "Standalone concentration gates are weaker than the final portfolio C2-C4 gates and are only intended to reject obvious one-name sleeves.",
+    "Current industry and fund/event snapshots are not full vendor PIT reconstructions."
+  ]
+}

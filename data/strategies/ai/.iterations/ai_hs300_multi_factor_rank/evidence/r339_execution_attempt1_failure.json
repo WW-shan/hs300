@@ -1,0 +1,10 @@
+{
+  "round": "R339",
+  "attempt": 1,
+  "status": "invalid_execution_no_returns_read",
+  "invalid_output": "evidence/r339_execution_attempt1_schema_misread.json",
+  "root_cause": "The preflight read only the oldest enriched partition schema (16 columns) instead of the factor registry and joined strategy panel. ma60 and all extension factors were therefore misclassified as missing before any candidate backtest.",
+  "impact": "All eight candidates were marked data_gap without running. The output is not a screen result and must not be cited as negative evidence.",
+  "fix": "Use the factor registry plus explicit non-factor string columns for preflight, and let the strategy engine fail closed on actual materialization errors.",
+  "signal_or_return_read": false
+}

@@ -1,0 +1,459 @@
+{
+  "round": "R343",
+  "id": "r343_abc_cap10_gold_trend_proxy_posthoc",
+  "status": "candidate_for_paper_trading_review",
+  "paper_trading_review": "candidate_for_paper_trading_review",
+  "production_enabled": false,
+  "post_hoc_selection": true,
+  "classification": "post-hoc 10% C satellite-cap portfolio with monthly gold 200-day trend proxy; full cost, concentration, plateau, robustness and fresh-start validation",
+  "window": {
+    "start": "2023-05-04",
+    "end": "2026-11-05",
+    "recent_year_start": "2025-11-05",
+    "note": "Only the common coverage window is tested; this is not a 2018-2026 full-cycle validation."
+  },
+  "portfolio": {
+    "equity_sleeves": {
+      "A": {
+        "strategy_id": "ai_hs300_macro_gate_quality",
+        "max_positions": 10,
+        "max_hold_days": 35,
+        "stop_loss": null
+      },
+      "B": {
+        "strategy_id": "ai_hs300_industry_relative_strength_quality_h20_sl20",
+        "max_positions": 10,
+        "max_hold_days": 20,
+        "stop_loss": -0.2
+      },
+      "C": {
+        "strategy_id": "ai_hs300_quality_momentum_broad_h60",
+        "max_positions": 50,
+        "max_hold_days": 60,
+        "stop_loss": null
+      },
+      "combination": "Monthly 60-day inverse-volatility risk parity across A/B/C using the original [0.20, 0.60] bounds, then cap C at 10% and redistribute capped excess to A/B.",
+      "realized_mean_weights": {
+        "A": 0.557427,
+        "B": 0.342573,
+        "C": 0.1
+      }
+    },
+    "equity_risk_share": "At each monthly rebalance the combined A/B/C equity sleeve is at most 1/3; the defensive bucket is at least 2/3. No leverage.",
+    "defensive_bucket": {
+      "base_components": [
+        "518880.SH",
+        "511260.SH",
+        "510880.SH"
+      ],
+      "base_weights": {
+        "518880.SH": 0.3333333333333333,
+        "511260.SH": 0.3333333333333333,
+        "510880.SH": 0.3333333333333333
+      },
+      "gold_trend_override": "When gold is OFF, the gold third is replaced by 50% 511260.SH plus 50% 510880.SH; the other two thirds remain unchanged.",
+      "rebalance": "monthly"
+    },
+    "overlay": {
+      "lookback_trading_days": 60,
+      "annualized_vol_target": 0.15,
+      "gross_bounds": [
+        0.2,
+        1.0
+      ],
+      "no_leverage": true
+    },
+    "costs": {
+      "stock_main": "2x stock costs",
+      "stock_stress": "3x/4x/5x stock costs",
+      "overlay_main_round_trip": 0.001,
+      "overlay_conservative_3x_round_trip": 0.003,
+      "overlay_4x_round_trip": 0.002,
+      "overlay_5x_round_trip": 0.0025
+    }
+  },
+  "gold_trend_rule": {
+    "signal_at": "month-start close",
+    "on_condition": "gold close > trailing 200-trading-day moving average",
+    "off_proxy": "50% 511260.SH + 50% 510880.SH for the gold sleeve",
+    "warmup": "gold ON before the first 200 gold closes",
+    "lookahead_control": "signal observed at t is applied only to returns after t",
+    "switch_cost": "one-third portfolio turnover at the prevailing overlay round-trip cost",
+    "fixed_parameter": "200 trading days; not scanned in R343"
+  },
+  "headline_results": {
+    "center_2x": {
+      "bootstrap": {
+        "blocks_needed": 13,
+        "mdd_median": -0.06338,
+        "mdd_p05": -0.098312,
+        "mdd_worst": -0.185763,
+        "paths": 1000,
+        "positive_rate": 0.93,
+        "return_best": 0.598353,
+        "return_median": 0.132637,
+        "return_p05": -0.011944,
+        "return_p25": 0.071761,
+        "return_p75": 0.205085,
+        "return_p95": 0.337611,
+        "return_worst": -0.157653,
+        "sharpe_median": 1.4386,
+        "sharpe_p05": -0.1127
+      },
+      "recent": {
+        "annual": 0.069815,
+        "days": 242,
+        "mdd": -0.085255,
+        "sharpe": 0.6489,
+        "total_return": 0.066668
+      },
+      "rolling": {
+        "positive_rate": 1.0,
+        "return_p05": 0.092944,
+        "return_worst": 0.054053
+      },
+      "stats": {
+        "annual": 0.141749,
+        "days": 850,
+        "mdd": -0.085255,
+        "sharpe": 1.4596,
+        "total_return": 0.562995
+      },
+      "stress": {
+        "annual": 0.136063,
+        "days": 850,
+        "mdd": -0.087104,
+        "sharpe": 1.4066,
+        "total_return": 0.536927
+      },
+      "yearly": {
+        "2023": -0.007996,
+        "2024": 0.232688,
+        "2025": 0.219529,
+        "2026": 0.048092
+      }
+    },
+    "stress_3x_conservative": {
+      "bootstrap": {
+        "blocks_needed": 13,
+        "mdd_median": -0.063591,
+        "mdd_p05": -0.10104,
+        "mdd_worst": -0.188078,
+        "paths": 1000,
+        "positive_rate": 0.915,
+        "return_best": 0.587995,
+        "return_median": 0.1263,
+        "return_p05": -0.017712,
+        "return_p25": 0.065367,
+        "return_p75": 0.198237,
+        "return_p95": 0.328928,
+        "return_worst": -0.164064,
+        "sharpe_median": 1.3666,
+        "sharpe_p05": -0.1827
+      },
+      "recent": {
+        "annual": 0.06212,
+        "days": 242,
+        "mdd": -0.087621,
+        "sharpe": 0.5856,
+        "total_return": 0.05933
+      },
+      "rolling": {
+        "positive_rate": 1.0,
+        "return_p05": 0.086406,
+        "return_worst": 0.046366
+      },
+      "stats": {
+        "annual": 0.134921,
+        "days": 850,
+        "mdd": -0.087621,
+        "sharpe": 1.396,
+        "total_return": 0.531727
+      },
+      "yearly": {
+        "2023": -0.012618,
+        "2024": 0.226276,
+        "2025": 0.214635,
+        "2026": 0.041507
+      }
+    },
+    "stress_4x": {
+      "bootstrap": {
+        "blocks_needed": 13,
+        "mdd_median": -0.063535,
+        "mdd_p05": -0.101422,
+        "mdd_worst": -0.18766,
+        "paths": 1000,
+        "positive_rate": 0.91,
+        "return_best": 0.584724,
+        "return_median": 0.124035,
+        "return_p05": -0.018779,
+        "return_p25": 0.06336,
+        "return_p75": 0.19524,
+        "return_p95": 0.324831,
+        "return_worst": -0.165604,
+        "sharpe_median": 1.3434,
+        "sharpe_p05": -0.201
+      },
+      "recent": {
+        "annual": 0.059681,
+        "days": 242,
+        "mdd": -0.087953,
+        "sharpe": 0.5653,
+        "total_return": 0.057003
+      },
+      "rolling": {
+        "positive_rate": 1.0,
+        "return_p05": 0.082958,
+        "return_worst": 0.043971
+      },
+      "stats": {
+        "annual": 0.132424,
+        "days": 850,
+        "mdd": -0.087953,
+        "sharpe": 1.3724,
+        "total_return": 0.520403
+      },
+      "yearly": {
+        "2023": -0.013609,
+        "2024": 0.223088,
+        "2025": 0.212312,
+        "2026": 0.03953
+      }
+    },
+    "stress_5x": {
+      "bootstrap": {
+        "blocks_needed": 13,
+        "mdd_median": -0.063653,
+        "mdd_p05": -0.102839,
+        "mdd_worst": -0.188403,
+        "paths": 1000,
+        "positive_rate": 0.902,
+        "return_best": 0.577444,
+        "return_median": 0.118705,
+        "return_p05": -0.022677,
+        "return_p25": 0.058547,
+        "return_p75": 0.189441,
+        "return_p95": 0.318784,
+        "return_worst": -0.168786,
+        "sharpe_median": 1.2965,
+        "sharpe_p05": -0.2511
+      },
+      "recent": {
+        "annual": 0.05374,
+        "days": 242,
+        "mdd": -0.088938,
+        "sharpe": 0.5156,
+        "total_return": 0.051335
+      },
+      "rolling": {
+        "positive_rate": 1.0,
+        "return_p05": 0.077508,
+        "return_worst": 0.038443
+      },
+      "stats": {
+        "annual": 0.127306,
+        "days": 850,
+        "mdd": -0.088938,
+        "sharpe": 1.3244,
+        "total_return": 0.497379
+      },
+      "yearly": {
+        "2023": -0.016673,
+        "2024": 0.218349,
+        "2025": 0.207653,
+        "2026": 0.034951
+      }
+    },
+    "fresh_starts": {
+      "2023-05-04": {
+        "stats": {
+          "annual": 0.141749,
+          "days": 850,
+          "mdd": -0.085255,
+          "sharpe": 1.4596,
+          "total_return": 0.562995
+        },
+        "yearly": {
+          "2023": -0.007996,
+          "2024": 0.232688,
+          "2025": 0.219529,
+          "2026": 0.048092
+        }
+      },
+      "2024-01-02": {
+        "stats": {
+          "annual": 0.132381,
+          "days": 686,
+          "mdd": -0.076377,
+          "sharpe": 1.3363,
+          "total_return": 0.402056
+        },
+        "yearly": {
+          "2024": 0.127041,
+          "2025": 0.19365,
+          "2026": 0.042194
+        }
+      },
+      "2025-01-02": {
+        "stats": {
+          "annual": 0.130181,
+          "days": 444,
+          "mdd": -0.085096,
+          "sharpe": 1.3636,
+          "total_return": 0.240027
+        },
+        "yearly": {
+          "2025": 0.192704,
+          "2026": 0.039676
+        }
+      },
+      "2025-11-05": {
+        "stats": {
+          "annual": 0.001157,
+          "days": 242,
+          "mdd": -0.094743,
+          "sharpe": 0.0628,
+          "total_return": 0.001107
+        },
+        "yearly": {
+          "2025": 0.005893,
+          "2026": -0.004758
+        }
+      },
+      "2026-01-05": {
+        "stats": {
+          "annual": 0.009341,
+          "days": 201,
+          "mdd": -0.064942,
+          "sharpe": 0.1563,
+          "total_return": 0.007406
+        },
+        "yearly": {
+          "2026": 0.007406
+        }
+      }
+    },
+    "fresh_start_gate": true
+  },
+  "concentration_5x": {
+    "gates_all_pass": true,
+    "distinct_symbols": 254,
+    "top1_net_share": 0.163844,
+    "top3_net_share": 0.441147,
+    "top5_net_share": 0.637662,
+    "top_industry_gross_share": 0.308101,
+    "max_symbol_loss_to_gross": 0.018913,
+    "recent_positive_symbols": 68,
+    "asset_contribution_shares": {
+      "dividend": 0.140094,
+      "equity": 0.363676,
+      "gold": 0.412333,
+      "treasury": 0.083897
+    },
+    "mean_weights": {
+      "equity": 0.315276,
+      "gold": 0.218193,
+      "treasury": 0.218193,
+      "dividend": 0.218193
+    },
+    "gross_max": 1.0,
+    "gross_mean": 0.969855,
+    "gross_min": 0.5,
+    "max_weight_sum": 1.0,
+    "min_target_weight": 0.0
+  },
+  "robustness": {
+    "data_gates_all_pass": true,
+    "performance_gates_all_pass": true,
+    "cost_gates_all_pass": true,
+    "concentration_gates_2x_all_pass": true,
+    "concentration_gates_5x_all_pass": true,
+    "overlay_plateau": {
+      "center_pass": true,
+      "joint_passes": 3,
+      "overlay_passes": 9,
+      "plateau_pass": true
+    },
+    "cap_plateau": {
+      "center_pass": true,
+      "passes": 4,
+      "plateau_pass": true,
+      "required": 3
+    },
+    "asset_substitutions": {
+      "R1_dividend": true,
+      "R2_gold": true,
+      "R3_treasury": true
+    },
+    "input_isolation_stable": true,
+    "mean_pairwise_sleeve_correlation": 0.551705
+  },
+  "two_sleeve_control_2x": {
+    "stats": {
+      "annual": 0.146708,
+      "days": 850,
+      "mdd": -0.08311,
+      "sharpe": 1.5049,
+      "total_return": 0.585984
+    },
+    "yearly": {
+      "2023": -0.005301,
+      "2024": 0.239991,
+      "2025": 0.214185,
+      "2026": 0.059019
+    }
+  },
+  "headline_comparison": "The A+B control has slightly higher 2x annual return (14.67%), Sharpe (1.5049) and MDD (-8.31%) than R343. R343 is selected for the 5x net-profit concentration tradeoff, not for beating the control on headline return.",
+  "decision": {
+    "order_file_generated": false,
+    "paper_target_generated": false,
+    "parameter_search": false,
+    "post_hoc": true,
+    "production_write": false,
+    "provider_write": false,
+    "status": "candidate_for_paper_trading_review"
+  },
+  "production_or_paper_artifacts": {
+    "paper_target_generated": false,
+    "order_file_generated": false,
+    "production_write": false,
+    "provider_write": false
+  },
+  "data_dependencies": [
+    "enriched stock daily data with runtime indicators",
+    "ext_alt_hs300 factors used by A/B",
+    "current-snapshot industry classification backfilled through history",
+    "historical HS300 membership data",
+    "ETF qfq caches for 518880.SH/511260.SH/510880.SH and replacement assets"
+  ],
+  "evidence": [
+    "evidence/r343_gold_trend_proxy.json",
+    "evidence/r343_gold_trend_proxy_preregistration.json",
+    "evidence/r343_result.md",
+    "evidence/r342_c_satellite_cap10.json",
+    "evidence/r342_recent_fresh_start_erratum.json",
+    "evidence/r340_broad_quality_momentum.json",
+    "evidence/r339_c_sleeve_screen.json",
+    "evidence/r331_asset_manifest.json"
+  ],
+  "source_hashes": {
+    "result_sha256": "2acc9427823127b3efa2766387577a6513128eacdecedcc77f56e05ca0554688",
+    "preregistration_sha256": "4e4e797a5fd73b99df6a9c90729a2be9dfdf27987ccb0c599dc82d49cf40f78e",
+    "runner_sha256": "875394052f7a4d58fc0e84664daad027fc1f0019887160bd61d3c90186e09938",
+    "asset_manifest_sha256": "50c50bdb2ab68d7974217061fba792db83b08caf0c5ecade9824b2a94d7a6177"
+  },
+  "reproduction": "cd backend && uv run python ../data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r343_gold_trend_proxy.py",
+  "reproduction_note": "The runner refuses to overwrite existing evidence. Reproduce in a clean worktree/copy or change OUTPUT explicitly; do not delete the retained result.",
+  "risk_notes": [
+    "The gold trend rule and 10% C cap are post-hoc.",
+    "Common window starts in 2023; not a full 2018-2026 validation.",
+    "Gold, treasury and dividend ETF qfq series are not official PIT total-return benchmarks.",
+    "The proxy does not model intraday execution or ETF premium/discount.",
+    "The 10% C cap, broad C sleeve and gold 200-day proxy were introduced after earlier results; treat this as post-hoc research.",
+    "A+B remains the higher-return 2x control; the candidate is a concentration-improvement tradeoff, not a proven superior return strategy.",
+    "The two latest fresh starts are only marginally positive and are fragile.",
+    "The full-path 2023 calendar slice is negative at 5x; do not claim every calendar year is positive.",
+    "This is a research-level portfolio composite, not a single stock-strategy file in the existing UI."
+  ]
+}

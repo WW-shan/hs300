@@ -1,0 +1,91 @@
+{
+  "round": "R341",
+  "candidate_id": "r341_abc_broad_quality_momentum_cap33_posthoc",
+  "status": "pre_registered_before_r341_portfolio_backtest",
+  "classification": "post-hoc three-sleeve portfolio test using the R340 broad sleeve as a diversification source",
+  "hypothesis": "Although the R340 broad quality-momentum sleeve failed its standalone selection gates, its 242-symbol breadth, low single-name loss share and moderate A/B correlation can diversify 5x-cost net stock P&L when allocated through dynamic three-sleeve risk parity.",
+  "disclosure": "R340 E1/E3/E6 failed, so this is not a promotion of R340 as a standalone strategy. A static post-result arithmetic diagnostic suggested adding it at roughly one-third risk budget could lower A+B top5 net concentration into the 69%-72% range. R341 replaces that diagnostic with the real daily/monthly portfolio simulation and strict original-style gates.",
+  "sleeves": {
+    "A": {"strategy_id": "ai_hs300_macro_gate_quality", "max_positions": 10, "max_hold_days": 35},
+    "B": {"strategy_id": "ai_hs300_industry_relative_strength_quality_h20_sl20", "max_positions": 10, "max_hold_days": 20},
+    "C": {"strategy_id": "ai_hs300_quality_momentum_broad_h60", "max_positions": 50, "max_hold_days": 60}
+  },
+  "window": {
+    "start": "2023-05-04",
+    "end": "2026-11-05",
+    "recent_year_start": "2025-11-05",
+    "reason": "Common window used by the R339/R340 third-source research."
+  },
+  "fixed_construction": {
+    "stock_execution": "T+1 open, equal weight within each sleeve",
+    "costs": "2x/3x/4x/5x stock costs; 3x conservative overlay 0.30%; overlay 0.10%/0.15%/0.20%/0.25%",
+    "sleeve_weighting": "monthly 60-day inverse-volatility risk parity across A/B/C, each weight bounded [0.20,0.60], no leverage",
+    "equity_risk_share": "monthly equity sleeve at most 1/3 of total portfolio risk budget",
+    "defensive_bucket": "518880.SH / 511260.SH / 510880.SH equal 1/3 monthly",
+    "overlay": "60-day lookback, 15% balance-vol target, gross exposure [0.2,1.0], no leverage",
+    "rebalance": "monthly"
+  },
+  "gates": {
+    "data": {
+      "D1": "all three strategy files and required factors load without error",
+      "D2": "all strategy sleeves produce curves over START..END",
+      "D3": "input data trees remain byte-stable",
+      "D4": "mean pairwise daily return correlation across sleeves below 0.85"
+    },
+    "performance_2x": {
+      "G1_annual": ">=6%",
+      "G2_mdd": ">= -18%",
+      "G3_sharpe": ">=0.70",
+      "G4_calendar": "2024 and 2025 returns both >=0",
+      "G5_recent_year": ">0",
+      "G6_bootstrap": "positive rate >=80% and P05 >= -12%",
+      "G7_rolling": "positive rate >=70% and worst <= -15%",
+      "G8_stress": "3x conservative total return >0 and MDD >= -25%",
+      "G9_incremental": "Sharpe >= A+B two-sleeve control +0.05 or MDD >= control +3pp, while annual >= control -1pp",
+      "G10_no_leverage": "max gross weight <=1 and min target weight >=0",
+      "G11_sleeve_balance": "mean weight of each sleeve >=0.15 and <=0.60"
+    },
+    "costs": {
+      "X1_4x": "total return >0 and MDD >= -25%",
+      "X2_5x_performance": "total return >0, Sharpe >=0.50, MDD >= -25%, 2024/2025 both >=0, recent year >0",
+      "X3_5x_concentration": "all C1-C12 gates pass at 5x"
+    },
+    "concentration_2x_and_5x": {
+      "C1_stock_breadth": "distinct symbols >=80",
+      "C2_top1": "top1 net contribution <=25%",
+      "C3_top3": "top3 net contribution <=55%",
+      "C4_top5": "top5 net contribution <=75%",
+      "C5_recent_breadth": "recent 12m positive-contribution symbols >=8",
+      "C6_industry": "top industry gross-profit share <=45%",
+      "C7_loss": "max symbol loss / gross profit <=20%",
+      "C8_asset_contribution": "each of equity/gold/treasury/dividend <=50%",
+      "C9_asset_weight": "each defensive asset mean <=40% and max <=50%",
+      "C10_liquidity": "R331 primary asset liquidity gate passes",
+      "C11_turnover": "portfolio annual turnover <=1.5x",
+      "C12_weights": "max weight sum <=1 and min target weight >=0"
+    },
+    "robustness": {
+      "R1_dividend": "replacement 515080.SH passes annual >=5%, MDD >= -20%, 2024/2025 >=0",
+      "R2_gold": "replacement 159937.SZ passes annual >=5%, MDD >= -20%, 2024/2025 >=0",
+      "R3_treasury": "replacement 511010.SH passes annual >=5%, MDD >= -20%, 2024/2025 >=0",
+      "F1_fresh_starts": "at least 4/5 fresh starts positive and every MDD >= -18%",
+      "P1_overlay_plateau": "at least 7/9 combinations of 40/60/90-day lookback and 12/15/18% target pass core gates",
+      "P2_joint_target": "at least 2/3 joint equity/overlay target variants pass core gates",
+      "P3_center": "the frozen 60-day/15% center passes"
+    }
+  },
+  "selection_rule": "All D/G/X/C/R/F/P gates must pass. Otherwise R341 is a negative result, R334 remains research_only_cost_fragile, and no third-sleeve promotion occurs. No threshold may change after results.",
+  "discipline": [
+    "C is not promoted as a standalone strategy; it is only a portfolio sleeve hypothesis.",
+    "No stock-score, position-count, holding-period, sleeve-weight or asset grid is run.",
+    "No leverage.",
+    "No paper target or order file."
+  ],
+  "known_limitations": [
+    "C is post-hoc and failed its own standalone R340 gates.",
+    "The common window starts in 2023, so this is not a full 2018-2026 validation.",
+    "The industry map and financial/custom factors are not full vendor PIT reconstructions.",
+    "ETF qfq series are not official PIT total-return benchmarks.",
+    "Static arithmetic motivated this round; only the full daily simulation can determine promotion."
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "round": "R340",
+  "status": "pre_registered_before_broad_quality_momentum_backtest",
+  "candidate_id": "r340_broad_quality_momentum_h60_p50_posthoc",
+  "strategy_id": "ai_hs300_quality_momentum_broad_h60",
+  "hypothesis": "A broad 50-position quality-momentum sleeve with positive 60-day trend confirmation and 60-day holding can retain positive net alpha under 5x costs while distributing profit across enough names to serve as a third portfolio profit source.",
+  "design_disclosure": "R339 showed every tested narrow sleeve failed the third-source screen. Rather than forcing a failed 10-position sleeve into the portfolio, R340 creates one new broad sleeve. It is a structural breadth/turnover experiment, not a factor-weight or holding-period grid.",
+  "fixed_construction": {
+    "universe": "daily historical HS300 membership, standard R340 strategy basic filters",
+    "entry_filter": "ma60 present, momentum_60d > 0, quality/cash/low-vol factors non-null",
+    "score": "momentum_60d 40% + quality-value 25% + cash quality 20% + low volatility 15%",
+    "positions": 50,
+    "holding": "60 trading days, no fixed stop-loss",
+    "execution": "T+1 open, equal weight",
+    "costs": "2x and 5x stock costs"
+  },
+  "window": {
+    "start": "2023-05-04",
+    "end": "2026-11-05",
+    "recent_year_start": "2025-11-05"
+  },
+  "screen_gates": {
+    "D1": "strategy loads and required factors are available",
+    "D2": "2x and 5x curves cover the full common window",
+    "E1": "5x total return >=10% and Sharpe >=0.35",
+    "E2": "recent-year total return at 2x >0",
+    "E3": "2x Sharpe >=0.50",
+    "E4": "maximum daily-return correlation with existing A and B <=0.85",
+    "E5": "5x distinct symbols >=100",
+    "E6": "5x top1/top3/top5 net contribution <=25%/55%/75%",
+    "E7": "5x top industry gross-profit share <=45%",
+    "E8": "5x max single-symbol loss / gross profit <=20%"
+  },
+  "selection_rule": "If all D/E gates pass, this broad sleeve becomes the fixed C sleeve for a separately preregistered three-sleeve portfolio test. If any gate fails, record a negative result and do not alter weights, holding period, TopN or factor definitions after reading results.",
+  "future_portfolio_test_if_eligible": {
+    "structure": "A/B/C monthly 60-day inverse-volatility risk parity, each weight [0.20,0.60], equity sleeve max 1/3, unchanged three-asset defensive bucket, 60d/15% overlay, no leverage",
+    "promotion_requires": "new preregistration and all portfolio performance, cost, concentration, asset-substitution, plateau and fresh-start gates"
+  },
+  "known_limitations": [
+    "In-sample post-hoc strategy created after observing concentration failures.",
+    "60-day holding is not a grid-selected optimum.",
+    "Current industry and financial snapshots are not full vendor PIT reconstructions.",
+    "The strategy is not deployable merely because its standalone screen passes."
+  ]
+}

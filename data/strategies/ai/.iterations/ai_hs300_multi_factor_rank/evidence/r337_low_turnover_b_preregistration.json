@@ -1,0 +1,59 @@
+{
+  "candidate_id": "r337_top10_b40_three_asset_cap33_posthoc",
+  "classification": "post-hoc low-turnover B-leg experiment after 5x cost fragility; no holding-period grid",
+  "created_at": "2026-11-05",
+  "discipline": [
+    "No holding-period grid: only 40 days is tested.",
+    "No scoring, stop-loss, TopN, cap, asset or overlay-parameter changes.",
+    "The candidate remains post-hoc.",
+    "No paper target or order file."
+  ],
+  "disclosure": "R334/R335 kept the portfolio positive at 5x but stock net contribution became too concentrated. Existing h20 B-leg turnover is a major cost source. R337 changes only the B leg maximum holding period from 20 to 40 trading days, aligning it with the A leg, and keeps every other rule fixed.",
+  "fixed_strategy": {
+    "A_B_combination": "60-day inverse-volatility risk parity, A share [0.2,0.8]",
+    "A_strategy": "ai_hs300_macro_gate_quality",
+    "B_strategy": "ai_hs300_industry_relative_strength_quality_h40_sl20",
+    "center": "60-day overlay lookback, 15% target vol, gross [0.2,1.0], no leverage",
+    "costs": "2x/3x/4x/5x stock costs with overlay 0.10%/0.15%/0.30%/0.20%/0.25%; 3x conservative 0.30%",
+    "defensive_bucket": "518880.SH / 511260.SH / 510880.SH equal 1/3 monthly",
+    "equity_risk_share_bounds": "[0.2,1/3] monthly",
+    "max_positions_each": 10
+  },
+  "gates": {
+    "5x_concentration": "C1-C12 under 5x costs; top1/top3/top5 net contribution <=25%/55%/75%",
+    "asset_substitution": "all three R331 asset substitutions pass",
+    "cost": "3x conservative, 4x and 5x total return >0; 5x Sharpe >=0.5 and MDD >= -25%",
+    "fresh_starts": "at least 4/5 positive and every MDD >= -18%",
+    "full_2x": "all R334/R332 performance and concentration gates with 2022/2023 >=0",
+    "plateau": "at least 7/9 overlay and 2/3 joint target variants pass all core gates"
+  },
+  "known_limitations": [
+    "In-sample candidate; not independent out-of-sample proof.",
+    "ETF qfq and current industry snapshot limitations remain.",
+    "Longer holding may improve cost but worsen responsiveness."
+  ],
+  "round": "R337",
+  "selection_rule": "All gates must pass; otherwise record low-turnover B as a negative result and do not promote.",
+  "variant_grid": {
+    "joint_target": {
+      "lookback_days": 60,
+      "target_vol": [
+        0.12,
+        0.15,
+        0.18
+      ]
+    },
+    "overlay": {
+      "lookback_days": [
+        40,
+        60,
+        90
+      ],
+      "target_vol": [
+        0.12,
+        0.15,
+        0.18
+      ]
+    }
+  }
+}

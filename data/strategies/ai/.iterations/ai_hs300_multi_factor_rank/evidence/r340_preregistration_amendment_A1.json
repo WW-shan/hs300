@@ -1,0 +1,13 @@
+{
+  "round": "R340",
+  "amendment": "A1",
+  "status": "before_any_c_sleeve_return_or_trade_was_read",
+  "trigger": "evidence/r340_execution_attempt1_uf_filter_failure.json",
+  "change": "The strategy filter must test the raw materialized financial columns used by uf_quality_value_defensive and uf_cash_quality, plus annual_vol_20d, instead of referencing uf_* scoring columns before scoring materialization.",
+  "unchanged_economics": [
+    "The score still uses momentum_60d 40%, uf_quality_value_defensive 25%, uf_cash_quality 20% and uf_low_vol 15%.",
+    "The required quality/cash/low-vol completeness condition remains.",
+    "50 positions, 60-day holding, no stop-loss, T+1 execution, window, costs and all gates remain unchanged."
+  ],
+  "reason": "This is an execution-stage materialization fix, not a strategy redesign or post-result parameter change."
+}

@@ -1,0 +1,100 @@
+{
+  "round": "R343",
+  "candidate_id": "r343_abc_cap10_gold_trend_proxy_posthoc",
+  "status": "pre_registered_before_r343_portfolio_backtest",
+  "classification": "post-hoc defensive-asset trend experiment on the R342 C-satellite portfolio",
+  "hypothesis": "The R342 recent fresh-start losses were driven by the gold sleeve, not the stock sleeves. Switching the gold sleeve to a 50/50 treasury-plus-dividend proxy when gold closes below its 200-day moving average should improve fresh-start stability and MDD without changing stock selection or concentration.",
+  "disclosure": "R342 passed 5x cost and concentration but failed recent fresh starts. Component attribution showed equity was positive in both failed phases, while the gold sleeve contributed roughly -3.5% and -2.6%. The 200-day gold rule is a single classic trend rule, not a lookback grid. It is first evaluated here with full portfolio gates.",
+  "base_portfolio": {
+    "sleeves": {
+      "A": {"strategy_id": "ai_hs300_macro_gate_quality", "max_positions": 10},
+      "B": {"strategy_id": "ai_hs300_industry_relative_strength_quality_h20_sl20", "max_positions": 10},
+      "C": {"strategy_id": "ai_hs300_quality_momentum_broad_h60", "max_positions": 50}
+    },
+    "sleeve_weighting": "monthly 60-day inverse-volatility risk parity with [0.20,0.60] bounds; C capped at 10% and excess redistributed to A/B",
+    "equity_risk_share": "monthly equity sleeve at most 1/3",
+    "defensive_bucket": "gold proxy / 511260.SH / 510880.SH equal 1/3 monthly",
+    "overlay": "60-day lookback, 15% balance-vol target, gross [0.2,1.0], no leverage",
+    "costs": "2x/3x/4x/5x stock costs; 3x conservative overlay 0.30%; overlay 0.10%/0.15%/0.20%/0.25%"
+  },
+  "gold_proxy_rule": {
+    "signal": "At each month-start close, gold is ON if close > mean(close over trailing 200 trading days), otherwise OFF.",
+    "on_return": "gold daily return",
+    "off_return": "50% treasury daily return + 50% dividend daily return",
+    "switch_cost": "one-third portfolio turnover at the prevailing overlay round-trip cost on a regime switch",
+    "warmup": "before 200 gold closes, gold is ON",
+    "leakage_control": "the signal at date t is applied only to returns after t"
+  },
+  "window": {"start": "2023-05-04", "end": "2026-11-05", "recent_year_start": "2025-11-05"},
+  "gates": {
+    "data": {
+      "D1": "all sleeves load and produce full curves",
+      "D2": "gold/treasury/dividend proxy series align over the full window",
+      "D3": "input data trees stable",
+      "D4": "mean pairwise stock-sleeve correlation <0.85"
+    },
+    "absolute_performance_2x": {
+      "G1_annual": ">=6%",
+      "G2_mdd": ">= -18%",
+      "G3_sharpe": ">=0.70",
+      "G4_calendar": "2024 and 2025 both >=0",
+      "G5_recent": ">0",
+      "G6_bootstrap": "positive rate >=80%, P05 >= -12%",
+      "G7_rolling": "positive rate >=70%, worst >= -15%",
+      "G8_stress": "3x conservative total return >0 and MDD >= -25%",
+      "G10_no_leverage": "max weight sum <=1, min weight >=0",
+      "G11_cap": "mean C sleeve weight <=10.5%"
+    },
+    "tradeoff_vs_two_sleeve_control": {
+      "G9_annual": "candidate annual >= A+B control annual -1.0pp",
+      "G9_sharpe": "candidate Sharpe >= control Sharpe -0.10",
+      "G9_mdd": "candidate MDD >= control MDD -0.5pp"
+    },
+    "costs_and_concentration": {
+      "X1_4x": "total return >0 and MDD >= -25%",
+      "X2_5x_performance": "total return >0, Sharpe >=0.50, MDD >= -25%, 2024/2025 >=0, recent >0",
+      "X3_5x_concentration": "C1-C12 all pass at 5x"
+    },
+    "concentration": {
+      "C1": "distinct symbols >=80",
+      "C2": "top1 net <=25%",
+      "C3": "top3 net <=55%",
+      "C4": "top5 net <=75%",
+      "C5": "recent positive-contribution symbols >=8",
+      "C6": "top industry gross <=45%",
+      "C7": "max symbol loss / gross profit <=20%",
+      "C8": "each asset contribution <=50%",
+      "C9": "each defensive sleeve mean <=40%, max <=50%",
+      "C10": "R331 primary asset liquidity passes",
+      "C11": "portfolio annual turnover <=1.5x",
+      "C12": "max weight sum <=1, min target weight >=0"
+    },
+    "robustness": {
+      "R1_dividend": "515080.SH replacement annual >=5%, MDD >= -20%, 2024/2025 >=0",
+      "R2_gold": "159937.SZ replacement through the same proxy annual >=5%, MDD >= -20%, 2024/2025 >=0",
+      "R3_treasury": "511010.SH replacement annual >=5%, MDD >= -20%, 2024/2025 >=0",
+      "F1_fresh": "at least 4/5 fresh starts positive and every MDD >= -18%",
+      "P1_overlay": ">=7/9 overlay lookback/target variants pass core gates",
+      "P2_joint": ">=2/3 joint target variants pass core gates",
+      "P3_center": "60d/15% center passes"
+    },
+    "satellite_cap_plateau": {
+      "grid": [0.05, 0.10, 0.15, 0.20],
+      "per_cap_core": "2x annual >=12%, Sharpe >=1.25, MDD >= -15%; 5x annual >=10%, Sharpe >=1.10, MDD >= -15%; 5x C2-C4 pass; at least 4/5 fresh starts positive",
+      "P4": "at least 3/4 caps pass and the 10% center passes"
+    }
+  },
+  "selection_rule": "All D/G/X/C/R/F/P gates and P4 must pass. Otherwise record negative result and do not promote. No threshold changes after results.",
+  "discipline": [
+    "Only the gold defensive composition changes from R342.",
+    "No stock strategy, score, position count, holding period, C cap or overlay grid is altered.",
+    "The 200-day signal is fixed before the run and is not scanned.",
+    "No leverage; no paper target or order file."
+  ],
+  "known_limitations": [
+    "The gold trend rule and 10% C cap are post-hoc.",
+    "Common window starts in 2023; not a full 2018-2026 validation.",
+    "Gold, treasury and dividend ETF qfq series are not official PIT total-return benchmarks.",
+    "The proxy does not model intraday execution or ETF premium/discount."
+  ]
+}

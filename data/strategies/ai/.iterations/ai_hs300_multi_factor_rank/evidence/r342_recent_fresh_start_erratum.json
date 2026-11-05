@@ -1,0 +1,38 @@
+{
+  "round": "R342",
+  "erratum_id": "R342-RECENT-FRESH-START-ERRATUM-1",
+  "date": "2026-11-05",
+  "classification": "append-only disclosure correction; original preregistration and result retained unchanged",
+  "parent_evidence": {
+    "preregistration_file": "r342_c_satellite_cap10_preregistration.json",
+    "preregistration_sha256": "f793ff16c7d27d5a90ae39cbaed6bda055f71a0c7f102cf131fb6588907a2a83",
+    "result_file": "r342_c_satellite_cap10.json",
+    "result_sha256": "658eb4c0664787853db6314ab2e69af67b74106b8bff582d899359f2ae031ce8",
+    "runner_file": "run_r342_c_satellite_cap10.py",
+    "runner_sha256": "bc46995a6524f432f3508b505fb92850c15b78b1d317c89da81414a453409499"
+  },
+  "incorrect_disclosure": "The R342 preregistration disclosure said a post-result diagnostic found that 10%-15% caps made both recent fresh starts positive.",
+  "reason": "That exploratory diagnostic omitted the formal A/B inverse-volatility [0.20,0.60] bounds. The formal R342 portfolio run restored those bounds before applying the 10% C cap.",
+  "corrected_finding": {
+    "formal_fresh_starts_positive": 3,
+    "formal_fresh_starts_total": 5,
+    "failing_fresh_starts": {
+      "2025-11-05": {
+        "total_return": -0.009321,
+        "mdd": -0.093286
+      },
+      "2026-01-05": {
+        "total_return": -0.003628,
+        "mdd": -0.068569
+      }
+    },
+    "cap_plateau_formal_passes": 0,
+    "cap_plateau_required": 3,
+    "per_cap_fresh_requirement": "at least 4/5 positive fresh starts",
+    "per_cap_fresh_positive": 3
+  },
+  "effect_on_result": "No result, return, risk, concentration, cap or fresh-start threshold changes. R342 remains selected=null and no_candidate_passed.",
+  "no_research_rerun": true,
+  "no_paper_target": true,
+  "no_order_file": true
+}
