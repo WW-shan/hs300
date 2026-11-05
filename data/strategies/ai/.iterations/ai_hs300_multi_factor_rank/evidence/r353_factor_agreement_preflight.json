@@ -1,0 +1,209 @@
+{
+  "all_checks": true,
+  "candidate_strategy": {
+    "file": "data/strategies/ai/ai_hs300_quality_momentum_agreement_additive_h60.py",
+    "id": "ai_hs300_quality_momentum_agreement_additive_h60",
+    "max_hold_days": 60,
+    "neutralize": {
+      "exclude": [
+        "momentum_60d",
+        "uf_quality_value_defensive",
+        "uf_cash_quality",
+        "uf_low_vol"
+      ],
+      "industry": "industry_l1",
+      "shrink": 1.0,
+      "styles": []
+    },
+    "scoring": {
+      "momentum_60d": 0.34,
+      "uf_cash_quality": 0.17,
+      "uf_factor_agreement": 0.15,
+      "uf_low_vol": 0.1275,
+      "uf_quality_value_defensive": 0.2125
+    },
+    "sha256": "7d3ece047b33c2800baab2b215ee0e69c31e8ee8559c411943892eeb0d7ca55f",
+    "stop_loss": null
+  },
+  "checks": {
+    "D10_all_values_finite": true,
+    "D11_low_component_correlation": true,
+    "D12_candidate_days": true,
+    "D13_inputs_byte_stable": true,
+    "D1_formula_compiles": true,
+    "D2_dependencies_are_backward_pit_inputs": true,
+    "D3_candidate_strategy_frozen": true,
+    "D4_only_agreement_leg_neutralized": true,
+    "D5_panel_loaded_with_warmup": true,
+    "D6_first_factor_date_at_window_start": true,
+    "D7_mean_candidate_coverage": true,
+    "D8_min_candidate_coverage": true,
+    "D9_every_year_coverage": true
+  },
+  "control_strategy": {
+    "file": "data/strategies/ai/ai_hs300_quality_momentum_broad_h60.py",
+    "id": "ai_hs300_quality_momentum_broad_h60",
+    "scoring": {
+      "momentum_60d": 0.4,
+      "uf_cash_quality": 0.2,
+      "uf_low_vol": 0.15,
+      "uf_quality_value_defensive": 0.25
+    },
+    "sha256": "6a120d44e00be96bccc1641bcec300f1bf62f1a1af56476bc37fc4561495051d"
+  },
+  "coverage": {
+    "agreement_coverage_mean": 1.0,
+    "agreement_coverage_min": 1.0,
+    "by_year": [
+      {
+        "candidate_days": 165,
+        "candidate_rows": 12984,
+        "coverage": 1.0,
+        "finite_rate": 1.0,
+        "year": 2022
+      },
+      {
+        "candidate_days": 242,
+        "candidate_rows": 23732,
+        "coverage": 1.0,
+        "finite_rate": 1.0,
+        "year": 2023
+      },
+      {
+        "candidate_days": 242,
+        "candidate_rows": 32028,
+        "coverage": 1.0,
+        "finite_rate": 1.0,
+        "year": 2024
+      },
+      {
+        "candidate_days": 243,
+        "candidate_rows": 32423,
+        "coverage": 1.0,
+        "finite_rate": 1.0,
+        "year": 2025
+      },
+      {
+        "candidate_days": 201,
+        "candidate_rows": 20876,
+        "coverage": 1.0,
+        "finite_rate": 1.0,
+        "year": 2026
+      }
+    ],
+    "candidate_days": 1093,
+    "candidate_rows": 122043,
+    "component_coverage_mean": {
+      "agreement_cov": 1.0,
+      "cash_cov": 1.0,
+      "momentum_cov": 1.0,
+      "quality_cov": 1.0
+    },
+    "first_factor_date": "2022-05-05"
+  },
+  "factor": {
+    "dependencies": [
+      "accrual",
+      "annual_vol_20d",
+      "debt_ratio_latest",
+      "momentum_60d",
+      "ocf_ni",
+      "pb_latest",
+      "roe_latest"
+    ],
+    "direction": "high",
+    "file": "data/user_data/custom_factors/uf_factor_agreement.json",
+    "formula": "if_else(rank(momentum_60d) > 0.6, 1, 0) + if_else(rank(roe_latest / (100.0 * pb_latest) - debt_ratio_latest / 100.0) > 0.6, 1, 0) + if_else(rank(ocf_ni - accrual) > 0.6, 1, 0) + if_else(rank(0.0 - annual_vol_20d) > 0.6, 1, 0)",
+    "id": "uf_factor_agreement",
+    "interpretation": "count of four same-date cross-sectional top-40% ranks: momentum, quality-value, cash-quality and low-vol; high means multiple independent dimensions agree, industry-neutralized only inside the candidate strategy",
+    "sha256": "58f2fe6aeb56909c33b91b54470fa7e5602dfd0de8510320a738ca6b930b309f"
+  },
+  "factor_structure": {
+    "correlation_days": 1093,
+    "daily_spearman_abs_p90": {
+      "cash": 0.5193358576036705,
+      "low_vol": 0.3852220498055724,
+      "merton_dd": 0.36417442355713264,
+      "momentum": 0.2706318104171407,
+      "quality": 0.2553182842209351,
+      "raw_vs_neutral": 0.85194635241886,
+      "solvency_buffer": 0.29427644387609625
+    },
+    "daily_spearman_mean": {
+      "cash": 0.389318433172337,
+      "low_vol": 0.21990082214476953,
+      "merton_dd": 0.23208629569107256,
+      "momentum": 0.0532373371126377,
+      "quality": 0.12585160162818543,
+      "raw_vs_neutral": 0.766606653450475,
+      "solvency_buffer": 0.1965111212045117
+    },
+    "daily_spearman_median": {
+      "cash": 0.3868671030222614,
+      "low_vol": 0.20985934730505804,
+      "merton_dd": 0.22707709293416511,
+      "momentum": 0.06972232191964967,
+      "quality": 0.12386348445204011,
+      "raw_vs_neutral": 0.7784633376613799,
+      "solvency_buffer": 0.19654351780319562
+    },
+    "max_abs_mean_component_correlation": 0.389318433172337,
+    "unique_neutral_values": 4169
+  },
+  "input_isolation": {
+    "after": {
+      "alt_hs300": {
+        "bytes": 251443214,
+        "files": 2143,
+        "sha256": "2fed5684eb1742095094f00a8ff38afd7ed7242c9d2ee52b824dc5be88f1467e"
+      },
+      "candidate_strategy": "7d3ece047b33c2800baab2b215ee0e69c31e8ee8559c411943892eeb0d7ca55f",
+      "control_strategy": "6a120d44e00be96bccc1641bcec300f1bf62f1a1af56476bc37fc4561495051d",
+      "factor_definition": "58f2fe6aeb56909c33b91b54470fa7e5602dfd0de8510320a738ca6b930b309f",
+      "financials": {
+        "balance_sheet": "9253a260bb045c37c0409617bdb3082624e7f21f253d35a147036e5eeac47283",
+        "cash_flow": "f34a3365dd92713d91a007b784b9ac8cd266cc7e7d19b5ab1df75a82381e3b5b",
+        "income": "9bf784d2939de14c4f9da2e96ad3fbecd3c87ae85e8c7dfea056b636ee8164e2",
+        "metrics": "d458c82807fbd0957344021930ba065b478dae78d7bb17a6aea9e4cab4757886"
+      },
+      "kline_daily_enriched": {
+        "bytes": 47704926,
+        "files": 2143,
+        "sha256": "8de93672101a09972d0ebe67c44e089240daa03eb861091b3c16005ae37baf7c"
+      },
+      "membership": "6e5114f16ecd936be0bf7fb62f474d169dca25f1bad78bb27fd0ea413d3ed748"
+    },
+    "before": {
+      "alt_hs300": {
+        "bytes": 251443214,
+        "files": 2143,
+        "sha256": "2fed5684eb1742095094f00a8ff38afd7ed7242c9d2ee52b824dc5be88f1467e"
+      },
+      "candidate_strategy": "7d3ece047b33c2800baab2b215ee0e69c31e8ee8559c411943892eeb0d7ca55f",
+      "control_strategy": "6a120d44e00be96bccc1641bcec300f1bf62f1a1af56476bc37fc4561495051d",
+      "factor_definition": "58f2fe6aeb56909c33b91b54470fa7e5602dfd0de8510320a738ca6b930b309f",
+      "financials": {
+        "balance_sheet": "9253a260bb045c37c0409617bdb3082624e7f21f253d35a147036e5eeac47283",
+        "cash_flow": "f34a3365dd92713d91a007b784b9ac8cd266cc7e7d19b5ab1df75a82381e3b5b",
+        "income": "9bf784d2939de14c4f9da2e96ad3fbecd3c87ae85e8c7dfea056b636ee8164e2",
+        "metrics": "d458c82807fbd0957344021930ba065b478dae78d7bb17a6aea9e4cab4757886"
+      },
+      "kline_daily_enriched": {
+        "bytes": 47704926,
+        "files": 2143,
+        "sha256": "8de93672101a09972d0ebe67c44e089240daa03eb861091b3c16005ae37baf7c"
+      },
+      "membership": "6e5114f16ecd936be0bf7fb62f474d169dca25f1bad78bb27fd0ea413d3ed748"
+    },
+    "stable": true
+  },
+  "next": "If all checks pass, freeze R353 portfolio gates before running any return or drawdown backtest.",
+  "no_return_or_backtest_evaluated": true,
+  "round": "R353",
+  "status": "coverage_only_preflight_no_returns",
+  "window": {
+    "end": "2026-11-05",
+    "panel_warmup_start": "2020-06-01",
+    "start": "2022-05-05"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "id": "uf_factor_agreement",
+  "kind": "custom",
+  "version": 1,
+  "label": "四因子一致数",
+  "group": "组合",
+  "formula": "if_else(rank(momentum_60d) > 0.6, 1, 0) + if_else(rank(roe_latest / (100.0 * pb_latest) - debt_ratio_latest / 100.0) > 0.6, 1, 0) + if_else(rank(ocf_ni - accrual) > 0.6, 1, 0) + if_else(rank(0.0 - annual_vol_20d) > 0.6, 1, 0)",
+  "description": "动量、质量价值、现金质量、低波四项同日截面排名中，处于前40%的项数（0-4）；高值代表多个独立维度同时支持。仅使用当日及之前已知数据。",
+  "direction": "high",
+  "status": "draft",
+  "created_at": "2026-11-06T00:30:00",
+  "updated_at": "2026-11-06T00:30:00"
+}

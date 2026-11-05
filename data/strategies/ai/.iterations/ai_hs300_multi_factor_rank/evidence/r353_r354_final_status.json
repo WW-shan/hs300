@@ -1,0 +1,55 @@
+{
+  "best_diagnostic": {
+    "annual_2x": 0.119457,
+    "candidate_id": "r354_factor_agreement_gate_c_sleeve_cap10_gold_trend_proxy",
+    "mdd_2x": -0.090285,
+    "return_2022": 0.000416,
+    "round": "R354",
+    "sharpe_2x": 1.2851,
+    "top5_net_share_5x": 1.200086,
+    "why_not_promoted": [
+      "annual below 12%",
+      "5x top1/top3/top5 concentration failed",
+      "cap plateau 0/4",
+      "C standalone annual negative"
+    ]
+  },
+  "closed_lines": [
+    {
+      "line": "four-factor agreement additive to C sleeve",
+      "result_file": "r353_factor_agreement_backtest.json",
+      "result_sha256": "3342e07ab4d0478b432776927d4d28fb7397f629974285b39b916602f4e74c17",
+      "round": "R353",
+      "status": "failed_no_incremental_c_alpha"
+    },
+    {
+      "line": "four-factor agreement hard gate on C candidates",
+      "result_file": "r354_factor_agreement_gate_backtest.json",
+      "result_sha256": "907179e1b2005bfe3914a8426dcf5b63baf1dde07140e4113ba71b246d7ffad4",
+      "round": "R354",
+      "status": "2022_positive_but_annual_and_5x_concentration_failed"
+    }
+  ],
+  "known_limitations": [
+    "Common window starts 2022-05-05 because TTM C-sleeve data starts then.",
+    "Agreement is derived from the same four factors and is not independent data.",
+    "Industry classification uses a current snapshot backfilled through history.",
+    "ETF qfq caches are not official PIT total-return series.",
+    "The gate minimum of one candidate per day implies sparse-day concentration risk."
+  ],
+  "next_research_guidance": [
+    "Do not scan the agreement threshold, additive weight, component set or C cap.",
+    "The gate shows the trade-off: it can improve the 2022 tail but destroys C-sleeve net alpha.",
+    "Next work must find an independent return source or a portfolio structure that increases 5x net-profit breadth, not another reweighting of the same four factors."
+  ],
+  "no_leverage": true,
+  "order_file_generated": false,
+  "paper_target_generated": false,
+  "production_enabled": false,
+  "rounds": [
+    "R353",
+    "R354"
+  ],
+  "selected": null,
+  "status": "research_only_no_candidate_after_r353_r354"
+}
