@@ -25,6 +25,9 @@ SIGNAL_IDS = (
 
 
 def _signals() -> list[dict]:
+    # 该测试只构造信号表达式，不会启动应用；必须显式加载仓库 data 下的
+    # ext_alt_hs300 字段，否则 allowed_fields() 会使用测试环境的默认数据目录。
+    load_into_registry(ROOT / "data")
     fixture_dir = Path(__file__).resolve().parent / "fixtures" / "custom_signals"
     signals = [
         json.loads((fixture_dir / f"{signal_id}.json").read_text(encoding="utf-8"))
