@@ -1,0 +1,68 @@
+{
+  "classification": "preregistered current-data reconstruction of the retired R131 dual-sleeve shape; no parameter search",
+  "created_at_utc": "2026-11-05T10:34:03.020726+00:00",
+  "decision_rule": "All G1-G7 pass -> candidate_for_concentration_audit only. Any failure -> record negative knowledge; no gate, window, target, weight bounds, or rebalance change after seeing results.",
+  "execution": {
+    "data_root": "temporary copy of data/research/r40_engine_data with current data/kline_daily copied as the raw execution directory",
+    "factor_registry": "current data via app.factors.store.load_into_registry",
+    "main_cost": "2x (commission 4bp, slippage 10bp, stamp 5bp)",
+    "matching": "open_t+1",
+    "max_positions_per_sleeve": 10,
+    "membership": "R78 exact daily snapshots",
+    "position_sizing": "equal",
+    "stress_cost": "3x (commission 6bp, slippage 15bp, stamp 10bp)"
+  },
+  "gates": {
+    "G1_execution": "all 10 phase + 5 recent dual-sleeve runs complete with non-empty aligned equity curves",
+    "G2_full_drawdown": "START full-path 2x combined+vol15 MDD >= -25%",
+    "G3_full_return": "START full-path 2x combined+vol15 annual >= 5% and Sharpe >= 0.60",
+    "G4_recent": "recent mean return > 0 and at least 4/5 positive fresh-start phases",
+    "G5_stress": "START full-path 3x combined+vol15 return > 0 and MDD >= -30%",
+    "G6_incrementality": "vs B-only vol15 at START: combined+vol15 improves Sharpe by >=0.05 or MDD by >=3pp, without reducing B-only annual return by more than 2pp",
+    "G7_no_leverage": "all monthly total-exposure weights stay within [0,1.0]"
+  },
+  "known_limitations": [
+    "R40 is a local research snapshot, not an official canonical archive.",
+    "The shape is derived from R131, which failed snapshot reproducibility; this round tests the shape on current data and does not restore old performance.",
+    "Industry mapping and alt factors may use current snapshots rather than historical PIT.",
+    "Overlapping phase starts are descriptive and are not independent out-of-sample evidence.",
+    "A standalone R266 failed stock-level concentration gates; any R312 pass still requires a separate trade/stock concentration audit."
+  ],
+  "periods": {
+    "full": [
+      "2021-06-01",
+      "2026-10-14"
+    ],
+    "phase_starts": [
+      "2021-06-01",
+      "2022-01-04",
+      "2022-07-01",
+      "2023-01-03",
+      "2023-07-03",
+      "2024-01-02",
+      "2024-07-01",
+      "2025-01-02",
+      "2025-07-01",
+      "2026-01-05"
+    ],
+    "recent_starts": [
+      "2025-10-14",
+      "2025-12-15",
+      "2026-02-13",
+      "2026-04-15",
+      "2026-06-15"
+    ]
+  },
+  "portfolio_rule": {
+    "combine": "60-day inverse-volatility risk parity; monthly rebalance; A weight bounds [0.2,0.8]",
+    "leverage": "not allowed; total exposure <= 1.0",
+    "overlay": "60-day realized volatility target 15%; monthly rebalance; total exposure bounds [0.2,1.0]",
+    "round_trip_cost": "0.52% on monthly turnover"
+  },
+  "question": "在 R40 可复现行情临时根目录与当前因子数据上，把宏观质量 A 腿与行业相对强弱质量 B 腿按 60 日逆波动风险平价组合，再叠加 15% 无杠杆波动率目标，能否把单腿 B 的完整路径回撤压到 -25% 内，同时保留近期稳定性、压力成本余量并优于 B-only？",
+  "round": "R312",
+  "sleeves": {
+    "A": "ai_hs300_macro_gate_quality",
+    "B": "ai_hs300_industry_relative_strength_quality_h20_sl20"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "candidate": {
+    "A": "ai_hs300_macro_gate_quality",
+    "B": "ai_hs300_industry_relative_strength_quality_h20_sl20"
+  },
+  "classification": "preregistered 3x3 parameter-neighborhood robustness check; not a best-parameter search",
+  "created_at_utc": "2026-11-05T10:37:05.555081+00:00",
+  "decision_rule": "All P1-P7 pass -> center is classified parameter-robust but remains research/paper-review only. Any failure -> center is classified parameter-fragile and must not be promoted. Do not choose a grid winner after seeing results.",
+  "gates": {
+    "P1_execution": "all 15 A/B backtests, all 9 overlay combinations and the 3x full-start stress run complete with non-empty curves",
+    "P2_center_full": "center (60d,15%) full-start 2x MDD >= -25%, annual >=5%, Sharpe >=0.60",
+    "P3_drawdown_plateau": "at least 7/9 combinations have full-start 2x MDD >= -25%",
+    "P4_return_plateau": "at least 7/9 combinations have full-start 2x annual >=5% and Sharpe >=0.55",
+    "P5_recent_plateau": "at least 7/9 combinations have recent mean return >0 and at least 4/5 positive fresh starts",
+    "P6_stress_plateau": "at least 7/9 combinations have full-start 3x return >0 and MDD >= -30%",
+    "P7_no_leverage": "all monthly overlay weights remain within [0,1.0]"
+  },
+  "grid": {
+    "overlay_weight_bounds": [
+      0.2,
+      1.0
+    ],
+    "rebalance": "monthly",
+    "risk_parity_lookbacks": [
+      40,
+      60,
+      90
+    ],
+    "risk_parity_weight_bounds_A": [
+      0.2,
+      0.8
+    ],
+    "round_trip_cost": 0.0052,
+    "selection": "center (60,15%) remains the candidate; no grid cell is selected for deployment",
+    "target_annual_vols": [
+      0.12,
+      0.15,
+      0.18
+    ]
+  },
+  "known_limitations": [
+    "Neighborhood checks share the same underlying history and are not independent samples.",
+    "R40 is a local research snapshot and canonical data drift remains unresolved.",
+    "A parameter plateau cannot remove data-version, industry-PIT, or survivor-bias risks."
+  ],
+  "periods": {
+    "full": [
+      "2021-06-01",
+      "2026-10-14"
+    ],
+    "phase_starts": [
+      "2021-06-01",
+      "2022-01-04",
+      "2022-07-01",
+      "2023-01-03",
+      "2023-07-03",
+      "2024-01-02",
+      "2024-07-01",
+      "2025-01-02",
+      "2025-07-01",
+      "2026-01-05"
+    ],
+    "recent_starts": [
+      "2025-10-14",
+      "2025-12-15",
+      "2026-02-13",
+      "2026-04-15",
+      "2026-06-15"
+    ]
+  },
+  "question": "R312 的 60 日风险平价 + 15% 波动率目标是否处在一个稳定参数平台，还是只有中心参数偶然有效？",
+  "round": "R314"
+}

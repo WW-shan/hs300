@@ -1,0 +1,38 @@
+{
+  "attribution": {
+    "limitation": "This is a contribution-share approximation for separately backtested 1M sleeves, not a compounded portfolio accounting ledger.",
+    "sleeve_pnl": "A trade pnl_amount multiplied by its holding-period average of weight_A(t) * total_exposure(t); B by (1-weight_A(t)) * total_exposure(t).",
+    "weights": "monthly risk-parity and volatility-target records, carried forward until the next record."
+  },
+  "candidate": {
+    "A": "ai_hs300_macro_gate_quality",
+    "B": "ai_hs300_industry_relative_strength_quality_h20_sl20",
+    "cost": "2x commission 4bp + slippage 10bp + stamp 5bp",
+    "portfolio": "60d inverse-vol risk parity A bounds [0.2,0.8], then 15% vol target [0.2,1.0], monthly"
+  },
+  "classification": "preregistered concentration audit of the R312 passing candidate; no strategy or parameter changes",
+  "created_at_utc": "2026-11-05T10:35:58.395555+00:00",
+  "decision_rule": "All C1-C7 pass -> candidate_for_paper_trading_review only; any failure -> keep research-only. Do not change weights, portfolio rule, window, or thresholds after seeing results.",
+  "gates": {
+    "C1_coverage": "at least 80 distinct symbols",
+    "C2_top1": "largest positive symbol net P&L share <= 25%",
+    "C3_top3": "top three positive symbol net P&L share <= 55%",
+    "C4_top5": "top five positive symbol net P&L share <= 75%",
+    "C5_recent_breadth": "at least 8 distinct recent-12m symbols with positive attributed P&L",
+    "C6_industry": "largest industry gross-profit share <= 45%",
+    "C7_loss": "largest single-symbol loss <= 20% of gross profit"
+  },
+  "known_limitations": [
+    "Industry classification is a current snapshot, not historical PIT.",
+    "Attribution uses holding-period average portfolio weights and separately run sleeve P&L.",
+    "R40 is a local research snapshot; canonical data drift remains unresolved.",
+    "A passing concentration audit would not authorize production while data provenance is unresolved."
+  ],
+  "question": "R312 的双袖风险平价 + 15% 波动率目标在按组合权重缩放逐笔 P&L 后，收益是否仍分散在足够多股票、行业和近期标的上，还是与 R266/R257 一样依赖少数赢家？",
+  "round": "R313",
+  "window": {
+    "end": "2026-10-14",
+    "recent_start": "2025-10-14",
+    "start": "2021-06-01"
+  }
+}

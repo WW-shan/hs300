@@ -1,0 +1,84 @@
+{
+  "base_rules": {
+    "asset_type": "stock",
+    "hs300_membership": "R78 exact daily snapshots",
+    "matching": "open_t+1",
+    "max_hold_days": 20,
+    "max_positions": 10,
+    "selection": "unchanged R102 scoring/filter",
+    "stop_loss": -0.2
+  },
+  "base_strategy": "ai_hs300_industry_relative_strength_quality_h20_sl20",
+  "classification": "preregistered fixed-factor risk-budget experiment on the reproducible R40 snapshot; not a new alpha search",
+  "costs": {
+    "main": "2x (commission 4bp, slippage 10bp, stamp 5bp)",
+    "stress": "3x (commission 6bp, slippage 15bp, stamp 10bp)"
+  },
+  "created_at_utc": "2026-11-05T10:29:13.881033+00:00",
+  "date": "2026-11-05",
+  "decision_rule": "Select only a dynamic overlay that passes G1-G5; report G6 as an incrementality gate. If none pass, record negative knowledge and do not tune the lookback, target, bounds, or monthly cost after seeing results.",
+  "execution_boundary": "Use only a temporary copy of data/research/r40_engine_data. Do not write production data, call providers, alter R102 source, or search additional parameters.",
+  "gates": {
+    "G1_execution": "all runs complete without error and produce non-empty equity curves",
+    "G2_drawdown": "at least one dynamic overlay has full-period MDD >= -25%",
+    "G3_recent": "same passing overlay has recent mean return >0 and at least 4/5 positive fresh-start phases",
+    "G4_return": "same overlay has full-period annualized return >=5% and Sharpe >=0.35, with 10/10 long-period phases positive",
+    "G5_cost": "same overlay has positive full-period 3x return and MDD >= -30%",
+    "G6_control": "dynamic overlay must beat fixed50 on either MDD by >=5pp or Sharpe by >=0.05; otherwise record no incremental timing value"
+  },
+  "overlays": {
+    "fixed50": {
+      "rebalance": "monthly",
+      "role": "control for whether dynamic timing adds value",
+      "round_trip_cost": 0.0052,
+      "weight": 0.5
+    },
+    "vol15": {
+      "lookback_days": 60,
+      "rebalance": "monthly",
+      "round_trip_cost": 0.0052,
+      "target_annual_vol": 0.15,
+      "weight_bounds": [
+        0.2,
+        1.0
+      ]
+    },
+    "vol20": {
+      "lookback_days": 60,
+      "rebalance": "monthly",
+      "round_trip_cost": 0.0052,
+      "target_annual_vol": 0.2,
+      "weight_bounds": [
+        0.2,
+        1.0
+      ]
+    }
+  },
+  "periods": {
+    "full": [
+      "2021-06-01",
+      "2026-10-14"
+    ],
+    "phase_starts": [
+      "2021-06-01",
+      "2022-01-04",
+      "2022-07-01",
+      "2023-01-03",
+      "2023-07-03",
+      "2024-01-02",
+      "2024-07-01",
+      "2025-01-02",
+      "2025-07-01",
+      "2026-01-05"
+    ],
+    "recent_starts": [
+      "2025-10-14",
+      "2025-12-15",
+      "2026-02-13",
+      "2026-04-15",
+      "2026-06-15"
+    ]
+  },
+  "question": "Can a simple 60-day volatility target or fixed cash allocation reduce the R102 maximum drawdown below the prior unacceptable level while retaining enough return and recent stability?",
+  "round": "R311"
+}
