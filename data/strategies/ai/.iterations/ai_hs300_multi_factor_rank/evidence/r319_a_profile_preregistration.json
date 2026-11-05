@@ -1,0 +1,48 @@
+{
+  "bootstrap": {
+    "method": "circular 20-trading-day block bootstrap",
+    "path_days": 252,
+    "paths": 1000,
+    "seed": 20261105
+  },
+  "classification": "preregistered conservative-profile comparison of the existing macro-quality A sleeve; no new factor",
+  "created_at_utc": "2026-11-05T11:32:31.555980+00:00",
+  "gates": {
+    "D1": "all three variants complete full 2x, recent fresh starts and full 3x",
+    "G1_return": "full 2x annual >=3%",
+    "G2_drawdown": "full 2x MDD >= -18%",
+    "G3_bootstrap_positive": "bootstrap 1-year positive rate >=80%",
+    "G4_actual_rolling": "actual rolling 252-day positive rate >=70%",
+    "G5_recent": "2025-10-14 fresh-start return >0 and recent five-start mean >0",
+    "G6_stress": "full 3x return >0 and MDD >= -25%",
+    "G7_no_leverage": "all volatility-target exposures <=1.0"
+  },
+  "known_limitations": [
+    "A sleeve standalone concentration failed C2-C4 in R266.",
+    "No new alpha; this is a risk-profile comparison of an existing sleeve.",
+    "R40 local snapshot and canonical data drift remain unresolved.",
+    "Longer holding period and macro gates can make the curve look smoother without proving deployability."
+  ],
+  "periods": {
+    "full": [
+      "2021-06-01",
+      "2026-10-14"
+    ],
+    "recent_starts": [
+      "2025-10-14",
+      "2025-12-15",
+      "2026-02-13",
+      "2026-04-15",
+      "2026-06-15"
+    ]
+  },
+  "question": "在双袖候选年度体验偏弱的情况下，单独的 A 腿宏观质量策略，或给 A 腿叠加 12%/15% 无杠杆波动率目标，能否提供更稳定的年度持有体验，作为低收益、低回撤备选？",
+  "round": "R319",
+  "selection_rule": "If multiple variants pass G1-G7, choose the one with the highest bootstrap positive rate, tie-break by annual return. This is a conservative-profile candidate only; A sleeve concentration is already known to fail C2-C4, so it cannot be promoted to production without a separate concentration fix.",
+  "strategy": "ai_hs300_macro_gate_quality",
+  "variants": {
+    "A_raw": "A sleeve at 100% of its backtest exposure; no additional volatility target",
+    "A_vol12": "A sleeve with 60d 12% annual volatility target, exposure bounds [0.2,1.0], monthly",
+    "A_vol15": "A sleeve with 60d 15% annual volatility target, exposure bounds [0.2,1.0], monthly"
+  }
+}
