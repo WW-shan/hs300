@@ -18624,3 +18624,33 @@ Top20 通过 D1-D4、G1-G3、G5-G10、C1-C12，仅 G4 的 2022 门槛失败（-0
 - 中心年化相对 R332 仅下降 0.23pp，MDD 改善 0.25pp，2022 提高 1.77pp；参数平台由 3/9 提升到 9/9。
 
 **判定**: `selected=r334_top10_three_asset_equity_cap33_posthoc`，状态 `candidate_equity_cap33_plateau_confirmed`，进入 `candidate_for_paper_trading_review`。这是研究候选而非生产授权；没有生成纸面目标或订单，生产仍 `pause_production`。证据: `evidence/r334_equity_cap33.json`、`evidence/r334_result.md`、`evidence/r334_candidate_spec.json`。
+
+
+# R335 · R334 候选的 4×/5× 成本压力（2026-11-05）
+
+**动机**: R334 通过参数平台后，仍需检查更高执行成本。4×/5× 使用实际引擎回测，不接受线性外推。
+
+**结果**:
+
+| 项目 | 4× | 5× |
+| --- | ---: | ---: |
+| 完整路径收益 / 年化 | +64.54% / +10.01% | +60.49% / +9.49% |
+| Sharpe / MDD | 1.1103 / -9.50% | 1.0579 / -9.75% |
+| 2022 / 2023 | +1.19% / +8.25% | +0.82% / +7.82% |
+
+- 5× 总收益、Sharpe、MDD 和年度符号均通过，但 5× 股票净贡献集中度失败：top1 **26.61%**、top3 **63.68%**、top5 **91.66%**。
+- 诊断显示 5× 股票净/毛收益为 18.88%，前五占毛利润仅 17.30%。这不是股票宽度坍缩，而是净利润分母被高成本压缩后放大集中度。
+- 按预注册原门槛，R334 从 `candidate_for_paper_trading_review` 降级为 `research_only_cost_fragile`；不能用毛利润口径替换已经失败的门槛。
+- 证据: `evidence/r335_cost_stress.json`、`evidence/r335_result.md`。
+
+# R336 · Top20 对 5× 成本脆弱性的修复尝试（2026-11-05）
+
+**动机**: R335 的 5× 失败可能来自 Top10 宽度不足。R336 只把 A/B 从 Top10 扩到 Top20，保持 1/3 权益上限、三资产等权和全部规则不变。
+
+**结果**:
+- 2×：年化 +9.38%、Sharpe 1.0577、MDD -8.83%，2022/2023 +1.99%/+8.02%；前五净贡献 45.62%。
+- 5×：年化 +7.52%、Sharpe 0.8621、MDD -10.49%，2022/2023 +0.71%/+6.46%；但 top1/top3/top5 净贡献 **44.16%/111.47%/168.04%**，黄金贡献 **50.38%**。
+- 参数平台 9/9 overlay + 3/3 joint target 全过；3× 保守、4×、5× 收益和回撤全过；三个资产替换和五个 fresh-start 全过。
+- 按原始集中度门槛仍失败，Top20 不是 5× 修复方案，`selected=null`。
+
+**最终状态（严格门槛）**: 没有 5× 成本仍全过原门槛的策略。R334 是 2×/4× 成本下最好的研究候选，但当前必须保持 `research_only_cost_fragile`，不进入生产或纸面执行。若继续，应优先降低股票换手/寻找 5× 后仍有净 alpha 的股票腿，而不是继续调资产权重。证据: `evidence/r336_top20_cap33.json`、`evidence/r335_result.md`、`evidence/r336_result.md`、`evidence/r336_final_status.json`。

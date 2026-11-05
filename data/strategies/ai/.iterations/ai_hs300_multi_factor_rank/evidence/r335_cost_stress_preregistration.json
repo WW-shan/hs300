@@ -1,0 +1,39 @@
+{
+  "candidate": "r334_top10_three_asset_equity_cap33_posthoc",
+  "classification": "post-hoc execution-cost stress of the R334 robust candidate; no parameter or weight search",
+  "created_at": "2026-11-05",
+  "decision": "Both 4x and 5x must pass; otherwise downgrade the R334 candidate to research_only_cost_fragile.",
+  "discipline": [
+    "No lookback, target-vol, asset, cap, TopN or gate tuning.",
+    "Use actual engine backtests for 4x/5x stock costs and the same overlay/rebalance logic.",
+    "No paper target or order file."
+  ],
+  "fixed_strategy": "R334 center: A/B Top10, 60d/15%, equity share capped at 1/3, gold/10Y treasury/dividend each 1/3 monthly",
+  "gates": {
+    "4x": "total return >0 and MDD >= -25%",
+    "5x": "total return >0, Sharpe >=0.5, MDD >= -25%, 2022/2023 >=0, recent year >0",
+    "concentration_5x": "C1-C7 and C11-C12 still pass under 5x costs; asset contribution and weight gates unchanged",
+    "curve": "full curve must cover 2021-06-01 through 2026-11-05"
+  },
+  "known_limitations": [
+    "This tests historical execution costs, not live broker fill quality.",
+    "ETF qfq and industry-snapshot limitations remain."
+  ],
+  "round": "R335",
+  "stress_matrix": {
+    "4x": {
+      "overlay_round_trip_cost": 0.002,
+      "slippage_bps": 20.0,
+      "stamp_tax_pct": 0.001,
+      "stock_commission_pct": 0.0008,
+      "stock_fees_pct": 0.0008
+    },
+    "5x": {
+      "overlay_round_trip_cost": 0.0025,
+      "slippage_bps": 25.0,
+      "stamp_tax_pct": 0.00125,
+      "stock_commission_pct": 0.001,
+      "stock_fees_pct": 0.001
+    }
+  }
+}
