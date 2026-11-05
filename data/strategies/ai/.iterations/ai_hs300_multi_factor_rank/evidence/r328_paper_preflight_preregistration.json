@@ -1,0 +1,26 @@
+{
+  "round": "R328",
+  "classification": "preregistered paper-execution data-freshness and dependency preflight; no performance or parameter test",
+  "created_at_utc": "2026-11-05T12:43:20.600000+00:00",
+  "as_of": "2026-11-05",
+  "candidate_context": "R325 gold ballast passed return gates but failed R326 concentration; R327 top20 also failed. This preflight checks whether any forward signal could be generated from current inputs without stale-data leakage.",
+  "gates": {
+    "D1_membership": "HS300 cache as_of equals the current date, count is 300, and fetched_at is on the current date",
+    "D2_equity_daily": "both kline_daily and kline_daily_enriched have a partition on the current as_of date",
+    "D3_alt_factors": "ext_data/alt_hs300/timeseries has a partition on the current as_of date",
+    "D4_industry_snapshot": "industry snapshot file mtime date equals the current as_of date",
+    "D5_financials": "financials max period_end >= 2026-09-30 and max announce_date >= 2026-10-25",
+    "D6_gold_etf": "gold ETF qfq cache last date >= the current as_of date",
+    "D7_factor_registry": "custom factors uf_quality_value_defensive, uf_low_vol, uf_cash_quality resolve in the factor registry",
+    "D8_feature_schema": "latest enriched and alt partitions contain ma60 and all ext_alt_hs300 features required by A/B",
+    "D9_strategy_files": "both A/B strategy files exist and their SHA-256 values are recorded",
+    "D10_fail_closed": "if any upstream freshness gate fails, do not generate a paper target or order file"
+  },
+  "decision_rule": "All D1-D10 pass -> ready_for_paper_signal_generation only. Any freshness/schema failure -> no_go_stale_inputs; no target file. This round does not change strategy rules and does not place orders.",
+  "known_limitations": [
+    "A current industry snapshot has no historical vintage; file freshness does not make it PIT.",
+    "Financial period-end freshness is necessary but not sufficient for point-in-time publication timing.",
+    "A readiness pass would not authorize production; broker/order constraints still require a separate paper runner.",
+    "The A/B research evidence still uses R40 local data and current factor snapshots."
+  ]
+}

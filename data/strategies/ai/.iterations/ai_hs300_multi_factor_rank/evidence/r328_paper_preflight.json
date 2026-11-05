@@ -1,0 +1,122 @@
+{
+  "all_pass": false,
+  "amendment_sha256": "bc159f4c2eb37b975779195b0fb1f2a546a6294b3bfd4032ae0f33a9a1736d02",
+  "as_of": "2026-11-05",
+  "blocking_reasons": [
+    "D2_equity_daily",
+    "D3_alt_factors",
+    "D4_industry_snapshot",
+    "D5_financials",
+    "D6_gold_etf"
+  ],
+  "classification": "preregistered paper-execution input freshness and dependency preflight; no performance test",
+  "decision": {
+    "order_file_generated": false,
+    "paper_target_generated": false,
+    "production_write": false,
+    "provider_call": false,
+    "status": "no_go_stale_inputs"
+  },
+  "dependencies": {
+    "missing_alt_columns": [],
+    "missing_custom_factors": [],
+    "missing_enriched_features": [],
+    "required_custom_factors": [
+      "uf_cash_quality",
+      "uf_low_vol",
+      "uf_quality_value_defensive"
+    ],
+    "required_ext_columns": [
+      "credit_spread_5y_low",
+      "equity_risk_premium",
+      "holder_top10_free_float_share",
+      "industry_mom_20d",
+      "stock_rel_industry_20d",
+      "term_spread_10y_2y"
+    ],
+    "required_features": [
+      "ext_alt_hs300_credit_spread_5y_low",
+      "ext_alt_hs300_equity_risk_premium",
+      "ext_alt_hs300_holder_top10_free_float_share",
+      "ext_alt_hs300_industry_mom_20d",
+      "ext_alt_hs300_stock_rel_industry_20d",
+      "ext_alt_hs300_term_spread_10y_2y",
+      "ma60"
+    ],
+    "runtime_indicators": [
+      "ma60"
+    ],
+    "strategy_files": {
+      "A": {
+        "path": "data/strategies/ai/ai_hs300_macro_gate_quality.py",
+        "sha256": "8cc54b21b2508bf35527687bac061518e8d8caac9887a7e86a07345bdc33526e"
+      },
+      "B": {
+        "path": "data/strategies/ai/ai_hs300_industry_relative_strength_quality_h20_sl20.py",
+        "sha256": "e785a540c23ecbeab625ae5349c52293c8659011bf224f80960d6e728bcb382e"
+      }
+    }
+  },
+  "gates": {
+    "D10_fail_closed": true,
+    "D1_membership": true,
+    "D2_equity_daily": false,
+    "D3_alt_factors": false,
+    "D4_industry_snapshot": false,
+    "D5_financials": false,
+    "D6_gold_etf": false,
+    "D7_factor_registry": true,
+    "D8_feature_schema": true,
+    "D9_strategy_files": true
+  },
+  "inputs": {
+    "alt_factors_latest": "2026-10-16",
+    "alt_factors_weekday_lag": 14,
+    "equity_enriched_latest": "2026-10-22",
+    "equity_enriched_weekday_lag": 10,
+    "equity_raw_latest": "2026-10-22",
+    "equity_raw_weekday_lag": 10,
+    "financials": {
+      "balance_sheet": {
+        "max_announce_date": "2026-10-17",
+        "max_period_end": "2026-06-30",
+        "rows": 111683
+      },
+      "cash_flow": {
+        "max_announce_date": "2026-10-17",
+        "max_period_end": "2026-06-30",
+        "rows": 113093
+      },
+      "income": {
+        "max_announce_date": "2026-10-17",
+        "max_period_end": "2026-06-30",
+        "rows": 113255
+      },
+      "metrics": {
+        "max_announce_date": "2026-10-17",
+        "max_period_end": "2026-06-30",
+        "rows": 119834
+      }
+    },
+    "gold_cache_fetched_at": "2026-11-05T12:31:07.427754+00:00",
+    "gold_cache_last_date": "2026-10-14",
+    "gold_cache_weekday_lag": 16,
+    "industry_snapshot_mtime": "2026-10-16",
+    "industry_snapshot_weekday_lag": 14,
+    "membership": {
+      "as_of": "2026-11-05",
+      "count": 300,
+      "fetched_at": "2026-11-05T18:09:35+08:00",
+      "source": "em"
+    }
+  },
+  "limits": [
+    "A current industry snapshot has no historical vintage; file freshness does not make it PIT.",
+    "Financial period-end freshness is necessary but not sufficient for point-in-time publication timing.",
+    "A readiness pass would not authorize production; broker/order constraints still require a separate paper runner.",
+    "The A/B research evidence still uses R40 local data and current factor snapshots."
+  ],
+  "preregistration_sha256": "a144d905ab48094b83c88f02220438fa5b03152a7450553c2d98376b87b7a9fd",
+  "round": "R328",
+  "runner_sha256": "ee69d0e409f6202afea752b0b070324a086c3787a8c980fa7fcf9ee66d23bc7b"
+}
