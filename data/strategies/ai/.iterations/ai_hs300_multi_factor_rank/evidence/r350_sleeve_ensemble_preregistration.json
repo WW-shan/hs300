@@ -1,0 +1,192 @@
+{
+  "artifact_sha256": {
+    "preflight_v2_runner": "dae36017eecb8c39f1522fd479106543a77bd24e1988c7f5a56ce37100cb85db",
+    "runner": "beb4c69baef04413dffc0a5b9f82da3a121f98ad1c029c3145eedb64dbdcd815",
+    "strategy_A": "8cc54b21b2508bf35527687bac061518e8d8caac9887a7e86a07345bdc33526e",
+    "strategy_B": "e785a540c23ecbeab625ae5349c52293c8659011bf224f80960d6e728bcb382e",
+    "strategy_C": "6a120d44e00be96bccc1641bcec300f1bf62f1a1af56476bc37fc4561495051d"
+  },
+  "candidate_id": "r350_dual_universe_ab_ensemble",
+  "classification": "post-hoc fixed 50/50 ensemble of already frozen Top10 and Top20 A/B sleeves",
+  "costs": {
+    "ensemble_rebalance": "0.10%/0.15%/0.30%/0.20%/0.25% round trip for 2x/3x/3x-conservative/4x/5x",
+    "outer_risk_parity": "0.52% round trip inherited from R131",
+    "overlay_conservative_3x": 0.003,
+    "overlay_main": 0.001,
+    "stock_main": "2x stock costs inherited from frozen caches",
+    "stock_stress": "3x/4x/5x stock costs inherited from frozen caches"
+  },
+  "discipline": [
+    "One fixed 50/50 ensemble; no blend-weight or TopN scan",
+    "Reuse only frozen R344/R346 caches after exact control reconstruction",
+    "No leverage",
+    "No paper target or order file",
+    "Preserve preflight failures, amendments and execution failures"
+  ],
+  "disclosure": "R344-R349 results were observed before this round. R350 is explicitly post-hoc and tests one fixed 50/50 ensemble; no blend weight, TopN level, lookback, cap, cost or threshold scan is permitted. The preflight inspected only cache completeness and holdings overlap. No R350 ensemble return, drawdown, trade or concentration result was inspected before this file was frozen.",
+  "economic_rationale": "The A Top10/Top20 active-holding Jaccard is 0.4827 and the B pair is 0.3978; Top20 adds 47/36 symbols not held by the corresponding Top10 over the full cache. The ensemble therefore combines the same investment thesis at two breadth levels instead of selecting a third factor family.",
+  "ensemble_rule": {
+    "A": "50/50 monthly-rebalanced ensemble of the frozen A Top10 and A Top20 curves",
+    "B": "50/50 monthly-rebalanced ensemble of the frozen B Top10 and B Top20 curves",
+    "C": "frozen C Top50 curve unchanged",
+    "defensive_bucket": "frozen R344 gold 200-day trend proxy plus one-third gold/treasury/dividend bucket",
+    "ensemble_cost_round_trip": {
+      "2x": 0.001,
+      "3x": 0.0015,
+      "3x_conservative": 0.003,
+      "4x": 0.002,
+      "5x": 0.0025
+    },
+    "monthly_rebalance": "reset each A/B sub-sleeve to 50/50 monthly after marked-to-market drift",
+    "outer_portfolio": "monthly 60-day inverse-vol risk parity across ensemble A/B and C with [0.20, 0.60] bounds, cap C at 10%, then equity sleeve at most 1/3",
+    "overlay": "60-day lookback, 15% balance-vol target, gross [0.20, 1.00], no leverage"
+  },
+  "execution_attempt1_failure": {
+    "file": "r350_execution_attempt1_failure.json",
+    "sha256": "413d3fcf315df3c9b243042e233011b9d1f6c7ef8a9daa29fee653ff5efa5e55",
+    "status": "failed_no_returns_evaluated"
+  },
+  "execution_attempt2_failure": {
+    "file": "r350_execution_attempt2_failure.json",
+    "sha256": "d58787b1f8877c57d8fc4112f33fda440840871d3a2b129c01b115c832f2fa10",
+    "status": "failed_no_returns_evaluated"
+  },
+  "fresh_starts": [
+    "2022-05-05",
+    "2023-01-03",
+    "2024-01-02",
+    "2025-01-02",
+    "2025-11-05",
+    "2026-01-05"
+  ],
+  "gates": {
+    "absolute_performance_2x": {
+      "G10_no_leverage": "max weight sum <=1, min target weight >=0",
+      "G11_cap": "mean C sleeve weight <=10.5%",
+      "G1_annual": ">=12%",
+      "G2_mdd": ">= -15%",
+      "G3_sharpe": ">=1.25",
+      "G4_calendar": "2024 and 2025 both >=0",
+      "G5_recent": "recent-year total return >0",
+      "G6_bootstrap": "positive rate >=80%, P05 >= -12%",
+      "G7_rolling": "positive rate >=70%, worst >= -15%",
+      "G8_stress": "3x conservative total return >0 and MDD >= -25%"
+    },
+    "concentration": {
+      "C1": "distinct symbols >=80",
+      "C10": "R331 primary asset liquidity passes",
+      "C11": "portfolio annual turnover <=1.5x",
+      "C12": "max weight sum <=1, min target weight >=0",
+      "C2": "top1 net contribution <=25%",
+      "C3": "top3 net contribution <=55%",
+      "C4": "top5 net contribution <=75%",
+      "C5": "recent positive-contribution symbols >=8",
+      "C6": "top industry gross contribution <=45%",
+      "C7": "max symbol loss / gross profit <=20%",
+      "C8": "each asset contribution <=50%",
+      "C9": "each defensive sleeve mean <=40%, max <=50%"
+    },
+    "costs_and_concentration": {
+      "X1_4x": "total return >0 and MDD >= -25%",
+      "X2_5x_performance": "total return >0, Sharpe >=0.50, MDD >= -25%, 2024/2025 >=0, recent >0",
+      "X3_5x_concentration": "C1-C12 all pass at 5x"
+    },
+    "data": {
+      "D1_preregistration": "status frozen before ensemble returns",
+      "D2_preflight": "v2 all checks true and no returns evaluated",
+      "D3_controls_reconstructed": "R344 and R346 center 2x stats reproduced within 2e-6 from frozen caches",
+      "D4_cache_stable": "all 60 R344/R346 cache files remain byte-hash stable",
+      "D5_correlation": "mean pairwise ensemble-A/ensemble-B/C correlation <0.85"
+    },
+    "robustness": {
+      "F1_fresh": "at least 5/6 fresh starts positive and every MDD >= -18%",
+      "F2_extension_phase": "2022-05-05 fresh-start path total return >0",
+      "P1_overlay": ">=7/9 overlay lookback/target variants pass core gates",
+      "P2_joint": ">=2/3 joint target variants pass core gates",
+      "P3_center": "60d/15% center passes",
+      "R1_dividend": "515080.SH replacement annual >=5%, MDD >= -20%, 2024/2025 >=0",
+      "R2_gold": "159937.SZ replacement annual >=5%, MDD >= -20%, 2024/2025 >=0",
+      "R3_treasury": "511010.SH replacement annual >=5%, MDD >= -20%, 2024/2025 >=0"
+    },
+    "satellite_cap_plateau": {
+      "P4": "at least 3/4 caps pass and the 10% center passes",
+      "grid": [
+        0.05,
+        0.1,
+        0.15,
+        0.2
+      ],
+      "per_cap_core": "2x annual >=12%, Sharpe >=1.25, MDD >= -15%; 5x annual >=10%, Sharpe >=1.10, MDD >= -15%; 5x C2-C4 pass; at least 5/6 fresh starts positive"
+    },
+    "temporal_extension": {
+      "T1_2022_partial_return": "2022-05-05..2022-12-31 total return >0",
+      "T2_2022_partial_mdd": "2022-05-05..2022-12-31 MDD >= -15%",
+      "T3_2023_full_year": "full calendar-year 2023 return >=0",
+      "T4_prewindow_return": "2022-05-05..2023-05-03 total return >0",
+      "T5_prewindow_sharpe": "2022-05-05..2023-05-03 Sharpe >=0.30",
+      "T6_prewindow_mdd": "2022-05-05..2023-05-03 MDD >= -15%"
+    },
+    "tradeoff_vs_r344_control": {
+      "G9_annual": "candidate annual >= R344 control annual -1.0pp",
+      "G9_mdd": "candidate MDD >= R344 control MDD -0.5pp",
+      "G9_sharpe": "candidate Sharpe >= R344 control Sharpe -0.10"
+    }
+  },
+  "hypothesis": "A fixed 50/50 monthly ensemble of the narrower Top10 and broader Top20 A/B sleeves retains most of the narrow-sleeve alpha while diluting single-name dependence enough to improve 5x net-profit concentration and preserve drawdown control, without scanning TopN or blend weights.",
+  "known_limitations": [
+    "R350 is post-hoc after observing R344-R349 results and is not an independent out-of-sample discovery.",
+    "The ensemble rebalance cost is an approximation; underlying strategy trade costs are already in the cached curves.",
+    "Top10 and Top20 caches come from reconstructed historical membership and current-snapshot industry classification.",
+    "ETF qfq caches are not official PIT total-return data.",
+    "The common window starts in 2022 because TTM data for the C sleeve begins then.",
+    "Net-contribution concentration remains fragile when total net profit is thin."
+  ],
+  "preflight": {
+    "amendment": {
+      "file": "r350_preflight_amendment_A1.json",
+      "sha256": "345e71ad7f76f68712957e32ab5445f10fc483d1a4e4e824578046a44190ff03"
+    },
+    "holdings_overlap": {
+      "A": 0.4826943549536309,
+      "B": 0.397777095959344
+    },
+    "v1_failed": {
+      "file": "r350_sleeve_ensemble_preflight.json",
+      "sha256": "16765144e3a0b5042d7d4807b1792d9da324a2913199fa16eb888afa7cbc9bf7"
+    },
+    "v2": {
+      "all_checks": true,
+      "file": "r350_sleeve_ensemble_preflight_v2.json",
+      "no_returns_computed": true,
+      "sha256": "e6d41eff94c6234b6bb1ec630f8fbef0f40dbe4804e753fe7e91c10f1b722913"
+    },
+    "v2_failure": {
+      "file": "r350_preflight_v2_attempt1_failure.json",
+      "sha256": "e7aac39c7957374577b5b76d75cba3b77081a3db6be0344244fd35447988eb99"
+    }
+  },
+  "reference_controls": {
+    "R344": {
+      "file": "r344_extended_window.json",
+      "sha256": "2549f75ec759eb0a6cf40e3cd5534a6b45eac5d64c093676af47eef0b25153b3",
+      "status": "no_candidate_passed_temporal_extension"
+    },
+    "R346": {
+      "file": "r346_ab_top20_extended.json",
+      "sha256": "4507ca54bd72066f1e2144b6d3bbb2b959dcf63fa9d766c0a84c9f9f1c529078",
+      "status": "research_only_topn_scaling_failed"
+    }
+  },
+  "round": "R350",
+  "selection_rule": "All D/G/T/X/C/R/F/P gates must pass. Otherwise record the result as research-only negative evidence and do not promote or generate paper targets. No threshold, blend weight, TopN, cap or window changes after results.",
+  "status": "pre_registered_before_r350_portfolio_backtest",
+  "window": {
+    "end": "2026-11-05",
+    "prewindow_extension": [
+      "2022-05-05",
+      "2023-05-03"
+    ],
+    "recent_year_start": "2025-11-05",
+    "start": "2022-05-05"
+  }
+}

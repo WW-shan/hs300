@@ -1,0 +1,307 @@
+{
+  "all_checks": true,
+  "checks": {
+    "D1_primary_asset_coverage": true,
+    "D2_robustness_asset_coverage": true,
+    "D3_monthly_schedule_complete": true,
+    "D4_all_assets_selected": true,
+    "D5_max_turnover_bounded": true,
+    "D6_no_leverage": true,
+    "D7_inputs_byte_stable": true
+  },
+  "coverage": {
+    "R1_dividend": {
+      "dividend": {
+        "covers_window": true,
+        "first_date": "2019-12-27",
+        "has_60d_warmup": true,
+        "last_date": "2026-11-05",
+        "rows": 1660,
+        "symbol": "515080.SH",
+        "warmup_rows_before_start": 566,
+        "window_rows": 1094
+      },
+      "gold": {
+        "covers_window": true,
+        "first_date": "2017-01-03",
+        "has_60d_warmup": true,
+        "last_date": "2026-11-05",
+        "rows": 2388,
+        "symbol": "518880.SH",
+        "warmup_rows_before_start": 1294,
+        "window_rows": 1094
+      },
+      "treasury": {
+        "covers_window": true,
+        "first_date": "2017-08-24",
+        "has_60d_warmup": true,
+        "last_date": "2026-11-05",
+        "rows": 2230,
+        "symbol": "511260.SH",
+        "warmup_rows_before_start": 1136,
+        "window_rows": 1094
+      }
+    },
+    "R2_gold": {
+      "dividend": {
+        "covers_window": true,
+        "first_date": "2019-01-02",
+        "has_60d_warmup": true,
+        "last_date": "2026-11-05",
+        "rows": 1901,
+        "symbol": "510880.SH",
+        "warmup_rows_before_start": 807,
+        "window_rows": 1094
+      },
+      "gold": {
+        "covers_window": true,
+        "first_date": "2017-01-03",
+        "has_60d_warmup": true,
+        "last_date": "2026-11-05",
+        "rows": 2388,
+        "symbol": "159937.SZ",
+        "warmup_rows_before_start": 1294,
+        "window_rows": 1094
+      },
+      "treasury": {
+        "covers_window": true,
+        "first_date": "2017-08-24",
+        "has_60d_warmup": true,
+        "last_date": "2026-11-05",
+        "rows": 2230,
+        "symbol": "511260.SH",
+        "warmup_rows_before_start": 1136,
+        "window_rows": 1094
+      }
+    },
+    "R3_treasury": {
+      "dividend": {
+        "covers_window": true,
+        "first_date": "2019-01-02",
+        "has_60d_warmup": true,
+        "last_date": "2026-11-05",
+        "rows": 1901,
+        "symbol": "510880.SH",
+        "warmup_rows_before_start": 807,
+        "window_rows": 1094
+      },
+      "gold": {
+        "covers_window": true,
+        "first_date": "2017-01-03",
+        "has_60d_warmup": true,
+        "last_date": "2026-11-05",
+        "rows": 2388,
+        "symbol": "518880.SH",
+        "warmup_rows_before_start": 1294,
+        "window_rows": 1094
+      },
+      "treasury": {
+        "covers_window": true,
+        "first_date": "2017-01-03",
+        "has_60d_warmup": true,
+        "last_date": "2026-11-05",
+        "rows": 2388,
+        "symbol": "511010.SH",
+        "warmup_rows_before_start": 1294,
+        "window_rows": 1094
+      }
+    },
+    "primary": {
+      "dividend": {
+        "covers_window": true,
+        "first_date": "2019-01-02",
+        "has_60d_warmup": true,
+        "last_date": "2026-11-05",
+        "rows": 1901,
+        "symbol": "510880.SH",
+        "warmup_rows_before_start": 807,
+        "window_rows": 1094
+      },
+      "gold": {
+        "covers_window": true,
+        "first_date": "2017-01-03",
+        "has_60d_warmup": true,
+        "last_date": "2026-11-05",
+        "rows": 2388,
+        "symbol": "518880.SH",
+        "warmup_rows_before_start": 1294,
+        "window_rows": 1094
+      },
+      "treasury": {
+        "covers_window": true,
+        "first_date": "2017-08-24",
+        "has_60d_warmup": true,
+        "last_date": "2026-11-05",
+        "rows": 2230,
+        "symbol": "511260.SH",
+        "warmup_rows_before_start": 1136,
+        "window_rows": 1094
+      }
+    }
+  },
+  "input_isolation": {
+    "after": {
+      "dividend": "0c135eff8187948ed364f5f2d7ced64d5c39b977bba25b832af33b85e1245df1",
+      "gold": "1a1c16e894ac500da3167e23cf68d59a46d66c6d1aa1940f09957d7ced70ec75",
+      "treasury": "4bd6510f1e2b0bd0016348eb144725944a45566d2bf30d335ca80214a1f940eb"
+    },
+    "before": {
+      "dividend": "0c135eff8187948ed364f5f2d7ced64d5c39b977bba25b832af33b85e1245df1",
+      "gold": "1a1c16e894ac500da3167e23cf68d59a46d66c6d1aa1940f09957d7ced70ec75",
+      "treasury": "4bd6510f1e2b0bd0016348eb144725944a45566d2bf30d335ca80214a1f940eb"
+    },
+    "stable": true
+  },
+  "next": "If all checks pass, freeze R349 portfolio gates before running any portfolio return or drawdown backtest.",
+  "no_return_or_backtest_evaluated": true,
+  "round": "R349",
+  "rule": {
+    "lookback": 60,
+    "no_parameter_scan": true,
+    "selection": "equal-weight the top two; signal applies only to subsequent returns",
+    "signal": "at each first trading day of month, rank the three ETFs by total return over the trailing 60 trading days through that close",
+    "universe": {
+      "dividend": "510880.SH",
+      "gold": "518880.SH",
+      "treasury": "511260.SH"
+    }
+  },
+  "schedule_sample": [
+    {
+      "date": "2022-05-05",
+      "momentum": {
+        "dividend": 0.0508859609,
+        "gold": 0.089572934,
+        "treasury": 0.0016130911
+      },
+      "selected": [
+        "gold",
+        "dividend"
+      ],
+      "turnover": 0.0,
+      "weights": {
+        "dividend": 0.5,
+        "gold": 0.5,
+        "treasury": 0.0
+      }
+    },
+    {
+      "date": "2022-06-01",
+      "momentum": {
+        "dividend": -0.0142677298,
+        "gold": 0.0039093041,
+        "treasury": 0.0121610917
+      },
+      "selected": [
+        "treasury",
+        "gold"
+      ],
+      "turnover": 0.5,
+      "weights": {
+        "dividend": 0.0,
+        "gold": 0.5,
+        "treasury": 0.5
+      }
+    },
+    {
+      "date": "2022-07-01",
+      "momentum": {
+        "dividend": -0.0174938975,
+        "gold": -0.0127837203,
+        "treasury": 0.006440906
+      },
+      "selected": [
+        "treasury",
+        "gold"
+      ],
+      "turnover": 0.0,
+      "weights": {
+        "dividend": 0.0,
+        "gold": 0.5,
+        "treasury": 0.5
+      }
+    },
+    {
+      "date": "2026-09-01",
+      "momentum": {
+        "dividend": 0.053874092,
+        "gold": 0.0184295767,
+        "treasury": 0.0086385314
+      },
+      "selected": [
+        "dividend",
+        "gold"
+      ],
+      "turnover": 0.5,
+      "weights": {
+        "dividend": 0.5,
+        "gold": 0.5,
+        "treasury": 0.0
+      }
+    },
+    {
+      "date": "2026-10-08",
+      "momentum": {
+        "dividend": 0.1090909091,
+        "gold": -0.0133892188,
+        "treasury": 0.0081336097
+      },
+      "selected": [
+        "dividend",
+        "treasury"
+      ],
+      "turnover": 0.5,
+      "weights": {
+        "dividend": 0.5,
+        "gold": 0.0,
+        "treasury": 0.5
+      }
+    },
+    {
+      "date": "2026-11-02",
+      "momentum": {
+        "dividend": 0.0411622276,
+        "gold": -0.058342227,
+        "treasury": 0.0101936571
+      },
+      "selected": [
+        "dividend",
+        "treasury"
+      ],
+      "turnover": 0.0,
+      "weights": {
+        "dividend": 0.5,
+        "gold": 0.0,
+        "treasury": 0.5
+      }
+    }
+  ],
+  "selection_summary": {
+    "max_schedule_turnover": 0.5,
+    "mean_schedule_turnover": 0.2636363636363636,
+    "schedule_rows_in_window": 55,
+    "selection_counts": {
+      "dividend": 36,
+      "gold": 44,
+      "treasury": 30
+    },
+    "selection_frequency": {
+      "dividend": 0.6545454545454545,
+      "gold": 0.8,
+      "treasury": 0.5454545454545454
+    },
+    "selection_pairs": {
+      "dividend+gold": 11,
+      "dividend+treasury": 7,
+      "gold+dividend": 14,
+      "gold+treasury": 15,
+      "treasury+dividend": 4,
+      "treasury+gold": 4
+    }
+  },
+  "status": "coverage_only_preflight_no_returns",
+  "window": [
+    "2022-05-05",
+    "2026-11-05"
+  ]
+}

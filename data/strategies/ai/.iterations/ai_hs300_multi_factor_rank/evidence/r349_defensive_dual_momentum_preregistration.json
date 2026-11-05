@@ -1,0 +1,198 @@
+{
+  "artifact_sha256": {
+    "preflight_runner": "9a4fb8a2c1159b646ce8526ddc07402a12bc9fc9672c00916857417c171861c3",
+    "runner": "1f1fad69c9465318256db68b0ae348106b90e1b8ddd31ec35660ff1da929a1e4",
+    "strategy_A": "8cc54b21b2508bf35527687bac061518e8d8caac9887a7e86a07345bdc33526e",
+    "strategy_B": "e785a540c23ecbeab625ae5349c52293c8659011bf224f80960d6e728bcb382e",
+    "strategy_C": "6a120d44e00be96bccc1641bcec300f1bf62f1a1af56476bc37fc4561495051d"
+  },
+  "candidate_id": "r349_defensive_dual_momentum_top2_60d",
+  "classification": "post-hoc defensive-bucket selection rule using cached frozen R344 equity sleeves",
+  "costs": {
+    "defensive_switch": "round-trip cost times one-way turnover of the top-two allocation",
+    "overlay_4x_round_trip": 0.002,
+    "overlay_5x_round_trip": 0.0025,
+    "overlay_conservative_3x_round_trip": 0.003,
+    "overlay_main_round_trip": 0.001,
+    "stock_main": "2x stock costs",
+    "stock_stress": "3x/4x/5x stock costs"
+  },
+  "defensive_rule": {
+    "lookback": 60,
+    "no_parameter_scan": true,
+    "rebalance": "monthly",
+    "selection": "Hold the top two ETFs at 50% each after the signal; the signal applies only to subsequent returns.",
+    "signal": "At each monthly rebalance, rank the three ETFs by total return over the trailing 60 trading days through the signal close.",
+    "ties": "Stable order gold, treasury, dividend.",
+    "universe": [
+      "518880.SH",
+      "511260.SH",
+      "510880.SH"
+    ]
+  },
+  "discipline": [
+    "One fixed defensive top-two selection rule; no parameter or weight scan",
+    "Reuse only frozen R344 strategy curves after exact baseline reconstruction",
+    "No leverage",
+    "No paper target or order file",
+    "Preserve execution failures, preflight errors and amendments"
+  ],
+  "disclosure": "R344 and later candidate results were observed before this round. R349 is explicitly post-hoc and tests one fixed defensive selection rule; no lookback, asset count, weighting, cap, cost or threshold scan is permitted. The coverage-only preflight inspected asset coverage, selection frequency and turnover only. No R349 portfolio return, drawdown, trade or concentration result was inspected before this file was frozen.",
+  "economic_rationale": "Gold, treasury and dividend ETFs have distinct macro exposures. A monthly top-two relative-momentum rule can rotate away from the weakest defensive regime while staying fully invested in two liquid defensive assets and avoiding an asset-weight optimization grid.",
+  "execution_attempt1_failure": {
+    "file": "r349_execution_attempt1_failure.json",
+    "sha256": "07523f1965d9b027ad423d125cb38064dd737658df9df5be0a9dfaf1348879c2",
+    "status": "failed_no_returns_evaluated"
+  },
+  "execution_attempt2_failure": {
+    "file": "r349_execution_attempt2_failure.json",
+    "sha256": "b574080bbe6c5f43e05d5c3c08c0913be1675cb011d3be17fd3e37bf05be402b",
+    "status": "failed_no_returns_evaluated"
+  },
+  "fresh_starts": [
+    "2022-05-05",
+    "2023-01-03",
+    "2024-01-02",
+    "2025-01-02",
+    "2025-11-05",
+    "2026-01-05"
+  ],
+  "frozen_equity_construction": {
+    "A": {
+      "max_positions": 10,
+      "strategy_id": "ai_hs300_macro_gate_quality"
+    },
+    "B": {
+      "max_positions": 10,
+      "strategy_id": "ai_hs300_industry_relative_strength_quality_h20_sl20"
+    },
+    "C": {
+      "max_positions": 50,
+      "strategy_id": "ai_hs300_quality_momentum_broad_h60"
+    },
+    "cache": "data/research/r344_cache frozen strategy curves; the runner must reconstruct R344 center, 3x-conservative, 4x and 5x stats within 2e-6 before evaluating R349",
+    "equity_risk_share": "at most 1/3",
+    "overlay": "60-day lookback, 15% balance-vol target, gross [0.20, 1.00], no leverage",
+    "sleeve_weighting": "monthly 60-day inverse-volatility risk parity with [0.20, 0.60] bounds, then cap C at 10% and redistribute excess to A/B"
+  },
+  "gates": {
+    "absolute_performance_2x": {
+      "G10_no_leverage": "max weight sum <=1, min target weight >=0",
+      "G11_cap": "mean C sleeve weight <=10.5%",
+      "G1_annual": ">=12%",
+      "G2_mdd": ">= -15%",
+      "G3_sharpe": ">=1.25",
+      "G4_calendar": "2024 and 2025 both >=0",
+      "G5_recent": "recent-year total return >0",
+      "G6_bootstrap": "positive rate >=80%, P05 >= -12%",
+      "G7_rolling": "positive rate >=70%, worst >= -15%",
+      "G8_stress": "3x conservative total return >0 and MDD >= -25%"
+    },
+    "concentration": {
+      "C1": "distinct symbols >=80",
+      "C10": "R331 primary asset liquidity passes",
+      "C11": "portfolio annual turnover <=1.5x",
+      "C12": "max weight sum <=1, min target weight >=0",
+      "C2": "top1 net contribution <=25%",
+      "C3": "top3 net contribution <=55%",
+      "C4": "top5 net contribution <=75%",
+      "C5": "recent positive-contribution symbols >=8",
+      "C6": "top industry gross contribution <=45%",
+      "C7": "max symbol loss / gross profit <=20%",
+      "C8": "each actual asset contribution <=50%, using the top-two defensive contribution stream rather than equal-thirds accounting",
+      "C9": "each actual total-portfolio defensive asset mean <=40%, max <=50%"
+    },
+    "costs_and_concentration": {
+      "X1_4x": "total return >0 and MDD >= -25%",
+      "X2_5x_performance": "total return >0, Sharpe >=0.50, MDD >= -25%, 2024/2025 >=0, recent >0",
+      "X3_5x_concentration": "C1-C12 all pass at 5x"
+    },
+    "data": {
+      "D1_preregistration": "status frozen before returns",
+      "D2_preflight": "all coverage/selection checks true and no returns evaluated",
+      "D3_r344_cache_reconstructs_control": "R344 center, 3x-conservative, 4x and 5x stats reproduced within 2e-6",
+      "D4_cache_and_assets_stable": "cache and defensive asset inputs remain byte-hash stable",
+      "D5_correlation": "mean pairwise A/B/C correlation <0.85"
+    },
+    "robustness": {
+      "F1_fresh": "at least 5/6 fresh starts positive and every MDD >= -18%",
+      "F2_extension_phase": "2022-05-05 fresh-start path total return >0",
+      "P1_overlay": ">=7/9 overlay lookback/target variants pass core gates",
+      "P2_joint": ">=2/3 joint target variants pass core gates",
+      "P3_center": "60d/15% center passes",
+      "R1_dividend": "515080.SH replacement annual >=5%, MDD >= -20%, 2024/2025 >=0",
+      "R2_gold": "159937.SZ replacement annual >=5%, MDD >= -20%, 2024/2025 >=0",
+      "R3_treasury": "511010.SH replacement annual >=5%, MDD >= -20%, 2024/2025 >=0"
+    },
+    "satellite_cap_plateau": {
+      "P4": "at least 3/4 caps pass and the 10% center passes",
+      "grid": [
+        0.05,
+        0.1,
+        0.15,
+        0.2
+      ],
+      "per_cap_core": "2x annual >=12%, Sharpe >=1.25, MDD >= -15%; 5x annual >=10%, Sharpe >=1.10, MDD >= -15%; 5x C2-C4 pass; at least 5/6 fresh starts positive"
+    },
+    "temporal_extension": {
+      "T1_2022_partial_return": "2022-05-05..2022-12-31 total return >0",
+      "T2_2022_partial_mdd": "2022-05-05..2022-12-31 MDD >= -15%",
+      "T3_2023_full_year": "full calendar-year 2023 return >=0",
+      "T4_prewindow_return": "2022-05-05..2023-05-03 total return >0",
+      "T5_prewindow_sharpe": "2022-05-05..2023-05-03 Sharpe >=0.30",
+      "T6_prewindow_mdd": "2022-05-05..2023-05-03 MDD >= -15%"
+    },
+    "tradeoff_vs_r344_control": {
+      "G9_annual": "candidate annual >= R344 control annual -1.0pp",
+      "G9_mdd": "candidate MDD >= R344 control MDD -0.5pp",
+      "G9_sharpe": "candidate Sharpe >= R344 control Sharpe -0.10"
+    }
+  },
+  "hypothesis": "Replacing the fixed one-third defensive bucket with a monthly 60-day dual-momentum top-two rule reduces equity-correlated drawdown and improves recent-year and 2022 experience without changing the frozen A/B equity sleeves, C sleeve, 10% satellite cap, 1/3 equity-risk share, 15% volatility target or leverage constraint.",
+  "known_limitations": [
+    "R349 is post-hoc after observing R344-R348 results and is not an independent out-of-sample discovery.",
+    "The common window begins in 2022 because TTM data for the C sleeve begins then.",
+    "ETF qfq caches are not official PIT total-return series and do not model premium/discount.",
+    "The rule is evaluated on current reconstructed HS300 membership and current-snapshot industry classification.",
+    "Top-two momentum can whipsaw around month boundaries despite the 50% turnover cap.",
+    "The runner depends on the frozen R344 cache; exact baseline reconstruction is required before candidate evaluation."
+  ],
+  "preflight": {
+    "all_checks": true,
+    "file": "r349_defensive_dual_momentum_preflight.json",
+    "max_turnover": 0.5,
+    "no_returns_computed": true,
+    "schedule_rows": 55,
+    "selection_counts": {
+      "dividend": 36,
+      "gold": 44,
+      "treasury": 30
+    },
+    "sha256": "d1cacf9b19f619a2d48205c01ee7432e9bf4098be5d58e63df824b94daaf50fb"
+  },
+  "preflight_erratum": {
+    "effect": "Canonical pair counts only; selection rule and checks unchanged.",
+    "file": "r349_preflight_selection_pair_erratum.json",
+    "sha256": "cb41870863fc3db434ff12cfca7888e324965c70aa46f806204470ac5b520dfc",
+    "status": "reporting_erratum_no_returns"
+  },
+  "reference_control": {
+    "construction": "fixed one-third defensive bucket with the gold 200-day trend proxy",
+    "result_file": "r344_extended_window.json",
+    "result_sha256": "2549f75ec759eb0a6cf40e3cd5534a6b45eac5d64c093676af47eef0b25153b3",
+    "round": "R344",
+    "status": "no_candidate_passed_temporal_extension"
+  },
+  "round": "R349",
+  "selection_rule": "All D/G/T/X/C/R/F/P gates must pass. Otherwise record the result as research-only negative evidence and do not promote or generate paper targets. No threshold, lookback, asset, weighting, cap or window changes after results.",
+  "status": "pre_registered_before_r349_portfolio_backtest",
+  "window": {
+    "end": "2026-11-05",
+    "prewindow_extension": [
+      "2022-05-05",
+      "2023-05-03"
+    ],
+    "recent_year_start": "2025-11-05",
+    "start": "2022-05-05"
+  }
+}
