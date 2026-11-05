@@ -1481,7 +1481,7 @@ def _hk_risk_daily(dates: list[date]) -> pl.DataFrame:
         frames.append(frame)
     paths = sorted((DATA / "kline_index_daily").glob("date=*/part.parquet"))
     hs300 = (
-        pl.scan_parquet([str(p) for p in paths])
+        pl.scan_parquet([str(p) for p in paths], extra_columns="ignore")
         .filter(pl.col("symbol") == "000300.SH")
         .select(["date", "close"])
         .collect()
@@ -1903,7 +1903,7 @@ def _idio_vol_daily(prices: pl.DataFrame) -> pl.DataFrame:
     if not index_paths:
         raise RuntimeError("kline_index_daily 为空，无法计算 HS300 残差波动率")
     market = (
-        pl.scan_parquet([str(path) for path in index_paths])
+        pl.scan_parquet([str(path) for path in index_paths], extra_columns="ignore")
         .filter(pl.col("symbol") == "000300.SH")
         .select(["date", "close"])
         .collect()
@@ -1971,7 +1971,7 @@ def _price_delay_daily(prices: pl.DataFrame) -> pl.DataFrame:
     if not index_paths:
         raise RuntimeError("kline_index_daily 为空，无法计算 HS300 价格延迟")
     market = (
-        pl.scan_parquet([str(path) for path in index_paths])
+        pl.scan_parquet([str(path) for path in index_paths], extra_columns="ignore")
         .filter(pl.col("symbol") == "000300.SH")
         .select(["date", "close"])
         .collect()
@@ -2078,7 +2078,7 @@ def _market_down_beta_daily(prices: pl.DataFrame) -> pl.DataFrame:
     if not index_paths:
         raise RuntimeError("kline_index_daily 为空，无法计算 HS300 市场下跌 beta")
     market = (
-        pl.scan_parquet([str(path) for path in index_paths])
+        pl.scan_parquet([str(path) for path in index_paths], extra_columns="ignore")
         .filter(pl.col("symbol") == "000300.SH")
         .select(["date", "close"])
         .collect()
@@ -2182,7 +2182,7 @@ def _beta_asymmetry_daily(prices: pl.DataFrame) -> pl.DataFrame:
     if not index_paths:
         raise RuntimeError("kline_index_daily 为空，无法计算 HS300 beta 不对称性")
     market = (
-        pl.scan_parquet([str(path) for path in index_paths])
+        pl.scan_parquet([str(path) for path in index_paths], extra_columns="ignore")
         .filter(pl.col("symbol") == "000300.SH")
         .select(["date", "close"])
         .collect()
@@ -2289,7 +2289,7 @@ def _market_skew_daily(dates: list[date]) -> pl.DataFrame:
     if not index_paths:
         raise RuntimeError("kline_index_daily 为空，无法计算 HS300 已实现偏度")
     market = (
-        pl.scan_parquet([str(path) for path in index_paths])
+        pl.scan_parquet([str(path) for path in index_paths], extra_columns="ignore")
         .filter(pl.col("symbol") == "000300.SH")
         .select(["date", "close"])
         .collect()

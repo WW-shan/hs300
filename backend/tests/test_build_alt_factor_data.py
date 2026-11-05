@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import math
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 
 import polars as pl
@@ -64,3 +64,35 @@ def test_decayed_event_score_starts_next_trading_day() -> None:
     )
 
     assert scores == [0.0, 2.0, 1.0]
+
+
+def test_hk_risk_daily_ignores_extra_index_columns(tmp_path, monkeypatch) -> None:
+    dates = [date(2024, 1, 1) + timedelta(days=index) for index in range(25)]
+    hk_root = tmp_path / "research" / "r195_hk"
+    hk_root.mkdir(parents=True)
+    for symbol in ("HSI", "HSCEI"):
+        pl.DataFrame(
+            {"date": dates, "close": [100.0 + index for index in range(len(dates))]}
+        ).write_parquet(hk_root / f"{symbol}.parquet")
+    index_root = tmp_path / "kline_index_daily"
+    for index, day in enumerate(dates):
+        partition = index_root / f"date={day.isoformat()}"
+        partition.mkdir(parents=True)
+        frame = pl.DataFrame(
+            {
+                "symbol": ["000300.SH"],
+                "date": [day],
+                "close": [1000.0 + index],
+            }
+        )
+        if index % 2 == 0:
+            frame = frame.with_columns(pl.lit(1_700_000_000_000).alias("quote_ts"))
+        frame.write_parquet(partition / "part.parquet")
+
+    monkeypatch.setattr(build_alt_factor_data, "DATA", tmp_path)
+    out = build_alt_factor_data._hk_risk_daily(dates)
+
+    assert out.height == len(dates)
+    assert out["hsi_mom_20d"].null_count() == 20
+    assert out["hsciei_mom_20d"].null_count() == 20
+    assert out["hsi_rel_hs300_20d"].null_count() == 20

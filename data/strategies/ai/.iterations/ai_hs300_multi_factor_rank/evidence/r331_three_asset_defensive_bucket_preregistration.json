@@ -1,0 +1,93 @@
+{
+  "classification": "preregistered three-asset defensive bucket and Top20 concentration repair; no weight grid",
+  "concentration_and_diversification_gates": {
+    "C10_liquidity": "same as D3 for the primary assets",
+    "C11_turnover": "annualized portfolio-layer turnover <=1.5x",
+    "C12_weights": "target weights nonnegative and sum <=1.0",
+    "C1_stock_breadth": "distinct traded stocks >=80",
+    "C2_top1": "top-one positive stock PnL share <=25%",
+    "C3_top3": "top-three positive stock PnL share <=55%",
+    "C4_top5": "top-five positive stock PnL share <=75%",
+    "C5_recent_breadth": "positive contributing stocks in the recent 12 months >=8",
+    "C6_industry": "maximum industry gross-profit share <=45%",
+    "C7_loss": "maximum single-stock loss <=20% of stock gross profit",
+    "C8_asset_contribution": "no single asset contributes >50% of approximate total PnL",
+    "C9_asset_weight": "mean target weight of each defensive asset <=40% and maximum <=50%"
+  },
+  "created_at": "2026-11-05",
+  "data_gates": {
+    "D1_asset_integrity": "each asset has no duplicate dates, null close, or nonpositive close; alignment coverage with the equity curve >=95%",
+    "D2_strategy_inputs": "enriched equity data, extended factors, financial data, membership and all strategy dependencies are available and current through 2026-11-05; future-dated financial announcements are excluded by the PIT builder",
+    "D3_primary_liquidity": "each of the three primary defensive ETFs has median daily amount >= CNY 100m and minimum 20-day average amount >= CNY 50m over the strategy period"
+  },
+  "defensive_bucket": {
+    "components": {
+      "dividend": "510880.SH",
+      "gold": "518880.SH",
+      "treasury": "511260.SH"
+    },
+    "equity_vs_bucket": "60-day inverse-volatility risk parity between the frozen equity composite and the equal-weight defensive bucket daily return series; equity share bounds [0.2,0.8]",
+    "overlay_cost": "0.10% round-trip on one-way turnover; stress 0.30%",
+    "rebalance": "first trading day of each month using only prior daily returns",
+    "vol_target": "15% annualized, gross exposure [0.2,1.0], leverage prohibited",
+    "weights": "equal 1/3 each, rebalanced monthly with the overall portfolio"
+  },
+  "diagnostic_only": {
+    "top10_same_bucket": "descriptive check of holding-count effect; cannot be selected",
+    "top20_equity_only": "same-data incremental control for the defensive bucket; cannot be selected"
+  },
+  "discipline": [
+    "Equal 1/3 defensive weights and 60-day/15% parameters are copied from prior rounds; no weight, lookback, target-vol, TopN or threshold grid is allowed.",
+    "The first run is the result; execution bugs are preserved and corrected only through explicit amendments.",
+    "No production or paper order file is written in R331."
+  ],
+  "equity_engine": {
+    "A_B_combination": "60-day inverse-volatility risk parity, A bounds [0.2,0.8], then 15% annualized volatility target [0.2,1.0] gross",
+    "A_strategy": "ai_hs300_macro_gate_quality",
+    "B_strategy": "ai_hs300_industry_relative_strength_quality_h20_sl20",
+    "main_cost": "2x commission 4bp + slippage 10bp + stamp 5bp",
+    "matching": "open_t+1",
+    "max_positions_per_sleeve": 20,
+    "membership": "R78 exact daily snapshots",
+    "stress_cost": "3x commission 6bp + slippage 15bp + stamp 10bp"
+  },
+  "known_limitations": [
+    "The sample contains a strong gold bull market and a recent dividend/low-vol regime; historical performance is not proof of a permanent premium.",
+    "ETF qfq prices are vendor-reconstructed and are not an official point-in-time archive.",
+    "Industry classification remains a current snapshot backfilled through history.",
+    "Attribution is an approximate contribution-share diagnostic, not a tax or accounting ledger."
+  ],
+  "motivation": "R325 gold-only passed performance/risk but failed stock top-five concentration and depended on gold for 74.59% of approximate PnL. R327 Top20 repaired stock concentration but had 2022 -1.50% and gold contribution 75.35%. R331 keeps Top20 and replaces the single gold ballast with an equal-weight gold / 10Y treasury / dividend ETF defensive bucket.",
+  "performance_gates": {
+    "G10_no_leverage": "all target weights nonnegative and sum <=1.0",
+    "G1_return": "annualized return >=6%",
+    "G2_drawdown": "maximum drawdown >= -18%",
+    "G3_sharpe": "Sharpe >=0.70",
+    "G4_calendar_stability": "2022 and 2023 calendar returns both >=0",
+    "G5_bootstrap": "252-day block bootstrap positive rate >=80% and return P05 >= -12%",
+    "G6_rolling_year": "rolling 252-day positive rate >=70% and worst window >= -15%",
+    "G7_recent_year": "2025-11-05 to 2026-11-05 total return >0",
+    "G8_stress": "3x cost total return >0 and MDD >= -25%",
+    "G9_incremental": "versus the same-data Top20 equity-only control: (Sharpe >= control+0.05 or MDD >= control+0.03) and annual return >= control-1pp"
+  },
+  "periods": {
+    "full": [
+      "2021-06-01",
+      "2026-11-05"
+    ],
+    "recent_year": [
+      "2025-11-05",
+      "2026-11-05"
+    ]
+  },
+  "robustness_gates": {
+    "R1_R3": "each single-asset substitute has annualized return >=5%, MDD >= -20%, and 2022/2023 returns both >=0",
+    "selection": "the primary Top20 three-asset bucket must pass D1-D3 + G1-G10 + C1-C12 and all R1-R3; the Top10 diagnostic and equity-only control are not eligible candidates"
+  },
+  "robustness_substitutions": {
+    "R1_dividend": "515080.SH replaces 510880.SH only",
+    "R2_gold": "159937.SZ replaces 518880.SH only",
+    "R3_treasury": "511010.SH replaces 511260.SH only"
+  },
+  "round": "R331"
+}

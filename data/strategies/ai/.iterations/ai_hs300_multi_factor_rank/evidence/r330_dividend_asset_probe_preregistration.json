@@ -1,0 +1,37 @@
+{
+  "as_of": "2026-11-05",
+  "assets": {
+    "510880.SH": {
+      "code": "510880",
+      "name": "上证红利ETF",
+      "role": "primary dividend defensive asset"
+    },
+    "515080.SH": {
+      "code": "515080",
+      "name": "中证红利ETF",
+      "role": "robustness dividend defensive asset"
+    }
+  },
+  "classification": "dividend ETF data-availability and integrity probe only; no returns inspected",
+  "decision_rule": {
+    "action_if_fail": "record data gap and do not test the dividend component",
+    "action_if_pass": "cache both adjusted series for R331 only; no return calculation in R330",
+    "duplicate_dates": "must equal 0",
+    "last_date": "must equal 2026-11-05",
+    "missing_calendar_rate": "<=5% from each asset first date through as_of",
+    "null_or_nonpositive_close": "must equal 0",
+    "primary_liquidity": "median daily amount >= CNY 100m and minimum 20-day average amount >= CNY 50m",
+    "robustness_liquidity": "median daily amount >= CNY 50m",
+    "rows_each": ">=1000"
+  },
+  "known_limitations": [
+    "ETF qfq history is vendor-reconstructed, not an official point-in-time archive.",
+    "Availability is tested before performance; this probe does not choose an allocation weight."
+  ],
+  "requested_window": {
+    "end": "2026-11-05",
+    "start": "2019-01-01"
+  },
+  "round": "R330",
+  "source": "AkShare fund_etf_hist_em, Eastmoney daily qfq"
+}

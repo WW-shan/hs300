@@ -1,0 +1,88 @@
+{
+  "data_dependencies": [
+    "enriched stock daily data with runtime indicators",
+    "ext_alt_hs300 factors",
+    "PIT financial statements",
+    "R78 historical HS300 membership",
+    "ETF qfq caches for 518880.SH/511260.SH/510880.SH"
+  ],
+  "evidence": [
+    "evidence/r332_top10_bucket_promotion.json",
+    "evidence/r332_result.md",
+    "evidence/r331_three_asset_bucket_v2.json",
+    "evidence/r331_asset_manifest.json"
+  ],
+  "execution": {
+    "overlay_cost": "0.10% round-trip on turnover; stress 0.30%",
+    "stock_main_cost": "2x commission 4bp + slippage 10bp + stamp 5bp",
+    "stock_matching": "open_t+1",
+    "stock_stress_cost": "3x commission 6bp + slippage 15bp + stamp 10bp"
+  },
+  "headline_results": {
+    "annual_return": 0.110659,
+    "bootstrap_positive_rate": 0.912,
+    "equity_contribution_share": 0.405455,
+    "gold_contribution_share": 0.350799,
+    "max_drawdown": -0.095201,
+    "positive_fresh_start_phases": 5,
+    "recent_year_mdd": -0.073299,
+    "recent_year_return": 0.072807,
+    "rolling_252_positive_rate": 0.906015,
+    "sharpe": 1.2085,
+    "stress_3x_mdd": -0.097793,
+    "stress_3x_return": 0.672874,
+    "top5_stock_contribution": 0.642549,
+    "total_return": 0.729227,
+    "year_2022": 0.001433,
+    "year_2023": 0.089985
+  },
+  "id": "r332_top10_three_asset_bucket_posthoc",
+  "portfolio": {
+    "cash": "residual when gross exposure <1.0",
+    "defensive_bucket": {
+      "components": [
+        {
+          "name": "黄金ETF",
+          "symbol": "518880.SH",
+          "weight": 0.3333333333333333
+        },
+        {
+          "name": "10Y国债ETF",
+          "symbol": "511260.SH",
+          "weight": 0.3333333333333333
+        },
+        {
+          "name": "上证红利ETF",
+          "symbol": "510880.SH",
+          "weight": 0.3333333333333333
+        }
+      ],
+      "equity_vs_bucket": "60-day inverse-volatility risk parity; annualized volatility target 15%; gross exposure [0.2,1.0]",
+      "rebalance": "first trading day of each month with the whole portfolio"
+    },
+    "equity_sleeves": {
+      "A": {
+        "max_positions": 10,
+        "strategy_id": "ai_hs300_macro_gate_quality"
+      },
+      "B": {
+        "max_positions": 10,
+        "strategy_id": "ai_hs300_industry_relative_strength_quality_h20_sl20"
+      },
+      "combination": "60-day inverse-volatility risk parity; A share bounded [0.2,0.8]; combined annualized volatility target 15%; gross exposure bounded [0.2,1.0]"
+    },
+    "leverage": "not allowed"
+  },
+  "post_hoc_selection": true,
+  "production_enabled": false,
+  "reproduction": "cd backend && uv run python ../data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r332_top10_promotion.py",
+  "risk_notes": [
+    "Top10 promotion was selected after R331 diagnostic inspection; treat as post-hoc.",
+    "Gold and dividend ETF samples include strong trend regimes; no permanent premium is implied.",
+    "ETF qfq prices are vendor-reconstructed, not an official PIT archive.",
+    "Industry classification is a current snapshot backfilled through history.",
+    "The portfolio is research-level and is not a single stock-strategy file in the existing UI."
+  ],
+  "round": "R332",
+  "status": "candidate_for_paper_trading_review"
+}

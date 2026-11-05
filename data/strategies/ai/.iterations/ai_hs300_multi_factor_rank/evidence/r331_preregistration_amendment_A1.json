@@ -1,0 +1,29 @@
+{
+  "amendment": "A1",
+  "correction": {
+    "cache_scope": "Rerun with a fresh R331 v2 strategy-curve cache namespace.",
+    "enriched_history_extension": "In the isolated engine root only, copy production kline_daily_enriched partitions with date > 2026-10-14 through the configured END; do not modify production or R40.",
+    "result_gate": "Add D4_curve_coverage to the result data gates.",
+    "validity_guard": "Each strategy curve must start at START and end at END; otherwise the run aborts instead of writing a result."
+  },
+  "created_at": "2026-11-05",
+  "invalid_attempt": "evidence/r331_three_asset_bucket_attempt1_stale_end.json",
+  "limits": [
+    "This is an execution-validity correction, not a performance-driven threshold change."
+  ],
+  "reason": "Execution attempt 1 used the frozen R40 historical enriched root, whose latest stock partition was 2026-10-14. Replacing raw partitions alone did not extend the enriched history, so the configured 2026-11-05 endpoint was silently truncated.",
+  "round": "R331",
+  "trigger": "evidence/r331_execution_attempt1_failure.json",
+  "unchanged": [
+    "strategy definitions",
+    "membership",
+    "cost model",
+    "asset set",
+    "equal defensive weights",
+    "lookback",
+    "volatility target",
+    "all performance gates",
+    "all concentration gates",
+    "robustness substitutions"
+  ]
+}

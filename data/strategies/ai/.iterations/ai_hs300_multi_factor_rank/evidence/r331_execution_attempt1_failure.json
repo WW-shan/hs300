@@ -1,0 +1,9 @@
+{
+  "classification": "non-destructive execution failure; performance result invalidated",
+  "detected_by": "Configured END=2026-11-05 versus primary_stats.days=1301 and curve max date 2026-10-14 in the first R331 output.",
+  "failure": "The research engine root R40 contained enriched equity partitions only through 2026-10-14. The runner copied current raw partitions but did not extend the enriched history, so the configured 2026-11-05 end silently produced a 1301-day curve ending 2026-10-14.",
+  "invalid_output": "evidence/r331_three_asset_bucket_attempt1_stale_end.json",
+  "performance_result_accepted": false,
+  "recovery": "Preserve attempt 1, add an execution-validity guard requiring curve max date == END, and extend the isolated R40 enriched root with production enriched partitions strictly after the R40 max date. No thresholds or asset weights change.",
+  "round": "R331"
+}

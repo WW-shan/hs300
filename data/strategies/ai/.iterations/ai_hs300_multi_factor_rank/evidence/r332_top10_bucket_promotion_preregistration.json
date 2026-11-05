@@ -1,0 +1,62 @@
+{
+  "classification": "post-hoc promotion validation of the R331 Top10 diagnostic; no parameter or weight search",
+  "created_at": "2026-11-05",
+  "discipline": [
+    "No TopN, weight, lookback, target-vol, asset or threshold changes are allowed.",
+    "Top10 is disclosed as post-hoc relative to R331 and cannot be presented as an independent discovery.",
+    "No paper target, order file or production write is generated."
+  ],
+  "disclosure": "R331 was preregistered to select the Top20 three-asset bucket and label Top10 as diagnostic-only. R331 Top20 failed only 2022 (-0.36%) and robustness calendar gates. The R331 Top10 diagnostic passed all full-path performance and concentration gates. R332 explicitly treats Top10 as a post-hoc candidate and tests it under the same fixed rules plus additional promotion gates.",
+  "fixed_strategy": {
+    "A_B_combination": "60-day inverse-volatility risk parity, A bounds [0.2,0.8], then 15% annualized volatility target [0.2,1.0] gross",
+    "A_strategy": "ai_hs300_macro_gate_quality",
+    "B_strategy": "ai_hs300_industry_relative_strength_quality_h20_sl20",
+    "defensive_bucket": {
+      "dividend": "510880.SH",
+      "gold": "518880.SH",
+      "treasury": "511260.SH",
+      "weights": "equal 1/3, monthly"
+    },
+    "equity_vs_bucket": "60-day inverse-volatility risk parity; 15% annualized vol target; gross [0.2,1.0]; no leverage",
+    "main_equity_cost": "2x commission 4bp + slippage 10bp + stamp 5bp",
+    "max_positions_per_sleeve": 10,
+    "overlay_cost": "0.10% round-trip on turnover; 0.30% stress",
+    "stress_equity_cost": "3x commission 6bp + slippage 15bp + stamp 10bp"
+  },
+  "fresh_start_phases": [
+    "2022-01-04",
+    "2023-01-03",
+    "2024-01-02",
+    "2025-01-02",
+    "2025-11-05"
+  ],
+  "full_path_gates": "Reuse R331 D1-D4 + G1-G10 + C1-C12 unchanged.",
+  "known_limitations": [
+    "The sample contains strong gold and dividend regimes.",
+    "ETF qfq data are vendor-reconstructed.",
+    "Industry classification is a current snapshot backfilled through history.",
+    "Five overlapping fresh-start paths are robustness checks, not five independent samples."
+  ],
+  "periods": {
+    "full": [
+      "2021-06-01",
+      "2026-11-05"
+    ],
+    "recent_year": [
+      "2025-11-05",
+      "2026-11-05"
+    ]
+  },
+  "promotion_gates": {
+    "P1_stress": "3x equity cost + 0.30% overlay cost total return >0 and MDD >= -25%",
+    "P2_fresh_starts": "at least 4 of 5 fresh-start phases have positive total return; every phase MDD >= -18%",
+    "P3_full_curve": "curve starts 2021-06-01 and ends 2026-11-05 with D4 guard",
+    "selection": "all full-path, robustness, stress and fresh-start gates must pass; otherwise no candidate"
+  },
+  "robustness_gates": {
+    "R1_dividend": "515080.SH replaces 510880.SH only; annual >=5%, MDD >= -20%, 2022 and 2023 >=0",
+    "R2_gold": "159937.SZ replaces 518880.SH only; same thresholds",
+    "R3_treasury": "511010.SH replaces 511260.SH only; same thresholds"
+  },
+  "round": "R332"
+}
