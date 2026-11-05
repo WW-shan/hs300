@@ -311,6 +311,10 @@ _CATALOG: tuple[FactorSpec, ...] = (
         "ocf_debt", "经营现金流/总负债(TTM)",
         "TTM 经营现金流 / 总负债; 分母<=0 或数据缺失时为空",
     ),
+    _financial(
+        "core_earnings_ratio", "核心利润占比(TTM)",
+        "TTM 营业利润 / TTM 利润总额; 利润总额<=0、季度不完整或数据缺失时为空; 高值代表利润更依赖主营经营",
+    ),
 )
 
 _REGISTRY: dict[str, FactorSpec] = {}

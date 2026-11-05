@@ -2,8 +2,9 @@
 
 数据契约:
 - 输入为 data/financials/{metrics,income,balance_sheet,cash_flow}/part.parquet;
-- ``metrics`` 是基础快照; ``balance_sheet`` / ``cash_flow`` 用于 TTM 派生
-  (``ocf_ni`` / ``accrual`` / ``ocf_debt``), 缺失时派生因子保持 null;
+- ``metrics`` 是基础快照; ``income`` / ``balance_sheet`` / ``cash_flow`` 用于
+  TTM 派生 (``ocf_ni`` / ``accrual`` / ``ocf_debt`` / ``core_earnings_ratio``),
+  缺失时派生因子保持 null;
 - 原始 ``announce_date`` 保留用于审计, 但历史源字段常是"最后更新日"而非首次
   披露日 (实测 2021~2025H1 中位滞后约 412 天)。引擎不直接使用原始值, 而是
   按 ``financial_pit_date`` 归一:
@@ -14,7 +15,8 @@
   * ocf_ni = max(metrics, cash_flow);
   * accrual = max(metrics, cash_flow, balance_sheet);
   * ocf_debt = max(cash_flow, balance_sheet);
-  * debt_ratio_latest = balance_sheet (缺失时退回 metrics)。
+  * debt_ratio_latest = balance_sheet (缺失时退回 metrics);
+  * core_earnings_ratio = TTM 营业利润 / TTM 利润总额, 利润总额<=0 或季度不完整时为空。
 - 因子只在 **严格晚于生效日的交易日** 才有值 (公告多在盘后发布, 保守取 T+1),
   此前保持 null; 无财务数据一律 null, 绝不填 0。
 - TTM: 累计值(YTD)按同财年连续季度差分还原单季, 再滚动 4 季求和;
@@ -55,6 +57,11 @@ DERIVED_FUNDAMENTAL_FACTORS: dict[str, dict[str, Any]] = {
     "ocf_ni": {"column": "ocf_ni", "price_ratio": False, "announce_column": "_announce_ocf_ni"},
     "accrual": {"column": "accrual", "price_ratio": False, "announce_column": "_announce_accrual"},
     "ocf_debt": {"column": "ocf_debt", "price_ratio": False, "announce_column": "_announce_ocf_debt"},
+    "core_earnings_ratio": {
+        "column": "core_earnings_ratio",
+        "price_ratio": False,
+        "announce_column": "_announce_core_earnings",
+    },
 }
 
 FUNDAMENTAL_FACTORS: dict[str, dict[str, Any]] = {
@@ -250,15 +257,21 @@ def _quarterly_flow(column: str) -> pl.Expr:
 
 
 def _derive_ttm_factors(snapshot: pl.DataFrame) -> pl.DataFrame:
-    """在四表并集上计算 TTM 现金流/应计因子。"""
+    """在四表并集上计算 TTM 现金流、应计与核心利润因子。"""
     q_net_income = _quarterly_flow("net_income")
     q_ocf = _quarterly_flow("net_operating_cash_flow")
+    q_operating_profit = _quarterly_flow("operating_profit")
+    q_total_profit = _quarterly_flow("total_profit")
     enriched = snapshot.with_columns([
         q_net_income.alias("_q_net_income"),
         q_ocf.alias("_q_ocf"),
+        q_operating_profit.alias("_q_operating_profit"),
+        q_total_profit.alias("_q_total_profit"),
     ]).with_columns([
         pl.col("_q_net_income").rolling_sum(window_size=4, min_samples=4).over("symbol").alias("_ttm_net_income"),
         pl.col("_q_ocf").rolling_sum(window_size=4, min_samples=4).over("symbol").alias("_ttm_ocf"),
+        pl.col("_q_operating_profit").rolling_sum(window_size=4, min_samples=4).over("symbol").alias("_ttm_operating_profit"),
+        pl.col("_q_total_profit").rolling_sum(window_size=4, min_samples=4).over("symbol").alias("_ttm_total_profit"),
     ])
     return enriched.with_columns([
         (pl.col("_ttm_net_income").is_not_null() & pl.col("_ttm_ocf").is_not_null()).alias("_ttm_complete"),
@@ -274,17 +287,26 @@ def _derive_ttm_factors(snapshot: pl.DataFrame) -> pl.DataFrame:
         .then(pl.col("_ttm_ocf") / pl.col("total_liabilities"))
         .otherwise(None)
         .alias("ocf_debt"),
+        pl.when(pl.col("_ttm_total_profit") > 0)
+        .then(pl.col("_ttm_operating_profit") / pl.col("_ttm_total_profit"))
+        .otherwise(None)
+        .alias("core_earnings_ratio"),
         _rowwise_max_dates("_announce_metrics", "_announce_cash").alias("_announce_ocf_ni"),
         _rowwise_max_dates("_announce_metrics", "_announce_cash", "_announce_balance").alias("_announce_accrual"),
         _rowwise_max_dates("_announce_cash", "_announce_balance").alias("_announce_ocf_debt"),
-    ]).drop(["_q_net_income", "_q_ocf", "_ttm_net_income", "_ttm_ocf"])
+        pl.col("_announce_income").alias("_announce_core_earnings"),
+    ]).drop([
+        "_q_net_income", "_q_ocf", "_q_operating_profit", "_q_total_profit",
+        "_ttm_net_income", "_ttm_ocf", "_ttm_operating_profit", "_ttm_total_profit",
+    ])
 
 
 def load_fundamental_snapshot(data_dir: Path | None) -> pl.DataFrame | None:
     """读取财务指标快照, 并附加多表 TTM 派生列。
 
     返回列: symbol, period_end, announce_date (原始), 各 PIT 生效日列, 基础
-    metrics 列, 以及 ocf_ni / accrual / ocf_debt (无法计算时为 null)。
+    metrics 列, 以及 ocf_ni / accrual / ocf_debt / core_earnings_ratio
+    (无法计算时为 null)。
     """
     if data_dir is None:
         return None
@@ -297,6 +319,9 @@ def load_fundamental_snapshot(data_dir: Path | None) -> pl.DataFrame | None:
     )
     cash = _load_optional_table(
         data_dir, "cash_flow", "cash", ["net_operating_cash_flow"]
+    )
+    income = _load_optional_table(
+        data_dir, "income", "income", ["operating_profit", "total_profit"]
     )
 
     snapshot = metrics
@@ -321,6 +346,17 @@ def load_fundamental_snapshot(data_dir: Path | None) -> pl.DataFrame | None:
             snapshot.join(cash, on=["symbol", "period_end"], how="full", suffix="_cf"),
             "_cf",
         )
+    if income is None:
+        snapshot = snapshot.with_columns([
+            pl.lit(None, dtype=pl.Date).alias("_announce_income"),
+            pl.lit(None, dtype=pl.Float64).alias("operating_profit"),
+            pl.lit(None, dtype=pl.Float64).alias("total_profit"),
+        ])
+    else:
+        snapshot = _coalesce_full_join_keys(
+            snapshot.join(income, on=["symbol", "period_end"], how="full", suffix="_inc"),
+            "_inc",
+        )
 
     snapshot = (
         snapshot.with_columns([
@@ -332,10 +368,11 @@ def load_fundamental_snapshot(data_dir: Path | None) -> pl.DataFrame | None:
     snapshot = _derive_ttm_factors(snapshot)
     keep = [
         "symbol", "period_end", "announce_date",
-        "_announce", "_announce_metrics", "_announce_balance", "_announce_cash",
+        "_announce", "_announce_metrics", "_announce_balance", "_announce_cash", "_announce_income",
         "_announce_debt_ratio", "_announce_ocf_ni", "_announce_accrual", "_announce_ocf_debt",
+        "_announce_core_earnings",
         *sorted({spec["column"] for spec in BASE_FUNDAMENTAL_FACTORS.values()}),
-        "ocf_ni", "accrual", "ocf_debt", "_ttm_complete",
+        "ocf_ni", "accrual", "ocf_debt", "core_earnings_ratio", "_ttm_complete",
     ]
     return snapshot.select(keep).sort(["symbol", "period_end"])
 

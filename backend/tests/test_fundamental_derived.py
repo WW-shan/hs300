@@ -3,7 +3,7 @@
 覆盖:
 - 历史源公告日整体晚一年时的法定截止日回退;
 - 早于/等于截止日的真实公告日保留;
-- 多表 TTM 派生 (ocf_ni / accrual / ocf_debt) 的数值与逐因子生效日;
+- 多表 TTM 派生 (ocf_ni / accrual / ocf_debt / core_earnings_ratio) 的数值与逐因子生效日;
 - 侧表缺失、分母非正、季度缺口时的 null 安全;
 - Polars 面板与矩阵两条路径一致。
 """
@@ -29,6 +29,7 @@ PERIODS = [date(2024, 3, 31), date(2024, 6, 30), date(2024, 9, 30), date(2024, 1
 METRICS_ANNOUNCE = [date(2025, 4, 30), date(2025, 8, 31), date(2025, 10, 31), date(2026, 4, 30)]
 BALANCE_ANNOUNCE = [date(2024, 4, 25), date(2024, 8, 25), date(2024, 10, 25), date(2025, 4, 15)]
 CASH_ANNOUNCE = [date(2024, 4, 25), date(2024, 8, 25), date(2024, 10, 25), date(2025, 4, 15)]
+INCOME_ANNOUNCE = [date(2024, 4, 25), date(2024, 8, 25), date(2024, 10, 25), date(2025, 4, 15)]
 
 
 def _metrics_frame(
@@ -73,14 +74,29 @@ def _cash_frame(*, cumulative_ocf: list[float] | None = None) -> pl.DataFrame:
     })
 
 
+def _income_frame(
+    *,
+    cumulative_operating_profit: list[float] | None = None,
+    cumulative_total_profit: list[float] | None = None,
+) -> pl.DataFrame:
+    return pl.DataFrame({
+        "symbol": ["600000.SH"] * 4,
+        "period_end": [p.isoformat() for p in PERIODS],
+        "announce_date": [d.isoformat() for d in INCOME_ANNOUNCE],
+        "operating_profit": cumulative_operating_profit or [9.0, 20.0, 32.0, 48.0],
+        "total_profit": cumulative_total_profit or [10.0, 22.0, 36.0, 52.0],
+    })
+
+
 def _write_tables(
     root: Path,
     *,
     metrics: pl.DataFrame | None = None,
     balance: pl.DataFrame | None = None,
     cash: pl.DataFrame | None = None,
+    income: pl.DataFrame | None = None,
 ) -> None:
-    tables = {"metrics": metrics, "balance_sheet": balance, "cash_flow": cash}
+    tables = {"metrics": metrics, "balance_sheet": balance, "cash_flow": cash, "income": income}
     for name, frame in tables.items():
         if frame is None:
             continue
@@ -118,7 +134,13 @@ def test_pit_date_keeps_plausible_announcement_and_falls_back_to_deadline():
 
 
 def test_snapshot_computes_ttm_factors_and_per_factor_announce_dates(tmp_path: Path):
-    _write_tables(tmp_path, metrics=_metrics_frame(), balance=_balance_frame(), cash=_cash_frame())
+    _write_tables(
+        tmp_path,
+        metrics=_metrics_frame(),
+        balance=_balance_frame(),
+        cash=_cash_frame(),
+        income=_income_frame(),
+    )
     snapshot = load_fundamental_snapshot(tmp_path)
     assert snapshot is not None
     row = snapshot.filter(pl.col("period_end") == date(2024, 12, 31)).row(0, named=True)
@@ -126,6 +148,7 @@ def test_snapshot_computes_ttm_factors_and_per_factor_announce_dates(tmp_path: P
     np.testing.assert_allclose(row["ocf_ni"], 44.0 / 52.0, rtol=1e-12)
     np.testing.assert_allclose(row["accrual"], 8.0 / 1000.0, rtol=1e-12)
     np.testing.assert_allclose(row["ocf_debt"], 44.0 / 400.0, rtol=1e-12)
+    np.testing.assert_allclose(row["core_earnings_ratio"], 48.0 / 52.0, rtol=1e-12)
 
     # 原始公告日保留；PIT 日期按依赖表分别计算
     assert row["announce_date"] == "2026-04-30"
@@ -145,11 +168,21 @@ def test_snapshot_computes_ttm_factors_and_per_factor_announce_dates(tmp_path: P
 
 
 def test_attach_uses_each_factor_own_pit_date(tmp_path: Path):
-    _write_tables(tmp_path, metrics=_metrics_frame(), balance=_balance_frame(), cash=_cash_frame())
+    _write_tables(
+        tmp_path,
+        metrics=_metrics_frame(),
+        balance=_balance_frame(),
+        cash=_cash_frame(),
+        income=_income_frame(),
+    )
     snapshot = load_fundamental_snapshot(tmp_path)
     assert snapshot is not None
     panel = _daily_panel(date(2025, 4, 10), 30)
-    attached = attach_fundamental_factors(panel, snapshot, ["ocf_ni", "accrual", "ocf_debt"]).sort("date")
+    attached = attach_fundamental_factors(
+        panel,
+        snapshot,
+        ["ocf_ni", "accrual", "ocf_debt", "core_earnings_ratio"],
+    ).sort("date")
     by_date = {row["date"]: row for row in attached.iter_rows(named=True)}
 
     # ocf_debt 依赖现金流+资产负债表, 2025-04-15 公告, 4-16 起生效
@@ -160,6 +193,8 @@ def test_attach_uses_each_factor_own_pit_date(tmp_path: Path):
     assert by_date[date(2025, 5, 3)]["accrual"] is None
     np.testing.assert_allclose(by_date[date(2025, 5, 4)]["ocf_ni"], 44.0 / 52.0, rtol=1e-12)
     np.testing.assert_allclose(by_date[date(2025, 5, 4)]["accrual"], 0.008, rtol=1e-12)
+    assert by_date[date(2025, 4, 15)]["core_earnings_ratio"] is None
+    np.testing.assert_allclose(by_date[date(2025, 4, 16)]["core_earnings_ratio"], 48.0 / 52.0, rtol=1e-12)
 
 
 def test_missing_side_tables_yield_null_derived_factors(tmp_path: Path):
@@ -167,8 +202,12 @@ def test_missing_side_tables_yield_null_derived_factors(tmp_path: Path):
     snapshot = load_fundamental_snapshot(tmp_path)
     assert snapshot is not None
     panel = _daily_panel(date(2025, 4, 1), 40)
-    attached = attach_fundamental_factors(panel, snapshot, ["ocf_ni", "accrual", "ocf_debt", "roe_latest"])
-    for name in ("ocf_ni", "accrual", "ocf_debt"):
+    attached = attach_fundamental_factors(
+        panel,
+        snapshot,
+        ["ocf_ni", "accrual", "ocf_debt", "core_earnings_ratio", "roe_latest"],
+    )
+    for name in ("ocf_ni", "accrual", "ocf_debt", "core_earnings_ratio"):
         assert attached[name].null_count() == attached.height
     # 单表基础因子仍可用
     assert attached["roe_latest"].null_count() < attached.height
@@ -200,6 +239,7 @@ def test_denominator_guards_and_quarter_gap(tmp_path: Path):
         metrics=_metrics_frame(cumulative_net_income=[10.0, 22.0, 36.0, -5.0]),
         balance=_balance_frame(total_assets=[0.0] * 4, liabilities=[0.0] * 4),
         cash=_cash_frame(),
+        income=_income_frame(cumulative_total_profit=[10.0, 20.0, 30.0, -5.0]),
     )
     snapshot = load_fundamental_snapshot(tmp_path)
     assert snapshot is not None
@@ -207,28 +247,37 @@ def test_denominator_guards_and_quarter_gap(tmp_path: Path):
     assert row["ocf_ni"] is None
     assert row["accrual"] is None
     assert row["ocf_debt"] is None
+    assert row["core_earnings_ratio"] is None
 
     # 季度缺口: Q2 缺失时 Q4 的 TTM 不得用 Q1-YTD 错算
     gap_root = tmp_path / "gap"
     metrics = _metrics_frame().filter(pl.col("period_end") != "2024-06-30")
     balance = _balance_frame().filter(pl.col("period_end") != "2024-06-30")
     cash = _cash_frame().filter(pl.col("period_end") != "2024-06-30")
-    _write_tables(gap_root, metrics=metrics, balance=balance, cash=cash)
+    income = _income_frame().filter(pl.col("period_end") != "2024-06-30")
+    _write_tables(gap_root, metrics=metrics, balance=balance, cash=cash, income=income)
     gap = load_fundamental_snapshot(gap_root)
     assert gap is not None
     q4 = gap.filter(pl.col("period_end") == date(2024, 12, 31)).row(0, named=True)
     assert q4["ocf_ni"] is None
     assert q4["accrual"] is None
     assert q4["ocf_debt"] is None
+    assert q4["core_earnings_ratio"] is None
     assert q4["_ttm_complete"] is False
 
 
 def test_matrix_matches_panel_for_derived_factors(tmp_path: Path):
-    _write_tables(tmp_path, metrics=_metrics_frame(), balance=_balance_frame(), cash=_cash_frame())
+    _write_tables(
+        tmp_path,
+        metrics=_metrics_frame(),
+        balance=_balance_frame(),
+        cash=_cash_frame(),
+        income=_income_frame(),
+    )
     snapshot = load_fundamental_snapshot(tmp_path)
     assert snapshot is not None
     panel = _daily_panel(date(2025, 4, 10), 30)
-    names = ["ocf_ni", "accrual", "ocf_debt"]
+    names = ["ocf_ni", "accrual", "ocf_debt", "core_earnings_ratio"]
     attached = attach_fundamental_factors(panel, snapshot, names).sort("date")
     market = build_market_data_matrix(panel)
     matrices = build_fundamental_matrices(market, snapshot, names)
