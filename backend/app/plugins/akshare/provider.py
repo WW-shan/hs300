@@ -317,9 +317,14 @@ def _as_datetime(
     else:
         text = str(value).strip()
         try:
-            result = datetime.fromisoformat(text)
+            parsed = date.fromisoformat(text)
         except ValueError:
-            parsed = _as_date(text, default.date())
+            try:
+                result = datetime.fromisoformat(text)
+            except ValueError:
+                parsed = _as_date(text, default.date())
+                result = datetime.combine(parsed, datetime.max.time() if end else datetime.min.time())
+        else:
             result = datetime.combine(parsed, datetime.max.time() if end else datetime.min.time())
     if result.tzinfo is not None:
         result = result.astimezone(ZoneInfo("Asia/Shanghai")).replace(tzinfo=None)
