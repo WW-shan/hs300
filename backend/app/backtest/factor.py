@@ -159,16 +159,6 @@ class FactorBatchResult:
     error: str | None = None
 
 
-def _current_hs300_symbols() -> list[str]:
-    """官方当前沪深300名单; 用于限定因子面板的数据加载边界。"""
-    from app.hs300.current import CurrentMembersError, current_symbols
-
-    try:
-        return current_symbols()
-    except CurrentMembersError as exc:
-        raise ValueError(f"HS300 当前成分不可用: {exc}") from exc
-
-
 def _fundamental_dependency_closure(factor_names) -> set[str]:
     """请求因子 (含 custom/composite 依赖闭包) 中属于 PIT 财务因子的集合。
 
@@ -217,9 +207,13 @@ class FactorBacktestService:
     ) -> FactorResult:
         t0 = time.perf_counter()
         run_id = uuid.uuid4().hex[:10]
+        membership = None
         if config.hs300 and config.symbols is None:
+            from app.backtest.strategy import _hs300_membership_frame
+
             try:
-                config.symbols = _current_hs300_symbols()
+                membership = _hs300_membership_frame(config.start, config.end)
+                config.symbols = membership.get_column("symbol").to_list()
             except ValueError as exc:
                 return self._error_result(config, run_id, t0, str(exc))
         generation = self._data_generation(config.asset_type)
@@ -246,7 +240,7 @@ class FactorBacktestService:
         )
         if config.hs300:
             try:
-                panel = self._apply_hs300_membership(panel, config)
+                panel = self._apply_hs300_membership(panel, config, membership)
             except ValueError as exc:
                 return self._error_result(config, run_id, t0, str(exc))
         evaluate_kwargs = (
@@ -292,9 +286,13 @@ class FactorBacktestService:
                 error="至少选择一个因子",
             )
 
+        membership = None
         if config.hs300 and config.symbols is None:
+            from app.backtest.strategy import _hs300_membership_frame
+
             try:
-                config.symbols = _current_hs300_symbols()
+                membership = _hs300_membership_frame(config.start, config.end)
+                config.symbols = membership.get_column("symbol").to_list()
             except ValueError as exc:
                 return FactorBatchResult(
                     run_id=run_id,
@@ -326,7 +324,7 @@ class FactorBacktestService:
         )
         if config.hs300:
             try:
-                panel = self._apply_hs300_membership(panel, config)
+                panel = self._apply_hs300_membership(panel, config, membership)
             except ValueError as exc:
                 return FactorBatchResult(
                     run_id=run_id,
@@ -514,6 +512,7 @@ class FactorBacktestService:
     def _apply_hs300_membership(
         panel: pl.DataFrame,
         config: FactorConfig | FactorBatchConfig,
+        membership: pl.DataFrame | None = None,
     ) -> pl.DataFrame:
         """只保留官方当前沪深300成分 (整段回测同一份名单)。
 
@@ -523,7 +522,9 @@ class FactorBacktestService:
         """
         from app.backtest.strategy import _hs300_membership_frame, _hs300_panel_row_mask
 
-        membership = _hs300_membership_frame(config.start, config.end)
+        # 加载边界与过滤复用同一名单, 避免后台刷新导致一轮回测混入两个版本。
+        if membership is None:
+            membership = _hs300_membership_frame(config.start, config.end)
         return panel.filter(_hs300_panel_row_mask(panel, membership))
 
     def _global_trading_dates(
