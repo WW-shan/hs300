@@ -4,6 +4,8 @@ import hashlib
 import json
 from pathlib import Path
 
+import pytest
+
 from app.factor_research.taxonomy import validate_field_taxonomy
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -12,6 +14,8 @@ ROOT = Path(__file__).resolve().parents[3]
 def test_alt_hs300_taxonomy_covers_every_extension_field() -> None:
     config_path = ROOT / "data" / "ext_data" / "alt_hs300" / "config.json"
     taxonomy_path = ROOT / "data" / "factor_research" / "catalog" / "field_taxonomy.json"
+    if not config_path.exists():
+        pytest.skip("optional local alt_hs300 extension data is not present")
     config = json.loads(config_path.read_text(encoding="utf-8"))
     taxonomy = json.loads(taxonomy_path.read_text(encoding="utf-8"))
     expected = {f"ext_alt_hs300_{field['name']}" for field in config["fields"]}
