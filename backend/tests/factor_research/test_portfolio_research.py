@@ -11,10 +11,11 @@ SCRIPT = (
     / "scripts"
     / "research_factor_set_portfolio.py"
 )
+ABLATION_SCRIPT = SCRIPT.with_name("research_factor_set_ablation.py")
 
 
-def _module():
-    spec = importlib.util.spec_from_file_location("factor_set_portfolio_research", SCRIPT)
+def _module(path: Path = SCRIPT):
+    spec = importlib.util.spec_from_file_location(f"factor_set_portfolio_{path.stem}", path)
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
@@ -76,3 +77,24 @@ def test_cost_parameters_keep_stamp_tax_at_statutory_rate() -> None:
     assert module._cost_parameters("3x")["stamp_tax_pct"] == 0.0005
     with pytest.raises(ValueError, match="unsupported cost scenario"):
         module._cost_parameters("5x")
+
+
+def test_ablation_builds_all_leave_one_out_and_single_factor_variants() -> None:
+    factors = [
+        "ext_alt_hs300_idio_vol_40d_low",
+        "ext_alt_hs300_dividend_yield",
+        "ext_alt_hs300_vol_of_vol_20d_low",
+        "ext_alt_hs300_cash_flow_stability_4q_low",
+        "ext_alt_hs300_fund_holding_ratio_low",
+        "ext_alt_hs300_ocf_margin_4q",
+        "ext_alt_hs300_margin_chg_1m_low",
+        "ext_alt_hs300_holder_top10_share_chg_yoy",
+    ]
+
+    variants = _module(ABLATION_SCRIPT)._variant_factor_sets(factors)
+
+    assert len(variants) == 17
+    assert variants["all_factors"] == factors
+    assert len(variants["drop_idio_vol_40d_low"]) == 7
+    assert "ext_alt_hs300_idio_vol_40d_low" not in variants["drop_idio_vol_40d_low"]
+    assert variants["single_idio_vol_40d_low"] == ["ext_alt_hs300_idio_vol_40d_low"]

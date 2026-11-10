@@ -71,6 +71,8 @@
 
 唯一的负窗口是 2025-07-01 至 2026-06-30：20 仓在 2x 成本下 -4.11%，同期基准为
 +18.41%。这说明策略在该阶段出现了明显风格逆风，不能把滚动结果解释成全年每月都稳定。
+后续 drop-one 拆解显示，这段主要拖累是股息率腿；去掉它该窗口变为 +3.06%，但同一
+因子在最近完整一年又是第一贡献腿，因此下一步应研究状态化权重，不能直接删除。
 
 ## 研究门槛
 
@@ -96,3 +98,5 @@
 
 - 组合回测：`data/factor_research/research/multi_dimension_v1_portfolio_2026-11-10.json`
 - 研究 ID：`sha256:bce0df7c8ffb36de97671e056733782af3a529c8a1dcecaa90d618db4c9745da`
+- 因子拆解：`data/factor_research/research/multi_dimension_v1_ablation_2026-11-10.json`
+- 因子拆解报告：`data/factor_research/research/multi_dimension_v1_ablation_report_2026-11-10.md`
