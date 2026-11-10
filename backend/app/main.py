@@ -21,6 +21,7 @@ from app.api import (
     events,
     ext_data,
     ext_pages,
+    factor_research,
     factors,
     financials,
     hs300,
@@ -579,6 +580,7 @@ app.include_router(watchlist.router)
 app.include_router(screener.router)
 app.include_router(backtest.router)
 app.include_router(factors.router)
+app.include_router(factor_research.router)
 app.include_router(mining.router)
 app.include_router(intraday.router)
 app.include_router(indices.router)

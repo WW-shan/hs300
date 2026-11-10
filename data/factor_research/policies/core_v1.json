@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "policy_id": "core_v1",
+  "sample_sufficiency": {
+    "rank_min_valid_cross_sections_5y": 120,
+    "rank_min_valid_cross_sections_recent": 40,
+    "rank_min_non_null_symbols_per_date": 30,
+    "market_min_valid_dates_5y": 120,
+    "minimum_non_null_ratio": 0.1
+  },
+  "staleness_trading_days": {
+    "price": 10,
+    "sentiment": 10,
+    "flow": 10,
+    "industry": 20,
+    "macro": 45,
+    "financial": 120,
+    "unknown": 0
+  },
+  "cost": {
+    "baseline_multiplier": 2,
+    "hard_stress_multiplier": 3,
+    "diagnostic_5x": {
+      "hard_rejection": false,
+      "warnings": [
+        "negative_5x_annual",
+        "negative_5x_total_return",
+        "drawdown_deterioration",
+        "thin_net_to_gross"
+      ]
+    }
+  },
+  "leverage": {
+    "required": "none",
+    "max_weight_sum": 1.0,
+    "min_target_weight": 0.0
+  },
+  "multiple_testing": {
+    "require_trial_family": true,
+    "missing_family_verdict": "inconclusive"
+  },
+  "parameter_audit": {
+    "required_for_active": true,
+    "center_point_platform_required": true,
+    "correlated_grid_units_are_not_independent": true
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "factor_id": "ext_alt_hs300_stock_rel_industry_20d",
+      "data_class": "industry",
+      "pit_hint": "unknown",
+      "asset_types": ["stock"],
+      "source_field": "stock_rel_industry_20d"
+    },
+    {
+      "factor_id": "ext_alt_hs300_industry_mom_20d",
+      "data_class": "industry",
+      "pit_hint": "unknown",
+      "asset_types": ["stock"],
+      "source_field": "industry_mom_20d"
+    },
+    {
+      "factor_id": "uf_quality_value_defensive",
+      "data_class": "financial",
+      "pit_hint": "declared",
+      "asset_types": ["stock"],
+      "source_field": "roe_latest / (100 * pb_latest) - debt_ratio_latest / 100"
+    },
+    {
+      "factor_id": "uf_cash_quality",
+      "data_class": "financial",
+      "pit_hint": "declared",
+      "asset_types": ["stock"],
+      "source_field": "ocf_ni - accrual"
+    },
+    {
+      "factor_id": "uf_industry_relative_strength_change_5d",
+      "data_class": "industry",
+      "pit_hint": "unknown",
+      "asset_types": ["stock"],
+      "source_field": "ts_delta(ext_alt_hs300_stock_rel_industry_20d, 5)"
+    }
+  ]
+}
