@@ -320,14 +320,21 @@ class FactorAuditRecord(FactorResearchModel):
     factor_id: str
     available: bool = False
     latest_date: str | None = None
+    latest_non_null_date: str | None = None
+    latest_informative_date: str | None = None
     staleness_days: int | None = None
     non_null_ratio: float = 0.0
+    informative_ratio: float = 0.0
     active_date_ratio: float = 0.0
     valid_dates: int = 0
     median_non_null_symbols: float = 0.0
     median_unique_values: float = 0.0
     cross_section_type: CrossSectionType = "unknown"
     classification_confidence: float = 0.0
+    classification_ref: str | None = None
+    data_class: DataClass = "unknown"
+    pit_status: PitStatus = "unknown"
+    zero_is_missing: bool = False
     reasons: list[str] = Field(default_factory=list)
 
 

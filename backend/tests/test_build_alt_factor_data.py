@@ -66,6 +66,32 @@ def test_decayed_event_score_starts_next_trading_day() -> None:
     assert scores == [0.0, 2.0, 1.0]
 
 
+def test_price_parameter_variants_are_declared_as_extension_fields() -> None:
+    fields = {field.name for field in build_alt_factor_data.FIELDS}
+
+    assert {"idio_vol_20d_low", "idio_vol_40d_low", "vol_of_vol_20d_low"} <= fields
+
+
+def test_residual_volatility_frame_supports_parameterized_output_name() -> None:
+    dates = [date(2024, 1, 1) + timedelta(days=index) for index in range(30)]
+    market = pl.DataFrame({
+        "date": dates,
+        "close": [100.0 * (1.001 ** index) for index in range(len(dates))],
+    })
+    stocks = pl.DataFrame({
+        "symbol": ["A"] * len(dates),
+        "date": dates,
+        "close": [50.0 * (1.0008 ** index) for index in range(len(dates))],
+    })
+
+    out = build_alt_factor_data._residual_volatility_frame(
+        stocks, market, window_size=10, output_column="idio_vol_10d_low"
+    )
+
+    assert "idio_vol_10d_low" in out.columns
+    assert "idio_vol_60d_low" not in out.columns
+
+
 def test_hk_risk_daily_ignores_extra_index_columns(tmp_path, monkeypatch) -> None:
     dates = [date(2024, 1, 1) + timedelta(days=index) for index in range(25)]
     hk_root = tmp_path / "research" / "r195_hk"

@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "purpose": "Stable classification evidence for the core watch custom factors.",
+  "factors": [
+    {
+      "factor_id": "uf_quality_value_defensive",
+      "formula": "roe_latest / (100 * pb_latest) - debt_ratio_latest / 100",
+      "data_class": "financial",
+      "pit_hint": "declared",
+      "note": "PIT financial fields are gated by announcement dates."
+    },
+    {
+      "factor_id": "uf_cash_quality",
+      "formula": "ocf_ni - accrual",
+      "data_class": "financial",
+      "pit_hint": "declared",
+      "note": "PIT financial fields are gated by announcement dates."
+    },
+    {
+      "factor_id": "uf_industry_relative_strength_change_5d",
+      "formula": "ts_delta(ext_alt_hs300_stock_rel_industry_20d, 5)",
+      "data_class": "industry",
+      "pit_hint": "unknown",
+      "note": "Inherits the source factor's industry-relative PIT contract."
+    }
+  ]
+}

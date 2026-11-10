@@ -112,8 +112,18 @@ def _data_class(spec: FactorSpec, taxonomy: Mapping[str, Any] | None, market_lev
     return "price"
 
 
-def _pit_state(spec: FactorSpec, data_class: str, *, source_type: str, mode: str | None) -> tuple[str, str, str]:
-    if spec.pit:
+def _pit_state(
+    spec: FactorSpec,
+    data_class: str,
+    *,
+    source_type: str,
+    mode: str | None,
+    taxonomy: Mapping[str, Any] | None,
+) -> tuple[str, str, str]:
+    taxonomy_pit = taxonomy.get("pit_hint") if taxonomy else None
+    if taxonomy_pit in {"verified", "declared", "not_applicable", "unknown"}:
+        pit_status = str(taxonomy_pit)
+    elif spec.pit:
         pit_status = "declared"
     elif data_class == "financial":
         pit_status = "unknown"
@@ -122,7 +132,15 @@ def _pit_state(spec: FactorSpec, data_class: str, *, source_type: str, mode: str
     else:
         pit_status = "unknown"
 
-    if (source_type == "extension" and mode == "snapshot") or (data_class == "financial" and not spec.pit) or source_type in {"custom", "composite"}:
+    taxonomy_future = taxonomy.get("future_data_status") if taxonomy else None
+    if taxonomy_future in {"clear", "unknown", "blocked"}:
+        future = str(taxonomy_future)
+    elif (
+        (source_type == "extension" and mode == "snapshot")
+        or (data_class == "financial" and not spec.pit)
+        or source_type in {"custom", "composite"}
+        or (source_type == "extension" and pit_status == "unknown")
+    ):
         future = "unknown"
     else:
         future = "clear"
@@ -198,11 +216,39 @@ def build_catalog(
         )
         resolved = resolver.resolve(spec.id)
         data_class = _data_class(spec, taxonomy.get(spec.id), market_level)
+        taxonomy_record = taxonomy.get(spec.id, {})
         pit_status, pit_source, future = _pit_state(
             spec,
             data_class,
             source_type=str(source["type"]),
             mode=mode,
+            taxonomy=taxonomy_record,
+        )
+        taxonomy_cross_section = taxonomy_record.get("cross_section_type")
+        cross_section_type = (
+            str(taxonomy_cross_section)
+            if taxonomy_cross_section in {
+                "stock_cross_sectional",
+                "industry_cross_sectional",
+                "event_sparse",
+                "market_level",
+                "text_or_signal",
+                "unknown",
+            }
+            else "market_level" if market_level else "unknown"
+        )
+        taxonomy_direction = taxonomy_record.get("direction")
+        direction = (
+            str(taxonomy_direction)
+            if taxonomy_direction in {"high", "low", "none"}
+            else spec.direction
+        )
+        classification_confidence = taxonomy_record.get("classification_confidence")
+        classification_confidence = (
+            float(classification_confidence)
+            if isinstance(classification_confidence, (int, float))
+            and not isinstance(classification_confidence, bool)
+            else None
         )
         definition_fp = sha256_json({
             "resolver_fingerprint": resolved.definition_fingerprint,
@@ -221,7 +267,7 @@ def build_catalog(
             formula_text=spec.formula_text,
             dependencies=sorted(spec.dependencies),
             components=[FactorComponent(factor_id=member, weight=weight) for member, weight in spec.components],
-            direction=spec.direction,
+            direction=direction,  # type: ignore[arg-type]
             unit=spec.unit,
             warmup_bars=spec.warmup_bars,
             pit_status=pit_status,  # type: ignore[arg-type]
@@ -236,7 +282,9 @@ def build_catalog(
             ),
             source=source,  # type: ignore[arg-type]
             data_class=data_class,  # type: ignore[arg-type]
-            cross_section_type="market_level" if market_level else "unknown",
+            cross_section_type=cross_section_type,  # type: ignore[arg-type]
+            classification_ref=sha256_json(taxonomy_record) if taxonomy_record else None,
+            classification_confidence=classification_confidence,
             definition_fingerprint=definition_fp,
             reference_kind="registered_factor",
             tags=list(spec.tags),

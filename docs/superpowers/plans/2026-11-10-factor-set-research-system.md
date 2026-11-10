@@ -677,7 +677,7 @@ uv run --project backend python scripts/audit_factor_research.py --help
 
 验收必须满足：
 
-- 母集当前包含 220 个注册因子（测试 fixture 不写死 220）；
+- 母集当前包含 223 个注册因子（测试 fixture 不写死 223）；
 - `amount` 和 `consecutive_limit_ups` 是 physical column；
 - `core_v1` 是 watch，active_version 为 null；
 - 5× 没有硬拒绝路径；

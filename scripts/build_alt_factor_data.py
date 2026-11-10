@@ -108,9 +108,12 @@ FIELDS = [
     ExtField("hs300_turnover_z_ext2017", "float", "HS300 turnover 20d expanding z-score with 2017 history (direction negative)"),
     ExtField("hs300_turnover_chg_20d_ext2017", "float", "HS300 turnover 20d mean 20d change with 2017 history (direction negative)"),
     ExtField("hs300_turnover_gate_flag_ext2017", "float", "HS300 turnover 20d expanding z-score < 0 gate flag with 2017 history"),
+    ExtField("idio_vol_20d_low", "float", "HS300市场模型20日残差波动率反向"),
+    ExtField("idio_vol_40d_low", "float", "HS300市场模型40日残差波动率反向"),
     ExtField("idio_vol_60d_low", "float", "HS300市场模型60日残差波动率反向"),
     ExtField("price_delay_60d", "float", "HS300市场信息60日价格延迟"),
     ExtField("cs_spread_60d", "float", "Corwin-Schultz高低价估计买卖价差60日均值"),
+    ExtField("vol_of_vol_20d_low", "float", "20日波动率的20日稳定性反向"),
     ExtField("vol_of_vol_60d_low", "float", "20日波动率的60日稳定性反向"),
     ExtField("market_down_beta_60d_low", "float", "HS300市场下跌日条件beta反向"),
     ExtField("beta_asymmetry_120d", "float", "HS300上行beta减下行beta（高好）"),
@@ -1853,6 +1856,7 @@ def _residual_volatility_frame(
     market_panel: pl.DataFrame,
     *,
     window_size: int = 60,
+    output_column: str = "idio_vol_60d_low",
 ) -> pl.DataFrame:
     """Compute negative annualized HS300 market-model residual volatility.
 
@@ -1892,9 +1896,9 @@ def _residual_volatility_frame(
             .alias("_residual_var")
         )
         .with_columns(
-            (-pl.col("_residual_var").sqrt() * math.sqrt(252.0)).alias("idio_vol_60d_low")
+            (-pl.col("_residual_var").sqrt() * math.sqrt(252.0)).alias(output_column)
         )
-        .select(["symbol", "date", "idio_vol_60d_low"])
+        .select(["symbol", "date", output_column])
     )
 
 
@@ -1908,7 +1912,20 @@ def _idio_vol_daily(prices: pl.DataFrame) -> pl.DataFrame:
         .select(["date", "close"])
         .collect()
     )
-    return _residual_volatility_frame(prices, market)
+    frames = [
+        _residual_volatility_frame(
+            prices, market, window_size=window, output_column=column
+        )
+        for window, column in (
+            (20, "idio_vol_20d_low"),
+            (40, "idio_vol_40d_low"),
+            (60, "idio_vol_60d_low"),
+        )
+    ]
+    out = frames[0]
+    for frame in frames[1:]:
+        out = out.join(frame, on=["symbol", "date"], how="full", coalesce=True)
+    return out.sort(["symbol", "date"])
 
 
 def _price_delay_frame(
@@ -1984,6 +2001,7 @@ def _vol_of_vol_frame(
     *,
     vol_window: int = 20,
     stability_window: int = 60,
+    output_column: str = "vol_of_vol_60d_low",
 ) -> pl.DataFrame:
     """Compute negative 60-day stability of 20-day realized volatility."""
     return (
@@ -2002,14 +2020,25 @@ def _vol_of_vol_frame(
             pl.col("_rv20").rolling_std(stability_window, min_samples=stability_window).over("symbol").alias("_vol_of_vol")
         )
         .with_columns(
-            (-pl.col("_vol_of_vol")).alias("vol_of_vol_60d_low")
+            (-pl.col("_vol_of_vol")).alias(output_column)
         )
-        .select(["symbol", "date", "vol_of_vol_60d_low"])
+        .select(["symbol", "date", output_column])
     )
 
 
 def _vol_of_vol_daily(prices: pl.DataFrame) -> pl.DataFrame:
-    return _vol_of_vol_frame(prices)
+    frames = [
+        _vol_of_vol_frame(
+            prices, vol_window=20, stability_window=window, output_column=column
+        )
+        for window, column in (
+            (20, "vol_of_vol_20d_low"),
+            (60, "vol_of_vol_60d_low"),
+        )
+    ]
+    return frames[0].join(
+        frames[1], on=["symbol", "date"], how="full", coalesce=True
+    ).sort(["symbol", "date"])
 
 
 def _market_down_beta_frame(

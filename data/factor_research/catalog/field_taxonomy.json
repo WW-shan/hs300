@@ -1,40 +1,3240 @@
 {
   "schema_version": 1,
+  "generated_by": "scripts/sync_factor_taxonomy.py",
+  "source": {
+    "path": "scripts/build_alt_factor_data.py",
+    "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb",
+    "numeric_extension_fields": 109
+  },
   "records": [
     {
-      "factor_id": "ext_alt_hs300_stock_rel_industry_20d",
+      "factor_id": "ext_alt_hs300_ah_premium_chg_1m",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "ah_premium_chg_1m",
+      "source_function": "_ah_premium_daily",
+      "zero_is_missing": false,
+      "direction": "low",
+      "classification_confidence": 0.95,
+      "classification_note": "AH溢价月末记录下一交易日生效，45天陈旧截断。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 95,
+          "line_end": 95,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1440,
+          "line_end": 1465,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_ah_premium_z",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "ah_premium_z",
+      "source_function": "_ah_premium_daily",
+      "zero_is_missing": false,
+      "direction": "low",
+      "classification_confidence": 0.95,
+      "classification_note": "AH溢价月末记录下一交易日生效，45天陈旧截断。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 94,
+          "line_end": 94,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1440,
+          "line_end": 1465,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_analyst_rating_change_20d",
+      "data_class": "sentiment",
+      "cross_section_type": "event_sparse",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "analyst_rating_change_20d",
+      "source_function": "_analyst_daily",
+      "zero_is_missing": true,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "评级调整是稀疏事件，按研报日下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 61,
+          "line_end": 61,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 669,
+          "line_end": 732,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_analyst_rating_score_20d",
+      "data_class": "sentiment",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "analyst_rating_score_20d",
+      "source_function": "_analyst_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "分析师评级按研报日下一交易日生效，20日滚动。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 60,
+          "line_end": 60,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 669,
+          "line_end": 732,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_beta_asymmetry_120d",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "beta_asymmetry_120d",
+      "source_function": "_beta_asymmetry_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "个股价格趋势、beta不对称与风险调整动量。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 119,
+          "line_end": 119,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 2209,
+          "line_end": 2219,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_block_premium_20d",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "block_premium_20d",
+      "source_function": "_block_trade_daily",
+      "zero_is_missing": true,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "大宗交易按事件日下一交易日生效；连续0表示无事件。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 59,
+          "line_end": 59,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 606,
+          "line_end": 666,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_block_trade_ratio_20d_low",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "block_trade_ratio_20d_low",
+      "source_function": "_block_trade_daily",
+      "zero_is_missing": true,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "大宗交易按事件日下一交易日生效；连续0表示无事件。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 58,
+          "line_end": 58,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 606,
+          "line_end": 666,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_bond_mom_20d",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "bond_mom_20d",
+      "source_function": "_bond_momentum_daily",
+      "zero_is_missing": false,
+      "direction": "low",
+      "classification_confidence": 0.95,
+      "classification_note": "国债期货日度收盘计算的20日动量，市场级广播。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 92,
+          "line_end": 92,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1417,
+          "line_end": 1437,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_bond_tf_mom_20d",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "bond_tf_mom_20d",
+      "source_function": "_bond_momentum_daily",
+      "zero_is_missing": false,
+      "direction": "low",
+      "classification_confidence": 0.95,
+      "classification_note": "国债期货日度收盘计算的20日动量，市场级广播。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 93,
+          "line_end": 93,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1417,
+          "line_end": 1437,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_capex_intensity_low",
+      "data_class": "financial",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "capex_intensity_low",
+      "source_function": "_goodwill_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "商誉、无形资产、研发和资本开支强度。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 137,
+          "line_end": 137,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1668,
+          "line_end": 1693,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+      "data_class": "financial",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "cash_flow_stability_4q_low",
+      "source_function": "_cash_flow_stability_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "现金流/总资产四季稳定性，按法定披露截止日后一日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 123,
+          "line_end": 123,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 2329,
+          "line_end": 2410,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_cash_to_assets",
+      "data_class": "financial",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "cash_to_assets",
+      "source_function": "_cash_to_assets_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "TTM经营现金流利润率与现金资产占比。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 125,
+          "line_end": 125,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 2413,
+          "line_end": 2463,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_cpi_yoy",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "cpi_yoy",
+      "source_function": "_macro_extra_daily",
+      "zero_is_missing": false,
+      "direction": "none",
+      "classification_confidence": 0.95,
+      "classification_note": "宏观活动/通胀指标按数据可得日生效，超过60天自动置空。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 82,
+          "line_end": 82,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 993,
+          "line_end": 1081,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_credit_spread_5y_low",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "credit_spread_5y_low",
+      "source_function": "_macro_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "信用利差与期限利差，市场级宏观条件。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 145,
+          "line_end": 145,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1765,
+          "line_end": 1802,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_cs_spread_60d",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "cs_spread_60d",
+      "source_function": "_corwin_schultz_spread_frame",
+      "zero_is_missing": false,
+      "direction": "low",
+      "classification_confidence": 0.95,
+      "classification_note": "价格延迟与估计买卖价差，数值越低越好。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 115,
+          "line_end": 115,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 3117,
+          "line_end": 3167,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_dividend_growth_ttm",
+      "data_class": "financial",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "dividend_growth_ttm",
+      "source_function": "_dividend_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "现金分红TTM、增长、收益率与首次分红标记。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 139,
+          "line_end": 139,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1134,
+          "line_end": 1189,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_dividend_initiation_flag",
+      "data_class": "financial",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "dividend_initiation_flag",
+      "source_function": "_dividend_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "现金分红TTM、增长、收益率与首次分红标记。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 142,
+          "line_end": 142,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1134,
+          "line_end": 1189,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_dividend_ttm_cash",
+      "data_class": "financial",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "dividend_ttm_cash",
+      "source_function": "_dividend_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "现金分红TTM、增长、收益率与首次分红标记。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 140,
+          "line_end": 140,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1134,
+          "line_end": 1189,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_dividend_yield",
+      "data_class": "financial",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "dividend_yield",
+      "source_function": "_dividend_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "现金分红TTM、增长、收益率与首次分红标记。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 141,
+          "line_end": 141,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1134,
+          "line_end": 1189,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_equity_risk_premium",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "equity_risk_premium",
+      "source_function": "_erp_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "沪深300盈利收益率减10年国债，市场级估值条件。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 143,
+          "line_end": 143,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1816,
+          "line_end": 1851,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_equity_risk_premium_chg3m",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "equity_risk_premium_chg3m",
+      "source_function": "_erp_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "沪深300盈利收益率减10年国债，市场级估值条件。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 144,
+          "line_end": 144,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1816,
+          "line_end": 1851,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_equity_supply_ratio_180d_low",
+      "data_class": "financial",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "equity_supply_ratio_180d_low",
+      "source_function": "_equity_supply_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "股权融资供给180日强度反向。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 138,
+          "line_end": 138,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1696,
+          "line_end": 1762,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_etf_share_chg_1m",
+      "data_class": "flow",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "etf_share_chg_1m",
+      "source_function": "_etf_flow_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "510300份额快照日下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 73,
+          "line_end": 73,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 930,
+          "line_end": 963,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_etf_share_chg_3m",
+      "data_class": "flow",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "etf_share_chg_3m",
+      "source_function": "_etf_flow_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "510300份额快照日下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 74,
+          "line_end": 74,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 930,
+          "line_end": 963,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_express_surprise_60d",
+      "data_class": "financial",
+      "cross_section_type": "event_sparse",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "express_surprise_60d",
+      "source_function": "_express_daily",
+      "zero_is_missing": true,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "业绩预告/快报按公告日下一交易日生效；连续0表示无事件。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 63,
+          "line_end": 63,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 777,
+          "line_end": 801,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_forecast_surprise_60d",
+      "data_class": "financial",
+      "cross_section_type": "event_sparse",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "forecast_surprise_60d",
+      "source_function": "_forecast_daily",
+      "zero_is_missing": true,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "业绩预告/快报按公告日下一交易日生效；连续0表示无事件。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 62,
+          "line_end": 62,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 735,
+          "line_end": 774,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_fund_count_chg_qoq_low",
+      "data_class": "flow",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "fund_count_chg_qoq_low",
+      "source_function": "_fund_holding_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "基金持仓拥挤度使用季度披露，并按可得日下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 48,
+          "line_end": 48,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 352,
+          "line_end": 371,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_fund_count_low",
+      "data_class": "flow",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "fund_count_low",
+      "source_function": "_fund_holding_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "基金持仓拥挤度使用季度披露，并按可得日下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 47,
+          "line_end": 47,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 352,
+          "line_end": 371,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_fund_holding_ratio_chg_qoq_low",
+      "data_class": "flow",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "fund_holding_ratio_chg_qoq_low",
+      "source_function": "_fund_holding_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "基金持仓拥挤度使用季度披露，并按可得日下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 50,
+          "line_end": 50,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 352,
+          "line_end": 371,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+      "data_class": "flow",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "fund_holding_ratio_low",
+      "source_function": "_fund_holding_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "基金持仓拥挤度使用季度披露，并按可得日下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 49,
+          "line_end": 49,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 352,
+          "line_end": 371,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_fund_holding_value_chg_qoq_low",
+      "data_class": "flow",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "fund_holding_value_chg_qoq_low",
+      "source_function": "_fund_holding_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "基金持仓拥挤度使用季度披露，并按可得日下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 51,
+          "line_end": 51,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 352,
+          "line_end": 371,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_goodwill_ratio_low",
+      "data_class": "financial",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "goodwill_ratio_low",
+      "source_function": "_goodwill_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "商誉、无形资产、研发和资本开支强度。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 134,
+          "line_end": 134,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1668,
+          "line_end": 1693,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_gross_margin_stability_4q_low",
+      "data_class": "financial",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "gross_margin_stability_4q_low",
+      "source_function": "_gross_margin_stability_4q_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "毛利率稳定性与单季同比改善。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 132,
+          "line_end": 132,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 2848,
+          "line_end": 2931,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_gross_margin_yoy_improvement_q",
+      "data_class": "financial",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "gross_margin_yoy_improvement_q",
+      "source_function": "_gross_margin_yoy_improvement_q_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "毛利率稳定性与单季同比改善。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 133,
+          "line_end": 133,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 2742,
+          "line_end": 2823,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_holder_net_buy_count_90d",
+      "data_class": "flow",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "holder_net_buy_count_90d",
+      "source_function": "_holder_net_buy_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "重要股东净增持按公告日生效，90日窗口统计。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 46,
+          "line_end": 46,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1260,
+          "line_end": 1316,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_holder_net_buy_ratio_90d",
+      "data_class": "flow",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "holder_net_buy_ratio_90d",
+      "source_function": "_holder_net_buy_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "重要股东净增持按公告日生效，90日窗口统计。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 45,
+          "line_end": 45,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1260,
+          "line_end": 1316,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_holder_top10_free_float_share",
+      "data_class": "flow",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "holder_top10_free_float_share",
+      "source_function": "_holder_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "前十大流通股东数据按公告日下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 42,
+          "line_end": 42,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 190,
+          "line_end": 258,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_holder_top10_share_chg_qoq",
+      "data_class": "flow",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "holder_top10_share_chg_qoq",
+      "source_function": "_holder_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "前十大流通股东数据按公告日下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 43,
+          "line_end": 43,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 190,
+          "line_end": 258,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+      "data_class": "flow",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "holder_top10_share_chg_yoy",
+      "source_function": "_holder_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "前十大流通股东数据按公告日下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 44,
+          "line_end": 44,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 190,
+          "line_end": 258,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_hs300_stock_rel_industry_top3_flag",
       "data_class": "industry",
-      "pit_hint": "unknown",
-      "asset_types": ["stock"],
-      "source_field": "stock_rel_industry_20d"
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "hs300_stock_rel_industry_top3_flag",
+      "source_function": "_industry_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "个股相对所属行业强弱，保留个股横截面差异。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 69,
+          "line_end": 69,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 831,
+          "line_end": 889,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_hs300_turnover_chg_20d",
+      "data_class": "flow",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "hs300_turnover_chg_20d",
+      "source_function": "_turnover_level_daily",
+      "zero_is_missing": false,
+      "direction": "low",
+      "classification_confidence": 0.95,
+      "classification_note": "HS300换手率水平与变化，月末记录下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 107,
+          "line_end": 107,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1611,
+          "line_end": 1635,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ],
+      "staleness_days_override": 45
+    },
+    {
+      "factor_id": "ext_alt_hs300_hs300_turnover_chg_20d_ext2017",
+      "data_class": "flow",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "hs300_turnover_chg_20d_ext2017",
+      "source_function": "_turnover_extended_daily",
+      "zero_is_missing": false,
+      "direction": "low",
+      "classification_confidence": 0.95,
+      "classification_note": "扩展2017历史的HS300换手率因子。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 109,
+          "line_end": 109,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1638,
+          "line_end": 1665,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ],
+      "staleness_days_override": 45
+    },
+    {
+      "factor_id": "ext_alt_hs300_hs300_turnover_gate_flag_ext2017",
+      "data_class": "flow",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "hs300_turnover_gate_flag_ext2017",
+      "source_function": "_turnover_extended_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "换手率z-score小于0时为1，0是有效闸门状态。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 110,
+          "line_end": 110,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1638,
+          "line_end": 1665,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_hs300_turnover_z",
+      "data_class": "flow",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "hs300_turnover_z",
+      "source_function": "_turnover_level_daily",
+      "zero_is_missing": false,
+      "direction": "low",
+      "classification_confidence": 0.95,
+      "classification_note": "HS300换手率水平与变化，月末记录下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 106,
+          "line_end": 106,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1611,
+          "line_end": 1635,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ],
+      "staleness_days_override": 45
+    },
+    {
+      "factor_id": "ext_alt_hs300_hs300_turnover_z_ext2017",
+      "data_class": "flow",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "hs300_turnover_z_ext2017",
+      "source_function": "_turnover_extended_daily",
+      "zero_is_missing": false,
+      "direction": "low",
+      "classification_confidence": 0.95,
+      "classification_note": "扩展2017历史的HS300换手率因子。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 108,
+          "line_end": 108,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1638,
+          "line_end": 1665,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ],
+      "staleness_days_override": 45
+    },
+    {
+      "factor_id": "ext_alt_hs300_hsciei_mom_20d",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "hsciei_mom_20d",
+      "source_function": "_hk_risk_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "港股指数日度动量，市场级广播。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 97,
+          "line_end": 97,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1468,
+          "line_end": 1501,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_hsi_mom_20d",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "hsi_mom_20d",
+      "source_function": "_hk_risk_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "港股指数日度动量，市场级广播。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 96,
+          "line_end": 96,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1468,
+          "line_end": 1501,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_hsi_rel_hs300_20d",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "hsi_rel_hs300_20d",
+      "source_function": "_hk_risk_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "港股指数日度动量，市场级广播。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 98,
+          "line_end": 98,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1468,
+          "line_end": 1501,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_idio_vol_20d_low",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "idio_vol_20d_low",
+      "source_function": "_idio_vol_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "HS300市场模型衍生的个股风险因子，已按“高好”方向转换。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 111,
+          "line_end": 111,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1905,
+          "line_end": 1928,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_idio_vol_40d_low",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "idio_vol_40d_low",
+      "source_function": "_idio_vol_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "HS300市场模型衍生的个股风险因子，已按“高好”方向转换。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 112,
+          "line_end": 112,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1905,
+          "line_end": 1928,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_idio_vol_60d_low",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "idio_vol_60d_low",
+      "source_function": "_idio_vol_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "HS300市场模型衍生的个股风险因子，已按“高好”方向转换。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 113,
+          "line_end": 113,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1905,
+          "line_end": 1928,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_if_net_short_chg_1m",
+      "data_class": "flow",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "if_net_short_chg_1m",
+      "source_function": "_if_position_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "IF前20席位净空头月度变化，市场级广播。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 91,
+          "line_end": 91,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1386,
+          "line_end": 1414,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ],
+      "staleness_days_override": 45
+    },
+    {
+      "factor_id": "ext_alt_hs300_industry_breadth_20d",
+      "data_class": "industry",
+      "cross_section_type": "industry_cross_sectional",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "industry_breadth_20d",
+      "source_function": "_industry_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "一级行业等权聚合值，在同日行业内重复、跨行业变化。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 67,
+          "line_end": 67,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 831,
+          "line_end": 889,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
     },
     {
       "factor_id": "ext_alt_hs300_industry_mom_20d",
       "data_class": "industry",
-      "pit_hint": "unknown",
-      "asset_types": ["stock"],
-      "source_field": "industry_mom_20d"
+      "cross_section_type": "industry_cross_sectional",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "industry_mom_20d",
+      "source_function": "_industry_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "一级行业等权聚合值，在同日行业内重复、跨行业变化。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 64,
+          "line_end": 64,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 831,
+          "line_end": 889,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
     },
     {
-      "factor_id": "uf_quality_value_defensive",
-      "data_class": "financial",
+      "factor_id": "ext_alt_hs300_industry_mom_60d",
+      "data_class": "industry",
+      "cross_section_type": "industry_cross_sectional",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "industry_mom_60d",
+      "source_function": "_industry_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "一级行业等权聚合值，在同日行业内重复、跨行业变化。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 65,
+          "line_end": 65,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 831,
+          "line_end": 889,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_industry_rps_20d",
+      "data_class": "industry",
+      "cross_section_type": "industry_cross_sectional",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "industry_rps_20d",
+      "source_function": "_industry_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "一级行业等权聚合值，在同日行业内重复、跨行业变化。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 66,
+          "line_end": 66,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 831,
+          "line_end": 889,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_insider_buy_20d",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
       "pit_hint": "declared",
-      "asset_types": ["stock"],
-      "source_field": "roe_latest / (100 * pb_latest) - debt_ratio_latest / 100"
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "insider_buy_20d",
+      "source_function": "_insider_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "董监高竞价交易按公告日下一交易日生效，20日线性衰减。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 39,
+          "line_end": 39,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1225,
+          "line_end": 1257,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_insider_net_buy_20d",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "insider_net_buy_20d",
+      "source_function": "_insider_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "董监高竞价交易按公告日下一交易日生效，20日线性衰减。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 40,
+          "line_end": 40,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1225,
+          "line_end": 1257,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_insider_sell_20d_low",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "insider_sell_20d_low",
+      "source_function": "_insider_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "董监高竞价交易按公告日下一交易日生效，20日线性衰减。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 41,
+          "line_end": 41,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1225,
+          "line_end": 1257,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_intangible_ratio_low",
+      "data_class": "financial",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "intangible_ratio_low",
+      "source_function": "_goodwill_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "商誉、无形资产、研发和资本开支强度。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 135,
+          "line_end": 135,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1668,
+          "line_end": 1693,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_lhb_event_count_20d_low",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "lhb_event_count_20d_low",
+      "source_function": "_lhb_daily",
+      "zero_is_missing": true,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "龙虎榜事件按公告日下一交易日生效；连续0表示当日无事件而不是连续观测。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 54,
+          "line_end": 54,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 381,
+          "line_end": 495,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_lhb_inst_net_buy_ratio_20d",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "lhb_inst_net_buy_ratio_20d",
+      "source_function": "_lhb_daily",
+      "zero_is_missing": true,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "龙虎榜事件按公告日下一交易日生效；连续0表示当日无事件而不是连续观测。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 53,
+          "line_end": 53,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 381,
+          "line_end": 495,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_lhb_net_buy_ratio_20d",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "lhb_net_buy_ratio_20d",
+      "source_function": "_lhb_daily",
+      "zero_is_missing": true,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "龙虎榜事件按公告日下一交易日生效；连续0表示当日无事件而不是连续观测。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 52,
+          "line_end": 52,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 381,
+          "line_end": 495,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_m1_m2_scissors",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "m1_m2_scissors",
+      "source_function": "_macro_extra_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "货币供应同比按月份对应可得日延后45天生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 76,
+          "line_end": 76,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 993,
+          "line_end": 1081,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_m1_m2_scissors_chg_1m",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "m1_m2_scissors_chg_1m",
+      "source_function": "_macro_extra_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "货币供应同比按月份对应可得日延后45天生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 77,
+          "line_end": 77,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 993,
+          "line_end": 1081,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_m2_yoy",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "m2_yoy",
+      "source_function": "_macro_extra_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "货币供应同比按月份对应可得日延后45天生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 78,
+          "line_end": 78,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 993,
+          "line_end": 1081,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_mainline_leader_flag",
+      "data_class": "industry",
+      "cross_section_type": "event_sparse",
+      "pit_hint": "unknown",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "mainline_leader_flag",
+      "source_function": "_mainline_daily",
+      "zero_is_missing": true,
+      "direction": "high",
+      "classification_confidence": 0.8,
+      "classification_note": "主线龙头为稀疏个股标记；源数据同日直连，PIT 尚未独立证明。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 72,
+          "line_end": 72,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 892,
+          "line_end": 927,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_mainline_strength",
+      "data_class": "industry",
+      "cross_section_type": "event_sparse",
+      "pit_hint": "unknown",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "mainline_strength",
+      "source_function": "_mainline_daily",
+      "zero_is_missing": true,
+      "direction": "high",
+      "classification_confidence": 0.8,
+      "classification_note": "主线行业字段按行业广播；源数据同日直连，PIT 与历史完整性尚未独立证明。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 71,
+          "line_end": 71,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 892,
+          "line_end": 927,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_mainline_top1_flag",
+      "data_class": "industry",
+      "cross_section_type": "event_sparse",
+      "pit_hint": "unknown",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "mainline_top1_flag",
+      "source_function": "_mainline_daily",
+      "zero_is_missing": true,
+      "direction": "high",
+      "classification_confidence": 0.8,
+      "classification_note": "主线行业字段按行业广播；源数据同日直连，PIT 与历史完整性尚未独立证明。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 70,
+          "line_end": 70,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 892,
+          "line_end": 927,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_management_expense_ratio_4q_low",
+      "data_class": "financial",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "management_expense_ratio_4q_low",
+      "source_function": "_management_expense_ratio_4q_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "管理费用率和销售+管理费用率稳定性。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 130,
+          "line_end": 130,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 3035,
+          "line_end": 3114,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_margin_chg_1m_low",
+      "data_class": "flow",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "margin_chg_1m_low",
+      "source_function": "_margin_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "个股两融余额与融券余量按快照日下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 89,
+          "line_end": 89,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1319,
+          "line_end": 1350,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_margin_safety_chg_20d",
+      "data_class": "flow",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "margin_safety_chg_20d",
+      "source_function": "_margin_safety_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "两融维持担保比例月末记录下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 100,
+          "line_end": 100,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1504,
+          "line_end": 1528,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ],
+      "staleness_days_override": 45
+    },
+    {
+      "factor_id": "ext_alt_hs300_margin_safety_z",
+      "data_class": "flow",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "margin_safety_z",
+      "source_function": "_margin_safety_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "两融维持担保比例月末记录下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 99,
+          "line_end": 99,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1504,
+          "line_end": 1528,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ],
+      "staleness_days_override": 45
+    },
+    {
+      "factor_id": "ext_alt_hs300_market_breadth_above_ma20",
+      "data_class": "sentiment",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "market_breadth_above_ma20",
+      "source_function": "_regime_extra_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "市场宽度与赚钱效应指标来自 regime_history。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 84,
+          "line_end": 84,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1084,
+          "line_end": 1102,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_market_down_beta_60d_low",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "market_down_beta_60d_low",
+      "source_function": "_market_down_beta_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "HS300市场模型衍生的个股风险因子，已按“高好”方向转换。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 118,
+          "line_end": 118,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 2105,
+          "line_end": 2115,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_market_emotion_score",
+      "data_class": "sentiment",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "market_emotion_score",
+      "source_function": "_emotion_daily",
+      "zero_is_missing": false,
+      "direction": "none",
+      "classification_confidence": 0.95,
+      "classification_note": "市场情绪分数，作为周期条件而非个股排序因子。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 147,
+          "line_end": 147,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1805,
+          "line_end": 1813,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_market_profit_score",
+      "data_class": "sentiment",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "market_profit_score",
+      "source_function": "_regime_extra_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "市场宽度与赚钱效应指标来自 regime_history。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 85,
+          "line_end": 85,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1084,
+          "line_end": 1102,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_market_skew_60d_low",
+      "data_class": "price",
+      "cross_section_type": "market_level",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "market_skew_60d_low",
+      "source_function": "_market_skew_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "HS300 60日已实现偏度反向，市场级广播。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 122,
+          "line_end": 122,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 2315,
+          "line_end": 2326,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_market_speculation_score",
+      "data_class": "sentiment",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "market_speculation_score",
+      "source_function": "_regime_extra_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "市场宽度与赚钱效应指标来自 regime_history。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 87,
+          "line_end": 87,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1084,
+          "line_end": 1102,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_market_trend_score",
+      "data_class": "sentiment",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "market_trend_score",
+      "source_function": "_regime_extra_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "市场宽度与赚钱效应指标来自 regime_history。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 86,
+          "line_end": 86,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1084,
+          "line_end": 1102,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_net_financing_4q_low",
+      "data_class": "financial",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "net_financing_4q_low",
+      "source_function": "_net_financing_4q_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "净筹资现金流四季强度反向。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 126,
+          "line_end": 126,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 2552,
+          "line_end": 2627,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_nh_nl_diff_20d",
+      "data_class": "sentiment",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "nh_nl_diff_20d",
+      "source_function": "_breadth_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "HS300新高减新低比例，月末记录下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 102,
+          "line_end": 102,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1531,
+          "line_end": 1555,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ],
+      "staleness_days_override": 45
+    },
+    {
+      "factor_id": "ext_alt_hs300_nh_nl_diff_z",
+      "data_class": "sentiment",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "nh_nl_diff_z",
+      "source_function": "_breadth_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "HS300新高减新低比例，月末记录下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 101,
+          "line_end": 101,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1531,
+          "line_end": 1555,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ],
+      "staleness_days_override": 45
+    },
+    {
+      "factor_id": "ext_alt_hs300_northbound_net_buy_20d",
+      "data_class": "flow",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "northbound_net_buy_20d",
+      "source_function": "_northbound_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "北向20日净买额按成交可得日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 88,
+          "line_end": 88,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1105,
+          "line_end": 1131,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_ocf_margin_4q",
+      "data_class": "financial",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "ocf_margin_4q",
+      "source_function": "_ocf_margin_4q_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "TTM经营现金流利润率与现金资产占比。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 124,
+          "line_end": 124,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 2466,
+          "line_end": 2550,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_pledge_ratio_chg_1m_low",
+      "data_class": "flow",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "pledge_ratio_chg_1m_low",
+      "source_function": "_pledge_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "股权质押快照按快照日下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 56,
+          "line_end": 56,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 498,
+          "line_end": 548,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_pledge_ratio_low",
+      "data_class": "flow",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "pledge_ratio_low",
+      "source_function": "_pledge_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "股权质押快照按快照日下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 55,
+          "line_end": 55,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 498,
+          "line_end": 548,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_pmi",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "pmi",
+      "source_function": "_macro_extra_daily",
+      "zero_is_missing": false,
+      "direction": "none",
+      "classification_confidence": 0.95,
+      "classification_note": "宏观活动/通胀指标按数据可得日生效，超过60天自动置空。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 81,
+          "line_end": 81,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 993,
+          "line_end": 1081,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_ppi_yoy",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "ppi_yoy",
+      "source_function": "_macro_extra_daily",
+      "zero_is_missing": false,
+      "direction": "none",
+      "classification_confidence": 0.95,
+      "classification_note": "宏观活动/通胀指标按数据可得日生效，超过60天自动置空。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 83,
+          "line_end": 83,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 993,
+          "line_end": 1081,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_price_delay_60d",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "price_delay_60d",
+      "source_function": "_price_delay_daily",
+      "zero_is_missing": false,
+      "direction": "low",
+      "classification_confidence": 0.95,
+      "classification_note": "价格延迟与估计买卖价差，数值越低越好。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 114,
+          "line_end": 114,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1986,
+          "line_end": 1996,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_qvix_z_252",
+      "data_class": "sentiment",
+      "cross_section_type": "market_level",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "qvix_z_252",
+      "source_function": "_qvix_daily",
+      "zero_is_missing": false,
+      "direction": "low",
+      "classification_confidence": 0.95,
+      "classification_note": "300ETF QVIX 日度观测，252日扩张标准化。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 75,
+          "line_end": 75,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 966,
+          "line_end": 990,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_rd_intensity",
+      "data_class": "financial",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "rd_intensity",
+      "source_function": "_goodwill_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "商誉、无形资产、研发和资本开支强度。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 136,
+          "line_end": 136,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1668,
+          "line_end": 1693,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_repurchase_event_60d",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "repurchase_event_60d",
+      "source_function": "_repurchase_daily",
+      "zero_is_missing": true,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "回购计划按公告日下一交易日生效；连续0表示无事件。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 57,
+          "line_end": 57,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 581,
+          "line_end": 603,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_risk_adjusted_momentum_60d",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "risk_adjusted_momentum_60d",
+      "source_function": "_risk_adjusted_momentum_frame",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "个股价格趋势、beta不对称与风险调整动量。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 121,
+          "line_end": 121,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 2248,
+          "line_end": 2274,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_sga_ratio_4q_industry_neutral",
+      "data_class": "financial",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "sga_ratio_4q_industry_neutral",
+      "source_function": "_sga_ratio_4q_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "销售+管理费用率、行业中性分位与环比改善。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 128,
+          "line_end": 128,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 2630,
+          "line_end": 2739,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_sga_ratio_4q_low",
+      "data_class": "financial",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "sga_ratio_4q_low",
+      "source_function": "_sga_ratio_4q_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "销售+管理费用率、行业中性分位与环比改善。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 127,
+          "line_end": 127,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 2630,
+          "line_end": 2739,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_sga_ratio_4q_qoq_improvement",
+      "data_class": "financial",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "sga_ratio_4q_qoq_improvement",
+      "source_function": "_sga_ratio_4q_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "销售+管理费用率、行业中性分位与环比改善。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 129,
+          "line_end": 129,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 2630,
+          "line_end": 2739,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_sga_ratio_stability_4q_low",
+      "data_class": "financial",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "sga_ratio_stability_4q_low",
+      "source_function": "_sga_ratio_stability_4q_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "管理费用率和销售+管理费用率稳定性。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 131,
+          "line_end": 131,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 2934,
+          "line_end": 3032,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_shibor_3m",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "shibor_3m",
+      "source_function": "_macro_extra_daily",
+      "zero_is_missing": false,
+      "direction": "low",
+      "classification_confidence": 0.95,
+      "classification_note": "SHIBOR 日度利率与20日变化。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 79,
+          "line_end": 79,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 993,
+          "line_end": 1081,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_shibor_3m_chg_20d",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "shibor_3m_chg_20d",
+      "source_function": "_macro_extra_daily",
+      "zero_is_missing": false,
+      "direction": "low",
+      "classification_confidence": 0.95,
+      "classification_note": "SHIBOR 日度利率与20日变化。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 80,
+          "line_end": 80,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 993,
+          "line_end": 1081,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_shibor_tightness_z",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "shibor_tightness_z",
+      "source_function": "_shibor_tightness_daily",
+      "zero_is_missing": false,
+      "direction": "low",
+      "classification_confidence": 0.95,
+      "classification_note": "SHIBOR 3M扩张z-score，月末记录下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 103,
+          "line_end": 103,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1558,
+          "line_end": 1581,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_short_ratio_low",
+      "data_class": "flow",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "short_ratio_low",
+      "source_function": "_short_ratio_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "个股两融余额与融券余量按快照日下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 90,
+          "line_end": 90,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1353,
+          "line_end": 1383,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_stock_rel_industry_20d",
+      "data_class": "industry",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "stock_rel_industry_20d",
+      "source_function": "_industry_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "个股相对所属行业强弱，保留个股横截面差异。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 68,
+          "line_end": 68,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 831,
+          "line_end": 889,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_term_spread_10y_2y",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "term_spread_10y_2y",
+      "source_function": "_macro_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "信用利差与期限利差，市场级宏观条件。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 146,
+          "line_end": 146,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1765,
+          "line_end": 1802,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_top30_amount_share_z",
+      "data_class": "flow",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "top30_amount_share_z",
+      "source_function": "_concentration_daily",
+      "zero_is_missing": false,
+      "direction": "low",
+      "classification_confidence": 0.95,
+      "classification_note": "HS300成交集中度，月末记录下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 105,
+          "line_end": 105,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1584,
+          "line_end": 1608,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ],
+      "staleness_days_override": 45
+    },
+    {
+      "factor_id": "ext_alt_hs300_trend_efficiency_60d",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "trend_efficiency_60d",
+      "source_function": "_trend_efficiency_frame",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "个股价格趋势、beta不对称与风险调整动量。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 120,
+          "line_end": 120,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 2222,
+          "line_end": 2245,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_turnover_hhi_z",
+      "data_class": "flow",
+      "cross_section_type": "market_level",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "turnover_hhi_z",
+      "source_function": "_concentration_daily",
+      "zero_is_missing": false,
+      "direction": "low",
+      "classification_confidence": 0.95,
+      "classification_note": "HS300成交集中度，月末记录下一交易日生效。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 104,
+          "line_end": 104,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 1584,
+          "line_end": 1608,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ],
+      "staleness_days_override": 45
+    },
+    {
+      "factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "vol_of_vol_20d_low",
+      "source_function": "_vol_of_vol_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "HS300市场模型衍生的个股风险因子，已按“高好”方向转换。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 116,
+          "line_end": 116,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 2029,
+          "line_end": 2041,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_vol_of_vol_60d_low",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "not_applicable",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "vol_of_vol_60d_low",
+      "source_function": "_vol_of_vol_daily",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.95,
+      "classification_note": "HS300市场模型衍生的个股风险因子，已按“高好”方向转换。",
+      "evidence_refs": [
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 117,
+          "line_end": 117,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        },
+        {
+          "path": "scripts/build_alt_factor_data.py",
+          "line_start": 2029,
+          "line_end": 2041,
+          "sha256": "sha256:320ab1f2206c458fc39b738ba74482ffeff6c7975337d75934b3ad91258022fb"
+        }
+      ]
     },
     {
       "factor_id": "uf_cash_quality",
       "data_class": "financial",
+      "cross_section_type": "stock_cross_sectional",
       "pit_hint": "declared",
-      "asset_types": ["stock"],
-      "source_field": "ocf_ni - accrual"
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "ocf_ni - accrual",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.85,
+      "evidence_refs": [
+        {
+          "path": "data/factor_research/catalog/classification_evidence/custom_core_watch_v1.json",
+          "sha256": "sha256:b7573ac76701799be0fb1f06c228ec5d62b7062f9158252d111195a4228d560c"
+        }
+      ]
     },
     {
       "factor_id": "uf_industry_relative_strength_change_5d",
       "data_class": "industry",
+      "cross_section_type": "stock_cross_sectional",
       "pit_hint": "unknown",
-      "asset_types": ["stock"],
-      "source_field": "ts_delta(ext_alt_hs300_stock_rel_industry_20d, 5)"
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "ts_delta(ext_alt_hs300_stock_rel_industry_20d, 5)",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.8,
+      "evidence_refs": [
+        {
+          "path": "data/factor_research/catalog/classification_evidence/custom_core_watch_v1.json",
+          "sha256": "sha256:b7573ac76701799be0fb1f06c228ec5d62b7062f9158252d111195a4228d560c"
+        }
+      ]
+    },
+    {
+      "factor_id": "uf_quality_value_defensive",
+      "data_class": "financial",
+      "cross_section_type": "stock_cross_sectional",
+      "pit_hint": "declared",
+      "asset_types": [
+        "stock"
+      ],
+      "source_field": "roe_latest / (100 * pb_latest) - debt_ratio_latest / 100",
+      "zero_is_missing": false,
+      "direction": "high",
+      "classification_confidence": 0.85,
+      "evidence_refs": [
+        {
+          "path": "data/factor_research/catalog/classification_evidence/custom_core_watch_v1.json",
+          "sha256": "sha256:b7573ac76701799be0fb1f06c228ec5d62b7062f9158252d111195a4228d560c"
+        }
+      ]
     }
   ]
 }

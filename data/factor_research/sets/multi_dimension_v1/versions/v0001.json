@@ -1,0 +1,207 @@
+{
+  "schema_version": 1,
+  "set_id": "multi_dimension_v1",
+  "version": 1,
+  "parent_version": null,
+  "created_at": "2026-11-10T14:19:27Z",
+  "created_by": "research",
+  "change_reason": "建立跨价格风险、财务质量、资金拥挤与股东结构的多维 watch 因子集",
+  "catalog_snapshot_id": "sha256:8c5e3b58937d3399313c8903353a4df01fcb4ecf30c29837633cba00f2006543",
+  "scope": {
+    "asset_type": "stock",
+    "universe": "hs300_current"
+  },
+  "members": [
+    {
+      "factor_id": "ext_alt_hs300_idio_vol_40d_low",
+      "factor_version": 1,
+      "definition_fingerprint": "sha256:af0b0ce3483e71d7760bac95ad93bfd9afc76017cc38dc47adb76f65f85ff9da",
+      "reference_kind": "registered_factor",
+      "role": "alpha",
+      "membership_status": "watch",
+      "direction": "high",
+      "weight": 0.125,
+      "rationale": "价格风险：HS300残差低波；20/40/60/120日参数平台稳定，40日全样本IC最高。",
+      "evidence_refs": [
+        {
+          "kind": "factor_signal_scan",
+          "path": "factor_research/research/alt_hs300_rank_ic_5d_2026-11-10_v2.json",
+          "sha256": "sha256:13895fdac892ab82719a1be1a12b7d47385cd2fc7d4b76d746c4c63586c626e6"
+        },
+        {
+          "kind": "factor_increment_scan",
+          "path": "factor_research/research/alt_hs300_incremental_2026-11-10.json",
+          "sha256": "sha256:251d79d58861ce9fdb5691b9918302f7d94e7db6a55b69e53db54e4840ed794e"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_dividend_yield",
+      "factor_version": 1,
+      "definition_fingerprint": "sha256:84bafebe28ea1ef34829dc68548093f8e630f5d163b2a7a44a8aca4d38d49da4",
+      "reference_kind": "registered_factor",
+      "role": "alpha",
+      "membership_status": "watch",
+      "direction": "high",
+      "weight": 0.125,
+      "rationale": "价值/现金回报：股息率IC高且行业规模中性后仍稳定，和核心腿相关性较低。",
+      "evidence_refs": [
+        {
+          "kind": "factor_signal_scan",
+          "path": "factor_research/research/alt_hs300_rank_ic_5d_2026-11-10_v2.json",
+          "sha256": "sha256:13895fdac892ab82719a1be1a12b7d47385cd2fc7d4b76d746c4c63586c626e6"
+        },
+        {
+          "kind": "factor_increment_scan",
+          "path": "factor_research/research/alt_hs300_incremental_2026-11-10.json",
+          "sha256": "sha256:251d79d58861ce9fdb5691b9918302f7d94e7db6a55b69e53db54e4840ed794e"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+      "factor_version": 1,
+      "definition_fingerprint": "sha256:7f6866e0774c5c8868e3ed02525abd9ad639de9b1a51c5d4f39cec0e8f809eb0",
+      "reference_kind": "registered_factor",
+      "role": "alpha",
+      "membership_status": "watch",
+      "direction": "high",
+      "weight": 0.125,
+      "rationale": "波动稳定性：20日波动率的20日稳定性；参数扫描优于当前60日版本。",
+      "evidence_refs": [
+        {
+          "kind": "factor_signal_scan",
+          "path": "factor_research/research/alt_hs300_rank_ic_5d_2026-11-10_v2.json",
+          "sha256": "sha256:13895fdac892ab82719a1be1a12b7d47385cd2fc7d4b76d746c4c63586c626e6"
+        },
+        {
+          "kind": "factor_increment_scan",
+          "path": "factor_research/research/alt_hs300_incremental_2026-11-10.json",
+          "sha256": "sha256:251d79d58861ce9fdb5691b9918302f7d94e7db6a55b69e53db54e4840ed794e"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+      "factor_version": 1,
+      "definition_fingerprint": "sha256:9d2303f4528047db114d1e7906d27838f85f984c103cc2f0c75cdc70d04e043f",
+      "reference_kind": "registered_factor",
+      "role": "alpha",
+      "membership_status": "watch",
+      "direction": "high",
+      "weight": 0.125,
+      "rationale": "财务质量：经营现金流/总资产四季稳定性，行业规模中性后仍有正IC。",
+      "evidence_refs": [
+        {
+          "kind": "factor_signal_scan",
+          "path": "factor_research/research/alt_hs300_rank_ic_5d_2026-11-10_v2.json",
+          "sha256": "sha256:13895fdac892ab82719a1be1a12b7d47385cd2fc7d4b76d746c4c63586c626e6"
+        },
+        {
+          "kind": "factor_increment_scan",
+          "path": "factor_research/research/alt_hs300_incremental_2026-11-10.json",
+          "sha256": "sha256:251d79d58861ce9fdb5691b9918302f7d94e7db6a55b69e53db54e4840ed794e"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+      "factor_version": 1,
+      "definition_fingerprint": "sha256:38efc1b9517323738a580475d8d4ba48d915a930f1e17f464b2cf2ee320097ba",
+      "reference_kind": "registered_factor",
+      "role": "alpha",
+      "membership_status": "watch",
+      "direction": "high",
+      "weight": 0.125,
+      "rationale": "资金拥挤：低基金持仓比例，近一年与全样本IC同向。",
+      "evidence_refs": [
+        {
+          "kind": "factor_signal_scan",
+          "path": "factor_research/research/alt_hs300_rank_ic_5d_2026-11-10_v2.json",
+          "sha256": "sha256:13895fdac892ab82719a1be1a12b7d47385cd2fc7d4b76d746c4c63586c626e6"
+        },
+        {
+          "kind": "factor_increment_scan",
+          "path": "factor_research/research/alt_hs300_incremental_2026-11-10.json",
+          "sha256": "sha256:251d79d58861ce9fdb5691b9918302f7d94e7db6a55b69e53db54e4840ed794e"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_ocf_margin_4q",
+      "factor_version": 1,
+      "definition_fingerprint": "sha256:9b5440fac52930421b99697f67413cdad9c0a84c20d6f9cbd7de5fb308f11097",
+      "reference_kind": "registered_factor",
+      "role": "alpha",
+      "membership_status": "watch",
+      "direction": "high",
+      "weight": 0.125,
+      "rationale": "现金盈利：TTM经营现金流/营收，补充利润质量维度。",
+      "evidence_refs": [
+        {
+          "kind": "factor_signal_scan",
+          "path": "factor_research/research/alt_hs300_rank_ic_5d_2026-11-10_v2.json",
+          "sha256": "sha256:13895fdac892ab82719a1be1a12b7d47385cd2fc7d4b76d746c4c63586c626e6"
+        },
+        {
+          "kind": "factor_increment_scan",
+          "path": "factor_research/research/alt_hs300_incremental_2026-11-10.json",
+          "sha256": "sha256:251d79d58861ce9fdb5691b9918302f7d94e7db6a55b69e53db54e4840ed794e"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_margin_chg_1m_low",
+      "factor_version": 1,
+      "definition_fingerprint": "sha256:1c9b44faee05d787024fcdcab1602a95005cc4572011f672964bff29a1597a10",
+      "reference_kind": "registered_factor",
+      "role": "alpha",
+      "membership_status": "watch",
+      "direction": "high",
+      "weight": 0.125,
+      "rationale": "交易资金：融资余额月度下降，低拥挤且和现有腿相关性低。",
+      "evidence_refs": [
+        {
+          "kind": "factor_signal_scan",
+          "path": "factor_research/research/alt_hs300_rank_ic_5d_2026-11-10_v2.json",
+          "sha256": "sha256:13895fdac892ab82719a1be1a12b7d47385cd2fc7d4b76d746c4c63586c626e6"
+        },
+        {
+          "kind": "factor_increment_scan",
+          "path": "factor_research/research/alt_hs300_incremental_2026-11-10.json",
+          "sha256": "sha256:251d79d58861ce9fdb5691b9918302f7d94e7db6a55b69e53db54e4840ed794e"
+        }
+      ]
+    },
+    {
+      "factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+      "factor_version": 1,
+      "definition_fingerprint": "sha256:cc2fde287a2be6e34a8bf7e21265feb470ccd265dc930aa5c9f6fbfdf58d6579",
+      "reference_kind": "registered_factor",
+      "role": "alpha",
+      "membership_status": "watch",
+      "direction": "high",
+      "weight": 0.125,
+      "rationale": "股东结构：前十大流通股东持股同比增加，增量IC为正且相关性低。",
+      "evidence_refs": [
+        {
+          "kind": "factor_signal_scan",
+          "path": "factor_research/research/alt_hs300_rank_ic_5d_2026-11-10_v2.json",
+          "sha256": "sha256:13895fdac892ab82719a1be1a12b7d47385cd2fc7d4b76d746c4c63586c626e6"
+        },
+        {
+          "kind": "factor_increment_scan",
+          "path": "factor_research/research/alt_hs300_incremental_2026-11-10.json",
+          "sha256": "sha256:251d79d58861ce9fdb5691b9918302f7d94e7db6a55b69e53db54e4840ed794e"
+        }
+      ]
+    }
+  ],
+  "preflight": {
+    "reference_status": "pass",
+    "role_asset_scale_status": "pass",
+    "weight_status": "pass",
+    "catalog_snapshot_id": "sha256:8c5e3b58937d3399313c8903353a4df01fcb4ecf30c29837633cba00f2006543"
+  },
+  "content_sha256": "sha256:9eb577a43d549e1b9218ae61d125fa393dd65263988f0d5b221067a23c61822b"
+}

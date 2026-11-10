@@ -21,13 +21,13 @@
 
 | 维度 | 数量 | 说明 |
 | --- | ---: | --- |
-| 可调用因子总数 | 220 | `all_factors(asset_type="stock")` 的注册表快照 |
-| base | 135 | 已物化指标或扩展列 |
+| 可调用因子总数 | 223 | `all_factors(asset_type="stock")` 的注册表快照 |
+| base | 138 | 已物化指标或扩展列 |
 | virtual | 52 | 评分时按依赖物化 |
 | custom | 19 | DSL 自定义因子 |
 | composite | 14 | 复合因子 |
 | built-in | 81 | 70 个技术/价量 + 11 个 PIT 财务声明 |
-| extension data | 106 | `data/ext_data/*/config.json` 的数值字段 |
+| extension data | 109 | `data/ext_data/*/config.json` 的数值字段 |
 | custom + composite | 33 | `data/user_data/custom_factors/*.json` |
 
 自定义/复合因子的源定义状态为：28 个 `draft`、5 个 `retired`、0 个 `active`。
@@ -38,8 +38,9 @@
 
 ### 0.2 研究证据缺口
 
-当前统一五年 IC 扫描只覆盖 77 个内置因子。另有 143 个注册表因子尚未进入统一扫描：
-106 个扩展因子、33 个动态因子、4 个较新的内置财务 TTM 因子。它们可以出现在母集，
+当前统一五年 IC 扫描只覆盖 77 个内置因子。另有 146 个注册表因子尚未全部进入统一扫描：
+109 个扩展因子、33 个动态因子、4 个较新的内置财务 TTM 因子。扩展因子已完成首轮数据审计，
+但扩展和动态因子仍需统一纳入同一套统计扫描。它们可以出现在母集，
 但不能因为“存在定义”被写成“已验证”。
 
 ### 0.3 当前审计的错误口径
@@ -331,7 +332,7 @@ data/factor_research/**/__pycache__/
   "classification_ref": "sha256:<64-hex-or-null>",
   "source_completeness": "complete",
   "generated_at": "2026-11-10T08:00:00Z",
-  "factor_count": 220,
+  "factor_count": 223,
   "ledger_record_id": "lr_<24-hex>"
 }
 ```
@@ -397,7 +398,7 @@ data/factor_research/**/__pycache__/
   "generated_at": "2026-11-10T08:00:00Z",
   "registry_fingerprint": "sha256:<64-hex>",
   "source_completeness": "complete",
-  "factor_count": 220,
+  "factor_count": 223,
   "factors": [
     {
       "factor_id": "momentum_20d",
@@ -446,7 +447,7 @@ data/factor_research/**/__pycache__/
   同一 ID。
 - `source_completeness`：`complete`、`partial`、`unavailable`。扩展配置或自定义因子加载
   出错时为 `partial`，并保留 `load_errors`；`partial` 母集不能用于 active 提升。
-- `factor_count` 是本次快照的实际数量，不得在代码里写死 220；220 只是当前基线。
+- `factor_count` 是本次快照的实际数量，不得在代码里写死 223；223 只是当前基线。
 - `classification_ref` 指向 `classification_evidence/<classification_id>.json`；没有分类
   证据时为 null。`classification_confidence` 是审计证据置信度，不是收益置信度。
 - `definition_stability` 只复制注册表的定义稳定性，禁止映射为有效。
@@ -1457,9 +1458,9 @@ git status --short --branch
 
 以下全部满足才认为设计实现完成：
 
-1. 当前注册表能生成一份完整母集，且所有 220 个当前因子有唯一 `factor_id`；
+1. 当前注册表能生成一份完整母集，且所有 223 个当前因子有唯一 `factor_id`；
 2. `amount`、`consecutive_limit_ups` 不再被报告为缺失因子；
-3. 106 个扩展字段、33 个动态因子、81 个内置因子分别有来源和引用类型；
+3. 109 个扩展字段、33 个动态因子、81 个内置因子分别有来源和引用类型；
 4. `stable` 与 `active` 完全分离；
 5. 所有集合写操作都能生成新版本并追加台账，不覆盖旧版本；
 6. active 读取会检查 fingerprint、head、台账和数据 freshness；
