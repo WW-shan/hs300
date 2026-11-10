@@ -25,10 +25,14 @@
 from __future__ import annotations
 
 import contextlib
+import dataclasses
 import logging
 import re
 from pathlib import Path
+from types import MappingProxyType
+from typing import Any
 
+import numpy as np
 import polars as pl
 
 from app.factors.registry import FactorSpec, get_factor, register_factor, unregister_factor
@@ -324,6 +328,58 @@ def attach_ext_columns(
         if tmp_date:
             df = df.drop("_ext_date")
     return df
+
+
+def attach_matrix_ext_fields(
+    market: Any,
+    data_dir: Path | None,
+    names: Any,
+) -> Any:
+    """Attach timeseries extension fields to a frozen MarketDataMatrix copy."""
+    requested = {str(name) for name in names}
+    if not requested or not getattr(market, "symbols", None):
+        return market
+    root = _resolve_dir(data_dir)
+    dates = [str(label)[:10] for label in market.timestamp_labels]
+    symbols = [str(symbol) for symbol in market.symbols]
+    grid = pl.DataFrame({
+        "_date_order": np.repeat(np.arange(len(dates), dtype=np.int32), len(symbols)),
+        "_symbol_order": np.tile(np.arange(len(symbols), dtype=np.int32), len(dates)),
+        "date": [day for day in dates for _ in symbols],
+        "symbol": [symbol for _ in dates for symbol in symbols],
+    })
+    extra: dict[str, np.ndarray] = {}
+    for cfg in _load_configs(root):
+        if cfg.mode != "timeseries":
+            continue
+        fields = [
+            field for field in _numeric_fields(cfg)
+            if ext_column_name(cfg.id, field.name) in requested
+        ]
+        if not fields:
+            continue
+        frame = _timeseries_frame(root, cfg, fields)
+        if frame.is_empty():
+            continue
+        joined = (
+            grid.join(
+                frame.with_columns(pl.col("_ext_date").str.slice(0, 10).alias("date")),
+                on=["date", "symbol"],
+                how="left",
+            )
+            .sort(["_date_order", "_symbol_order"])
+        )
+        for field in fields:
+            name = ext_column_name(cfg.id, field.name)
+            values = joined[name].cast(pl.Float32).to_numpy().reshape(market.shape)
+            values.flags.writeable = False
+            extra[name] = values
+    if not extra:
+        return market
+    return dataclasses.replace(
+        market,
+        fields=MappingProxyType({**dict(market.fields), **extra}),
+    )
 
 
 def invalidate_ext_caches(data_dir: Path | None = None, *, keep_strategy_cache: bool = False) -> None:

@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from datetime import date
 
+import numpy as np
 import polars as pl
 import pytest
 
@@ -165,6 +166,44 @@ def test_timeseries_no_lookahead_across_dates(data_dir):
     ])
     out = ext_factors.attach_ext_columns(frame, include_snapshot=False, data_dir=data_dir)
     assert out[COL].to_list() == [0.1, 9.9]
+
+
+def test_timeseries_fields_attach_to_market_data_matrix_by_date(data_dir):
+    from app.backtest.matrix import build_market_data_matrix
+
+    cfg = _mk_config(data_dir, mode="timeseries")
+    write_ext_parquet(
+        pl.DataFrame({"symbol": ["600000.SH"], "hot": [0.2]}),
+        cfg, data_dir, snapshot_date=date(2026, 1, 5),
+    )
+    write_ext_parquet(
+        pl.DataFrame({"symbol": ["000001.SZ", "600000.SH"], "hot": [0.3, 0.7]}),
+        cfg, data_dir, snapshot_date=date(2026, 1, 6),
+    )
+    panel = pl.DataFrame({
+        "date": [date(2026, 1, 5), date(2026, 1, 5), date(2026, 1, 6), date(2026, 1, 6)],
+        "symbol": ["600000.SH", "000001.SZ", "600000.SH", "000001.SZ"],
+        "open": [10.0, 20.0, 11.0, 21.0],
+        "high": [10.5, 20.5, 11.5, 21.5],
+        "low": [9.5, 19.5, 10.5, 20.5],
+        "close": [10.0, 20.0, 11.0, 21.0],
+        "volume": [1000.0] * 4,
+        "amount": [10000.0] * 4,
+        "turnover_rate": [1.0] * 4,
+    })
+    market = build_market_data_matrix(panel)
+
+    attached = ext_factors.attach_matrix_ext_fields(market, data_dir, [COL])
+
+    values = attached.field(COL)
+    csi_idx = market.symbols.index("600000.SH")
+    ping_idx = market.symbols.index("000001.SZ")
+    assert values.shape == market.shape
+    assert np.isnan(values[0, ping_idx])
+    assert values[0, csi_idx] == pytest.approx(0.2)
+    assert values[1, ping_idx] == pytest.approx(0.3)
+    assert values[1, csi_idx] == pytest.approx(0.7)
+    assert not values.flags.writeable
 
 
 # ── 快照门控 ──────────────────────────────────────────────

@@ -186,13 +186,42 @@ def test_strategy_direction_changes_score_without_dynamic_formula_execution():
         )
 
 
+def test_strategy_supports_eight_factor_watch_set_members():
+    strategy = StrategyEngine._load_file(STRATEGY_PATH).matrix_strategy
+    market = _market()
+    scoring = {
+        "open": 0.125,
+        "high": 0.125,
+        "low": 0.125,
+        "close": 0.125,
+        "volume": 0.125,
+        "amount": 0.125,
+        "turnover_rate": 0.125,
+        "change_pct": 0.125,
+    }
+
+    signals = strategy.compute_signals(
+        market,
+        {
+            "scoring": scoring,
+            "directions": {name: "high" for name in scoring},
+            "entry_score": 0.0,
+            "exit_score": 0.0,
+            "top_rank": 4,
+        },
+    )
+
+    validate_signal_matrix(signals, market.shape)
+    assert signals.entry.shape == market.shape
+
+
 @pytest.mark.parametrize(
     ("params", "message"),
     [
         ({"scoring": {}}, "non-empty scoring"),
         (
-            {"scoring": {f"factor_{index}": 1.0 for index in range(5)}},
-            "at most 4 factors",
+            {"scoring": {f"factor_{index}": 1.0 for index in range(9)}},
+            "at most 8 factors",
         ),
         (
             {

@@ -61,7 +61,7 @@ EXIT_SIGNALS = ["signal_factor_rank_exit"]
 STOP_LOSS = -0.08
 MAX_HOLD_DAYS = 30
 
-_MAX_FACTORS = 4
+_MAX_FACTORS = 8
 _VALID_DIRECTIONS = {"high", "low"}
 
 

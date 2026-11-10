@@ -572,6 +572,17 @@ class BacktestEngine:
                     cancel_event=cancel_event,
                 )
                 self.assert_data_generation(asset_type, source_generation)
+                from app.factors.ext_factors import attach_matrix_ext_fields
+
+                ext_names = sorted(
+                    getattr(feature_plan, "ext_columns", frozenset())
+                )
+                if ext_names:
+                    market = attach_matrix_ext_fields(
+                        market,
+                        self.repo.store.data_dir if self.repo is not None else None,
+                        ext_names,
+                    )
                 from app.backtest.fundamentals import attach_matrix_fundamental_fields
 
                 fundamental_names = sorted(

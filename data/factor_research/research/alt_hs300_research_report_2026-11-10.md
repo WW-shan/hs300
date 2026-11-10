@@ -13,6 +13,8 @@
 4. 8 个价格风险家族完成 32 组参数、训练/检验分段和 1000 次 moving-block Monte Carlo。
 5. 物化 3 个参数候选：`idio_vol_20d_low`、`idio_vol_40d_low`、`vol_of_vol_20d_low`。
 6. 建立 `multi_dimension_v1` 八成员 watch 因子集，`active_version=null`，不生成交易信号。
+7. 已完成该因子集的真实 T+1 组合回测和 18 个滚动一年窗口；2x/3x 成本下均为
+   17/18 个窗口为正。结果见独立组合报告。
 
 ## 数据审计
 
@@ -135,8 +137,10 @@ bootstrap（1000 次）。参数网格只代表相邻窗口的相关实验，不
 - 财务字段目前是按公告或法定披露日生效的声明证据，尚未完成逐字段 PIT 对照验证。
 - 参数扫描是相关网格，不是 32 个独立发现；Monte Carlo 只评估日 IC 分布，不替代
   真实组合回测。
-- 尚未完成 `multi_dimension_v1` 的真实组合回测、2x/3x 成本、容量、停牌/涨跌停
-  和滚动一年检验，不能据此宣称可交易或可上线。
+- 已完成 `multi_dimension_v1` 的真实 T+1 组合回测、2x/3x 成本和 18 个滚动一年
+  窗口；持仓数量敏感性不等于 AUM 容量或市场冲击模型。
+- 当前 HS300 名单回填历史仍有幸存者偏差，财务/扩展字段 PIT 仍为声明级证据；
+  因子集保持 watch，不能据此宣称可上线。
 
 ## 产物
 
@@ -146,3 +150,5 @@ bootstrap（1000 次）。参数网格只代表相邻窗口的相关实验，不
 - 参数蒙特卡洛：`data/factor_research/research/alt_hs300_parameter_monte_carlo_2026-11-10.json`
 - 相关性与边际贡献：`data/factor_research/research/alt_hs300_incremental_2026-11-10.json`
 - 多维 watch 集：`data/factor_research/sets/multi_dimension_v1/versions/v0001.json`
+- 组合回测：`data/factor_research/research/multi_dimension_v1_portfolio_2026-11-10.json`
+- 组合报告：`data/factor_research/research/multi_dimension_v1_portfolio_report_2026-11-10.md`
