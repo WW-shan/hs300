@@ -52,6 +52,7 @@ class ParameterFamily(FactorResearchModel):
     neutralization: list[Literal["industry", "size"]] = Field(default_factory=list)
     member_factor_ids: list[str] = Field(min_length=1)
     status: ParameterFamilyStatus = "tunable"
+    formula_template: str | None = None
     evidence_refs: list[dict[str, Any]] = Field(default_factory=list)
 
     @field_validator("parameter_grid")
@@ -73,6 +74,7 @@ class ParameterFamilyRegistry(FactorResearchModel):
     schema_version: Literal[1] = 1
     families: list[ParameterFamily] = Field(default_factory=list)
     unclassified_factor_ids: list[str] = Field(default_factory=list)
+    fixed_factor_ids: list[str] = Field(default_factory=list)
     blocked_factor_ids: list[str] = Field(default_factory=list)
 
 
@@ -130,20 +132,27 @@ def validate_parameter_registry(
                 f"for family {family.family_id}"
             )
 
-    for field_name in ("unclassified_factor_ids", "blocked_factor_ids"):
+    for field_name in (
+        "unclassified_factor_ids",
+        "fixed_factor_ids",
+        "blocked_factor_ids",
+    ):
         for factor_id in getattr(registry, field_name):
             if factor_id not in factor_ids:
                 errors.append(f"missing factor {factor_id} in {field_name}")
         for factor_id in _duplicates(getattr(registry, field_name)):
             errors.append(f"duplicate factor {factor_id} in {field_name}")
 
-    manual_states = set(registry.unclassified_factor_ids) | set(registry.blocked_factor_ids)
-    for factor_id in sorted(manual_states.intersection(member_owner)):
-        errors.append(
-            f"factor {factor_id} is both a family member and manually classified"
-        )
-    overlap = set(registry.unclassified_factor_ids).intersection(registry.blocked_factor_ids)
-    for factor_id in sorted(overlap):
+    fixed_ids = set(registry.fixed_factor_ids)
+    unclassified_ids = set(registry.unclassified_factor_ids)
+    blocked_ids = set(registry.blocked_factor_ids)
+    for factor_id in sorted(fixed_ids.intersection(member_owner)):
+        errors.append(f"factor {factor_id} is both a family member and fixed")
+    for factor_id in sorted(fixed_ids.intersection(unclassified_ids)):
+        errors.append(f"factor {factor_id} is both fixed and unclassified")
+    for factor_id in sorted(fixed_ids.intersection(blocked_ids)):
+        errors.append(f"factor {factor_id} is both fixed and blocked")
+    for factor_id in sorted(unclassified_ids.intersection(blocked_ids)):
         errors.append(f"factor {factor_id} is both unclassified and blocked")
     return errors
 
@@ -174,6 +183,7 @@ def classify_factor_parameters(
     }
     blocked_ids = set(registry.blocked_factor_ids)
     unclassified_ids = set(registry.unclassified_factor_ids)
+    fixed_ids = set(registry.fixed_factor_ids)
     rows: list[FactorParameterClassification] = []
     for factor in sorted(factors, key=lambda item: item.factor_id):
         family = family_by_member.get(factor.factor_id)
@@ -193,6 +203,9 @@ def classify_factor_parameters(
         elif family is not None:
             status = "grouped"
             reason = f"member of parameter family {family.family_id}"
+        elif factor.factor_id in fixed_ids:
+            status = "fixed"
+            reason = "explicitly fixed by parameter registry"
         elif factor.factor_id in unclassified_ids:
             status = "unclassified"
             reason = "explicitly listed as unclassified"
@@ -270,3 +283,18 @@ def build_classification_payload(
         "factors": factor_rows,
         "validation_errors": [],
     }
+
+
+def current_family_factor_id(family: ParameterFamily) -> str:
+    matches = [
+        factor_id
+        for factor_id in family.member_factor_ids
+        if detect_parameter_window(factor_id) == family.current_parameter
+    ]
+    if len(matches) == 1:
+        return matches[0]
+    if not matches and len(family.member_factor_ids) == 1:
+        return family.member_factor_ids[0]
+    raise ValueError(
+        f"family {family.family_id} requires exactly one current member, got {matches}"
+    )

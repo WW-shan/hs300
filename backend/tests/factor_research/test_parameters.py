@@ -206,7 +206,7 @@ def test_p1_manifest_covers_eight_families_and_all_catalog_members() -> None:
 
     assert catalog.factor_count == 223
     assert len(catalog.factors) == 223
-    assert {family.family_id for family in registry.families} == {
+    assert {
         "idio_vol",
         "cs_spread",
         "vol_of_vol",
@@ -215,7 +215,7 @@ def test_p1_manifest_covers_eight_families_and_all_catalog_members() -> None:
         "trend_efficiency",
         "risk_adjusted_momentum",
         "beta_asymmetry",
-    }
+    }.issubset({family.family_id for family in registry.families})
     assert validate_parameter_registry(registry, {item.factor_id for item in catalog.factors}) == []
 
     rows = classify_factor_parameters(catalog.factors, registry)
@@ -229,3 +229,120 @@ def test_p1_manifest_covers_eight_families_and_all_catalog_members() -> None:
             for factor_id in family.member_factor_ids
         }
     )
+
+
+def test_explicit_fixed_factor_overrides_numeric_window_detection() -> None:
+    payload = _registry_payload()
+    payload["fixed_factor_ids"] = ["momentum_999d"]
+    registry = ParameterFamilyRegistry.model_validate(payload)
+
+    rows = classify_factor_parameters(
+        [_factor("idio_vol_20"), _factor("momentum_999d")], registry
+    )
+    row = next(item for item in rows if item.factor_id == "momentum_999d")
+
+    assert row.status == "fixed"
+    assert row.reason == "explicitly fixed by parameter registry"
+
+
+def test_fixed_factor_cannot_overlap_family_or_blocked_member() -> None:
+    payload = _registry_payload()
+    payload["fixed_factor_ids"] = ["idio_vol_20"]
+    payload["blocked_factor_ids"] = ["idio_vol_20"]
+    registry = ParameterFamilyRegistry.model_validate(payload)
+
+    errors = validate_parameter_registry(registry, {"idio_vol_20"})
+
+    assert any("both a family member and fixed" in error for error in errors)
+    assert any("both fixed and blocked" in error for error in errors)
+
+
+def test_p2_manifest_leaves_no_builtin_factor_unclassified() -> None:
+    from app.factor_research.catalog import load_latest_catalog
+
+    root = Path(__file__).resolve().parents[3]
+    catalog = load_latest_catalog(root / "data")
+    assert catalog is not None
+    registry = load_parameter_registry(root / "data")
+    expected_p2_families = {
+        "short_momentum_reversal",
+        "medium_momentum",
+        "short_ma_reversal",
+        "medium_ma_trend",
+        "short_ema_reversal",
+        "medium_ema_trend",
+        "rsi_reversal",
+        "annual_volatility",
+        "downside_volatility",
+        "atr_risk",
+        "bollinger_position",
+        "bollinger_width",
+        "price_position",
+        "distance_to_high",
+        "distance_from_low",
+        "amihud",
+        "amount_level",
+        "turnover_level",
+        "turnover_stability",
+        "turnover_crowding",
+        "volume_spike",
+        "turnover_spike",
+        "amount_spike",
+        "obv_trend",
+        "volume_price_corr",
+        "limit_up_gene",
+        "max_return",
+        "return_skew",
+        "up_day_ratio",
+        "overnight_return",
+        "intraday_return",
+    }
+    assert expected_p2_families.issubset(
+        {family.family_id for family in registry.families}
+    )
+    assert validate_parameter_registry(
+        registry, {factor.factor_id for factor in catalog.factors}
+    ) == []
+
+    rows = classify_factor_parameters(catalog.factors, registry)
+    by_id = {row.factor_id: row for row in rows}
+    builtin_ids = {
+        factor.factor_id
+        for factor in catalog.factors
+        if factor.source.type == "builtin"
+    }
+    assert not [
+        factor_id
+        for factor_id in builtin_ids
+        if by_id[factor_id].status == "unclassified"
+    ]
+
+
+def test_current_family_factor_id_supports_single_unparsed_factor() -> None:
+    from app.factor_research.parameters import current_family_factor_id
+
+    payload = _registry_payload(
+        family_id="bollinger_position",
+        member_factor_ids=["boll_position"],
+        parameter_grid=[10, 20, 40],
+        current_parameter=20,
+    )
+    payload["families"][0]["evaluator"] = "bollinger_position"
+    registry = ParameterFamilyRegistry.model_validate(payload)
+
+    assert current_family_factor_id(registry.families[0]) == "boll_position"
+
+
+def test_current_family_factor_id_fails_closed_when_ambiguous() -> None:
+    from app.factor_research.parameters import current_family_factor_id
+
+    payload = _registry_payload(
+        family_id="ambiguous",
+        member_factor_ids=["factor_a", "factor_b"],
+        parameter_grid=[10, 20, 40],
+        current_parameter=20,
+    )
+    registry = ParameterFamilyRegistry.model_validate(payload)
+
+    with pytest.raises(ValueError, match="exactly one current member"):
+        current_family_factor_id(registry.families[0])

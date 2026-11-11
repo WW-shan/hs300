@@ -127,3 +127,15 @@ def test_parameter_output_refuses_absolute_path_outside_research_directory(tmp_p
 
     with pytest.raises(ValueError, match="parameter output"):
         scan._resolve_output(str(tmp_path / "result.json"))
+
+
+def test_p1_registry_fingerprint_isolated_from_later_family_batches() -> None:
+    families = scan.load_p1_families(ROOT / "data")
+    payload = scan.p1_research_registry_payload(families)
+
+    assert payload["schema_version"] == 1
+    assert len(payload["families"]) == 8
+    assert payload["unclassified_factor_ids"] == []
+    assert payload["blocked_factor_ids"] == []
+    assert all("formula_template" not in family for family in payload["families"])
+    assert "fixed_factor_ids" not in payload

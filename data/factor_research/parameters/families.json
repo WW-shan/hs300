@@ -211,8 +211,889 @@
       ],
       "status": "tunable",
       "evidence_refs": []
+    },
+    {
+      "family_id": "short_momentum_reversal",
+      "label": "短周期动量反转",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "momentum",
+      "parameter_name": "window",
+      "parameter_grid": [
+        3,
+        5,
+        10,
+        15,
+        20
+      ],
+      "current_parameter": 5,
+      "minimum_history": 21,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "momentum_5d",
+        "momentum_10d"
+      ],
+      "status": "tunable",
+      "formula_template": "close / close.shift({parameter}) - 1",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "medium_momentum",
+      "label": "中期动量",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "momentum",
+      "parameter_name": "window",
+      "parameter_grid": [
+        20,
+        30,
+        60,
+        120
+      ],
+      "current_parameter": 20,
+      "minimum_history": 121,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "momentum_20d",
+        "momentum_30d",
+        "momentum_60d",
+        "momentum_120d"
+      ],
+      "status": "tunable",
+      "formula_template": "close / close.shift({parameter}) - 1",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "short_ma_reversal",
+      "label": "短周期 MA 乖离反转",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "ma_bias",
+      "parameter_name": "window",
+      "parameter_grid": [
+        3,
+        5,
+        10,
+        15,
+        20
+      ],
+      "current_parameter": 5,
+      "minimum_history": 21,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ma5_bias",
+        "ma10_bias"
+      ],
+      "status": "tunable",
+      "formula_template": "close / rolling_mean(close, {parameter}) - 1",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "medium_ma_trend",
+      "label": "中期 MA 趋势",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "ma_bias",
+      "parameter_name": "window",
+      "parameter_grid": [
+        20,
+        30,
+        60,
+        120
+      ],
+      "current_parameter": 20,
+      "minimum_history": 121,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ma20_bias",
+        "ma30_bias",
+        "ma60_bias"
+      ],
+      "status": "tunable",
+      "formula_template": "close / rolling_mean(close, {parameter}) - 1",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "short_ema_reversal",
+      "label": "短周期 EMA 乖离反转",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "ema_bias",
+      "parameter_name": "window",
+      "parameter_grid": [
+        3,
+        5,
+        10,
+        15,
+        20
+      ],
+      "current_parameter": 5,
+      "minimum_history": 21,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ema5_bias",
+        "ema10_bias"
+      ],
+      "status": "tunable",
+      "formula_template": "close / EMA(close, alpha=2/({parameter}+1)) - 1",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "medium_ema_trend",
+      "label": "中期 EMA 趋势",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "ema_bias",
+      "parameter_name": "window",
+      "parameter_grid": [
+        20,
+        30,
+        60,
+        120
+      ],
+      "current_parameter": 20,
+      "minimum_history": 121,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ema20_bias",
+        "ema30_bias",
+        "ema60_bias"
+      ],
+      "status": "tunable",
+      "formula_template": "close / EMA(close, alpha=2/({parameter}+1)) - 1",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "rsi_reversal",
+      "label": "RSI 超买反转",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "rsi",
+      "parameter_name": "window",
+      "parameter_grid": [
+        6,
+        14,
+        24,
+        40,
+        60
+      ],
+      "current_parameter": 14,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "rsi_6",
+        "rsi_14",
+        "rsi_24"
+      ],
+      "status": "tunable",
+      "formula_template": "RSI(close changes, Wilder alpha=1/{parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "annual_volatility",
+      "label": "年化低波",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "annual_volatility",
+      "parameter_name": "window",
+      "parameter_grid": [
+        10,
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 20,
+      "minimum_history": 121,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "annual_vol_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_std(close.pct_change(), {parameter}) * sqrt(252)",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "downside_volatility",
+      "label": "下行波动",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "downside_volatility",
+      "parameter_name": "window",
+      "parameter_grid": [
+        10,
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 20,
+      "minimum_history": 121,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "downside_vol_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "sqrt(rolling_mean(min(change, 0)^2, {parameter}))",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "atr_risk",
+      "label": "ATR 相对波动",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "atr_pct",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        14,
+        20,
+        60
+      ],
+      "current_parameter": 14,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "atr_pct"
+      ],
+      "status": "tunable",
+      "formula_template": "Wilder ATR({parameter}) / close",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "bollinger_position",
+      "label": "布林带位置",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "bollinger_position",
+      "parameter_name": "window",
+      "parameter_grid": [
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "boll_position"
+      ],
+      "status": "tunable",
+      "formula_template": "(close - lower Bollinger({parameter})) / band width",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "bollinger_width",
+      "label": "布林带宽",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "bollinger_width",
+      "parameter_name": "window",
+      "parameter_grid": [
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "boll_width"
+      ],
+      "status": "tunable",
+      "formula_template": "4 * rolling_std(close, {parameter}) / rolling_mean(close, {parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "price_position",
+      "label": "区间价格位置",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "price_position",
+      "parameter_name": "window",
+      "parameter_grid": [
+        60,
+        120,
+        240
+      ],
+      "current_parameter": 240,
+      "minimum_history": 241,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "position_240d"
+      ],
+      "status": "tunable",
+      "formula_template": "(close - rolling_min(close, {parameter})) / rolling range",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "distance_to_high",
+      "label": "距区间高点",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "distance_to_high",
+      "parameter_name": "window",
+      "parameter_grid": [
+        20,
+        60,
+        120,
+        240
+      ],
+      "current_parameter": 240,
+      "minimum_history": 241,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "distance_to_high_60d",
+        "distance_to_high_240d"
+      ],
+      "status": "tunable",
+      "formula_template": "close / rolling_max(close, {parameter}) - 1",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "distance_from_low",
+      "label": "距区间低点",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "distance_from_low",
+      "parameter_name": "window",
+      "parameter_grid": [
+        20,
+        60,
+        120,
+        240
+      ],
+      "current_parameter": 60,
+      "minimum_history": 241,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "distance_from_low_60d"
+      ],
+      "status": "tunable",
+      "formula_template": "close / rolling_min(close, {parameter}) - 1",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "amihud",
+      "label": "Amihud 非流动性",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "amihud",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 20,
+      "minimum_history": 121,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "amihud_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_mean(abs(change) / (amount / 1e8), {parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "amount_level",
+      "label": "成交额水平",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "amount_level",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 20,
+      "minimum_history": 121,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "amount_mean_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_mean(amount / 1e8, {parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "turnover_level",
+      "label": "换手率水平",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "turnover_level",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 20,
+      "minimum_history": 121,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "turnover_mean_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_mean(turnover_rate, {parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "turnover_stability",
+      "label": "换手率稳定性",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "turnover_stability",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 20,
+      "minimum_history": 121,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "turnover_std_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_std(turnover_rate, {parameter}) / rolling_mean(turnover_rate, {parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "turnover_crowding",
+      "label": "换手拥挤度",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "turnover_crowding",
+      "parameter_name": "window",
+      "parameter_grid": [
+        10,
+        20,
+        60,
+        120,
+        240
+      ],
+      "current_parameter": 60,
+      "minimum_history": 241,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "turnover_z_60d"
+      ],
+      "status": "tunable",
+      "formula_template": "(turnover_rate - prior {parameter}d mean) / prior {parameter}d std",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "volume_spike",
+      "label": "成交量放大",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "volume_ratio",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        60
+      ],
+      "current_parameter": 5,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "vol_ratio_5d",
+        "vol_ratio_10d"
+      ],
+      "status": "tunable",
+      "formula_template": "volume / prior rolling_mean(volume, {parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "turnover_spike",
+      "label": "换手率放大",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "turnover_ratio",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        60
+      ],
+      "current_parameter": 5,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "turnover_ratio_5d"
+      ],
+      "status": "tunable",
+      "formula_template": "turnover_rate / prior rolling_mean(turnover_rate, {parameter}) - 1",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "amount_spike",
+      "label": "成交额放大",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "amount_ratio",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        60
+      ],
+      "current_parameter": 5,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "amount_ratio_5d"
+      ],
+      "status": "tunable",
+      "formula_template": "amount / prior rolling_mean(amount, {parameter}) - 1",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "obv_trend",
+      "label": "量能潮趋势",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "obv_trend",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "obv_trend_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_sum(sign(change) * volume, {parameter}) / (rolling_mean(volume, {parameter}) * {parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "volume_price_corr",
+      "label": "量价相关",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "volume_price_corr",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "vol_price_corr_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_corr(change, volume, {parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "limit_up_gene",
+      "label": "涨停基因",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "limit_up_count",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 20,
+      "minimum_history": 121,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "limit_up_count_20d",
+        "limit_up_count_60d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_sum(limit_up_hit, {parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "max_return",
+      "label": "最大单日涨幅",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "max_return",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "max_ret_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_max(change, {parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "return_skew",
+      "label": "收益偏度",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "return_skew",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ret_skew_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_skew(change, {parameter}, bias=True)",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "up_day_ratio",
+      "label": "上涨天数",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "up_day_count",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "up_days_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_sum(change > 0, {parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "overnight_return",
+      "label": "隔夜收益",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "overnight_return",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "overnight_ret_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_sum(open / prior close - 1, {parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "intraday_return",
+      "label": "日内收益",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "intraday_return",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "intraday_ret_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_sum(close / open - 1, {parameter})",
+      "evidence_refs": []
     }
   ],
   "unclassified_factor_ids": [],
-  "blocked_factor_ids": []
+  "blocked_factor_ids": [
+    "atr_14"
+  ],
+  "fixed_factor_ids": [
+    "vol_trend_5_10",
+    "vol_trend_5_60",
+    "mom_accel_20_60",
+    "rsi_14_delta_5d",
+    "vol_regime_5_60",
+    "amplitude_trend_20_60"
+  ]
 }
