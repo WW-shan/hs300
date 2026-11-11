@@ -25,6 +25,8 @@
 > 同时修复 catalog 动态因子加载把成功 ID 误记为错误的问题；新 snapshot 为
 > `sha256:ea0642e2c74326752bc109dcc61d72abe7f65776e107d42654f6b865e30dd79a`，
 > 223 个因子、`source_completeness=complete`、`load_errors=[]`。
+> 干净检出下的扩展依赖编译问题已用临时占位修复并通过 CI；最终通过提交为
+> `3bd26de6`，CI 与 Docker 均成功。
 
 ## Global Constraints
 
@@ -120,9 +122,11 @@
 ### Task 6: 全链路验收
 
 - [x] 定向测试、后端全量、改动文件 Ruff、前端构建和 `git diff --check`。
-- [ ] 干净 `linux/amd64` Python 3.12 全量测试。
-- [ ] 精确提交 P5 文件，不触碰既有 R359-R371、custom factors/signals、周报和 `.gitignore`。
-- [ ] GitHub CI 与 Docker 均成功。
+- [x] 干净 `linux/amd64` Python 3.12 全量测试（GitHub `ubuntu-latest` + Python 3.12）。
+- [x] 精确提交 P5 文件，不触碰既有 R359-R371、custom factors/signals、周报和 `.gitignore`。
+- [x] GitHub CI 与 Docker 均成功：
+  CI `https://github.com/WW-shan/hs300/actions/runs/43036112466`；
+  Docker `https://github.com/WW-shan/hs300/actions/runs/43036112561`。
 
 ## Self-Review
 
