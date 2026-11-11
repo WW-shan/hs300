@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Parameter-family scan with train/test holdout and block-bootstrap confidence."""
+"""Registry-driven parameter scan with holdout and two-stage block bootstrap."""
 from __future__ import annotations
 
 import argparse
@@ -13,8 +13,16 @@ import build_alt_factor_data as builder
 import polars as pl
 
 from app.backtest import stats_v2
+from app.factor_research.catalog import load_latest_catalog
 from app.factor_research.fingerprints import sha256_file, sha256_json, utc_now
 from app.factor_research.ledger import ResearchLedger
+from app.factor_research.locking import atomic_write_json, atomic_write_text
+from app.factor_research.parameters import (
+    ParameterFamily,
+    detect_parameter_window,
+    load_parameter_registry,
+    validate_parameter_registry,
+)
 from app.factor_research.signal_scan import (
     block_bootstrap_mean_ci,
     calculate_rank_ic,
@@ -24,119 +32,167 @@ from app.strategy.scoring import neutralize_scoring_columns
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
-DEFAULT_OUTPUT = DATA / "factor_research" / "research" / "alt_hs300_parameter_monte_carlo_2026-11-10.json"
+DEFAULT_OUTPUT = (
+    DATA
+    / "factor_research"
+    / "research"
+    / "parameters"
+    / "p1_parameter_mc_2026-11-11.json"
+)
 DEFAULT_START = date(2021, 6, 1)
 DEFAULT_END = date(2026, 11, 5)
 TRAIN_END = date(2024, 12, 31)
 TEST_START = date(2025, 1, 1)
 RECENT_START = date(2025, 10, 14)
-METHOD_VERSION = "parameter_mc_v1"
+METHOD_VERSION = "parameter_mc_v2_two_stage"
 HORIZON = 5
-BOOTSTRAP_BLOCK_SIZE = 20
-BOOTSTRAP_RUNS = 1000
+MINIMUM_CROSS_SECTION = 30
+INITIAL_BOOTSTRAP_RUNS = 1000
+FINAL_BOOTSTRAP_RUNS = 5000
+PRIMARY_BLOCK_SIZE = 20
+FINAL_BLOCK_SIZES = (10, 20, 40)
+FDR_THRESHOLD = 0.10
+OPERATION = "factor_parameter_mc_published"
 
-INDUSTRY_SIZE_SPEC = {
-    "industry": "industry_l1",
-    "styles": ["log_float_mv"],
-    "exclude": [],
-    "shrink": 1.0,
-}
-
-
-def _compute_idio(prices: pl.DataFrame, market: pl.DataFrame, value: int) -> tuple[pl.DataFrame, str]:
-    return builder._residual_volatility_frame(prices, market, window_size=value), "idio_vol_60d_low"
+INDUSTRY_COLUMN = "industry_l1"
+SIZE_COLUMN = "log_float_mv"
 
 
-def _compute_cs_spread(prices: pl.DataFrame, market: pl.DataFrame, value: int) -> tuple[pl.DataFrame, str]:
+def _compute_idio(
+    prices: pl.DataFrame,
+    market: pl.DataFrame,
+    value: int,
+) -> tuple[pl.DataFrame, str]:
+    return (
+        builder._residual_volatility_frame(prices, market, window_size=value),
+        "idio_vol_60d_low",
+    )
+
+
+def _compute_cs_spread(
+    prices: pl.DataFrame,
+    market: pl.DataFrame,
+    value: int,
+) -> tuple[pl.DataFrame, str]:
     del market
     return builder._corwin_schultz_spread_frame(prices, window_size=value), "cs_spread_60d"
 
 
-def _compute_vol_of_vol(prices: pl.DataFrame, market: pl.DataFrame, value: int) -> tuple[pl.DataFrame, str]:
+def _compute_vol_of_vol(
+    prices: pl.DataFrame,
+    market: pl.DataFrame,
+    value: int,
+) -> tuple[pl.DataFrame, str]:
     del market
-    return builder._vol_of_vol_frame(prices, stability_window=value), "vol_of_vol_60d_low"
+    return (
+        builder._vol_of_vol_frame(prices, stability_window=value),
+        "vol_of_vol_60d_low",
+    )
 
 
-def _compute_down_beta(prices: pl.DataFrame, market: pl.DataFrame, value: int) -> tuple[pl.DataFrame, str]:
-    return builder._market_down_beta_frame(prices, market, window_size=value), "market_down_beta_60d_low"
+def _compute_down_beta(
+    prices: pl.DataFrame,
+    market: pl.DataFrame,
+    value: int,
+) -> tuple[pl.DataFrame, str]:
+    return (
+        builder._market_down_beta_frame(prices, market, window_size=value),
+        "market_down_beta_60d_low",
+    )
 
 
-def _compute_price_delay(prices: pl.DataFrame, market: pl.DataFrame, value: int) -> tuple[pl.DataFrame, str]:
-    return builder._price_delay_frame(prices, market, window_size=value), "price_delay_60d"
+def _compute_price_delay(
+    prices: pl.DataFrame,
+    market: pl.DataFrame,
+    value: int,
+) -> tuple[pl.DataFrame, str]:
+    return (
+        builder._price_delay_frame(prices, market, window_size=value),
+        "price_delay_60d",
+    )
 
 
-def _compute_trend_efficiency(prices: pl.DataFrame, market: pl.DataFrame, value: int) -> tuple[pl.DataFrame, str]:
+def _compute_trend_efficiency(
+    prices: pl.DataFrame,
+    market: pl.DataFrame,
+    value: int,
+) -> tuple[pl.DataFrame, str]:
     del market
-    return builder._trend_efficiency_frame(prices, window_size=value), "trend_efficiency_60d"
+    return (
+        builder._trend_efficiency_frame(prices, window_size=value),
+        "trend_efficiency_60d",
+    )
 
 
-def _compute_risk_adjusted(prices: pl.DataFrame, market: pl.DataFrame, value: int) -> tuple[pl.DataFrame, str]:
+def _compute_risk_adjusted(
+    prices: pl.DataFrame,
+    market: pl.DataFrame,
+    value: int,
+) -> tuple[pl.DataFrame, str]:
     del market
-    return builder._risk_adjusted_momentum_frame(prices, window_size=value), "risk_adjusted_momentum_60d"
+    return (
+        builder._risk_adjusted_momentum_frame(prices, window_size=value),
+        "risk_adjusted_momentum_60d",
+    )
 
 
-def _compute_beta_asymmetry(prices: pl.DataFrame, market: pl.DataFrame, value: int) -> tuple[pl.DataFrame, str]:
-    return builder._beta_asymmetry_frame(prices, market, window_size=value), "beta_asymmetry_120d"
+def _compute_beta_asymmetry(
+    prices: pl.DataFrame,
+    market: pl.DataFrame,
+    value: int,
+) -> tuple[pl.DataFrame, str]:
+    return (
+        builder._beta_asymmetry_frame(prices, market, window_size=value),
+        "beta_asymmetry_120d",
+    )
 
 
-FAMILIES: dict[str, dict[str, Any]] = {
-    "idio_vol": {
-        "factor_id": "ext_alt_hs300_idio_vol_60d_low",
-        "direction": "high",
-        "parameters": [20, 40, 60, 120],
-        "current": 60,
-        "compute": _compute_idio,
-    },
-    "cs_spread": {
-        "factor_id": "ext_alt_hs300_cs_spread_60d",
-        "direction": "low",
-        "parameters": [20, 40, 60, 120],
-        "current": 60,
-        "compute": _compute_cs_spread,
-    },
-    "vol_of_vol": {
-        "factor_id": "ext_alt_hs300_vol_of_vol_60d_low",
-        "direction": "high",
-        "parameters": [20, 40, 60, 120],
-        "current": 60,
-        "compute": _compute_vol_of_vol,
-    },
-    "market_down_beta": {
-        "factor_id": "ext_alt_hs300_market_down_beta_60d_low",
-        "direction": "high",
-        "parameters": [20, 40, 60, 120],
-        "current": 60,
-        "compute": _compute_down_beta,
-    },
-    "price_delay": {
-        "factor_id": "ext_alt_hs300_price_delay_60d",
-        "direction": "low",
-        "parameters": [20, 40, 60, 120],
-        "current": 60,
-        "compute": _compute_price_delay,
-    },
-    "trend_efficiency": {
-        "factor_id": "ext_alt_hs300_trend_efficiency_60d",
-        "direction": "high",
-        "parameters": [20, 40, 60, 120],
-        "current": 60,
-        "compute": _compute_trend_efficiency,
-    },
-    "risk_adjusted_momentum": {
-        "factor_id": "ext_alt_hs300_risk_adjusted_momentum_60d",
-        "direction": "high",
-        "parameters": [20, 40, 60, 120],
-        "current": 60,
-        "compute": _compute_risk_adjusted,
-    },
-    "beta_asymmetry": {
-        "factor_id": "ext_alt_hs300_beta_asymmetry_120d",
-        "direction": "high",
-        "parameters": [60, 120, 180, 240],
-        "current": 120,
-        "compute": _compute_beta_asymmetry,
-    },
+Evaluator = Callable[[pl.DataFrame, pl.DataFrame, int], tuple[pl.DataFrame, str]]
+
+EVALUATORS: dict[str, Evaluator] = {
+    "residual_volatility": _compute_idio,
+    "corwin_schultz_spread": _compute_cs_spread,
+    "vol_of_vol": _compute_vol_of_vol,
+    "market_down_beta": _compute_down_beta,
+    "price_delay": _compute_price_delay,
+    "trend_efficiency": _compute_trend_efficiency,
+    "risk_adjusted_momentum": _compute_risk_adjusted,
+    "beta_asymmetry": _compute_beta_asymmetry,
 }
+
+
+def load_p1_families(data_dir: Path) -> list[ParameterFamily]:
+    catalog = load_latest_catalog(Path(data_dir))
+    if catalog is None:
+        raise RuntimeError("factor catalog snapshot is unavailable")
+    registry = load_parameter_registry(Path(data_dir))
+    errors = validate_parameter_registry(
+        registry,
+        {factor.factor_id for factor in catalog.factors},
+    )
+    if errors:
+        raise ValueError("; ".join(errors))
+    unsupported = sorted(
+        family.family_id
+        for family in registry.families
+        if family.status == "tunable" and family.evaluator not in EVALUATORS
+    )
+    if unsupported:
+        raise ValueError(f"unregistered evaluators for families: {unsupported}")
+    return [family for family in registry.families if family.status == "tunable"]
+
+
+def _family_current_factor_id(family: ParameterFamily) -> str:
+    matches = [
+        factor_id
+        for factor_id in family.member_factor_ids
+        if detect_parameter_window(factor_id) == family.current_parameter
+    ]
+    if len(matches) != 1:
+        raise ValueError(
+            f"family {family.family_id} requires exactly one current member, got {matches}"
+        )
+    return matches[0]
 
 
 def _enriched_panel(start: date, end: date, symbols: list[str]) -> pl.DataFrame:
@@ -148,7 +204,17 @@ def _enriched_panel(start: date, end: date, symbols: list[str]) -> pl.DataFrame:
             & (pl.col("date") >= start)
             & (pl.col("date") <= end)
         )
-        .select(["symbol", "date", "open", "high", "low", "close", "volume", "amount", "turnover_rate"])
+        .select([
+            "symbol",
+            "date",
+            "open",
+            "high",
+            "low",
+            "close",
+            "volume",
+            "amount",
+            "turnover_rate",
+        ])
         .collect()
         .sort(["symbol", "date"])
     )
@@ -165,55 +231,454 @@ def _market_panel() -> pl.DataFrame:
     )
 
 
-def _stats_for_period(ic: pl.DataFrame, start: date, end: date, sign: int) -> dict[str, Any]:
-    values = ic.filter((pl.col("date") >= start) & (pl.col("date") <= end))["ic"].to_numpy()
+def _stats_for_period(
+    ic: pl.DataFrame,
+    start: date,
+    end: date,
+    sign: int,
+    *,
+    include_distribution: bool = False,
+) -> dict[str, Any]:
+    period = ic.filter((pl.col("date") >= start) & (pl.col("date") <= end))
+    values = period["ic"].to_numpy()
     if values.size == 0:
-        return {"n_dates": 0, "directional_ic": None, "nw_t": None, "p_value": None}
+        result: dict[str, Any] = {
+            "n_dates": 0,
+            "directional_ic": None,
+            "nw_t": None,
+            "p_value": None,
+            "average_cross_section": None,
+        }
+        if include_distribution:
+            result["yearly"] = []
+            result["yearly_sign_consistency"] = None
+        return result
     nw = stats_v2.newey_west_t(values, lag=HORIZON)
-    return {
+    result = {
         "n_dates": int(values.size),
         "directional_ic": round(float(values.mean()) * sign, 6),
         "nw_t": round(float(nw[0]), 6) if nw is not None else None,
-        "p_value": round(float(stats_v2.normal_two_sided_p(nw[0])), 8) if nw is not None else None,
+        "p_value": (
+            round(float(stats_v2.normal_two_sided_p(nw[0])), 8)
+            if nw is not None
+            else None
+        ),
+        "average_cross_section": round(float(period["n"].mean()), 3),
     }
+    if include_distribution:
+        yearly = (
+            period.with_columns(pl.col("date").dt.year().alias("year"))
+            .group_by("year")
+            .agg(pl.col("ic").mean().alias("ic_mean"), pl.len().alias("n_dates"))
+            .sort("year")
+        )
+        yearly_rows = [
+            {
+                "year": int(row["year"]),
+                "directional_ic": round(float(row["ic_mean"]) * sign, 6),
+                "n_dates": int(row["n_dates"]),
+            }
+            for row in yearly.iter_rows(named=True)
+        ]
+        result["yearly"] = yearly_rows
+        result["yearly_sign_consistency"] = (
+            round(
+                sum(row["directional_ic"] > 0 for row in yearly_rows) / len(yearly_rows),
+                6,
+            )
+            if yearly_rows
+            else None
+        )
+    return result
 
 
-def _bootstrap(ic: pl.DataFrame, start: date, end: date, sign: int) -> dict[str, Any]:
-    values = ic.filter((pl.col("date") >= start) & (pl.col("date") <= end))["ic"].to_numpy() * sign
+def _bootstrap(
+    ic: pl.DataFrame,
+    start: date,
+    end: date,
+    sign: int,
+    *,
+    block_size: int,
+    n_bootstrap: int,
+    seed: int,
+) -> dict[str, Any]:
+    values = ic.filter((pl.col("date") >= start) & (pl.col("date") <= end))["ic"].to_numpy()
     return block_bootstrap_mean_ci(
-        values,
-        block_size=BOOTSTRAP_BLOCK_SIZE,
-        n_bootstrap=BOOTSTRAP_RUNS,
-        seed=20261110 + int(start.strftime("%Y%m%d")),
+        values * sign,
+        block_size=block_size,
+        n_bootstrap=n_bootstrap,
+        seed=seed,
     )
 
 
-def _plateau(trials: list[dict[str, Any]]) -> None:
+def _bootstrap_seed(
+    research_id: str,
+    family_id: str,
+    parameter: int,
+    block_size: int,
+    n_bootstrap: int,
+) -> int:
+    token = sha256_json({
+        "research_id": research_id,
+        "family_id": family_id,
+        "parameter": parameter,
+        "block_size": block_size,
+        "n_bootstrap": n_bootstrap,
+    }).removeprefix("sha256:")
+    return int(token[:8], 16)
+
+
+def _positive(value: Any) -> bool:
+    return isinstance(value, (int, float)) and float(value) > 0.0
+
+
+def _trial_direction_positive(trial: dict[str, Any]) -> bool:
+    return all(
+        _positive(trial[period]["directional_ic"])
+        for period in ("full", "train", "test")
+    )
+
+
+def annotate_plateau(trials: list[dict[str, Any]]) -> None:
     ordered = sorted(trials, key=lambda item: item["parameter"])
+    size = len(ordered)
     for index, trial in enumerate(ordered):
-        neighbors = []
-        if index > 0:
-            neighbors.append(ordered[index - 1])
-        if index + 1 < len(ordered):
-            neighbors.append(ordered[index + 1])
-        robust = [
-            item for item in [trial, *neighbors]
-            if (item["train"]["directional_ic"] or 0.0) > 0
-            and (item["test"]["directional_ic"] or 0.0) > 0
-            and (item["full"]["directional_ic"] or 0.0) > 0
-        ]
-        trial["neighbor_count"] = len(neighbors)
-        trial["robust_plateau"] = len(robust) == len(neighbors) + 1
+        if size < 3:
+            neighbor_indices: list[int] = []
+        elif index == 0:
+            neighbor_indices = [1, 2]
+        elif index == size - 1:
+            neighbor_indices = [size - 3, size - 2]
+        else:
+            neighbor_indices = [index - 1, index + 1]
+        neighbors = [ordered[position] for position in neighbor_indices]
+        robust = (
+            size >= 3
+            and len(neighbor_indices) >= 2
+            and all(_trial_direction_positive(neighbor) for neighbor in neighbors)
+            and _trial_direction_positive(trial)
+        )
+        trial["neighbor_parameters"] = [neighbor["parameter"] for neighbor in neighbors]
+        trial["robust_plateau"] = robust
+        trial["plateau_status"] = (
+            "robust_plateau"
+            if robust
+            else "single_point_unverified"
+            if size < 3
+            else "not_robust"
+        )
+
+
+def _initial_eligibility(trial: dict[str, Any]) -> bool:
+    neutral = trial["industry_size_neutral"]["full"]["directional_ic"]
+    q_value = trial.get("q_value")
+    ci_low = trial.get("bootstrap_full", {}).get("ci_low")
+    return (
+        bool(trial.get("robust_plateau"))
+        and _trial_direction_positive(trial)
+        and _positive(neutral)
+        and isinstance(q_value, (int, float))
+        and float(q_value) <= FDR_THRESHOLD
+        and _positive(ci_low)
+    )
+
+
+def select_robust_candidates(trials: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return sorted(
+        [trial for trial in trials if _initial_eligibility(trial)],
+        key=lambda item: item["parameter"],
+    )
+
+
+def _final_ci_low(trial: dict[str, Any]) -> Any:
+    final = trial.get("final_bootstrap", {})
+    primary = final.get(str(PRIMARY_BLOCK_SIZE), final.get(PRIMARY_BLOCK_SIZE))
+    return primary.get("ci_low") if isinstance(primary, dict) else None
+
+
+def choose_recommended_candidate(
+    trials: list[dict[str, Any]],
+    *,
+    current_parameter: int,
+) -> dict[str, Any] | None:
+    eligible = [
+        trial
+        for trial in trials
+        if _initial_eligibility(trial)
+        and _positive(trial.get("train", {}).get("directional_ic"))
+        and _positive(trial.get("test", {}).get("directional_ic"))
+        and _positive(_final_ci_low(trial))
+    ]
+    if not eligible:
+        return None
+    return max(
+        eligible,
+        key=lambda trial: (
+            min(
+                float(trial["train"]["directional_ic"]),
+                float(trial["test"]["directional_ic"]),
+            ),
+            float(_final_ci_low(trial)),
+            -abs(int(trial["parameter"]) - current_parameter),
+        ),
+    )
+
+
+def _neutralization_spec(names: list[str]) -> dict[str, Any]:
+    return {
+        "industry": INDUSTRY_COLUMN if "industry" in names else None,
+        "styles": [SIZE_COLUMN] if "size" in names else [],
+        "exclude": [],
+        "shrink": 1.0,
+    }
+
+
+def _neutralized_ic(
+    joined: pl.DataFrame,
+    names: list[str],
+) -> pl.DataFrame:
+    neutral_input = joined.select([
+        "date",
+        "symbol",
+        "forward_return_5d",
+        "factor_value",
+        INDUSTRY_COLUMN,
+        SIZE_COLUMN,
+    ])
+    neutralized = neutralize_scoring_columns(
+        neutral_input,
+        ["factor_value"],
+        _neutralization_spec(names),
+    )
+    return calculate_rank_ic(
+        neutralized,
+        "factor_value",
+        "forward_return_5d",
+        minimum=MINIMUM_CROSS_SECTION,
+    )
+
+
+def _coverage(joined: pl.DataFrame) -> dict[str, Any]:
+    valid = joined.filter(
+        pl.col("factor_value").is_not_null()
+        & pl.col("factor_value").is_finite()
+        & pl.col("forward_return_5d").is_not_null()
+        & pl.col("forward_return_5d").is_finite()
+    )
+    widths = valid.group_by("date").len().sort("date")["len"]
+    return {
+        "rows": joined.height,
+        "valid_factor_rows": valid.height,
+        "factor_non_null_ratio": (
+            round(valid.height / joined.height, 6) if joined.height else 0.0
+        ),
+        "valid_dates": widths.len(),
+        "minimum_cross_section": int(widths.min()) if widths.len() else 0,
+        "median_cross_section": round(float(widths.median()), 3) if widths.len() else 0.0,
+    }
+
+
+def _yearly_q_values(trials: list[dict[str, Any]]) -> None:
+    raw_q = stats_v2.bh_fdr_qvalues([
+        trial["full"]["p_value"] for trial in trials
+    ])
+    industry_q = stats_v2.bh_fdr_qvalues([
+        trial["industry_neutral"]["full"]["p_value"] for trial in trials
+    ])
+    size_q = stats_v2.bh_fdr_qvalues([
+        trial["size_neutral"]["full"]["p_value"] for trial in trials
+    ])
+    combined_q = stats_v2.bh_fdr_qvalues([
+        trial["industry_size_neutral"]["full"]["p_value"] for trial in trials
+    ])
+    for trial, raw, industry, size, combined in zip(
+        trials,
+        raw_q,
+        industry_q,
+        size_q,
+        combined_q,
+        strict=True,
+    ):
+        trial["q_value"] = round(float(raw), 8) if raw is not None else None
+        trial["industry_neutral"]["q_value"] = (
+            round(float(industry), 8) if industry is not None else None
+        )
+        trial["size_neutral"]["q_value"] = (
+            round(float(size), 8) if size is not None else None
+        )
+        trial["industry_size_neutral"]["q_value"] = (
+            round(float(combined), 8) if combined is not None else None
+        )
+
+
+def _initial_failure_counts(trials: list[dict[str, Any]]) -> dict[str, int]:
+    checks = {
+        "robust_plateau": lambda trial: bool(trial.get("robust_plateau")),
+        "full_ic_positive": lambda trial: _positive(
+            trial["full"]["directional_ic"]
+        ),
+        "train_ic_positive": lambda trial: _positive(
+            trial["train"]["directional_ic"]
+        ),
+        "test_ic_positive": lambda trial: _positive(
+            trial["test"]["directional_ic"]
+        ),
+        "industry_size_ic_positive": lambda trial: _positive(
+            trial["industry_size_neutral"]["full"]["directional_ic"]
+        ),
+        "fdr_q_le_0_10": lambda trial: (
+            isinstance(trial.get("q_value"), (int, float))
+            and float(trial["q_value"]) <= FDR_THRESHOLD
+        ),
+        "initial_bootstrap_ci_positive": lambda trial: _positive(
+            trial.get("bootstrap_full", {}).get("ci_low")
+        ),
+    }
+    return {
+        name: sum(not check(trial) for trial in trials)
+        for name, check in checks.items()
+    }
+
+
+def _render_markdown(payload: dict[str, Any]) -> str:
+    def fmt(value: Any) -> str:
+        return f"{float(value):.6f}" if isinstance(value, (int, float)) else "-"
+
+    lines = [
+        "# P1 价格风险参数族蒙特卡洛报告",
+        "",
+        f"- Research ID：`{payload['research_id']}`",
+        f"- 生成时间：`{payload['generated_at']}`",
+        f"- 方法版本：`{payload['method_version']}`",
+        f"- 样本：`{payload['period']['start']}` 至 `{payload['period']['end']}`",
+        f"- 训练/检验：`{payload['period']['train_end']}` / `{payload['period']['test_start']}`",
+        f"- 参数点：{payload['trial_count']}；决赛参数点：{payload['finalist_count']}",
+        "- 所有结论仅为 watch 候选研究，不产生 active 版本、订单或纸面目标。",
+        "",
+        "## 家族结论",
+        "",
+        "| 参数族 | 当前 | 推荐 | 结论 | 当前全样本 IC | 当前检验 IC | 决赛主 CI 下限 | block 10/20/40 |",
+        "| --- | ---: | ---: | --- | ---: | ---: | ---: | --- |",
+    ]
+    for family_id, result in payload["families"].items():
+        current = result["current_trial"]
+        recommended = result.get("recommended_trial")
+        final = recommended.get("final_bootstrap", {}) if recommended else {}
+        primary = final.get(str(PRIMARY_BLOCK_SIZE), {})
+        sensitivity = "/".join(
+            fmt(final.get(str(block), {}).get("ci_low"))
+            for block in FINAL_BLOCK_SIZES
+        )
+        lines.append(
+            f"| `{family_id}` | {result['current_parameter']} | "
+            f"{result['recommended_parameter'] if result['recommended_parameter'] is not None else '-'} | "
+            f"{result['recommendation_status']} | "
+            f"{fmt(current['full']['directional_ic'])} | "
+            f"{fmt(current['test']['directional_ic'])} | "
+            f"{fmt(primary.get('ci_low'))} | {sensitivity} |"
+        )
+
+    lines.extend([
+        "",
+        "## 参数点统计",
+        "",
+        "| 参数族 | 参数 | 全样本 IC | 训练 IC | 检验 IC | 近一年 IC | 行业+规模 IC | q | 初筛 CI 下限 | 平台 | 决赛 CI 下限 |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: |",
+    ])
+    for family_id, result in payload["families"].items():
+        for trial in result["trials"]:
+            lines.append(
+                f"| `{family_id}` | {trial['parameter']} | "
+                f"{fmt(trial['full']['directional_ic'])} | "
+                f"{fmt(trial['train']['directional_ic'])} | "
+                f"{fmt(trial['test']['directional_ic'])} | "
+                f"{fmt(trial['recent']['directional_ic'])} | "
+                f"{fmt(trial['industry_size_neutral']['full']['directional_ic'])} | "
+                f"{fmt(trial['q_value'])} | "
+                f"{fmt(trial['bootstrap_full']['ci_low'])} | "
+                f"{trial['plateau_status']} | "
+                f"{fmt(_final_ci_low(trial))} |"
+            )
+    lines.extend([
+        "",
+        "## 判定口径",
+        "",
+        "- 初筛：`robust_plateau`、全样本/训练/检验方向 IC 为正、行业+规模中性 IC 为正、族内 BH-FDR `q <= 0.10`、1000 次主 block bootstrap `ci_low > 0`。",
+        "- 决赛：入围点使用 5000 次 bootstrap，主 block=20；block 10/40 只做敏感性报告。",
+        "- 推荐排序：先最大化 `min(train_ic, test_ic)`，再取主 block 决赛 `ci_low` 更高者，最后取更接近当前参数者。",
+        "- 单一参数点不能构成稳健平台；未通过者保留为负知识。",
+        "",
+    ])
+    return "\n".join(lines)
+
+
+def _resolve_output(value: str) -> Path:
+    path = Path(value)
+    allowed = (DATA / "factor_research" / "research" / "parameters").resolve()
+    candidates = (path,) if path.is_absolute() else (Path.cwd() / path, ROOT / path)
+    for candidate in candidates:
+        resolved = candidate.resolve()
+        if resolved.is_relative_to(allowed):
+            return resolved
+    raise ValueError("parameter output must stay inside data/factor_research/research/parameters")
+
+
+def _publish_json(path: Path, payload: dict[str, Any]) -> dict[str, Any]:
+    if path.exists():
+        existing = json.loads(path.read_text(encoding="utf-8"))
+        if existing.get("research_id") != payload["research_id"]:
+            raise FileExistsError(f"parameter result already exists: {path}")
+        return existing
+    atomic_write_json(path, payload)
+    return payload
+
+
+def _publish_markdown(path: Path, payload: dict[str, Any]) -> None:
+    text = _render_markdown(payload)
+    if path.exists():
+        if path.read_text(encoding="utf-8") != text:
+            raise FileExistsError(f"parameter markdown already exists: {path}")
+        return
+    atomic_write_text(path, text)
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--start", default=str(DEFAULT_START))
     parser.add_argument("--end", default=str(DEFAULT_END))
-    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument(
+        "--output",
+        default=str(DEFAULT_OUTPUT.relative_to(ROOT)),
+        help="Repository-relative JSON output path.",
+    )
     args = parser.parse_args()
     start = date.fromisoformat(args.start)
     end = date.fromisoformat(args.end)
+    if end <= start or end <= TRAIN_END:
+        raise ValueError("end date must be after the training window")
+    output = _resolve_output(args.output)
+    markdown_path = output.with_suffix(".md")
+
+    catalog = load_latest_catalog(DATA)
+    if catalog is None:
+        raise RuntimeError("factor catalog snapshot is unavailable")
+    if catalog.source_completeness != "complete":
+        raise RuntimeError(
+            f"factor catalog source completeness is {catalog.source_completeness}"
+        )
+    families = load_p1_families(DATA)
+    registry = load_parameter_registry(DATA)
+    research_id = sha256_json({
+        "method_version": METHOD_VERSION,
+        "catalog_snapshot_id": catalog.snapshot_id,
+        "parameter_registry": registry.model_dump(mode="json"),
+        "start": str(start),
+        "end": str(end),
+        "horizon": HORIZON,
+        "initial_bootstrap_runs": INITIAL_BOOTSTRAP_RUNS,
+        "final_bootstrap_runs": FINAL_BOOTSTRAP_RUNS,
+        "final_block_sizes": FINAL_BLOCK_SIZES,
+    })
 
     from app.hs300.current import current_symbols
 
@@ -222,104 +687,210 @@ def main() -> int:
     prices = _enriched_panel(load_start, end, symbols)
     market = _market_panel()
     prices = prices.with_columns(
-        (pl.col("close").shift(-HORIZON).over("symbol") / pl.col("close") - 1.0).alias("forward_return_5d"),
+        (
+            pl.col("close").shift(-HORIZON).over("symbol") / pl.col("close") - 1.0
+        ).alias("forward_return_5d"),
         pl.when((pl.col("turnover_rate") > 0) & (pl.col("volume") > 0))
         .then((pl.col("close") * pl.col("volume") / pl.col("turnover_rate")).log())
         .otherwise(None)
-        .alias("log_float_mv"),
+        .alias(SIZE_COLUMN),
     )
-    industry = load_industry_l1(DATA).select(["symbol", "industry_l1"]).unique(subset=["symbol"], keep="last")
+    industry = (
+        load_industry_l1(DATA)
+        .select(["symbol", INDUSTRY_COLUMN])
+        .unique(subset=["symbol"], keep="last")
+    )
     prices = prices.join(industry, on="symbol", how="left")
+    data_fingerprint = sha256_json({
+        "symbols": sorted(symbols),
+        "start": str(start),
+        "end": str(end),
+        "price_rows": prices.height,
+        "market_rows": market.height,
+    })
 
     family_results: dict[str, Any] = {}
     all_trials: list[dict[str, Any]] = []
-    for family, spec in FAMILIES.items():
-        sign = -1 if spec["direction"] == "low" else 1
+    raw_ic_by_trial: dict[tuple[str, int], pl.DataFrame] = {}
+    for family in families:
+        evaluator = EVALUATORS[family.evaluator]
+        sign = -1 if family.direction == "low" else 1
+        current_factor_id = _family_current_factor_id(family)
         trials: list[dict[str, Any]] = []
-        compute: Callable[[pl.DataFrame, pl.DataFrame, int], tuple[pl.DataFrame, str]] = spec["compute"]
-        for parameter in spec["parameters"]:
-            raw, output_column = compute(prices, market, parameter)
+        for parameter in family.parameter_grid:
+            raw, output_column = evaluator(prices, market, parameter)
             factor_frame = raw.select([
                 "symbol",
                 "date",
                 pl.col(output_column).alias("factor_value"),
             ])
-            joined = prices.select([
-                "symbol", "date", "forward_return_5d", "industry_l1", "log_float_mv"
-            ]).join(factor_frame, on=["symbol", "date"], how="inner")
-            joined = joined.filter(pl.col("forward_return_5d").is_not_null())
-            raw_ic = calculate_rank_ic(joined, "factor_value", "forward_return_5d", minimum=30)
-            neutral_input = joined.select([
-                "date", "symbol", "forward_return_5d", "factor_value", "industry_l1", "log_float_mv"
-            ])
-            neutralized = neutralize_scoring_columns(
-                neutral_input, ["factor_value"], INDUSTRY_SIZE_SPEC
+            joined = (
+                prices.select([
+                    "symbol",
+                    "date",
+                    "forward_return_5d",
+                    INDUSTRY_COLUMN,
+                    SIZE_COLUMN,
+                ])
+                .join(factor_frame, on=["symbol", "date"], how="inner")
+                .filter(pl.col("forward_return_5d").is_not_null())
             )
-            neutral_ic = calculate_rank_ic(neutralized, "factor_value", "forward_return_5d", minimum=30)
+            raw_ic = calculate_rank_ic(
+                joined,
+                "factor_value",
+                "forward_return_5d",
+                minimum=MINIMUM_CROSS_SECTION,
+            )
+            raw_ic_by_trial[(family.family_id, parameter)] = raw_ic
+            industry_ic = _neutralized_ic(joined, ["industry"])
+            size_ic = _neutralized_ic(joined, ["size"])
+            combined_ic = _neutralized_ic(joined, ["industry", "size"])
+            seed = _bootstrap_seed(
+                research_id,
+                family.family_id,
+                parameter,
+                PRIMARY_BLOCK_SIZE,
+                INITIAL_BOOTSTRAP_RUNS,
+            )
+            variant_id = f"{family.family_id}__p_{parameter}"
             trial = {
+                "variant_id": variant_id,
+                "family_id": family.family_id,
+                "source_factor_id": current_factor_id,
                 "parameter": parameter,
-                "is_current": parameter == spec["current"],
-                "full": _stats_for_period(raw_ic, start, end, sign),
+                "is_current": parameter == family.current_parameter,
+                "definition_fingerprint": sha256_json({
+                    "method_version": METHOD_VERSION,
+                    "catalog_snapshot_id": catalog.snapshot_id,
+                    "data_fingerprint": data_fingerprint,
+                    "family_id": family.family_id,
+                    "parameter": parameter,
+                }),
+                "coverage": _coverage(joined),
+                "full": _stats_for_period(
+                    raw_ic,
+                    start,
+                    end,
+                    sign,
+                    include_distribution=True,
+                ),
                 "train": _stats_for_period(raw_ic, start, TRAIN_END, sign),
                 "test": _stats_for_period(raw_ic, TEST_START, end, sign),
                 "recent": _stats_for_period(raw_ic, RECENT_START, end, sign),
-                "bootstrap_full": _bootstrap(raw_ic, start, end, sign),
+                "bootstrap_full": _bootstrap(
+                    raw_ic,
+                    start,
+                    end,
+                    sign,
+                    block_size=PRIMARY_BLOCK_SIZE,
+                    n_bootstrap=INITIAL_BOOTSTRAP_RUNS,
+                    seed=seed,
+                ),
+                "industry_neutral": {
+                    "full": _stats_for_period(industry_ic, start, end, sign),
+                    "train": _stats_for_period(industry_ic, start, TRAIN_END, sign),
+                    "test": _stats_for_period(industry_ic, TEST_START, end, sign),
+                    "recent": _stats_for_period(industry_ic, RECENT_START, end, sign),
+                },
+                "size_neutral": {
+                    "full": _stats_for_period(size_ic, start, end, sign),
+                    "train": _stats_for_period(size_ic, start, TRAIN_END, sign),
+                    "test": _stats_for_period(size_ic, TEST_START, end, sign),
+                    "recent": _stats_for_period(size_ic, RECENT_START, end, sign),
+                },
                 "industry_size_neutral": {
-                    "full": _stats_for_period(neutral_ic, start, end, sign),
-                    "train": _stats_for_period(neutral_ic, start, TRAIN_END, sign),
-                    "test": _stats_for_period(neutral_ic, TEST_START, end, sign),
-                    "recent": _stats_for_period(neutral_ic, RECENT_START, end, sign),
-                    "bootstrap_full": _bootstrap(neutral_ic, start, end, sign),
+                    "full": _stats_for_period(combined_ic, start, end, sign),
+                    "train": _stats_for_period(combined_ic, start, TRAIN_END, sign),
+                    "test": _stats_for_period(combined_ic, TEST_START, end, sign),
+                    "recent": _stats_for_period(combined_ic, RECENT_START, end, sign),
                 },
                 "q_value": None,
-                "neutral_q_value": None,
+                "final_bootstrap": {},
             }
             trials.append(trial)
-        _plateau(trials)
-        raw_q = stats_v2.bh_fdr_qvalues([item["full"]["p_value"] for item in trials])
-        neutral_q = stats_v2.bh_fdr_qvalues([
-            item["industry_size_neutral"]["full"]["p_value"] for item in trials
-        ])
-        for item, q_value, neutral_value in zip(trials, raw_q, neutral_q, strict=True):
-            item["q_value"] = round(float(q_value), 8) if q_value is not None else None
-            item["neutral_q_value"] = round(float(neutral_value), 8) if neutral_value is not None else None
-        stable = [
-            item for item in trials
-            if item["robust_plateau"]
-            and (item["full"]["directional_ic"] or 0.0) > 0
-            and (item["train"]["directional_ic"] or 0.0) > 0
-            and (item["test"]["directional_ic"] or 0.0) > 0
-            and (item["bootstrap_full"]["ci_low"] or -1.0) > 0
-        ]
-        recommended = max(
-            stable,
-            key=lambda item: min(
-                item["train"]["directional_ic"] or 0.0,
-                item["test"]["directional_ic"] or 0.0,
+
+        annotate_plateau(trials)
+        _yearly_q_values(trials)
+        initial_finalists = select_robust_candidates(trials)
+        finalists: list[dict[str, Any]] = []
+        for trial in initial_finalists:
+            final_bootstrap: dict[str, Any] = {}
+            for block_size in FINAL_BLOCK_SIZES:
+                final_bootstrap[str(block_size)] = _bootstrap(
+                    raw_ic_by_trial[(family.family_id, int(trial["parameter"]))],
+                    start,
+                    end,
+                    sign,
+                    block_size=block_size,
+                    n_bootstrap=FINAL_BOOTSTRAP_RUNS,
+                    seed=_bootstrap_seed(
+                        research_id,
+                        family.family_id,
+                        int(trial["parameter"]),
+                        block_size,
+                        FINAL_BOOTSTRAP_RUNS,
+                    ),
+                )
+            trial["final_bootstrap"] = final_bootstrap
+            finalists.append(trial)
+
+        recommended = choose_recommended_candidate(
+            finalists,
+            current_parameter=family.current_parameter,
+        )
+        current = next(trial for trial in trials if trial["is_current"])
+        sensitivity_positive = None
+        if recommended is not None:
+            sensitivity_positive = all(
+                _positive(recommended["final_bootstrap"][str(block)]["ci_low"])
+                for block in FINAL_BLOCK_SIZES
+            )
+        family_results[family.family_id] = {
+            "label": family.label,
+            "evaluator": family.evaluator,
+            "direction": family.direction,
+            "parameter_name": family.parameter_name,
+            "parameter_grid": family.parameter_grid,
+            "current_parameter": family.current_parameter,
+            "current_factor_id": current_factor_id,
+            "member_factor_ids": family.member_factor_ids,
+            "recommended_parameter": (
+                int(recommended["parameter"]) if recommended is not None else None
             ),
-        )["parameter"] if stable else None
-        current = next(item for item in trials if item["is_current"])
-        family_results[family] = {
-            "factor_id": spec["factor_id"],
-            "direction": spec["direction"],
-            "current_parameter": spec["current"],
-            "recommended_parameter": recommended,
+            "recommended_variant_id": (
+                recommended["variant_id"] if recommended is not None else None
+            ),
+            "recommendation_status": (
+                "recommended" if recommended is not None else "rejected"
+            ),
+            "final_block_sensitivity_positive": sensitivity_positive,
+            "initial_finalist_count": len(initial_finalists),
+            "initial_failure_counts": _initial_failure_counts(trials),
+            "rejection_reasons": (
+                []
+                if recommended is not None
+                else [
+                    "final_5000_block20_ci_not_positive"
+                    if initial_finalists
+                    else "no_parameter_passed_initial_robustness_gate"
+                ]
+            ),
             "current_trial": current,
+            "recommended_trial": recommended,
             "trials": trials,
         }
         all_trials.extend(trials)
 
     payload = {
         "schema_version": 1,
-        "research_id": sha256_json({
-            "method_version": METHOD_VERSION,
-            "start": str(start),
-            "end": str(end),
-            "families": list(FAMILIES),
-            "parameters": {key: value["parameters"] for key, value in FAMILIES.items()},
-        }),
+        "research_id": research_id,
         "generated_at": utc_now(),
         "method_version": METHOD_VERSION,
+        "catalog_snapshot_id": catalog.snapshot_id,
+        "parameter_registry_sha256": sha256_file(
+            DATA / "factor_research" / "parameters" / "families.json"
+        ),
+        "data_fingerprint": data_fingerprint,
         "period": {
             "start": str(start),
             "end": str(end),
@@ -333,65 +904,107 @@ def main() -> int:
             "survivorship_bias": True,
         },
         "return_horizon_days": HORIZON,
+        "minimum_cross_section": MINIMUM_CROSS_SECTION,
         "method": {
-            "parameter_scan": "neighboring windows, not a claim that correlated grid points are independent discoveries",
-            "train_test": "2021-06-01..2024-12-31 train; 2025-01-01..end test",
-            "monte_carlo": "moving-block bootstrap of daily Rank IC with 20-day blocks",
-            "bootstrap_runs": BOOTSTRAP_RUNS,
-            "multiple_testing": "BH-FDR across each family's parameter grid",
-            "neutralization": "industry + log_float_mv residualization for robustness check",
+            "parameter_grid": "pre-registered registry grids only",
+            "train_test": "train through 2024-12-31; test from 2025-01-01",
+            "initial_monte_carlo": {
+                "runs": INITIAL_BOOTSTRAP_RUNS,
+                "block_size": PRIMARY_BLOCK_SIZE,
+            },
+            "final_monte_carlo": {
+                "runs": FINAL_BOOTSTRAP_RUNS,
+                "block_sizes": list(FINAL_BLOCK_SIZES),
+                "primary_block_size": PRIMARY_BLOCK_SIZE,
+            },
+            "multiple_testing": "BH-FDR across each family parameter grid",
+            "fdr_threshold": FDR_THRESHOLD,
+            "neutralization": ["industry", "size", "industry+size"],
+            "recommendation_order": [
+                "maximize min(train_ic, test_ic)",
+                "maximize final block-20 bootstrap ci_low",
+                "minimize distance to current parameter",
+            ],
         },
         "family_count": len(family_results),
         "trial_count": len(all_trials),
-        "recommended_parameter_count": sum(
-            1 for item in family_results.values() if item["recommended_parameter"] is not None
+        "finalist_count": sum(
+            result["initial_finalist_count"] for result in family_results.values()
         ),
+        "recommended_parameter_count": sum(
+            1
+            for result in family_results.values()
+            if result["recommended_parameter"] is not None
+        ),
+        "rejected_family_count": sum(
+            1
+            for result in family_results.values()
+            if result["recommendation_status"] == "rejected"
+        ),
+        "active_version": None,
         "families": family_results,
     }
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    payload = _publish_json(output, payload)
+    _publish_markdown(markdown_path, payload)
+
     ledger = ResearchLedger(DATA)
-    if not any(
-        record.operation == "factor_parameter_mc_published"
-        and record.input_fingerprints.get("research_id") == payload["research_id"]
+    ledger.verify()
+    existing = [
+        record
         for record in ledger.records()
-    ):
+        if record.operation == OPERATION
+        and record.input_fingerprints.get("research_id") == payload["research_id"]
+    ]
+    if not existing:
         ledger.append(
-            "factor_parameter_mc_published",
+            OPERATION,
             payload={
+                "catalog_snapshot_id": payload["catalog_snapshot_id"],
                 "input_fingerprints": {
                     "research_id": payload["research_id"],
-                    "output_sha256": sha256_file(args.output),
+                    "parameter_registry_sha256": payload["parameter_registry_sha256"],
+                    "data_fingerprint": payload["data_fingerprint"],
+                    "output_sha256": sha256_file(output),
+                    "markdown_sha256": sha256_file(markdown_path),
                 },
-                "evidence_refs": [{
-                    "kind": "factor_parameter_mc",
-                    "path": str(args.output.relative_to(DATA)),
-                }],
+                "evidence_refs": [
+                    {
+                        "kind": "factor_parameter_mc",
+                        "path": str(output.relative_to(DATA)),
+                    },
+                    {
+                        "kind": "factor_parameter_mc_markdown",
+                        "path": str(markdown_path.relative_to(DATA)),
+                    },
+                ],
                 "metrics": {
-                    "family_count": len(family_results),
-                    "trial_count": len(all_trials),
-                    "recommended_parameter_count": payload["recommended_parameter_count"],
+                    "family_count": payload["family_count"],
+                    "trial_count": payload["trial_count"],
+                    "finalist_count": payload["finalist_count"],
+                    "recommended_parameter_count": payload[
+                        "recommended_parameter_count"
+                    ],
+                    "rejected_family_count": payload["rejected_family_count"],
                 },
-                "verdict": "watch_only",
+                "verdict": "watch_candidates_only_no_active_version",
             },
         )
+
     print(json.dumps({
         "research_id": payload["research_id"],
-        "family_count": len(family_results),
-        "trial_count": len(all_trials),
-        "output": str(args.output),
+        "output": str(output.relative_to(ROOT)),
+        "markdown": str(markdown_path.relative_to(ROOT)),
+        "family_count": payload["family_count"],
+        "trial_count": payload["trial_count"],
+        "finalist_count": payload["finalist_count"],
         "families": {
-            family: {
-                "current": item["current_parameter"],
-                "recommended": item["recommended_parameter"],
-                "current_full_ic": item["current_trial"]["full"]["directional_ic"],
-                "current_test_ic": item["current_trial"]["test"]["directional_ic"],
-                "current_bootstrap_ci": [
-                    item["current_trial"]["bootstrap_full"]["ci_low"],
-                    item["current_trial"]["bootstrap_full"]["ci_high"],
-                ],
+            family_id: {
+                "current": result["current_parameter"],
+                "recommended": result["recommended_parameter"],
+                "status": result["recommendation_status"],
             }
-            for family, item in family_results.items()
+            for family_id, result in payload["families"].items()
         },
     }, ensure_ascii=False, indent=2))
     return 0
