@@ -1,0 +1,2046 @@
+{
+  "schema_version": 1,
+  "method_version": "financial_increment_p8_v1",
+  "financial_pit_research_id": "sha256:4d98dbe7ecb185cbb3e9cf14538df6916b19f0b67f184fce9f7a0ec5c501a7d6",
+  "p5_research_id": "sha256:641f0df5849264ea133ea0a8ccb58b057816afd47d916014f0d5baabb93cb6c7",
+  "catalog_snapshot_id": "sha256:6cb4e69da0a5a3097459e32ddd662979c4602f7327c3b737c4130de147b9b3f6",
+  "p6_admission_catalog_snapshot_id": "sha256:6cb4e69da0a5a3097459e32ddd662979c4602f7327c3b737c4130de147b9b3f6",
+  "input_manifest_sha256": "sha256:cb14a7178e41ce9e85bff53023687841ed2db816cf334c0d1b1c60e82ffd0415",
+  "input_manifest": [
+    {
+      "label": "enriched_daily",
+      "root": "kline_daily_enriched",
+      "patterns": [
+        "date=*/part.parquet"
+      ],
+      "file_count": 2143,
+      "bytes": 47704926,
+      "sha256": "sha256:a9b22f1c53e629f7ccb72fe68e4b1f4ffbb8f1fdd0c93093a22c2c965ac5b777"
+    },
+    {
+      "label": "index_daily",
+      "root": "kline_index_daily",
+      "patterns": [
+        "date=*/part.parquet"
+      ],
+      "file_count": 2133,
+      "bytes": 5951798,
+      "sha256": "sha256:282ddba171383b54a2bb0f7940aa55ec23fc059db4a481ca39321c06dab7368d"
+    },
+    {
+      "label": "existing_extension_factors",
+      "root": "ext_data/alt_hs300/timeseries",
+      "patterns": [
+        "date=*/part.parquet"
+      ],
+      "file_count": 2143,
+      "bytes": 267574660,
+      "sha256": "sha256:84397feef8d5a5a945c5cecc1b48615f5bc6d587d81e988b76583c3dee8ecc1a"
+    },
+    {
+      "label": "industry_map",
+      "root": "ext_data/ext_hy_ths",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 1,
+      "bytes": 103818,
+      "sha256": "sha256:a5635df79fc61d7a8115b05db9a33ef5c05e89ff2155770d807529298614ba7c"
+    },
+    {
+      "label": "instruments",
+      "root": "instruments",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 1,
+      "bytes": 162939,
+      "sha256": "sha256:9e918f0d3dbd5f21d04959745d38a0e3c1c04140d74fa23f96e84c514fdb996e"
+    },
+    {
+      "label": "insider_events",
+      "root": "research/r90_insider_trade",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 29,
+      "bytes": 1401612,
+      "sha256": "sha256:007e38a6358c8f590e16608f3cc4b6edfa0a1208533f5bf6b1c990919fc50597"
+    },
+    {
+      "label": "lhb_events",
+      "root": "research/r43_lhb",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 128,
+      "bytes": 19460906,
+      "sha256": "sha256:3274ff1ff2ddf851c9227dc2ba61cea58a62bd7933cb673a437e8661fd801c44"
+    },
+    {
+      "label": "repurchase_events",
+      "root": "research/external_r39",
+      "patterns": [
+        "repurchase.parquet"
+      ],
+      "file_count": 1,
+      "bytes": 534208,
+      "sha256": "sha256:62927d8c7e6b2d494acfe5609c553d251b2f706e447594cd133016ac388d22ff"
+    },
+    {
+      "label": "block_trade_events",
+      "root": "research/external_r39",
+      "patterns": [
+        "dzjy_*.parquet"
+      ],
+      "file_count": 37,
+      "bytes": 5103507,
+      "sha256": "sha256:8c2a4111568b9462f1960b63fa0b2e0d082e3e670a0c78e742546fbeece0dc7a"
+    },
+    {
+      "label": "analyst_reports",
+      "root": "research/r47_analyst",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 1301,
+      "bytes": 8950338,
+      "sha256": "sha256:701faab6676a078c558fc7be41cad5ea2c0e6d582d7371f026200ee1081dec70"
+    },
+    {
+      "label": "treasury_futures",
+      "root": "research/r193_treasury",
+      "patterns": [
+        "T0.parquet",
+        "TF0.parquet"
+      ],
+      "file_count": 2,
+      "bytes": 85185,
+      "sha256": "sha256:5d2e1f9777925cfc96cdaa2d095b49e4bf3437d32219708fc299237d808fad26"
+    },
+    {
+      "label": "hong_kong_indices",
+      "root": "research/r195_hk",
+      "patterns": [
+        "HSI.parquet",
+        "HSCEI.parquet"
+      ],
+      "file_count": 2,
+      "bytes": 41373,
+      "sha256": "sha256:57c98d2b6191c16b2138f845b8b2793ab197d8f616f296aa020a8de810c7e6b1"
+    },
+    {
+      "label": "etf_shares",
+      "root": "research/r74_etf_flow",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 71,
+      "bytes": 735542,
+      "sha256": "sha256:1d242dcba762fd8ee8a51d7df262bfd5cfa8d97a6f5a8700d04b4e3ecfd81c30"
+    },
+    {
+      "label": "qvix",
+      "root": "research/r75_qvix",
+      "patterns": [
+        "qvix_300etf.parquet"
+      ],
+      "file_count": 1,
+      "bytes": 31426,
+      "sha256": "sha256:d2ab9d933c9f5173cc51523030fca6a88b61a93cdef5d261d11a61fa5f7f2e34"
+    },
+    {
+      "label": "p1_p4_research",
+      "file_count": 4,
+      "bytes": 5047098,
+      "sha256": "sha256:b790de8893c4a0780bc7f0d1fec2d2bcd152ab04b0ebdf0e5df036d069c5ddfe",
+      "files": [
+        {
+          "path": "factor_research/research/parameters/p1_parameter_mc_2026-11-11.json",
+          "bytes": 267768,
+          "sha256": "sha256:a6bc94c4b572b5daba771e0a8d8544531f0030bd5afc6687732c7f69eecb3bb7"
+        },
+        {
+          "path": "factor_research/research/parameters/p2_builtin_parameter_mc_2026-11-11_v2.json",
+          "bytes": 1218453,
+          "sha256": "sha256:b2162789150bd3b7d2b2f61b123e28c8f24cffec50638c696e360a500f9e77ea"
+        },
+        {
+          "path": "factor_research/research/parameters/p3_extended_parameter_mc_2026-11-11_v3.json",
+          "bytes": 1059795,
+          "sha256": "sha256:b79bcdec6911323e1e8416ac39310a1f0a26bd85464d59f739e9390b4d125661"
+        },
+        {
+          "path": "factor_research/research/parameters/p4_threshold_parameter_mc_2026-11-11.json",
+          "bytes": 2501082,
+          "sha256": "sha256:9c65600b73b19cab7d89c76a7b83ef416cdc3125dadc7ce61e0d47353e63f1d4"
+        }
+      ]
+    },
+    {
+      "label": "p5_research_candidates",
+      "file_count": 9,
+      "bytes": 3576,
+      "sha256": "sha256:d04d63e3ffbc9dafd367021c23705c22121ff21d52c1dff70ae97cb239c69dcb",
+      "files": [
+        {
+          "path": "factor_research/candidates/p5/uf_p5_annual_vol10_low.json",
+          "bytes": 419,
+          "sha256": "sha256:3e957fb935ef878a1d493e95559a37ba518cea744533939fb5ba2a9433ec8bb2"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_atr5_low.json",
+          "bytes": 419,
+          "sha256": "sha256:5eeb304e3d8dd140dcda271ac8ed4bf6c50bb203c7631e1b3fbc3b0d00e77d9b"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_boll_width10_low.json",
+          "bytes": 349,
+          "sha256": "sha256:55c1d4fc2083ebbf5d39dd0d4c84905c3a30a5fda9d32a4e431f373f1b3c1eaf"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_amihud120.json",
+          "bytes": 398,
+          "sha256": "sha256:1f133388cb053d1f0d01f9c7b658bf2de655fcb87aa84e4c95826facc9c22f03"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_amount5_low.json",
+          "bytes": 352,
+          "sha256": "sha256:4afc4a3808148259ce622ac136f92c20ab2f21e426a7d883d8c367b1786a5c60"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_turnover5_low.json",
+          "bytes": 346,
+          "sha256": "sha256:bedca1be8b15ca0017e1b92994369dcef1c3cdb29f3cc7cae5a591b76a04438e"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_max_ret60_low.json",
+          "bytes": 383,
+          "sha256": "sha256:17cf2dd34dc0fbff42462a1bbfb53862994acf60b5c4673f429545ff40c2fc9c"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_div_yield_abs015.json",
+          "bytes": 449,
+          "sha256": "sha256:20e9769c9b3435483b859aaf433d4db8549b7382687a049f6db29daa9e0a3b95"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_margin_q50.json",
+          "bytes": 461,
+          "sha256": "sha256:34fa351781e1463b6b8595486db734a9e9a7287a7bb33845e88308578b64a30c"
+        }
+      ]
+    },
+    {
+      "label": "base_watch_version",
+      "file_count": 1,
+      "bytes": 8650,
+      "sha256": "sha256:0748c7469c6569cf4d903d322719ffe6dcadd94ea2dff5e749a1a8fbc9047ecb",
+      "files": [
+        {
+          "path": "factor_research/sets/multi_dimension_v1/versions/v0001.json",
+          "bytes": 8650,
+          "sha256": "sha256:d6c2ad44c2f08738cdb25214909cae812c887ac08a81593ba59a84f1c0802515"
+        }
+      ]
+    },
+    {
+      "label": "financial_tables",
+      "file_count": 4,
+      "bytes": 31673341,
+      "sha256": "sha256:6da00e458e56ad16f9779c950bd9fd075e09ee14c20943a4988db6c35dc4f164",
+      "files": [
+        {
+          "path": "financials/balance_sheet/part.parquet",
+          "bytes": 6890578,
+          "sha256": "sha256:9253a260bb045c37c0409617bdb3082624e7f21f253d35a147036e5eeac47283"
+        },
+        {
+          "path": "financials/cash_flow/part.parquet",
+          "bytes": 6867147,
+          "sha256": "sha256:f34a3365dd92713d91a007b784b9ac8cd266cc7e7d19b5ab1df75a82381e3b5b"
+        },
+        {
+          "path": "financials/income/part.parquet",
+          "bytes": 8349539,
+          "sha256": "sha256:9bf784d2939de14c4f9da2e96ad3fbecd3c87ae85e8c7dfea056b636ee8164e2"
+        },
+        {
+          "path": "financials/metrics/part.parquet",
+          "bytes": 9566077,
+          "sha256": "sha256:d458c82807fbd0957344021930ba065b478dae78d7bb17a6aea9e4cab4757886"
+        }
+      ]
+    },
+    {
+      "label": "financial_pit_p7",
+      "file_count": 3,
+      "bytes": 8406,
+      "sha256": "sha256:b89a0adc68ccefeb94c99414a04f0c6c71374d3934ef8429c953a6f3274cd1e4",
+      "files": [
+        {
+          "path": "factor_research/pit/latest.json",
+          "bytes": 994,
+          "sha256": "sha256:c1176680151e202674f57959e5016da5bef98b27d219e55c91724f2f12423b91"
+        },
+        {
+          "path": "factor_research/pit/runs/4d98dbe7ecb185cbb3e9cf14538df6916b19f0b67f184fce9f7a0ec5c501a7d6.json",
+          "bytes": 5769,
+          "sha256": "sha256:ec8ea288167e2ba3d482cf7ba3213b95f0f1da3275ab16d892cfa2824cb3e221"
+        },
+        {
+          "path": "factor_research/pit/runs/4d98dbe7ecb185cbb3e9cf14538df6916b19f0b67f184fce9f7a0ec5c501a7d6.md",
+          "bytes": 1643,
+          "sha256": "sha256:b436f5120a3f071bb5f4093f2bb85244632c545649bcdf5b0d0c4023a46f6a0e"
+        }
+      ]
+    },
+    {
+      "label": "p5_increment_baseline",
+      "file_count": 3,
+      "bytes": 116907,
+      "sha256": "sha256:72b4faa597d8f5edb847131457cb35f1916d19e42390123f880cc60b1ea0bacb",
+      "files": [
+        {
+          "path": "factor_research/research/p5_incremental_2026-11-12.json",
+          "bytes": 103654,
+          "sha256": "sha256:9ed3171ad440ae677b73b8b820ad022b0230b9e27c8d3198a2b386afb3f1cd91"
+        },
+        {
+          "path": "factor_research/research/p5_incremental_2026-11-12.md",
+          "bytes": 4603,
+          "sha256": "sha256:cf9e0df67fe534435378e377d6321b1d09ea1cbc2a9bf389b35988bf06f0daf8"
+        },
+        {
+          "path": "factor_research/sets/multi_dimension_v1/versions/v0001.json",
+          "bytes": 8650,
+          "sha256": "sha256:d6c2ad44c2f08738cdb25214909cae812c887ac08a81593ba59a84f1c0802515"
+        }
+      ]
+    },
+    {
+      "label": "catalog_snapshot",
+      "file_count": 1,
+      "bytes": 369628,
+      "sha256": "sha256:669eb7491725f6cf0b30bedab7e02f198c5c78a8152c45ad6ad4386ba4710324",
+      "files": [
+        {
+          "path": "factor_research/catalog/snapshots/6cb4e69da0a5a3097459e32ddd662979c4602f7327c3b737c4130de147b9b3f6.json",
+          "bytes": 369628,
+          "sha256": "sha256:8d600f9fe02bf2a072b5fbbe00ebc2fcf8cbdc1c63ae00b6a15621d7feeb20ed"
+        }
+      ]
+    }
+  ],
+  "data_fingerprint": "sha256:b79ec8951266d27c648303744d1bfe240e86040195181056c90be3c9d7c8462b",
+  "period": {
+    "start": "2021-06-01",
+    "recent_start": "2025-10-14",
+    "end": "2026-11-05",
+    "weak_start": "2025-07-01",
+    "weak_end": "2026-06-30"
+  },
+  "universe": {
+    "name": "hs300_current",
+    "symbol_count": 300,
+    "survivorship_bias": true
+  },
+  "base_set": {
+    "set_id": "multi_dimension_v1",
+    "version": 1,
+    "content_sha256": "sha256:9eb577a43d549e1b9218ae61d125fa393dd65263988f0d5b221067a23c61822b",
+    "factor_ids": [
+      "ext_alt_hs300_cash_flow_stability_4q_low",
+      "ext_alt_hs300_dividend_yield",
+      "ext_alt_hs300_fund_holding_ratio_low",
+      "ext_alt_hs300_holder_top10_share_chg_yoy",
+      "ext_alt_hs300_idio_vol_40d_low",
+      "ext_alt_hs300_margin_chg_1m_low",
+      "ext_alt_hs300_ocf_margin_4q",
+      "ext_alt_hs300_vol_of_vol_20d_low"
+    ]
+  },
+  "candidate_count": 11,
+  "statistical_pass_count": 0,
+  "portfolio_pass_count": 0,
+  "candidates": [
+    {
+      "candidate_key": "p8_accrual",
+      "economic_key": "accrual",
+      "factor_id": "accrual",
+      "direction": "low",
+      "label": "accrual",
+      "transform": "pit_latest",
+      "coverage": {
+        "rows": 536265,
+        "non_null_rows": 322838,
+        "non_null_ratio": 0.602012,
+        "symbol_count": 300,
+        "first_value_date": "2022-05-05"
+      },
+      "marginal_ic": {
+        "comparison_basis": "current_composite",
+        "n_dates": 1088,
+        "base_ic_mean": 0.050751,
+        "combined_ic_mean": 0.049075,
+        "directional_delta_mean": -0.001676,
+        "delta_nw_t": -0.72381,
+        "delta_p_value": 0.46918227,
+        "recent_directional_delta_mean": -0.002578,
+        "correlations": [
+          {
+            "current_factor_id": "ext_alt_hs300_idio_vol_40d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1083,
+            "mean_symbols": 294.774,
+            "mean_signed": 0.037481,
+            "mean_abs": 0.062998,
+            "max_abs": 0.221521,
+            "min_signed": -0.168376,
+            "max_signed": 0.221521
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_dividend_yield",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 276.2,
+            "mean_signed": 0.080122,
+            "mean_abs": 0.082312,
+            "max_abs": 0.269078,
+            "min_signed": -0.048157,
+            "max_signed": 0.269078
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 294.827,
+            "mean_signed": 0.041862,
+            "mean_abs": 0.075528,
+            "max_abs": 0.287405,
+            "min_signed": -0.231827,
+            "max_signed": 0.287405
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 293.532,
+            "mean_signed": 0.133825,
+            "mean_abs": 0.133825,
+            "max_abs": 0.312249,
+            "min_signed": 0.034254,
+            "max_signed": 0.312249
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 294.608,
+            "mean_signed": 0.084939,
+            "mean_abs": 0.092755,
+            "max_abs": 0.200221,
+            "min_signed": -0.055095,
+            "max_signed": 0.200221
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_ocf_margin_4q",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 295.355,
+            "mean_signed": 0.470723,
+            "mean_abs": 0.470723,
+            "max_abs": 0.552006,
+            "min_signed": 0.272185,
+            "max_signed": 0.552006
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 290.82,
+            "mean_signed": 0.022545,
+            "mean_abs": 0.052795,
+            "max_abs": 0.149116,
+            "min_signed": -0.118585,
+            "max_signed": 0.149116
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 289.895,
+            "mean_signed": 0.021078,
+            "mean_abs": 0.037511,
+            "max_abs": 0.162854,
+            "min_signed": -0.07011,
+            "max_signed": 0.162854
+          }
+        ],
+        "max_abs_correlation_all_members": 0.470723,
+        "max_abs_correlation_for_gate": 0.470723,
+        "delta_q_value": 0.46918227
+      },
+      "statistical_gate": {
+        "pass": false,
+        "reasons": [
+          "marginal_ic_not_positive",
+          "marginal_ic_p_above_0_10",
+          "marginal_ic_q_above_0_10"
+        ]
+      },
+      "portfolio_result": null,
+      "portfolio_gate": null,
+      "status": "statistical_rejected"
+    },
+    {
+      "candidate_key": "p8_core_earnings_ratio",
+      "economic_key": "core_earnings_ratio",
+      "factor_id": "core_earnings_ratio",
+      "direction": "high",
+      "label": "core_earnings_ratio",
+      "transform": "pit_latest",
+      "coverage": {
+        "rows": 536265,
+        "non_null_rows": 300294,
+        "non_null_ratio": 0.559973,
+        "symbol_count": 300,
+        "first_value_date": "2022-05-05"
+      },
+      "marginal_ic": {
+        "comparison_basis": "current_composite",
+        "n_dates": 1088,
+        "base_ic_mean": 0.051064,
+        "combined_ic_mean": 0.048897,
+        "directional_delta_mean": -0.002167,
+        "delta_nw_t": -0.882157,
+        "delta_p_value": 0.37769172,
+        "recent_directional_delta_mean": -0.002114,
+        "correlations": [
+          {
+            "current_factor_id": "ext_alt_hs300_idio_vol_40d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1083,
+            "mean_symbols": 274.196,
+            "mean_signed": 0.005482,
+            "mean_abs": 0.055685,
+            "max_abs": 0.154543,
+            "min_signed": -0.134621,
+            "max_signed": 0.154543
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_dividend_yield",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 264.019,
+            "mean_signed": 0.002025,
+            "mean_abs": 0.031124,
+            "max_abs": 0.128752,
+            "min_signed": -0.091649,
+            "max_signed": 0.128752
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 274.237,
+            "mean_signed": 0.002128,
+            "mean_abs": 0.044908,
+            "max_abs": 0.145776,
+            "min_signed": -0.142853,
+            "max_signed": 0.145776
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 273.053,
+            "mean_signed": 0.015183,
+            "mean_abs": 0.024,
+            "max_abs": 0.081243,
+            "min_signed": -0.061189,
+            "max_signed": 0.081243
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 274.002,
+            "mean_signed": -0.015621,
+            "mean_abs": 0.032057,
+            "max_abs": 0.096952,
+            "min_signed": -0.096952,
+            "max_signed": 0.0672
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_ocf_margin_4q",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 274.729,
+            "mean_signed": 0.059855,
+            "mean_abs": 0.072099,
+            "max_abs": 0.161224,
+            "min_signed": -0.076827,
+            "max_signed": 0.161224
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 270.275,
+            "mean_signed": 0.00927,
+            "mean_abs": 0.049503,
+            "max_abs": 0.210127,
+            "min_signed": -0.137659,
+            "max_signed": 0.210127
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 269.738,
+            "mean_signed": 0.029259,
+            "mean_abs": 0.048388,
+            "max_abs": 0.136468,
+            "min_signed": -0.078529,
+            "max_signed": 0.136468
+          }
+        ],
+        "max_abs_correlation_all_members": 0.072099,
+        "max_abs_correlation_for_gate": 0.072099,
+        "delta_q_value": 0.46918227
+      },
+      "statistical_gate": {
+        "pass": false,
+        "reasons": [
+          "marginal_ic_not_positive",
+          "marginal_ic_p_above_0_10",
+          "marginal_ic_q_above_0_10"
+        ]
+      },
+      "portfolio_result": null,
+      "portfolio_gate": null,
+      "status": "statistical_rejected"
+    },
+    {
+      "candidate_key": "p8_debt_ratio_latest",
+      "economic_key": "debt_ratio_latest",
+      "factor_id": "debt_ratio_latest",
+      "direction": "low",
+      "label": "debt_ratio_latest",
+      "transform": "pit_latest",
+      "coverage": {
+        "rows": 536265,
+        "non_null_rows": 390570,
+        "non_null_ratio": 0.728315,
+        "symbol_count": 300,
+        "first_value_date": "2021-04-12"
+      },
+      "marginal_ic": {
+        "comparison_basis": "current_composite",
+        "n_dates": 1335,
+        "base_ic_mean": 0.046311,
+        "combined_ic_mean": 0.042084,
+        "directional_delta_mean": -0.004226,
+        "delta_nw_t": -0.928147,
+        "delta_p_value": 0.35333156,
+        "recent_directional_delta_mean": 0.00017,
+        "correlations": [
+          {
+            "current_factor_id": "ext_alt_hs300_idio_vol_40d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1330,
+            "mean_symbols": 290.634,
+            "mean_signed": -0.322912,
+            "mean_abs": 0.32307,
+            "max_abs": 0.476366,
+            "min_signed": -0.476366,
+            "max_signed": 0.104952
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_dividend_yield",
+            "is_replaced_slot": false,
+            "n_dates": 1340,
+            "mean_symbols": 272.175,
+            "mean_signed": -0.266457,
+            "mean_abs": 0.266457,
+            "max_abs": 0.380393,
+            "min_signed": -0.380393,
+            "max_signed": -0.0675
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1340,
+            "mean_symbols": 290.715,
+            "mean_signed": -0.183044,
+            "mean_abs": 0.188513,
+            "max_abs": 0.398807,
+            "min_signed": -0.398807,
+            "max_signed": 0.182208
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 293.435,
+            "mean_signed": -0.008265,
+            "mean_abs": 0.046869,
+            "max_abs": 0.10035,
+            "min_signed": -0.10035,
+            "max_signed": 0.071446
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+            "is_replaced_slot": false,
+            "n_dates": 1340,
+            "mean_symbols": 290.382,
+            "mean_signed": -0.260613,
+            "mean_abs": 0.26134,
+            "max_abs": 0.391136,
+            "min_signed": -0.391136,
+            "max_signed": 0.158279
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_ocf_margin_4q",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 295.258,
+            "mean_signed": 0.013037,
+            "mean_abs": 0.079121,
+            "max_abs": 0.184403,
+            "min_signed": -0.163905,
+            "max_signed": 0.184403
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+            "is_replaced_slot": false,
+            "n_dates": 1316,
+            "mean_symbols": 285.06,
+            "mean_signed": -0.009011,
+            "mean_abs": 0.092079,
+            "max_abs": 0.282939,
+            "min_signed": -0.184564,
+            "max_signed": 0.282939
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+            "is_replaced_slot": false,
+            "n_dates": 1340,
+            "mean_symbols": 284.425,
+            "mean_signed": -0.050418,
+            "mean_abs": 0.070624,
+            "max_abs": 0.19886,
+            "min_signed": -0.19886,
+            "max_signed": 0.144789
+          }
+        ],
+        "max_abs_correlation_all_members": 0.32307,
+        "max_abs_correlation_for_gate": 0.32307,
+        "delta_q_value": 0.46918227
+      },
+      "statistical_gate": {
+        "pass": false,
+        "reasons": [
+          "marginal_ic_not_positive",
+          "marginal_ic_p_above_0_10",
+          "marginal_ic_q_above_0_10"
+        ]
+      },
+      "portfolio_result": null,
+      "portfolio_gate": null,
+      "status": "statistical_rejected"
+    },
+    {
+      "candidate_key": "p8_gross_margin_latest",
+      "economic_key": "gross_margin_latest",
+      "factor_id": "gross_margin_latest",
+      "direction": "high",
+      "label": "gross_margin_latest",
+      "transform": "pit_latest",
+      "coverage": {
+        "rows": 536265,
+        "non_null_rows": 328015,
+        "non_null_ratio": 0.611666,
+        "symbol_count": 253,
+        "first_value_date": "2021-05-06"
+      },
+      "marginal_ic": {
+        "comparison_basis": "current_composite",
+        "n_dates": 1329,
+        "base_ic_mean": 0.035845,
+        "combined_ic_mean": 0.028662,
+        "directional_delta_mean": -0.007183,
+        "delta_nw_t": -1.71952,
+        "delta_p_value": 0.08551965,
+        "recent_directional_delta_mean": -0.009422,
+        "correlations": [
+          {
+            "current_factor_id": "ext_alt_hs300_idio_vol_40d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1324,
+            "mean_symbols": 245.113,
+            "mean_signed": -0.091642,
+            "mean_abs": 0.099805,
+            "max_abs": 0.245478,
+            "min_signed": -0.245478,
+            "max_signed": 0.095402
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_dividend_yield",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 226.734,
+            "mean_signed": -0.04537,
+            "mean_abs": 0.065074,
+            "max_abs": 0.226354,
+            "min_signed": -0.226354,
+            "max_signed": 0.088177
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 245.182,
+            "mean_signed": -0.055143,
+            "mean_abs": 0.084519,
+            "max_abs": 0.373217,
+            "min_signed": -0.373217,
+            "max_signed": 0.181952
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 246.757,
+            "mean_signed": -0.017008,
+            "mean_abs": 0.044985,
+            "max_abs": 0.125422,
+            "min_signed": -0.125422,
+            "max_signed": 0.102607
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 244.843,
+            "mean_signed": -0.183739,
+            "mean_abs": 0.183739,
+            "max_abs": 0.331618,
+            "min_signed": -0.331618,
+            "max_signed": -0.114229
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_ocf_margin_4q",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 248.579,
+            "mean_signed": 0.482955,
+            "mean_abs": 0.482955,
+            "max_abs": 0.538333,
+            "min_signed": 0.435211,
+            "max_signed": 0.538333
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+            "is_replaced_slot": false,
+            "n_dates": 1316,
+            "mean_symbols": 239.042,
+            "mean_signed": -0.025281,
+            "mean_abs": 0.077542,
+            "max_abs": 0.221728,
+            "min_signed": -0.221469,
+            "max_signed": 0.221728
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 239.537,
+            "mean_signed": 0.005306,
+            "mean_abs": 0.055068,
+            "max_abs": 0.148211,
+            "min_signed": -0.123541,
+            "max_signed": 0.148211
+          }
+        ],
+        "max_abs_correlation_all_members": 0.482955,
+        "max_abs_correlation_for_gate": 0.482955,
+        "delta_q_value": 0.31357205
+      },
+      "statistical_gate": {
+        "pass": false,
+        "reasons": [
+          "marginal_ic_not_positive",
+          "marginal_ic_q_above_0_10"
+        ]
+      },
+      "portfolio_result": null,
+      "portfolio_gate": null,
+      "status": "statistical_rejected"
+    },
+    {
+      "candidate_key": "p8_net_income_yoy_latest",
+      "economic_key": "net_income_yoy_latest",
+      "factor_id": "net_income_yoy_latest",
+      "direction": "high",
+      "label": "net_income_yoy_latest",
+      "transform": "pit_latest",
+      "coverage": {
+        "rows": 536265,
+        "non_null_rows": 390128,
+        "non_null_ratio": 0.727491,
+        "symbol_count": 300,
+        "first_value_date": "2021-05-06"
+      },
+      "marginal_ic": {
+        "comparison_basis": "current_composite",
+        "n_dates": 1329,
+        "base_ic_mean": 0.046469,
+        "combined_ic_mean": 0.043393,
+        "directional_delta_mean": -0.003076,
+        "delta_nw_t": -0.783772,
+        "delta_p_value": 0.43317407,
+        "recent_directional_delta_mean": -0.00559,
+        "correlations": [
+          {
+            "current_factor_id": "ext_alt_hs300_idio_vol_40d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1324,
+            "mean_symbols": 291.616,
+            "mean_signed": -0.150046,
+            "mean_abs": 0.164324,
+            "max_abs": 0.376455,
+            "min_signed": -0.376455,
+            "max_signed": 0.166468
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_dividend_yield",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 273.036,
+            "mean_signed": -0.213289,
+            "mean_abs": 0.213289,
+            "max_abs": 0.38037,
+            "min_signed": -0.38037,
+            "max_signed": -0.022786
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 291.69,
+            "mean_signed": -0.071309,
+            "mean_abs": 0.099996,
+            "max_abs": 0.313639,
+            "min_signed": -0.313639,
+            "max_signed": 0.21646
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 293.532,
+            "mean_signed": -0.03549,
+            "mean_abs": 0.06567,
+            "max_abs": 0.181105,
+            "min_signed": -0.181105,
+            "max_signed": 0.069912
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 291.344,
+            "mean_signed": -0.169844,
+            "mean_abs": 0.169844,
+            "max_abs": 0.374448,
+            "min_signed": -0.374448,
+            "max_signed": -0.054274
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_ocf_margin_4q",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 295.355,
+            "mean_signed": 0.137192,
+            "mean_abs": 0.137192,
+            "max_abs": 0.237159,
+            "min_signed": 0.044303,
+            "max_signed": 0.237159
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+            "is_replaced_slot": false,
+            "n_dates": 1316,
+            "mean_symbols": 285.118,
+            "mean_signed": -0.07708,
+            "mean_abs": 0.095235,
+            "max_abs": 0.228169,
+            "min_signed": -0.228169,
+            "max_signed": 0.111836
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 285.337,
+            "mean_signed": 0.032732,
+            "mean_abs": 0.062316,
+            "max_abs": 0.157872,
+            "min_signed": -0.101252,
+            "max_signed": 0.157872
+          }
+        ],
+        "max_abs_correlation_all_members": 0.213289,
+        "max_abs_correlation_for_gate": 0.213289,
+        "delta_q_value": 0.46918227
+      },
+      "statistical_gate": {
+        "pass": false,
+        "reasons": [
+          "marginal_ic_not_positive",
+          "marginal_ic_p_above_0_10",
+          "marginal_ic_q_above_0_10"
+        ]
+      },
+      "portfolio_result": null,
+      "portfolio_gate": null,
+      "status": "statistical_rejected"
+    },
+    {
+      "candidate_key": "p8_net_margin_latest",
+      "economic_key": "net_margin_latest",
+      "factor_id": "net_margin_latest",
+      "direction": "high",
+      "label": "net_margin_latest",
+      "transform": "pit_latest",
+      "coverage": {
+        "rows": 536265,
+        "non_null_rows": 390135,
+        "non_null_ratio": 0.727504,
+        "symbol_count": 300,
+        "first_value_date": "2021-05-06"
+      },
+      "marginal_ic": {
+        "comparison_basis": "current_composite",
+        "n_dates": 1329,
+        "base_ic_mean": 0.046469,
+        "combined_ic_mean": 0.041637,
+        "directional_delta_mean": -0.004832,
+        "delta_nw_t": -1.879868,
+        "delta_p_value": 0.06012613,
+        "recent_directional_delta_mean": -0.003796,
+        "correlations": [
+          {
+            "current_factor_id": "ext_alt_hs300_idio_vol_40d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1324,
+            "mean_symbols": 291.616,
+            "mean_signed": 0.17805,
+            "mean_abs": 0.178407,
+            "max_abs": 0.362901,
+            "min_signed": -0.041854,
+            "max_signed": 0.362901
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_dividend_yield",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 273.036,
+            "mean_signed": 0.218217,
+            "mean_abs": 0.218217,
+            "max_abs": 0.355112,
+            "min_signed": 0.04564,
+            "max_signed": 0.355112
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 291.69,
+            "mean_signed": 0.119484,
+            "mean_abs": 0.128349,
+            "max_abs": 0.328204,
+            "min_signed": -0.136768,
+            "max_signed": 0.328204
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 293.532,
+            "mean_signed": 0.035784,
+            "mean_abs": 0.047011,
+            "max_abs": 0.121934,
+            "min_signed": -0.036049,
+            "max_signed": 0.121934
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 291.344,
+            "mean_signed": -0.031271,
+            "mean_abs": 0.04947,
+            "max_abs": 0.196515,
+            "min_signed": -0.196515,
+            "max_signed": 0.058219
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_ocf_margin_4q",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 295.355,
+            "mean_signed": 0.56651,
+            "mean_abs": 0.56651,
+            "max_abs": 0.684945,
+            "min_signed": 0.454784,
+            "max_signed": 0.684945
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+            "is_replaced_slot": false,
+            "n_dates": 1316,
+            "mean_symbols": 285.118,
+            "mean_signed": -0.027859,
+            "mean_abs": 0.062488,
+            "max_abs": 0.165585,
+            "min_signed": -0.165585,
+            "max_signed": 0.126195
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 285.337,
+            "mean_signed": 0.048958,
+            "mean_abs": 0.066585,
+            "max_abs": 0.223641,
+            "min_signed": -0.089388,
+            "max_signed": 0.223641
+          }
+        ],
+        "max_abs_correlation_all_members": 0.56651,
+        "max_abs_correlation_for_gate": 0.56651,
+        "delta_q_value": 0.31357205
+      },
+      "statistical_gate": {
+        "pass": false,
+        "reasons": [
+          "marginal_ic_not_positive",
+          "marginal_ic_q_above_0_10"
+        ]
+      },
+      "portfolio_result": null,
+      "portfolio_gate": null,
+      "status": "statistical_rejected"
+    },
+    {
+      "candidate_key": "p8_ocf_debt",
+      "economic_key": "ocf_debt",
+      "factor_id": "ocf_debt",
+      "direction": "high",
+      "label": "ocf_debt",
+      "transform": "pit_latest",
+      "coverage": {
+        "rows": 536265,
+        "non_null_rows": 322730,
+        "non_null_ratio": 0.601811,
+        "symbol_count": 300,
+        "first_value_date": "2022-05-05"
+      },
+      "marginal_ic": {
+        "comparison_basis": "current_composite",
+        "n_dates": 1088,
+        "base_ic_mean": 0.050886,
+        "combined_ic_mean": 0.047217,
+        "directional_delta_mean": -0.003669,
+        "delta_nw_t": -0.94498,
+        "delta_p_value": 0.34466885,
+        "recent_directional_delta_mean": 0.00236,
+        "correlations": [
+          {
+            "current_factor_id": "ext_alt_hs300_idio_vol_40d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1083,
+            "mean_symbols": 294.711,
+            "mean_signed": -0.154656,
+            "mean_abs": 0.158892,
+            "max_abs": 0.290076,
+            "min_signed": -0.290076,
+            "max_signed": 0.151832
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_dividend_yield",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 276.2,
+            "mean_signed": -0.026812,
+            "mean_abs": 0.043699,
+            "max_abs": 0.205062,
+            "min_signed": -0.205062,
+            "max_signed": 0.105631
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 294.764,
+            "mean_signed": -0.058572,
+            "mean_abs": 0.085349,
+            "max_abs": 0.304152,
+            "min_signed": -0.304152,
+            "max_signed": 0.216787
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 293.434,
+            "mean_signed": -0.016931,
+            "mean_abs": 0.04142,
+            "max_abs": 0.101909,
+            "min_signed": -0.074986,
+            "max_signed": 0.101909
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 294.559,
+            "mean_signed": -0.227177,
+            "mean_abs": 0.227177,
+            "max_abs": 0.350873,
+            "min_signed": -0.350873,
+            "max_signed": -0.134825
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_ocf_margin_4q",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 295.256,
+            "mean_signed": 0.513311,
+            "mean_abs": 0.513311,
+            "max_abs": 0.689447,
+            "min_signed": 0.314116,
+            "max_signed": 0.689447
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 290.748,
+            "mean_signed": 0.001899,
+            "mean_abs": 0.057286,
+            "max_abs": 0.187817,
+            "min_signed": -0.187817,
+            "max_signed": 0.184181
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 289.895,
+            "mean_signed": -0.018639,
+            "mean_abs": 0.044355,
+            "max_abs": 0.126848,
+            "min_signed": -0.126848,
+            "max_signed": 0.084112
+          }
+        ],
+        "max_abs_correlation_all_members": 0.513311,
+        "max_abs_correlation_for_gate": 0.513311,
+        "delta_q_value": 0.46918227
+      },
+      "statistical_gate": {
+        "pass": false,
+        "reasons": [
+          "marginal_ic_not_positive",
+          "marginal_ic_p_above_0_10",
+          "marginal_ic_q_above_0_10"
+        ]
+      },
+      "portfolio_result": null,
+      "portfolio_gate": null,
+      "status": "statistical_rejected"
+    },
+    {
+      "candidate_key": "p8_ocf_ni",
+      "economic_key": "ocf_ni",
+      "factor_id": "ocf_ni",
+      "direction": "high",
+      "label": "ocf_ni",
+      "transform": "pit_latest",
+      "coverage": {
+        "rows": 536265,
+        "non_null_rows": 301461,
+        "non_null_ratio": 0.562149,
+        "symbol_count": 300,
+        "first_value_date": "2022-05-05"
+      },
+      "marginal_ic": {
+        "comparison_basis": "current_composite",
+        "n_dates": 1088,
+        "base_ic_mean": 0.050476,
+        "combined_ic_mean": 0.047473,
+        "directional_delta_mean": -0.003003,
+        "delta_nw_t": -1.370571,
+        "delta_p_value": 0.17050876,
+        "recent_directional_delta_mean": -0.001882,
+        "correlations": [
+          {
+            "current_factor_id": "ext_alt_hs300_idio_vol_40d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1083,
+            "mean_symbols": 275.282,
+            "mean_signed": 0.138123,
+            "mean_abs": 0.140355,
+            "max_abs": 0.392972,
+            "min_signed": -0.049106,
+            "max_signed": 0.392972
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_dividend_yield",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 265.175,
+            "mean_signed": 0.108874,
+            "mean_abs": 0.110113,
+            "max_abs": 0.319485,
+            "min_signed": -0.037239,
+            "max_signed": 0.319485
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 275.305,
+            "mean_signed": 0.084158,
+            "mean_abs": 0.09818,
+            "max_abs": 0.379364,
+            "min_signed": -0.131892,
+            "max_signed": 0.379364
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 274.121,
+            "mean_signed": 0.186512,
+            "mean_abs": 0.186512,
+            "max_abs": 0.408697,
+            "min_signed": 0.090684,
+            "max_signed": 0.408697
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 275.07,
+            "mean_signed": 0.180145,
+            "mean_abs": 0.180145,
+            "max_abs": 0.303296,
+            "min_signed": 0.063119,
+            "max_signed": 0.303296
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_ocf_margin_4q",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 275.797,
+            "mean_signed": 0.595308,
+            "mean_abs": 0.595308,
+            "max_abs": 0.697671,
+            "min_signed": 0.32486,
+            "max_signed": 0.697671
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 271.343,
+            "mean_signed": 0.027927,
+            "mean_abs": 0.060425,
+            "max_abs": 0.175418,
+            "min_signed": -0.175418,
+            "max_signed": 0.149263
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 270.806,
+            "mean_signed": 0.044037,
+            "mean_abs": 0.054654,
+            "max_abs": 0.181345,
+            "min_signed": -0.057483,
+            "max_signed": 0.181345
+          }
+        ],
+        "max_abs_correlation_all_members": 0.595308,
+        "max_abs_correlation_for_gate": 0.595308,
+        "delta_q_value": 0.46889909
+      },
+      "statistical_gate": {
+        "pass": false,
+        "reasons": [
+          "marginal_ic_not_positive",
+          "marginal_ic_p_above_0_10",
+          "marginal_ic_q_above_0_10"
+        ]
+      },
+      "portfolio_result": null,
+      "portfolio_gate": null,
+      "status": "statistical_rejected"
+    },
+    {
+      "candidate_key": "p8_pb_latest",
+      "economic_key": "pb_latest",
+      "factor_id": "pb_latest",
+      "direction": "low",
+      "label": "pb_latest",
+      "transform": "pit_latest",
+      "coverage": {
+        "rows": 536265,
+        "non_null_rows": 389430,
+        "non_null_ratio": 0.726189,
+        "symbol_count": 300,
+        "first_value_date": "2021-05-06"
+      },
+      "marginal_ic": {
+        "comparison_basis": "current_composite",
+        "n_dates": 1329,
+        "base_ic_mean": 0.046523,
+        "combined_ic_mean": 0.048637,
+        "directional_delta_mean": 0.002113,
+        "delta_nw_t": 0.845645,
+        "delta_p_value": 0.39775068,
+        "recent_directional_delta_mean": -0.001863,
+        "correlations": [
+          {
+            "current_factor_id": "ext_alt_hs300_idio_vol_40d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1324,
+            "mean_symbols": 291.198,
+            "mean_signed": 0.522611,
+            "mean_abs": 0.522611,
+            "max_abs": 0.736224,
+            "min_signed": 0.315385,
+            "max_signed": 0.736224
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_dividend_yield",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 272.814,
+            "mean_signed": 0.618943,
+            "mean_abs": 0.618943,
+            "max_abs": 0.759575,
+            "min_signed": 0.354344,
+            "max_signed": 0.759575
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 291.274,
+            "mean_signed": 0.309808,
+            "mean_abs": 0.310002,
+            "max_abs": 0.650069,
+            "min_signed": -0.0352,
+            "max_signed": 0.650069
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 293.291,
+            "mean_signed": 0.26647,
+            "mean_abs": 0.26647,
+            "max_abs": 0.341749,
+            "min_signed": 0.154434,
+            "max_signed": 0.341749
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 290.957,
+            "mean_signed": 0.412253,
+            "mean_abs": 0.412253,
+            "max_abs": 0.483485,
+            "min_signed": 0.353141,
+            "max_signed": 0.483485
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_ocf_margin_4q",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 295.035,
+            "mean_signed": 0.05289,
+            "mean_abs": 0.076898,
+            "max_abs": 0.188498,
+            "min_signed": -0.100431,
+            "max_signed": 0.188498
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+            "is_replaced_slot": false,
+            "n_dates": 1316,
+            "mean_symbols": 284.983,
+            "mean_signed": 0.045738,
+            "mean_abs": 0.124784,
+            "max_abs": 0.319148,
+            "min_signed": -0.319148,
+            "max_signed": 0.315992
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 285.04,
+            "mean_signed": 0.049025,
+            "mean_abs": 0.06833,
+            "max_abs": 0.183108,
+            "min_signed": -0.089063,
+            "max_signed": 0.183108
+          }
+        ],
+        "max_abs_correlation_all_members": 0.618943,
+        "max_abs_correlation_for_gate": 0.618943,
+        "delta_q_value": 0.46918227
+      },
+      "statistical_gate": {
+        "pass": false,
+        "reasons": [
+          "marginal_ic_p_above_0_10",
+          "marginal_ic_q_above_0_10"
+        ]
+      },
+      "portfolio_result": null,
+      "portfolio_gate": null,
+      "status": "statistical_rejected"
+    },
+    {
+      "candidate_key": "p8_revenue_yoy_latest",
+      "economic_key": "revenue_yoy_latest",
+      "factor_id": "revenue_yoy_latest",
+      "direction": "high",
+      "label": "revenue_yoy_latest",
+      "transform": "pit_latest",
+      "coverage": {
+        "rows": 536265,
+        "non_null_rows": 390128,
+        "non_null_ratio": 0.727491,
+        "symbol_count": 300,
+        "first_value_date": "2021-05-06"
+      },
+      "marginal_ic": {
+        "comparison_basis": "current_composite",
+        "n_dates": 1329,
+        "base_ic_mean": 0.046469,
+        "combined_ic_mean": 0.043011,
+        "directional_delta_mean": -0.003458,
+        "delta_nw_t": -0.855458,
+        "delta_p_value": 0.3922977,
+        "recent_directional_delta_mean": -0.004309,
+        "correlations": [
+          {
+            "current_factor_id": "ext_alt_hs300_idio_vol_40d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1324,
+            "mean_symbols": 291.616,
+            "mean_signed": -0.24482,
+            "mean_abs": 0.257378,
+            "max_abs": 0.45823,
+            "min_signed": -0.45823,
+            "max_signed": 0.111276
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_dividend_yield",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 273.036,
+            "mean_signed": -0.29864,
+            "mean_abs": 0.29864,
+            "max_abs": 0.451911,
+            "min_signed": -0.451911,
+            "max_signed": -0.029541
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 291.69,
+            "mean_signed": -0.128395,
+            "mean_abs": 0.146496,
+            "max_abs": 0.365959,
+            "min_signed": -0.365959,
+            "max_signed": 0.157137
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 293.532,
+            "mean_signed": -0.081307,
+            "mean_abs": 0.100647,
+            "max_abs": 0.23488,
+            "min_signed": -0.23488,
+            "max_signed": 0.075493
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 291.344,
+            "mean_signed": -0.241215,
+            "mean_abs": 0.241215,
+            "max_abs": 0.397531,
+            "min_signed": -0.397531,
+            "max_signed": -0.088589
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_ocf_margin_4q",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 295.355,
+            "mean_signed": 0.053354,
+            "mean_abs": 0.056184,
+            "max_abs": 0.153985,
+            "min_signed": -0.034506,
+            "max_signed": 0.153985
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+            "is_replaced_slot": false,
+            "n_dates": 1316,
+            "mean_symbols": 285.118,
+            "mean_signed": -0.063145,
+            "mean_abs": 0.099238,
+            "max_abs": 0.308321,
+            "min_signed": -0.308321,
+            "max_signed": 0.123094
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 285.337,
+            "mean_signed": 0.003698,
+            "mean_abs": 0.045214,
+            "max_abs": 0.116331,
+            "min_signed": -0.093348,
+            "max_signed": 0.116331
+          }
+        ],
+        "max_abs_correlation_all_members": 0.29864,
+        "max_abs_correlation_for_gate": 0.29864,
+        "delta_q_value": 0.46918227
+      },
+      "statistical_gate": {
+        "pass": false,
+        "reasons": [
+          "marginal_ic_not_positive",
+          "marginal_ic_p_above_0_10",
+          "marginal_ic_q_above_0_10"
+        ]
+      },
+      "portfolio_result": null,
+      "portfolio_gate": null,
+      "status": "statistical_rejected"
+    },
+    {
+      "candidate_key": "p8_roe_latest",
+      "economic_key": "roe_latest",
+      "factor_id": "roe_latest",
+      "direction": "high",
+      "label": "roe_latest",
+      "transform": "pit_latest",
+      "coverage": {
+        "rows": 536265,
+        "non_null_rows": 389597,
+        "non_null_ratio": 0.726501,
+        "symbol_count": 300,
+        "first_value_date": "2021-05-06"
+      },
+      "marginal_ic": {
+        "comparison_basis": "current_composite",
+        "n_dates": 1329,
+        "base_ic_mean": 0.046423,
+        "combined_ic_mean": 0.04036,
+        "directional_delta_mean": -0.006063,
+        "delta_nw_t": -1.98943,
+        "delta_p_value": 0.04665377,
+        "recent_directional_delta_mean": -0.002569,
+        "correlations": [
+          {
+            "current_factor_id": "ext_alt_hs300_idio_vol_40d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1324,
+            "mean_symbols": 291.302,
+            "mean_signed": -0.07199,
+            "mean_abs": 0.106263,
+            "max_abs": 0.364138,
+            "min_signed": -0.364138,
+            "max_signed": 0.2519
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_dividend_yield",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 272.844,
+            "mean_signed": 0.132599,
+            "mean_abs": 0.169805,
+            "max_abs": 0.387318,
+            "min_signed": -0.156084,
+            "max_signed": 0.387318
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 291.379,
+            "mean_signed": 0.004319,
+            "mean_abs": 0.082769,
+            "max_abs": 0.30429,
+            "min_signed": -0.30429,
+            "max_signed": 0.292763
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 293.336,
+            "mean_signed": -0.053455,
+            "mean_abs": 0.062489,
+            "max_abs": 0.170676,
+            "min_signed": -0.170676,
+            "max_signed": 0.043301
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 291.036,
+            "mean_signed": -0.251185,
+            "mean_abs": 0.251185,
+            "max_abs": 0.395306,
+            "min_signed": -0.395306,
+            "max_signed": -0.02328
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_ocf_margin_4q",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 295.158,
+            "mean_signed": 0.275409,
+            "mean_abs": 0.275409,
+            "max_abs": 0.332171,
+            "min_signed": 0.148425,
+            "max_signed": 0.332171
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+            "is_replaced_slot": false,
+            "n_dates": 1316,
+            "mean_symbols": 285.021,
+            "mean_signed": -0.032734,
+            "mean_abs": 0.074426,
+            "max_abs": 0.194486,
+            "min_signed": -0.194486,
+            "max_signed": 0.147715
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+            "is_replaced_slot": false,
+            "n_dates": 1334,
+            "mean_symbols": 285.04,
+            "mean_signed": 0.033319,
+            "mean_abs": 0.064484,
+            "max_abs": 0.226246,
+            "min_signed": -0.136008,
+            "max_signed": 0.226246
+          }
+        ],
+        "max_abs_correlation_all_members": 0.275409,
+        "max_abs_correlation_for_gate": 0.275409,
+        "delta_q_value": 0.31357205
+      },
+      "statistical_gate": {
+        "pass": false,
+        "reasons": [
+          "marginal_ic_not_positive",
+          "marginal_ic_q_above_0_10"
+        ]
+      },
+      "portfolio_result": null,
+      "portfolio_gate": null,
+      "status": "statistical_rejected"
+    }
+  ],
+  "portfolio": {
+    "baseline": {
+      "full_2x": {
+        "label": "p8_baseline_full_2x",
+        "start": "2021-06-01",
+        "end": "2026-11-05",
+        "cost": "2x",
+        "max_positions": 20,
+        "error": null,
+        "stats": {
+          "total_return": 0.9273,
+          "annual_return": 0.1339,
+          "max_drawdown": -0.1164,
+          "sharpe": 1.05,
+          "sortino": 1.57,
+          "win_rate": 0.5511,
+          "profit_factor": 1.62,
+          "n_trades": 704.0,
+          "avg_exposure": 0.7296,
+          "worst": -0.1038
+        },
+        "trade_count": 704,
+        "benchmark_return": 0.00919
+      },
+      "full_3x": {
+        "label": "p8_baseline_full_3x",
+        "start": "2021-06-01",
+        "end": "2026-11-05",
+        "cost": "3x",
+        "max_positions": 20,
+        "error": null,
+        "stats": {
+          "total_return": 0.8353,
+          "annual_return": 0.1233,
+          "max_drawdown": -0.1253,
+          "sharpe": 0.97,
+          "sortino": 1.45,
+          "win_rate": 0.5384,
+          "profit_factor": 1.63,
+          "n_trades": 704.0,
+          "avg_exposure": 0.7297,
+          "worst": -0.105
+        },
+        "trade_count": 704,
+        "benchmark_return": 0.00919
+      },
+      "recent_2x": {
+        "label": "p8_baseline_recent_2x",
+        "start": "2025-10-14",
+        "end": "2026-11-05",
+        "cost": "2x",
+        "max_positions": 20,
+        "error": null,
+        "stats": {
+          "total_return": 0.0844,
+          "annual_return": 0.0823,
+          "max_drawdown": -0.1084,
+          "sharpe": 0.68,
+          "sortino": 0.99,
+          "win_rate": 0.565,
+          "profit_factor": 1.19,
+          "n_trades": 177.0,
+          "avg_exposure": 0.931,
+          "worst": -0.0833
+        },
+        "trade_count": 177,
+        "benchmark_return": -0.053607
+      },
+      "weak_2x": {
+        "label": "p8_baseline_weak_2x",
+        "start": "2025-07-01",
+        "end": "2026-06-30",
+        "cost": "2x",
+        "max_positions": 20,
+        "error": null,
+        "stats": {
+          "total_return": -0.0411,
+          "annual_return": -0.0427,
+          "max_drawdown": -0.1046,
+          "sharpe": -0.31,
+          "sortino": -0.42,
+          "win_rate": 0.3661,
+          "profit_factor": 1.5,
+          "n_trades": 183.0,
+          "avg_exposure": 0.9759,
+          "worst": -0.0844
+        },
+        "trade_count": 183,
+        "benchmark_return": 0.184123
+      }
+    },
+    "baseline_gate": {
+      "full_2x": {
+        "total_return": 0.9273,
+        "annual_return": 0.1339,
+        "max_drawdown": -0.1164,
+        "sharpe": 1.05,
+        "sortino": 1.57,
+        "win_rate": 0.5511,
+        "profit_factor": 1.62,
+        "n_trades": 704.0,
+        "avg_exposure": 0.7296,
+        "worst": -0.1038
+      },
+      "recent_2x": {
+        "total_return": 0.0844,
+        "annual_return": 0.0823,
+        "max_drawdown": -0.1084,
+        "sharpe": 0.68,
+        "sortino": 0.99,
+        "win_rate": 0.565,
+        "profit_factor": 1.19,
+        "n_trades": 177.0,
+        "avg_exposure": 0.931,
+        "worst": -0.0833
+      },
+      "full_3x": {
+        "total_return": 0.8353,
+        "annual_return": 0.1233,
+        "max_drawdown": -0.1253,
+        "sharpe": 0.97,
+        "sortino": 1.45,
+        "win_rate": 0.5384,
+        "profit_factor": 1.63,
+        "n_trades": 704.0,
+        "avg_exposure": 0.7297,
+        "worst": -0.105
+      }
+    },
+    "combined_attempt": null,
+    "final": null,
+    "final_gate": null
+  },
+  "ablation": null,
+  "ablation_gate": null,
+  "rolling_year": null,
+  "cost_warning_5x": null,
+  "negative_knowledge": [
+    {
+      "candidate_key": "p8_accrual",
+      "factor_id": "accrual",
+      "status": "statistical_rejected",
+      "reasons": [
+        "marginal_ic_not_positive",
+        "marginal_ic_p_above_0_10",
+        "marginal_ic_q_above_0_10"
+      ]
+    },
+    {
+      "candidate_key": "p8_core_earnings_ratio",
+      "factor_id": "core_earnings_ratio",
+      "status": "statistical_rejected",
+      "reasons": [
+        "marginal_ic_not_positive",
+        "marginal_ic_p_above_0_10",
+        "marginal_ic_q_above_0_10"
+      ]
+    },
+    {
+      "candidate_key": "p8_debt_ratio_latest",
+      "factor_id": "debt_ratio_latest",
+      "status": "statistical_rejected",
+      "reasons": [
+        "marginal_ic_not_positive",
+        "marginal_ic_p_above_0_10",
+        "marginal_ic_q_above_0_10"
+      ]
+    },
+    {
+      "candidate_key": "p8_gross_margin_latest",
+      "factor_id": "gross_margin_latest",
+      "status": "statistical_rejected",
+      "reasons": [
+        "marginal_ic_not_positive",
+        "marginal_ic_q_above_0_10"
+      ]
+    },
+    {
+      "candidate_key": "p8_net_income_yoy_latest",
+      "factor_id": "net_income_yoy_latest",
+      "status": "statistical_rejected",
+      "reasons": [
+        "marginal_ic_not_positive",
+        "marginal_ic_p_above_0_10",
+        "marginal_ic_q_above_0_10"
+      ]
+    },
+    {
+      "candidate_key": "p8_net_margin_latest",
+      "factor_id": "net_margin_latest",
+      "status": "statistical_rejected",
+      "reasons": [
+        "marginal_ic_not_positive",
+        "marginal_ic_q_above_0_10"
+      ]
+    },
+    {
+      "candidate_key": "p8_ocf_debt",
+      "factor_id": "ocf_debt",
+      "status": "statistical_rejected",
+      "reasons": [
+        "marginal_ic_not_positive",
+        "marginal_ic_p_above_0_10",
+        "marginal_ic_q_above_0_10"
+      ]
+    },
+    {
+      "candidate_key": "p8_ocf_ni",
+      "factor_id": "ocf_ni",
+      "status": "statistical_rejected",
+      "reasons": [
+        "marginal_ic_not_positive",
+        "marginal_ic_p_above_0_10",
+        "marginal_ic_q_above_0_10"
+      ]
+    },
+    {
+      "candidate_key": "p8_pb_latest",
+      "factor_id": "pb_latest",
+      "status": "statistical_rejected",
+      "reasons": [
+        "marginal_ic_p_above_0_10",
+        "marginal_ic_q_above_0_10"
+      ]
+    },
+    {
+      "candidate_key": "p8_revenue_yoy_latest",
+      "factor_id": "revenue_yoy_latest",
+      "status": "statistical_rejected",
+      "reasons": [
+        "marginal_ic_not_positive",
+        "marginal_ic_p_above_0_10",
+        "marginal_ic_q_above_0_10"
+      ]
+    },
+    {
+      "candidate_key": "p8_roe_latest",
+      "factor_id": "roe_latest",
+      "status": "statistical_rejected",
+      "reasons": [
+        "marginal_ic_not_positive",
+        "marginal_ic_q_above_0_10"
+      ]
+    }
+  ],
+  "decision": {
+    "status": "no_statistical_candidate",
+    "active_version": null,
+    "paper_target_generated": false,
+    "orders_generated": false,
+    "production_enabled": false,
+    "factor_ids": null,
+    "new_watch_version": null,
+    "set_version_created": false
+  },
+  "caveats": [
+    "Current HS300 membership is applied to history; survivorship bias remains.",
+    "Financial factors are PIT-verified by P7, but the result is a research admission test, not a profit guarantee.",
+    "2x is the normal cost baseline and 3x is a hard stress gate; 5x is warning-only.",
+    "No leverage, paper target, order, or production activation is produced.",
+    "The factor set remains watch-only; active_version is null."
+  ],
+  "research_id": "sha256:448cbd37b4faefc94025243be86b496779fcf649273d2e15b1a1835a42874038",
+  "generated_at": "2026-11-11T16:42:13Z"
+}

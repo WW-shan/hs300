@@ -1026,6 +1026,7 @@ def _run_prepared(
     end: date,
     cost_label: str,
     label: str,
+    cost_override: dict[str, float] | None = None,
 ) -> dict[str, Any]:
     config = portfolio._backtest_config(
         scoring,
@@ -1033,7 +1034,7 @@ def _run_prepared(
         start=start,
         end=end,
         max_positions=portfolio.DEFAULT_POSITIONS,
-        cost=portfolio._cost_parameters(cost_label),
+        cost=cost_override or portfolio._cost_parameters(cost_label),
     )
     config.symbols = list(prepared.market_data.symbols)
     result = service.run(config, prepared=prepared)
@@ -1449,17 +1450,25 @@ def _ensure_watch_version(
     final_directions: dict[str, str],
     candidate_by_id: dict[str, dict[str, Any]],
     output_path: Path,
+    *,
+    evidence_kind: str = "factor_increment_scan",
+    method_label: str = "P5",
+    rationale_suffix: str = "通过边际 IC 与 T+1 组合门槛。",
+    new_version_number: int = 2,
+    parent_version: int = 1,
+    change_reason: str = "P5 增量筛选通过：加入参数稳定的边际正贡献候选",
+    head_reason: str = "P5 增量筛选通过，保持 watch 且不激活",
 ) -> tuple[Any, Any, bool]:
     current_members = {member.factor_id: member for member in current_version.members}
     factors = list(dict.fromkeys(final_ids))
     if not 1 <= len(factors) <= 8:
-        raise ValueError("P5 watch set must contain 1..8 factors")
+        raise ValueError(f"{method_label} watch set must contain 1..8 factors")
     new_factor_ids = sorted(set(factors) - set(current_members))
     if new_factor_ids:
         assert_portfolio_candidates_admitted(DATA, new_factor_ids)
     weight = 1.0 / len(factors)
-    p5_ref = {
-        "kind": "factor_increment_scan",
+    research_ref = {
+        "kind": evidence_kind,
         "path": str(output_path.relative_to(DATA)),
     }
     members = []
@@ -1467,11 +1476,14 @@ def _ensure_watch_version(
         candidate = candidate_by_id.get(factor_id)
         existing = current_members.get(factor_id)
         if candidate is not None:
-            rationale = f"P5 增量：{candidate['label']}；{candidate['transform']}；通过边际 IC 与 T+1 组合门槛。"
-            evidence_refs = [p5_ref]
+            rationale = (
+                f"{method_label} 增量：{candidate['label']}；{candidate['transform']}；"
+                f"{rationale_suffix}"
+            )
+            evidence_refs = [research_ref]
         elif existing is not None:
             rationale = existing.rationale
-            evidence_refs = [*existing.evidence_refs, p5_ref]
+            evidence_refs = [*existing.evidence_refs, research_ref]
         else:
             raise ValueError(f"final member has no provenance: {factor_id}")
         members.append(
@@ -1489,38 +1501,40 @@ def _ensure_watch_version(
             }
         )
     expected_signature = sorted((item["factor_id"], round(weight, 12), item["direction"]) for item in members)
-    for version_number in (2,):
-        try:
-            existing_version = sets.load_version("multi_dimension_v1", version_number)
-        except FileNotFoundError:
-            continue
-        if _member_signature(existing_version.members) == expected_signature:
-            if head.watch_version != version_number:
-                token = sets._head_token(head)
-                head = sets.set_head(
-                    "multi_dimension_v1",
-                    "watch",
-                    version_number,
-                    token,
-                    "恢复 P5 已通过的增量 watch 版本",
-                )
-            return existing_version, head, False
-    if head.watch_version != 1:
-        raise ValueError("P5 cannot create a new version from a non-v1 watch head")
+    try:
+        existing_version = sets.load_version("multi_dimension_v1", new_version_number)
+    except FileNotFoundError:
+        existing_version = None
+    if existing_version is not None and _member_signature(existing_version.members) == expected_signature:
+        if head.watch_version != new_version_number:
+            token = sets._head_token(head)
+            head = sets.set_head(
+                "multi_dimension_v1",
+                "watch",
+                new_version_number,
+                token,
+                f"恢复 {method_label} 已通过的增量 watch 版本",
+            )
+        return existing_version, head, False
+    if head.watch_version != parent_version:
+        raise ValueError(
+            f"{method_label} cannot create a new version from watch head "
+            f"v{head.watch_version}; expected v{parent_version}"
+        )
     token = sets._head_token(head)
     version = sets.create_version(
         "multi_dimension_v1",
         members,
-        parent_version=1,
+        parent_version=parent_version,
         expected_head_sha256=token,
-        change_reason="P5 增量筛选通过：加入参数稳定的边际正贡献候选",
+        change_reason=change_reason,
     )
     head = sets.set_head(
         "multi_dimension_v1",
         "watch",
         version.version,
         token,
-        "P5 增量筛选通过，保持 watch 且不激活",
+        head_reason,
     )
     return version, head, True
 

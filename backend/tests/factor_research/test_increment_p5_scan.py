@@ -221,3 +221,115 @@ def test_p5_watch_requires_p6_portfolio_admission(monkeypatch) -> None:
         )
 
     assert checked == [["candidate_factor"]]
+
+
+def test_run_prepared_accepts_cost_override_without_new_engine(monkeypatch) -> None:
+    module = _module()
+    captured: dict[str, float] = {}
+    result = SimpleNamespace(
+        error=None,
+        stats={},
+        trades=[],
+        benchmark_curve=[],
+    )
+
+    class FakeService:
+        def run(self, config, prepared):
+            del prepared
+            captured["fees_pct"] = config.fees_pct
+            captured["slippage_bps"] = config.slippage_bps
+            return result
+
+    prepared = SimpleNamespace(
+        market_data=SimpleNamespace(symbols=["000001.SZ"])
+    )
+    record = module._run_prepared(
+        FakeService(),
+        prepared,
+        {"f": 1.0},
+        {"f": "high"},
+        start=module.START,
+        end=module.END,
+        cost_label="5x_warning",
+        label="five_x_warning",
+        cost_override={
+            "fees_pct": 0.001,
+            "commission_pct": 0.001,
+            "stamp_tax_pct": 0.0005,
+            "slippage_bps": 25.0,
+        },
+    )
+
+    assert captured == {"fees_pct": 0.001, "slippage_bps": 25.0}
+    assert record["cost"] == "5x_warning"
+
+
+def test_watch_version_supports_non_p5_evidence_provenance(monkeypatch) -> None:
+    module = _module()
+    monkeypatch.setattr(
+        module,
+        "assert_portfolio_candidates_admitted",
+        lambda *_args, **_kwargs: None,
+    )
+    captured: dict[str, object] = {}
+
+    class FakeSets:
+        @staticmethod
+        def _head_token(head):
+            del head
+            return "sha256:token"
+
+        @staticmethod
+        def load_version(_set_id, _version):
+            raise FileNotFoundError
+
+        @staticmethod
+        def create_version(_set_id, members, **kwargs):
+            captured["members"] = members
+            captured["create_kwargs"] = kwargs
+            return SimpleNamespace(version=2)
+
+        @staticmethod
+        def set_head(_set_id, state, version, token, reason):
+            captured["set_head"] = (state, version, token, reason)
+            return SimpleNamespace(watch_version=version, active_version=None)
+
+    current_version = SimpleNamespace(
+        version=1,
+        members=[
+            SimpleNamespace(
+                factor_id="base",
+                weight=1.0,
+                direction="high",
+                rationale="base rationale",
+                evidence_refs=[],
+            )
+        ],
+    )
+    candidate = {
+        "label": "P8财务因子",
+        "transform": "pit_latest",
+    }
+    version, head, created = module._ensure_watch_version(
+        FakeSets(),
+        SimpleNamespace(watch_version=1),
+        current_version,
+        ["base", "new_financial"],
+        {"base": "high", "new_financial": "low"},
+        {"new_financial": candidate},
+        ROOT / "data" / "factor_research" / "research" / "p8.json",
+        evidence_kind="financial_increment_scan",
+        method_label="P8",
+        change_reason="P8 财务增量研究通过",
+        head_reason="P8 形成 watch 版本",
+    )
+
+    assert created is True
+    assert version.version == 2
+    assert head.watch_version == 2
+    new_member = next(
+        member for member in captured["members"] if member["factor_id"] == "new_financial"
+    )
+    assert new_member["evidence_refs"][0]["kind"] == "financial_increment_scan"
+    assert new_member["rationale"].startswith("P8 增量")
+    assert captured["create_kwargs"]["change_reason"] == "P8 财务增量研究通过"
