@@ -13,6 +13,8 @@
 > 因 catalog 变化，P5 也在新 catalog 上重跑，Research ID 为
 > `sha256:641f0df5849264ea133ea0a8ccb58b057816afd47d916014f0d5baabb93cb6c7`，
 > 结论仍是 `no_new_watch_version`；同时补了 P5 相对输出路径归一化。
+> 最终 GitHub CI：`https://github.com/WW-shan/hs300/actions/runs/43056786201`；
+> 最终 Docker：`https://github.com/WW-shan/hs300/actions/runs/43056786083`，两项均成功。
 
 **Goal:** 用本地真实财务表、行情表和股息事件数据生成可复现的 PIT 审计，只有逐因子检查通过后才把财务因子提升为 `verified`，并让 P6 在新 catalog 上重新计算准入。
 
