@@ -51,6 +51,13 @@ RESEARCH_PATHS = {
         "financial_increment_scan_published",
         DATA / "factor_research" / "research" / "p8_financial_increment_2026-11-12.json",
     ),
+    "p9": (
+        "financial_regime_scan_published",
+        DATA
+        / "factor_research"
+        / "research"
+        / "p9_financial_regime_2026-11-12_v3.json",
+    ),
 }
 
 
@@ -242,6 +249,7 @@ def _bind_p6(
                 "p4_research_id": payloads["p4"]["research_id"],
                 "p5_research_id": payloads["p5"]["research_id"],
                 "p8_research_id": payloads["p8"]["research_id"],
+                "p9_research_id": payloads["p9"]["research_id"],
             },
             "metrics": payload["summary"],
             "verdict": "watch_only_no_active_version",

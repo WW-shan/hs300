@@ -781,6 +781,9 @@ def score_candidates(
     candidates: list[dict[str, Any]],
     current_weights: dict[str, float],
     current_directions: dict[str, str],
+    *,
+    return_column: str = "forward_return_5d",
+    horizon: int = HORIZON,
 ) -> tuple[pl.DataFrame, dict[str, dict[str, Any]]]:
     scored, current_scores, current_column = _current_composite(
         panel, current_weights, current_directions
@@ -848,10 +851,10 @@ def score_candidates(
             scored,
             base_column,
             candidate["score_column"],
-            "forward_return_5d",
+            return_column,
             recent_start=RECENT_START,
             minimum_symbols=MINIMUM_CROSS_SECTION,
-            horizon=HORIZON,
+            horizon=horizon,
         )
         results[candidate["candidate_key"]] = {
             "comparison_basis": (

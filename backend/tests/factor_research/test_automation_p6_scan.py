@@ -82,9 +82,12 @@ def test_published_p6_result_is_complete_and_watch_only() -> None:
         "p4",
         "p5",
         "p8",
+        "p9",
     ]
     p8 = next(item for item in payload["ledger_bindings"] if item["name"] == "p8")
     assert p8["research_id"] == "sha256:448cbd37b4faefc94025243be86b496779fcf649273d2e15b1a1835a42874038"
+    p9 = next(item for item in payload["ledger_bindings"] if item["name"] == "p9")
+    assert p9["research_id"] == "sha256:0dbe733ab7536387ef274964acca94238efd4ccc5acde3ef0909d2e2f6eda314"
     assert latest["ledger_record_id"].startswith("lr_")
 
 

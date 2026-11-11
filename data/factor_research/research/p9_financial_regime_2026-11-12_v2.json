@@ -1,0 +1,1886 @@
+{
+  "schema_version": 1,
+  "method_version": "financial_regime_p9_v2",
+  "financial_pit_research_id": "sha256:4d98dbe7ecb185cbb3e9cf14538df6916b19f0b67f184fce9f7a0ec5c501a7d6",
+  "p8_research_id": "sha256:448cbd37b4faefc94025243be86b496779fcf649273d2e15b1a1835a42874038",
+  "p5_research_id": "sha256:641f0df5849264ea133ea0a8ccb58b057816afd47d916014f0d5baabb93cb6c7",
+  "catalog_snapshot_id": "sha256:6cb4e69da0a5a3097459e32ddd662979c4602f7327c3b737c4130de147b9b3f6",
+  "p6_admission_catalog_snapshot_id": "sha256:6cb4e69da0a5a3097459e32ddd662979c4602f7327c3b737c4130de147b9b3f6",
+  "input_manifest_sha256": "sha256:e776f5e096ca77f2a3f756c2b2b042c769a85123df7b6cdd47e24ba7401e208b",
+  "input_manifest": [
+    {
+      "label": "enriched_daily",
+      "root": "kline_daily_enriched",
+      "patterns": [
+        "date=*/part.parquet"
+      ],
+      "file_count": 2143,
+      "bytes": 47704926,
+      "sha256": "sha256:a9b22f1c53e629f7ccb72fe68e4b1f4ffbb8f1fdd0c93093a22c2c965ac5b777"
+    },
+    {
+      "label": "index_daily",
+      "root": "kline_index_daily",
+      "patterns": [
+        "date=*/part.parquet"
+      ],
+      "file_count": 2133,
+      "bytes": 5951798,
+      "sha256": "sha256:282ddba171383b54a2bb0f7940aa55ec23fc059db4a481ca39321c06dab7368d"
+    },
+    {
+      "label": "existing_extension_factors",
+      "root": "ext_data/alt_hs300/timeseries",
+      "patterns": [
+        "date=*/part.parquet"
+      ],
+      "file_count": 2143,
+      "bytes": 267574660,
+      "sha256": "sha256:84397feef8d5a5a945c5cecc1b48615f5bc6d587d81e988b76583c3dee8ecc1a"
+    },
+    {
+      "label": "industry_map",
+      "root": "ext_data/ext_hy_ths",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 1,
+      "bytes": 103818,
+      "sha256": "sha256:a5635df79fc61d7a8115b05db9a33ef5c05e89ff2155770d807529298614ba7c"
+    },
+    {
+      "label": "instruments",
+      "root": "instruments",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 1,
+      "bytes": 162939,
+      "sha256": "sha256:9e918f0d3dbd5f21d04959745d38a0e3c1c04140d74fa23f96e84c514fdb996e"
+    },
+    {
+      "label": "insider_events",
+      "root": "research/r90_insider_trade",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 29,
+      "bytes": 1401612,
+      "sha256": "sha256:007e38a6358c8f590e16608f3cc4b6edfa0a1208533f5bf6b1c990919fc50597"
+    },
+    {
+      "label": "lhb_events",
+      "root": "research/r43_lhb",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 128,
+      "bytes": 19460906,
+      "sha256": "sha256:3274ff1ff2ddf851c9227dc2ba61cea58a62bd7933cb673a437e8661fd801c44"
+    },
+    {
+      "label": "repurchase_events",
+      "root": "research/external_r39",
+      "patterns": [
+        "repurchase.parquet"
+      ],
+      "file_count": 1,
+      "bytes": 534208,
+      "sha256": "sha256:62927d8c7e6b2d494acfe5609c553d251b2f706e447594cd133016ac388d22ff"
+    },
+    {
+      "label": "block_trade_events",
+      "root": "research/external_r39",
+      "patterns": [
+        "dzjy_*.parquet"
+      ],
+      "file_count": 37,
+      "bytes": 5103507,
+      "sha256": "sha256:8c2a4111568b9462f1960b63fa0b2e0d082e3e670a0c78e742546fbeece0dc7a"
+    },
+    {
+      "label": "analyst_reports",
+      "root": "research/r47_analyst",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 1301,
+      "bytes": 8950338,
+      "sha256": "sha256:701faab6676a078c558fc7be41cad5ea2c0e6d582d7371f026200ee1081dec70"
+    },
+    {
+      "label": "treasury_futures",
+      "root": "research/r193_treasury",
+      "patterns": [
+        "T0.parquet",
+        "TF0.parquet"
+      ],
+      "file_count": 2,
+      "bytes": 85185,
+      "sha256": "sha256:5d2e1f9777925cfc96cdaa2d095b49e4bf3437d32219708fc299237d808fad26"
+    },
+    {
+      "label": "hong_kong_indices",
+      "root": "research/r195_hk",
+      "patterns": [
+        "HSI.parquet",
+        "HSCEI.parquet"
+      ],
+      "file_count": 2,
+      "bytes": 41373,
+      "sha256": "sha256:57c98d2b6191c16b2138f845b8b2793ab197d8f616f296aa020a8de810c7e6b1"
+    },
+    {
+      "label": "etf_shares",
+      "root": "research/r74_etf_flow",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 71,
+      "bytes": 735542,
+      "sha256": "sha256:1d242dcba762fd8ee8a51d7df262bfd5cfa8d97a6f5a8700d04b4e3ecfd81c30"
+    },
+    {
+      "label": "qvix",
+      "root": "research/r75_qvix",
+      "patterns": [
+        "qvix_300etf.parquet"
+      ],
+      "file_count": 1,
+      "bytes": 31426,
+      "sha256": "sha256:d2ab9d933c9f5173cc51523030fca6a88b61a93cdef5d261d11a61fa5f7f2e34"
+    },
+    {
+      "label": "p1_p4_research",
+      "file_count": 4,
+      "bytes": 5047098,
+      "sha256": "sha256:b790de8893c4a0780bc7f0d1fec2d2bcd152ab04b0ebdf0e5df036d069c5ddfe",
+      "files": [
+        {
+          "path": "factor_research/research/parameters/p1_parameter_mc_2026-11-11.json",
+          "bytes": 267768,
+          "sha256": "sha256:a6bc94c4b572b5daba771e0a8d8544531f0030bd5afc6687732c7f69eecb3bb7"
+        },
+        {
+          "path": "factor_research/research/parameters/p2_builtin_parameter_mc_2026-11-11_v2.json",
+          "bytes": 1218453,
+          "sha256": "sha256:b2162789150bd3b7d2b2f61b123e28c8f24cffec50638c696e360a500f9e77ea"
+        },
+        {
+          "path": "factor_research/research/parameters/p3_extended_parameter_mc_2026-11-11_v3.json",
+          "bytes": 1059795,
+          "sha256": "sha256:b79bcdec6911323e1e8416ac39310a1f0a26bd85464d59f739e9390b4d125661"
+        },
+        {
+          "path": "factor_research/research/parameters/p4_threshold_parameter_mc_2026-11-11.json",
+          "bytes": 2501082,
+          "sha256": "sha256:9c65600b73b19cab7d89c76a7b83ef416cdc3125dadc7ce61e0d47353e63f1d4"
+        }
+      ]
+    },
+    {
+      "label": "p5_research_candidates",
+      "file_count": 9,
+      "bytes": 3576,
+      "sha256": "sha256:d04d63e3ffbc9dafd367021c23705c22121ff21d52c1dff70ae97cb239c69dcb",
+      "files": [
+        {
+          "path": "factor_research/candidates/p5/uf_p5_annual_vol10_low.json",
+          "bytes": 419,
+          "sha256": "sha256:3e957fb935ef878a1d493e95559a37ba518cea744533939fb5ba2a9433ec8bb2"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_atr5_low.json",
+          "bytes": 419,
+          "sha256": "sha256:5eeb304e3d8dd140dcda271ac8ed4bf6c50bb203c7631e1b3fbc3b0d00e77d9b"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_boll_width10_low.json",
+          "bytes": 349,
+          "sha256": "sha256:55c1d4fc2083ebbf5d39dd0d4c84905c3a30a5fda9d32a4e431f373f1b3c1eaf"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_amihud120.json",
+          "bytes": 398,
+          "sha256": "sha256:1f133388cb053d1f0d01f9c7b658bf2de655fcb87aa84e4c95826facc9c22f03"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_amount5_low.json",
+          "bytes": 352,
+          "sha256": "sha256:4afc4a3808148259ce622ac136f92c20ab2f21e426a7d883d8c367b1786a5c60"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_turnover5_low.json",
+          "bytes": 346,
+          "sha256": "sha256:bedca1be8b15ca0017e1b92994369dcef1c3cdb29f3cc7cae5a591b76a04438e"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_max_ret60_low.json",
+          "bytes": 383,
+          "sha256": "sha256:17cf2dd34dc0fbff42462a1bbfb53862994acf60b5c4673f429545ff40c2fc9c"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_div_yield_abs015.json",
+          "bytes": 449,
+          "sha256": "sha256:20e9769c9b3435483b859aaf433d4db8549b7382687a049f6db29daa9e0a3b95"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_margin_q50.json",
+          "bytes": 461,
+          "sha256": "sha256:34fa351781e1463b6b8595486db734a9e9a7287a7bb33845e88308578b64a30c"
+        }
+      ]
+    },
+    {
+      "label": "base_watch_version",
+      "file_count": 1,
+      "bytes": 8650,
+      "sha256": "sha256:0748c7469c6569cf4d903d322719ffe6dcadd94ea2dff5e749a1a8fbc9047ecb",
+      "files": [
+        {
+          "path": "factor_research/sets/multi_dimension_v1/versions/v0001.json",
+          "bytes": 8650,
+          "sha256": "sha256:d6c2ad44c2f08738cdb25214909cae812c887ac08a81593ba59a84f1c0802515"
+        }
+      ]
+    },
+    {
+      "label": "financial_tables",
+      "file_count": 4,
+      "bytes": 31673341,
+      "sha256": "sha256:6da00e458e56ad16f9779c950bd9fd075e09ee14c20943a4988db6c35dc4f164",
+      "files": [
+        {
+          "path": "financials/balance_sheet/part.parquet",
+          "bytes": 6890578,
+          "sha256": "sha256:9253a260bb045c37c0409617bdb3082624e7f21f253d35a147036e5eeac47283"
+        },
+        {
+          "path": "financials/cash_flow/part.parquet",
+          "bytes": 6867147,
+          "sha256": "sha256:f34a3365dd92713d91a007b784b9ac8cd266cc7e7d19b5ab1df75a82381e3b5b"
+        },
+        {
+          "path": "financials/income/part.parquet",
+          "bytes": 8349539,
+          "sha256": "sha256:9bf784d2939de14c4f9da2e96ad3fbecd3c87ae85e8c7dfea056b636ee8164e2"
+        },
+        {
+          "path": "financials/metrics/part.parquet",
+          "bytes": 9566077,
+          "sha256": "sha256:d458c82807fbd0957344021930ba065b478dae78d7bb17a6aea9e4cab4757886"
+        }
+      ]
+    },
+    {
+      "label": "financial_pit_p7",
+      "file_count": 3,
+      "bytes": 8406,
+      "sha256": "sha256:b89a0adc68ccefeb94c99414a04f0c6c71374d3934ef8429c953a6f3274cd1e4",
+      "files": [
+        {
+          "path": "factor_research/pit/latest.json",
+          "bytes": 994,
+          "sha256": "sha256:c1176680151e202674f57959e5016da5bef98b27d219e55c91724f2f12423b91"
+        },
+        {
+          "path": "factor_research/pit/runs/4d98dbe7ecb185cbb3e9cf14538df6916b19f0b67f184fce9f7a0ec5c501a7d6.json",
+          "bytes": 5769,
+          "sha256": "sha256:ec8ea288167e2ba3d482cf7ba3213b95f0f1da3275ab16d892cfa2824cb3e221"
+        },
+        {
+          "path": "factor_research/pit/runs/4d98dbe7ecb185cbb3e9cf14538df6916b19f0b67f184fce9f7a0ec5c501a7d6.md",
+          "bytes": 1643,
+          "sha256": "sha256:b436f5120a3f071bb5f4093f2bb85244632c545649bcdf5b0d0c4023a46f6a0e"
+        }
+      ]
+    },
+    {
+      "label": "p5_increment_baseline",
+      "file_count": 3,
+      "bytes": 116907,
+      "sha256": "sha256:72b4faa597d8f5edb847131457cb35f1916d19e42390123f880cc60b1ea0bacb",
+      "files": [
+        {
+          "path": "factor_research/research/p5_incremental_2026-11-12.json",
+          "bytes": 103654,
+          "sha256": "sha256:9ed3171ad440ae677b73b8b820ad022b0230b9e27c8d3198a2b386afb3f1cd91"
+        },
+        {
+          "path": "factor_research/research/p5_incremental_2026-11-12.md",
+          "bytes": 4603,
+          "sha256": "sha256:cf9e0df67fe534435378e377d6321b1d09ea1cbc2a9bf389b35988bf06f0daf8"
+        },
+        {
+          "path": "factor_research/sets/multi_dimension_v1/versions/v0001.json",
+          "bytes": 8650,
+          "sha256": "sha256:d6c2ad44c2f08738cdb25214909cae812c887ac08a81593ba59a84f1c0802515"
+        }
+      ]
+    },
+    {
+      "label": "catalog_snapshot",
+      "file_count": 1,
+      "bytes": 369628,
+      "sha256": "sha256:669eb7491725f6cf0b30bedab7e02f198c5c78a8152c45ad6ad4386ba4710324",
+      "files": [
+        {
+          "path": "factor_research/catalog/snapshots/6cb4e69da0a5a3097459e32ddd662979c4602f7327c3b737c4130de147b9b3f6.json",
+          "bytes": 369628,
+          "sha256": "sha256:8d600f9fe02bf2a072b5fbbe00ebc2fcf8cbdc1c63ae00b6a15621d7feeb20ed"
+        }
+      ]
+    },
+    {
+      "label": "p8_financial_increment",
+      "file_count": 2,
+      "bytes": 70573,
+      "sha256": "sha256:4d0fbd1b3a2a3cce35bf75f5f691f093658a96e10eaf8dbd9c98871341942fcd",
+      "files": [
+        {
+          "path": "factor_research/research/p8_financial_increment_2026-11-12.json",
+          "bytes": 66398,
+          "sha256": "sha256:455f47d61e0e708b917d3fe44a28d11896f8b5568c145b469729b1498a82fa9a"
+        },
+        {
+          "path": "factor_research/research/p8_financial_increment_2026-11-12.md",
+          "bytes": 4175,
+          "sha256": "sha256:9b519d5f81764d2b162d38ea6b21866670468eac6b652a8662b3d847e2a116d1"
+        }
+      ]
+    },
+    {
+      "label": "regime_history",
+      "file_count": 1,
+      "bytes": 120384,
+      "sha256": "sha256:5d89101c279ce5f299c32b6b579a79dfa353262c2215fd6daf98d017e4db830e",
+      "files": [
+        {
+          "path": "regime_history/part.parquet",
+          "bytes": 120384,
+          "sha256": "sha256:474332dcb2d0b3bc7b27c37973c78bb7c7f4e6bff535350a07dc4d8d7819c058"
+        }
+      ]
+    }
+  ],
+  "data_fingerprint": "sha256:a024c053ee5b3ccec96de86c37cede3c41972573e60a94709b7c011dc0dbd7ff",
+  "period": {
+    "start": "2021-06-01",
+    "recent_start": "2025-10-14",
+    "end": "2026-11-05",
+    "weak_start": "2025-07-01",
+    "weak_end": "2026-06-30"
+  },
+  "universe": {
+    "name": "hs300_current",
+    "symbol_count": 300,
+    "survivorship_bias": true
+  },
+  "base_set": {
+    "set_id": "multi_dimension_v1",
+    "version": 1,
+    "content_sha256": "sha256:9eb577a43d549e1b9218ae61d125fa393dd65263988f0d5b221067a23c61822b",
+    "pre_registered_drop_factor": "ext_alt_hs300_holder_top10_share_chg_yoy",
+    "factor_ids": [
+      "ext_alt_hs300_cash_flow_stability_4q_low",
+      "ext_alt_hs300_dividend_yield",
+      "ext_alt_hs300_fund_holding_ratio_low",
+      "ext_alt_hs300_idio_vol_40d_low",
+      "ext_alt_hs300_margin_chg_1m_low",
+      "ext_alt_hs300_ocf_margin_4q",
+      "ext_alt_hs300_vol_of_vol_20d_low"
+    ]
+  },
+  "regime": {
+    "stored_latest_before": "2026-10-21",
+    "computed_start": "2026-10-22",
+    "computed_end": "2026-11-05",
+    "computed_days": 11,
+    "source": "stored_regime_history_plus_in_memory_recompute",
+    "effective_state": {
+      "algorithm": "sha256_json",
+      "sha256": "sha256:896cb3bc25916f9a7e965eae20506410176761420e01ca9eeaa876cc080b8f94",
+      "row_count": 1900,
+      "weak_signal_date_count": 412,
+      "first_signal_date": "2019-01-02",
+      "last_signal_date": "2026-11-05"
+    }
+  },
+  "factor_eligibility": {
+    "pb_latest": {
+      "primary_horizon": 60,
+      "gate": {
+        "pass": true,
+        "confirmations": [
+          "industry",
+          "size",
+          "industry_size"
+        ],
+        "required_confirmations": 2,
+        "reasons": []
+      },
+      "eligible": true,
+      "diagnostics": {
+        "5": {
+          "raw": {
+            "directional_ic": 0.043105,
+            "nw_t": 3.16177,
+            "p_value": 0.00156814,
+            "n_dates": 1329,
+            "valid_rows": 387930
+          },
+          "industry": {
+            "directional_ic": 0.025955,
+            "nw_t": 4.548513,
+            "p_value": 5.4e-06,
+            "n_dates": 1329,
+            "valid_rows": 387930
+          },
+          "size": {
+            "directional_ic": 0.038527,
+            "nw_t": 3.234743,
+            "p_value": 0.00121752,
+            "n_dates": 1329,
+            "valid_rows": 387930
+          },
+          "industry_size": {
+            "directional_ic": 0.019234,
+            "nw_t": 3.644327,
+            "p_value": 0.00026809,
+            "n_dates": 1329,
+            "valid_rows": 387930
+          }
+        },
+        "20": {
+          "raw": {
+            "directional_ic": 0.068951,
+            "nw_t": 2.551263,
+            "p_value": 0.01073332,
+            "n_dates": 1314,
+            "valid_rows": 383435
+          },
+          "industry": {
+            "directional_ic": 0.04526,
+            "nw_t": 3.965761,
+            "p_value": 7.316e-05,
+            "n_dates": 1314,
+            "valid_rows": 383435
+          },
+          "size": {
+            "directional_ic": 0.064692,
+            "nw_t": 2.752592,
+            "p_value": 0.00591255,
+            "n_dates": 1314,
+            "valid_rows": 383435
+          },
+          "industry_size": {
+            "directional_ic": 0.033706,
+            "nw_t": 3.222381,
+            "p_value": 0.0012713,
+            "n_dates": 1314,
+            "valid_rows": 383435
+          }
+        },
+        "60": {
+          "raw": {
+            "directional_ic": 0.116134,
+            "nw_t": 4.132157,
+            "p_value": 3.594e-05,
+            "n_dates": 1274,
+            "valid_rows": 371475
+          },
+          "industry": {
+            "directional_ic": 0.075381,
+            "nw_t": 5.086006,
+            "p_value": 3.7e-07,
+            "n_dates": 1274,
+            "valid_rows": 371475
+          },
+          "size": {
+            "directional_ic": 0.112031,
+            "nw_t": 4.588123,
+            "p_value": 4.47e-06,
+            "n_dates": 1274,
+            "valid_rows": 371475
+          },
+          "industry_size": {
+            "directional_ic": 0.058693,
+            "nw_t": 4.458867,
+            "p_value": 8.24e-06,
+            "n_dates": 1274,
+            "valid_rows": 371475
+          }
+        }
+      }
+    },
+    "accrual": {
+      "primary_horizon": 60,
+      "gate": {
+        "pass": true,
+        "confirmations": [
+          "industry",
+          "size",
+          "industry_size"
+        ],
+        "required_confirmations": 2,
+        "reasons": []
+      },
+      "eligible": true,
+      "diagnostics": {
+        "5": {
+          "raw": {
+            "directional_ic": 0.016791,
+            "nw_t": 2.798554,
+            "p_value": 0.0051332,
+            "n_dates": 1088,
+            "valid_rows": 321338
+          },
+          "industry": {
+            "directional_ic": 0.013607,
+            "nw_t": 3.392533,
+            "p_value": 0.0006925,
+            "n_dates": 1088,
+            "valid_rows": 321338
+          },
+          "size": {
+            "directional_ic": 0.015919,
+            "nw_t": 3.016982,
+            "p_value": 0.00255305,
+            "n_dates": 1088,
+            "valid_rows": 321338
+          },
+          "industry_size": {
+            "directional_ic": 0.013004,
+            "nw_t": 3.702683,
+            "p_value": 0.00021333,
+            "n_dates": 1088,
+            "valid_rows": 321338
+          }
+        },
+        "20": {
+          "raw": {
+            "directional_ic": 0.027528,
+            "nw_t": 2.306126,
+            "p_value": 0.02110357,
+            "n_dates": 1073,
+            "valid_rows": 316843
+          },
+          "industry": {
+            "directional_ic": 0.023273,
+            "nw_t": 2.694711,
+            "p_value": 0.00704496,
+            "n_dates": 1073,
+            "valid_rows": 316843
+          },
+          "size": {
+            "directional_ic": 0.029916,
+            "nw_t": 2.915111,
+            "p_value": 0.00355562,
+            "n_dates": 1073,
+            "valid_rows": 316843
+          },
+          "industry_size": {
+            "directional_ic": 0.024992,
+            "nw_t": 3.417644,
+            "p_value": 0.00063166,
+            "n_dates": 1073,
+            "valid_rows": 316843
+          }
+        },
+        "60": {
+          "raw": {
+            "directional_ic": 0.042601,
+            "nw_t": 2.816741,
+            "p_value": 0.00485137,
+            "n_dates": 1033,
+            "valid_rows": 304883
+          },
+          "industry": {
+            "directional_ic": 0.034856,
+            "nw_t": 3.182841,
+            "p_value": 0.00145837,
+            "n_dates": 1033,
+            "valid_rows": 304883
+          },
+          "size": {
+            "directional_ic": 0.050668,
+            "nw_t": 3.744959,
+            "p_value": 0.00018042,
+            "n_dates": 1033,
+            "valid_rows": 304883
+          },
+          "industry_size": {
+            "directional_ic": 0.040002,
+            "nw_t": 4.015023,
+            "p_value": 5.944e-05,
+            "n_dates": 1033,
+            "valid_rows": 304883
+          }
+        }
+      }
+    },
+    "ocf_ni": {
+      "primary_horizon": 60,
+      "gate": {
+        "pass": true,
+        "confirmations": [
+          "industry",
+          "size"
+        ],
+        "required_confirmations": 2,
+        "reasons": []
+      },
+      "eligible": true,
+      "diagnostics": {
+        "5": {
+          "raw": {
+            "directional_ic": 0.020233,
+            "nw_t": 2.998501,
+            "p_value": 0.00271311,
+            "n_dates": 1088,
+            "valid_rows": 300082
+          },
+          "industry": {
+            "directional_ic": 0.008734,
+            "nw_t": 1.9901,
+            "p_value": 0.04657995,
+            "n_dates": 1088,
+            "valid_rows": 300082
+          },
+          "size": {
+            "directional_ic": 0.017811,
+            "nw_t": 2.714372,
+            "p_value": 0.00664016,
+            "n_dates": 1088,
+            "valid_rows": 300082
+          },
+          "industry_size": {
+            "directional_ic": 0.006688,
+            "nw_t": 1.611659,
+            "p_value": 0.10703621,
+            "n_dates": 1088,
+            "valid_rows": 300082
+          }
+        },
+        "20": {
+          "raw": {
+            "directional_ic": 0.033991,
+            "nw_t": 2.720162,
+            "p_value": 0.00652499,
+            "n_dates": 1073,
+            "valid_rows": 295903
+          },
+          "industry": {
+            "directional_ic": 0.014786,
+            "nw_t": 1.723166,
+            "p_value": 0.08485846,
+            "n_dates": 1073,
+            "valid_rows": 295903
+          },
+          "size": {
+            "directional_ic": 0.029833,
+            "nw_t": 2.271839,
+            "p_value": 0.02309623,
+            "n_dates": 1073,
+            "valid_rows": 295903
+          },
+          "industry_size": {
+            "directional_ic": 0.011232,
+            "nw_t": 1.307995,
+            "p_value": 0.19087517,
+            "n_dates": 1073,
+            "valid_rows": 295903
+          }
+        },
+        "60": {
+          "raw": {
+            "directional_ic": 0.059533,
+            "nw_t": 4.170784,
+            "p_value": 3.036e-05,
+            "n_dates": 1033,
+            "valid_rows": 284740
+          },
+          "industry": {
+            "directional_ic": 0.024211,
+            "nw_t": 2.13011,
+            "p_value": 0.03316253,
+            "n_dates": 1033,
+            "valid_rows": 284740
+          },
+          "size": {
+            "directional_ic": 0.057739,
+            "nw_t": 3.7149,
+            "p_value": 0.00020328,
+            "n_dates": 1033,
+            "valid_rows": 284740
+          },
+          "industry_size": {
+            "directional_ic": 0.020016,
+            "nw_t": 1.618499,
+            "p_value": 0.1055551,
+            "n_dates": 1033,
+            "valid_rows": 284740
+          }
+        }
+      }
+    }
+  },
+  "eligible_variants": {
+    "pb_weak": [
+      "pb_latest"
+    ],
+    "accrual_weak": [
+      "accrual"
+    ],
+    "ocf_ni_weak": [
+      "ocf_ni"
+    ],
+    "pb_accrual_weak": [
+      "pb_latest",
+      "accrual"
+    ],
+    "pb_accrual_ocf_ni_weak": [
+      "pb_latest",
+      "accrual",
+      "ocf_ni"
+    ]
+  },
+  "horizon_grid": {
+    "pb_latest": {
+      "5": {
+        "raw": {
+          "directional_ic": 0.043105,
+          "nw_t": 3.16177,
+          "p_value": 0.00156814,
+          "n_dates": 1329,
+          "valid_rows": 387930
+        },
+        "industry": {
+          "directional_ic": 0.025955,
+          "nw_t": 4.548513,
+          "p_value": 5.4e-06,
+          "n_dates": 1329,
+          "valid_rows": 387930
+        },
+        "size": {
+          "directional_ic": 0.038527,
+          "nw_t": 3.234743,
+          "p_value": 0.00121752,
+          "n_dates": 1329,
+          "valid_rows": 387930
+        },
+        "industry_size": {
+          "directional_ic": 0.019234,
+          "nw_t": 3.644327,
+          "p_value": 0.00026809,
+          "n_dates": 1329,
+          "valid_rows": 387930
+        }
+      },
+      "20": {
+        "raw": {
+          "directional_ic": 0.068951,
+          "nw_t": 2.551263,
+          "p_value": 0.01073332,
+          "n_dates": 1314,
+          "valid_rows": 383435
+        },
+        "industry": {
+          "directional_ic": 0.04526,
+          "nw_t": 3.965761,
+          "p_value": 7.316e-05,
+          "n_dates": 1314,
+          "valid_rows": 383435
+        },
+        "size": {
+          "directional_ic": 0.064692,
+          "nw_t": 2.752592,
+          "p_value": 0.00591255,
+          "n_dates": 1314,
+          "valid_rows": 383435
+        },
+        "industry_size": {
+          "directional_ic": 0.033706,
+          "nw_t": 3.222381,
+          "p_value": 0.0012713,
+          "n_dates": 1314,
+          "valid_rows": 383435
+        }
+      },
+      "60": {
+        "raw": {
+          "directional_ic": 0.116134,
+          "nw_t": 4.132157,
+          "p_value": 3.594e-05,
+          "n_dates": 1274,
+          "valid_rows": 371475
+        },
+        "industry": {
+          "directional_ic": 0.075381,
+          "nw_t": 5.086006,
+          "p_value": 3.7e-07,
+          "n_dates": 1274,
+          "valid_rows": 371475
+        },
+        "size": {
+          "directional_ic": 0.112031,
+          "nw_t": 4.588123,
+          "p_value": 4.47e-06,
+          "n_dates": 1274,
+          "valid_rows": 371475
+        },
+        "industry_size": {
+          "directional_ic": 0.058693,
+          "nw_t": 4.458867,
+          "p_value": 8.24e-06,
+          "n_dates": 1274,
+          "valid_rows": 371475
+        }
+      }
+    },
+    "accrual": {
+      "5": {
+        "raw": {
+          "directional_ic": 0.016791,
+          "nw_t": 2.798554,
+          "p_value": 0.0051332,
+          "n_dates": 1088,
+          "valid_rows": 321338
+        },
+        "industry": {
+          "directional_ic": 0.013607,
+          "nw_t": 3.392533,
+          "p_value": 0.0006925,
+          "n_dates": 1088,
+          "valid_rows": 321338
+        },
+        "size": {
+          "directional_ic": 0.015919,
+          "nw_t": 3.016982,
+          "p_value": 0.00255305,
+          "n_dates": 1088,
+          "valid_rows": 321338
+        },
+        "industry_size": {
+          "directional_ic": 0.013004,
+          "nw_t": 3.702683,
+          "p_value": 0.00021333,
+          "n_dates": 1088,
+          "valid_rows": 321338
+        }
+      },
+      "20": {
+        "raw": {
+          "directional_ic": 0.027528,
+          "nw_t": 2.306126,
+          "p_value": 0.02110357,
+          "n_dates": 1073,
+          "valid_rows": 316843
+        },
+        "industry": {
+          "directional_ic": 0.023273,
+          "nw_t": 2.694711,
+          "p_value": 0.00704496,
+          "n_dates": 1073,
+          "valid_rows": 316843
+        },
+        "size": {
+          "directional_ic": 0.029916,
+          "nw_t": 2.915111,
+          "p_value": 0.00355562,
+          "n_dates": 1073,
+          "valid_rows": 316843
+        },
+        "industry_size": {
+          "directional_ic": 0.024992,
+          "nw_t": 3.417644,
+          "p_value": 0.00063166,
+          "n_dates": 1073,
+          "valid_rows": 316843
+        }
+      },
+      "60": {
+        "raw": {
+          "directional_ic": 0.042601,
+          "nw_t": 2.816741,
+          "p_value": 0.00485137,
+          "n_dates": 1033,
+          "valid_rows": 304883
+        },
+        "industry": {
+          "directional_ic": 0.034856,
+          "nw_t": 3.182841,
+          "p_value": 0.00145837,
+          "n_dates": 1033,
+          "valid_rows": 304883
+        },
+        "size": {
+          "directional_ic": 0.050668,
+          "nw_t": 3.744959,
+          "p_value": 0.00018042,
+          "n_dates": 1033,
+          "valid_rows": 304883
+        },
+        "industry_size": {
+          "directional_ic": 0.040002,
+          "nw_t": 4.015023,
+          "p_value": 5.944e-05,
+          "n_dates": 1033,
+          "valid_rows": 304883
+        }
+      }
+    },
+    "ocf_ni": {
+      "5": {
+        "raw": {
+          "directional_ic": 0.020233,
+          "nw_t": 2.998501,
+          "p_value": 0.00271311,
+          "n_dates": 1088,
+          "valid_rows": 300082
+        },
+        "industry": {
+          "directional_ic": 0.008734,
+          "nw_t": 1.9901,
+          "p_value": 0.04657995,
+          "n_dates": 1088,
+          "valid_rows": 300082
+        },
+        "size": {
+          "directional_ic": 0.017811,
+          "nw_t": 2.714372,
+          "p_value": 0.00664016,
+          "n_dates": 1088,
+          "valid_rows": 300082
+        },
+        "industry_size": {
+          "directional_ic": 0.006688,
+          "nw_t": 1.611659,
+          "p_value": 0.10703621,
+          "n_dates": 1088,
+          "valid_rows": 300082
+        }
+      },
+      "20": {
+        "raw": {
+          "directional_ic": 0.033991,
+          "nw_t": 2.720162,
+          "p_value": 0.00652499,
+          "n_dates": 1073,
+          "valid_rows": 295903
+        },
+        "industry": {
+          "directional_ic": 0.014786,
+          "nw_t": 1.723166,
+          "p_value": 0.08485846,
+          "n_dates": 1073,
+          "valid_rows": 295903
+        },
+        "size": {
+          "directional_ic": 0.029833,
+          "nw_t": 2.271839,
+          "p_value": 0.02309623,
+          "n_dates": 1073,
+          "valid_rows": 295903
+        },
+        "industry_size": {
+          "directional_ic": 0.011232,
+          "nw_t": 1.307995,
+          "p_value": 0.19087517,
+          "n_dates": 1073,
+          "valid_rows": 295903
+        }
+      },
+      "60": {
+        "raw": {
+          "directional_ic": 0.059533,
+          "nw_t": 4.170784,
+          "p_value": 3.036e-05,
+          "n_dates": 1033,
+          "valid_rows": 284740
+        },
+        "industry": {
+          "directional_ic": 0.024211,
+          "nw_t": 2.13011,
+          "p_value": 0.03316253,
+          "n_dates": 1033,
+          "valid_rows": 284740
+        },
+        "size": {
+          "directional_ic": 0.057739,
+          "nw_t": 3.7149,
+          "p_value": 0.00020328,
+          "n_dates": 1033,
+          "valid_rows": 284740
+        },
+        "industry_size": {
+          "directional_ic": 0.020016,
+          "nw_t": 1.618499,
+          "p_value": 0.1055551,
+          "n_dates": 1033,
+          "valid_rows": 284740
+        }
+      }
+    }
+  },
+  "candidate_count": 5,
+  "statistical_pass_count": 0,
+  "portfolio_pass_count": 0,
+  "candidates": [
+    {
+      "candidate_key": "p9_pb_weak",
+      "economic_key": "pb_weak",
+      "label": "低PB",
+      "factor_ids": [
+        "pb_latest"
+      ],
+      "factor_id": "p9_composite_pb_weak",
+      "direction": "high",
+      "registered": true,
+      "transform": "t1_weak_median_neutral",
+      "set_role": "new",
+      "replaces_factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+      "dedupe_priority": 0,
+      "score_column": "_score_p9_composite_pb_weak",
+      "coverage": {
+        "pb_latest": {
+          "rows": 536265,
+          "non_null_rows": 389430,
+          "non_null_ratio": 0.726189,
+          "symbol_count": 300,
+          "first_value_date": "2021-05-06"
+        }
+      },
+      "marginal_ic": {
+        "comparison_basis": "current_composite_without_ext_alt_hs300_holder_top10_share_chg_yoy",
+        "n_dates": 275,
+        "base_ic_mean": 0.102225,
+        "combined_ic_mean": 0.116203,
+        "directional_delta_mean": 0.013978,
+        "delta_nw_t": 2.060792,
+        "delta_p_value": 0.03932285,
+        "recent_directional_delta_mean": -0.003121,
+        "correlations": [
+          {
+            "current_factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+            "is_replaced_slot": false,
+            "n_dates": 228,
+            "mean_symbols": 293.996,
+            "mean_signed": 0.269201,
+            "mean_abs": 0.269201,
+            "max_abs": 0.334698,
+            "min_signed": 0.154434,
+            "max_signed": 0.334698
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_dividend_yield",
+            "is_replaced_slot": false,
+            "n_dates": 292,
+            "mean_symbols": 272.798,
+            "mean_signed": 0.623453,
+            "mean_abs": 0.623453,
+            "max_abs": 0.759368,
+            "min_signed": 0.42929,
+            "max_signed": 0.759368
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+            "is_replaced_slot": false,
+            "n_dates": 292,
+            "mean_symbols": 291.154,
+            "mean_signed": 0.416315,
+            "mean_abs": 0.416315,
+            "max_abs": 0.481653,
+            "min_signed": 0.354338,
+            "max_signed": 0.481653
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_idio_vol_40d_low",
+            "is_replaced_slot": false,
+            "n_dates": 288,
+            "mean_symbols": 291.413,
+            "mean_signed": 0.527682,
+            "mean_abs": 0.527682,
+            "max_abs": 0.73118,
+            "min_signed": 0.322968,
+            "max_signed": 0.73118
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+            "is_replaced_slot": false,
+            "n_dates": 289,
+            "mean_symbols": 284.315,
+            "mean_signed": 0.06,
+            "mean_abs": 0.132425,
+            "max_abs": 0.316497,
+            "min_signed": -0.316497,
+            "max_signed": 0.312771
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_ocf_margin_4q",
+            "is_replaced_slot": false,
+            "n_dates": 228,
+            "mean_symbols": 295.671,
+            "mean_signed": 0.065007,
+            "mean_abs": 0.086663,
+            "max_abs": 0.185924,
+            "min_signed": -0.100431,
+            "max_signed": 0.185924
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+            "is_replaced_slot": false,
+            "n_dates": 292,
+            "mean_symbols": 291.527,
+            "mean_signed": 0.315847,
+            "mean_abs": 0.316346,
+            "max_abs": 0.638891,
+            "min_signed": -0.027469,
+            "max_signed": 0.638891
+          }
+        ],
+        "max_abs_correlation_all_members": 0.623453,
+        "max_abs_correlation_for_gate": 0.623453,
+        "delta_q_value": 0.19661425
+      },
+      "statistical_gate": {
+        "pass": false,
+        "reasons": [
+          "marginal_ic_q_above_0_10"
+        ]
+      },
+      "status": "statistical_rejected"
+    },
+    {
+      "candidate_key": "p9_accrual_weak",
+      "economic_key": "accrual_weak",
+      "label": "低应计",
+      "factor_ids": [
+        "accrual"
+      ],
+      "factor_id": "p9_composite_accrual_weak",
+      "direction": "high",
+      "registered": true,
+      "transform": "t1_weak_median_neutral",
+      "set_role": "new",
+      "replaces_factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+      "dedupe_priority": 0,
+      "score_column": "_score_p9_composite_accrual_weak",
+      "coverage": {
+        "accrual": {
+          "rows": 536265,
+          "non_null_rows": 322838,
+          "non_null_ratio": 0.602012,
+          "symbol_count": 300,
+          "first_value_date": "2022-05-05"
+        }
+      },
+      "marginal_ic": {
+        "comparison_basis": "current_composite_without_ext_alt_hs300_holder_top10_share_chg_yoy",
+        "n_dates": 211,
+        "base_ic_mean": 0.104335,
+        "combined_ic_mean": 0.102312,
+        "directional_delta_mean": -0.002024,
+        "delta_nw_t": -0.286213,
+        "delta_p_value": 0.77471477,
+        "recent_directional_delta_mean": -0.011044,
+        "correlations": [
+          {
+            "current_factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+            "is_replaced_slot": false,
+            "n_dates": 228,
+            "mean_symbols": 293.996,
+            "mean_signed": 0.137887,
+            "mean_abs": 0.137887,
+            "max_abs": 0.30352,
+            "min_signed": 0.037535,
+            "max_signed": 0.30352
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_dividend_yield",
+            "is_replaced_slot": false,
+            "n_dates": 228,
+            "mean_symbols": 276.504,
+            "mean_signed": 0.086525,
+            "mean_abs": 0.086941,
+            "max_abs": 0.269078,
+            "min_signed": -0.019928,
+            "max_signed": 0.269078
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+            "is_replaced_slot": false,
+            "n_dates": 228,
+            "mean_symbols": 295.009,
+            "mean_signed": 0.086883,
+            "mean_abs": 0.094923,
+            "max_abs": 0.170796,
+            "min_signed": -0.055095,
+            "max_signed": 0.170796
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_idio_vol_40d_low",
+            "is_replaced_slot": false,
+            "n_dates": 224,
+            "mean_symbols": 295.152,
+            "mean_signed": 0.03373,
+            "mean_abs": 0.06166,
+            "max_abs": 0.213297,
+            "min_signed": -0.168376,
+            "max_signed": 0.213297
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+            "is_replaced_slot": false,
+            "n_dates": 228,
+            "mean_symbols": 291.386,
+            "mean_signed": 0.021104,
+            "mean_abs": 0.053432,
+            "max_abs": 0.149116,
+            "min_signed": -0.117797,
+            "max_signed": 0.149116
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_ocf_margin_4q",
+            "is_replaced_slot": false,
+            "n_dates": 228,
+            "mean_symbols": 295.671,
+            "mean_signed": 0.46434,
+            "mean_abs": 0.46434,
+            "max_abs": 0.551478,
+            "min_signed": 0.272185,
+            "max_signed": 0.551478
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+            "is_replaced_slot": false,
+            "n_dates": 228,
+            "mean_symbols": 295.219,
+            "mean_signed": 0.040896,
+            "mean_abs": 0.074202,
+            "max_abs": 0.285489,
+            "min_signed": -0.186157,
+            "max_signed": 0.285489
+          }
+        ],
+        "max_abs_correlation_all_members": 0.46434,
+        "max_abs_correlation_for_gate": 0.46434,
+        "delta_q_value": 0.77471477
+      },
+      "statistical_gate": {
+        "pass": false,
+        "reasons": [
+          "marginal_ic_not_positive",
+          "marginal_ic_p_above_0_10",
+          "marginal_ic_q_above_0_10"
+        ]
+      },
+      "status": "statistical_rejected"
+    },
+    {
+      "candidate_key": "p9_ocf_ni_weak",
+      "economic_key": "ocf_ni_weak",
+      "label": "经营现金流/净利润",
+      "factor_ids": [
+        "ocf_ni"
+      ],
+      "factor_id": "p9_composite_ocf_ni_weak",
+      "direction": "high",
+      "registered": true,
+      "transform": "t1_weak_median_neutral",
+      "set_role": "new",
+      "replaces_factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+      "dedupe_priority": 0,
+      "score_column": "_score_p9_composite_ocf_ni_weak",
+      "coverage": {
+        "ocf_ni": {
+          "rows": 536265,
+          "non_null_rows": 301461,
+          "non_null_ratio": 0.562149,
+          "symbol_count": 300,
+          "first_value_date": "2022-05-05"
+        }
+      },
+      "marginal_ic": {
+        "comparison_basis": "current_composite_without_ext_alt_hs300_holder_top10_share_chg_yoy",
+        "n_dates": 211,
+        "base_ic_mean": 0.104335,
+        "combined_ic_mean": 0.102553,
+        "directional_delta_mean": -0.001782,
+        "delta_nw_t": -0.288342,
+        "delta_p_value": 0.77308481,
+        "recent_directional_delta_mean": -0.007289,
+        "correlations": [
+          {
+            "current_factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+            "is_replaced_slot": false,
+            "n_dates": 228,
+            "mean_symbols": 293.996,
+            "mean_signed": 0.192434,
+            "mean_abs": 0.192434,
+            "max_abs": 0.40074,
+            "min_signed": 0.094257,
+            "max_signed": 0.40074
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_dividend_yield",
+            "is_replaced_slot": false,
+            "n_dates": 228,
+            "mean_symbols": 276.504,
+            "mean_signed": 0.116623,
+            "mean_abs": 0.117463,
+            "max_abs": 0.305938,
+            "min_signed": -0.026005,
+            "max_signed": 0.305938
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+            "is_replaced_slot": false,
+            "n_dates": 228,
+            "mean_symbols": 295.009,
+            "mean_signed": 0.184163,
+            "mean_abs": 0.184163,
+            "max_abs": 0.299928,
+            "min_signed": 0.06294,
+            "max_signed": 0.299928
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_idio_vol_40d_low",
+            "is_replaced_slot": false,
+            "n_dates": 224,
+            "mean_symbols": 295.152,
+            "mean_signed": 0.137163,
+            "mean_abs": 0.139611,
+            "max_abs": 0.380752,
+            "min_signed": -0.045683,
+            "max_signed": 0.380752
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+            "is_replaced_slot": false,
+            "n_dates": 228,
+            "mean_symbols": 291.386,
+            "mean_signed": 0.027135,
+            "mean_abs": 0.059044,
+            "max_abs": 0.173726,
+            "min_signed": -0.173726,
+            "max_signed": 0.152047
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_ocf_margin_4q",
+            "is_replaced_slot": false,
+            "n_dates": 228,
+            "mean_symbols": 295.671,
+            "mean_signed": 0.559271,
+            "mean_abs": 0.559271,
+            "max_abs": 0.672061,
+            "min_signed": 0.304791,
+            "max_signed": 0.672061
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+            "is_replaced_slot": false,
+            "n_dates": 228,
+            "mean_symbols": 295.219,
+            "mean_signed": 0.086224,
+            "mean_abs": 0.100778,
+            "max_abs": 0.361749,
+            "min_signed": -0.099856,
+            "max_signed": 0.361749
+          }
+        ],
+        "max_abs_correlation_all_members": 0.559271,
+        "max_abs_correlation_for_gate": 0.559271,
+        "delta_q_value": 0.77471477
+      },
+      "statistical_gate": {
+        "pass": false,
+        "reasons": [
+          "marginal_ic_not_positive",
+          "marginal_ic_p_above_0_10",
+          "marginal_ic_q_above_0_10"
+        ]
+      },
+      "status": "statistical_rejected"
+    },
+    {
+      "candidate_key": "p9_pb_accrual_weak",
+      "economic_key": "pb_accrual_weak",
+      "label": "低PB+低应计",
+      "factor_ids": [
+        "pb_latest",
+        "accrual"
+      ],
+      "factor_id": "p9_composite_pb_accrual_weak",
+      "direction": "high",
+      "registered": true,
+      "transform": "t1_weak_median_neutral",
+      "set_role": "new",
+      "replaces_factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+      "dedupe_priority": 0,
+      "score_column": "_score_p9_composite_pb_accrual_weak",
+      "coverage": {
+        "pb_latest": {
+          "rows": 536265,
+          "non_null_rows": 389430,
+          "non_null_ratio": 0.726189,
+          "symbol_count": 300,
+          "first_value_date": "2021-05-06"
+        },
+        "accrual": {
+          "rows": 536265,
+          "non_null_rows": 322838,
+          "non_null_ratio": 0.602012,
+          "symbol_count": 300,
+          "first_value_date": "2022-05-05"
+        }
+      },
+      "marginal_ic": {
+        "comparison_basis": "current_composite_without_ext_alt_hs300_holder_top10_share_chg_yoy",
+        "n_dates": 275,
+        "base_ic_mean": 0.102225,
+        "combined_ic_mean": 0.113925,
+        "directional_delta_mean": 0.011701,
+        "delta_nw_t": 1.456544,
+        "delta_p_value": 0.14524217,
+        "recent_directional_delta_mean": -0.004176,
+        "correlations": [
+          {
+            "current_factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+            "is_replaced_slot": false,
+            "n_dates": 228,
+            "mean_symbols": 293.996,
+            "mean_signed": 0.270528,
+            "mean_abs": 0.270528,
+            "max_abs": 0.417113,
+            "min_signed": 0.178342,
+            "max_signed": 0.417113
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_dividend_yield",
+            "is_replaced_slot": false,
+            "n_dates": 292,
+            "mean_symbols": 272.798,
+            "mean_signed": 0.51601,
+            "mean_abs": 0.51601,
+            "max_abs": 0.759368,
+            "min_signed": 0.346057,
+            "max_signed": 0.759368
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+            "is_replaced_slot": false,
+            "n_dates": 292,
+            "mean_symbols": 291.154,
+            "mean_signed": 0.360699,
+            "mean_abs": 0.360699,
+            "max_abs": 0.471654,
+            "min_signed": 0.229266,
+            "max_signed": 0.471654
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_idio_vol_40d_low",
+            "is_replaced_slot": false,
+            "n_dates": 288,
+            "mean_symbols": 291.413,
+            "mean_signed": 0.408738,
+            "mean_abs": 0.408738,
+            "max_abs": 0.674344,
+            "min_signed": 0.212926,
+            "max_signed": 0.674344
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+            "is_replaced_slot": false,
+            "n_dates": 289,
+            "mean_symbols": 284.315,
+            "mean_signed": 0.049785,
+            "mean_abs": 0.113904,
+            "max_abs": 0.277988,
+            "min_signed": -0.277988,
+            "max_signed": 0.232383
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_ocf_margin_4q",
+            "is_replaced_slot": false,
+            "n_dates": 228,
+            "mean_symbols": 295.671,
+            "mean_signed": 0.37778,
+            "mean_abs": 0.37778,
+            "max_abs": 0.443085,
+            "min_signed": 0.282264,
+            "max_signed": 0.443085
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+            "is_replaced_slot": false,
+            "n_dates": 292,
+            "mean_symbols": 291.527,
+            "mean_signed": 0.25176,
+            "mean_abs": 0.252259,
+            "max_abs": 0.500347,
+            "min_signed": -0.027469,
+            "max_signed": 0.500347
+          }
+        ],
+        "max_abs_correlation_all_members": 0.51601,
+        "max_abs_correlation_for_gate": 0.51601,
+        "delta_q_value": 0.31105937
+      },
+      "statistical_gate": {
+        "pass": false,
+        "reasons": [
+          "marginal_ic_p_above_0_10",
+          "marginal_ic_q_above_0_10"
+        ]
+      },
+      "status": "statistical_rejected"
+    },
+    {
+      "candidate_key": "p9_pb_accrual_ocf_ni_weak",
+      "economic_key": "pb_accrual_ocf_ni_weak",
+      "label": "低PB+低应计+经营现金流/净利润",
+      "factor_ids": [
+        "pb_latest",
+        "accrual",
+        "ocf_ni"
+      ],
+      "factor_id": "p9_composite_pb_accrual_ocf_ni_weak",
+      "direction": "high",
+      "registered": true,
+      "transform": "t1_weak_median_neutral",
+      "set_role": "new",
+      "replaces_factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+      "dedupe_priority": 0,
+      "score_column": "_score_p9_composite_pb_accrual_ocf_ni_weak",
+      "coverage": {
+        "pb_latest": {
+          "rows": 536265,
+          "non_null_rows": 389430,
+          "non_null_ratio": 0.726189,
+          "symbol_count": 300,
+          "first_value_date": "2021-05-06"
+        },
+        "accrual": {
+          "rows": 536265,
+          "non_null_rows": 322838,
+          "non_null_ratio": 0.602012,
+          "symbol_count": 300,
+          "first_value_date": "2022-05-05"
+        },
+        "ocf_ni": {
+          "rows": 536265,
+          "non_null_rows": 301461,
+          "non_null_ratio": 0.562149,
+          "symbol_count": 300,
+          "first_value_date": "2022-05-05"
+        }
+      },
+      "marginal_ic": {
+        "comparison_basis": "current_composite_without_ext_alt_hs300_holder_top10_share_chg_yoy",
+        "n_dates": 275,
+        "base_ic_mean": 0.102225,
+        "combined_ic_mean": 0.112689,
+        "directional_delta_mean": 0.010465,
+        "delta_nw_t": 1.320597,
+        "delta_p_value": 0.18663562,
+        "recent_directional_delta_mean": -0.005104,
+        "correlations": [
+          {
+            "current_factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+            "is_replaced_slot": false,
+            "n_dates": 228,
+            "mean_symbols": 293.996,
+            "mean_signed": 0.256679,
+            "mean_abs": 0.256679,
+            "max_abs": 0.438946,
+            "min_signed": 0.159553,
+            "max_signed": 0.438946
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_dividend_yield",
+            "is_replaced_slot": false,
+            "n_dates": 292,
+            "mean_symbols": 272.798,
+            "mean_signed": 0.418261,
+            "mean_abs": 0.418261,
+            "max_abs": 0.759368,
+            "min_signed": 0.210079,
+            "max_signed": 0.759368
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+            "is_replaced_slot": false,
+            "n_dates": 292,
+            "mean_symbols": 291.154,
+            "mean_signed": 0.327618,
+            "mean_abs": 0.327618,
+            "max_abs": 0.471654,
+            "min_signed": 0.177787,
+            "max_signed": 0.471654
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_idio_vol_40d_low",
+            "is_replaced_slot": false,
+            "n_dates": 288,
+            "mean_symbols": 291.413,
+            "mean_signed": 0.344141,
+            "mean_abs": 0.344141,
+            "max_abs": 0.674344,
+            "min_signed": 0.1157,
+            "max_signed": 0.674344
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+            "is_replaced_slot": false,
+            "n_dates": 289,
+            "mean_symbols": 284.315,
+            "mean_signed": 0.041654,
+            "mean_abs": 0.099348,
+            "max_abs": 0.277988,
+            "min_signed": -0.277988,
+            "max_signed": 0.221363
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_ocf_margin_4q",
+            "is_replaced_slot": false,
+            "n_dates": 228,
+            "mean_symbols": 295.671,
+            "mean_signed": 0.482167,
+            "mean_abs": 0.482167,
+            "max_abs": 0.529482,
+            "min_signed": 0.311442,
+            "max_signed": 0.529482
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+            "is_replaced_slot": false,
+            "n_dates": 292,
+            "mean_symbols": 291.527,
+            "mean_signed": 0.206269,
+            "mean_abs": 0.207103,
+            "max_abs": 0.475261,
+            "min_signed": -0.028031,
+            "max_signed": 0.475261
+          }
+        ],
+        "max_abs_correlation_all_members": 0.482167,
+        "max_abs_correlation_for_gate": 0.482167,
+        "delta_q_value": 0.31105937
+      },
+      "statistical_gate": {
+        "pass": false,
+        "reasons": [
+          "marginal_ic_p_above_0_10",
+          "marginal_ic_q_above_0_10"
+        ]
+      },
+      "status": "statistical_rejected"
+    }
+  ],
+  "portfolio": {
+    "baseline": {
+      "full_2x": {
+        "label": "p9_baseline_full_2x",
+        "start": "2021-06-01",
+        "end": "2026-11-05",
+        "cost": "2x",
+        "max_positions": 20,
+        "error": null,
+        "stats": {
+          "total_return": 0.9399,
+          "annual_return": 0.1353,
+          "max_drawdown": -0.1224,
+          "sharpe": 1.01,
+          "sortino": 1.52,
+          "win_rate": 0.5659,
+          "profit_factor": 1.5,
+          "n_trades": 774.0,
+          "avg_exposure": 0.8076,
+          "worst": -0.0923
+        },
+        "trade_count": 774,
+        "benchmark_return": 0.00919
+      },
+      "full_3x": {
+        "label": "p9_baseline_full_3x",
+        "start": "2021-06-01",
+        "end": "2026-11-05",
+        "cost": "3x",
+        "max_positions": 20,
+        "error": null,
+        "stats": {
+          "total_return": 0.8367,
+          "annual_return": 0.1235,
+          "max_drawdown": -0.1309,
+          "sharpe": 0.93,
+          "sortino": 1.39,
+          "win_rate": 0.5556,
+          "profit_factor": 1.48,
+          "n_trades": 774.0,
+          "avg_exposure": 0.8076,
+          "worst": -0.0935
+        },
+        "trade_count": 774,
+        "benchmark_return": 0.00919
+      },
+      "recent_2x": {
+        "label": "p9_baseline_recent_2x",
+        "start": "2025-10-14",
+        "end": "2026-11-05",
+        "cost": "2x",
+        "max_positions": 20,
+        "error": null,
+        "stats": {
+          "total_return": 0.1073,
+          "annual_return": 0.1047,
+          "max_drawdown": -0.097,
+          "sharpe": 0.83,
+          "sortino": 1.23,
+          "win_rate": 0.5815,
+          "profit_factor": 1.2,
+          "n_trades": 184.0,
+          "avg_exposure": 0.9413,
+          "worst": -0.0866
+        },
+        "trade_count": 184,
+        "benchmark_return": -0.053607
+      },
+      "weak_2x": {
+        "label": "p9_baseline_weak_2x",
+        "start": "2025-07-01",
+        "end": "2026-06-30",
+        "cost": "2x",
+        "max_positions": 20,
+        "error": null,
+        "stats": {
+          "total_return": -0.0653,
+          "annual_return": -0.0679,
+          "max_drawdown": -0.0905,
+          "sharpe": -0.52,
+          "sortino": -0.71,
+          "win_rate": 0.4054,
+          "profit_factor": 1.12,
+          "n_trades": 185.0,
+          "avg_exposure": 0.9779,
+          "worst": -0.083
+        },
+        "trade_count": 185,
+        "benchmark_return": 0.184123
+      }
+    },
+    "baseline_gate": {
+      "full_2x": {
+        "total_return": 0.9399,
+        "annual_return": 0.1353,
+        "max_drawdown": -0.1224,
+        "sharpe": 1.01,
+        "sortino": 1.52,
+        "win_rate": 0.5659,
+        "profit_factor": 1.5,
+        "n_trades": 774.0,
+        "avg_exposure": 0.8076,
+        "worst": -0.0923
+      },
+      "recent_2x": {
+        "total_return": 0.1073,
+        "annual_return": 0.1047,
+        "max_drawdown": -0.097,
+        "sharpe": 0.83,
+        "sortino": 1.23,
+        "win_rate": 0.5815,
+        "profit_factor": 1.2,
+        "n_trades": 184.0,
+        "avg_exposure": 0.9413,
+        "worst": -0.0866
+      },
+      "full_3x": {
+        "total_return": 0.8367,
+        "annual_return": 0.1235,
+        "max_drawdown": -0.1309,
+        "sharpe": 0.93,
+        "sortino": 1.39,
+        "win_rate": 0.5556,
+        "profit_factor": 1.48,
+        "n_trades": 774.0,
+        "avg_exposure": 0.8076,
+        "worst": -0.0935
+      }
+    },
+    "final_candidate": null,
+    "final_ids": null,
+    "final_directions": {}
+  },
+  "ablation": null,
+  "ablation_gate": null,
+  "rolling_year": null,
+  "weight_neighborhood": null,
+  "cost_warning_5x": null,
+  "decision": {
+    "status": "no_statistical_candidate",
+    "active_version": null,
+    "paper_target_generated": false,
+    "orders_generated": false,
+    "production_enabled": false,
+    "factor_ids": null,
+    "new_watch_version": null,
+    "requires_registration": false
+  },
+  "negative_knowledge": [
+    {
+      "candidate_key": "p9_accrual_weak",
+      "factor_id": "p9_composite_accrual_weak",
+      "status": "statistical_rejected",
+      "reasons": [
+        "marginal_ic_not_positive",
+        "marginal_ic_p_above_0_10",
+        "marginal_ic_q_above_0_10"
+      ]
+    },
+    {
+      "candidate_key": "p9_ocf_ni_weak",
+      "factor_id": "p9_composite_ocf_ni_weak",
+      "status": "statistical_rejected",
+      "reasons": [
+        "marginal_ic_not_positive",
+        "marginal_ic_p_above_0_10",
+        "marginal_ic_q_above_0_10"
+      ]
+    },
+    {
+      "candidate_key": "p9_pb_accrual_ocf_ni_weak",
+      "factor_id": "p9_composite_pb_accrual_ocf_ni_weak",
+      "status": "statistical_rejected",
+      "reasons": [
+        "marginal_ic_p_above_0_10",
+        "marginal_ic_q_above_0_10"
+      ]
+    },
+    {
+      "candidate_key": "p9_pb_accrual_weak",
+      "factor_id": "p9_composite_pb_accrual_weak",
+      "status": "statistical_rejected",
+      "reasons": [
+        "marginal_ic_p_above_0_10",
+        "marginal_ic_q_above_0_10"
+      ]
+    },
+    {
+      "candidate_key": "p9_pb_weak",
+      "factor_id": "p9_composite_pb_weak",
+      "status": "statistical_rejected",
+      "reasons": [
+        "marginal_ic_q_above_0_10"
+      ]
+    }
+  ],
+  "caveats": [
+    "Current HS300 membership is applied to history; survivorship bias remains.",
+    "P9 uses a pre-registered synthetic conditional composite; it is not a registered factor and cannot enter a factor set until a separate registration/admission round passes.",
+    "Regime alignment uses the previous trading session and fails closed on unresolved states.",
+    "2x is the normal cost baseline, 3x is a hard stress gate, 5x is warning-only.",
+    "No leverage, paper target, order, or production activation is produced."
+  ],
+  "research_id": "sha256:b9be9705a3b48bb69f050a57520541c8c9e71aa6b2f1f4960d64a8207bf5228a",
+  "generated_at": "2026-11-11T17:32:08Z"
+}
