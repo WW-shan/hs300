@@ -232,3 +232,12 @@ P9 Research ID 绑定 P7/P8/P5/P6 catalog 指纹和预注册假设；同输入�
 - 经营现金流/净利润在原始口径和规模中性口径有效，但行业中性后不稳健，不能把 raw 显著性当成可交易增量。
 - HS300 当前成分回填历史仍有幸存者偏差。
 - 条件复合腿是预注册研究构件，不是正式注册因子；即使未来通过，也只能进入独立的注册和准入轮次。
+
+### 验证与 CI
+
+- 定向测试：`29 passed`（P5/P9/P6）。
+- 完整后端测试：`3365 passed, 7 skipped, 1 xfailed`。
+- Ruff：P5/P9/P6 脚本与测试全部通过。
+- `git diff --check`：通过。
+- GitHub CI：https://github.com/WW-shan/hs300/actions/runs/43070574679
+- Docker：https://github.com/WW-shan/hs300/actions/runs/43070577470
