@@ -7,7 +7,10 @@ import dataclasses
 import importlib.util
 import json
 import math
+import re
 import sys
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
@@ -117,6 +120,7 @@ CUSTOM_FACTOR_IDS = (
 )
 SYNTHETIC_REPURCHASE_FACTOR = "p5_research_repurchase_decay_20"
 CUSTOM_FACTOR_DIR = Path("factor_research") / "candidates" / "p5"
+RESEARCH_EXT_DEPENDENCY_RE = re.compile(r"\b(ext_alt_hs300_[a-z0-9_]+)\b")
 
 
 @dataclass(frozen=True)
@@ -455,26 +459,66 @@ def _custom_factor_path(data_dir: Path, factor_id: str) -> Path:
     return data_dir / CUSTOM_FACTOR_DIR / f"{factor_id}.json"
 
 
+@contextmanager
+def _temporary_research_dependencies(formula_texts: list[str]) -> Iterator[None]:
+    """Register missing extension columns only for DSL compilation, then remove them."""
+    from app.factors.registry import (
+        FactorSpec,
+        get_factor,
+        register_factor,
+        unregister_factor,
+    )
+
+    registered: list[str] = []
+    try:
+        for formula_text in formula_texts:
+            for factor_id in sorted(set(RESEARCH_EXT_DEPENDENCY_RE.findall(formula_text))):
+                if get_factor(factor_id) is not None:
+                    continue
+                register_factor(
+                    FactorSpec(
+                        id=factor_id,
+                        label=f"P5 research dependency {factor_id}",
+                        group="P5参数研究依赖",
+                        formula_text="extension column",
+                        kind="base",
+                        scale_free=False,
+                    )
+                )
+                registered.append(factor_id)
+        yield
+    finally:
+        for factor_id in reversed(registered):
+            unregister_factor(factor_id)
+
+
 def _load_custom_definitions(data_dir: Path) -> dict[str, dict[str, Any]]:
     """Load P5 draft definitions without inserting them into the global registry."""
     ensure_synced(data_dir)
     from app.factors.registry import get_factor
 
-    definitions: dict[str, dict[str, Any]] = {}
+    raw_definitions = {}
     for factor_id in CUSTOM_FACTOR_IDS:
         path = _custom_factor_path(data_dir, factor_id)
         if not path.exists():
             raise FileNotFoundError(path)
-        definition = json.loads(path.read_text(encoding="utf-8"))
-        if definition.get("id") != factor_id or definition.get("status") != "draft":
-            raise ValueError(f"P5 custom factor must be draft with matching id: {path}")
-        if get_factor(factor_id) is not None:
-            raise ValueError(f"P5 research factor must not be globally registered: {factor_id}")
-        spec = to_spec(definition)
-        compiled = compile_formula(spec.formula_text)
-        if not compiled.ok or compiled.frame_transform is None:
-            raise ValueError(f"invalid P5 custom factor formula {factor_id}: {compiled.errors}")
-        definitions[factor_id] = definition
+        raw_definitions[factor_id] = json.loads(path.read_text(encoding="utf-8"))
+
+    definitions: dict[str, dict[str, Any]] = {}
+    with _temporary_research_dependencies(
+        [str(definition.get("formula", "")) for definition in raw_definitions.values()]
+    ):
+        for factor_id, definition in raw_definitions.items():
+            path = _custom_factor_path(data_dir, factor_id)
+            if definition.get("id") != factor_id or definition.get("status") != "draft":
+                raise ValueError(f"P5 custom factor must be draft with matching id: {path}")
+            if get_factor(factor_id) is not None:
+                raise ValueError(f"P5 research factor must not be globally registered: {factor_id}")
+            spec = to_spec(definition)
+            compiled = compile_formula(spec.formula_text)
+            if not compiled.ok or compiled.frame_transform is None:
+                raise ValueError(f"invalid P5 custom factor formula {factor_id}: {compiled.errors}")
+            definitions[factor_id] = definition
     return definitions
 
 
@@ -498,18 +542,20 @@ def _materialize_research_factors(
     for factor_id in factor_ids:
         if factor_id in frame.columns:
             raise ValueError(f"P5 research factor column already exists: {factor_id}")
-        spec = to_spec(definitions[factor_id])
-        compiled = compile_formula(spec.formula_text)
-        if not compiled.ok or compiled.frame_transform is None:
-            raise ValueError(
-                f"invalid P5 custom factor formula {factor_id}: {compiled.errors}"
-            )
-        transformed = compiled.frame_transform(frame)
-        if transformed is None:
-            raise ValueError(f"P5 research factor dependencies are missing: {factor_id}")
-        frame = transformed.with_columns(
-            pl.col(FACTOR_COLUMN).alias(factor_id)
-        ).drop(FACTOR_COLUMN)
+        formula_text = str(definitions[factor_id].get("formula", ""))
+        with _temporary_research_dependencies([formula_text]):
+            spec = to_spec(definitions[factor_id])
+            compiled = compile_formula(spec.formula_text)
+            if not compiled.ok or compiled.frame_transform is None:
+                raise ValueError(
+                    f"invalid P5 custom factor formula {factor_id}: {compiled.errors}"
+                )
+            transformed = compiled.frame_transform(frame)
+            if transformed is None:
+                raise ValueError(f"P5 research factor dependencies are missing: {factor_id}")
+            frame = transformed.with_columns(
+                pl.col(FACTOR_COLUMN).alias(factor_id)
+            ).drop(FACTOR_COLUMN)
     return frame
 
 

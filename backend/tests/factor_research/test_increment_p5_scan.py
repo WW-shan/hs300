@@ -107,6 +107,16 @@ def test_p5_custom_factors_materialize_without_global_registration() -> None:
     assert get_factor("uf_p5_amount5_low") is None
 
 
+def test_temporary_research_dependencies_do_not_leak() -> None:
+    module = _module()
+    factor_id = "ext_alt_hs300_test_runtime_dependency"
+
+    with module._temporary_research_dependencies([f"{factor_id} + close"]):
+        assert get_factor(factor_id) is not None
+
+    assert get_factor(factor_id) is None
+
+
 def test_equal_inputs_reject_more_than_eight_factors() -> None:
     module = _module()
     factors = [f"f{i}" for i in range(9)]
