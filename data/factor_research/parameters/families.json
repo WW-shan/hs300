@@ -1082,11 +1082,636 @@
       "status": "tunable",
       "formula_template": "rolling_sum(close / open - 1, {parameter})",
       "evidence_refs": []
+    },
+    {
+      "family_id": "industry_momentum",
+      "label": "一级行业等权动量",
+      "data_class": "industry",
+      "cross_section_type": "industry_cross_sectional",
+      "direction": "high",
+      "evaluator": "industry_momentum",
+      "parameter_name": "window",
+      "parameter_grid": [
+        10,
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 20,
+      "minimum_history": 121,
+      "neutralization": [
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_industry_mom_20d",
+        "ext_alt_hs300_industry_mom_60d"
+      ],
+      "status": "tunable",
+      "formula_template": "industry equal-weight close / close.shift({parameter}) - 1",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "industry_rps",
+      "label": "一级行业动量 RPS",
+      "data_class": "industry",
+      "cross_section_type": "industry_cross_sectional",
+      "direction": "high",
+      "evaluator": "industry_rps",
+      "parameter_name": "window",
+      "parameter_grid": [
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_industry_rps_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "cross-industry ordinal rank of industry momentum({parameter}) / industry_count",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "industry_breadth",
+      "label": "一级行业 MA 宽度",
+      "data_class": "industry",
+      "cross_section_type": "industry_cross_sectional",
+      "direction": "high",
+      "evaluator": "industry_breadth",
+      "parameter_name": "window",
+      "parameter_grid": [
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_industry_breadth_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "mean(close > rolling_mean(close, {parameter})) by industry",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "stock_rel_industry_strength",
+      "label": "个股相对行业强弱",
+      "data_class": "industry",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "stock_rel_industry_strength",
+      "parameter_name": "window",
+      "parameter_grid": [
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_stock_rel_industry_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "stock_return({parameter}) - industry equal-weight return({parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "insider_buy_event",
+      "label": "董监高增持事件衰减",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "direction": "high",
+      "evaluator": "insider_buy_event",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_insider_buy_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "linear_decay(insider_buy_events, {parameter} trading days)",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "insider_net_buy_event",
+      "label": "董监高净增持事件衰减",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "direction": "high",
+      "evaluator": "insider_net_buy_event",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_insider_net_buy_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "linear_decay(insider_net_buy_events, {parameter} trading days)",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "insider_sell_event_low",
+      "label": "董监高减持事件衰减反向",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "direction": "high",
+      "evaluator": "insider_sell_event_low",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_insider_sell_20d_low"
+      ],
+      "status": "tunable",
+      "formula_template": "-linear_decay(insider_sell_events, {parameter} trading days)",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "lhb_net_buy_event",
+      "label": "龙虎榜净买入事件衰减",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "direction": "high",
+      "evaluator": "lhb_net_buy_event",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_lhb_net_buy_ratio_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "linear_decay(lhb_net_buy_ratio, {parameter} trading days)",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "lhb_inst_net_buy_event",
+      "label": "龙虎榜机构净买入事件衰减",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "direction": "high",
+      "evaluator": "lhb_inst_net_buy_event",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_lhb_inst_net_buy_ratio_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "linear_decay(lhb_inst_net_buy_ratio, {parameter} trading days)",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "lhb_event_count_low",
+      "label": "龙虎榜上榜次数衰减反向",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "direction": "high",
+      "evaluator": "lhb_event_count_low",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_lhb_event_count_20d_low"
+      ],
+      "status": "tunable",
+      "formula_template": "-linear_decay(lhb_event_count, {parameter} trading days)",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "repurchase_event_decay",
+      "label": "回购事件衰减",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "direction": "high",
+      "evaluator": "repurchase_event_decay",
+      "parameter_name": "window",
+      "parameter_grid": [
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 60,
+      "minimum_history": 121,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_repurchase_event_60d"
+      ],
+      "status": "tunable",
+      "formula_template": "linear_decay(repurchase_event, {parameter} trading days)",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "block_trade_ratio_event",
+      "label": "大宗交易占比事件衰减反向",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "direction": "high",
+      "evaluator": "block_trade_ratio_event",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_block_trade_ratio_20d_low"
+      ],
+      "status": "tunable",
+      "formula_template": "-linear_decay(block_trade_ratio, {parameter} trading days)",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "block_premium_event",
+      "label": "大宗交易折溢率事件衰减",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "direction": "high",
+      "evaluator": "block_premium_event",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_block_premium_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "linear_decay(block_premium, {parameter} trading days)",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "analyst_rating_level",
+      "label": "分析师评级水平",
+      "data_class": "sentiment",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "analyst_rating_level",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_analyst_rating_score_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_mean(asof analyst rating, {parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "analyst_rating_change",
+      "label": "分析师评级调整事件衰减",
+      "data_class": "sentiment",
+      "cross_section_type": "event_sparse",
+      "direction": "high",
+      "evaluator": "analyst_rating_change",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_analyst_rating_change_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "linear_decay(analyst_rating_change, {parameter} trading days)",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "bond_futures_momentum",
+      "label": "国债期货 T 动量",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "direction": "low",
+      "evaluator": "bond_futures_momentum",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [],
+      "member_factor_ids": [
+        "ext_alt_hs300_bond_mom_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "T0 close / close.shift({parameter}) - 1",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "bond_futures_trend_momentum",
+      "label": "国债期货 TF 动量",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "direction": "low",
+      "evaluator": "bond_futures_trend_momentum",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [],
+      "member_factor_ids": [
+        "ext_alt_hs300_bond_tf_mom_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "TF0 close / close.shift({parameter}) - 1",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "hsi_momentum",
+      "label": "恒生指数动量",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "direction": "high",
+      "evaluator": "hsi_momentum",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [],
+      "member_factor_ids": [
+        "ext_alt_hs300_hsi_mom_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "HSI close / close.shift({parameter}) - 1",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "hscei_momentum",
+      "label": "恒生国企指数动量",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "direction": "high",
+      "evaluator": "hscei_momentum",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [],
+      "member_factor_ids": [
+        "ext_alt_hs300_hsciei_mom_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "HSCEI close / close.shift({parameter}) - 1",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "hsi_relative_hs300",
+      "label": "恒指相对沪深300强弱",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "direction": "high",
+      "evaluator": "hsi_relative_hs300",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [],
+      "member_factor_ids": [
+        "ext_alt_hs300_hsi_rel_hs300_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "HSI_return({parameter}) - HS300_return({parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "etf_share_change",
+      "label": "510300 份额变化",
+      "data_class": "flow",
+      "cross_section_type": "market_level",
+      "direction": "high",
+      "evaluator": "etf_share_change",
+      "parameter_name": "window",
+      "parameter_grid": [
+        1,
+        2,
+        3,
+        6
+      ],
+      "current_parameter": 1,
+      "minimum_history": 7,
+      "neutralization": [],
+      "member_factor_ids": [
+        "ext_alt_hs300_etf_share_chg_1m",
+        "ext_alt_hs300_etf_share_chg_3m"
+      ],
+      "status": "tunable",
+      "formula_template": "510300 shares / shares.shift({parameter} months) - 1",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "qvix_zscore",
+      "label": "300ETF QVIX 分位",
+      "data_class": "sentiment",
+      "cross_section_type": "market_level",
+      "direction": "low",
+      "evaluator": "qvix_zscore",
+      "parameter_name": "window",
+      "parameter_grid": [
+        60,
+        120,
+        252
+      ],
+      "current_parameter": 252,
+      "minimum_history": 253,
+      "neutralization": [],
+      "member_factor_ids": [
+        "ext_alt_hs300_qvix_z_252"
+      ],
+      "status": "tunable",
+      "formula_template": "zscore(QVIX close, {parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "market_skew",
+      "label": "HS300 已实现偏度反向",
+      "data_class": "price",
+      "cross_section_type": "market_level",
+      "direction": "high",
+      "evaluator": "market_skew",
+      "parameter_name": "window",
+      "parameter_grid": [
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 60,
+      "minimum_history": 121,
+      "neutralization": [],
+      "member_factor_ids": [
+        "ext_alt_hs300_market_skew_60d_low"
+      ],
+      "status": "tunable",
+      "formula_template": "negative_realized_skew(HS300 return, {parameter})",
+      "evidence_refs": []
     }
   ],
   "unclassified_factor_ids": [],
   "blocked_factor_ids": [
-    "atr_14"
+    "atr_14",
+    "ext_alt_hs300_cash_flow_stability_4q_low",
+    "ext_alt_hs300_gross_margin_stability_4q_low",
+    "ext_alt_hs300_management_expense_ratio_4q_low",
+    "ext_alt_hs300_net_financing_4q_low",
+    "ext_alt_hs300_ocf_margin_4q",
+    "ext_alt_hs300_sga_ratio_4q_industry_neutral",
+    "ext_alt_hs300_sga_ratio_4q_low",
+    "ext_alt_hs300_sga_ratio_4q_qoq_improvement",
+    "ext_alt_hs300_sga_ratio_stability_4q_low",
+    "ext_alt_hs300_equity_supply_ratio_180d_low",
+    "ext_alt_hs300_forecast_surprise_60d",
+    "ext_alt_hs300_express_surprise_60d",
+    "ext_alt_hs300_northbound_net_buy_20d",
+    "uf_industry_relative_strength_change_5d"
   ],
   "fixed_factor_ids": [
     "vol_trend_5_10",
@@ -1094,6 +1719,52 @@
     "mom_accel_20_60",
     "rsi_14_delta_5d",
     "vol_regime_5_60",
-    "amplitude_trend_20_60"
-  ]
+    "amplitude_trend_20_60",
+    "ext_alt_hs300_ah_premium_chg_1m",
+    "ext_alt_hs300_if_net_short_chg_1m",
+    "ext_alt_hs300_margin_safety_chg_20d",
+    "ext_alt_hs300_nh_nl_diff_20d",
+    "ext_alt_hs300_market_breadth_above_ma20",
+    "ext_alt_hs300_hs300_turnover_chg_20d",
+    "ext_alt_hs300_hs300_turnover_chg_20d_ext2017",
+    "ext_alt_hs300_shibor_3m",
+    "ext_alt_hs300_shibor_3m_chg_20d",
+    "ext_alt_hs300_m1_m2_scissors_chg_1m",
+    "ext_alt_hs300_holder_net_buy_ratio_90d",
+    "ext_alt_hs300_holder_net_buy_count_90d",
+    "ext_alt_hs300_margin_chg_1m_low",
+    "ext_alt_hs300_pledge_ratio_chg_1m_low"
+  ],
+  "blocked_factor_reasons": {
+    "ext_alt_hs300_cash_flow_stability_4q_low": "future_data_status=unknown; field-level PIT promotion required",
+    "ext_alt_hs300_gross_margin_stability_4q_low": "future_data_status=unknown; field-level PIT promotion required",
+    "ext_alt_hs300_management_expense_ratio_4q_low": "future_data_status=unknown; field-level PIT promotion required",
+    "ext_alt_hs300_net_financing_4q_low": "future_data_status=unknown; field-level PIT promotion required",
+    "ext_alt_hs300_ocf_margin_4q": "future_data_status=unknown; field-level PIT promotion required",
+    "ext_alt_hs300_sga_ratio_4q_industry_neutral": "future_data_status=unknown; field-level PIT promotion required",
+    "ext_alt_hs300_sga_ratio_4q_low": "future_data_status=unknown; field-level PIT promotion required",
+    "ext_alt_hs300_sga_ratio_4q_qoq_improvement": "future_data_status=unknown; field-level PIT promotion required",
+    "ext_alt_hs300_sga_ratio_stability_4q_low": "future_data_status=unknown; field-level PIT promotion required",
+    "ext_alt_hs300_equity_supply_ratio_180d_low": "future_data_status=unknown; field-level PIT promotion required",
+    "ext_alt_hs300_forecast_surprise_60d": "future_data_status=unknown; announcement-date source requires catalog audit promotion",
+    "ext_alt_hs300_express_surprise_60d": "future_data_status=unknown; announcement-date source requires catalog audit promotion",
+    "ext_alt_hs300_northbound_net_buy_20d": "stale: last non-null 2024-08-16",
+    "uf_industry_relative_strength_change_5d": "custom definition pit_status=unknown and future_data_status=unknown; source file is uncommitted user data"
+  },
+  "fixed_factor_reasons": {
+    "ext_alt_hs300_ah_premium_chg_1m": "fixed market conditioner with one audited monthly horizon",
+    "ext_alt_hs300_if_net_short_chg_1m": "fixed market conditioner with one audited monthly horizon",
+    "ext_alt_hs300_margin_safety_chg_20d": "fixed market conditioner with one audited monthly horizon",
+    "ext_alt_hs300_nh_nl_diff_20d": "fixed market conditioner with one audited monthly horizon",
+    "ext_alt_hs300_market_breadth_above_ma20": "fixed regime field with one audited breadth definition",
+    "ext_alt_hs300_hs300_turnover_chg_20d": "fixed market conditioner with one audited turnover horizon",
+    "ext_alt_hs300_hs300_turnover_chg_20d_ext2017": "fixed duplicate extended-history turnover variant; no independent parameter family",
+    "ext_alt_hs300_shibor_3m": "fixed macro level",
+    "ext_alt_hs300_shibor_3m_chg_20d": "fixed macro conditioner with one audited horizon",
+    "ext_alt_hs300_m1_m2_scissors_chg_1m": "fixed macro conditioner with one audited monthly horizon",
+    "ext_alt_hs300_holder_net_buy_ratio_90d": "fixed structural 90-day lookback; threshold work belongs to P4",
+    "ext_alt_hs300_holder_net_buy_count_90d": "fixed structural 90-day lookback; threshold work belongs to P4",
+    "ext_alt_hs300_margin_chg_1m_low": "fixed structural monthly change; threshold work belongs to P4",
+    "ext_alt_hs300_pledge_ratio_chg_1m_low": "fixed structural monthly change; threshold work belongs to P4"
+  }
 }

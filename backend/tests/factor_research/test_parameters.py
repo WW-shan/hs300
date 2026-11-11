@@ -245,6 +245,44 @@ def test_explicit_fixed_factor_overrides_numeric_window_detection() -> None:
     assert row.reason == "explicitly fixed by parameter registry"
 
 
+def test_registry_rejects_reason_for_unknown_factor() -> None:
+    payload = _registry_payload()
+    payload["fixed_factor_reasons"] = {"missing": "not an audited horizon"}
+    registry = ParameterFamilyRegistry.model_validate(payload)
+
+    errors = validate_parameter_registry(registry, {"idio_vol_20"})
+
+    assert "missing factor missing in fixed_factor_reasons" in errors
+
+
+def test_classification_uses_explicit_fixed_and_blocked_reasons() -> None:
+    payload = _registry_payload()
+    payload["fixed_factor_ids"] = ["roe_latest"]
+    payload["fixed_factor_reasons"] = {
+        "roe_latest": "single audited structural horizon",
+    }
+    payload["blocked_factor_ids"] = ["northbound_20d"]
+    payload["blocked_factor_reasons"] = {
+        "northbound_20d": "stale: last non-null 2024-08-16",
+    }
+    registry = ParameterFamilyRegistry.model_validate(payload)
+
+    rows = classify_factor_parameters(
+        [
+            _factor("idio_vol_20"),
+            _factor("roe_latest"),
+            _factor("northbound_20d"),
+        ],
+        registry,
+    )
+    by_id = {row.factor_id: row for row in rows}
+
+    assert by_id["roe_latest"].status == "fixed"
+    assert by_id["roe_latest"].reason == "single audited structural horizon"
+    assert by_id["northbound_20d"].status == "blocked"
+    assert by_id["northbound_20d"].reason == "stale: last non-null 2024-08-16"
+
+
 def test_fixed_factor_cannot_overlap_family_or_blocked_member() -> None:
     payload = _registry_payload()
     payload["fixed_factor_ids"] = ["idio_vol_20"]
@@ -316,6 +354,55 @@ def test_p2_manifest_leaves_no_builtin_factor_unclassified() -> None:
         for factor_id in builtin_ids
         if by_id[factor_id].status == "unclassified"
     ]
+
+
+def test_p3_manifest_classifies_every_remaining_window_factor() -> None:
+    from app.factor_research.catalog import load_latest_catalog
+
+    root = Path(__file__).resolve().parents[3]
+    catalog = load_latest_catalog(root / "data")
+    assert catalog is not None
+    registry = load_parameter_registry(root / "data")
+    expected_p3_families = {
+        "industry_momentum",
+        "industry_rps",
+        "industry_breadth",
+        "stock_rel_industry_strength",
+        "insider_buy_event",
+        "insider_net_buy_event",
+        "insider_sell_event_low",
+        "lhb_net_buy_event",
+        "lhb_inst_net_buy_event",
+        "lhb_event_count_low",
+        "repurchase_event_decay",
+        "block_trade_ratio_event",
+        "block_premium_event",
+        "analyst_rating_level",
+        "analyst_rating_change",
+        "bond_futures_momentum",
+        "bond_futures_trend_momentum",
+        "hsi_momentum",
+        "hscei_momentum",
+        "hsi_relative_hs300",
+        "etf_share_change",
+        "qvix_zscore",
+        "market_skew",
+    }
+    assert expected_p3_families.issubset(
+        {family.family_id for family in registry.families}
+    )
+    assert validate_parameter_registry(
+        registry, {factor.factor_id for factor in catalog.factors}
+    ) == []
+
+    rows = classify_factor_parameters(catalog.factors, registry)
+    assert all(row.status != "unclassified" for row in rows)
+    assert all(
+        row.reason
+        for row in rows
+        if row.factor_id in set(registry.fixed_factor_ids)
+        | set(registry.blocked_factor_ids)
+    )
 
 
 def test_current_family_factor_id_supports_single_unparsed_factor() -> None:

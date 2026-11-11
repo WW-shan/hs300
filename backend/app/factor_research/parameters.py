@@ -76,6 +76,8 @@ class ParameterFamilyRegistry(FactorResearchModel):
     unclassified_factor_ids: list[str] = Field(default_factory=list)
     fixed_factor_ids: list[str] = Field(default_factory=list)
     blocked_factor_ids: list[str] = Field(default_factory=list)
+    fixed_factor_reasons: dict[str, str] = Field(default_factory=dict)
+    blocked_factor_reasons: dict[str, str] = Field(default_factory=dict)
 
 
 class FactorParameterClassification(FactorResearchModel):
@@ -143,6 +145,17 @@ def validate_parameter_registry(
         for factor_id in _duplicates(getattr(registry, field_name)):
             errors.append(f"duplicate factor {factor_id} in {field_name}")
 
+    for ids_field, reasons_field in (
+        ("fixed_factor_ids", "fixed_factor_reasons"),
+        ("blocked_factor_ids", "blocked_factor_reasons"),
+    ):
+        ids = set(getattr(registry, ids_field))
+        for factor_id, reason in getattr(registry, reasons_field).items():
+            if factor_id not in ids:
+                errors.append(f"missing factor {factor_id} in {reasons_field}")
+            if not reason.strip():
+                errors.append(f"empty reason for factor {factor_id} in {reasons_field}")
+
     fixed_ids = set(registry.fixed_factor_ids)
     unclassified_ids = set(registry.unclassified_factor_ids)
     blocked_ids = set(registry.blocked_factor_ids)
@@ -196,7 +209,12 @@ def classify_factor_parameters(
         ):
             status: ParameterClassificationStatus = "blocked"
             reason = (
-                "member of blocked parameter family"
+                registry.blocked_factor_reasons.get(
+                    factor.factor_id,
+                    "explicitly blocked by parameter registry",
+                )
+                if factor.factor_id in blocked_ids
+                else "member of blocked parameter family"
                 if family is not None and family.status == "blocked"
                 else "factor definition or future-data status is blocked"
             )
@@ -205,7 +223,10 @@ def classify_factor_parameters(
             reason = f"member of parameter family {family.family_id}"
         elif factor.factor_id in fixed_ids:
             status = "fixed"
-            reason = "explicitly fixed by parameter registry"
+            reason = registry.fixed_factor_reasons.get(
+                factor.factor_id,
+                "explicitly fixed by parameter registry",
+            )
         elif factor.factor_id in unclassified_ids:
             status = "unclassified"
             reason = "explicitly listed as unclassified"

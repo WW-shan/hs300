@@ -1,0 +1,3576 @@
+{
+  "schema_version": 1,
+  "report_id": "sha256:044a054b71571ea0128d2b6929562874333b2b0c74c878c61d006a313a5acba9",
+  "generated_at": "2026-11-11T11:09:35Z",
+  "catalog": {
+    "snapshot_id": "sha256:8c5e3b58937d3399313c8903353a4df01fcb4ecf30c29837633cba00f2006543",
+    "registry_fingerprint": "sha256:d7f2998de35cd14c9c62c0637b3c252783024330e7e00c4924090c3bed7e5ea5",
+    "factor_count": 223,
+    "source_completeness": "complete"
+  },
+  "registry": {
+    "schema_version": 1,
+    "family_count": 62,
+    "member_count": 82
+  },
+  "counts": {
+    "total": 223,
+    "tunable": 0,
+    "fixed": 121,
+    "grouped": 82,
+    "blocked": 20,
+    "unclassified": 0
+  },
+  "families": [
+    {
+      "family_id": "amihud",
+      "label": "Amihud 非流动性",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "amihud",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 20,
+      "minimum_history": 121,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "amihud_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_mean(abs(change) / (amount / 1e8), {parameter})",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "amount_level",
+      "label": "成交额水平",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "amount_level",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 20,
+      "minimum_history": 121,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "amount_mean_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_mean(amount / 1e8, {parameter})",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "amount_spike",
+      "label": "成交额放大",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "amount_ratio",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        60
+      ],
+      "current_parameter": 5,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "amount_ratio_5d"
+      ],
+      "status": "tunable",
+      "formula_template": "amount / prior rolling_mean(amount, {parameter}) - 1",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "analyst_rating_change",
+      "label": "分析师评级调整事件衰减",
+      "data_class": "sentiment",
+      "cross_section_type": "event_sparse",
+      "direction": "high",
+      "evaluator": "analyst_rating_change",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_analyst_rating_change_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "linear_decay(analyst_rating_change, {parameter} trading days)",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "analyst_rating_level",
+      "label": "分析师评级水平",
+      "data_class": "sentiment",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "analyst_rating_level",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_analyst_rating_score_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_mean(asof analyst rating, {parameter})",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "annual_volatility",
+      "label": "年化低波",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "annual_volatility",
+      "parameter_name": "window",
+      "parameter_grid": [
+        10,
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 20,
+      "minimum_history": 121,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "annual_vol_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_std(close.pct_change(), {parameter}) * sqrt(252)",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "atr_risk",
+      "label": "ATR 相对波动",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "atr_pct",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        14,
+        20,
+        60
+      ],
+      "current_parameter": 14,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "atr_pct"
+      ],
+      "status": "tunable",
+      "formula_template": "Wilder ATR({parameter}) / close",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "beta_asymmetry",
+      "label": "上下行 beta 不对称",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "beta_asymmetry",
+      "parameter_name": "window",
+      "parameter_grid": [
+        60,
+        120,
+        180,
+        240
+      ],
+      "current_parameter": 120,
+      "minimum_history": 240,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_beta_asymmetry_120d"
+      ],
+      "status": "tunable",
+      "formula_template": null,
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "block_premium_event",
+      "label": "大宗交易折溢率事件衰减",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "direction": "high",
+      "evaluator": "block_premium_event",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_block_premium_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "linear_decay(block_premium, {parameter} trading days)",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "block_trade_ratio_event",
+      "label": "大宗交易占比事件衰减反向",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "direction": "high",
+      "evaluator": "block_trade_ratio_event",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_block_trade_ratio_20d_low"
+      ],
+      "status": "tunable",
+      "formula_template": "-linear_decay(block_trade_ratio, {parameter} trading days)",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "bollinger_position",
+      "label": "布林带位置",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "bollinger_position",
+      "parameter_name": "window",
+      "parameter_grid": [
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "boll_position"
+      ],
+      "status": "tunable",
+      "formula_template": "(close - lower Bollinger({parameter})) / band width",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "bollinger_width",
+      "label": "布林带宽",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "bollinger_width",
+      "parameter_name": "window",
+      "parameter_grid": [
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "boll_width"
+      ],
+      "status": "tunable",
+      "formula_template": "4 * rolling_std(close, {parameter}) / rolling_mean(close, {parameter})",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "bond_futures_momentum",
+      "label": "国债期货 T 动量",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "direction": "low",
+      "evaluator": "bond_futures_momentum",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [],
+      "member_factor_ids": [
+        "ext_alt_hs300_bond_mom_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "T0 close / close.shift({parameter}) - 1",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "bond_futures_trend_momentum",
+      "label": "国债期货 TF 动量",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "direction": "low",
+      "evaluator": "bond_futures_trend_momentum",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [],
+      "member_factor_ids": [
+        "ext_alt_hs300_bond_tf_mom_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "TF0 close / close.shift({parameter}) - 1",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "cs_spread",
+      "label": "Corwin-Schultz 买卖价差",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "corwin_schultz_spread",
+      "parameter_name": "window",
+      "parameter_grid": [
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 60,
+      "minimum_history": 240,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_cs_spread_60d"
+      ],
+      "status": "tunable",
+      "formula_template": null,
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "distance_from_low",
+      "label": "距区间低点",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "distance_from_low",
+      "parameter_name": "window",
+      "parameter_grid": [
+        20,
+        60,
+        120,
+        240
+      ],
+      "current_parameter": 60,
+      "minimum_history": 241,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "distance_from_low_60d"
+      ],
+      "status": "tunable",
+      "formula_template": "close / rolling_min(close, {parameter}) - 1",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "distance_to_high",
+      "label": "距区间高点",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "distance_to_high",
+      "parameter_name": "window",
+      "parameter_grid": [
+        20,
+        60,
+        120,
+        240
+      ],
+      "current_parameter": 240,
+      "minimum_history": 241,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "distance_to_high_60d",
+        "distance_to_high_240d"
+      ],
+      "status": "tunable",
+      "formula_template": "close / rolling_max(close, {parameter}) - 1",
+      "evidence_refs": [],
+      "member_count": 2
+    },
+    {
+      "family_id": "downside_volatility",
+      "label": "下行波动",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "downside_volatility",
+      "parameter_name": "window",
+      "parameter_grid": [
+        10,
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 20,
+      "minimum_history": 121,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "downside_vol_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "sqrt(rolling_mean(min(change, 0)^2, {parameter}))",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "etf_share_change",
+      "label": "510300 份额变化",
+      "data_class": "flow",
+      "cross_section_type": "market_level",
+      "direction": "high",
+      "evaluator": "etf_share_change",
+      "parameter_name": "window",
+      "parameter_grid": [
+        1,
+        2,
+        3,
+        6
+      ],
+      "current_parameter": 1,
+      "minimum_history": 7,
+      "neutralization": [],
+      "member_factor_ids": [
+        "ext_alt_hs300_etf_share_chg_1m",
+        "ext_alt_hs300_etf_share_chg_3m"
+      ],
+      "status": "tunable",
+      "formula_template": "510300 shares / shares.shift({parameter} months) - 1",
+      "evidence_refs": [],
+      "member_count": 2
+    },
+    {
+      "family_id": "hscei_momentum",
+      "label": "恒生国企指数动量",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "direction": "high",
+      "evaluator": "hscei_momentum",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [],
+      "member_factor_ids": [
+        "ext_alt_hs300_hsciei_mom_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "HSCEI close / close.shift({parameter}) - 1",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "hsi_momentum",
+      "label": "恒生指数动量",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "direction": "high",
+      "evaluator": "hsi_momentum",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [],
+      "member_factor_ids": [
+        "ext_alt_hs300_hsi_mom_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "HSI close / close.shift({parameter}) - 1",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "hsi_relative_hs300",
+      "label": "恒指相对沪深300强弱",
+      "data_class": "macro",
+      "cross_section_type": "market_level",
+      "direction": "high",
+      "evaluator": "hsi_relative_hs300",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [],
+      "member_factor_ids": [
+        "ext_alt_hs300_hsi_rel_hs300_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "HSI_return({parameter}) - HS300_return({parameter})",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "idio_vol",
+      "label": "HS300 残差低波",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "residual_volatility",
+      "parameter_name": "window",
+      "parameter_grid": [
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 60,
+      "minimum_history": 240,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_idio_vol_20d_low",
+        "ext_alt_hs300_idio_vol_40d_low",
+        "ext_alt_hs300_idio_vol_60d_low"
+      ],
+      "status": "tunable",
+      "formula_template": null,
+      "evidence_refs": [],
+      "member_count": 3
+    },
+    {
+      "family_id": "industry_breadth",
+      "label": "一级行业 MA 宽度",
+      "data_class": "industry",
+      "cross_section_type": "industry_cross_sectional",
+      "direction": "high",
+      "evaluator": "industry_breadth",
+      "parameter_name": "window",
+      "parameter_grid": [
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_industry_breadth_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "mean(close > rolling_mean(close, {parameter})) by industry",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "industry_momentum",
+      "label": "一级行业等权动量",
+      "data_class": "industry",
+      "cross_section_type": "industry_cross_sectional",
+      "direction": "high",
+      "evaluator": "industry_momentum",
+      "parameter_name": "window",
+      "parameter_grid": [
+        10,
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 20,
+      "minimum_history": 121,
+      "neutralization": [
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_industry_mom_20d",
+        "ext_alt_hs300_industry_mom_60d"
+      ],
+      "status": "tunable",
+      "formula_template": "industry equal-weight close / close.shift({parameter}) - 1",
+      "evidence_refs": [],
+      "member_count": 2
+    },
+    {
+      "family_id": "industry_rps",
+      "label": "一级行业动量 RPS",
+      "data_class": "industry",
+      "cross_section_type": "industry_cross_sectional",
+      "direction": "high",
+      "evaluator": "industry_rps",
+      "parameter_name": "window",
+      "parameter_grid": [
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_industry_rps_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "cross-industry ordinal rank of industry momentum({parameter}) / industry_count",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "insider_buy_event",
+      "label": "董监高增持事件衰减",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "direction": "high",
+      "evaluator": "insider_buy_event",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_insider_buy_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "linear_decay(insider_buy_events, {parameter} trading days)",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "insider_net_buy_event",
+      "label": "董监高净增持事件衰减",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "direction": "high",
+      "evaluator": "insider_net_buy_event",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_insider_net_buy_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "linear_decay(insider_net_buy_events, {parameter} trading days)",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "insider_sell_event_low",
+      "label": "董监高减持事件衰减反向",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "direction": "high",
+      "evaluator": "insider_sell_event_low",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_insider_sell_20d_low"
+      ],
+      "status": "tunable",
+      "formula_template": "-linear_decay(insider_sell_events, {parameter} trading days)",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "intraday_return",
+      "label": "日内收益",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "intraday_return",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "intraday_ret_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_sum(close / open - 1, {parameter})",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "lhb_event_count_low",
+      "label": "龙虎榜上榜次数衰减反向",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "direction": "high",
+      "evaluator": "lhb_event_count_low",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_lhb_event_count_20d_low"
+      ],
+      "status": "tunable",
+      "formula_template": "-linear_decay(lhb_event_count, {parameter} trading days)",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "lhb_inst_net_buy_event",
+      "label": "龙虎榜机构净买入事件衰减",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "direction": "high",
+      "evaluator": "lhb_inst_net_buy_event",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_lhb_inst_net_buy_ratio_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "linear_decay(lhb_inst_net_buy_ratio, {parameter} trading days)",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "lhb_net_buy_event",
+      "label": "龙虎榜净买入事件衰减",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "direction": "high",
+      "evaluator": "lhb_net_buy_event",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_lhb_net_buy_ratio_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "linear_decay(lhb_net_buy_ratio, {parameter} trading days)",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "limit_up_gene",
+      "label": "涨停基因",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "limit_up_count",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 20,
+      "minimum_history": 121,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "limit_up_count_20d",
+        "limit_up_count_60d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_sum(limit_up_hit, {parameter})",
+      "evidence_refs": [],
+      "member_count": 2
+    },
+    {
+      "family_id": "market_down_beta",
+      "label": "市场下跌条件 beta",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "market_down_beta",
+      "parameter_name": "window",
+      "parameter_grid": [
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 60,
+      "minimum_history": 240,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_market_down_beta_60d_low"
+      ],
+      "status": "tunable",
+      "formula_template": null,
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "market_skew",
+      "label": "HS300 已实现偏度反向",
+      "data_class": "price",
+      "cross_section_type": "market_level",
+      "direction": "high",
+      "evaluator": "market_skew",
+      "parameter_name": "window",
+      "parameter_grid": [
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 60,
+      "minimum_history": 121,
+      "neutralization": [],
+      "member_factor_ids": [
+        "ext_alt_hs300_market_skew_60d_low"
+      ],
+      "status": "tunable",
+      "formula_template": "negative_realized_skew(HS300 return, {parameter})",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "max_return",
+      "label": "最大单日涨幅",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "max_return",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "max_ret_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_max(change, {parameter})",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "medium_ema_trend",
+      "label": "中期 EMA 趋势",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "ema_bias",
+      "parameter_name": "window",
+      "parameter_grid": [
+        20,
+        30,
+        60,
+        120
+      ],
+      "current_parameter": 20,
+      "minimum_history": 121,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ema20_bias",
+        "ema30_bias",
+        "ema60_bias"
+      ],
+      "status": "tunable",
+      "formula_template": "close / EMA(close, alpha=2/({parameter}+1)) - 1",
+      "evidence_refs": [],
+      "member_count": 3
+    },
+    {
+      "family_id": "medium_ma_trend",
+      "label": "中期 MA 趋势",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "ma_bias",
+      "parameter_name": "window",
+      "parameter_grid": [
+        20,
+        30,
+        60,
+        120
+      ],
+      "current_parameter": 20,
+      "minimum_history": 121,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ma20_bias",
+        "ma30_bias",
+        "ma60_bias"
+      ],
+      "status": "tunable",
+      "formula_template": "close / rolling_mean(close, {parameter}) - 1",
+      "evidence_refs": [],
+      "member_count": 3
+    },
+    {
+      "family_id": "medium_momentum",
+      "label": "中期动量",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "momentum",
+      "parameter_name": "window",
+      "parameter_grid": [
+        20,
+        30,
+        60,
+        120
+      ],
+      "current_parameter": 20,
+      "minimum_history": 121,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "momentum_20d",
+        "momentum_30d",
+        "momentum_60d",
+        "momentum_120d"
+      ],
+      "status": "tunable",
+      "formula_template": "close / close.shift({parameter}) - 1",
+      "evidence_refs": [],
+      "member_count": 4
+    },
+    {
+      "family_id": "obv_trend",
+      "label": "量能潮趋势",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "obv_trend",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "obv_trend_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_sum(sign(change) * volume, {parameter}) / (rolling_mean(volume, {parameter}) * {parameter})",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "overnight_return",
+      "label": "隔夜收益",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "overnight_return",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "overnight_ret_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_sum(open / prior close - 1, {parameter})",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "price_delay",
+      "label": "市场信息价格延迟",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "price_delay",
+      "parameter_name": "window",
+      "parameter_grid": [
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 60,
+      "minimum_history": 240,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_price_delay_60d"
+      ],
+      "status": "tunable",
+      "formula_template": null,
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "price_position",
+      "label": "区间价格位置",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "price_position",
+      "parameter_name": "window",
+      "parameter_grid": [
+        60,
+        120,
+        240
+      ],
+      "current_parameter": 240,
+      "minimum_history": 241,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "position_240d"
+      ],
+      "status": "tunable",
+      "formula_template": "(close - rolling_min(close, {parameter})) / rolling range",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "qvix_zscore",
+      "label": "300ETF QVIX 分位",
+      "data_class": "sentiment",
+      "cross_section_type": "market_level",
+      "direction": "low",
+      "evaluator": "qvix_zscore",
+      "parameter_name": "window",
+      "parameter_grid": [
+        60,
+        120,
+        252
+      ],
+      "current_parameter": 252,
+      "minimum_history": 253,
+      "neutralization": [],
+      "member_factor_ids": [
+        "ext_alt_hs300_qvix_z_252"
+      ],
+      "status": "tunable",
+      "formula_template": "zscore(QVIX close, {parameter})",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "repurchase_event_decay",
+      "label": "回购事件衰减",
+      "data_class": "flow",
+      "cross_section_type": "event_sparse",
+      "direction": "high",
+      "evaluator": "repurchase_event_decay",
+      "parameter_name": "window",
+      "parameter_grid": [
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 60,
+      "minimum_history": 121,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_repurchase_event_60d"
+      ],
+      "status": "tunable",
+      "formula_template": "linear_decay(repurchase_event, {parameter} trading days)",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "return_skew",
+      "label": "收益偏度",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "return_skew",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ret_skew_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_skew(change, {parameter}, bias=True)",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "risk_adjusted_momentum",
+      "label": "风险调整动量",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "risk_adjusted_momentum",
+      "parameter_name": "window",
+      "parameter_grid": [
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 60,
+      "minimum_history": 240,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_risk_adjusted_momentum_60d"
+      ],
+      "status": "tunable",
+      "formula_template": null,
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "rsi_reversal",
+      "label": "RSI 超买反转",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "rsi",
+      "parameter_name": "window",
+      "parameter_grid": [
+        6,
+        14,
+        24,
+        40,
+        60
+      ],
+      "current_parameter": 14,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "rsi_6",
+        "rsi_14",
+        "rsi_24"
+      ],
+      "status": "tunable",
+      "formula_template": "RSI(close changes, Wilder alpha=1/{parameter})",
+      "evidence_refs": [],
+      "member_count": 3
+    },
+    {
+      "family_id": "short_ema_reversal",
+      "label": "短周期 EMA 乖离反转",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "ema_bias",
+      "parameter_name": "window",
+      "parameter_grid": [
+        3,
+        5,
+        10,
+        15,
+        20
+      ],
+      "current_parameter": 5,
+      "minimum_history": 21,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ema5_bias",
+        "ema10_bias"
+      ],
+      "status": "tunable",
+      "formula_template": "close / EMA(close, alpha=2/({parameter}+1)) - 1",
+      "evidence_refs": [],
+      "member_count": 2
+    },
+    {
+      "family_id": "short_ma_reversal",
+      "label": "短周期 MA 乖离反转",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "ma_bias",
+      "parameter_name": "window",
+      "parameter_grid": [
+        3,
+        5,
+        10,
+        15,
+        20
+      ],
+      "current_parameter": 5,
+      "minimum_history": 21,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ma5_bias",
+        "ma10_bias"
+      ],
+      "status": "tunable",
+      "formula_template": "close / rolling_mean(close, {parameter}) - 1",
+      "evidence_refs": [],
+      "member_count": 2
+    },
+    {
+      "family_id": "short_momentum_reversal",
+      "label": "短周期动量反转",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "momentum",
+      "parameter_name": "window",
+      "parameter_grid": [
+        3,
+        5,
+        10,
+        15,
+        20
+      ],
+      "current_parameter": 5,
+      "minimum_history": 21,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "momentum_5d",
+        "momentum_10d"
+      ],
+      "status": "tunable",
+      "formula_template": "close / close.shift({parameter}) - 1",
+      "evidence_refs": [],
+      "member_count": 2
+    },
+    {
+      "family_id": "stock_rel_industry_strength",
+      "label": "个股相对行业强弱",
+      "data_class": "industry",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "stock_rel_industry_strength",
+      "parameter_name": "window",
+      "parameter_grid": [
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_stock_rel_industry_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "stock_return({parameter}) - industry equal-weight return({parameter})",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "trend_efficiency",
+      "label": "趋势效率",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "trend_efficiency",
+      "parameter_name": "window",
+      "parameter_grid": [
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 60,
+      "minimum_history": 240,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_trend_efficiency_60d"
+      ],
+      "status": "tunable",
+      "formula_template": null,
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "turnover_crowding",
+      "label": "换手拥挤度",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "turnover_crowding",
+      "parameter_name": "window",
+      "parameter_grid": [
+        10,
+        20,
+        60,
+        120,
+        240
+      ],
+      "current_parameter": 60,
+      "minimum_history": 241,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "turnover_z_60d"
+      ],
+      "status": "tunable",
+      "formula_template": "(turnover_rate - prior {parameter}d mean) / prior {parameter}d std",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "turnover_level",
+      "label": "换手率水平",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "turnover_level",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 20,
+      "minimum_history": 121,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "turnover_mean_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_mean(turnover_rate, {parameter})",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "turnover_spike",
+      "label": "换手率放大",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "turnover_ratio",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        60
+      ],
+      "current_parameter": 5,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "turnover_ratio_5d"
+      ],
+      "status": "tunable",
+      "formula_template": "turnover_rate / prior rolling_mean(turnover_rate, {parameter}) - 1",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "turnover_stability",
+      "label": "换手率稳定性",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "turnover_stability",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 20,
+      "minimum_history": 121,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "turnover_std_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_std(turnover_rate, {parameter}) / rolling_mean(turnover_rate, {parameter})",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "up_day_ratio",
+      "label": "上涨天数",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "up_day_count",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "up_days_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_sum(change > 0, {parameter})",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "vol_of_vol",
+      "label": "波动率的波动",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "vol_of_vol",
+      "parameter_name": "window",
+      "parameter_grid": [
+        20,
+        40,
+        60,
+        120
+      ],
+      "current_parameter": 60,
+      "minimum_history": 240,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "ext_alt_hs300_vol_of_vol_20d_low",
+        "ext_alt_hs300_vol_of_vol_60d_low"
+      ],
+      "status": "tunable",
+      "formula_template": null,
+      "evidence_refs": [],
+      "member_count": 2
+    },
+    {
+      "family_id": "volume_price_corr",
+      "label": "量价相关",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "high",
+      "evaluator": "volume_price_corr",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "vol_price_corr_20d"
+      ],
+      "status": "tunable",
+      "formula_template": "rolling_corr(change, volume, {parameter})",
+      "evidence_refs": [],
+      "member_count": 1
+    },
+    {
+      "family_id": "volume_spike",
+      "label": "成交量放大",
+      "data_class": "price",
+      "cross_section_type": "stock_cross_sectional",
+      "direction": "low",
+      "evaluator": "volume_ratio",
+      "parameter_name": "window",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        60
+      ],
+      "current_parameter": 5,
+      "minimum_history": 61,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "member_factor_ids": [
+        "vol_ratio_5d",
+        "vol_ratio_10d"
+      ],
+      "status": "tunable",
+      "formula_template": "volume / prior rolling_mean(volume, {parameter})",
+      "evidence_refs": [],
+      "member_count": 2
+    }
+  ],
+  "factors": [
+    {
+      "factor_id": "accrual",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "amihud_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "amihud",
+      "parameter": 20,
+      "reason": "member of parameter family amihud"
+    },
+    {
+      "factor_id": "amount_mean_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "amount_level",
+      "parameter": 20,
+      "reason": "member of parameter family amount_level"
+    },
+    {
+      "factor_id": "amount_ratio_5d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "amount_spike",
+      "parameter": 5,
+      "reason": "member of parameter family amount_spike"
+    },
+    {
+      "factor_id": "amplitude",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "amplitude_trend_20_60",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": 20,
+      "reason": "explicitly fixed by parameter registry"
+    },
+    {
+      "factor_id": "annual_vol_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "annual_volatility",
+      "parameter": 20,
+      "reason": "member of parameter family annual_volatility"
+    },
+    {
+      "factor_id": "atr_14",
+      "factor_version": 1,
+      "status": "blocked",
+      "family_id": null,
+      "parameter": 14,
+      "reason": "explicitly blocked by parameter registry"
+    },
+    {
+      "factor_id": "atr_pct",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "atr_risk",
+      "parameter": null,
+      "reason": "member of parameter family atr_risk"
+    },
+    {
+      "factor_id": "boll_position",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "bollinger_position",
+      "parameter": null,
+      "reason": "member of parameter family bollinger_position"
+    },
+    {
+      "factor_id": "boll_width",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "bollinger_width",
+      "parameter": null,
+      "reason": "member of parameter family bollinger_width"
+    },
+    {
+      "factor_id": "cf_fundamental_growth_quality",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "cf_fundamental_safety_cash",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "cf_industry_cash_quality",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "cf_industry_fund_reduction",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "cf_industry_lowrisk_quality",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "cf_liquidity_structure",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "cf_medium_term_trend",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "cf_price_position",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "cf_reversal_sentiment",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "cf_short_term_risk_reversal",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "cf_tail_risk_low",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "cf_trend_confirmation",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "cf_volume_price_structure",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "cf_weak_reversal_blend",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "change_pct",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "close_position",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "core_earnings_ratio",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "debt_ratio_latest",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "distance_from_low_60d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "distance_from_low",
+      "parameter": 60,
+      "reason": "member of parameter family distance_from_low"
+    },
+    {
+      "factor_id": "distance_to_high_240d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "distance_to_high",
+      "parameter": 240,
+      "reason": "member of parameter family distance_to_high"
+    },
+    {
+      "factor_id": "distance_to_high_60d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "distance_to_high",
+      "parameter": 60,
+      "reason": "member of parameter family distance_to_high"
+    },
+    {
+      "factor_id": "downside_vol_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "downside_volatility",
+      "parameter": 20,
+      "reason": "member of parameter family downside_volatility"
+    },
+    {
+      "factor_id": "ema10_bias",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "short_ema_reversal",
+      "parameter": 10,
+      "reason": "member of parameter family short_ema_reversal"
+    },
+    {
+      "factor_id": "ema20_bias",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "medium_ema_trend",
+      "parameter": 20,
+      "reason": "member of parameter family medium_ema_trend"
+    },
+    {
+      "factor_id": "ema30_bias",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "medium_ema_trend",
+      "parameter": 30,
+      "reason": "member of parameter family medium_ema_trend"
+    },
+    {
+      "factor_id": "ema5_bias",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "short_ema_reversal",
+      "parameter": 5,
+      "reason": "member of parameter family short_ema_reversal"
+    },
+    {
+      "factor_id": "ema60_bias",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "medium_ema_trend",
+      "parameter": 60,
+      "reason": "member of parameter family medium_ema_trend"
+    },
+    {
+      "factor_id": "ext_alt_hs300_ah_premium_chg_1m",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": 1,
+      "reason": "fixed market conditioner with one audited monthly horizon"
+    },
+    {
+      "factor_id": "ext_alt_hs300_ah_premium_z",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_analyst_rating_change_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "analyst_rating_change",
+      "parameter": 20,
+      "reason": "member of parameter family analyst_rating_change"
+    },
+    {
+      "factor_id": "ext_alt_hs300_analyst_rating_score_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "analyst_rating_level",
+      "parameter": 20,
+      "reason": "member of parameter family analyst_rating_level"
+    },
+    {
+      "factor_id": "ext_alt_hs300_beta_asymmetry_120d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "beta_asymmetry",
+      "parameter": 120,
+      "reason": "member of parameter family beta_asymmetry"
+    },
+    {
+      "factor_id": "ext_alt_hs300_block_premium_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "block_premium_event",
+      "parameter": 20,
+      "reason": "member of parameter family block_premium_event"
+    },
+    {
+      "factor_id": "ext_alt_hs300_block_trade_ratio_20d_low",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "block_trade_ratio_event",
+      "parameter": 20,
+      "reason": "member of parameter family block_trade_ratio_event"
+    },
+    {
+      "factor_id": "ext_alt_hs300_bond_mom_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "bond_futures_momentum",
+      "parameter": 20,
+      "reason": "member of parameter family bond_futures_momentum"
+    },
+    {
+      "factor_id": "ext_alt_hs300_bond_tf_mom_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "bond_futures_trend_momentum",
+      "parameter": 20,
+      "reason": "member of parameter family bond_futures_trend_momentum"
+    },
+    {
+      "factor_id": "ext_alt_hs300_capex_intensity_low",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+      "factor_version": 1,
+      "status": "blocked",
+      "family_id": null,
+      "parameter": 4,
+      "reason": "future_data_status=unknown; field-level PIT promotion required"
+    },
+    {
+      "factor_id": "ext_alt_hs300_cash_to_assets",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_cpi_yoy",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_credit_spread_5y_low",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_cs_spread_60d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "cs_spread",
+      "parameter": 60,
+      "reason": "member of parameter family cs_spread"
+    },
+    {
+      "factor_id": "ext_alt_hs300_dividend_growth_ttm",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_dividend_initiation_flag",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_dividend_ttm_cash",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_dividend_yield",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_equity_risk_premium",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_equity_risk_premium_chg3m",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_equity_supply_ratio_180d_low",
+      "factor_version": 1,
+      "status": "blocked",
+      "family_id": null,
+      "parameter": 180,
+      "reason": "future_data_status=unknown; field-level PIT promotion required"
+    },
+    {
+      "factor_id": "ext_alt_hs300_etf_share_chg_1m",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "etf_share_change",
+      "parameter": 1,
+      "reason": "member of parameter family etf_share_change"
+    },
+    {
+      "factor_id": "ext_alt_hs300_etf_share_chg_3m",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "etf_share_change",
+      "parameter": 3,
+      "reason": "member of parameter family etf_share_change"
+    },
+    {
+      "factor_id": "ext_alt_hs300_express_surprise_60d",
+      "factor_version": 1,
+      "status": "blocked",
+      "family_id": null,
+      "parameter": 60,
+      "reason": "future_data_status=unknown; announcement-date source requires catalog audit promotion"
+    },
+    {
+      "factor_id": "ext_alt_hs300_forecast_surprise_60d",
+      "factor_version": 1,
+      "status": "blocked",
+      "family_id": null,
+      "parameter": 60,
+      "reason": "future_data_status=unknown; announcement-date source requires catalog audit promotion"
+    },
+    {
+      "factor_id": "ext_alt_hs300_fund_count_chg_qoq_low",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_fund_count_low",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_fund_holding_ratio_chg_qoq_low",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_fund_holding_value_chg_qoq_low",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_goodwill_ratio_low",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_gross_margin_stability_4q_low",
+      "factor_version": 1,
+      "status": "blocked",
+      "family_id": null,
+      "parameter": 4,
+      "reason": "future_data_status=unknown; field-level PIT promotion required"
+    },
+    {
+      "factor_id": "ext_alt_hs300_gross_margin_yoy_improvement_q",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_holder_net_buy_count_90d",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": 90,
+      "reason": "fixed structural 90-day lookback; threshold work belongs to P4"
+    },
+    {
+      "factor_id": "ext_alt_hs300_holder_net_buy_ratio_90d",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": 90,
+      "reason": "fixed structural 90-day lookback; threshold work belongs to P4"
+    },
+    {
+      "factor_id": "ext_alt_hs300_holder_top10_free_float_share",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_holder_top10_share_chg_qoq",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_hs300_stock_rel_industry_top3_flag",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_hs300_turnover_chg_20d",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": 20,
+      "reason": "fixed market conditioner with one audited turnover horizon"
+    },
+    {
+      "factor_id": "ext_alt_hs300_hs300_turnover_chg_20d_ext2017",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": 20,
+      "reason": "fixed duplicate extended-history turnover variant; no independent parameter family"
+    },
+    {
+      "factor_id": "ext_alt_hs300_hs300_turnover_gate_flag_ext2017",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_hs300_turnover_z",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_hs300_turnover_z_ext2017",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_hsciei_mom_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "hscei_momentum",
+      "parameter": 20,
+      "reason": "member of parameter family hscei_momentum"
+    },
+    {
+      "factor_id": "ext_alt_hs300_hsi_mom_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "hsi_momentum",
+      "parameter": 20,
+      "reason": "member of parameter family hsi_momentum"
+    },
+    {
+      "factor_id": "ext_alt_hs300_hsi_rel_hs300_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "hsi_relative_hs300",
+      "parameter": 20,
+      "reason": "member of parameter family hsi_relative_hs300"
+    },
+    {
+      "factor_id": "ext_alt_hs300_idio_vol_20d_low",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "idio_vol",
+      "parameter": 20,
+      "reason": "member of parameter family idio_vol"
+    },
+    {
+      "factor_id": "ext_alt_hs300_idio_vol_40d_low",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "idio_vol",
+      "parameter": 40,
+      "reason": "member of parameter family idio_vol"
+    },
+    {
+      "factor_id": "ext_alt_hs300_idio_vol_60d_low",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "idio_vol",
+      "parameter": 60,
+      "reason": "member of parameter family idio_vol"
+    },
+    {
+      "factor_id": "ext_alt_hs300_if_net_short_chg_1m",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": 1,
+      "reason": "fixed market conditioner with one audited monthly horizon"
+    },
+    {
+      "factor_id": "ext_alt_hs300_industry_breadth_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "industry_breadth",
+      "parameter": 20,
+      "reason": "member of parameter family industry_breadth"
+    },
+    {
+      "factor_id": "ext_alt_hs300_industry_mom_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "industry_momentum",
+      "parameter": 20,
+      "reason": "member of parameter family industry_momentum"
+    },
+    {
+      "factor_id": "ext_alt_hs300_industry_mom_60d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "industry_momentum",
+      "parameter": 60,
+      "reason": "member of parameter family industry_momentum"
+    },
+    {
+      "factor_id": "ext_alt_hs300_industry_rps_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "industry_rps",
+      "parameter": 20,
+      "reason": "member of parameter family industry_rps"
+    },
+    {
+      "factor_id": "ext_alt_hs300_insider_buy_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "insider_buy_event",
+      "parameter": 20,
+      "reason": "member of parameter family insider_buy_event"
+    },
+    {
+      "factor_id": "ext_alt_hs300_insider_net_buy_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "insider_net_buy_event",
+      "parameter": 20,
+      "reason": "member of parameter family insider_net_buy_event"
+    },
+    {
+      "factor_id": "ext_alt_hs300_insider_sell_20d_low",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "insider_sell_event_low",
+      "parameter": 20,
+      "reason": "member of parameter family insider_sell_event_low"
+    },
+    {
+      "factor_id": "ext_alt_hs300_intangible_ratio_low",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_lhb_event_count_20d_low",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "lhb_event_count_low",
+      "parameter": 20,
+      "reason": "member of parameter family lhb_event_count_low"
+    },
+    {
+      "factor_id": "ext_alt_hs300_lhb_inst_net_buy_ratio_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "lhb_inst_net_buy_event",
+      "parameter": 20,
+      "reason": "member of parameter family lhb_inst_net_buy_event"
+    },
+    {
+      "factor_id": "ext_alt_hs300_lhb_net_buy_ratio_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "lhb_net_buy_event",
+      "parameter": 20,
+      "reason": "member of parameter family lhb_net_buy_event"
+    },
+    {
+      "factor_id": "ext_alt_hs300_m1_m2_scissors",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_m1_m2_scissors_chg_1m",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": 1,
+      "reason": "fixed macro conditioner with one audited monthly horizon"
+    },
+    {
+      "factor_id": "ext_alt_hs300_m2_yoy",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_mainline_leader_flag",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_mainline_strength",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_mainline_top1_flag",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_management_expense_ratio_4q_low",
+      "factor_version": 1,
+      "status": "blocked",
+      "family_id": null,
+      "parameter": 4,
+      "reason": "future_data_status=unknown; field-level PIT promotion required"
+    },
+    {
+      "factor_id": "ext_alt_hs300_margin_chg_1m_low",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": 1,
+      "reason": "fixed structural monthly change; threshold work belongs to P4"
+    },
+    {
+      "factor_id": "ext_alt_hs300_margin_safety_chg_20d",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": 20,
+      "reason": "fixed market conditioner with one audited monthly horizon"
+    },
+    {
+      "factor_id": "ext_alt_hs300_margin_safety_z",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_market_breadth_above_ma20",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": 20,
+      "reason": "fixed regime field with one audited breadth definition"
+    },
+    {
+      "factor_id": "ext_alt_hs300_market_down_beta_60d_low",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "market_down_beta",
+      "parameter": 60,
+      "reason": "member of parameter family market_down_beta"
+    },
+    {
+      "factor_id": "ext_alt_hs300_market_emotion_score",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_market_profit_score",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_market_skew_60d_low",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "market_skew",
+      "parameter": 60,
+      "reason": "member of parameter family market_skew"
+    },
+    {
+      "factor_id": "ext_alt_hs300_market_speculation_score",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_market_trend_score",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_net_financing_4q_low",
+      "factor_version": 1,
+      "status": "blocked",
+      "family_id": null,
+      "parameter": 4,
+      "reason": "future_data_status=unknown; field-level PIT promotion required"
+    },
+    {
+      "factor_id": "ext_alt_hs300_nh_nl_diff_20d",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": 20,
+      "reason": "fixed market conditioner with one audited monthly horizon"
+    },
+    {
+      "factor_id": "ext_alt_hs300_nh_nl_diff_z",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_northbound_net_buy_20d",
+      "factor_version": 1,
+      "status": "blocked",
+      "family_id": null,
+      "parameter": 20,
+      "reason": "stale: last non-null 2024-08-16"
+    },
+    {
+      "factor_id": "ext_alt_hs300_ocf_margin_4q",
+      "factor_version": 1,
+      "status": "blocked",
+      "family_id": null,
+      "parameter": 4,
+      "reason": "future_data_status=unknown; field-level PIT promotion required"
+    },
+    {
+      "factor_id": "ext_alt_hs300_pledge_ratio_chg_1m_low",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": 1,
+      "reason": "fixed structural monthly change; threshold work belongs to P4"
+    },
+    {
+      "factor_id": "ext_alt_hs300_pledge_ratio_low",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_pmi",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_ppi_yoy",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_price_delay_60d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "price_delay",
+      "parameter": 60,
+      "reason": "member of parameter family price_delay"
+    },
+    {
+      "factor_id": "ext_alt_hs300_qvix_z_252",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "qvix_zscore",
+      "parameter": 252,
+      "reason": "member of parameter family qvix_zscore"
+    },
+    {
+      "factor_id": "ext_alt_hs300_rd_intensity",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_repurchase_event_60d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "repurchase_event_decay",
+      "parameter": 60,
+      "reason": "member of parameter family repurchase_event_decay"
+    },
+    {
+      "factor_id": "ext_alt_hs300_risk_adjusted_momentum_60d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "risk_adjusted_momentum",
+      "parameter": 60,
+      "reason": "member of parameter family risk_adjusted_momentum"
+    },
+    {
+      "factor_id": "ext_alt_hs300_sga_ratio_4q_industry_neutral",
+      "factor_version": 1,
+      "status": "blocked",
+      "family_id": null,
+      "parameter": 4,
+      "reason": "future_data_status=unknown; field-level PIT promotion required"
+    },
+    {
+      "factor_id": "ext_alt_hs300_sga_ratio_4q_low",
+      "factor_version": 1,
+      "status": "blocked",
+      "family_id": null,
+      "parameter": 4,
+      "reason": "future_data_status=unknown; field-level PIT promotion required"
+    },
+    {
+      "factor_id": "ext_alt_hs300_sga_ratio_4q_qoq_improvement",
+      "factor_version": 1,
+      "status": "blocked",
+      "family_id": null,
+      "parameter": 4,
+      "reason": "future_data_status=unknown; field-level PIT promotion required"
+    },
+    {
+      "factor_id": "ext_alt_hs300_sga_ratio_stability_4q_low",
+      "factor_version": 1,
+      "status": "blocked",
+      "family_id": null,
+      "parameter": 4,
+      "reason": "future_data_status=unknown; field-level PIT promotion required"
+    },
+    {
+      "factor_id": "ext_alt_hs300_shibor_3m",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": 3,
+      "reason": "fixed macro level"
+    },
+    {
+      "factor_id": "ext_alt_hs300_shibor_3m_chg_20d",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": 20,
+      "reason": "fixed macro conditioner with one audited horizon"
+    },
+    {
+      "factor_id": "ext_alt_hs300_shibor_tightness_z",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_short_ratio_low",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_stock_rel_industry_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "stock_rel_industry_strength",
+      "parameter": 20,
+      "reason": "member of parameter family stock_rel_industry_strength"
+    },
+    {
+      "factor_id": "ext_alt_hs300_term_spread_10y_2y",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_top30_amount_share_z",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_trend_efficiency_60d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "trend_efficiency",
+      "parameter": 60,
+      "reason": "member of parameter family trend_efficiency"
+    },
+    {
+      "factor_id": "ext_alt_hs300_turnover_hhi_z",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "vol_of_vol",
+      "parameter": 20,
+      "reason": "member of parameter family vol_of_vol"
+    },
+    {
+      "factor_id": "ext_alt_hs300_vol_of_vol_60d_low",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "vol_of_vol",
+      "parameter": 60,
+      "reason": "member of parameter family vol_of_vol"
+    },
+    {
+      "factor_id": "gap_return",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "gross_margin_latest",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "intraday_ret_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "intraday_return",
+      "parameter": 20,
+      "reason": "member of parameter family intraday_return"
+    },
+    {
+      "factor_id": "intraday_return",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "kdj_d",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "kdj_j",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "kdj_k",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "kdj_kd_diff",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "limit_up_count_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "limit_up_gene",
+      "parameter": 20,
+      "reason": "member of parameter family limit_up_gene"
+    },
+    {
+      "factor_id": "limit_up_count_60d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "limit_up_gene",
+      "parameter": 60,
+      "reason": "member of parameter family limit_up_gene"
+    },
+    {
+      "factor_id": "log_amount",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "log_float_mv",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ma10_bias",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "short_ma_reversal",
+      "parameter": 10,
+      "reason": "member of parameter family short_ma_reversal"
+    },
+    {
+      "factor_id": "ma20_bias",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "medium_ma_trend",
+      "parameter": 20,
+      "reason": "member of parameter family medium_ma_trend"
+    },
+    {
+      "factor_id": "ma30_bias",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "medium_ma_trend",
+      "parameter": 30,
+      "reason": "member of parameter family medium_ma_trend"
+    },
+    {
+      "factor_id": "ma5_bias",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "short_ma_reversal",
+      "parameter": 5,
+      "reason": "member of parameter family short_ma_reversal"
+    },
+    {
+      "factor_id": "ma60_bias",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "medium_ma_trend",
+      "parameter": 60,
+      "reason": "member of parameter family medium_ma_trend"
+    },
+    {
+      "factor_id": "macd_dea_pct",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "macd_dif_pct",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "macd_hist",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "macd_hist_pct",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "max_ret_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "max_return",
+      "parameter": 20,
+      "reason": "member of parameter family max_return"
+    },
+    {
+      "factor_id": "mom_accel_20_60",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": 20,
+      "reason": "explicitly fixed by parameter registry"
+    },
+    {
+      "factor_id": "momentum_10d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "short_momentum_reversal",
+      "parameter": 10,
+      "reason": "member of parameter family short_momentum_reversal"
+    },
+    {
+      "factor_id": "momentum_120d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "medium_momentum",
+      "parameter": 120,
+      "reason": "member of parameter family medium_momentum"
+    },
+    {
+      "factor_id": "momentum_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "medium_momentum",
+      "parameter": 20,
+      "reason": "member of parameter family medium_momentum"
+    },
+    {
+      "factor_id": "momentum_30d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "medium_momentum",
+      "parameter": 30,
+      "reason": "member of parameter family medium_momentum"
+    },
+    {
+      "factor_id": "momentum_5d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "short_momentum_reversal",
+      "parameter": 5,
+      "reason": "member of parameter family short_momentum_reversal"
+    },
+    {
+      "factor_id": "momentum_60d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "medium_momentum",
+      "parameter": 60,
+      "reason": "member of parameter family medium_momentum"
+    },
+    {
+      "factor_id": "net_income_yoy_latest",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "net_margin_latest",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "obv_trend_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "obv_trend",
+      "parameter": 20,
+      "reason": "member of parameter family obv_trend"
+    },
+    {
+      "factor_id": "ocf_debt",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "ocf_ni",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "overnight_ret_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "overnight_return",
+      "parameter": 20,
+      "reason": "member of parameter family overnight_return"
+    },
+    {
+      "factor_id": "pb_latest",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "position_240d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "price_position",
+      "parameter": 240,
+      "reason": "member of parameter family price_position"
+    },
+    {
+      "factor_id": "ret_skew_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "return_skew",
+      "parameter": 20,
+      "reason": "member of parameter family return_skew"
+    },
+    {
+      "factor_id": "revenue_yoy_latest",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "roe_latest",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "rsi_14",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "rsi_reversal",
+      "parameter": 14,
+      "reason": "member of parameter family rsi_reversal"
+    },
+    {
+      "factor_id": "rsi_14_delta_5d",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": 5,
+      "reason": "explicitly fixed by parameter registry"
+    },
+    {
+      "factor_id": "rsi_24",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "rsi_reversal",
+      "parameter": 24,
+      "reason": "member of parameter family rsi_reversal"
+    },
+    {
+      "factor_id": "rsi_6",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "rsi_reversal",
+      "parameter": 6,
+      "reason": "member of parameter family rsi_reversal"
+    },
+    {
+      "factor_id": "turnover_mean_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "turnover_level",
+      "parameter": 20,
+      "reason": "member of parameter family turnover_level"
+    },
+    {
+      "factor_id": "turnover_rate",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "turnover_ratio_5d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "turnover_spike",
+      "parameter": 5,
+      "reason": "member of parameter family turnover_spike"
+    },
+    {
+      "factor_id": "turnover_std_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "turnover_stability",
+      "parameter": 20,
+      "reason": "member of parameter family turnover_stability"
+    },
+    {
+      "factor_id": "turnover_z_60d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "turnover_crowding",
+      "parameter": 60,
+      "reason": "member of parameter family turnover_crowding"
+    },
+    {
+      "factor_id": "uf_cash_quality",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "uf_close_position_reversal",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "uf_core_earnings_quality",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "uf_ep_roe_pb",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "uf_factor_agreement",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "uf_industry_relative_strength_change_5d",
+      "factor_version": 1,
+      "status": "blocked",
+      "family_id": null,
+      "parameter": 5,
+      "reason": "custom definition pit_status=unknown and future_data_status=unknown; source file is uncommitted user data"
+    },
+    {
+      "factor_id": "uf_intraday_reversal",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "uf_intraday_risk_share",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "uf_low_amount",
+      "factor_version": 2,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "uf_low_amount_20",
+      "factor_version": 1,
+      "status": "blocked",
+      "family_id": null,
+      "parameter": 20,
+      "reason": "factor definition or future-data status is blocked"
+    },
+    {
+      "factor_id": "uf_low_turnover",
+      "factor_version": 1,
+      "status": "blocked",
+      "family_id": null,
+      "parameter": null,
+      "reason": "factor definition or future-data status is blocked"
+    },
+    {
+      "factor_id": "uf_low_vol",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "uf_low_vol_60",
+      "factor_version": 1,
+      "status": "blocked",
+      "family_id": null,
+      "parameter": 60,
+      "reason": "factor definition or future-data status is blocked"
+    },
+    {
+      "factor_id": "uf_merton_dd",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "uf_quality_value_defensive",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "uf_rev_10d",
+      "factor_version": 1,
+      "status": "blocked",
+      "family_id": null,
+      "parameter": 10,
+      "reason": "factor definition or future-data status is blocked"
+    },
+    {
+      "factor_id": "uf_rev_5d",
+      "factor_version": 1,
+      "status": "blocked",
+      "family_id": null,
+      "parameter": 5,
+      "reason": "factor definition or future-data status is blocked"
+    },
+    {
+      "factor_id": "uf_small_mv",
+      "factor_version": 2,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "uf_solvency_buffer",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    },
+    {
+      "factor_id": "up_days_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "up_day_ratio",
+      "parameter": 20,
+      "reason": "member of parameter family up_day_ratio"
+    },
+    {
+      "factor_id": "vol_price_corr_20d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "volume_price_corr",
+      "parameter": 20,
+      "reason": "member of parameter family volume_price_corr"
+    },
+    {
+      "factor_id": "vol_ratio_10d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "volume_spike",
+      "parameter": 10,
+      "reason": "member of parameter family volume_spike"
+    },
+    {
+      "factor_id": "vol_ratio_5d",
+      "factor_version": 1,
+      "status": "grouped",
+      "family_id": "volume_spike",
+      "parameter": 5,
+      "reason": "member of parameter family volume_spike"
+    },
+    {
+      "factor_id": "vol_regime_5_60",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": 5,
+      "reason": "explicitly fixed by parameter registry"
+    },
+    {
+      "factor_id": "vol_trend_5_10",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": 5,
+      "reason": "explicitly fixed by parameter registry"
+    },
+    {
+      "factor_id": "vol_trend_5_60",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": 5,
+      "reason": "explicitly fixed by parameter registry"
+    },
+    {
+      "factor_id": "vwap_bias",
+      "factor_version": 1,
+      "status": "fixed",
+      "family_id": null,
+      "parameter": null,
+      "reason": "no tunable numeric window detected and no family membership"
+    }
+  ],
+  "validation_errors": []
+}

@@ -116,9 +116,14 @@ def _positive(value: Any) -> bool:
     return isinstance(value, (int, float)) and float(value) > 0.0
 
 
+def _directional_value(period: dict[str, Any]) -> Any:
+    value = period.get("directional_ic")
+    return period.get("directional_beta") if value is None else value
+
+
 def _trial_direction_positive(trial: dict[str, Any]) -> bool:
     return all(
-        _positive(trial[period]["directional_ic"])
+        _positive(_directional_value(trial[period]))
         for period in ("full", "train", "test")
     )
 
@@ -154,7 +159,8 @@ def annotate_plateau(trials: list[dict[str, Any]]) -> None:
 
 
 def initial_eligibility(trial: dict[str, Any]) -> bool:
-    neutral = trial["industry_size_neutral"]["full"]["directional_ic"]
+    neutral_block = trial.get("gate_neutral", trial["industry_size_neutral"])
+    neutral = _directional_value(neutral_block["full"])
     q_value = trial.get("q_value")
     ci_low = trial.get("bootstrap_full", {}).get("ci_low")
     return (
@@ -221,15 +227,28 @@ def assign_family_q_values(trials: list[dict[str, Any]]) -> None:
     combined_q = stats_v2.bh_fdr_qvalues([
         trial["industry_size_neutral"]["full"]["p_value"] for trial in trials
     ])
-    for trial, raw, industry, size, combined in zip(
+    gate_q = stats_v2.bh_fdr_qvalues([
+        (
+            trial.get("gate_neutral", trial["industry_size_neutral"])["full"].get(
+                "p_value"
+            )
+        )
+        for trial in trials
+    ])
+    for trial, raw, industry, size, combined, gate in zip(
         trials,
         raw_q,
         industry_q,
         size_q,
         combined_q,
+        gate_q,
         strict=True,
     ):
-        trial["q_value"] = round(float(raw), 8) if raw is not None else None
+        trial["raw_q_value"] = round(float(raw), 8) if raw is not None else None
+        selected_q = gate if "gate_neutral" in trial else raw
+        trial["q_value"] = (
+            round(float(selected_q), 8) if selected_q is not None else None
+        )
         trial["industry_neutral"]["q_value"] = (
             round(float(industry), 8) if industry is not None else None
         )
@@ -239,9 +258,18 @@ def assign_family_q_values(trials: list[dict[str, Any]]) -> None:
         trial["industry_size_neutral"]["q_value"] = (
             round(float(combined), 8) if combined is not None else None
         )
+        if "gate_neutral" in trial:
+            trial["gate_neutral"]["q_value"] = (
+                round(float(gate), 8) if gate is not None else None
+            )
 
 
 def initial_failure_counts(trials: list[dict[str, Any]]) -> dict[str, int]:
+    neutral_key = (
+        "declared_neutral_ic_positive"
+        if any("gate_neutral" in trial for trial in trials)
+        else "industry_size_ic_positive"
+    )
     checks = {
         "robust_plateau": lambda trial: bool(trial.get("robust_plateau")),
         "full_ic_positive": lambda trial: _positive(
@@ -253,8 +281,10 @@ def initial_failure_counts(trials: list[dict[str, Any]]) -> dict[str, int]:
         "test_ic_positive": lambda trial: _positive(
             trial["test"]["directional_ic"]
         ),
-        "industry_size_ic_positive": lambda trial: _positive(
-            trial["industry_size_neutral"]["full"]["directional_ic"]
+        neutral_key: lambda trial: _positive(
+            _directional_value(
+                trial.get("gate_neutral", trial["industry_size_neutral"])["full"]
+            )
         ),
         "fdr_q_le_0_10": lambda trial: (
             isinstance(trial.get("q_value"), (int, float))
