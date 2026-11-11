@@ -1,5 +1,6 @@
 # 财务因子增量准入 P8 实施计划
 > **Execution note (2026-11-12):** P8 已完成真实运行。11 个 P7 已验证内置财务因子均通过 P6 准入，但在当前 5 日边际 IC 门槛下 `statistical_pass_count=0`，因此没有财务候选进入组合，也没有创建新 watch 版本。Research ID 为 `sha256:448cbd37b4faefc94025243be86b496779fcf649273d2e15b1a1835a42874038`，JSON/Markdown SHA 分别为 `sha256:455f47d61e0e708b917d3fe44a28d11896f8b5568c145b469729b1498a82fa9a` 和 `sha256:9b519d5f81764d2b162d38ea6b21866670468eac6b652a8662b3d847e2a116d1`。P6 重新绑定 P8 后 Research ID 为 `sha256:9c326835be610e91cc15c21ed2b1ac0bdf2cd8b6bccf5da34e0e83da3083ac09`，`portfolio_ready_factor_count=164`、`pending_task_count=0`、`blocked_task_count=0`，`active_version=null`。
+> P8 提交为 `5f230f4e`，GitHub CI 与 Docker 均成功；P8 后只读诊断记录在本文末，不改变 P8 的 no-watch 决策。
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -222,6 +223,40 @@ Expected: 全部通过；重跑产物指纹不变。
 Run: `git status --short --branch && git diff --check`
 - [x] **Step 2: 精确暂存并提交**
 Run: `git add <P8 files> && git commit -m "feat: add financial factor incremental research P8"`
-- [ ] **Step 3: 推送并等待 CI/Docker**
+- [x] **Step 3: 推送并等待 CI/Docker**
 Run: `git push origin main`
 Expected: GitHub CI 与 Docker 均成功；失败则按日志修复后重跑。
+
+---
+
+## P8 后诊断：多周期与中性化
+
+P8 的正式研究仍以 5 日边际 IC 为唯一准入，结论不变。为避免把“5 日无效”误写成“财务因子完全无效”，另做了只读诊断，结果只作为 P9 的假设来源，不改变 P8 决策。
+
+### 单因子 IC
+
+- `pb_latest`（低 PB）在 60 日原始/行业/规模/行业+规模口径下 IC 分别约为 `0.1161/0.0754/0.1120/0.0587`，同号且稳健。
+- `ocf_ni` 在 60 日原始 IC 约 `0.0595`、NW t 约 `4.17`；行业+规模后 IC 约 `0.0200`，显著性明显下降。
+- `accrual`（低应计）在 60 日行业+规模 IC 约 `0.0400`、NW t 约 `4.02`。
+- 成长类 `revenue_yoy_latest`、`net_income_yoy_latest` 和 `roe_latest` 在多数周期为负，不支持直接加入当前组合。
+
+### 组合反事实
+
+| 方案 | 全周期总收益 | 近一年总收益 | 弱市一年 | 结论 |
+| --- | ---: | ---: | ---: | --- |
+| 当前 8 腿基线 | 92.73% | 8.44% | -4.11% | 对照 |
+| 7 腿（删除股东结构） | 93.99% | 10.73% | -6.53% | 近一年改善、弱市恶化 |
+| 7 腿 + 中性化 PB | 74.14% | 12.92% | 未通过全周期 | 近一年改善、全周期明显变差 |
+| 7 腿 + 弱市 PB 条件腿 | 91.60% | 11.14% | -7.18% | 组合门通过但拆解拖累 -2.39pp，拒绝 |
+| 7 腿 + 弱市股东/非弱市价值切换 | 73.30% | 12.31% | -7.19% | 全周期明显变差，拒绝 |
+| 条件腿权重 15% | 93.51% | 11.05% | 未通过 MDD/弱市 | MDD -14.77%，稳定性不足 |
+
+结论：**没有出现同时改善全周期、近一年和弱市一年、且拆解为正的财务组合**。这说明下一步不应继续做“单因子塞入”，而应做 P9 的期限分层与 regime 条件化组合；任何新候选必须同时通过全周期、近一年、弱市段、3x 成本、ablation 和滚动一年。
+
+### 验收状态
+
+- GitHub CI：`https://github.com/WW-shan/hs300/actions/runs/43061945704`，成功。
+- Docker：`https://github.com/WW-shan/hs300/actions/runs/43061946010`，成功。
+- 本地后端全量测试：`3353 passed, 7 skipped, 1 xfailed`。
+- P8/P6 幂等：通过。
+- `active_version`：null；不生成纸面目标、订单或生产启用。
