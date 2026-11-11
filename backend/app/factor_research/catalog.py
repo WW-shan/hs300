@@ -95,7 +95,8 @@ def _load_dynamic(data_dir: Path) -> list[str]:
     if dynamic or not root.exists() or not any(root.glob("*.json")):
         return []
     try:
-        return store.load_into_registry(data_dir)
+        store.load_into_registry(data_dir)
+        return []
     except Exception as exc:  # noqa: BLE001 - load errors become source_completeness=partial
         return [f"dynamic factor load: {exc}"]
 

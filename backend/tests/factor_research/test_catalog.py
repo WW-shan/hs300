@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from app.factor_research import catalog as catalog_module
 from app.factor_research.catalog import (
     build_catalog,
     load_catalog,
@@ -88,3 +89,17 @@ def test_catalog_applies_explicit_taxonomy_classification(tmp_path: Path, monkey
     assert factor.direction == "low"
     assert factor.classification_confidence == 0.8
     assert factor.classification_ref is not None
+
+
+def test_successful_dynamic_factor_load_is_not_a_source_error(tmp_path: Path, monkeypatch) -> None:
+    custom_dir = tmp_path / "user_data" / "custom_factors"
+    custom_dir.mkdir(parents=True)
+    (custom_dir / "uf_loaded.json").write_text("{}", encoding="utf-8")
+    monkeypatch.setattr(catalog_module, "all_factors", lambda asset_type=None: [])
+    monkeypatch.setattr(
+        catalog_module.store,
+        "load_into_registry",
+        lambda data_dir: ["uf_loaded"],
+    )
+
+    assert catalog_module._load_dynamic(tmp_path) == []
