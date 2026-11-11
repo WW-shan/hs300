@@ -19,6 +19,7 @@
 > `sha256:c67d0c2db07d961d48fd00c2959a1d9fefd043742bd55507f32b81e7c4be7dc0` 和
 > `sha256:800aa4fda1c403a2cc8fe8bf59e92c063904332a153e4e970b678ea8fd874da0`。
 > 重复运行、以及模拟缺少被 gitignore 的扩展配置时，research ID、输出文件和 ledger 均保持不变。
+> 最终通过提交为 `3c6f32c4`，CI 与 Docker 均成功。
 
 ## Global Constraints
 
@@ -289,11 +290,13 @@ cd frontend && pnpm build
 git diff --check
 ```
 
-- [ ] **Step 3: Commit exactly P6 files**
+- [x] **Step 3: Commit exactly P6 files**
 
 Do not stage `.gitignore`, R359-R371, weekly reports, unrelated custom factors/signals, or AI iteration ledger files.
 
-- [ ] **Step 4: Push and verify GitHub CI + Docker**
+- [x] **Step 4: Push and verify GitHub CI + Docker**
+  CI `https://github.com/WW-shan/hs300/actions/runs/43040485256`；
+  Docker `https://github.com/WW-shan/hs300/actions/runs/43040485273`。
 
 Record both run URLs in this plan and require success before P6 completion.
 
