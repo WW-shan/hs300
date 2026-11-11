@@ -22,6 +22,7 @@ import polars as pl
 
 from app.backtest import stats_v2
 from app.backtest.strategy import PreparedMatrixBacktest, StrategyBacktestService
+from app.factor_research.automation import assert_portfolio_candidates_admitted
 from app.factor_research.catalog import build_catalog, save_catalog
 from app.factor_research.extended_parameter_data import (
     load_event_panels,
@@ -1448,6 +1449,9 @@ def _ensure_watch_version(
     factors = list(dict.fromkeys(final_ids))
     if not 1 <= len(factors) <= 8:
         raise ValueError("P5 watch set must contain 1..8 factors")
+    new_factor_ids = sorted(set(factors) - set(current_members))
+    if new_factor_ids:
+        assert_portfolio_candidates_admitted(DATA, new_factor_ids)
     weight = 1.0 / len(factors)
     p5_ref = {
         "kind": "factor_increment_scan",

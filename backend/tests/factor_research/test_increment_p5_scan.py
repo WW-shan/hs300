@@ -4,6 +4,7 @@ import importlib.util
 import json
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import polars as pl
 import pytest
@@ -182,3 +183,31 @@ def test_published_p5_result_keeps_watch_unchanged_at_null_active_version() -> N
     assert amount["statistical_gate"]["pass"] is True
     assert amount["portfolio_gate"]["pass"] is False
     assert amount["portfolio_gate"]["checks"]["full_sharpe_within_tolerance"] is False
+
+
+def test_p5_watch_requires_p6_portfolio_admission(monkeypatch) -> None:
+    module = _module()
+    checked: list[list[str]] = []
+
+    def reject(_data_dir, factor_ids):
+        checked.append(list(factor_ids))
+        raise ValueError("portfolio admission rejected: audit_stale")
+
+    monkeypatch.setattr(module, "assert_portfolio_candidates_admitted", reject)
+    current_version = SimpleNamespace(
+        members=[SimpleNamespace(factor_id="base_factor")],
+        version=1,
+    )
+
+    with pytest.raises(ValueError, match="portfolio admission rejected"):
+        module._ensure_watch_version(
+            sets=object(),
+            head=object(),
+            current_version=current_version,
+            final_ids=["base_factor", "candidate_factor"],
+            final_directions={"base_factor": "high", "candidate_factor": "high"},
+            candidate_by_id={},
+            output_path=ROOT / "data" / "factor_research" / "research" / "p5.json",
+        )
+
+    assert checked == [["candidate_factor"]]
