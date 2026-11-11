@@ -88,3 +88,110 @@ def test_heavy_merge_runs_outside_write_lock(tmp_path: Path, monkeypatch) -> Non
     t.join(timeout=5)
     out = tmp_path / "kline_daily" / "date=2026-09-07" / "part.parquet"
     assert pl.read_parquet(out)["symbol"].to_list() == ["000001.SZ", "000002.SZ"]
+
+
+def test_upsert_retries_when_partition_changes_during_read(tmp_path: Path, monkeypatch) -> None:
+    """读旧快照期间发生的并发写入不能被后续合并覆盖。"""
+    repo = KlineRepository(DataStore(tmp_path))
+    repo.merge_live_daily_asset("stock", _frame(["000001.SZ"]))
+
+    out = tmp_path / "kline_daily" / "date=2026-09-07" / "part.parquet"
+    original_read = pl.read_parquet
+    first_read_entered = threading.Event()
+    release_first_read = threading.Event()
+    read_count = 0
+
+    def delayed_read(source, *args, **kwargs):
+        nonlocal read_count
+        read_count += 1
+        frame = original_read(source, *args, **kwargs)
+        if read_count == 1:
+            first_read_entered.set()
+            assert release_first_read.wait(timeout=5), "首次读取未放行"
+        return frame
+
+    monkeypatch.setattr(pl, "read_parquet", delayed_read)
+
+    errors: list[BaseException] = []
+
+    def upsert() -> None:
+        try:
+            repo.merge_live_daily_asset("stock", _frame(["000003.SZ"]))
+        except BaseException as exc:  # noqa: BLE001 - 线程异常必须带出断言
+            errors.append(exc)
+
+    thread = threading.Thread(target=upsert, daemon=True)
+    thread.start()
+    assert first_read_entered.wait(timeout=5), "首次读取未发生"
+
+    # 首次读取已经取得旧快照，但尚未返回；此时另一个写者先提交一行。
+    repo.merge_live_daily_asset("stock", _frame(["000002.SZ"]))
+    release_first_read.set()
+    thread.join(timeout=5)
+
+    assert not errors, errors
+    assert not thread.is_alive()
+    assert pl.read_parquet(out)["symbol"].to_list() == [
+        "000001.SZ",
+        "000002.SZ",
+        "000003.SZ",
+    ]
+
+
+def test_upsert_pins_partition_before_parquet_read(tmp_path: Path, monkeypatch) -> None:
+    """路径式读取跨 os.replace 会混读两个 inode，必须固定文件快照。"""
+    repo = KlineRepository(DataStore(tmp_path))
+    repo.merge_live_daily_asset("stock", _frame(["000001.SZ"]))
+
+    out = tmp_path / "kline_daily" / "date=2026-09-07" / "part.parquet"
+    original_read = pl.read_parquet
+
+    def pinned_read(source, *args, **kwargs):
+        assert not isinstance(source, (str, Path)), (
+            "upsert 必须从已打开的 parquet 文件句柄读取，不能用可能被 os.replace 切换的路径"
+        )
+        return original_read(source, *args, **kwargs)
+
+    monkeypatch.setattr(pl, "read_parquet", pinned_read)
+    repo.merge_live_daily_asset("stock", _frame(["000002.SZ"]))
+
+    assert original_read(out)["symbol"].to_list() == ["000001.SZ", "000002.SZ"]
+
+
+def test_upsert_retry_fallback_pins_partition_before_parquet_read(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """乐观重试耗尽后的锁内回退也必须固定读取快照。"""
+    repo = KlineRepository(DataStore(tmp_path))
+    repo.merge_live_daily_asset("stock", _frame(["000001.SZ"]))
+
+    out = tmp_path / "kline_daily" / "date=2026-09-07" / "part.parquet"
+    original_read = pl.read_parquet
+
+    def pinned_read(source, *args, **kwargs):
+        assert not isinstance(source, (str, Path)), "回退路径不能按路径读取 parquet"
+        return original_read(source, *args, **kwargs)
+
+    monkeypatch.setattr(pl, "read_parquet", pinned_read)
+    repo._optimistic_upsert_partition(out, _frame(["000002.SZ"]), None, retries=0)
+
+    assert original_read(out)["symbol"].to_list() == ["000001.SZ", "000002.SZ"]
+
+
+def test_flush_enriched_pins_partition_before_parquet_read(tmp_path: Path, monkeypatch) -> None:
+    """盘后/实时覆写前的旧内容探测也不能按可变路径读取。"""
+    repo = KlineRepository(DataStore(tmp_path))
+    out = tmp_path / "kline_index_enriched" / "date=2026-09-07" / "part.parquet"
+    out.parent.mkdir(parents=True)
+    repo._atomic_write_parquet(_frame(["000001.SH"]), out)
+
+    original_read = pl.read_parquet
+
+    def pinned_read(source, *args, **kwargs):
+        assert not isinstance(source, (str, Path)), "覆写路径不能按路径读取 parquet"
+        return original_read(source, *args, **kwargs)
+
+    monkeypatch.setattr(pl, "read_parquet", pinned_read)
+    repo.flush_live_enriched_asset("index", _frame(["000002.SH"]))
+
+    assert original_read(out)["symbol"].to_list() == ["000002.SH"]

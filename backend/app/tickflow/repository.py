@@ -2336,13 +2336,22 @@ class KlineRepository:
             self._optimistic_upsert_partition(out, date_df, publication)
 
     @staticmethod
-    def _partition_fingerprint(path: Path) -> tuple[int, int] | None:
-        """分区文件的修改指纹 (mtime_ns, size); 不存在返回 None。"""
+    def _partition_fingerprint(path: Path) -> tuple[int, int, int, int] | None:
+        """分区文件的 inode/版本指纹; 不存在返回 None。"""
         try:
             st = path.stat()
         except FileNotFoundError:
             return None
-        return (st.st_mtime_ns, st.st_size)
+        return (st.st_dev, st.st_ino, st.st_mtime_ns, st.st_size)
+
+    @staticmethod
+    def _read_partition_snapshot(path: Path) -> pl.DataFrame:
+        """从固定文件句柄读取分区，避免原子替换期间混读不同 inode。"""
+        try:
+            with path.open("rb") as snapshot:
+                return pl.read_parquet(snapshot)
+        except FileNotFoundError:
+            return pl.DataFrame()
 
     def _optimistic_upsert_partition(
         self,
@@ -2368,8 +2377,12 @@ class KlineRepository:
             ).sort(["symbol", "date"])
 
         for _ in range(retries):
-            existing = pl.read_parquet(out) if out.exists() else pl.DataFrame()
             base_fp = self._partition_fingerprint(out)
+            existing = (
+                pl.DataFrame()
+                if base_fp is None
+                else self._read_partition_snapshot(out)
+            )
             merged = _merge(existing)
             with self._write_lock:
                 if self._partition_fingerprint(out) != base_fp:
@@ -2378,7 +2391,7 @@ class KlineRepository:
             return
         # 乐观重试耗尽 (罕见: 高频并发写同一分区): 退回锁内全量模式保证正确性
         with self._write_lock:
-            existing = pl.read_parquet(out) if out.exists() else pl.DataFrame()
+            existing = self._read_partition_snapshot(out)
             self._write_partition_locked(out, _merge(existing), existing, publication)
 
     def _write_partition_locked(
@@ -2547,7 +2560,7 @@ class KlineRepository:
         )
         # 覆写语义: 读旧内容只为跳过无变化的写, 读在锁外 (误判最多造成一次
         # 冗余覆写, 不影响正确性); 锁内只做替换 + commit。
-        existing = pl.read_parquet(out) if out.exists() else pl.DataFrame()
+        existing = self._read_partition_snapshot(out)
         with self._write_lock:
             self._write_partition_locked(out, df_storage, existing, publication)
 
