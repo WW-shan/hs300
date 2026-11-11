@@ -414,9 +414,8 @@ def attach_fundamental_factors(
     for announce_column, group_names in groups.items():
         columns = sorted({FUNDAMENTAL_FACTORS[name]["column"] for name in group_names})
         right = (
-            snapshot.select(["symbol", announce_column, *columns])
-            .with_columns(pl.col(announce_column).dt.offset_by("1d").alias("_effective"))
-            .sort(["symbol", "_effective"])
+            _latest_effective_snapshot(snapshot, announce_column, columns)
+            .select(["symbol", announce_column, *columns, "_effective"])
         )
         joined = panel.join_asof(
             right,
@@ -447,6 +446,32 @@ def attach_fundamental_factors(
             pl.lit(None, dtype=pl.Float64).alias(name) for name in unavailable
         ])
     return panel
+
+
+def _latest_effective_snapshot(
+    snapshot: pl.DataFrame,
+    announce_column: str,
+    columns: list[str],
+) -> pl.DataFrame:
+    """Keep one report per symbol/effective date, preferring the latest period.
+
+    The source can map both Q4 and Q1 of the next year to the same statutory
+    fallback date.  ``join_asof`` does not define which duplicate row wins, so
+    normalizing here prevents the Polars and matrix paths from disagreeing.
+    """
+    return (
+        snapshot.select(["symbol", "period_end", announce_column, *columns])
+        .filter(pl.col(announce_column).is_not_null())
+        .with_columns(
+            pl.col(announce_column).dt.offset_by("1d").alias("_effective")
+        )
+        .sort(["symbol", "_effective", "period_end"])
+        .unique(
+            subset=["symbol", "_effective"],
+            keep="last",
+            maintain_order=True,
+        )
+    )
 
 
 def build_fundamental_matrices(

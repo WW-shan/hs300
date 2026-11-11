@@ -9,6 +9,7 @@ import polars as pl
 
 from app.backtest.fundamentals import (
     FUNDAMENTAL_FACTOR_NAMES,
+    _latest_effective_snapshot,
     attach_fundamental_factors,
     build_fundamental_matrices,
     load_fundamental_snapshot,
@@ -87,6 +88,37 @@ def test_attach_replaces_with_newer_announcement():
     assert roe[13] == 20.0           # 4-14
     assert roe[14] == 20.0           # 4-15 二次公告日: 新一期尚未生效, 仍保留上一期
     assert roe[15] == 33.0           # 4-16 起新公告生效
+
+
+def test_attach_resolves_equal_effective_date_by_latest_period_end():
+    panel = _daily_panel(date(2025, 5, 1), 8, ("600000.SH",))
+    snapshot = pl.DataFrame({
+        "symbol": ["600000.SH", "600000.SH"],
+        "period_end": [date(2024, 12, 31), date(2025, 3, 31)],
+        "announce_date": ["2025-05-03", "2025-05-03"],
+        "roe": [14.73, 4.08],
+        "_announce": [date(2025, 5, 3), date(2025, 5, 3)],
+    }).sort(["symbol", "period_end"])
+
+    attached = attach_fundamental_factors(panel, snapshot, ["roe_latest"]).sort("date")
+
+    assert attached["roe_latest"].to_list()[:3] == [None, None, None]
+    assert attached["roe_latest"].to_list()[3:] == [4.08] * 5
+
+
+def test_latest_effective_snapshot_resolves_equal_date_deterministically():
+    snapshot = pl.DataFrame({
+        "symbol": ["600000.SH", "600000.SH"],
+        "period_end": [date(2024, 12, 31), date(2025, 3, 31)],
+        "_announce": [date(2025, 5, 3), date(2025, 5, 3)],
+        "roe": [14.73, 4.08],
+    }).sort(["symbol", "period_end"])
+
+    effective = _latest_effective_snapshot(snapshot, "_announce", ["roe"])
+
+    assert effective.height == 1
+    assert effective["period_end"].item() == date(2025, 3, 31)
+    assert effective["roe"].item() == 4.08
 
 
 def test_attach_without_snapshot_keeps_null_columns():

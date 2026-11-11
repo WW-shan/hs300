@@ -126,6 +126,16 @@ def test_equal_inputs_reject_more_than_eight_factors() -> None:
         module._equal_inputs(factors, {factor: "high" for factor in factors})
 
 
+def test_output_path_normalizes_parent_segments() -> None:
+    module = _module()
+
+    normalized = module._normalize_output_path(
+        Path("../data/factor_research/research/p5_incremental.json")
+    )
+
+    assert normalized == ROOT / "data" / "factor_research" / "research" / "p5_incremental.json"
+
+
 def test_statistical_gate_rejects_correlation_and_unregistered_event_variant() -> None:
     module = _module()
     candidate = {
@@ -167,11 +177,11 @@ def test_variant_factor_set_replaces_same_slot_or_drops_weakest() -> None:
 
 
 def test_published_p5_result_keeps_watch_unchanged_at_null_active_version() -> None:
-    path = ROOT / "data" / "factor_research" / "research" / "p5_incremental_2026-11-11.json"
+    path = ROOT / "data" / "factor_research" / "research" / "p5_incremental_2026-11-12.json"
     payload = json.loads(path.read_text(encoding="utf-8"))
 
     assert payload["research_id"] == (
-        "sha256:172e4378a449778e692d180761c11fcde237651d54219d7e8c94cd1e03dc818e"
+        "sha256:641f0df5849264ea133ea0a8ccb58b057816afd47d916014f0d5baabb93cb6c7"
     )
     assert payload["decision"]["status"] == "no_new_watch_version"
     assert payload["decision"]["active_version"] is None

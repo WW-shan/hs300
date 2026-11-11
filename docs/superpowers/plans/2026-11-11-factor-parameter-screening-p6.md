@@ -21,6 +21,19 @@
 > 重复运行、以及模拟缺少被 gitignore 的扩展配置时，research ID、输出文件和 ledger 均保持不变。
 > 最终通过提交为 `3c6f32c4`，CI 与 Docker 均成功。
 
+> **Post-acceptance note (2026-11-11 P7):**
+> 扩展审计刷新后，P6 首次重跑发现两个自动化边界问题：最新审计按目录顺序而非
+> `generated_at` 选择；catalog 变化后的下一次重跑会把 `catalog_delta` 从
+> incremental 重置为 baseline，造成 Research ID 漂移。两处均已补回归测试并修复。
+> 财务 P7 使 15 个财务因子通过逐日 PIT 复算，catalog 重建为
+> `sha256:6cb4e69da0a5a3097459e32ddd662979c4602f7327c3b737c4130de147b9b3f6`。
+> P6 当前 Research ID 为
+> `sha256:5cdd753a0e3037f82fba50f3e77a056a8c6353b21cdff6feb1daf9d8fc420ce9`，
+> `164/164` 个可研究因子通过准入，`blocked_task_count=0`，`active_version=null`。
+> P6 绑定的是新 catalog 上重跑的 P5 Research ID
+> `sha256:641f0df5849264ea133ea0a8ccb58b057816afd47d916014f0d5baabb93cb6c7`；
+> P5 仍没有组合通过，未创建新 watch 版本。
+
 ## Global Constraints
 
 - 不自动激活策略，不生成纸面目标或订单；`active_version` 继续为 null。

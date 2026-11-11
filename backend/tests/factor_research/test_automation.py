@@ -292,6 +292,30 @@ def test_p5_reference_resolves_recommended_variant_without_pending_registration(
     assert payload["catalog_delta"]["removed_factor_ids"] == ["old_factor"]
 
 
+def test_catalog_delta_is_preserved_when_snapshot_is_unchanged() -> None:
+    registry = ParameterFamilyRegistry(families=[_window_family()])
+    first = _build(
+        factor_ids=["factor_a_20d"],
+        registry=registry,
+        p1=_payload(),
+    )
+    first["catalog_delta"] = {
+        "mode": "incremental",
+        "previous_research_id": "sha256:" + "9" * 64,
+        "new_factor_ids": ["factor_a_20d"],
+        "removed_factor_ids": ["old_factor"],
+    }
+
+    rebuilt = _build(
+        factor_ids=["factor_a_20d"],
+        registry=registry,
+        p1=_payload(),
+        previous=first,
+    )
+
+    assert rebuilt["catalog_delta"] == first["catalog_delta"]
+
+
 def test_recommended_unregistered_parameter_generates_registration_task() -> None:
     registry = ParameterFamilyRegistry(families=[_window_family()])
     p1 = {

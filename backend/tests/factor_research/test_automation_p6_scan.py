@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
 import subprocess
 import sys
@@ -34,6 +35,36 @@ def _hash(paths: list[Path]) -> str:
     for path in paths:
         digest.update(path.read_bytes())
     return digest.hexdigest()
+
+
+def _p6_module():
+    spec = importlib.util.spec_from_file_location("research_factor_automation_p6", SCRIPT)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_latest_audit_uses_generated_at_not_directory_order(tmp_path: Path) -> None:
+    audits = tmp_path / "factor_research" / "audits"
+    newest_id = "sha256:" + "0" * 64
+    older_id = "sha256:" + "f" * 64
+    for directory, audit_id, generated_at in (
+        (newest_id.removeprefix("sha256:"), newest_id, "2026-11-11T00:00:00Z"),
+        (older_id.removeprefix("sha256:"), older_id, "2026-11-10T00:00:00Z"),
+    ):
+        root = audits / directory
+        root.mkdir(parents=True)
+        (root / "manifest.json").write_text(
+            json.dumps({"audit_id": audit_id, "generated_at": generated_at}),
+            encoding="utf-8",
+        )
+        (root / "findings.json").write_text("{}", encoding="utf-8")
+
+    selected = _p6_module()._latest_audit(tmp_path)
+
+    assert selected is not None
+    assert selected["manifest"]["audit_id"] == newest_id
 
 
 def test_published_p6_result_is_complete_and_watch_only() -> None:
@@ -76,20 +107,20 @@ def test_p6_rerun_does_not_change_outputs_or_ledger() -> None:
     assert _hash(paths) == before
 
 
-def test_p6_admission_guard_accepts_ready_and_rejects_stale_audit() -> None:
+def test_p6_admission_guard_accepts_ready_and_rejects_blocked_factor() -> None:
     _latest, payload = _latest_payload()
     ready = next(
         factor_id
         for factor_id, row in payload["admission"].items()
         if row["portfolio_ready"] is True
     )
-    stale = next(
+    blocked = next(
         factor_id
         for factor_id, row in payload["admission"].items()
-        if row["audit_status"] == "audit_stale"
+        if row["portfolio_ready"] is False
     )
 
     admitted = assert_portfolio_candidates_admitted(DATA, [ready])
     assert admitted["research_id"] == payload["research_id"]
-    with pytest.raises(ValueError, match="audit_stale"):
-        assert_portfolio_candidates_admitted(DATA, [stale])
+    with pytest.raises(ValueError, match="portfolio admission rejected"):
+        assert_portfolio_candidates_admitted(DATA, [blocked])

@@ -63,6 +63,11 @@ def _load_sibling(name: str):
     return module
 
 
+def _normalize_output_path(path: Path) -> Path:
+    """Resolve relative CLI output before ledger path projection."""
+    return path.resolve() if path.is_absolute() else (Path.cwd() / path).resolve()
+
+
 portfolio = _load_sibling("research_factor_set_portfolio")
 p3_scan = _load_sibling("research_extended_parameter_families")
 
@@ -1969,9 +1974,7 @@ def main() -> int:
             "final_factor_ids": final_ids,
         }
     )
-    output_path = args.output
-    if not output_path.is_absolute():
-        output_path = ROOT / output_path
+    output_path = _normalize_output_path(args.output)
     if output_path.exists():
         existing = json.loads(output_path.read_text(encoding="utf-8"))
         if existing.get("research_id") != research_id:

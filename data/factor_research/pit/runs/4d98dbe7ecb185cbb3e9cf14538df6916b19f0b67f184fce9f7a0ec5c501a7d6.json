@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "method_version": "financial_pit_audit_v1",
+  "period": {
+    "start": "2021-06-01",
+    "end": "2100-12-31"
+  },
+  "universe": {
+    "name": "current_hs300_financial_sample",
+    "symbol_count": 300,
+    "survivorship_bias": true
+  },
+  "inputs": {
+    "financials/metrics/part.parquet": "sha256:d458c82807fbd0957344021930ba065b478dae78d7bb17a6aea9e4cab4757886",
+    "financials/income/part.parquet": "sha256:9bf784d2939de14c4f9da2e96ad3fbecd3c87ae85e8c7dfea056b636ee8164e2",
+    "financials/balance_sheet/part.parquet": "sha256:9253a260bb045c37c0409617bdb3082624e7f21f253d35a147036e5eeac47283",
+    "financials/cash_flow/part.parquet": "sha256:f34a3365dd92713d91a007b784b9ac8cd266cc7e7d19b5ab1df75a82381e3b5b"
+  },
+  "factors": {
+    "accrual": {
+      "factor_id": "accrual",
+      "status": "verified",
+      "verified": true,
+      "mismatch_count": 0,
+      "non_null_rows": 322838,
+      "symbol_count": 300,
+      "first_value_date": "2022-05-05",
+      "announcement_fallback_rows": 98475
+    },
+    "core_earnings_ratio": {
+      "factor_id": "core_earnings_ratio",
+      "status": "verified",
+      "verified": true,
+      "mismatch_count": 0,
+      "non_null_rows": 300294,
+      "symbol_count": 300,
+      "first_value_date": "2022-05-05",
+      "announcement_fallback_rows": 92795
+    },
+    "debt_ratio_latest": {
+      "factor_id": "debt_ratio_latest",
+      "status": "verified",
+      "verified": true,
+      "mismatch_count": 0,
+      "non_null_rows": 385083,
+      "symbol_count": 300,
+      "first_value_date": "2021-06-01",
+      "announcement_fallback_rows": 98465
+    },
+    "gross_margin_latest": {
+      "factor_id": "gross_margin_latest",
+      "status": "verified",
+      "verified": true,
+      "mismatch_count": 0,
+      "non_null_rows": 323915,
+      "symbol_count": 253,
+      "first_value_date": "2021-06-01",
+      "announcement_fallback_rows": 98111
+    },
+    "net_income_yoy_latest": {
+      "factor_id": "net_income_yoy_latest",
+      "status": "verified",
+      "verified": true,
+      "mismatch_count": 0,
+      "non_null_rows": 385218,
+      "symbol_count": 300,
+      "first_value_date": "2021-06-01",
+      "announcement_fallback_rows": 98111
+    },
+    "net_margin_latest": {
+      "factor_id": "net_margin_latest",
+      "status": "verified",
+      "verified": true,
+      "mismatch_count": 0,
+      "non_null_rows": 385225,
+      "symbol_count": 300,
+      "first_value_date": "2021-06-01",
+      "announcement_fallback_rows": 98111
+    },
+    "ocf_debt": {
+      "factor_id": "ocf_debt",
+      "status": "verified",
+      "verified": true,
+      "mismatch_count": 0,
+      "non_null_rows": 322730,
+      "symbol_count": 300,
+      "first_value_date": "2022-05-05",
+      "announcement_fallback_rows": 92660
+    },
+    "ocf_ni": {
+      "factor_id": "ocf_ni",
+      "status": "verified",
+      "verified": true,
+      "mismatch_count": 0,
+      "non_null_rows": 301461,
+      "symbol_count": 300,
+      "first_value_date": "2022-05-05",
+      "announcement_fallback_rows": 98460
+    },
+    "pb_latest": {
+      "factor_id": "pb_latest",
+      "status": "verified",
+      "verified": true,
+      "mismatch_count": 0,
+      "non_null_rows": 384538,
+      "symbol_count": 300,
+      "first_value_date": "2021-06-01",
+      "announcement_fallback_rows": 98111
+    },
+    "revenue_yoy_latest": {
+      "factor_id": "revenue_yoy_latest",
+      "status": "verified",
+      "verified": true,
+      "mismatch_count": 0,
+      "non_null_rows": 385218,
+      "symbol_count": 300,
+      "first_value_date": "2021-06-01",
+      "announcement_fallback_rows": 98111
+    },
+    "roe_latest": {
+      "factor_id": "roe_latest",
+      "status": "verified",
+      "verified": true,
+      "mismatch_count": 0,
+      "non_null_rows": 384705,
+      "symbol_count": 300,
+      "first_value_date": "2021-06-01",
+      "announcement_fallback_rows": 98111
+    },
+    "ext_alt_hs300_dividend_growth_ttm": {
+      "factor_id": "ext_alt_hs300_dividend_growth_ttm",
+      "status": "verified",
+      "verified": true,
+      "mismatch_count": 0,
+      "non_null_rows": 331171,
+      "symbol_count": 289,
+      "first_value_date": "2021-06-01",
+      "no_eligible_event_rows": 0
+    },
+    "ext_alt_hs300_dividend_initiation_flag": {
+      "factor_id": "ext_alt_hs300_dividend_initiation_flag",
+      "status": "verified",
+      "verified": true,
+      "mismatch_count": 0,
+      "non_null_rows": 360132,
+      "symbol_count": 295,
+      "first_value_date": "2021-06-01",
+      "no_eligible_event_rows": 0
+    },
+    "ext_alt_hs300_dividend_ttm_cash": {
+      "factor_id": "ext_alt_hs300_dividend_ttm_cash",
+      "status": "verified",
+      "verified": true,
+      "mismatch_count": 0,
+      "non_null_rows": 360132,
+      "symbol_count": 295,
+      "first_value_date": "2021-06-01",
+      "no_eligible_event_rows": 0
+    },
+    "ext_alt_hs300_dividend_yield": {
+      "factor_id": "ext_alt_hs300_dividend_yield",
+      "status": "verified",
+      "verified": true,
+      "mismatch_count": 0,
+      "non_null_rows": 359700,
+      "symbol_count": 295,
+      "first_value_date": "2021-06-01",
+      "no_eligible_event_rows": 0
+    }
+  },
+  "verified_factor_ids": [
+    "accrual",
+    "core_earnings_ratio",
+    "debt_ratio_latest",
+    "ext_alt_hs300_dividend_growth_ttm",
+    "ext_alt_hs300_dividend_initiation_flag",
+    "ext_alt_hs300_dividend_ttm_cash",
+    "ext_alt_hs300_dividend_yield",
+    "gross_margin_latest",
+    "net_income_yoy_latest",
+    "net_margin_latest",
+    "ocf_debt",
+    "ocf_ni",
+    "pb_latest",
+    "revenue_yoy_latest",
+    "roe_latest"
+  ],
+  "status": "verified",
+  "research_id": "sha256:4d98dbe7ecb185cbb3e9cf14538df6916b19f0b67f184fce9f7a0ec5c501a7d6",
+  "generated_at": "2026-11-11T16:03:17Z"
+}

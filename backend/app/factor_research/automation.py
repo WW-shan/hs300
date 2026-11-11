@@ -440,21 +440,37 @@ def build_automation_payload(
     previous_factor_ids = set()
     delta_mode = "baseline"
     previous_research_id = None
+    new_factor_ids: list[str] = []
+    removed_factor_ids: list[str] = []
     previous_catalog = previous_payload.get("catalog") if previous_payload else None
     previous_snapshot_id = (
         previous_catalog.get("snapshot_id")
         if isinstance(previous_catalog, Mapping)
         else None
     )
-    if previous_payload is not None and previous_snapshot_id != catalog.snapshot_id:
-        delta_mode = "incremental"
-        previous_research_id = previous_payload.get("research_id")
-        if isinstance(previous_catalog, Mapping):
-            raw_ids = previous_catalog.get("factor_ids")
-            if isinstance(raw_ids, list):
-                previous_factor_ids = {str(item) for item in raw_ids}
-    new_factor_ids = sorted(factor_ids - previous_factor_ids) if delta_mode == "incremental" else []
-    removed_factor_ids = sorted(previous_factor_ids - factor_ids) if delta_mode == "incremental" else []
+    if previous_payload is not None:
+        if previous_snapshot_id == catalog.snapshot_id:
+            previous_delta = previous_payload.get("catalog_delta")
+            if isinstance(previous_delta, Mapping):
+                previous_mode = previous_delta.get("mode")
+                if previous_mode in {"baseline", "incremental"}:
+                    delta_mode = str(previous_mode)
+                    previous_research_id = previous_delta.get("previous_research_id")
+                    raw_new = previous_delta.get("new_factor_ids")
+                    raw_removed = previous_delta.get("removed_factor_ids")
+                    if isinstance(raw_new, list):
+                        new_factor_ids = sorted(str(item) for item in raw_new)
+                    if isinstance(raw_removed, list):
+                        removed_factor_ids = sorted(str(item) for item in raw_removed)
+        elif previous_snapshot_id != catalog.snapshot_id:
+            delta_mode = "incremental"
+            previous_research_id = previous_payload.get("research_id")
+            if isinstance(previous_catalog, Mapping):
+                raw_ids = previous_catalog.get("factor_ids")
+                if isinstance(raw_ids, list):
+                    previous_factor_ids = {str(item) for item in raw_ids}
+            new_factor_ids = sorted(factor_ids - previous_factor_ids)
+            removed_factor_ids = sorted(previous_factor_ids - factor_ids)
     family_member_ids = {
         factor_id
         for family in window_registry.families

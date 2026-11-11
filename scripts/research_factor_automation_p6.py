@@ -45,7 +45,7 @@ RESEARCH_PATHS = {
     ),
     "p5": (
         "factor_increment_scan_published",
-        DATA / "factor_research" / "research" / "p5_incremental_2026-11-11.json",
+        DATA / "factor_research" / "research" / "p5_incremental_2026-11-12.json",
     ),
 }
 
@@ -93,6 +93,7 @@ def _latest_audit(data_dir: Path) -> dict[str, Any] | None:
         )
     if not ranked:
         return None
+    ranked.sort(key=lambda item: (item[0], item[1]))
     audit_id = str(_load_json(ranked[-1][2]).get("audit_id") or "")
     return load_audit(data_dir, audit_id) if audit_id else None
 

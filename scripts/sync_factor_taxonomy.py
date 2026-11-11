@@ -20,6 +20,21 @@ DATA = ROOT / "data"
 SOURCE = ROOT / "scripts" / "build_alt_factor_data.py"
 TAXONOMY = DATA / "factor_research" / "catalog" / "field_taxonomy.json"
 CUSTOM_EVIDENCE = DATA / "factor_research" / "catalog" / "classification_evidence" / "custom_core_watch_v1.json"
+PIT_LATEST = DATA / "factor_research" / "pit" / "latest.json"
+
+BUILTIN_FINANCIAL_DEFINITIONS = (
+    ("pb_latest", "low"),
+    ("roe_latest", "high"),
+    ("gross_margin_latest", "high"),
+    ("net_margin_latest", "high"),
+    ("revenue_yoy_latest", "high"),
+    ("net_income_yoy_latest", "high"),
+    ("debt_ratio_latest", "low"),
+    ("ocf_ni", "high"),
+    ("accrual", "low"),
+    ("ocf_debt", "high"),
+    ("core_earnings_ratio", "high"),
+)
 
 
 def _digest(path: Path) -> str:
@@ -468,6 +483,46 @@ def _existing_extra_records() -> list[dict[str, Any]]:
     ]
 
 
+def _financial_pit_evidence() -> tuple[set[str], dict[str, str] | None, str | None]:
+    if not PIT_LATEST.exists():
+        return set(), None, None
+    try:
+        pointer = json.loads(PIT_LATEST.read_text(encoding="utf-8"))
+        run_json = DATA / str(pointer["run_json"])
+        run = json.loads(run_json.read_text(encoding="utf-8"))
+    except (OSError, KeyError, json.JSONDecodeError) as exc:
+        raise SystemExit(f"invalid financial PIT latest pointer: {exc}") from exc
+    research_id = run.get("research_id")
+    if not isinstance(research_id, str) or pointer.get("research_id") != research_id:
+        raise SystemExit("financial PIT latest pointer does not match its run")
+    verified = run.get("verified_factor_ids")
+    if not isinstance(verified, list) or not all(isinstance(item, str) for item in verified):
+        raise SystemExit("financial PIT run has malformed verified_factor_ids")
+    return set(verified), {
+        "path": str(run_json.relative_to(ROOT)),
+        "sha256": _digest(run_json),
+    }, research_id
+
+
+def _promote_pit_records(
+    records: list[dict[str, Any]],
+    verified_ids: set[str],
+    evidence_ref: dict[str, str] | None,
+) -> list[dict[str, Any]]:
+    if evidence_ref is None or not verified_ids:
+        return records
+    for record in records:
+        if record.get("factor_id") not in verified_ids:
+            continue
+        record["pit_hint"] = "verified"
+        record["future_data_status"] = "clear"
+        refs = list(record.get("evidence_refs", []))
+        if evidence_ref not in refs:
+            refs.append(evidence_ref)
+        record["evidence_refs"] = refs
+    return records
+
+
 def main() -> int:
     source_hash = _digest(SOURCE)
     field_lines = _field_lines()
@@ -497,6 +552,7 @@ def main() -> int:
     if missing_functions:
         raise SystemExit("missing source function mapping: " + ", ".join(missing_functions))
 
+    verified_ids, pit_evidence, pit_audit_id = _financial_pit_evidence()
     records: list[dict[str, Any]] = []
     for factor_id, (ext_id, name) in numeric_fields.items():
         if ext_id != "alt_hs300":
@@ -535,7 +591,27 @@ def main() -> int:
         if name in STALENESS_DAYS_OVERRIDES:
             record["staleness_days_override"] = STALENESS_DAYS_OVERRIDES[name]
         records.append(record)
+    _promote_pit_records(records, verified_ids, pit_evidence)
     records.extend(_existing_extra_records())
+    existing_ids = {record["factor_id"] for record in records}
+    for factor_id, direction in BUILTIN_FINANCIAL_DEFINITIONS:
+        if factor_id not in verified_ids or factor_id in existing_ids or pit_evidence is None:
+            continue
+        records.append({
+            "factor_id": factor_id,
+            "data_class": "financial",
+            "cross_section_type": "stock_cross_sectional",
+            "pit_hint": "verified",
+            "future_data_status": "clear",
+            "asset_types": ["stock"],
+            "source_field": factor_id,
+            "source_function": "app.backtest.fundamentals",
+            "zero_is_missing": False,
+            "direction": direction,
+            "classification_confidence": 0.99,
+            "classification_note": "公告日后下一交易日生效；P7 实际面板复算通过。",
+            "evidence_refs": [pit_evidence],
+        })
     records.sort(key=lambda item: item["factor_id"])
     payload = {
         "schema_version": 1,
@@ -544,6 +620,7 @@ def main() -> int:
             "path": str(SOURCE.relative_to(ROOT)),
             "sha256": source_hash,
             "numeric_extension_fields": len(numeric_fields),
+            "financial_pit_audit_id": pit_audit_id,
         },
         "records": records,
     }

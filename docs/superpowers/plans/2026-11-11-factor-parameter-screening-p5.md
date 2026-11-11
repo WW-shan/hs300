@@ -28,6 +28,14 @@
 > 干净检出下的扩展依赖编译问题已用临时占位修复并通过 CI；最终通过提交为
 > `3bd26de6`，CI 与 Docker 均成功。
 
+> **Revalidation note (2026-11-12):** P7 财务 PIT 验证重建了 catalog，因此 P5 在
+> `sha256:6cb4e69da0a5a3097459e32ddd662979c4602f7327c3b737c4130de147b9b3f6`
+> 上重跑。新 Research ID 为
+> `sha256:641f0df5849264ea133ea0a8ccb58b057816afd47d916014f0d5baabb93cb6c7`，
+> 13 个候选、2 个经济含义去重、`portfolio_pass=[]`，结论仍为
+> `no_new_watch_version`，`multi_dimension_v1` 保持 v1 watch、`active_version=null`。
+> 同时修复了 P5 相对输出路径含 `..` 时计算成功但 ledger 路径投影失败的问题。
+
 ## Global Constraints
 
 - 全周期 `2021-06-01..2026-11-05`，近一年 `2025-10-14..2026-11-05`。
