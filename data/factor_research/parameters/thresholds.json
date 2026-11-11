@@ -1,0 +1,655 @@
+{
+  "schema_version": 1,
+  "families": [
+    {
+      "family_id": "dividend_yield_absolute",
+      "label": "股息率绝对阈值",
+      "kind": "threshold",
+      "source_factor_id": "ext_alt_hs300_dividend_yield",
+      "mode": "absolute",
+      "direction": "high",
+      "parameter_name": "threshold",
+      "parameter_grid": [
+        0.0,
+        0.005,
+        0.01,
+        0.015,
+        0.02,
+        0.03,
+        0.04,
+        0.05,
+        0.06
+      ],
+      "current_parameter": 0.02,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "data_class": "financial",
+      "minimum_history": 1,
+      "formula_template": "ext_alt_hs300_dividend_yield >= {parameter}",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "dividend_yield_quantile",
+      "label": "股息率分位阈值",
+      "kind": "threshold",
+      "source_factor_id": "ext_alt_hs300_dividend_yield",
+      "mode": "quantile",
+      "direction": "high",
+      "parameter_name": "quantile",
+      "parameter_grid": [
+        0.05,
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5,
+        0.6,
+        0.7,
+        0.8,
+        0.9,
+        0.95
+      ],
+      "current_parameter": 0.5,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "data_class": "financial",
+      "minimum_history": 1,
+      "formula_template": "ext_alt_hs300_dividend_yield >= daily_quantile({parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "fund_count_absolute",
+      "label": "基金持仓家数低拥挤绝对阈值",
+      "kind": "threshold",
+      "source_factor_id": "ext_alt_hs300_fund_count_low",
+      "mode": "absolute",
+      "direction": "high",
+      "parameter_name": "threshold",
+      "parameter_grid": [
+        -8.0,
+        -7.0,
+        -6.0,
+        -5.0,
+        -4.0,
+        -3.0,
+        -2.0
+      ],
+      "current_parameter": -5.0,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "data_class": "flow",
+      "minimum_history": 1,
+      "formula_template": "ext_alt_hs300_fund_count_low >= {parameter}",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "fund_count_quantile",
+      "label": "基金持仓家数低拥挤分位阈值",
+      "kind": "threshold",
+      "source_factor_id": "ext_alt_hs300_fund_count_low",
+      "mode": "quantile",
+      "direction": "high",
+      "parameter_name": "quantile",
+      "parameter_grid": [
+        0.05,
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5,
+        0.6,
+        0.7,
+        0.8,
+        0.9,
+        0.95
+      ],
+      "current_parameter": 0.5,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "data_class": "flow",
+      "minimum_history": 1,
+      "formula_template": "ext_alt_hs300_fund_count_low >= daily_quantile({parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "fund_count_change_absolute",
+      "label": "基金持仓家数变化低拥挤绝对阈值",
+      "kind": "threshold",
+      "source_factor_id": "ext_alt_hs300_fund_count_chg_qoq_low",
+      "mode": "absolute",
+      "direction": "high",
+      "parameter_name": "threshold",
+      "parameter_grid": [
+        -0.5,
+        -0.2,
+        0.0,
+        0.2,
+        0.5,
+        0.7,
+        0.9
+      ],
+      "current_parameter": 0.2,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "data_class": "flow",
+      "minimum_history": 1,
+      "formula_template": "ext_alt_hs300_fund_count_chg_qoq_low >= {parameter}",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "fund_count_change_quantile",
+      "label": "基金持仓家数变化低拥挤分位阈值",
+      "kind": "threshold",
+      "source_factor_id": "ext_alt_hs300_fund_count_chg_qoq_low",
+      "mode": "quantile",
+      "direction": "high",
+      "parameter_name": "quantile",
+      "parameter_grid": [
+        0.05,
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5,
+        0.6,
+        0.7,
+        0.8,
+        0.9,
+        0.95
+      ],
+      "current_parameter": 0.5,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "data_class": "flow",
+      "minimum_history": 1,
+      "formula_template": "ext_alt_hs300_fund_count_chg_qoq_low >= daily_quantile({parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "fund_holding_ratio_absolute",
+      "label": "基金持股比例低拥挤绝对阈值",
+      "kind": "threshold",
+      "source_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+      "mode": "absolute",
+      "direction": "high",
+      "parameter_name": "threshold",
+      "parameter_grid": [
+        -0.2,
+        -0.15,
+        -0.1,
+        -0.075,
+        -0.05,
+        -0.03,
+        -0.02,
+        -0.01
+      ],
+      "current_parameter": -0.05,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "data_class": "flow",
+      "minimum_history": 1,
+      "formula_template": "ext_alt_hs300_fund_holding_ratio_low >= {parameter}",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "fund_holding_ratio_quantile",
+      "label": "基金持股比例低拥挤分位阈值",
+      "kind": "threshold",
+      "source_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+      "mode": "quantile",
+      "direction": "high",
+      "parameter_name": "quantile",
+      "parameter_grid": [
+        0.05,
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5,
+        0.6,
+        0.7,
+        0.8,
+        0.9,
+        0.95
+      ],
+      "current_parameter": 0.5,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "data_class": "flow",
+      "minimum_history": 1,
+      "formula_template": "ext_alt_hs300_fund_holding_ratio_low >= daily_quantile({parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "fund_holding_change_absolute",
+      "label": "基金持股比例变化低拥挤绝对阈值",
+      "kind": "threshold",
+      "source_factor_id": "ext_alt_hs300_fund_holding_ratio_chg_qoq_low",
+      "mode": "absolute",
+      "direction": "high",
+      "parameter_name": "threshold",
+      "parameter_grid": [
+        -3.0,
+        -2.0,
+        -1.0,
+        -0.5,
+        0.0,
+        0.5,
+        0.8
+      ],
+      "current_parameter": -0.5,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "data_class": "flow",
+      "minimum_history": 1,
+      "formula_template": "ext_alt_hs300_fund_holding_ratio_chg_qoq_low >= {parameter}",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "fund_holding_change_quantile",
+      "label": "基金持股比例变化低拥挤分位阈值",
+      "kind": "threshold",
+      "source_factor_id": "ext_alt_hs300_fund_holding_ratio_chg_qoq_low",
+      "mode": "quantile",
+      "direction": "high",
+      "parameter_name": "quantile",
+      "parameter_grid": [
+        0.05,
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5,
+        0.6,
+        0.7,
+        0.8,
+        0.9,
+        0.95
+      ],
+      "current_parameter": 0.5,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "data_class": "flow",
+      "minimum_history": 1,
+      "formula_template": "ext_alt_hs300_fund_holding_ratio_chg_qoq_low >= daily_quantile({parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "margin_change_absolute",
+      "label": "两融余额变化低拥挤绝对阈值",
+      "kind": "threshold",
+      "source_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+      "mode": "absolute",
+      "direction": "high",
+      "parameter_name": "threshold",
+      "parameter_grid": [
+        -0.3,
+        -0.2,
+        -0.1,
+        0.0,
+        0.05,
+        0.1,
+        0.2
+      ],
+      "current_parameter": 0.0,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "data_class": "flow",
+      "minimum_history": 1,
+      "formula_template": "ext_alt_hs300_margin_chg_1m_low >= {parameter}",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "margin_change_quantile",
+      "label": "两融余额变化低拥挤分位阈值",
+      "kind": "threshold",
+      "source_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+      "mode": "quantile",
+      "direction": "high",
+      "parameter_name": "quantile",
+      "parameter_grid": [
+        0.05,
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5,
+        0.6,
+        0.7,
+        0.8,
+        0.9,
+        0.95
+      ],
+      "current_parameter": 0.5,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "data_class": "flow",
+      "minimum_history": 1,
+      "formula_template": "ext_alt_hs300_margin_chg_1m_low >= daily_quantile({parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "holder_net_buy_ratio_absolute",
+      "label": "重要股东净增持比例绝对阈值",
+      "kind": "threshold",
+      "source_factor_id": "ext_alt_hs300_holder_net_buy_ratio_90d",
+      "mode": "absolute",
+      "direction": "high",
+      "parameter_name": "threshold",
+      "parameter_grid": [
+        -3.0,
+        -1.0,
+        0.0,
+        0.5,
+        1.0,
+        2.0,
+        5.0
+      ],
+      "current_parameter": 0.5,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "data_class": "flow",
+      "minimum_history": 1,
+      "formula_template": "ext_alt_hs300_holder_net_buy_ratio_90d >= {parameter}",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "holder_net_buy_ratio_quantile",
+      "label": "重要股东净增持比例分位阈值",
+      "kind": "threshold",
+      "source_factor_id": "ext_alt_hs300_holder_net_buy_ratio_90d",
+      "mode": "quantile",
+      "direction": "high",
+      "parameter_name": "quantile",
+      "parameter_grid": [
+        0.05,
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5,
+        0.6,
+        0.7,
+        0.8,
+        0.9,
+        0.95
+      ],
+      "current_parameter": 0.5,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "data_class": "flow",
+      "minimum_history": 1,
+      "formula_template": "ext_alt_hs300_holder_net_buy_ratio_90d >= daily_quantile({parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "holder_net_buy_count_absolute",
+      "label": "重要股东净增持事件数绝对阈值",
+      "kind": "threshold",
+      "source_factor_id": "ext_alt_hs300_holder_net_buy_count_90d",
+      "mode": "absolute",
+      "direction": "high",
+      "parameter_name": "threshold",
+      "parameter_grid": [
+        -2.0,
+        0.0,
+        1.0,
+        2.0,
+        3.0,
+        5.0,
+        10.0
+      ],
+      "current_parameter": 2.0,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "data_class": "flow",
+      "minimum_history": 1,
+      "formula_template": "ext_alt_hs300_holder_net_buy_count_90d >= {parameter}",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "holder_net_buy_count_quantile",
+      "label": "重要股东净增持事件数分位阈值",
+      "kind": "threshold",
+      "source_factor_id": "ext_alt_hs300_holder_net_buy_count_90d",
+      "mode": "quantile",
+      "direction": "high",
+      "parameter_name": "quantile",
+      "parameter_grid": [
+        0.05,
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5,
+        0.6,
+        0.7,
+        0.8,
+        0.9,
+        0.95
+      ],
+      "current_parameter": 0.5,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "data_class": "flow",
+      "minimum_history": 1,
+      "formula_template": "ext_alt_hs300_holder_net_buy_count_90d >= daily_quantile({parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "pledge_change_absolute",
+      "label": "股权质押比例变化反向绝对阈值",
+      "kind": "threshold",
+      "source_factor_id": "ext_alt_hs300_pledge_ratio_chg_1m_low",
+      "mode": "absolute",
+      "direction": "high",
+      "parameter_name": "threshold",
+      "parameter_grid": [
+        -1.0,
+        -0.5,
+        0.0,
+        0.2,
+        0.5,
+        1.0,
+        2.0
+      ],
+      "current_parameter": 0.2,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "data_class": "flow",
+      "minimum_history": 1,
+      "formula_template": "ext_alt_hs300_pledge_ratio_chg_1m_low >= {parameter}",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "pledge_change_quantile",
+      "label": "股权质押比例变化反向分位阈值",
+      "kind": "threshold",
+      "source_factor_id": "ext_alt_hs300_pledge_ratio_chg_1m_low",
+      "mode": "quantile",
+      "direction": "high",
+      "parameter_name": "quantile",
+      "parameter_grid": [
+        0.05,
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5,
+        0.6,
+        0.7,
+        0.8,
+        0.9,
+        0.95
+      ],
+      "current_parameter": 0.5,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "data_class": "flow",
+      "minimum_history": 1,
+      "formula_template": "ext_alt_hs300_pledge_ratio_chg_1m_low >= daily_quantile({parameter})",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "insider_buy_holding",
+      "label": "董监高增持事件后持有期",
+      "kind": "event_holding",
+      "source_factor_id": "ext_alt_hs300_insider_buy_20d",
+      "event_key": "insider_buy",
+      "direction": "high",
+      "parameter_name": "holding_days",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "data_class": "flow",
+      "minimum_history": 61,
+      "formula_template": "constant_holding(insider_buy, {parameter} trading days)",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "lhb_net_buy_holding",
+      "label": "龙虎榜净买入事件后持有期",
+      "kind": "event_holding",
+      "source_factor_id": "ext_alt_hs300_lhb_net_buy_ratio_20d",
+      "event_key": "lhb_net_buy",
+      "direction": "high",
+      "parameter_name": "holding_days",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "data_class": "flow",
+      "minimum_history": 61,
+      "formula_template": "constant_holding(lhb_net_buy, {parameter} trading days)",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "repurchase_holding",
+      "label": "回购公告事件后持有期",
+      "kind": "event_holding",
+      "source_factor_id": "ext_alt_hs300_repurchase_event_60d",
+      "event_key": "repurchase",
+      "direction": "high",
+      "parameter_name": "holding_days",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "data_class": "flow",
+      "minimum_history": 61,
+      "formula_template": "constant_holding(repurchase, {parameter} trading days)",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "block_premium_holding",
+      "label": "大宗交易溢价事件后持有期",
+      "kind": "event_holding",
+      "source_factor_id": "ext_alt_hs300_block_premium_20d",
+      "event_key": "block_premium",
+      "direction": "high",
+      "parameter_name": "holding_days",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "data_class": "flow",
+      "minimum_history": 61,
+      "formula_template": "constant_holding(block_premium, {parameter} trading days)",
+      "evidence_refs": []
+    },
+    {
+      "family_id": "analyst_rating_change_holding",
+      "label": "分析师评级调整事件后持有期",
+      "kind": "event_holding",
+      "source_factor_id": "ext_alt_hs300_analyst_rating_change_20d",
+      "event_key": "analyst_rating_change",
+      "direction": "high",
+      "parameter_name": "holding_days",
+      "parameter_grid": [
+        5,
+        10,
+        20,
+        40,
+        60
+      ],
+      "current_parameter": 20,
+      "neutralization": [
+        "industry",
+        "size"
+      ],
+      "data_class": "sentiment",
+      "minimum_history": 61,
+      "formula_template": "constant_holding(analyst_rating_change, {parameter} trading days)",
+      "evidence_refs": []
+    }
+  ]
+}

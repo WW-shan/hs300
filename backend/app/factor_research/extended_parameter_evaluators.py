@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Collection, Mapping
-from typing import Any
+from typing import Any, Literal
 
 import polars as pl
 
@@ -54,6 +54,7 @@ def event_decay_factor(
     multiplier: float = 1.0,
     *,
     fill_zero: bool = False,
+    decay: Literal["linear", "step"] = "linear",
 ) -> pl.DataFrame:
     """Linear-decay daily events over the supplied symbol trading calendar.
 
@@ -65,6 +66,8 @@ def event_decay_factor(
     _require(events, {"symbol", "date", value_column}, window)
     if window <= 0:
         raise ValueError("window must be positive")
+    if decay not in {"linear", "step"}:
+        raise ValueError(f"unsupported event decay: {decay}")
 
     calendar = calendar.select(["symbol", "date"]).sort(["symbol", "date"])
     duplicate_keys = calendar.group_by(["symbol", "date"]).len().filter(pl.col("len") > 1)
@@ -138,7 +141,11 @@ def event_decay_factor(
     offsets = pl.DataFrame(
         {
             "offset": list(range(window)),
-            "weight": [1.0 - index / window for index in range(window)],
+            "weight": (
+                [1.0] * window
+                if decay == "step"
+                else [1.0 - index / window for index in range(window)]
+            ),
         }
     )
     expanded = (
@@ -692,7 +699,7 @@ def analyst_rating_change(context: Mapping[str, Any], parameter: int):
     local_reports = reports.select(
         [
             "symbol",
-            (pl.col("date") + pl.duration(days=1)).alias("date"),
+            "date",
             pl.col("rating_change").alias("_rating_change"),
         ]
     )

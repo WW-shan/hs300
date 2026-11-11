@@ -710,7 +710,7 @@ def _analyst_daily(dates: list[date], symbols: list[str]) -> pl.DataFrame:
         if part.is_empty():
             continue
         score = _decayed_event_score(
-            part["effective_date"].to_list(),
+            part["report_date"].to_list(),
             part["_rating_change"].fill_null(0.0).to_list(),
             date_values,
             window=20,

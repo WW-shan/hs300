@@ -8,6 +8,7 @@ import pytest
 
 from app.factor_research.extended_parameter_evaluators import (
     EXTENDED_EVALUATORS,
+    analyst_rating_change,
     etf_share_change,
     event_decay_factor,
     industry_window_frame,
@@ -129,6 +130,27 @@ def test_insider_event_keeps_non_event_stocks_in_the_cross_section() -> None:
 
     assert out.height == 4
     assert out.filter(pl.col("symbol") == "B")[column].to_list() == [0.0, 0.0]
+
+
+def test_analyst_rating_change_starts_next_trading_day() -> None:
+    dates = [date(2024, 1, 2), date(2024, 1, 3), date(2024, 1, 4)]
+    calendar = pl.DataFrame({"symbol": ["A"] * len(dates), "date": dates})
+    context = {
+        "calendar": calendar,
+        "events": {},
+        "analyst_reports": pl.DataFrame(
+            {
+                "symbol": ["A"],
+                "date": [dates[0]],
+                "rating": [4.0],
+                "rating_change": [1.5],
+            }
+        ),
+    }
+
+    out, column, _ = analyst_rating_change(context, 2)
+
+    assert out.sort("date")[column].to_list() == [0.0, 1.5, 0.75]
 
 
 def test_industry_momentum_rps_breadth_and_relative_strength() -> None:

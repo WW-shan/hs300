@@ -66,6 +66,28 @@ def test_decayed_event_score_starts_next_trading_day() -> None:
     assert scores == [0.0, 2.0, 1.0]
 
 
+def test_analyst_daily_applies_rating_change_on_next_trading_day(
+    tmp_path, monkeypatch
+) -> None:
+    dates = [date(2024, 1, 2), date(2024, 1, 3), date(2024, 1, 4)]
+    analyst_root = tmp_path / "research" / "r47_analyst"
+    analyst_root.mkdir(parents=True)
+    pl.DataFrame(
+        {
+            "symbol": ["A"],
+            "report_date": [dates[0]],
+            "rating_score": [4.0],
+            "rating_change_score": [1.5],
+        }
+    ).write_parquet(analyst_root / "2024.parquet")
+    monkeypatch.setattr(build_alt_factor_data, "DATA", tmp_path)
+
+    out = build_alt_factor_data._analyst_daily(dates, ["A"]).sort("date")
+
+    assert out["analyst_rating_change_20d"].to_list()[1] == pytest.approx(1.5)
+    assert out["analyst_rating_change_20d"].to_list()[0] is None
+
+
 def test_price_parameter_variants_are_declared_as_extension_fields() -> None:
     fields = {field.name for field in build_alt_factor_data.FIELDS}
 
