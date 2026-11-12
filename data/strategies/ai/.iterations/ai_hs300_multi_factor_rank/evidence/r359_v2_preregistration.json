@@ -1,0 +1,258 @@
+{
+  "classification": "new strategy structure; fixed three-cohort C sleeve with no parameter grid",
+  "concentration_denominator": "Use the existing R239 aggregate convention: top net shares divide positive symbol P&L contribution by total portfolio net P&L; also report gross-profit contribution shares as diagnostics. If net P&L <=0, G13-G15 fail and percentages are interpreted as not meaningful, not favorable.",
+  "created_at": "2026-11-06",
+  "execution_scale_erratum": {
+    "file": "r359_execution_scale_erratum_A1.json",
+    "returns_already_observed": true,
+    "selection_gates_unchanged": true,
+    "sha256": "58178a44da68ebf5f5bd5cd0c767a45c37a73bed0182429abba2dee7a78cdcf1",
+    "strategy_construction_unchanged": true
+  },
+  "frozen_construction": {
+    "cohorts": {
+      "between_cohort_rebalance": false,
+      "count": 3,
+      "each_cohort_independent_strategy_backtest": true,
+      "initial_capital_per_account_cny": 333333.3333333333,
+      "offsets_trading_sessions": [
+        0,
+        20,
+        40
+      ],
+      "pnl_scaling": "none; backtest each cohort at the actual one-third initial capital to preserve lot/minimum-commission execution",
+      "pre_activation": "uninvested cash at zero return",
+      "same_max_hold_days": 60,
+      "same_max_positions": 50,
+      "same_stop_loss": null,
+      "same_strategy": "ai_hs300_quality_momentum_broad_h60",
+      "starting_capital_weights": [
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333
+      ]
+    },
+    "costs": "Existing R344 2x/3x/4x/5x stock and overlay costs, unchanged.",
+    "no_leverage": true,
+    "outer_portfolio": "Frozen R344 three-sleeve monthly 60-day inverse-volatility risk parity, C capped at 10%, then 60-day 15% volatility-target overlay and original monthly gold 200-day trend defensive bucket.",
+    "window": {
+      "end": "2026-11-05",
+      "recent_start": "2025-11-05",
+      "start": "2022-05-05"
+    }
+  },
+  "frozen_inputs": {
+    "A_strategy_sha256": "8cc54b21b2508bf35527687bac061518e8d8caac9887a7e86a07345bdc33526e",
+    "B_strategy_sha256": "e785a540c23ecbeab625ae5349c52293c8659011bf224f80960d6e728bcb382e",
+    "C_strategy_sha256": "6a120d44e00be96bccc1641bcec300f1bf62f1a1af56476bc37fc4561495051d",
+    "R344_preregistration_sha256": "0e3b7deeb490ce07a1b8ae73c25b49ee4aa6939fa21ee9255f0febf5135a338c",
+    "R344_result_sha256": "2549f75ec759eb0a6cf40e3cd5534a6b45eac5d64c093676af47eef0b25153b3",
+    "cohort_runner_sha256": "b40cd1bd8d42df22032945abe53fa475b2169e95bca6754181c3adeee31ac6e3",
+    "data_fingerprints": {
+      "alt_hs300": {
+        "bytes": 251443214,
+        "files": 2143,
+        "sha256": "2fed5684eb1742095094f00a8ff38afd7ed7242c9d2ee52b824dc5be88f1467e"
+      },
+      "defensive_assets": {
+        "dividend_etf_qfq.parquet": "0c135eff8187948ed364f5f2d7ced64d5c39b977bba25b832af33b85e1245df1",
+        "gold_etf_qfq.parquet": "1a1c16e894ac500da3167e23cf68d59a46d66c6d1aa1940f09957d7ced70ec75",
+        "treasury_etf_qfq.parquet": "4bd6510f1e2b0bd0016348eb144725944a45566d2bf30d335ca80214a1f940eb"
+      },
+      "engine_code": {
+        "backend/app/backtest/engine.py": "e3d840cdd08febe114cfeb731d7fc5f7ed14915a5bd5a180e10b9e73f9ac1522",
+        "backend/app/backtest/strategy.py": "318b6548354c587965c321921faafcbb7c4be0012fefe3ada0ced97fae06fd4e",
+        "backend/app/factors/store.py": "ae0300f95d92d35372bd26b7138a98abcc72a6e0ee7599ff0052e12fb46ae626",
+        "backend/app/strategy/engine.py": "d0e207d0593b37157848925fc19bda73d3849651dd0e8469d6912caf4295519e",
+        "backend/app/strategy/scoring.py": "c4732a2c88150e960e6fa060bff18c819f0d90bc586a6c1457a53bcc47eaabad",
+        "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r313_concentration_audit.py": "89bd89fa50b2fb1328ecf5a351e8b4bc498cdd99d42fd90adba0ca5d071927e5",
+        "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r315_holding_bootstrap.py": "f25bb8bcff54c6eb29ce2f98511eb1e4b7127546c04b38685a7352978ba0cc3f",
+        "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r324_defensive_ballast.py": "7184c71b8c5922dbd92b91eb1c33287bacb1ed3c7f1cfe3c8a4ae8e30059c806",
+        "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r326_gold_concentration.py": "85c9eab77902be9e22a6aa42e24895bb22722b72e71d36130115d324e4d99151",
+        "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r331_three_asset_bucket.py": "63397c2e4725d286df7f583ab9a5679e67b0ed4ae58782df0f9323471564b8f6",
+        "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r344_extended_window.py": "fa8df404badff554f974439490139f7e17ccd5dcd855507f3c2552d350132859",
+        "scripts/backtest_r112_dual_sleeve_risk_parity.py": "94c615bedbe9c5afa7fd3720e36bc20a3a8ede9046715efc9bbf6841458bd1ae",
+        "scripts/backtest_r114_b_vol_target.py": "6c32607d03b1971cc059786865c932ae81c2e7512b2245dcbf8ecfa5d63658b6",
+        "scripts/backtest_r239_concentration_audit.py": "7cbf0cf9e6b6d75531c9e99af712cde74bafdac9c895fd5eb59db4292c1695ee"
+      },
+      "factor_definitions": {
+        "uf_cash_quality.json": "8207de7153df11861cf4d763b5c12b4d087b7ee83bbb3c527a976da39c88ee67",
+        "uf_low_vol.json": "98bd91eee57bcbe3146f0dfcbe60ec3993c514e1c7c0ce4c9bb5bffbea176fe0",
+        "uf_quality_value_defensive.json": "bd41d7e1d7cdc1790bd9059f8e5b4125b8522fe0f04ae37cd3f54488f64be18c"
+      },
+      "financials": {
+        "financials": "f34a3365dd92713d91a007b784b9ac8cd266cc7e7d19b5ab1df75a82381e3b5b"
+      },
+      "industry": "702605875a44b978baaef9a6815ad64561bf69c0cc25f803a65875df24dc41f2",
+      "instrument_and_industry_inputs": {
+        "ext_data/ext_hy_ths/part.parquet": "702605875a44b978baaef9a6815ad64561bf69c0cc25f803a65875df24dc41f2",
+        "financials/shares/part.parquet": "f322f1d279c08f852b7edb16a6a15002bce0dd095623326e25d0cb1e05851177",
+        "instruments/instruments.parquet": "f02713442043b09cc03bb0c81812c964d1eeae00cb2a5116bf75d5cd3b4b8efa"
+      },
+      "membership": "6e5114f16ecd936be0bf7fb62f474d169dca25f1bad78bb27fd0ea413d3ed748",
+      "production_enriched": {
+        "bytes": 47704926,
+        "files": 2143,
+        "sha256": "8de93672101a09972d0ebe67c44e089240daa03eb861091b3c16005ae37baf7c"
+      },
+      "production_raw_daily": {
+        "bytes": 21308282,
+        "files": 2143,
+        "sha256": "bef8a25e11c81652ee7736d3190764b0a0ede20c3656cb1f326446d4c5afe119"
+      },
+      "r344_cache_inputs": {
+        "ai_hs300_industry_relative_strength_quality_h20_sl20_2022-05-05_2x_p10.parquet": "824d9221b2de1a58e08a46ef79678830a17c76a07b21043463cd301e415c0685",
+        "ai_hs300_industry_relative_strength_quality_h20_sl20_2022-05-05_2x_p10.trades.json": "5f768739a8ff6c12c6959a6291db16ed137962de79f0b473d5b69b2f10ad0d79",
+        "ai_hs300_industry_relative_strength_quality_h20_sl20_2022-05-05_3x_p10.parquet": "1d8b19388bfe6d620eae4b0a0f46d9ba3dfdd24d69dcd28b143c4cf712c5fc14",
+        "ai_hs300_industry_relative_strength_quality_h20_sl20_2022-05-05_4x_p10.parquet": "036e17592491df864cff74ad25f2484bc5e607d8de27b5c9cef16d315ee34243",
+        "ai_hs300_industry_relative_strength_quality_h20_sl20_2022-05-05_5x_p10.parquet": "84526ab25b3ffa75220059ed4bdf3e28abff6148fdc2b2705db983f14bca84fc",
+        "ai_hs300_industry_relative_strength_quality_h20_sl20_2022-05-05_5x_p10.trades.json": "c193591483f4a5fb143ef29a9477b8b24f1f2c74b69678aa647acb98fedaa898",
+        "ai_hs300_industry_relative_strength_quality_h20_sl20_2023-01-03_2x_p10.parquet": "6b95c31e4f83a726e53aebbbea0c727cbe4aebcd4903e8472b651f0ea9556df9",
+        "ai_hs300_industry_relative_strength_quality_h20_sl20_2024-01-02_2x_p10.parquet": "2d8525362ee65ca126f9f152e9c899cb2541b0d7bb6c2fdfeb5e80e1fc6d0680",
+        "ai_hs300_industry_relative_strength_quality_h20_sl20_2025-01-02_2x_p10.parquet": "96c3fe60ecca1881b0230100132ca54eb657d478c72ad317d3e5f5aa6eba54eb",
+        "ai_hs300_industry_relative_strength_quality_h20_sl20_2025-11-05_2x_p10.parquet": "1ba939bea29d6c69d32491bbc0279e7f0d7200b80108b31046fc2d70d2b0a221",
+        "ai_hs300_industry_relative_strength_quality_h20_sl20_2026-01-05_2x_p10.parquet": "10912099d42068e8301ddba4ff903bb5429b4c49ca84e6c13338d44c249e5249",
+        "ai_hs300_macro_gate_quality_2022-05-05_2x_p10.parquet": "ca531e3613d31a5ef7a2d5d576f88926755bc81ca8fc541e62ca1465a4813f86",
+        "ai_hs300_macro_gate_quality_2022-05-05_2x_p10.trades.json": "d13e55a0bc784457c4a196a2f673adc56f78f19aa693af0e6708150d275d8452",
+        "ai_hs300_macro_gate_quality_2022-05-05_3x_p10.parquet": "5a1899e9f29ddf9be4d3ca201635aebd26a4508812163eb94a8261a6cfd466eb",
+        "ai_hs300_macro_gate_quality_2022-05-05_4x_p10.parquet": "f3090901dc87fed1d4de9b9aaa47f77c128e0abef6c78d2c47ccc2088eac6933",
+        "ai_hs300_macro_gate_quality_2022-05-05_5x_p10.parquet": "6f397c960dec67bad376cf7069985536c6f5bda6e2a7071c774d4f325aca3114",
+        "ai_hs300_macro_gate_quality_2022-05-05_5x_p10.trades.json": "733a018dda95ee59715cddadb8a0fa90a980428e3c1b8ae9f172366ec5ebd440",
+        "ai_hs300_macro_gate_quality_2023-01-03_2x_p10.parquet": "e71abe082a8d66396120623d0b8cc2607a8d8e296693bec10caa7c3800566894",
+        "ai_hs300_macro_gate_quality_2024-01-02_2x_p10.parquet": "440868c354a827a805c36221bfbaf5f555b52fbbbe4232704854c347488bcdba",
+        "ai_hs300_macro_gate_quality_2025-01-02_2x_p10.parquet": "92ea15cdc49356df149d4500239f7cdab1221eddc7328d7037eeab6ad7b5605d",
+        "ai_hs300_macro_gate_quality_2025-11-05_2x_p10.parquet": "98dbb88c0c0e2f9147d417a4ad15b5f867340873dc58e33b7564782d624ce3af",
+        "ai_hs300_macro_gate_quality_2026-01-05_2x_p10.parquet": "a18305a0cdd775939806f37beb8116a88a297ad4aec5fd0cd90ab77e743d971d",
+        "ai_hs300_quality_momentum_broad_h60_2022-05-05_2x_p50.parquet": "7a097f8a69f702676be694505ac7d8a21ed5d275ffa6167d2782dffcf9d61e96",
+        "ai_hs300_quality_momentum_broad_h60_2022-05-05_2x_p50.trades.json": "e6e416c5282efc5205f42d51789fe60319085afa47d3017ed454c74918acdfce",
+        "ai_hs300_quality_momentum_broad_h60_2022-05-05_3x_p50.parquet": "9aa5b4f89b89ee41848133787a9b22c7f6c0a64944fa9dc4210e48575eeb31bd",
+        "ai_hs300_quality_momentum_broad_h60_2022-05-05_4x_p50.parquet": "b8ab6d6ceb0d5924f75f4027e841b67c6abff41457407793cfad191fd7b41a74",
+        "ai_hs300_quality_momentum_broad_h60_2022-05-05_5x_p50.parquet": "483e4c6a25b600d6b5f348a7ca496b5658cc15f831fc57db1b2bc0c0822cd7fe",
+        "ai_hs300_quality_momentum_broad_h60_2022-05-05_5x_p50.trades.json": "3afd868be817684f11dd0bd08c7fed6f562376274216c04ae21dcaa8e48bd7fb"
+      },
+      "r40_enriched": {
+        "bytes": 49897492,
+        "files": 1544,
+        "sha256": "a76db8149205486b06fbc664692f8b85bb365671f5888b6a12128909cffff707"
+      },
+      "strategies": {
+        "A": "8cc54b21b2508bf35527687bac061518e8d8caac9887a7e86a07345bdc33526e",
+        "B": "e785a540c23ecbeab625ae5349c52293c8659011bf224f80960d6e728bcb382e",
+        "C": "6a120d44e00be96bccc1641bcec300f1bf62f1a1af56476bc37fc4561495051d"
+      }
+    },
+    "engine_code_sha256": {
+      "backend/app/backtest/engine.py": "e3d840cdd08febe114cfeb731d7fc5f7ed14915a5bd5a180e10b9e73f9ac1522",
+      "backend/app/backtest/strategy.py": "318b6548354c587965c321921faafcbb7c4be0012fefe3ada0ced97fae06fd4e",
+      "backend/app/factors/store.py": "ae0300f95d92d35372bd26b7138a98abcc72a6e0ee7599ff0052e12fb46ae626",
+      "backend/app/strategy/engine.py": "d0e207d0593b37157848925fc19bda73d3849651dd0e8469d6912caf4295519e",
+      "backend/app/strategy/scoring.py": "c4732a2c88150e960e6fa060bff18c819f0d90bc586a6c1457a53bcc47eaabad",
+      "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r313_concentration_audit.py": "89bd89fa50b2fb1328ecf5a351e8b4bc498cdd99d42fd90adba0ca5d071927e5",
+      "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r315_holding_bootstrap.py": "f25bb8bcff54c6eb29ce2f98511eb1e4b7127546c04b38685a7352978ba0cc3f",
+      "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r324_defensive_ballast.py": "7184c71b8c5922dbd92b91eb1c33287bacb1ed3c7f1cfe3c8a4ae8e30059c806",
+      "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r326_gold_concentration.py": "85c9eab77902be9e22a6aa42e24895bb22722b72e71d36130115d324e4d99151",
+      "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r331_three_asset_bucket.py": "63397c2e4725d286df7f583ab9a5679e67b0ed4ae58782df0f9323471564b8f6",
+      "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r344_extended_window.py": "fa8df404badff554f974439490139f7e17ccd5dcd855507f3c2552d350132859",
+      "scripts/backtest_r112_dual_sleeve_risk_parity.py": "94c615bedbe9c5afa7fd3720e36bc20a3a8ede9046715efc9bbf6841458bd1ae",
+      "scripts/backtest_r114_b_vol_target.py": "6c32607d03b1971cc059786865c932ae81c2e7512b2245dcbf8ecfa5d63658b6",
+      "scripts/backtest_r239_concentration_audit.py": "7cbf0cf9e6b6d75531c9e99af712cde74bafdac9c895fd5eb59db4292c1695ee"
+    },
+    "preflight_runner_sha256": "cfe5e0f767c0035ad1263f1aa9112e36a0a82493688ff69d970546437334291b",
+    "r344_cache_sha256": {
+      "data/research/r344_cache/ai_hs300_industry_relative_strength_quality_h20_sl20_2022-05-05_2x_p10.parquet": "824d9221b2de1a58e08a46ef79678830a17c76a07b21043463cd301e415c0685",
+      "data/research/r344_cache/ai_hs300_industry_relative_strength_quality_h20_sl20_2022-05-05_2x_p10.trades.json": "5f768739a8ff6c12c6959a6291db16ed137962de79f0b473d5b69b2f10ad0d79",
+      "data/research/r344_cache/ai_hs300_industry_relative_strength_quality_h20_sl20_2022-05-05_3x_p10.parquet": "1d8b19388bfe6d620eae4b0a0f46d9ba3dfdd24d69dcd28b143c4cf712c5fc14",
+      "data/research/r344_cache/ai_hs300_industry_relative_strength_quality_h20_sl20_2022-05-05_4x_p10.parquet": "036e17592491df864cff74ad25f2484bc5e607d8de27b5c9cef16d315ee34243",
+      "data/research/r344_cache/ai_hs300_industry_relative_strength_quality_h20_sl20_2022-05-05_5x_p10.parquet": "84526ab25b3ffa75220059ed4bdf3e28abff6148fdc2b2705db983f14bca84fc",
+      "data/research/r344_cache/ai_hs300_industry_relative_strength_quality_h20_sl20_2022-05-05_5x_p10.trades.json": "c193591483f4a5fb143ef29a9477b8b24f1f2c74b69678aa647acb98fedaa898",
+      "data/research/r344_cache/ai_hs300_industry_relative_strength_quality_h20_sl20_2023-01-03_2x_p10.parquet": "6b95c31e4f83a726e53aebbbea0c727cbe4aebcd4903e8472b651f0ea9556df9",
+      "data/research/r344_cache/ai_hs300_industry_relative_strength_quality_h20_sl20_2024-01-02_2x_p10.parquet": "2d8525362ee65ca126f9f152e9c899cb2541b0d7bb6c2fdfeb5e80e1fc6d0680",
+      "data/research/r344_cache/ai_hs300_industry_relative_strength_quality_h20_sl20_2025-01-02_2x_p10.parquet": "96c3fe60ecca1881b0230100132ca54eb657d478c72ad317d3e5f5aa6eba54eb",
+      "data/research/r344_cache/ai_hs300_industry_relative_strength_quality_h20_sl20_2025-11-05_2x_p10.parquet": "1ba939bea29d6c69d32491bbc0279e7f0d7200b80108b31046fc2d70d2b0a221",
+      "data/research/r344_cache/ai_hs300_industry_relative_strength_quality_h20_sl20_2026-01-05_2x_p10.parquet": "10912099d42068e8301ddba4ff903bb5429b4c49ca84e6c13338d44c249e5249",
+      "data/research/r344_cache/ai_hs300_macro_gate_quality_2022-05-05_2x_p10.parquet": "ca531e3613d31a5ef7a2d5d576f88926755bc81ca8fc541e62ca1465a4813f86",
+      "data/research/r344_cache/ai_hs300_macro_gate_quality_2022-05-05_2x_p10.trades.json": "d13e55a0bc784457c4a196a2f673adc56f78f19aa693af0e6708150d275d8452",
+      "data/research/r344_cache/ai_hs300_macro_gate_quality_2022-05-05_3x_p10.parquet": "5a1899e9f29ddf9be4d3ca201635aebd26a4508812163eb94a8261a6cfd466eb",
+      "data/research/r344_cache/ai_hs300_macro_gate_quality_2022-05-05_4x_p10.parquet": "f3090901dc87fed1d4de9b9aaa47f77c128e0abef6c78d2c47ccc2088eac6933",
+      "data/research/r344_cache/ai_hs300_macro_gate_quality_2022-05-05_5x_p10.parquet": "6f397c960dec67bad376cf7069985536c6f5bda6e2a7071c774d4f325aca3114",
+      "data/research/r344_cache/ai_hs300_macro_gate_quality_2022-05-05_5x_p10.trades.json": "733a018dda95ee59715cddadb8a0fa90a980428e3c1b8ae9f172366ec5ebd440",
+      "data/research/r344_cache/ai_hs300_macro_gate_quality_2023-01-03_2x_p10.parquet": "e71abe082a8d66396120623d0b8cc2607a8d8e296693bec10caa7c3800566894",
+      "data/research/r344_cache/ai_hs300_macro_gate_quality_2024-01-02_2x_p10.parquet": "440868c354a827a805c36221bfbaf5f555b52fbbbe4232704854c347488bcdba",
+      "data/research/r344_cache/ai_hs300_macro_gate_quality_2025-01-02_2x_p10.parquet": "92ea15cdc49356df149d4500239f7cdab1221eddc7328d7037eeab6ad7b5605d",
+      "data/research/r344_cache/ai_hs300_macro_gate_quality_2025-11-05_2x_p10.parquet": "98dbb88c0c0e2f9147d417a4ad15b5f867340873dc58e33b7564782d624ce3af",
+      "data/research/r344_cache/ai_hs300_macro_gate_quality_2026-01-05_2x_p10.parquet": "a18305a0cdd775939806f37beb8116a88a297ad4aec5fd0cd90ab77e743d971d",
+      "data/research/r344_cache/ai_hs300_quality_momentum_broad_h60_2022-05-05_2x_p50.parquet": "7a097f8a69f702676be694505ac7d8a21ed5d275ffa6167d2782dffcf9d61e96",
+      "data/research/r344_cache/ai_hs300_quality_momentum_broad_h60_2022-05-05_2x_p50.trades.json": "e6e416c5282efc5205f42d51789fe60319085afa47d3017ed454c74918acdfce",
+      "data/research/r344_cache/ai_hs300_quality_momentum_broad_h60_2022-05-05_3x_p50.parquet": "9aa5b4f89b89ee41848133787a9b22c7f6c0a64944fa9dc4210e48575eeb31bd",
+      "data/research/r344_cache/ai_hs300_quality_momentum_broad_h60_2022-05-05_4x_p50.parquet": "b8ab6d6ceb0d5924f75f4027e841b67c6abff41457407793cfad191fd7b41a74",
+      "data/research/r344_cache/ai_hs300_quality_momentum_broad_h60_2022-05-05_5x_p50.parquet": "483e4c6a25b600d6b5f348a7ca496b5658cc15f831fc57db1b2bc0c0822cd7fe",
+      "data/research/r344_cache/ai_hs300_quality_momentum_broad_h60_2022-05-05_5x_p50.trades.json": "3afd868be817684f11dd0bd08c7fed6f562376274216c04ae21dcaa8e48bd7fb"
+    },
+    "test_sha256": "1b23d653226c33cc956085318d24aa0435d81f3003d992558c4e481c7c55bad9"
+  },
+  "hypothesis": "Starting three fixed equal-capital C subaccounts 20 trading sessions apart will reduce dependence on synchronized C-sleeve entries and improve 5x net-profit breadth while retaining the frozen R344 A/B/C and defensive portfolio framework.",
+  "known_limits": [
+    "C cohort staggering is evaluated in the same 2022-2026 historical window as earlier R344 work; it is structural research, not independent out-of-sample validation.",
+    "Historical HS300 membership data and current financial/industry snapshots retain the caveats recorded in R344.",
+    "The three cohort capital accounts are modeled as separate unlevered accounts with fixed one-third initial capital and no cross-cohort rebalance.",
+    "A pass is not paper-trading authorization; independent forward validation would still be required."
+  ],
+  "performance_gates": {
+    "G1": "2x annualized return >=12%.",
+    "G10": "5x Sharpe >=1.10.",
+    "G11": "5x MDD >= -15%.",
+    "G12": "5x aggregate scaled stock trade net P&L positive.",
+    "G13": "5x top1 net-profit share <=25%.",
+    "G14": "5x top3 net-profit share <=55%.",
+    "G15": "5x top5 net-profit share <=75%.",
+    "G16": "5x distinct symbols >= R344 control.",
+    "G17": "5x top industry gross share <=45%.",
+    "G18": "5x max single-symbol loss <=20% of gross profit.",
+    "G19": "At least 5 of 6 fresh starts positive.",
+    "G2": "2x Sharpe >=1.25.",
+    "G20": "No leverage: total target weight <=100%, all target weights >=0.",
+    "G3": "2x MDD >= -15%.",
+    "G4": "2022-05-05 through 2022-12-31 return >=0%.",
+    "G5": "2023 return >=0%.",
+    "G6": "2025-11-05 through 2026-11-05 return >0%.",
+    "G7": "2x annualized return not more than 1pp below R344 center.",
+    "G8": "2x Sharpe not more than 0.10 below R344 center.",
+    "G9": "5x annualized return >=10%."
+  },
+  "preflight": {
+    "candidate_gate": "At least 30 C-eligible historical HS300 candidates exist on each of 18 cohort activation dates across the six fixed phase starts.",
+    "failed_v1": {
+      "classification": "engineering failure: panel lacked 60 trading-day warmup; zero indicators and zero candidates, no returns read",
+      "file": "r359_cohort_preflight_v1_attempt1_failure.json",
+      "sha256": "2877dbcf5b3f3022ba5e6319b8e52425b55ab62aa361b27ed2fea95dc150ea3b"
+    },
+    "final_artifact": "r359_cohort_preflight_v14.json",
+    "final_coverage_artifact": "r359_cohort_preflight_v13.json",
+    "integrity_gate": "All strategy, market, membership, industry, financial and defensive-asset fingerprints match the frozen data snapshot and remain unchanged during preflight.",
+    "no_returns_or_backtest": true,
+    "passed_v14": {
+      "all_checks": true,
+      "cohort_runner_sha256": "1fb4d4dae5f00cdc5ccca0f9b16b9b573cccbf9687b00846fc94db7a1d8348fb",
+      "file": "r359_cohort_preflight_v14.json",
+      "no_returns_or_backtest_evaluated": true,
+      "runner_sha256": "cfe5e0f767c0035ad1263f1aa9112e36a0a82493688ff69d970546437334291b",
+      "sha256": "9bb40127b9873356765cc9fa5fa848f9ac29b558859453a9d79f0d2bc7ba9351"
+    },
+    "runner": "run_r359_cohort_preflight.py"
+  },
+  "round": "R359",
+  "selection_rule": "Select only if all preflight, data integrity and performance gates pass; otherwise selected=null, research-only, production paused. No search or threshold relaxation after observing returns.",
+  "status": "post_hoc_execution_scale_corrected_v2_before_v2_replay",
+  "superseded_v1_execution_result": {
+    "file": "r359_v1_cohort_backtest_execution_scale_error.json",
+    "result_note": "r359_v1_result_execution_scale_error.md",
+    "sha256": "256568e9f98fdbc604e83a533b40463a70c8ba01ec7909bddb97ca054c961a23",
+    "status_file": "r359_v1_final_status.json",
+    "status_sha256": "16a087a08ce6b0870fb6b484a147aab0b44cf9dd1b16c6aa4d5f6def7764b250"
+  },
+  "v2_preflight_source": {
+    "artifact": "r359_cohort_preflight_v14.json",
+    "checks": "coverage and inputs unchanged; no return/backtest evaluated",
+    "sha256": "5379be60b0575ca203273166dec9e56c459db26290a38f2c4d2fdd0a537b481d"
+  }
+}

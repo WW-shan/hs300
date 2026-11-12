@@ -1,0 +1,837 @@
+{
+  "all_gates_pass": false,
+  "classification": "paired weak-regime 20-session size-only neutralization test",
+  "comparisons": {
+    "candidate_annual_change_vs_r365": 0.00399693272123991,
+    "candidate_annual_change_vs_r366_industry_only": 0.16717153227077364,
+    "candidate_annual_change_vs_r366_industry_size": 0.2669213240512096,
+    "candidate_mdd_change_vs_r365": 0.021681747374580507,
+    "candidate_minus_control_annual_2x": 9.08659849416793e-05,
+    "candidate_minus_control_annual_edge_change_vs_r365": 0.07331997978786231,
+    "candidate_minus_control_mdd_2x": -0.0383918194233267,
+    "candidate_minus_control_recent_2x": 0.001748582142097499,
+    "candidate_minus_control_sharpe_2x": -0.03576816337330002,
+    "candidate_recent_change_vs_r365": -0.05292412386457057,
+    "candidate_recent_change_vs_r366_industry_only": 0.2866546493691958,
+    "candidate_recent_change_vs_r366_industry_size": 0.04262107769904633,
+    "candidate_sharpe_change_vs_r365": 0.011325675926940004
+  },
+  "decision": {
+    "leverage": "none",
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "research_only_no_candidate_after_r367"
+  },
+  "gates": {
+    "G1_size_only_annual_above_industry_plus_size": true,
+    "G2_size_only_annual_above_industry_only": true,
+    "G3_size_only_recent_improves_5pp_vs_industry_plus_size": false,
+    "G4_candidate_annual_not_more_than_15pp_below_raw_r365": true,
+    "G5_candidate_sharpe_within_0_15_of_raw_r365": true,
+    "G6_candidate_mdd_within_3pp_of_raw_r365": true,
+    "G7_candidate_annual_above_matched_control": true,
+    "G8_at_least_4_of_6_candidate_phases_positive_and_3x_nonnegative": true,
+    "G9_unlevered": true
+  },
+  "hypothesis": "R366 showed that industry-only neutralization led to a negative recent year (-26.02%), while industry+size neutralization raised recent return to -1.62% and reduced MDD to -20.20% but cut annual return to 4.53%. R367 removes the industry part and applies only existing log_float_mv score residualization to both candidate/control to isolate whether size control accounts for those changes. No other rule changes.",
+  "input_hashes_after": {
+    "alternative_config": "c144d4207b9d35e649f6a3fbc567f2200c29cf1e9b811bb85bfec991ea10ab42",
+    "alternative_factors": {
+      "bytes": 251443214,
+      "files": 2143,
+      "sha256": "154094de9374ac3cb59722466a0dccbcea41b35c93a4b9598fe3354a99a7a846"
+    },
+    "custom_factors": {
+      "bytes": 15028,
+      "files": 33,
+      "sha256": "145a2df2753347cf7877bdf04293789023b575f81db2b386c2cafcea6542ac3d"
+    },
+    "custom_signals": {
+      "bytes": 9803,
+      "files": 23,
+      "sha256": "b3eaab96fed5bb63540a22451ea139d7032e28a2a48b4f5959b5d24d0187272e"
+    },
+    "financials": {
+      "financials/balance_sheet/part.parquet": "9253a260bb045c37c0409617bdb3082624e7f21f253d35a147036e5eeac47283",
+      "financials/cash_flow/part.parquet": "f34a3365dd92713d91a007b784b9ac8cd266cc7e7d19b5ab1df75a82381e3b5b",
+      "financials/income/part.parquet": "9bf784d2939de14c4f9da2e96ad3fbecd3c87ae85e8c7dfea056b636ee8164e2",
+      "financials/metrics/part.parquet": "d458c82807fbd0957344021930ba065b478dae78d7bb17a6aea9e4cab4757886",
+      "financials/shares/part.parquet": "f322f1d279c08f852b7edb16a6a15002bce0dd095623326e25d0cb1e05851177"
+    },
+    "industry_snapshot": "702605875a44b978baaef9a6815ad64561bf69c0cc25f803a65875df24dc41f2",
+    "instruments": "f02713442043b09cc03bb0c81812c964d1eeae00cb2a5116bf75d5cd3b4b8efa",
+    "membership_daily": "6e5114f16ecd936be0bf7fb62f474d169dca25f1bad78bb27fd0ea413d3ed748",
+    "membership_monthly": "5f3284b954847ccf63d7349d884c2a986dec7a580cf9abd38075c7ed8f810d36",
+    "production_enriched": {
+      "bytes": 47704926,
+      "files": 2143,
+      "sha256": "7ce95ff388a8c9c6ccc9c989092b0b52875519993e97c076a81ba5ef378a9209"
+    },
+    "r365_backtest": "3f4536480bf9ae0e7331a628ff2fac9a2132b0816b2784190c335e24b366861b",
+    "r365_gate_audit": "7a4528bceadc35c1261479e49c4a067cdbd704592850ef748d8f845af41a0f61",
+    "r365_preregistration": "f4012a10d1543d1a907c42ee013835b6bf9fa3668d0d9ad7a42324e4cc6140da",
+    "r366_backtest": "4e43d5eaf485f4666ff27d04cdd4c5a137e02a4cfe6e0b4c58f66332532683f2",
+    "r366_preregistration": "a46952bde0a176c3bccb13c3e31eaf17c01e7889d32548b426171cedb64785c3",
+    "r40_enriched": {
+      "bytes": 49897492,
+      "files": 1544,
+      "sha256": "7127e4b2999e13455eff1ca0714bddb34a517de8e1e6f75e132f780506ffae2b"
+    },
+    "raw_daily": {
+      "bytes": 21308282,
+      "files": 2143,
+      "sha256": "2f46b1dc8231c56b91620884367372aa831a694389dd743d5b39c4996628bb52"
+    },
+    "regime_history": "474332dcb2d0b3bc7b27c37973c78bb7c7f4e6bff535350a07dc4d8d7819c058"
+  },
+  "input_hashes_before": {
+    "alternative_config": "c144d4207b9d35e649f6a3fbc567f2200c29cf1e9b811bb85bfec991ea10ab42",
+    "alternative_factors": {
+      "bytes": 251443214,
+      "files": 2143,
+      "sha256": "154094de9374ac3cb59722466a0dccbcea41b35c93a4b9598fe3354a99a7a846"
+    },
+    "custom_factors": {
+      "bytes": 15028,
+      "files": 33,
+      "sha256": "145a2df2753347cf7877bdf04293789023b575f81db2b386c2cafcea6542ac3d"
+    },
+    "custom_signals": {
+      "bytes": 9803,
+      "files": 23,
+      "sha256": "b3eaab96fed5bb63540a22451ea139d7032e28a2a48b4f5959b5d24d0187272e"
+    },
+    "financials": {
+      "financials/balance_sheet/part.parquet": "9253a260bb045c37c0409617bdb3082624e7f21f253d35a147036e5eeac47283",
+      "financials/cash_flow/part.parquet": "f34a3365dd92713d91a007b784b9ac8cd266cc7e7d19b5ab1df75a82381e3b5b",
+      "financials/income/part.parquet": "9bf784d2939de14c4f9da2e96ad3fbecd3c87ae85e8c7dfea056b636ee8164e2",
+      "financials/metrics/part.parquet": "d458c82807fbd0957344021930ba065b478dae78d7bb17a6aea9e4cab4757886",
+      "financials/shares/part.parquet": "f322f1d279c08f852b7edb16a6a15002bce0dd095623326e25d0cb1e05851177"
+    },
+    "industry_snapshot": "702605875a44b978baaef9a6815ad64561bf69c0cc25f803a65875df24dc41f2",
+    "instruments": "f02713442043b09cc03bb0c81812c964d1eeae00cb2a5116bf75d5cd3b4b8efa",
+    "membership_daily": "6e5114f16ecd936be0bf7fb62f474d169dca25f1bad78bb27fd0ea413d3ed748",
+    "membership_monthly": "5f3284b954847ccf63d7349d884c2a986dec7a580cf9abd38075c7ed8f810d36",
+    "production_enriched": {
+      "bytes": 47704926,
+      "files": 2143,
+      "sha256": "7ce95ff388a8c9c6ccc9c989092b0b52875519993e97c076a81ba5ef378a9209"
+    },
+    "r365_backtest": "3f4536480bf9ae0e7331a628ff2fac9a2132b0816b2784190c335e24b366861b",
+    "r365_gate_audit": "7a4528bceadc35c1261479e49c4a067cdbd704592850ef748d8f845af41a0f61",
+    "r365_preregistration": "f4012a10d1543d1a907c42ee013835b6bf9fa3668d0d9ad7a42324e4cc6140da",
+    "r366_backtest": "4e43d5eaf485f4666ff27d04cdd4c5a137e02a4cfe6e0b4c58f66332532683f2",
+    "r366_preregistration": "a46952bde0a176c3bccb13c3e31eaf17c01e7889d32548b426171cedb64785c3",
+    "r40_enriched": {
+      "bytes": 49897492,
+      "files": 1544,
+      "sha256": "7127e4b2999e13455eff1ca0714bddb34a517de8e1e6f75e132f780506ffae2b"
+    },
+    "raw_daily": {
+      "bytes": 21308282,
+      "files": 2143,
+      "sha256": "2f46b1dc8231c56b91620884367372aa831a694389dd743d5b39c4996628bb52"
+    },
+    "regime_history": "474332dcb2d0b3bc7b27c37973c78bb7c7f4e6bff535350a07dc4d8d7819c058"
+  },
+  "input_isolation": {
+    "alternative_timeseries_is_symlink": false,
+    "copied_enriched_partitions_after_r40": 15,
+    "isolated": true,
+    "materialized_paths": [
+      "adj_factor",
+      "adj_factor_etf",
+      "financials",
+      "instruments",
+      "instruments_etf",
+      "instruments_index",
+      "kline_daily",
+      "kline_etf_daily",
+      "kline_etf_enriched",
+      "kline_index_daily",
+      "kline_index_enriched",
+      "mainline_history",
+      "regime_history",
+      "ext_data",
+      "user_data/custom_factors",
+      "user_data/custom_signals"
+    ],
+    "raw_daily_is_symlink": false,
+    "remaining_top_level_symlinks": [],
+    "required_reversal_factors": [
+      "cf_weak_reversal_blend.json",
+      "uf_close_position_reversal.json",
+      "uf_intraday_reversal.json"
+    ]
+  },
+  "limits": [
+    "R365-R367 use overlapping history; no independent OOS evidence.",
+    "THS industry mapping is not used by the R367 rule, but the alpha inputs ext_alt industry-relative-strength and industry momentum remain sector-related.",
+    "log_float_mv is a turnover-implied size proxy and inherits turnover/share-count limits.",
+    "Neutralization is applied to all score legs, including the industry-related factor legs, changing the ranking construct.",
+    "Historical HS300 membership snapshots have pre-2020-12 monthly granularity and survivorship risks.",
+    "2x/3x labels refer only to transaction cost; gross exposure is capped at 100%."
+  ],
+  "metrics": {
+    "size": {
+      "candidate": {
+        "2x": {
+          "annual": 0.3121838270238739,
+          "days": 1078,
+          "mdd": -0.28684349318757096,
+          "sharpe": 1.0063530234662055,
+          "total_return": 2.19364611
+        },
+        "3x": {
+          "annual": 0.2886607463579349,
+          "days": 1078,
+          "mdd": -0.2922812619624712,
+          "sharpe": 0.9502936021858253,
+          "total_return": 1.95604742
+        },
+        "phase_2x": {
+          "2022-05-05": {
+            "annual": 0.3121838270238739,
+            "days": 1078,
+            "mdd": -0.28684349318757096,
+            "sharpe": 1.0063530234662055,
+            "total_return": 2.19364611
+          },
+          "2023-01-03": {
+            "annual": 0.36360941266999447,
+            "days": 913,
+            "mdd": -0.28679298932228625,
+            "sharpe": 1.0946286994857795,
+            "total_return": 2.07220003
+          },
+          "2024-01-02": {
+            "annual": 0.4393290722464456,
+            "days": 671,
+            "mdd": -0.2860789679232353,
+            "sharpe": 1.1860842354910452,
+            "total_return": 1.63332839
+          },
+          "2025-01-02": {
+            "annual": 0.5439832167620104,
+            "days": 429,
+            "mdd": -0.28489335289724294,
+            "sharpe": 1.3768421357394303,
+            "total_return": 1.0911873600000002
+          },
+          "2025-10-14": {
+            "annual": 0.01058673633536178,
+            "days": 243,
+            "mdd": -0.2758535940322203,
+            "sharpe": 0.20960729626136732,
+            "total_return": 0.01016449999999991
+          },
+          "2026-01-05": {
+            "annual": 0.0024391557119041174,
+            "days": 186,
+            "mdd": -0.27700945365236784,
+            "sharpe": 0.1935478430283862,
+            "total_return": 0.001790069999999977
+          }
+        },
+        "recent_2x": 0.026457066362878923,
+        "scorecard": {
+          "size_candidate_2022-05-05_2x": {
+            "metrics": {
+              "annual": 0.3121838270238739,
+              "days": 1078,
+              "mdd": -0.28684349318757096,
+              "sharpe": 1.0063530234662055,
+              "total_return": 2.19364611
+            },
+            "trades": 471
+          },
+          "size_candidate_2022-05-05_3x": {
+            "metrics": {
+              "annual": 0.2886607463579349,
+              "days": 1078,
+              "mdd": -0.2922812619624712,
+              "sharpe": 0.9502936021858253,
+              "total_return": 1.95604742
+            },
+            "trades": 471
+          },
+          "size_candidate_2023-01-03_2x": {
+            "metrics": {
+              "annual": 0.36360941266999447,
+              "days": 913,
+              "mdd": -0.28679298932228625,
+              "sharpe": 1.0946286994857795,
+              "total_return": 2.07220003
+            },
+            "trades": 398
+          },
+          "size_candidate_2023-01-03_3x": {
+            "metrics": {
+              "annual": 0.33730623408699967,
+              "days": 913,
+              "mdd": -0.2881058354281669,
+              "sharpe": 1.0362901427879434,
+              "total_return": 1.8630934700000004
+            },
+            "trades": 398
+          },
+          "size_candidate_2024-01-02_2x": {
+            "metrics": {
+              "annual": 0.4393290722464456,
+              "days": 671,
+              "mdd": -0.2860789679232353,
+              "sharpe": 1.1860842354910452,
+              "total_return": 1.63332839
+            },
+            "trades": 303
+          },
+          "size_candidate_2024-01-02_3x": {
+            "metrics": {
+              "annual": 0.41444914627431273,
+              "days": 671,
+              "mdd": -0.28946169584138803,
+              "sharpe": 1.1377533346559432,
+              "total_return": 1.51403371
+            },
+            "trades": 303
+          },
+          "size_candidate_2025-01-02_2x": {
+            "metrics": {
+              "annual": 0.5439832167620104,
+              "days": 429,
+              "mdd": -0.28489335289724294,
+              "sharpe": 1.3768421357394303,
+              "total_return": 1.0911873600000002
+            },
+            "trades": 190
+          },
+          "size_candidate_2025-01-02_3x": {
+            "metrics": {
+              "annual": 0.5174069769563563,
+              "days": 429,
+              "mdd": -0.2889052206630669,
+              "sharpe": 1.3272022184279424,
+              "total_return": 1.03042086
+            },
+            "trades": 190
+          },
+          "size_candidate_2025-10-14_2x": {
+            "metrics": {
+              "annual": 0.01058673633536178,
+              "days": 243,
+              "mdd": -0.2758535940322203,
+              "sharpe": 0.20960729626136732,
+              "total_return": 0.01016449999999991
+            },
+            "trades": 115
+          },
+          "size_candidate_2025-10-14_3x": {
+            "metrics": {
+              "annual": -0.009122368075534348,
+              "days": 243,
+              "mdd": -0.2805435924946458,
+              "sharpe": 0.15517858560931172,
+              "total_return": -0.008761959999999958
+            },
+            "trades": 115
+          },
+          "size_candidate_2026-01-05_2x": {
+            "metrics": {
+              "annual": 0.0024391557119041174,
+              "days": 186,
+              "mdd": -0.27700945365236784,
+              "sharpe": 0.1935478430283862,
+              "total_return": 0.001790069999999977
+            },
+            "trades": 85
+          },
+          "size_candidate_2026-01-05_3x": {
+            "metrics": {
+              "annual": -0.015269344998043444,
+              "days": 186,
+              "mdd": -0.28103562432789797,
+              "sharpe": 0.1469005571514544,
+              "total_return": -0.011232540000000069
+            },
+            "trades": 85
+          }
+        }
+      },
+      "control": {
+        "2x": {
+          "annual": 0.31209296103893225,
+          "days": 1078,
+          "mdd": -0.24845167376424426,
+          "sharpe": 1.0421211868395055,
+          "total_return": 2.1927010499999997
+        },
+        "3x": {
+          "annual": 0.28611795478078594,
+          "days": 1078,
+          "mdd": -0.2562233787937337,
+          "sharpe": 0.9773294146946482,
+          "total_return": 1.9311991699999997
+        },
+        "phase_2x": {
+          "2022-05-05": {
+            "annual": 0.31209296103893225,
+            "days": 1078,
+            "mdd": -0.24845167376424426,
+            "sharpe": 1.0421211868395055,
+            "total_return": 2.1927010499999997
+          },
+          "2023-01-03": {
+            "annual": 0.32153600941220417,
+            "days": 913,
+            "mdd": -0.24788342606547953,
+            "sharpe": 1.038025693379938,
+            "total_return": 1.7427780899999998
+          },
+          "2024-01-02": {
+            "annual": 0.4081621237509019,
+            "days": 671,
+            "mdd": -0.24704399306494906,
+            "sharpe": 1.1859702476189964,
+            "total_return": 1.4844331
+          },
+          "2025-01-02": {
+            "annual": 0.6611433080482596,
+            "days": 429,
+            "mdd": -0.24802773463070782,
+            "sharpe": 1.6356545450091975,
+            "total_return": 1.3677847500000002
+          },
+          "2025-10-14": {
+            "annual": -0.03797851217119841,
+            "days": 243,
+            "mdd": -0.26435641204018523,
+            "sharpe": 0.032994898089898576,
+            "total_return": -0.03649928000000002
+          },
+          "2026-01-05": {
+            "annual": 0.019281501419019076,
+            "days": 186,
+            "mdd": -0.2367460075055734,
+            "sharpe": 0.22016181741890695,
+            "total_return": 0.01411907999999995
+          }
+        },
+        "recent_2x": 0.024708484220781424,
+        "scorecard": {
+          "size_control_2022-05-05_2x": {
+            "metrics": {
+              "annual": 0.31209296103893225,
+              "days": 1078,
+              "mdd": -0.24845167376424426,
+              "sharpe": 1.0421211868395055,
+              "total_return": 2.1927010499999997
+            },
+            "trades": 473
+          },
+          "size_control_2022-05-05_3x": {
+            "metrics": {
+              "annual": 0.28611795478078594,
+              "days": 1078,
+              "mdd": -0.2562233787937337,
+              "sharpe": 0.9773294146946482,
+              "total_return": 1.9311991699999997
+            },
+            "trades": 473
+          },
+          "size_control_2023-01-03_2x": {
+            "metrics": {
+              "annual": 0.32153600941220417,
+              "days": 913,
+              "mdd": -0.24788342606547953,
+              "sharpe": 1.038025693379938,
+              "total_return": 1.7427780899999998
+            },
+            "trades": 401
+          },
+          "size_control_2023-01-03_3x": {
+            "metrics": {
+              "annual": 0.29938367701549784,
+              "days": 913,
+              "mdd": -0.2522205959076079,
+              "sharpe": 0.9825751484515063,
+              "total_return": 1.5800082299999998
+            },
+            "trades": 401
+          },
+          "size_control_2024-01-02_2x": {
+            "metrics": {
+              "annual": 0.4081621237509019,
+              "days": 671,
+              "mdd": -0.24704399306494906,
+              "sharpe": 1.1859702476189964,
+              "total_return": 1.4844331
+            },
+            "trades": 306
+          },
+          "size_control_2024-01-02_3x": {
+            "metrics": {
+              "annual": 0.36969272600828607,
+              "days": 671,
+              "mdd": -0.2535207840409479,
+              "sharpe": 1.104552774089915,
+              "total_return": 1.30804402
+            },
+            "trades": 306
+          },
+          "size_control_2025-01-02_2x": {
+            "metrics": {
+              "annual": 0.6611433080482596,
+              "days": 429,
+              "mdd": -0.24802773463070782,
+              "sharpe": 1.6356545450091975,
+              "total_return": 1.3677847500000002
+            },
+            "trades": 190
+          },
+          "size_control_2025-01-02_3x": {
+            "metrics": {
+              "annual": 0.6293544088350138,
+              "days": 429,
+              "mdd": -0.25339089695348194,
+              "sharpe": 1.5772677493904939,
+              "total_return": 1.29134202
+            },
+            "trades": 190
+          },
+          "size_control_2025-10-14_2x": {
+            "metrics": {
+              "annual": -0.03797851217119841,
+              "days": 243,
+              "mdd": -0.26435641204018523,
+              "sharpe": 0.032994898089898576,
+              "total_return": -0.03649928000000002
+            },
+            "trades": 116
+          },
+          "size_control_2025-10-14_3x": {
+            "metrics": {
+              "annual": -0.05695779866670281,
+              "days": 243,
+              "mdd": -0.2690309261203431,
+              "sharpe": -0.02979345335322816,
+              "total_return": -0.05476064000000003
+            },
+            "trades": 116
+          },
+          "size_control_2026-01-05_2x": {
+            "metrics": {
+              "annual": 0.019281501419019076,
+              "days": 186,
+              "mdd": -0.2367460075055734,
+              "sharpe": 0.22016181741890695,
+              "total_return": 0.01411907999999995
+            },
+            "trades": 86
+          },
+          "size_control_2026-01-05_3x": {
+            "metrics": {
+              "annual": 0.0007041947672057347,
+              "days": 186,
+              "mdd": -0.23711994697055894,
+              "sharpe": 0.16189458003604199,
+              "total_return": 0.0005169200000001428
+            },
+            "trades": 86
+          }
+        }
+      }
+    }
+  },
+  "preflight_sha256": "dd81068f99c419f88d8688130613a8c075704af53ef8394b4ced98e772de1571",
+  "preregistration_sha256": "7eed90f7c9124ea91715d1777a5832f81bce6b56008caca87e8882a16d6b145b",
+  "round": "R367",
+  "rule": {
+    "candidate_scoring": {
+      "cf_weak_reversal_blend": 0.2,
+      "ext_alt_hs300_industry_mom_20d": 0.15,
+      "ext_alt_hs300_stock_rel_industry_20d": 0.35,
+      "uf_cash_quality": 0.2,
+      "uf_quality_value_defensive": 0.1
+    },
+    "candidate_strategy": "ai_hs300_weak_reversal_blend_size_h20_sl20",
+    "component_weights": {
+      "uf_close_position_reversal": 0.5,
+      "uf_intraday_reversal": 0.5
+    },
+    "control_scoring": {
+      "ext_alt_hs300_industry_mom_20d": 0.15,
+      "ext_alt_hs300_stock_rel_industry_20d": 0.35,
+      "uf_cash_quality": 0.2,
+      "uf_quality_value_defensive": 0.3
+    },
+    "control_strategy": "ai_hs300_quality_size_h20_sl20",
+    "execution": "T close ranking; T+1 open; 2x/3x transaction-cost scenarios; no leverage or borrowing",
+    "factor": "cf_weak_reversal_blend",
+    "holding_sessions": 20,
+    "industry_neutralization": false,
+    "max_exposure_pct": 1.0,
+    "max_positions": 10,
+    "neutralization": {
+      "exclude": [],
+      "shrink": 1.0,
+      "styles": [
+        "log_float_mv"
+      ]
+    },
+    "regime_filter": {
+      "alignment": "T-1",
+      "states": [
+        "weak"
+      ]
+    },
+    "stop_loss": -0.2
+  },
+  "scorecard": {
+    "candidate": {
+      "size_candidate_2022-05-05_2x": {
+        "metrics": {
+          "annual": 0.3121838270238739,
+          "days": 1078,
+          "mdd": -0.28684349318757096,
+          "sharpe": 1.0063530234662055,
+          "total_return": 2.19364611
+        },
+        "trades": 471
+      },
+      "size_candidate_2022-05-05_3x": {
+        "metrics": {
+          "annual": 0.2886607463579349,
+          "days": 1078,
+          "mdd": -0.2922812619624712,
+          "sharpe": 0.9502936021858253,
+          "total_return": 1.95604742
+        },
+        "trades": 471
+      },
+      "size_candidate_2023-01-03_2x": {
+        "metrics": {
+          "annual": 0.36360941266999447,
+          "days": 913,
+          "mdd": -0.28679298932228625,
+          "sharpe": 1.0946286994857795,
+          "total_return": 2.07220003
+        },
+        "trades": 398
+      },
+      "size_candidate_2023-01-03_3x": {
+        "metrics": {
+          "annual": 0.33730623408699967,
+          "days": 913,
+          "mdd": -0.2881058354281669,
+          "sharpe": 1.0362901427879434,
+          "total_return": 1.8630934700000004
+        },
+        "trades": 398
+      },
+      "size_candidate_2024-01-02_2x": {
+        "metrics": {
+          "annual": 0.4393290722464456,
+          "days": 671,
+          "mdd": -0.2860789679232353,
+          "sharpe": 1.1860842354910452,
+          "total_return": 1.63332839
+        },
+        "trades": 303
+      },
+      "size_candidate_2024-01-02_3x": {
+        "metrics": {
+          "annual": 0.41444914627431273,
+          "days": 671,
+          "mdd": -0.28946169584138803,
+          "sharpe": 1.1377533346559432,
+          "total_return": 1.51403371
+        },
+        "trades": 303
+      },
+      "size_candidate_2025-01-02_2x": {
+        "metrics": {
+          "annual": 0.5439832167620104,
+          "days": 429,
+          "mdd": -0.28489335289724294,
+          "sharpe": 1.3768421357394303,
+          "total_return": 1.0911873600000002
+        },
+        "trades": 190
+      },
+      "size_candidate_2025-01-02_3x": {
+        "metrics": {
+          "annual": 0.5174069769563563,
+          "days": 429,
+          "mdd": -0.2889052206630669,
+          "sharpe": 1.3272022184279424,
+          "total_return": 1.03042086
+        },
+        "trades": 190
+      },
+      "size_candidate_2025-10-14_2x": {
+        "metrics": {
+          "annual": 0.01058673633536178,
+          "days": 243,
+          "mdd": -0.2758535940322203,
+          "sharpe": 0.20960729626136732,
+          "total_return": 0.01016449999999991
+        },
+        "trades": 115
+      },
+      "size_candidate_2025-10-14_3x": {
+        "metrics": {
+          "annual": -0.009122368075534348,
+          "days": 243,
+          "mdd": -0.2805435924946458,
+          "sharpe": 0.15517858560931172,
+          "total_return": -0.008761959999999958
+        },
+        "trades": 115
+      },
+      "size_candidate_2026-01-05_2x": {
+        "metrics": {
+          "annual": 0.0024391557119041174,
+          "days": 186,
+          "mdd": -0.27700945365236784,
+          "sharpe": 0.1935478430283862,
+          "total_return": 0.001790069999999977
+        },
+        "trades": 85
+      },
+      "size_candidate_2026-01-05_3x": {
+        "metrics": {
+          "annual": -0.015269344998043444,
+          "days": 186,
+          "mdd": -0.28103562432789797,
+          "sharpe": 0.1469005571514544,
+          "total_return": -0.011232540000000069
+        },
+        "trades": 85
+      }
+    },
+    "control": {
+      "size_control_2022-05-05_2x": {
+        "metrics": {
+          "annual": 0.31209296103893225,
+          "days": 1078,
+          "mdd": -0.24845167376424426,
+          "sharpe": 1.0421211868395055,
+          "total_return": 2.1927010499999997
+        },
+        "trades": 473
+      },
+      "size_control_2022-05-05_3x": {
+        "metrics": {
+          "annual": 0.28611795478078594,
+          "days": 1078,
+          "mdd": -0.2562233787937337,
+          "sharpe": 0.9773294146946482,
+          "total_return": 1.9311991699999997
+        },
+        "trades": 473
+      },
+      "size_control_2023-01-03_2x": {
+        "metrics": {
+          "annual": 0.32153600941220417,
+          "days": 913,
+          "mdd": -0.24788342606547953,
+          "sharpe": 1.038025693379938,
+          "total_return": 1.7427780899999998
+        },
+        "trades": 401
+      },
+      "size_control_2023-01-03_3x": {
+        "metrics": {
+          "annual": 0.29938367701549784,
+          "days": 913,
+          "mdd": -0.2522205959076079,
+          "sharpe": 0.9825751484515063,
+          "total_return": 1.5800082299999998
+        },
+        "trades": 401
+      },
+      "size_control_2024-01-02_2x": {
+        "metrics": {
+          "annual": 0.4081621237509019,
+          "days": 671,
+          "mdd": -0.24704399306494906,
+          "sharpe": 1.1859702476189964,
+          "total_return": 1.4844331
+        },
+        "trades": 306
+      },
+      "size_control_2024-01-02_3x": {
+        "metrics": {
+          "annual": 0.36969272600828607,
+          "days": 671,
+          "mdd": -0.2535207840409479,
+          "sharpe": 1.104552774089915,
+          "total_return": 1.30804402
+        },
+        "trades": 306
+      },
+      "size_control_2025-01-02_2x": {
+        "metrics": {
+          "annual": 0.6611433080482596,
+          "days": 429,
+          "mdd": -0.24802773463070782,
+          "sharpe": 1.6356545450091975,
+          "total_return": 1.3677847500000002
+        },
+        "trades": 190
+      },
+      "size_control_2025-01-02_3x": {
+        "metrics": {
+          "annual": 0.6293544088350138,
+          "days": 429,
+          "mdd": -0.25339089695348194,
+          "sharpe": 1.5772677493904939,
+          "total_return": 1.29134202
+        },
+        "trades": 190
+      },
+      "size_control_2025-10-14_2x": {
+        "metrics": {
+          "annual": -0.03797851217119841,
+          "days": 243,
+          "mdd": -0.26435641204018523,
+          "sharpe": 0.032994898089898576,
+          "total_return": -0.03649928000000002
+        },
+        "trades": 116
+      },
+      "size_control_2025-10-14_3x": {
+        "metrics": {
+          "annual": -0.05695779866670281,
+          "days": 243,
+          "mdd": -0.2690309261203431,
+          "sharpe": -0.02979345335322816,
+          "total_return": -0.05476064000000003
+        },
+        "trades": 116
+      },
+      "size_control_2026-01-05_2x": {
+        "metrics": {
+          "annual": 0.019281501419019076,
+          "days": 186,
+          "mdd": -0.2367460075055734,
+          "sharpe": 0.22016181741890695,
+          "total_return": 0.01411907999999995
+        },
+        "trades": 86
+      },
+      "size_control_2026-01-05_3x": {
+        "metrics": {
+          "annual": 0.0007041947672057347,
+          "days": 186,
+          "mdd": -0.23711994697055894,
+          "sharpe": 0.16189458003604199,
+          "total_return": 0.0005169200000001428
+        },
+        "trades": 86
+      }
+    }
+  },
+  "selected": null
+}

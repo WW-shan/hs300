@@ -60,6 +60,12 @@ data/**
 data/strategies/ai/.iterations/**/__pycache__/
 data/strategies/ai/.iterations/**/*.py[cod]
 
+# R368 reconciliation source curves are part of the research evidence and are
+# required by the checked-in reproducibility tests; other research caches stay ignored.
+!data/research/
+!data/research/r368_cache/
+!data/research/r368_cache/*.parquet
+
 # 因子研究定义、版本和台账随仓库版本化；运行时面板和缓存仍忽略。
 !data/factor_research/
 !data/factor_research/**
@@ -134,6 +140,11 @@ reports/cursor_tickflow_pro_rate_limit_p0.bundle
 !data/user_data/
 !data/user_data/custom_factors/
 !data/user_data/custom_factors/*.json
+# Application defaults live in code; keep per-user signal definitions private.
+!data/user_data/custom_signals/
+# Only the fixed R360 research signal is versioned because a checked-in AI
+# research strategy depends on this exact definition.
+!data/user_data/custom_signals/r360_rel_strength_fade.json
 # 注意: data/user_data/api_tokens.json 含密钥, 保持忽略; 其余运行时数据 (K线/回测/缓存) 仍不入库。
 
 # ===== Local runtime state (never commit) =====

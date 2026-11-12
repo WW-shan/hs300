@@ -1,0 +1,155 @@
+{
+  "comparison": "Frozen R359 v2 portfolio and R344 standalone A/B/C sleeve caches; only B changes. Portfolio uses the same monthly risk-parity, 10% C cap, 15% vol target and gold defensive ballast.",
+  "created_at": "2026-11-05T21:09:15.321806+00:00",
+  "decision": "If preflight fails, record without reading returns. If preflight passes, run exactly the fixed 2x/5x comparison; retain research-only regardless of gates, with selected=null and no paper target/orders/production write.",
+  "diagnostics": [
+    "Standalone B sleeve 2x/5x performance, MDD, turnover, trade count, signal count, early exits, stop-loss and max-hold counts.",
+    "Year-by-year returns, 6 fixed starts, 2x and 5x costs, 5x top1/top3/top5 net contribution, industry concentration.",
+    "No threshold/window/weight sweep. No selection or threshold changes after returns are observed."
+  ],
+  "frozen_inputs": {
+    "baseline_preregistration_path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r359_v2_preregistration.json",
+    "baseline_preregistration_sha256": "9396adfabe68a8b243399bf85b9d215bdc02a38f49fc917b091723f3999ec7b9",
+    "baseline_result_path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r359_v2_cohort_ensemble_backtest.json",
+    "baseline_result_sha256": "2dc6c3c9171291ff94b573b8533d84d33e7a6dfd612297d02883256f982f5ef5",
+    "candidate_strategy_path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r360_strategies/ai_hs300_industry_fade_quality_h20_sl20.py",
+    "candidate_strategy_sha256": "b439f5971337d8e74e3b8c655be5f60a443c0d566632aec88ab414113f085d6e",
+    "code_sha256": {
+      "backend/app/backtest/engine.py": "e3d840cdd08febe114cfeb731d7fc5f7ed14915a5bd5a180e10b9e73f9ac1522",
+      "backend/app/backtest/strategy.py": "318b6548354c587965c321921faafcbb7c4be0012fefe3ada0ced97fae06fd4e",
+      "backend/app/factors/store.py": "ae0300f95d92d35372bd26b7138a98abcc72a6e0ee7599ff0052e12fb46ae626",
+      "backend/app/strategy/engine.py": "d0e207d0593b37157848925fc19bda73d3849651dd0e8469d6912caf4295519e",
+      "backend/app/strategy/scoring.py": "c4732a2c88150e960e6fa060bff18c819f0d90bc586a6c1457a53bcc47eaabad",
+      "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r313_concentration_audit.py": "89bd89fa50b2fb1328ecf5a351e8b4bc498cdd99d42fd90adba0ca5d071927e5",
+      "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r315_holding_bootstrap.py": "f25bb8bcff54c6eb29ce2f98511eb1e4b7127546c04b38685a7352978ba0cc3f",
+      "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r324_defensive_ballast.py": "7184c71b8c5922dbd92b91eb1c33287bacb1ed3c7f1cfe3c8a4ae8e30059c806",
+      "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r326_gold_concentration.py": "85c9eab77902be9e22a6aa42e24895bb22722b72e71d36130115d324e4d99151",
+      "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r331_three_asset_bucket.py": "63397c2e4725d286df7f583ab9a5679e67b0ed4ae58782df0f9323471564b8f6",
+      "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r344_extended_window.py": "fa8df404badff554f974439490139f7e17ccd5dcd855507f3c2552d350132859",
+      "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r359_cohort_ensemble.py": "b40cd1bd8d42df22032945abe53fa475b2169e95bca6754181c3adeee31ac6e3",
+      "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r359_cohort_preflight.py": "cfe5e0f767c0035ad1263f1aa9112e36a0a82493688ff69d970546437334291b",
+      "data/strategies/ai/ai_hs300_industry_relative_strength_quality_h20_sl20.py": "e785a540c23ecbeab625ae5349c52293c8659011bf224f80960d6e728bcb382e",
+      "data/strategies/ai/ai_hs300_macro_gate_quality.py": "8cc54b21b2508bf35527687bac061518e8d8caac9887a7e86a07345bdc33526e",
+      "data/strategies/ai/ai_hs300_quality_momentum_broad_h60.py": "6a120d44e00be96bccc1641bcec300f1bf62f1a1af56476bc37fc4561495051d",
+      "scripts/backtest_r112_dual_sleeve_risk_parity.py": "94c615bedbe9c5afa7fd3720e36bc20a3a8ede9046715efc9bbf6841458bd1ae",
+      "scripts/backtest_r114_b_vol_target.py": "6c32607d03b1971cc059786865c932ae81c2e7512b2245dcbf8ecfa5d63658b6",
+      "scripts/backtest_r239_concentration_audit.py": "7cbf0cf9e6b6d75531c9e99af712cde74bafdac9c895fd5eb59db4292c1695ee"
+    },
+    "data_fingerprints": {
+      "alternative_config": "c144d4207b9d35e649f6a3fbc567f2200c29cf1e9b811bb85bfec991ea10ab42",
+      "alternative_factors": {
+        "bytes": 251443214,
+        "files": 2143,
+        "sha256": "2fed5684eb1742095094f00a8ff38afd7ed7242c9d2ee52b824dc5be88f1467e"
+      },
+      "custom_factors": {
+        "bytes": 13901,
+        "files": 30,
+        "sha256": "f6c801168a52839444c6abfdf2bad4520381365544ca1ef360e67c29c4d62f28"
+      },
+      "custom_signals": {
+        "bytes": 9803,
+        "files": 23,
+        "sha256": "90f1a83476cbc0459c0f088715e67e45252c45440e9c0e4c7ff94e047429a291"
+      },
+      "defensive_assets": {
+        "dividend_etf_qfq.parquet": "0c135eff8187948ed364f5f2d7ced64d5c39b977bba25b832af33b85e1245df1",
+        "gold_etf_qfq.parquet": "1a1c16e894ac500da3167e23cf68d59a46d66c6d1aa1940f09957d7ced70ec75",
+        "treasury_etf_qfq.parquet": "4bd6510f1e2b0bd0016348eb144725944a45566d2bf30d335ca80214a1f940eb"
+      },
+      "financials": {
+        "financials/balance_sheet/part.parquet": "9253a260bb045c37c0409617bdb3082624e7f21f253d35a147036e5eeac47283",
+        "financials/cash_flow/part.parquet": "f34a3365dd92713d91a007b784b9ac8cd266cc7e7d19b5ab1df75a82381e3b5b",
+        "financials/income/part.parquet": "9bf784d2939de14c4f9da2e96ad3fbecd3c87ae85e8c7dfea056b636ee8164e2",
+        "financials/metrics/part.parquet": "d458c82807fbd0957344021930ba065b478dae78d7bb17a6aea9e4cab4757886",
+        "financials/shares/part.parquet": "f322f1d279c08f852b7edb16a6a15002bce0dd095623326e25d0cb1e05851177"
+      },
+      "industry_snapshot": "702605875a44b978baaef9a6815ad64561bf69c0cc25f803a65875df24dc41f2",
+      "instruments": "f02713442043b09cc03bb0c81812c964d1eeae00cb2a5116bf75d5cd3b4b8efa",
+      "membership": "6e5114f16ecd936be0bf7fb62f474d169dca25f1bad78bb27fd0ea413d3ed748",
+      "production_enriched": {
+        "bytes": 47704926,
+        "files": 2143,
+        "sha256": "8de93672101a09972d0ebe67c44e089240daa03eb861091b3c16005ae37baf7c"
+      },
+      "r344_cache_invalid": [],
+      "r344_cache_valid": true,
+      "r359_cohort_cache_invalid": [],
+      "r359_cohort_cache_manifest_count": 60,
+      "r359_cohort_cache_valid": true,
+      "r359_preregistration": "9396adfabe68a8b243399bf85b9d215bdc02a38f49fc917b091723f3999ec7b9",
+      "r359_result": "2dc6c3c9171291ff94b573b8533d84d33e7a6dfd612297d02883256f982f5ef5",
+      "r40_enriched": {
+        "bytes": 49897492,
+        "files": 1544,
+        "sha256": "a76db8149205486b06fbc664692f8b85bb365671f5888b6a12128909cffff707"
+      },
+      "raw_daily": {
+        "bytes": 21308282,
+        "files": 2143,
+        "sha256": "bef8a25e11c81652ee7736d3190764b0a0ede20c3656cb1f326446d4c5afe119"
+      }
+    },
+    "exit_signal_path": "data/user_data/custom_signals/r360_rel_strength_fade.json",
+    "exit_signal_sha256": "01116841e0b91b867c870ed594a45997a45f594347e38d346a30e367db886b67",
+    "factor_definition_path": "data/user_data/custom_factors/uf_industry_relative_strength_change_5d.json",
+    "factor_definition_sha256": "053af895362413c63c23e595085396d6e3e8871c96d8ef99df0822212491c895",
+    "isolation_helper_path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r360_isolation.py",
+    "isolation_helper_sha256": "48bac050ea639c100a3d1007403c055e05c0791ec4e04117593309739130ecc0",
+    "preflight_runner_path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r360_preflight.py",
+    "preflight_runner_sha256": "8ae7b0dfa8dbad97ea708d630153a4681e493da9963dd1348bff8f2b822f902c",
+    "runner_path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r360_industry_fade.py",
+    "runner_sha256": "d53d7360ea86ba51588cedd0a0801faff33c6d4ce6e31553504c231f6eb27b08",
+    "test_path": "backend/tests/test_r360_industry_fade.py",
+    "test_sha256": "d4c8ec1c806be86de8354a3f2946a0c79343cb6d8b3396cce61e4f72a874aa08"
+  },
+  "hypothesis": "For the frozen B sleeve, exiting at T+1 open after the stock's current industry-relative 20-day return turns negative while its 5-session change is also negative will reduce drawdown / weak-market losses without changing entry ranks, position count, stop loss, holding cap, or portfolio risk budget.",
+  "known_limits": [
+    "Current industry snapshot backfill; not PIT industry data.",
+    "HS300 membership for historical backtests uses daily membership snapshots in research runner; same caveat as R344/R359.",
+    "The periods overlap earlier research; this is a hypothesis test, not independent out-of-sample evidence.",
+    "Passing gates would only justify a further independent robustness/forward paper study, not production enablement."
+  ],
+  "performance_gates": {
+    "G1_2x_annual_not_below_R359_by_more_than_1pp": "candidate 2x annualized >= R359 v2 2x annualized - 1 percentage point.",
+    "G2_2x_sharpe_not_below_R359_by_more_than_0_10": "candidate 2x Sharpe >= R359 v2 2x Sharpe - 0.10.",
+    "G3_2x_mdd_not_deeper_than_R359": "candidate 2x MDD >= R359 v2 2x MDD.",
+    "G4_2022_segment_nonnegative": "candidate 2x 2022-05-05 through 2022-12-31 return >= 0%.",
+    "G5_recent_year_positive": "candidate 2x 2025-11-05 through 2026-11-05 return > 0%.",
+    "G6_minimum_4_of_6_fresh_starts_positive": "Six fixed phase starts including 2022-05-05, at least four positive.",
+    "G7_5x_annual_at_least_10pct": "candidate 5x annualized >= 10%.",
+    "G8_no_leverage": "All targets nonnegative and <= 100%; no borrowing."
+  },
+  "primary_window": {
+    "cost_factors": [
+      2,
+      5
+    ],
+    "end": "2026-11-05",
+    "fresh_starts": [
+      "2023-01-03",
+      "2024-01-02",
+      "2025-01-02",
+      "2025-11-05",
+      "2026-01-05"
+    ],
+    "start": "2022-05-05"
+  },
+  "protocol_amendment": {
+    "hypothesis_or_thresholds_changed": false,
+    "reason": "The original R360 preflight and backtest runner referenced different preregistration/preflight filenames and used non-identical input fingerprint schemas. This v2 binds a single preregistration, preflight output, exact runners, test, and shared input fingerprint set before reading candidate returns.",
+    "repair": "Both runners now resolve the same v2 preregistration/preflight paths and have identical input_fingerprints() output; a regression test enforces both properties.",
+    "returns_read_before_amendment": false,
+    "source_preregistration": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r360_preregistration.json",
+    "source_preregistration_sha256": "2d6120e9940b706eb52f055ab86e1d218ae7de5550fa44000bccc32d06496f2c"
+  },
+  "round": "R360",
+  "rule": {
+    "entry": "Unchanged R101 B scoring, filters, and entry time.",
+    "execution": "Use the existing T+1 open signal exit; maintain existing -20% stop and 20 trading-session max hold.",
+    "industry_data": "Existing timeseries factor is backfilled with current THS industry classifications, not PIT; this is explicitly a non-PIT structural test.",
+    "leverage": "None; stock sleeve exposure <= 100%.",
+    "signal_day": "At T close, ext_alt_hs300_stock_rel_industry_20d < 0 AND current relative strength minus its value five trading sessions earlier < 0."
+  },
+  "status": "preregistered_v2_frozen_runner_contract_before_candidate_returns"
+}

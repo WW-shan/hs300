@@ -1,0 +1,174 @@
+{
+  "amendment_A1": {
+    "candidate_returns_read_before_amendment": false,
+    "hypothesis_or_thresholds_changed": false,
+    "reason": "Initial runner expected a nonexistent runner_sha256 preflight field; preflight already emits backtest_runner_sha256. Corrected field binding before candidate returns were read."
+  },
+  "created_at": "2026-11-06T06:00:00+08:00",
+  "decision": "If preflight fails, retain it without reading returns. If preflight passes, run the fixed paired comparison only; always research-only, selected=null, no paper target/orders/production write.",
+  "diagnostics": [
+    "weak-entry sessions and candidate depth",
+    "factor coverage in candidates",
+    "2x/3x annualized, Sharpe, MDD, recent, yearly and six phases",
+    "trade count",
+    "no threshold/window/weight sweep"
+  ],
+  "factor": {
+    "direction": "high",
+    "entry_condition": "StrategyBacktestConfig.regime_filter={\"states\":[\"weak\"]}; engine aligns regime at T-1 for T entry",
+    "formula": "0 - (close / open - 1)",
+    "id": "uf_intraday_reversal",
+    "not_swept": true
+  },
+  "frozen_artifacts": {
+    "backend/tests/test_r361_intraday_reversal.py": "005c363464d75f6758455fba4f6d1b95eed012b6185a5a231e2ff69e5484abaa",
+    "backend/tests/test_r361_isolation.py": "f9b2edc64b4784648a152a27b4e3f55c74f271c16d0a9c340c9895aec8b0bf3f",
+    "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r361_strategies/ai_hs300_industry_relative_strength_intraday_reversal_weak_h20_sl20.py": "05656f3bdfccabf764fcaa37d272c4154331381a6854ff42e9102e15ce295219",
+    "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r361_strategies/ai_hs300_industry_relative_strength_quality_weak_h20_sl20.py": "ba30b931c592f6c080a579d13cfb8fd8a9ab0d3399cce0d16cc12866c2a047af",
+    "data/user_data/custom_factors/uf_intraday_reversal.json": "7d3a61f143af33d9ca294ffd89f40c73cae2e8b2f24137dc5d082af89680d6cc"
+  },
+  "frozen_inputs": {
+    "backtest_runner_sha256": "2438f42e6a3866953e21a9449535209c8563638ad67b3d6a2a60e9e8bd635d09",
+    "baseline_r359_v2_preregistration_sha256": "9396adfabe68a8b243399bf85b9d215bdc02a38f49fc917b091723f3999ec7b9",
+    "baseline_r359_v2_result_sha256": "2dc6c3c9171291ff94b573b8533d84d33e7a6dfd612297d02883256f982f5ef5",
+    "code_sha256": {
+      "backend/app/backtest/engine.py": "e3d840cdd08febe114cfeb731d7fc5f7ed14915a5bd5a180e10b9e73f9ac1522",
+      "backend/app/backtest/regime_alignment.py": "43086ebe01d8e0e6f7e6a6bdbbe5b3367fee554d01c12626d91ff161e8288900",
+      "backend/app/backtest/strategy.py": "318b6548354c587965c321921faafcbb7c4be0012fefe3ada0ced97fae06fd4e",
+      "backend/app/factors/dsl.py": "1adb78439bd7148add696c269c079a0b301ff1e4fc7d9ad69ab9d23e1f3c1740",
+      "backend/app/factors/store.py": "ae0300f95d92d35372bd26b7138a98abcc72a6e0ee7599ff0052e12fb46ae626",
+      "backend/app/strategy/engine.py": "d0e207d0593b37157848925fc19bda73d3849651dd0e8469d6912caf4295519e",
+      "backend/app/strategy/scoring.py": "c4732a2c88150e960e6fa060bff18c819f0d90bc586a6c1457a53bcc47eaabad",
+      "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r313_concentration_audit.py": "89bd89fa50b2fb1328ecf5a351e8b4bc498cdd99d42fd90adba0ca5d071927e5",
+      "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r315_holding_bootstrap.py": "f25bb8bcff54c6eb29ce2f98511eb1e4b7127546c04b38685a7352978ba0cc3f",
+      "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r324_defensive_ballast.py": "7184c71b8c5922dbd92b91eb1c33287bacb1ed3c7f1cfe3c8a4ae8e30059c806",
+      "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r331_three_asset_bucket.py": "63397c2e4725d286df7f583ab9a5679e67b0ed4ae58782df0f9323471564b8f6",
+      "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r359_cohort_ensemble.py": "b40cd1bd8d42df22032945abe53fa475b2169e95bca6754181c3adeee31ac6e3",
+      "data/strategies/ai/ai_hs300_industry_relative_strength_quality_h20_sl20.py": "e785a540c23ecbeab625ae5349c52293c8659011bf224f80960d6e728bcb382e",
+      "scripts/backtest_r112_dual_sleeve_risk_parity.py": "94c615bedbe9c5afa7fd3720e36bc20a3a8ede9046715efc9bbf6841458bd1ae",
+      "scripts/backtest_r114_b_vol_target.py": "6c32607d03b1971cc059786865c932ae81c2e7512b2245dcbf8ecfa5d63658b6"
+    },
+    "data_fingerprints": {
+      "alternative_config": "c144d4207b9d35e649f6a3fbc567f2200c29cf1e9b811bb85bfec991ea10ab42",
+      "alternative_factors": {
+        "bytes": 251443214,
+        "files": 2143,
+        "sha256": "154094de9374ac3cb59722466a0dccbcea41b35c93a4b9598fe3354a99a7a846"
+      },
+      "baseline_r359_preregistration": "9396adfabe68a8b243399bf85b9d215bdc02a38f49fc917b091723f3999ec7b9",
+      "baseline_r359_result": "2dc6c3c9171291ff94b573b8533d84d33e7a6dfd612297d02883256f982f5ef5",
+      "custom_factors": {
+        "bytes": 14277,
+        "files": 31,
+        "sha256": "7244a722d64cd434b4926ba599a95bea1b1dd409ecf1079adbd4f7b5c9df9347"
+      },
+      "defensive_assets": {
+        "dividend_etf_qfq.parquet": "0c135eff8187948ed364f5f2d7ced64d5c39b977bba25b832af33b85e1245df1",
+        "gold_etf_qfq.parquet": "1a1c16e894ac500da3167e23cf68d59a46d66c6d1aa1940f09957d7ced70ec75",
+        "treasury_etf_qfq.parquet": "4bd6510f1e2b0bd0016348eb144725944a45566d2bf30d335ca80214a1f940eb"
+      },
+      "financials": {
+        "financials/balance_sheet/part.parquet": "9253a260bb045c37c0409617bdb3082624e7f21f253d35a147036e5eeac47283",
+        "financials/cash_flow/part.parquet": "f34a3365dd92713d91a007b784b9ac8cd266cc7e7d19b5ab1df75a82381e3b5b",
+        "financials/income/part.parquet": "9bf784d2939de14c4f9da2e96ad3fbecd3c87ae85e8c7dfea056b636ee8164e2",
+        "financials/metrics/part.parquet": "d458c82807fbd0957344021930ba065b478dae78d7bb17a6aea9e4cab4757886",
+        "financials/shares/part.parquet": "f322f1d279c08f852b7edb16a6a15002bce0dd095623326e25d0cb1e05851177"
+      },
+      "industry_snapshot": "702605875a44b978baaef9a6815ad64561bf69c0cc25f803a65875df24dc41f2",
+      "instruments": "f02713442043b09cc03bb0c81812c964d1eeae00cb2a5116bf75d5cd3b4b8efa",
+      "membership_daily": "6e5114f16ecd936be0bf7fb62f474d169dca25f1bad78bb27fd0ea413d3ed748",
+      "membership_monthly": "5f3284b954847ccf63d7349d884c2a986dec7a580cf9abd38075c7ed8f810d36",
+      "production_enriched": {
+        "bytes": 47704926,
+        "files": 2143,
+        "sha256": "7ce95ff388a8c9c6ccc9c989092b0b52875519993e97c076a81ba5ef378a9209"
+      },
+      "r344_cache_invalid": [],
+      "r344_cache_valid": true,
+      "r359_cohort_cache_invalid": [],
+      "r359_cohort_cache_manifest_count": 60,
+      "r359_cohort_cache_valid": true,
+      "r40_enriched": {
+        "bytes": 49897492,
+        "files": 1544,
+        "sha256": "7127e4b2999e13455eff1ca0714bddb34a517de8e1e6f75e132f780506ffae2b"
+      },
+      "raw_daily": {
+        "bytes": 21308282,
+        "files": 2143,
+        "sha256": "2f46b1dc8231c56b91620884367372aa831a694389dd743d5b39c4996628bb52"
+      },
+      "regime_history": "474332dcb2d0b3bc7b27c37973c78bb7c7f4e6bff535350a07dc4d8d7819c058"
+    },
+    "isolation_helper_sha256": "5a84e4a24ddac7457c36a327d62685d0776a241d5e3132167fb3c8b48f31baed",
+    "preflight_runner_sha256": "826491268032758f0a43fb6cefd697a03a13f8bd21c1f6f3a5e0bf402dd392fa"
+  },
+  "hypothesis": "Within the prior-session weak market regime, the lowest intraday return stocks have short-horizon reversal information that can improve the R101 B industry-relative quality sleeve when a fixed 20 percentage-point quality-value weight is replaced with a 20 percentage-point intraday-reversal weight.",
+  "known_limits": [
+    "R25 conditional IC and R361 share historical periods; not independent OOS.",
+    "Weak-regime conditional sample is smaller and incurs selection risk.",
+    "Historical membership uses archived PIT daily snapshots after 2020-12-31 and monthly snapshots before then.",
+    "Industry assignment in the historical factor is current-THS backfilled, not PIT.",
+    "Local regime history ends 2026-10-14; frozen end must not exceed that date."
+  ],
+  "performance_gates": {
+    "G1_candidate_2x_annual_at_least_control_minus_1pp": "candidate >= matched weak-regime control - 1pp",
+    "G2_candidate_2x_sharpe_at_least_control_minus_0_10": "candidate >= matched weak-regime control - 0.10",
+    "G3_candidate_2x_mdd_not_deeper_than_control": "candidate MDD >= control MDD",
+    "G4_candidate_recent_2x_nonnegative": "2025-10-14..2026-10-14 > 0",
+    "G5_2022_segment_nonnegative": "2022-05-05..2022-12-30 >= 0",
+    "G6_at_least_4_of_6_phase_starts_positive": ">=4 fixed starts positive",
+    "G7_3x_annual_nonnegative": "3x annualized >= 0",
+    "G8_unlevered": "gross exposure <=100%, borrowing=0"
+  },
+  "primary_window": {
+    "cost_multipliers": [
+      2,
+      3
+    ],
+    "end": "2026-10-14",
+    "phase_starts": [
+      "2022-05-05",
+      "2023-01-03",
+      "2024-01-02",
+      "2025-01-02",
+      "2025-10-14",
+      "2026-01-05"
+    ],
+    "recent_start": "2025-10-14",
+    "start": "2022-05-05"
+  },
+  "round": "R361",
+  "rule": {
+    "basic_filter": "R101 B baseline, identical for candidate and control",
+    "candidate_scoring": {
+      "ext_alt_hs300_industry_mom_20d": 0.15,
+      "ext_alt_hs300_stock_rel_industry_20d": 0.35,
+      "uf_cash_quality": 0.2,
+      "uf_intraday_reversal": 0.2,
+      "uf_quality_value_defensive": 0.1
+    },
+    "candidate_strategy": "ai_hs300_industry_relative_strength_intraday_reversal_weak_h20_sl20",
+    "control_scoring": {
+      "ext_alt_hs300_industry_mom_20d": 0.15,
+      "ext_alt_hs300_stock_rel_industry_20d": 0.35,
+      "uf_cash_quality": 0.2,
+      "uf_quality_value_defensive": 0.3
+    },
+    "control_strategy": "ai_hs300_industry_relative_strength_quality_weak_h20_sl20",
+    "factor_change": "replace 20pp of quality-value with intraday-reversal; all other weights unchanged",
+    "holding_sessions": 20,
+    "max_exposure_pct": 1.0,
+    "max_positions": 10,
+    "no_leverage": true,
+    "regime_filter": {
+      "alignment": "T-1",
+      "states": [
+        "weak"
+      ]
+    },
+    "signal": "T close factor; T+1 open execution",
+    "stop_loss": -0.2
+  },
+  "status": "preregistered_pending_preflight"
+}

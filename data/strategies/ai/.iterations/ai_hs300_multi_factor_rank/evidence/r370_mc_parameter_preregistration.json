@@ -1,0 +1,61 @@
+{
+  "round": "R370",
+  "created_at": "2026-11-10",
+  "classification": "post-hoc parameter robustness audit; not a new independent alpha test",
+  "purpose": "Separate robust parameter plateaus from historically scanned or untested parameters using path bootstrap, existing grid re-evaluation, and Latin-hypercube overlay perturbation.",
+  "frozen_methods": {
+    "circular_block_days": [5, 10, 20, 60],
+    "stationary_mean_block_days": [10, 20],
+    "path_horizon_days": 252,
+    "paths_per_setting": 2000,
+    "path_seed": 20261110,
+    "seed_sensitivity_seeds": [370, 20261110, 3702026],
+    "seed_sensitivity_paths": 500,
+    "lhs_samples": 96,
+    "lhs_seed": 370,
+    "lhs_ranges": {
+      "c_satellite_cap": [0.05, 0.20],
+      "equity_target_vol": [0.10, 0.20],
+      "overlay_lookback_days": [30, 120],
+      "overlay_target_vol": [0.10, 0.20],
+      "overlay_equity_weight_max": [0.20, 0.40]
+    }
+  },
+  "evaluation_thresholds": {
+    "core_2x": {
+      "annual_min": 0.08,
+      "sharpe_min": 1.0,
+      "mdd_min": -0.20,
+      "year_2022_min": -0.05,
+      "year_2023_min": 0.0,
+      "recent_return_min_exclusive": 0.0
+    },
+    "stress": {
+      "annual_min": 0.05,
+      "sharpe_min": 0.8,
+      "mdd_min": -0.25
+    },
+    "bootstrap": {
+      "positive_rate_min": 0.80,
+      "mdd_p05_min": -0.20
+    },
+    "plateau": {
+      "minimum_cells": 3,
+      "minimum_pass_rate": 0.75
+    }
+  },
+  "decision_rules": [
+    "A parameter is qualified_plateau only when at least 75% of every reported adjacent cell passes the v2 point and bootstrap thresholds in each lineage where it appears.",
+    "A parameter with only a small historical scan is historical_scan_only, never qualified_plateau.",
+    "A parameter without an adjacent-grid or randomized-neighbour experiment is not_monte_carlo_tested.",
+    "No best cell is selected from this audit.",
+    "No leverage, order, paper target, or production change is permitted from this round."
+  ],
+  "known_limits": [
+    "Block bootstrap resamples historical daily returns and cannot create unseen regimes.",
+    "Existing parameter-grid cells are correlated; treating them as independent trials would overstate evidence.",
+    "The full historical trial ledger is unavailable, so PBO and Deflated Sharpe are not claimed.",
+    "R360 industry classification is a current-snapshot backfill, not point-in-time data.",
+    "Historical HS300 membership and ETF adjusted-price limitations remain from R344/R359/R360."
+  ]
+}

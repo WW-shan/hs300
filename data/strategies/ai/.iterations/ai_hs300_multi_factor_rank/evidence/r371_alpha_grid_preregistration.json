@@ -1,0 +1,57 @@
+{
+  "round": "R371",
+  "created_at": "2026-11-10",
+  "classification": "post-hoc full-factorial alpha-parameter audit around frozen R360; research-only",
+  "hypothesis": "The R360 B-sleeve exit should remain effective across adjacent fade-change, holding and stop-loss settings instead of depending on one selected combination.",
+  "fixed_construction": {
+    "stock_strategy": "R360 B-sleeve scoring, filters, 10 positions and 2x execution costs",
+    "portfolio": "same monthly risk-parity A/B/C sleeves, 10% C cap, 15% joint equity target, 60-day overlay lookback, 15% overlay target and one-third equity-weight cap",
+    "start": "2022-05-05",
+    "end": "2026-11-05",
+    "cost_factor": 2
+  },
+  "factorial_grid": {
+    "industry_fade_change_days": [3, 5, 10],
+    "max_hold_days": [10, 20, 30],
+    "stop_loss": [-0.15, -0.20, -0.25]
+  },
+  "bootstrap": {
+    "method": "circular_block",
+    "block_days": 20,
+    "horizon_days": 252,
+    "paths": 1000,
+    "seed": 20261110
+  },
+  "evaluation": {
+    "core_2x": {
+      "annual_min": 0.08,
+      "sharpe_min": 1.0,
+      "mdd_min": -0.20,
+      "year_2022_min": -0.05,
+      "year_2023_min": 0.0,
+      "recent_return_min_exclusive": 0.0
+    },
+    "bootstrap": {
+      "positive_rate_min": 0.80,
+      "mdd_p05_min": -0.20
+    },
+    "plateau": {
+      "overall_pass_rate_min": 0.75,
+      "each_parameter_level_pass_rate_min": 0.666667
+    }
+  },
+  "decision_rules": [
+    "Run all 27 cells; do not stop after a favourable or unfavourable cell.",
+    "Do not select the best cell and do not replace R360 based on this audit.",
+    "The centre cell (5 days, 20 holding days, -20% stop) must reconstruct the frozen R360 portfolio metrics before any grid conclusion is accepted.",
+    "A parameter is qualified for this neighbourhood only if overall and every marginal-slice pass rate clear the preregistered thresholds.",
+    "No leverage, order, paper target or production change is permitted."
+  ],
+  "known_limits": [
+    "The grid is adjacent, not exhaustive; values outside 3-10 days, 10-30 holding days and -15% to -25% stops are not covered.",
+    "Only the realistic 2x cost case is rerun for all 27 cells; 5x remains a centre-point diagnostic.",
+    "The current industry snapshot is backfilled and is not point-in-time data.",
+    "Historical HS300 membership and ETF adjusted-price limitations remain.",
+    "The 27 cells are correlated and are not independent multiple-testing trials."
+  ]
+}

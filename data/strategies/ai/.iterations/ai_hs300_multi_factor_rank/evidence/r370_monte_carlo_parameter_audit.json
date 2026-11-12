@@ -1,0 +1,5143 @@
+{
+  "audit_date": "2026-11-10",
+  "classification": "post-hoc parameter robustness audit; not a new independent alpha test",
+  "decision": {
+    "no_best_cell_selected": true,
+    "no_leverage": true,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "selected_parameter_set": null
+  },
+  "known_limits": [
+    "Block bootstrap resamples historical daily returns and cannot create unseen regimes.",
+    "Existing parameter-grid cells are correlated; treating them as independent trials would overstate evidence.",
+    "The full historical trial ledger is unavailable, so PBO and Deflated Sharpe are not claimed.",
+    "R360 industry classification is a current-snapshot backfill, not point-in-time data.",
+    "Historical HS300 membership and ETF adjusted-price limitations remain from R344/R359/R360.",
+    "The current R360 metrics pass v2 thresholds, but the original R360 preregistered 2022 nonnegative gate failed.",
+    "Portfolio-level parameter robustness does not validate stock-level factor windows or scoring weights."
+  ],
+  "methodology": {
+    "layers": [
+      "daily-return path bootstrap",
+      "adjacent-grid v2 re-evaluation",
+      "Latin-hypercube portfolio-parameter perturbation",
+      "multiple-testing limitations recorded explicitly"
+    ],
+    "policy": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/gate_policy_v2.json",
+    "policy_sha256": "d1b4d15169b0dfc99e93c5baf1eaef5c6fc334ca68a651971567e7ec53724123",
+    "preregistration": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r370_mc_parameter_preregistration.json",
+    "preregistration_sha256": "6426f4a29c1784f6fb75667ed490bc64b3b06258df2df8130c8436a244140baf",
+    "references": [
+      {
+        "authors": "Bailey & Lopez de Prado",
+        "doi": "10.2139/ssrn.2460551",
+        "title": "The Deflated Sharpe Ratio: Correcting for Selection Bias, Backtest Overfitting and Non-Normality",
+        "url": "https://doi.org/10.2139/ssrn.2460551"
+      },
+      {
+        "authors": "Bailey, Borwein, Lopez de Prado & Zhu",
+        "doi": "10.2139/ssrn.2326253",
+        "title": "The Probability of Backtest Overfitting",
+        "url": "https://doi.org/10.2139/ssrn.2326253"
+      },
+      {
+        "authors": "Politis & Romano",
+        "doi": "10.1080/01621459.1994.10476870",
+        "title": "The Stationary Bootstrap",
+        "url": "https://doi.org/10.1080/01621459.1994.10476870"
+      },
+      {
+        "authors": "White",
+        "doi": "10.1111/1468-0262.00152",
+        "title": "A Reality Check for Data Snooping",
+        "url": "https://doi.org/10.1111/1468-0262.00152"
+      },
+      {
+        "authors": "Hansen",
+        "doi": "10.1198/073500105000000063",
+        "title": "A Test for Superior Predictive Ability",
+        "url": "https://doi.org/10.1198/073500105000000063"
+      },
+      {
+        "authors": "McKay, Beckman & Conover",
+        "doi": "10.1080/00401757.1979.10489755",
+        "title": "A comparison of Latin hypercube and simple random sampling",
+        "url": "https://doi.org/10.1080/00401757.1979.10489755"
+      },
+      {
+        "authors": "Sobol",
+        "doi": "10.1016/S0378-4754(00)00270-6",
+        "title": "Global sensitivity indices for nonlinear mathematical models and their Monte Carlo estimates",
+        "url": "https://doi.org/10.1016/S0378-4754(00)00270-6"
+      },
+      {
+        "authors": "Arlot & Celisse",
+        "doi": "10.1214/09-SS054",
+        "title": "A survey of cross-validation procedures for model selection",
+        "url": "https://doi.org/10.1214/09-SS054"
+      }
+    ]
+  },
+  "multiple_testing": {
+    "deflated_sharpe_computed": false,
+    "pbo_computed": false,
+    "probabilistic_sharpe_ratio": {
+      "available": true,
+      "daily_sharpe": 0.08376819773011149,
+      "interpretation": "PSR vs zero only; this is not a deflated Sharpe ratio.",
+      "kurtosis": 15.600877383889369,
+      "observations": 1092,
+      "probability_sharpe_above_zero": 0.9969395009984692,
+      "skew": 0.08123768156575283
+    },
+    "reason": "The full sequential trial ledger and non-identical trial count are unavailable; correlated grid cells cannot be treated as independent.",
+    "reported_grid_cells": 48,
+    "trial_ledger_complete": false
+  },
+  "overlay_parameter_latin_hypercube": {
+    "limits": [
+      "The underlying stock and sleeve return curves are fixed; this perturbs portfolio construction only.",
+      "LHS spans were chosen for audit breadth after the original experiments and are not a new pre-registered alpha test."
+    ],
+    "method": "Latin-hypercube perturbation of five portfolio-level parameters",
+    "ranges": {
+      "c_satellite_cap": [
+        0.05,
+        0.2
+      ],
+      "equity_target_vol": [
+        0.1,
+        0.2
+      ],
+      "overlay_equity_weight_max": [
+        0.2,
+        0.4
+      ],
+      "overlay_lookback_days": [
+        30,
+        120
+      ],
+      "overlay_target_vol": [
+        0.1,
+        0.2
+      ]
+    },
+    "rows": [
+      {
+        "parameters": {
+          "c_satellite_cap": 0.13520295658960968,
+          "equity_target_vol": 0.13817335535762493,
+          "overlay_equity_weight_max": 0.3204308624259891,
+          "overlay_lookback_days": 108,
+          "overlay_target_vol": 0.19120652036579294
+        },
+        "recent": 0.0473062404117337,
+        "sample": 0,
+        "stats": {
+          "annual": 0.12584924797204278,
+          "days": 1093,
+          "mdd": -0.09063165129994566,
+          "sharpe": 1.374492627551377,
+          "total_return": 0.6714025058246378
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": 0.004711347659113629,
+          "2023": 0.08204565740700587,
+          "2024": 0.24023372635222762,
+          "2025": 0.20721430653631612,
+          "2026": 0.0268481958205542
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.05747198857276338,
+          "equity_target_vol": 0.14009988897684228,
+          "overlay_equity_weight_max": 0.30652765644879093,
+          "overlay_lookback_days": 83,
+          "overlay_target_vol": 0.1282652623939979
+        },
+        "recent": 0.05694841020064345,
+        "sample": 1,
+        "stats": {
+          "annual": 0.12576652884767547,
+          "days": 1093,
+          "mdd": -0.08402670138971557,
+          "sharpe": 1.3653428663955454,
+          "total_return": 0.6708704273969481
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.009540240792497268,
+          "2023": 0.0830067273978532,
+          "2024": 0.24267885549995838,
+          "2025": 0.20951444996872293,
+          "2026": 0.03634608867542233
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.09079871959986346,
+          "equity_target_vol": 0.19466410593305072,
+          "overlay_equity_weight_max": 0.3040165282134023,
+          "overlay_lookback_days": 83,
+          "overlay_target_vol": 0.1956969413771766
+        },
+        "recent": 0.04967296663480769,
+        "sample": 2,
+        "stats": {
+          "annual": 0.1257272013156856,
+          "days": 1093,
+          "mdd": -0.09046036680887959,
+          "sharpe": 1.3160333022589714,
+          "total_return": 0.6706175046180176
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.013218049260507292,
+          "2023": 0.08459661722043599,
+          "2024": 0.24857717571371052,
+          "2025": 0.21851409212041895,
+          "2026": 0.025986477962994137
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.15463796950457698,
+          "equity_target_vol": 0.1051356441777735,
+          "overlay_equity_weight_max": 0.3864143701498505,
+          "overlay_lookback_days": 89,
+          "overlay_target_vol": 0.13076247214426895
+        },
+        "recent": 0.04546969344141605,
+        "sample": 3,
+        "stats": {
+          "annual": 0.11608448101656021,
+          "days": 1093,
+          "mdd": -0.08118800875187715,
+          "sharpe": 1.360581999240259,
+          "total_return": 0.6094863605192478
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.004914154825637951,
+          "2023": 0.07293606343464387,
+          "2024": 0.22510298918330762,
+          "2025": 0.19831821526473825,
+          "2026": 0.026852698183653434
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.13913748393777994,
+          "equity_target_vol": 0.12489028605595781,
+          "overlay_equity_weight_max": 0.2299976576106626,
+          "overlay_lookback_days": 74,
+          "overlay_target_vol": 0.11457836069542837
+        },
+        "recent": 0.0584769784762742,
+        "sample": 4,
+        "stats": {
+          "annual": 0.11913923732660159,
+          "days": 1093,
+          "mdd": -0.08539283553156085,
+          "sharpe": 1.3808072160258942,
+          "total_return": 0.6286628772925211
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.006101229528564844,
+          "2023": 0.08219037549500152,
+          "2024": 0.22037670235194784,
+          "2025": 0.18947346467302917,
+          "2026": 0.04312585678983338
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.19726884280010099,
+          "equity_target_vol": 0.16253086974235487,
+          "overlay_equity_weight_max": 0.2842057468881367,
+          "overlay_lookback_days": 53,
+          "overlay_target_vol": 0.14301964824581687
+        },
+        "recent": 0.04713997820496152,
+        "sample": 5,
+        "stats": {
+          "annual": 0.12009421025289657,
+          "days": 1093,
+          "mdd": -0.09208210450539522,
+          "sharpe": 1.2971225808172464,
+          "total_return": 0.6346937178825498
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.006331974310203603,
+          "2023": 0.08164479224200605,
+          "2024": 0.22888751581978917,
+          "2025": 0.2065852754557651,
+          "2026": 0.02574701383621636
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.08154946864402099,
+          "equity_target_vol": 0.15108254983492592,
+          "overlay_equity_weight_max": 0.29015561471164564,
+          "overlay_lookback_days": 50,
+          "overlay_target_vol": 0.18243037494753073
+        },
+        "recent": 0.04859946032732454,
+        "sample": 6,
+        "stats": {
+          "annual": 0.12589973222441153,
+          "days": 1093,
+          "mdd": -0.09289762349185648,
+          "sharpe": 1.3420913651292434,
+          "total_return": 0.6717273022871364
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.004452749686786772,
+          "2023": 0.08433113616889187,
+          "2024": 0.24215599718690517,
+          "2025": 0.2131347260158163,
+          "2026": 0.02767656839981636
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.1324450985236405,
+          "equity_target_vol": 0.11711462613452939,
+          "overlay_equity_weight_max": 0.3344741104048935,
+          "overlay_lookback_days": 56,
+          "overlay_target_vol": 0.12548777693245428
+        },
+        "recent": 0.04828226866178831,
+        "sample": 7,
+        "stats": {
+          "annual": 0.11972224364578166,
+          "days": 1093,
+          "mdd": -0.08303190401579685,
+          "sharpe": 1.3549126273713035,
+          "total_return": 0.6323426372900307
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.0035467680470004925,
+          "2023": 0.07721009925583644,
+          "2024": 0.22829958846217235,
+          "2025": 0.2022218782241052,
+          "2026": 0.02982885137605673
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.13878338979332333,
+          "equity_target_vol": 0.15224798052845545,
+          "overlay_equity_weight_max": 0.3877962236779426,
+          "overlay_lookback_days": 79,
+          "overlay_target_vol": 0.16289190622555247
+        },
+        "recent": 0.04642007408897242,
+        "sample": 8,
+        "stats": {
+          "annual": 0.12624210153369297,
+          "days": 1093,
+          "mdd": -0.08725835698790818,
+          "sharpe": 1.315994841656971,
+          "total_return": 0.6739312573947798
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.014968478778238481,
+          "2023": 0.0817194204349001,
+          "2024": 0.2483978366176829,
+          "2025": 0.23040479813716486,
+          "2026": 0.022755539819150794
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.14904720360215407,
+          "equity_target_vol": 0.10862590477351435,
+          "overlay_equity_weight_max": 0.22778254573665552,
+          "overlay_lookback_days": 93,
+          "overlay_target_vol": 0.11277116142099212
+        },
+        "recent": 0.059988335832465545,
+        "sample": 9,
+        "stats": {
+          "annual": 0.11826829593554145,
+          "days": 1093,
+          "mdd": -0.08426337851792698,
+          "sharpe": 1.4235211617104593,
+          "total_return": 0.623177648066122
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.002859298014468825,
+          "2023": 0.08118762579027816,
+          "2024": 0.2152718522563115,
+          "2025": 0.18425156800511022,
+          "2026": 0.04614319810179701
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.05501239196572501,
+          "equity_target_vol": 0.17405459797838763,
+          "overlay_equity_weight_max": 0.2580723259558768,
+          "overlay_lookback_days": 118,
+          "overlay_target_vol": 0.17578047614792058
+        },
+        "recent": 0.050355521356481026,
+        "sample": 10,
+        "stats": {
+          "annual": 0.12726505712462188,
+          "days": 1093,
+          "mdd": -0.0947239232221897,
+          "sharpe": 1.3797216382434732,
+          "total_return": 0.6805297107109649
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": 0.0038622791783244903,
+          "2023": 0.08291760410500926,
+          "2024": 0.24118212013607065,
+          "2025": 0.21065169789199922,
+          "2026": 0.028778594408244818
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.0696257416210207,
+          "equity_target_vol": 0.13454866786542982,
+          "overlay_equity_weight_max": 0.3559875574006747,
+          "overlay_lookback_days": 45,
+          "overlay_target_vol": 0.11590616470131082
+        },
+        "recent": 0.056540158119498196,
+        "sample": 11,
+        "stats": {
+          "annual": 0.12593064930106634,
+          "days": 1093,
+          "mdd": -0.07505646709620395,
+          "sharpe": 1.3790894973878807,
+          "total_return": 0.6719262349591035
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.006910222965614943,
+          "2023": 0.08437298349364686,
+          "2024": 0.23173504325273608,
+          "2025": 0.21903930935151306,
+          "2026": 0.03398658646835706
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.150159725715522,
+          "equity_target_vol": 0.16359587062148895,
+          "overlay_equity_weight_max": 0.24437562961142786,
+          "overlay_lookback_days": 85,
+          "overlay_target_vol": 0.16758899946215766
+        },
+        "recent": 0.048058091102317846,
+        "sample": 12,
+        "stats": {
+          "annual": 0.11977950428843087,
+          "days": 1093,
+          "mdd": -0.09743879436325076,
+          "sharpe": 1.3223551610709932,
+          "total_return": 0.6327043937952384
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.00884320063975319,
+          "2023": 0.08205390532456236,
+          "2024": 0.2314552510059662,
+          "2025": 0.20200098290663937,
+          "2026": 0.02847287564432821
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.17828922775749745,
+          "equity_target_vol": 0.14409012881110805,
+          "overlay_equity_weight_max": 0.3800242759823458,
+          "overlay_lookback_days": 43,
+          "overlay_target_vol": 0.14719000912020208
+        },
+        "recent": 0.047309856560849184,
+        "sample": 13,
+        "stats": {
+          "annual": 0.12194521803650948,
+          "days": 1093,
+          "mdd": -0.08585304782528358,
+          "sharpe": 1.3079376953403488,
+          "total_return": 0.6464320995620592
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.011511136498716934,
+          "2023": 0.08132560609996076,
+          "2024": 0.23072157958648054,
+          "2025": 0.22370226043816843,
+          "2026": 0.02277470501846901
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.08462721090646094,
+          "equity_target_vol": 0.14748536880428273,
+          "overlay_equity_weight_max": 0.32336626365439863,
+          "overlay_lookback_days": 111,
+          "overlay_target_vol": 0.1982309136966307
+        },
+        "recent": 0.0491820946889725,
+        "sample": 14,
+        "stats": {
+          "annual": 0.12933674997488742,
+          "days": 1093,
+          "mdd": -0.08998700410683513,
+          "sharpe": 1.390169738524232,
+          "total_return": 0.6939541985476558
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": 0.0040801649772030935,
+          "2023": 0.08516446678836753,
+          "2024": 0.24697881011448497,
+          "2025": 0.21389849754620083,
+          "2026": 0.027061059953718214
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.13313411147923773,
+          "equity_target_vol": 0.14369931418587756,
+          "overlay_equity_weight_max": 0.29501936300002424,
+          "overlay_lookback_days": 62,
+          "overlay_target_vol": 0.10221897400063558
+        },
+        "recent": 0.060566035662890094,
+        "sample": 15,
+        "stats": {
+          "annual": 0.12198341838250859,
+          "days": 1093,
+          "mdd": -0.07467100500405788,
+          "sharpe": 1.3755965001069685,
+          "total_return": 0.6466750323934536
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.010481143925186398,
+          "2023": 0.08169049612281953,
+          "2024": 0.22514407489278598,
+          "2025": 0.2070678065219178,
+          "2026": 0.040308102631885445
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.16403565819740928,
+          "equity_target_vol": 0.1276570248624776,
+          "overlay_equity_weight_max": 0.28943820337890724,
+          "overlay_lookback_days": 63,
+          "overlay_target_vol": 0.14832556465198252
+        },
+        "recent": 0.04563638080692711,
+        "sample": 16,
+        "stats": {
+          "annual": 0.11809941041858507,
+          "days": 1093,
+          "mdd": -0.09360951081981128,
+          "sharpe": 1.3166888263204386,
+          "total_return": 0.6221156463206095
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.008644110173329778,
+          "2023": 0.07960566370259015,
+          "2024": 0.23089904121007776,
+          "2025": 0.1978913458922047,
+          "2026": 0.027891340099172046
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.09668085099939805,
+          "equity_target_vol": 0.10115287936561204,
+          "overlay_equity_weight_max": 0.27642375100700145,
+          "overlay_lookback_days": 60,
+          "overlay_target_vol": 0.1147784601803777
+        },
+        "recent": 0.05064161568216585,
+        "sample": 17,
+        "stats": {
+          "annual": 0.11570947820867872,
+          "days": 1093,
+          "mdd": -0.0849432534735981,
+          "sharpe": 1.3924601769100147,
+          "total_return": 0.6071442701945182
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": 0.002674324305343978,
+          "2023": 0.0771795845063552,
+          "2024": 0.21083084072636682,
+          "2025": 0.18637019724858694,
+          "2026": 0.03586498745137767
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.12913482328489692,
+          "equity_target_vol": 0.1796190260747498,
+          "overlay_equity_weight_max": 0.21317677466592447,
+          "overlay_lookback_days": 57,
+          "overlay_target_vol": 0.10713423230066205
+        },
+        "recent": 0.05900468992756425,
+        "sample": 18,
+        "stats": {
+          "annual": 0.12240423409245782,
+          "days": 1093,
+          "mdd": -0.08461659482661643,
+          "sharpe": 1.380356227795925,
+          "total_return": 0.6493530102335345
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.0002242052277664497,
+          "2023": 0.08459138231645924,
+          "2024": 0.21930618054751183,
+          "2025": 0.1987417401844478,
+          "2026": 0.04065421382231382
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.07634569028555496,
+          "equity_target_vol": 0.11483493411520303,
+          "overlay_equity_weight_max": 0.34485657228977645,
+          "overlay_lookback_days": 30,
+          "overlay_target_vol": 0.10015929856615283
+        },
+        "recent": 0.05904750035837347,
+        "sample": 19,
+        "stats": {
+          "annual": 0.12223875607860846,
+          "days": 1093,
+          "mdd": -0.06443709994381563,
+          "sharpe": 1.4313782150414862,
+          "total_return": 0.6482995454967764
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.01088848087464711,
+          "2023": 0.08045851167867846,
+          "2024": 0.22909320602593253,
+          "2025": 0.20651681884871076,
+          "2026": 0.04007482798748274
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.16104687295245018,
+          "equity_target_vol": 0.17701000666191646,
+          "overlay_equity_weight_max": 0.2598512083433937,
+          "overlay_lookback_days": 119,
+          "overlay_target_vol": 0.1836029284772386
+        },
+        "recent": 0.04789638414350561,
+        "sample": 20,
+        "stats": {
+          "annual": 0.12330410478269438,
+          "days": 1093,
+          "mdd": -0.09580540519894076,
+          "sharpe": 1.3469003122310594,
+          "total_return": 0.655090828840293
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": 0.0030608062296795246,
+          "2023": 0.08032149101015484,
+          "2024": 0.23399095247673518,
+          "2025": 0.20480914851937615,
+          "2026": 0.027333200141095748
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.08422078995744942,
+          "equity_target_vol": 0.11089784620208917,
+          "overlay_equity_weight_max": 0.2324817297083575,
+          "overlay_lookback_days": 48,
+          "overlay_target_vol": 0.15584800277897232
+        },
+        "recent": 0.044984106213009856,
+        "sample": 21,
+        "stats": {
+          "annual": 0.11813320976182862,
+          "days": 1093,
+          "mdd": -0.09965641633781896,
+          "sharpe": 1.3679819482766469,
+          "total_return": 0.6223281437274877
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": 0.00434585598168602,
+          "2023": 0.08198828032985483,
+          "2024": 0.22000413348199688,
+          "2025": 0.18712929050144922,
+          "2026": 0.030797913686068767
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.0718131098087588,
+          "equity_target_vol": 0.15540291199384113,
+          "overlay_equity_weight_max": 0.2856664130291272,
+          "overlay_lookback_days": 96,
+          "overlay_target_vol": 0.1356450869914999
+        },
+        "recent": 0.051282420458079514,
+        "sample": 22,
+        "stats": {
+          "annual": 0.12516669666989366,
+          "days": 1093,
+          "mdd": -0.08962312761082591,
+          "sharpe": 1.3620927483998344,
+          "total_return": 0.6670159933627633
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.00826201507802482,
+          "2023": 0.08417240228808143,
+          "2024": 0.24230449925914388,
+          "2025": 0.21169031964300045,
+          "2026": 0.029970472480680632
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.08917120750661692,
+          "equity_target_vol": 0.19729286671180746,
+          "overlay_equity_weight_max": 0.3223321367437407,
+          "overlay_lookback_days": 68,
+          "overlay_target_vol": 0.18955829104554844
+        },
+        "recent": 0.05004205998510791,
+        "sample": 23,
+        "stats": {
+          "annual": 0.12787360926648383,
+          "days": 1093,
+          "mdd": -0.08885345363354735,
+          "sharpe": 1.329076624231339,
+          "total_return": 0.6844645843134598
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.013965461490479392,
+          "2023": 0.08297064554220368,
+          "2024": 0.25212706812853636,
+          "2025": 0.22886931462304716,
+          "2026": 0.025177268519733564
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.10965120941065928,
+          "equity_target_vol": 0.1907669844768219,
+          "overlay_equity_weight_max": 0.20222547371123237,
+          "overlay_lookback_days": 115,
+          "overlay_target_vol": 0.13930910909080013
+        },
+        "recent": 0.04628851626374364,
+        "sample": 24,
+        "stats": {
+          "annual": 0.12334308857895127,
+          "days": 1093,
+          "mdd": -0.10223044725254293,
+          "sharpe": 1.3702919223667878,
+          "total_return": 0.6553397465706683
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": 0.004520196300797696,
+          "2023": 0.0850571236080806,
+          "2024": 0.23122057790867112,
+          "2025": 0.19913491667221161,
+          "2026": 0.02866023884416813
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.18449527870386995,
+          "equity_target_vol": 0.16717024233078026,
+          "overlay_equity_weight_max": 0.25224123278417204,
+          "overlay_lookback_days": 100,
+          "overlay_target_vol": 0.1932552168346355
+        },
+        "recent": 0.04770430683042193,
+        "sample": 25,
+        "stats": {
+          "annual": 0.11873090120057639,
+          "days": 1093,
+          "mdd": -0.09693859412346251,
+          "sharpe": 1.3075827224700145,
+          "total_return": 0.6260893849968518
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.009514394642398338,
+          "2023": 0.08053788996931877,
+          "2024": 0.2303332130772524,
+          "2025": 0.20183003182952564,
+          "2026": 0.027520383231088186
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.1944172173043282,
+          "equity_target_vol": 0.16556755664200776,
+          "overlay_equity_weight_max": 0.2385579592823226,
+          "overlay_lookback_days": 101,
+          "overlay_target_vol": 0.1467630607765919
+        },
+        "recent": 0.046408732419354726,
+        "sample": 26,
+        "stats": {
+          "annual": 0.11775741184737543,
+          "days": 1093,
+          "mdd": -0.09857866556974881,
+          "sharpe": 1.3067125683150218,
+          "total_return": 0.6199666959745265
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.00928793752461099,
+          "2023": 0.08106672536680559,
+          "2024": 0.22798938139119418,
+          "2025": 0.19913226113400517,
+          "2026": 0.02717498998848411
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.13668735085406225,
+          "equity_target_vol": 0.12327745334474051,
+          "overlay_equity_weight_max": 0.2676282775166451,
+          "overlay_lookback_days": 36,
+          "overlay_target_vol": 0.139823380674854
+        },
+        "recent": 0.0514759634456905,
+        "sample": 27,
+        "stats": {
+          "annual": 0.11945010131124412,
+          "days": 1093,
+          "mdd": -0.08576225273828819,
+          "sharpe": 1.3530076823943205,
+          "total_return": 0.6306241619725721
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.005962347889348685,
+          "2023": 0.08186667086371835,
+          "2024": 0.2255448235461246,
+          "2025": 0.19554684971730252,
+          "2026": 0.03485975377717132
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.06780141156902436,
+          "equity_target_vol": 0.1483908227972367,
+          "overlay_equity_weight_max": 0.25130432477101106,
+          "overlay_lookback_days": 55,
+          "overlay_target_vol": 0.13486935790683252
+        },
+        "recent": 0.05025789087127697,
+        "sample": 28,
+        "stats": {
+          "annual": 0.12372044862729359,
+          "days": 1093,
+          "mdd": -0.09264341964281642,
+          "sharpe": 1.357540662669954,
+          "total_return": 0.6577507392330393
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.0009060073403972524,
+          "2023": 0.08493550830544461,
+          "2024": 0.23143773822903335,
+          "2025": 0.20396776713195397,
+          "2026": 0.03152947153845265
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.14097147662445128,
+          "equity_target_vol": 0.15876930083204835,
+          "overlay_equity_weight_max": 0.2367016159587646,
+          "overlay_lookback_days": 92,
+          "overlay_target_vol": 0.10788018725160785
+        },
+        "recent": 0.06350455381444164,
+        "sample": 29,
+        "stats": {
+          "annual": 0.12208344640303159,
+          "days": 1093,
+          "mdd": -0.07710468450318697,
+          "sharpe": 1.3976083258510537,
+          "total_return": 0.6473112852787273
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.00820154325726452,
+          "2023": 0.08255010744810853,
+          "2024": 0.2245520548139739,
+          "2025": 0.19954026240549783,
+          "2026": 0.04450892934722539
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.11396666468563414,
+          "equity_target_vol": 0.10297377819159066,
+          "overlay_equity_weight_max": 0.36196733157842714,
+          "overlay_lookback_days": 78,
+          "overlay_target_vol": 0.17136384684571035
+        },
+        "recent": 0.04519611786404476,
+        "sample": 30,
+        "stats": {
+          "annual": 0.11480255958280572,
+          "days": 1093,
+          "mdd": -0.0836992557968349,
+          "sharpe": 1.3465587035272935,
+          "total_return": 0.6014909216141189
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.006925952976301608,
+          "2023": 0.07265940581267061,
+          "2024": 0.22207658799720997,
+          "2025": 0.197173217236839,
+          "2026": 0.027603529053565445
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.12467275215051836,
+          "equity_target_vol": 0.18298461056715853,
+          "overlay_equity_weight_max": 0.3745727295606995,
+          "overlay_lookback_days": 48,
+          "overlay_target_vol": 0.10931796962294728
+        },
+        "recent": 0.05896906212105879,
+        "sample": 31,
+        "stats": {
+          "annual": 0.12594461361898235,
+          "days": 1093,
+          "mdd": -0.07348654582735892,
+          "sharpe": 1.347951022134783,
+          "total_return": 0.6720160928609025
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.013738066014331918,
+          "2023": 0.0828649781875832,
+          "2024": 0.23086749007921314,
+          "2025": 0.23484876036932234,
+          "2026": 0.030027458963491682
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.15863822162087943,
+          "equity_target_vol": 0.11030471067516834,
+          "overlay_equity_weight_max": 0.264531397227347,
+          "overlay_lookback_days": 95,
+          "overlay_target_vol": 0.10982939837105946
+        },
+        "recent": 0.05675276779228944,
+        "sample": 32,
+        "stats": {
+          "annual": 0.11705237437002891,
+          "days": 1093,
+          "mdd": -0.07934896288031656,
+          "sharpe": 1.4075345739743772,
+          "total_return": 0.6155434992755762
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.0037131268037327025,
+          "2023": 0.07779005772821757,
+          "2024": 0.21662027723496124,
+          "2025": 0.18731639167815572,
+          "2026": 0.04154625274860524
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.07804232622944922,
+          "equity_target_vol": 0.10671865606763581,
+          "overlay_equity_weight_max": 0.20587747777172127,
+          "overlay_lookback_days": 61,
+          "overlay_target_vol": 0.12164618250334787
+        },
+        "recent": 0.05157439302572242,
+        "sample": 33,
+        "stats": {
+          "annual": 0.11658085266096596,
+          "days": 1093,
+          "mdd": -0.09426518469028022,
+          "sharpe": 1.3920809482824,
+          "total_return": 0.6125904998127398
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.002829832313831271,
+          "2023": 0.08384323845212593,
+          "2024": 0.21383214322801747,
+          "2025": 0.18356520950866706,
+          "2026": 0.03857418279905955
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.08859402253220218,
+          "equity_target_vol": 0.1864012948761819,
+          "overlay_equity_weight_max": 0.3327222454172274,
+          "overlay_lookback_days": 92,
+          "overlay_target_vol": 0.1494107004998744
+        },
+        "recent": 0.049903417363960534,
+        "sample": 34,
+        "stats": {
+          "annual": 0.12871891712325056,
+          "days": 1093,
+          "mdd": -0.08797307049254721,
+          "sharpe": 1.3457897974089281,
+          "total_return": 0.6899420657556448
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.011008404688887308,
+          "2023": 0.08599117864271566,
+          "2024": 0.2535481427982951,
+          "2025": 0.2248047648564271,
+          "2026": 0.02481396070478481
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.10129426172372424,
+          "equity_target_vol": 0.12290846804428832,
+          "overlay_equity_weight_max": 0.22628635536729516,
+          "overlay_lookback_days": 32,
+          "overlay_target_vol": 0.11761225113529392
+        },
+        "recent": 0.05861657336404935,
+        "sample": 35,
+        "stats": {
+          "annual": 0.12096170664985939,
+          "days": 1093,
+          "mdd": -0.08118102647279513,
+          "sharpe": 1.4079849833052251,
+          "total_return": 0.6401870035654316
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.001816656159467911,
+          "2023": 0.08338524897265298,
+          "2024": 0.2211044524813639,
+          "2025": 0.19032945746528096,
+          "2026": 0.043470398448233416
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.1802776477485591,
+          "equity_target_vol": 0.12859575687053265,
+          "overlay_equity_weight_max": 0.24716118213642227,
+          "overlay_lookback_days": 109,
+          "overlay_target_vol": 0.19779254430214258
+        },
+        "recent": 0.04570924225423112,
+        "sample": 36,
+        "stats": {
+          "annual": 0.12027804412475795,
+          "days": 1093,
+          "mdd": -0.09790817323088796,
+          "sharpe": 1.3680580393640311,
+          "total_return": 0.6358566336759783
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": 0.0069434235692318325,
+          "2023": 0.08039416981091851,
+          "2024": 0.22570753803305088,
+          "2025": 0.19145711757193173,
+          "2026": 0.029657209519464045
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.050285843103477564,
+          "equity_target_vol": 0.19961426542244826,
+          "overlay_equity_weight_max": 0.33598374221817606,
+          "overlay_lookback_days": 88,
+          "overlay_target_vol": 0.12652383199492287
+        },
+        "recent": 0.056608298500621324,
+        "sample": 37,
+        "stats": {
+          "annual": 0.13179436172129622,
+          "days": 1093,
+          "mdd": -0.08113509307242883,
+          "sharpe": 1.3801979417513517,
+          "total_return": 0.7099862292796257
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.011075808237001161,
+          "2023": 0.08707535726337734,
+          "2024": 0.254607336441651,
+          "2025": 0.2297684399329516,
+          "2026": 0.030952829434345963
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.14451561970282956,
+          "equity_target_vol": 0.1498362525092667,
+          "overlay_equity_weight_max": 0.2788178719245106,
+          "overlay_lookback_days": 51,
+          "overlay_target_vol": 0.1853884175843758
+        },
+        "recent": 0.046712080894589114,
+        "sample": 38,
+        "stats": {
+          "annual": 0.12257256160337593,
+          "days": 1093,
+          "mdd": -0.09459652599526513,
+          "sharpe": 1.3210187614371631,
+          "total_return": 0.6504251467090507
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.004116904702470392,
+          "2023": 0.08299045112365144,
+          "2024": 0.2349386689585411,
+          "2025": 0.20676437628200683,
+          "2026": 0.026821546752201275
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.1437251776532391,
+          "equity_target_vol": 0.1881943138141428,
+          "overlay_equity_weight_max": 0.2110885346773873,
+          "overlay_lookback_days": 106,
+          "overlay_target_vol": 0.18643480583087427
+        },
+        "recent": 0.04758764719568864,
+        "sample": 39,
+        "stats": {
+          "annual": 0.12291573756087248,
+          "days": 1093,
+          "mdd": -0.10145646913078932,
+          "sharpe": 1.3626556069257947,
+          "total_return": 0.6526126143328641
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": 0.004170308021285374,
+          "2023": 0.08380648096759713,
+          "2024": 0.23017819076386292,
+          "2025": 0.19882186267024715,
+          "2026": 0.029649151959579623
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.15157858301277607,
+          "equity_target_vol": 0.12550588027737292,
+          "overlay_equity_weight_max": 0.31579944232822166,
+          "overlay_lookback_days": 104,
+          "overlay_target_vol": 0.13737754502760546
+        },
+        "recent": 0.04571762667773038,
+        "sample": 40,
+        "stats": {
+          "annual": 0.11926686837689471,
+          "days": 1093,
+          "mdd": -0.08976171663142685,
+          "sharpe": 1.3368819178250824,
+          "total_return": 0.6294678998741607
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.0063047433032887845,
+          "2023": 0.07848616579805112,
+          "2024": 0.23424760104554498,
+          "2025": 0.19939931551227308,
+          "2026": 0.027098099463638503
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.0931483787517917,
+          "equity_target_vol": 0.14569580517605565,
+          "overlay_equity_weight_max": 0.23473224907407408,
+          "overlay_lookback_days": 36,
+          "overlay_target_vol": 0.12804419029720795
+        },
+        "recent": 0.05476432337762849,
+        "sample": 41,
+        "stats": {
+          "annual": 0.12261451892543374,
+          "days": 1093,
+          "mdd": -0.08581302529536605,
+          "sharpe": 1.3720821350847985,
+          "total_return": 0.6506924709374462
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.004923580809461314,
+          "2023": 0.08513241477589295,
+          "2024": 0.2280296501976089,
+          "2025": 0.20025828732835915,
+          "2026": 0.037154444768485284
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.11859717621149204,
+          "equity_target_vol": 0.17825793563621428,
+          "overlay_equity_weight_max": 0.21878999232081636,
+          "overlay_lookback_days": 73,
+          "overlay_target_vol": 0.10520848954536398
+        },
+        "recent": 0.0643429394590933,
+        "sample": 42,
+        "stats": {
+          "annual": 0.12196544891749239,
+          "days": 1093,
+          "mdd": -0.07842831647326887,
+          "sharpe": 1.3841827305969756,
+          "total_return": 0.6465607532137112
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.00983276877224959,
+          "2023": 0.08412838003368828,
+          "2024": 0.22253773273971267,
+          "2025": 0.20008928914716262,
+          "2026": 0.04547262270367369
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.1821572713526053,
+          "equity_target_vol": 0.1773878901901509,
+          "overlay_equity_weight_max": 0.21485170423093247,
+          "overlay_lookback_days": 82,
+          "overlay_target_vol": 0.19973371170633697
+        },
+        "recent": 0.04709395412441153,
+        "sample": 43,
+        "stats": {
+          "annual": 0.11800360665941234,
+          "days": 1093,
+          "mdd": -0.1014348370917234,
+          "sharpe": 1.2988185688389615,
+          "total_return": 0.6215134417851231
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.009885250458020245,
+          "2023": 0.08312383434690584,
+          "2024": 0.22727452600716602,
+          "2025": 0.1970512239410156,
+          "2026": 0.02920634620595619
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.05932653685000504,
+          "equity_target_vol": 0.1465194394452139,
+          "overlay_equity_weight_max": 0.2799899644376903,
+          "overlay_lookback_days": 65,
+          "overlay_target_vol": 0.12280712570511088
+        },
+        "recent": 0.052890846790499824,
+        "sample": 44,
+        "stats": {
+          "annual": 0.12316801009466993,
+          "days": 1093,
+          "mdd": -0.08701320131480239,
+          "sharpe": 1.3563589878196618,
+          "total_return": 0.6542220683489697
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.009392395241600737,
+          "2023": 0.08360719630958724,
+          "2024": 0.23436881408781263,
+          "2025": 0.20874682782618725,
+          "2026": 0.032856492492082
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.062368991638394475,
+          "equity_target_vol": 0.15647621279439133,
+          "overlay_equity_weight_max": 0.31783206227627087,
+          "overlay_lookback_days": 94,
+          "overlay_target_vol": 0.1618857269725295
+        },
+        "recent": 0.05068295422418201,
+        "sample": 45,
+        "stats": {
+          "annual": 0.12747320666173323,
+          "days": 1093,
+          "mdd": -0.08928554945284095,
+          "sharpe": 1.3576996462688489,
+          "total_return": 0.6818748007288653
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.00897811325147202,
+          "2023": 0.08546892931435357,
+          "2024": 0.24879841732198837,
+          "2025": 0.2185085571340526,
+          "2026": 0.02747697384967762
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.19337179062461268,
+          "equity_target_vol": 0.11381490800115948,
+          "overlay_equity_weight_max": 0.21014449033814658,
+          "overlay_lookback_days": 44,
+          "overlay_target_vol": 0.16499058149939227
+        },
+        "recent": 0.04261694038129815,
+        "sample": 46,
+        "stats": {
+          "annual": 0.11625631028087802,
+          "days": 1093,
+          "mdd": -0.1039958351061927,
+          "sharpe": 1.3394781027733849,
+          "total_return": 0.6105604016089365
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": 0.004297003118685971,
+          "2023": 0.08257311467760098,
+          "2024": 0.21635856034798118,
+          "2025": 0.18317205240351941,
+          "2026": 0.0293145085372577
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.09996118503427356,
+          "equity_target_vol": 0.1509016157788929,
+          "overlay_equity_weight_max": 0.26060829253700685,
+          "overlay_lookback_days": 67,
+          "overlay_target_vol": 0.11130478836035541
+        },
+        "recent": 0.058868197658781485,
+        "sample": 47,
+        "stats": {
+          "annual": 0.12208053850203826,
+          "days": 1093,
+          "mdd": -0.08122615464606797,
+          "sharpe": 1.3721090420674205,
+          "total_return": 0.6472927861891311
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.009619908874987648,
+          "2023": 0.08335852854789416,
+          "2024": 0.22620541839229347,
+          "2025": 0.20466979264013752,
+          "2026": 0.03935865578557185
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.12073942230193466,
+          "equity_target_vol": 0.19669547096695447,
+          "overlay_equity_weight_max": 0.3685866610875775,
+          "overlay_lookback_days": 100,
+          "overlay_target_vol": 0.14397393793485513
+        },
+        "recent": 0.048201799536768064,
+        "sample": 48,
+        "stats": {
+          "annual": 0.12998038787604926,
+          "days": 1093,
+          "mdd": -0.08680411444552172,
+          "sharpe": 1.3450229985737636,
+          "total_return": 0.6981416947208745
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.01175139805212011,
+          "2023": 0.08528188851471219,
+          "2024": 0.25611030202914997,
+          "2025": 0.23131283513572165,
+          "2026": 0.023691217235752182
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.17706192962384598,
+          "equity_target_vol": 0.12171095773237053,
+          "overlay_equity_weight_max": 0.29689572075218035,
+          "overlay_lookback_days": 62,
+          "overlay_target_vol": 0.15103732651006008
+        },
+        "recent": 0.044900191006402634,
+        "sample": 49,
+        "stats": {
+          "annual": 0.11677163795044687,
+          "days": 1093,
+          "mdd": -0.09269455211783806,
+          "sharpe": 1.3166361069427743,
+          "total_return": 0.6137848304666613
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.008282975508250079,
+          "2023": 0.07803515108448145,
+          "2024": 0.22836413995260463,
+          "2025": 0.19587539687747113,
+          "2026": 0.027571090943165455
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.054011296348642525,
+          "equity_target_vol": 0.1039636518074014,
+          "overlay_equity_weight_max": 0.2172299336994704,
+          "overlay_lookback_days": 86,
+          "overlay_target_vol": 0.15300861595540127
+        },
+        "recent": 0.04630337595512746,
+        "sample": 50,
+        "stats": {
+          "annual": 0.11591103973091754,
+          "days": 1093,
+          "mdd": -0.10066786622642698,
+          "sharpe": 1.3840548661336058,
+          "total_return": 0.6084028021059482
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.001140357150529736,
+          "2023": 0.08289076323278866,
+          "2024": 0.21576588241073602,
+          "2025": 0.18383622544321043,
+          "2026": 0.03315177959497406
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.06426879391033075,
+          "equity_target_vol": 0.1001701509033115,
+          "overlay_equity_weight_max": 0.2666005499131905,
+          "overlay_lookback_days": 66,
+          "overlay_target_vol": 0.16961523808522594
+        },
+        "recent": 0.04598571868499035,
+        "sample": 51,
+        "stats": {
+          "annual": 0.11404476256222695,
+          "days": 1093,
+          "mdd": -0.09418440489990454,
+          "sharpe": 1.3618487005678666,
+          "total_return": 0.5967788761675947
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.0035562256596142205,
+          "2023": 0.07810224524484366,
+          "2024": 0.21569554240021382,
+          "2025": 0.1852132318121087,
+          "2026": 0.03159852974455002
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.13050073204385426,
+          "equity_target_vol": 0.11325329633561697,
+          "overlay_equity_weight_max": 0.30506103259703,
+          "overlay_lookback_days": 54,
+          "overlay_target_vol": 0.1705375513105356
+        },
+        "recent": 0.04548929088894882,
+        "sample": 52,
+        "stats": {
+          "annual": 0.11862214193267451,
+          "days": 1093,
+          "mdd": -0.09085070287839792,
+          "sharpe": 1.3492244281596393,
+          "total_return": 0.6254044698265453
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.001050579669488294,
+          "2023": 0.07792103522527749,
+          "2024": 0.22749550412157893,
+          "2025": 0.19553224131976643,
+          "2026": 0.028607769818344453
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.15764863163302134,
+          "equity_target_vol": 0.19349961348242234,
+          "overlay_equity_weight_max": 0.2246136540609737,
+          "overlay_lookback_days": 76,
+          "overlay_target_vol": 0.12073111012106737
+        },
+        "recent": 0.06347620543255816,
+        "sample": 53,
+        "stats": {
+          "annual": 0.1221752798650666,
+          "days": 1093,
+          "mdd": -0.0830575637146096,
+          "sharpe": 1.3588954090471097,
+          "total_return": 0.6478955811422951
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.010190039289963204,
+          "2023": 0.08271250684336451,
+          "2024": 0.2266928635165537,
+          "2025": 0.20000687372429216,
+          "2026": 0.04458826666749882
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.18652867181116617,
+          "equity_target_vol": 0.12015242137346148,
+          "overlay_equity_weight_max": 0.35047060425415294,
+          "overlay_lookback_days": 88,
+          "overlay_target_vol": 0.16394181977572703
+        },
+        "recent": 0.045030784155710935,
+        "sample": 54,
+        "stats": {
+          "annual": 0.11837085273619907,
+          "days": 1093,
+          "mdd": -0.08731547095087677,
+          "sharpe": 1.328991519599534,
+          "total_return": 0.6238228163133592
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.006555979217878094,
+          "2023": 0.0763776571627004,
+          "2024": 0.23310924484920648,
+          "2025": 0.2004520465521713,
+          "2026": 0.025850784019931572
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.11640324600727857,
+          "equity_target_vol": 0.1689809169397644,
+          "overlay_equity_weight_max": 0.222844872526249,
+          "overlay_lookback_days": 113,
+          "overlay_target_vol": 0.1410322704376591
+        },
+        "recent": 0.04740429380396982,
+        "sample": 55,
+        "stats": {
+          "annual": 0.12342373858231803,
+          "days": 1093,
+          "mdd": -0.09966248847534975,
+          "sharpe": 1.3693184458610514,
+          "total_return": 0.6558548010628862
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": 0.004354765443174591,
+          "2023": 0.08370613419281914,
+          "2024": 0.2315342810687555,
+          "2025": 0.20121671889561799,
+          "2026": 0.02838492520474345
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.07240388287119393,
+          "equity_target_vol": 0.16579385309537187,
+          "overlay_equity_weight_max": 0.3096185763516352,
+          "overlay_lookback_days": 70,
+          "overlay_target_vol": 0.18138462337719496
+        },
+        "recent": 0.05076173833504649,
+        "sample": 56,
+        "stats": {
+          "annual": 0.12642729135909536,
+          "days": 1093,
+          "mdd": -0.08976679891189576,
+          "sharpe": 1.333502088185375,
+          "total_return": 0.6751243223776817
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.012382054071904292,
+          "2023": 0.08316532747503702,
+          "2024": 0.24792932369125964,
+          "2025": 0.22200376356177443,
+          "2026": 0.026835296510380413
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.12726607601120893,
+          "equity_target_vol": 0.16153637674342766,
+          "overlay_equity_weight_max": 0.20180374678324706,
+          "overlay_lookback_days": 42,
+          "overlay_target_vol": 0.13772650765542777
+        },
+        "recent": 0.05105586883346147,
+        "sample": 57,
+        "stats": {
+          "annual": 0.12144300461710489,
+          "days": 1093,
+          "mdd": -0.09495625515109474,
+          "sharpe": 1.358071746992392,
+          "total_return": 0.6432408661382105
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": 0.001424345305339303,
+          "2023": 0.0855203667448079,
+          "2024": 0.22218222228666362,
+          "2025": 0.19629695700066985,
+          "2026": 0.03388002659470568
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.18945087200257715,
+          "equity_target_vol": 0.1330197833460635,
+          "overlay_equity_weight_max": 0.32926788721674516,
+          "overlay_lookback_days": 76,
+          "overlay_target_vol": 0.11821571980887394
+        },
+        "recent": 0.05725576804673116,
+        "sample": 58,
+        "stats": {
+          "annual": 0.12098775130272488,
+          "days": 1093,
+          "mdd": -0.07734139147834052,
+          "sharpe": 1.3399760934303449,
+          "total_return": 0.6403521465304909
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.011013837218741385,
+          "2023": 0.07946336013076927,
+          "2024": 0.22994591254481933,
+          "2025": 0.2045075742377862,
+          "2026": 0.0371544171869147
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.10342082038030209,
+          "equity_target_vol": 0.18091623591848383,
+          "overlay_equity_weight_max": 0.3381777524772839,
+          "overlay_lookback_days": 81,
+          "overlay_target_vol": 0.19472505829982667
+        },
+        "recent": 0.04945263411355527,
+        "sample": 59,
+        "stats": {
+          "annual": 0.12693124737048977,
+          "days": 1093,
+          "mdd": -0.08786617180554823,
+          "sharpe": 1.3175521796867442,
+          "total_return": 0.6783743154407604
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.014646208020403728,
+          "2023": 0.08534131676817003,
+          "2024": 0.2509684410237498,
+          "2025": 0.22476420468193403,
+          "2026": 0.024310106667460918
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.18795106919277227,
+          "equity_target_vol": 0.16840174021384574,
+          "overlay_equity_weight_max": 0.24830996357694313,
+          "overlay_lookback_days": 58,
+          "overlay_target_vol": 0.15746713171507848
+        },
+        "recent": 0.04639935953468166,
+        "sample": 60,
+        "stats": {
+          "annual": 0.120372357063113,
+          "days": 1093,
+          "mdd": -0.09839491060615024,
+          "sharpe": 1.3047539040127494,
+          "total_return": 0.6364534953938992
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.0033889979418707528,
+          "2023": 0.08251593424304038,
+          "2024": 0.229796838073683,
+          "2025": 0.20154994284877104,
+          "2026": 0.026522549445600063
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.0867160435521577,
+          "equity_target_vol": 0.1294493302259795,
+          "overlay_equity_weight_max": 0.3416120508207652,
+          "overlay_lookback_days": 117,
+          "overlay_target_vol": 0.17297119226982588
+        },
+        "recent": 0.049448241244591795,
+        "sample": 61,
+        "stats": {
+          "annual": 0.12737212707462042,
+          "days": 1093,
+          "mdd": -0.08714202559955897,
+          "sharpe": 1.3986770745623367,
+          "total_return": 0.6812215075882804
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": 0.005622383251962848,
+          "2023": 0.08248210025550118,
+          "2024": 0.24323242874531292,
+          "2025": 0.2073510396131495,
+          "2026": 0.028924224021154465
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.1912396089261173,
+          "equity_target_vol": 0.18514610938745474,
+          "overlay_equity_weight_max": 0.3494979560479163,
+          "overlay_lookback_days": 78,
+          "overlay_target_vol": 0.19588140135957863
+        },
+        "recent": 0.04722408307388437,
+        "sample": 62,
+        "stats": {
+          "annual": 0.12406340932688797,
+          "days": 1093,
+          "mdd": -0.08887843045095867,
+          "sharpe": 1.2955076205668856,
+          "total_return": 0.659944293123677
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.015293421054506817,
+          "2023": 0.08245579973748707,
+          "2024": 0.24360037660619227,
+          "2025": 0.22434258491506198,
+          "2026": 0.022804669688209822
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.12289753619646372,
+          "equity_target_vol": 0.1355779185488426,
+          "overlay_equity_weight_max": 0.2415353411655628,
+          "overlay_lookback_days": 102,
+          "overlay_target_vol": 0.1245555781026992
+        },
+        "recent": 0.048110818376175146,
+        "sample": 63,
+        "stats": {
+          "annual": 0.119530946145745,
+          "days": 1093,
+          "mdd": -0.09150854316786972,
+          "sharpe": 1.3612860103765207,
+          "total_return": 0.6311345209755619
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.005838366182118637,
+          "2023": 0.08214083845233278,
+          "2024": 0.229936760012601,
+          "2025": 0.19518162856361254,
+          "2026": 0.03141229095261777
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.08016582139688584,
+          "equity_target_vol": 0.11619257398849382,
+          "overlay_equity_weight_max": 0.2825641044391643,
+          "overlay_lookback_days": 80,
+          "overlay_target_vol": 0.18736267567556847
+        },
+        "recent": 0.04757846015146816,
+        "sample": 64,
+        "stats": {
+          "annual": 0.11817498010783467,
+          "days": 1093,
+          "mdd": -0.09244399792376123,
+          "sharpe": 1.351413440654951,
+          "total_return": 0.6225907846323389
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.0060518736116409455,
+          "2023": 0.07880404996490964,
+          "2024": 0.22875318692860214,
+          "2025": 0.19449861354081177,
+          "2026": 0.030985150982545617
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.10309017884622773,
+          "equity_target_vol": 0.13196660253767828,
+          "overlay_equity_weight_max": 0.2544167119146175,
+          "overlay_lookback_days": 64,
+          "overlay_target_vol": 0.17950885305597752
+        },
+        "recent": 0.048104828445892256,
+        "sample": 65,
+        "stats": {
+          "annual": 0.1199512036235304,
+          "days": 1093,
+          "mdd": -0.09623361380771589,
+          "sharpe": 1.33554166916062,
+          "total_return": 0.6337895112353444
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.0072746934001149954,
+          "2023": 0.08288044464029087,
+          "2024": 0.23168781200900712,
+          "2025": 0.19668415965365527,
+          "2026": 0.03111312070516581
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.19996335448383024,
+          "equity_target_vol": 0.10755424223239352,
+          "overlay_equity_weight_max": 0.3116753738700811,
+          "overlay_lookback_days": 71,
+          "overlay_target_vol": 0.13404267951883855
+        },
+        "recent": 0.04282678122986505,
+        "sample": 66,
+        "stats": {
+          "annual": 0.112700971051926,
+          "days": 1093,
+          "mdd": -0.09087383667244153,
+          "sharpe": 1.318114137746388,
+          "total_return": 0.588449298672493
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.007145427709830399,
+          "2023": 0.07420754664495477,
+          "2024": 0.21918146257012205,
+          "2025": 0.18986664389895225,
+          "2026": 0.026674741158432047
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.0939608830609921,
+          "equity_target_vol": 0.15490830181379672,
+          "overlay_equity_weight_max": 0.36304458887795327,
+          "overlay_lookback_days": 90,
+          "overlay_target_vol": 0.13251633307748054
+        },
+        "recent": 0.0521199895916713,
+        "sample": 67,
+        "stats": {
+          "annual": 0.12899472860329042,
+          "days": 1093,
+          "mdd": -0.0850251531154802,
+          "sharpe": 1.3620162407544738,
+          "total_return": 0.6917322483029411
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.010079208593893996,
+          "2023": 0.08442646003617948,
+          "2024": 0.25152850120407066,
+          "2025": 0.22490739155057216,
+          "2026": 0.02798570785839849
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.11216911280844169,
+          "equity_target_vol": 0.18436308274054622,
+          "overlay_equity_weight_max": 0.2721882572540839,
+          "overlay_lookback_days": 46,
+          "overlay_target_vol": 0.13139221241245452
+        },
+        "recent": 0.051992160283133915,
+        "sample": 68,
+        "stats": {
+          "annual": 0.12369318022748566,
+          "days": 1093,
+          "mdd": -0.08643993879187284,
+          "sharpe": 1.3362027318261631,
+          "total_return": 0.6575764280973575
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.005211398479687879,
+          "2023": 0.08392694881326856,
+          "2024": 0.23103077686060192,
+          "2025": 0.2120632791285577,
+          "2026": 0.030264043313586564
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.12579330744893763,
+          "equity_target_vol": 0.13368779991704038,
+          "overlay_equity_weight_max": 0.30173801529899996,
+          "overlay_lookback_days": 59,
+          "overlay_target_vol": 0.12940007058183245
+        },
+        "recent": 0.05029648707268097,
+        "sample": 69,
+        "stats": {
+          "annual": 0.12234315226914383,
+          "days": 1093,
+          "mdd": -0.08679268782161687,
+          "sharpe": 1.344372830428176,
+          "total_return": 0.6489640913591794
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.0035868086601452687,
+          "2023": 0.0815217839026261,
+          "2024": 0.2319806536815079,
+          "2025": 0.20454101251816637,
+          "2026": 0.031124198389561375
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.14782063351421038,
+          "equity_target_vol": 0.17323311656152474,
+          "overlay_equity_weight_max": 0.37597923429142405,
+          "overlay_lookback_days": 105,
+          "overlay_target_vol": 0.15349407368059914
+        },
+        "recent": 0.04822406714577454,
+        "sample": 70,
+        "stats": {
+          "annual": 0.1312749878178805,
+          "days": 1093,
+          "mdd": -0.08708308374147333,
+          "sharpe": 1.370314538024127,
+          "total_return": 0.7065884501729491
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": 0.0004964133504772317,
+          "2023": 0.08400747715381596,
+          "2024": 0.25141551627944825,
+          "2025": 0.22843418126026793,
+          "2026": 0.023593596849016407
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.06359862927660064,
+          "equity_target_vol": 0.1813638276439618,
+          "overlay_equity_weight_max": 0.3958255381639123,
+          "overlay_lookback_days": 52,
+          "overlay_target_vol": 0.1883834204708308
+        },
+        "recent": 0.0584026064296197,
+        "sample": 71,
+        "stats": {
+          "annual": 0.13236027357999824,
+          "days": 1093,
+          "mdd": -0.0832945227115689,
+          "sharpe": 1.3493378721085867,
+          "total_return": 0.7136943843762429
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.015386250857080896,
+          "2023": 0.08443919699773184,
+          "2024": 0.24914884945780447,
+          "2025": 0.25133601436660435,
+          "2026": 0.026772277905124042
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.11896100229753728,
+          "equity_target_vol": 0.1923601010283165,
+          "overlay_equity_weight_max": 0.3968444310079042,
+          "overlay_lookback_days": 110,
+          "overlay_target_vol": 0.16048122802123288
+        },
+        "recent": 0.048063752037649454,
+        "sample": 72,
+        "stats": {
+          "annual": 0.1344546045547399,
+          "days": 1093,
+          "mdd": -0.08722258106319125,
+          "sharpe": 1.3861454152472314,
+          "total_return": 0.7274713874934646
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": 1.3128231128201051e-05,
+          "2023": 0.08674898225149286,
+          "2024": 0.25812075383200916,
+          "2025": 0.23441663934288215,
+          "2026": 0.023509376158922235
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.1738069418235864,
+          "equity_target_vol": 0.1533769394034544,
+          "overlay_equity_weight_max": 0.3601845771491194,
+          "overlay_lookback_days": 112,
+          "overlay_target_vol": 0.16006752381899617
+        },
+        "recent": 0.04634379589173521,
+        "sample": 73,
+        "stats": {
+          "annual": 0.12787961295009365,
+          "days": 1093,
+          "mdd": -0.08874693240742071,
+          "sharpe": 1.3618883804826176,
+          "total_return": 0.6845034391599261
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": 0.001961226906658009,
+          "2023": 0.0846044865016764,
+          "2024": 0.24393237867140316,
+          "2025": 0.2175766573272262,
+          "2026": 0.023426136125523023
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.09793343934571908,
+          "equity_target_vol": 0.16003999542485378,
+          "overlay_equity_weight_max": 0.3781702916310895,
+          "overlay_lookback_days": 37,
+          "overlay_target_vol": 0.17754946536999347
+        },
+        "recent": 0.04597856571034331,
+        "sample": 74,
+        "stats": {
+          "annual": 0.12428534530414681,
+          "days": 1093,
+          "mdd": -0.09031527097009351,
+          "sharpe": 1.2931625103935593,
+          "total_return": 0.6613649703577533
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.020722195120022602,
+          "2023": 0.08558502181228822,
+          "2024": 0.24325094934060254,
+          "2025": 0.23353911002326577,
+          "2026": 0.019022027758063054
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.1601369331541849,
+          "equity_target_vol": 0.1415186203350035,
+          "overlay_equity_weight_max": 0.32626499888444715,
+          "overlay_lookback_days": 116,
+          "overlay_target_vol": 0.10127031776155468
+        },
+        "recent": 0.05163317509097354,
+        "sample": 75,
+        "stats": {
+          "annual": 0.12415049354318963,
+          "days": 1093,
+          "mdd": -0.07431718761717232,
+          "sharpe": 1.4054648271022905,
+          "total_return": 0.6605016332664924
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": 0.0039619895528120175,
+          "2023": 0.08223940379685435,
+          "2024": 0.23276375717227737,
+          "2025": 0.2030153162709889,
+          "2026": 0.030499249496755754
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.10933555086476829,
+          "equity_target_vol": 0.18677326919021633,
+          "overlay_equity_weight_max": 0.31340631788323897,
+          "overlay_lookback_days": 40,
+          "overlay_target_vol": 0.15723802063473358
+        },
+        "recent": 0.04972257118242718,
+        "sample": 76,
+        "stats": {
+          "annual": 0.1275467161991477,
+          "days": 1093,
+          "mdd": -0.08742452956147218,
+          "sharpe": 1.3375273478749923,
+          "total_return": 0.6823500269693825
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.00874188564792866,
+          "2023": 0.08494752939308836,
+          "2024": 0.2441859633813812,
+          "2025": 0.22581719096362263,
+          "2026": 0.02567522127543942
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.16505845437452143,
+          "equity_target_vol": 0.16079550433020381,
+          "overlay_equity_weight_max": 0.3470907416587249,
+          "overlay_lookback_days": 107,
+          "overlay_target_vol": 0.14514813458904677
+        },
+        "recent": 0.04802125612266228,
+        "sample": 77,
+        "stats": {
+          "annual": 0.12819409614892252,
+          "days": 1093,
+          "mdd": -0.08867618911861008,
+          "sharpe": 1.3615928537067887,
+          "total_return": 0.6865396864523552
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": 0.001699957732891333,
+          "2023": 0.0842004390765807,
+          "2024": 0.24476411077235993,
+          "2025": 0.21830286003306432,
+          "2026": 0.02401662842470853
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.17021611653698399,
+          "equity_target_vol": 0.1954489613863026,
+          "overlay_equity_weight_max": 0.20804099119497796,
+          "overlay_lookback_days": 99,
+          "overlay_target_vol": 0.15194786886406272
+        },
+        "recent": 0.047185233237035495,
+        "sample": 78,
+        "stats": {
+          "annual": 0.11880141339979366,
+          "days": 1093,
+          "mdd": -0.10219002220112017,
+          "sharpe": 1.318593066728848,
+          "total_return": 0.6265335565695327
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.008706894815006194,
+          "2023": 0.08341767150275747,
+          "2024": 0.2286490905564722,
+          "2025": 0.19720961645907265,
+          "2026": 0.0295962849333109
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.1145907085110744,
+          "equity_target_vol": 0.11800090881599284,
+          "overlay_equity_weight_max": 0.38328567443360784,
+          "overlay_lookback_days": 120,
+          "overlay_target_vol": 0.1585165166873926
+        },
+        "recent": 0.04699007636866659,
+        "sample": 79,
+        "stats": {
+          "annual": 0.12573083484759606,
+          "days": 1093,
+          "mdd": -0.08360659997716413,
+          "sharpe": 1.409371523773282,
+          "total_return": 0.6706408713124812
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": 0.005634376424904941,
+          "2023": 0.0794063313438278,
+          "2024": 0.24012759989255872,
+          "2025": 0.20790930517039263,
+          "2026": 0.027442035787211827
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.059784296574948936,
+          "equity_target_vol": 0.1386210111494975,
+          "overlay_equity_weight_max": 0.24344272718197987,
+          "overlay_lookback_days": 38,
+          "overlay_target_vol": 0.12375866830397567
+        },
+        "recent": 0.05562271644230621,
+        "sample": 80,
+        "stats": {
+          "annual": 0.12342064547841991,
+          "days": 1093,
+          "mdd": -0.08443502921150514,
+          "sharpe": 1.3838813189366506,
+          "total_return": 0.6558350453244237
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.004615596792619803,
+          "2023": 0.08528481428609491,
+          "2024": 0.23034189005077677,
+          "2025": 0.1999945849202096,
+          "2026": 0.03819137183510479
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.14647585512608183,
+          "equity_target_vol": 0.17259884413200782,
+          "overlay_equity_weight_max": 0.37133399491767116,
+          "overlay_lookback_days": 97,
+          "overlay_target_vol": 0.1037202912190444
+        },
+        "recent": 0.055151497135535354,
+        "sample": 81,
+        "stats": {
+          "annual": 0.1268112476736598,
+          "days": 1093,
+          "mdd": -0.07580394623862974,
+          "sharpe": 1.3774478860566295,
+          "total_return": 0.6776000023988182
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.011780616271059419,
+          "2023": 0.08432901864331122,
+          "2024": 0.2423941013281159,
+          "2025": 0.22315728395881784,
+          "2026": 0.03022547021168953
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.05287253920238198,
+          "equity_target_vol": 0.17579525691173375,
+          "overlay_equity_weight_max": 0.2934023260998302,
+          "overlay_lookback_days": 75,
+          "overlay_target_vol": 0.1551895352633248
+        },
+        "recent": 0.05057886902003639,
+        "sample": 82,
+        "stats": {
+          "annual": 0.1262530856645987,
+          "days": 1093,
+          "mdd": -0.09127156160750716,
+          "sharpe": 1.331699971203453,
+          "total_return": 0.6740020032038754
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.012299772156694755,
+          "2023": 0.08442657156246125,
+          "2024": 0.24791248599283655,
+          "2025": 0.2195750201563318,
+          "2026": 0.02692332534000208
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.16590025703797578,
+          "equity_target_vol": 0.1895002986638261,
+          "overlay_equity_weight_max": 0.2736956288569419,
+          "overlay_lookback_days": 50,
+          "overlay_target_vol": 0.1677396726034811
+        },
+        "recent": 0.04611657084835685,
+        "sample": 83,
+        "stats": {
+          "annual": 0.12240368747933772,
+          "days": 1093,
+          "mdd": -0.09587890473512739,
+          "sharpe": 1.3014401618476363,
+          "total_return": 0.6493495295373437
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.0054857194327896375,
+          "2023": 0.08230445766743921,
+          "2024": 0.23693413655518647,
+          "2025": 0.20874582961811416,
+          "2026": 0.024874449491864237
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.07857942212145178,
+          "equity_target_vol": 0.1308246095354016,
+          "overlay_equity_weight_max": 0.35276554123620996,
+          "overlay_lookback_days": 41,
+          "overlay_target_vol": 0.11978144634343607
+        },
+        "recent": 0.05554791173671925,
+        "sample": 84,
+        "stats": {
+          "annual": 0.12497678651330313,
+          "days": 1093,
+          "mdd": -0.07480434857216478,
+          "sharpe": 1.382178457991549,
+          "total_return": 0.6657970851151718
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.006211921167739609,
+          "2023": 0.08313226038186539,
+          "2024": 0.23094405268556684,
+          "2025": 0.215729932360756,
+          "2026": 0.03412110099614174
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.17098425986035948,
+          "equity_target_vol": 0.17151517751500625,
+          "overlay_equity_weight_max": 0.3923173870012393,
+          "overlay_lookback_days": 39,
+          "overlay_target_vol": 0.17623619837299512
+        },
+        "recent": 0.04818823222288593,
+        "sample": 85,
+        "stats": {
+          "annual": 0.12235141658617299,
+          "days": 1093,
+          "mdd": -0.08927677665722089,
+          "sharpe": 1.2725671543699302,
+          "total_return": 0.6490167076141657
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.023869984705960245,
+          "2023": 0.08408664403091715,
+          "2024": 0.23698874960527028,
+          "2025": 0.23600378753084672,
+          "2026": 0.019219779932615033
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.1730309183077764,
+          "equity_target_vol": 0.19892121788669304,
+          "overlay_equity_weight_max": 0.3652123853705851,
+          "overlay_lookback_days": 72,
+          "overlay_target_vol": 0.10421565576099606
+        },
+        "recent": 0.056489749352732765,
+        "sample": 86,
+        "stats": {
+          "annual": 0.12554852402534689,
+          "days": 1093,
+          "mdd": -0.07223537746723341,
+          "sharpe": 1.3480727051069459,
+          "total_return": 0.6694687680795588
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.01588707481921514,
+          "2023": 0.08217033046474143,
+          "2024": 0.2368884890964753,
+          "2025": 0.2280663206268343,
+          "2026": 0.032013482825811845
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.19565497267709575,
+          "equity_target_vol": 0.157669453740306,
+          "overlay_equity_weight_max": 0.38989863534636837,
+          "overlay_lookback_days": 33,
+          "overlay_target_vol": 0.11185664325848303
+        },
+        "recent": 0.052534416886447444,
+        "sample": 87,
+        "stats": {
+          "annual": 0.12207920732357702,
+          "days": 1093,
+          "mdd": -0.07444393133801774,
+          "sharpe": 1.3208168493140342,
+          "total_return": 0.6472843177321148
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.022866872525770132,
+          "2023": 0.0837615979502655,
+          "2024": 0.23497936225071503,
+          "2025": 0.22747862223948623,
+          "2026": 0.026141923192272598
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.06573303786649079,
+          "equity_target_vol": 0.1904376877480907,
+          "overlay_equity_weight_max": 0.3705142501679739,
+          "overlay_lookback_days": 114,
+          "overlay_target_vol": 0.19029047413728142
+        },
+        "recent": 0.049680955029636875,
+        "sample": 88,
+        "stats": {
+          "annual": 0.13621933050343338,
+          "days": 1093,
+          "mdd": -0.08582376504312572,
+          "sharpe": 1.4006884076612836,
+          "total_return": 0.7391461746822101
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": 0.0005208128218325836,
+          "2023": 0.08858244765983314,
+          "2024": 0.2623545745924958,
+          "2025": 0.2341474996886439,
+          "2026": 0.024944160005909044
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.18378325159672804,
+          "equity_target_vol": 0.1369433354441383,
+          "overlay_equity_weight_max": 0.26882946622985104,
+          "overlay_lookback_days": 98,
+          "overlay_target_vol": 0.16622689193012682
+        },
+        "recent": 0.04562991696721341,
+        "sample": 89,
+        "stats": {
+          "annual": 0.11770485520263319,
+          "days": 1093,
+          "mdd": -0.09593568802786356,
+          "sharpe": 1.3163473847325786,
+          "total_return": 0.6196366501649757
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.0072287489875860755,
+          "2023": 0.07946027157083724,
+          "2024": 0.22870770652012884,
+          "2025": 0.19669171221732973,
+          "2026": 0.02785268514577388
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.1047017530512441,
+          "equity_target_vol": 0.11897740036355522,
+          "overlay_equity_weight_max": 0.34171022372854487,
+          "overlay_lookback_days": 87,
+          "overlay_target_vol": 0.18043214663392593
+        },
+        "recent": 0.04761935932651107,
+        "sample": 90,
+        "stats": {
+          "annual": 0.12081457651827243,
+          "days": 1093,
+          "mdd": -0.08663713271706075,
+          "sharpe": 1.3615040070626534,
+          "total_return": 0.6392543264833532
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.005501026111512042,
+          "2023": 0.0773324291733104,
+          "2024": 0.23714374081242195,
+          "2025": 0.20239163405218896,
+          "2026": 0.028551775550793135
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.15516443993560633,
+          "equity_target_vol": 0.1701440484599145,
+          "overlay_equity_weight_max": 0.3571120390654493,
+          "overlay_lookback_days": 32,
+          "overlay_target_vol": 0.17245537105362682
+        },
+        "recent": 0.048979289589062835,
+        "sample": 91,
+        "stats": {
+          "annual": 0.12477004296623329,
+          "days": 1093,
+          "mdd": -0.0861530579626325,
+          "sharpe": 1.3004330799214274,
+          "total_return": 0.6644709139686387
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.020421490066137027,
+          "2023": 0.08507068709501797,
+          "2024": 0.24600675134319383,
+          "2025": 0.2288817098751188,
+          "2026": 0.022700466918862183
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.16854205800539196,
+          "equity_target_vol": 0.10606476628954008,
+          "overlay_equity_weight_max": 0.3291301253328689,
+          "overlay_lookback_days": 69,
+          "overlay_target_vol": 0.19257743095838453
+        },
+        "recent": 0.044056591782212884,
+        "sample": 92,
+        "stats": {
+          "annual": 0.11390042683838875,
+          "days": 1093,
+          "mdd": -0.08797016787213441,
+          "sharpe": 1.3296273389123985,
+          "total_return": 0.5958825949609206
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.007068306336964092,
+          "2023": 0.07367080223902689,
+          "2024": 0.2214084791473756,
+          "2025": 0.1929567591554615,
+          "2026": 0.027365054558298185
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.10754004528751696,
+          "equity_target_vol": 0.1260822426724944,
+          "overlay_equity_weight_max": 0.29864816327586796,
+          "overlay_lookback_days": 46,
+          "overlay_target_vol": 0.17851938244130328
+        },
+        "recent": 0.046970533147799864,
+        "sample": 93,
+        "stats": {
+          "annual": 0.12242906579153723,
+          "days": 1093,
+          "mdd": -0.09211912462236971,
+          "sharpe": 1.348331126507683,
+          "total_return": 0.6495111382666476
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.002098493994300843,
+          "2023": 0.08150338217121078,
+          "2024": 0.23579411378721082,
+          "2025": 0.20219632417719957,
+          "2026": 0.028769723166054417
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.1757553936972207,
+          "equity_target_vol": 0.14194884539121422,
+          "overlay_equity_weight_max": 0.38487586639427324,
+          "overlay_lookback_days": 106,
+          "overlay_target_vol": 0.1423277077975484
+        },
+        "recent": 0.04532910809358248,
+        "sample": 94,
+        "stats": {
+          "annual": 0.1275780255758483,
+          "days": 1093,
+          "mdd": -0.0886122424808774,
+          "sharpe": 1.3618690608459338,
+          "total_return": 0.6825524679504567
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": 0.0025904566430181575,
+          "2023": 0.08162592614807362,
+          "2024": 0.24504290086341807,
+          "2025": 0.21750218174334712,
+          "2026": 0.02356139264809931
+        }
+      },
+      {
+        "parameters": {
+          "c_satellite_cap": 0.07376366518158453,
+          "equity_target_vol": 0.11215817343158185,
+          "overlay_equity_weight_max": 0.3982350475745543,
+          "overlay_lookback_days": 34,
+          "overlay_target_vol": 0.17414184111569253
+        },
+        "recent": 0.04821434442590644,
+        "sample": 95,
+        "stats": {
+          "annual": 0.11986789458172642,
+          "days": 1093,
+          "mdd": -0.08041368533330584,
+          "sharpe": 1.3473574104053818,
+          "total_return": 0.6332629396782123
+        },
+        "v2_point_pass": true,
+        "yearly": {
+          "2022": -0.014975364171873284,
+          "2023": 0.07836300859651901,
+          "2024": 0.23298966260757936,
+          "2025": 0.21325014447928448,
+          "2026": 0.02786066444554458
+        }
+      }
+    ],
+    "samples": 96,
+    "seed": 370,
+    "summary": {
+      "annual_p05_median_p95": [
+        0.11586064935035784,
+        0.12240396078589777,
+        0.13030403786150707
+      ],
+      "annual_worst": 0.112700971051926,
+      "mdd_p05_median_worst": [
+        -0.10085960894275109,
+        -0.08797161918234081,
+        -0.1039958351061927
+      ],
+      "sharpe_p05_median_p95": [
+        1.300029452150811,
+        1.3556358075954826,
+        1.405982263820312
+      ],
+      "sharpe_worst": 1.2725671543699302,
+      "v2_point_pass_rate": 1.0
+    }
+  },
+  "parameter_inventory": [
+    {
+      "evidence": "Only one frozen value was backtested; no adjacent lookback grid exists.",
+      "parameter": "stock_rel_industry_lookback_days",
+      "status": "not_monte_carlo_tested",
+      "surface_value": 20,
+      "used_by": "R360 B sleeve score and fade condition"
+    },
+    {
+      "evidence": "Only one frozen five-session change was backtested.",
+      "parameter": "industry_fade_change_days",
+      "status": "not_monte_carlo_tested",
+      "surface_value": 5,
+      "used_by": "R360 fade exit"
+    },
+    {
+      "evidence": "The current weights were inherited, not randomly perturbed in this audit.",
+      "parameter": "scoring_weights",
+      "status": "not_monte_carlo_tested",
+      "surface_value": [
+        0.35,
+        0.15,
+        0.3,
+        0.2
+      ],
+      "used_by": "R101/R360 B sleeve"
+    },
+    {
+      "evidence": "No adjacent threshold sensitivity experiment was retained.",
+      "parameter": "basic_filter_thresholds",
+      "status": "not_monte_carlo_tested",
+      "surface_value": {
+        "amount_min": 20000000,
+        "exclude_new_days": 60,
+        "market_cap_min": 1000000000,
+        "price_max": 500,
+        "price_min": 3
+      },
+      "used_by": "R360 and earlier B sleeves"
+    },
+    {
+      "evidence": "Prior holding studies exist, but no Monte Carlo path-plus-parameter audit around the final R360 portfolio.",
+      "parameter": "max_hold_days",
+      "status": "historical_scan_only",
+      "surface_value": 20,
+      "used_by": "R360 B sleeve"
+    },
+    {
+      "evidence": {
+        "artifact": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r102d_stop_loss_scan.json",
+        "artifact_sha256": "116d61d16426eff730dd426622d872c86dee9e6d1e1ba543e9363dd2d023a9c8",
+        "rows": {
+          "none": {
+            "annual": 0.0958,
+            "mdd": -0.5059,
+            "sharpe": 0.46,
+            "stop_loss": null
+          },
+          "sl_10": {
+            "annual": -0.0096,
+            "mdd": -0.568,
+            "sharpe": 0.12,
+            "stop_loss": -0.1
+          },
+          "sl_15": {
+            "annual": 0.0498,
+            "mdd": -0.5148,
+            "sharpe": 0.31,
+            "stop_loss": -0.15
+          },
+          "sl_20": {
+            "annual": 0.0942,
+            "mdd": -0.4085,
+            "sharpe": 0.45,
+            "stop_loss": -0.2
+          },
+          "sl_25": {
+            "annual": 0.0791,
+            "mdd": -0.5147,
+            "sharpe": 0.41,
+            "stop_loss": -0.25
+          }
+        },
+        "scan_points": 5
+      },
+      "parameter": "stop_loss",
+      "status": "historical_scan_only",
+      "surface_value": -0.2,
+      "used_by": "R360 B sleeve"
+    },
+    {
+      "evidence": "A single 200-day rule was retained; its neighbouring grid was not tested.",
+      "parameter": "gold_trend_lookback_days",
+      "status": "not_monte_carlo_tested",
+      "surface_value": 200,
+      "used_by": "final defensive gold proxy"
+    },
+    {
+      "evidence": "The state mapping was frozen before this audit; threshold uncertainty was not sampled.",
+      "parameter": "regime_gate_states",
+      "status": "not_monte_carlo_tested",
+      "surface_value": [
+        "weak"
+      ],
+      "used_by": "A sleeve regime gate"
+    },
+    {
+      "evidence": "40/60/90-day cells pass v2 point and bootstrap checks in R344, R350 and R354.",
+      "grid": [
+        40,
+        60,
+        90
+      ],
+      "parameter": "risk_parity_lookback_days",
+      "status": "qualified_plateau",
+      "surface_value": 60,
+      "used_by": "final defensive bucket"
+    },
+    {
+      "evidence": "All 12/15/18% overlay cells pass across the three frozen lineages.",
+      "grid": [
+        0.12,
+        0.15,
+        0.18
+      ],
+      "parameter": "overlay_target_vol",
+      "status": "qualified_plateau",
+      "surface_value": 0.15,
+      "used_by": "final defensive bucket"
+    },
+    {
+      "evidence": "The three joint target-vol cells pass v2 re-evaluation in every lineage.",
+      "grid": [
+        0.12,
+        0.15,
+        0.18
+      ],
+      "parameter": "joint_equity_target_vol",
+      "status": "qualified_plateau",
+      "surface_value": 0.15,
+      "used_by": "joint equity and overlay risk target"
+    },
+    {
+      "evidence": "The four cap cells pass v2 re-evaluation in every lineage; legacy 12% gates had rejected them.",
+      "grid": [
+        0.05,
+        0.1,
+        0.15,
+        0.2
+      ],
+      "parameter": "c_satellite_cap",
+      "status": "qualified_plateau",
+      "surface_value": 0.1,
+      "used_by": "C-sleeve satellite weight"
+    },
+    {
+      "evidence": "R368 compared 10 versus 20 positions, but did not run a path-bootstrap parameter audit.",
+      "grid": [
+        10,
+        20
+      ],
+      "parameter": "max_positions",
+      "status": "historical_scan_only",
+      "surface_value": 10,
+      "used_by": "stock sleeves"
+    }
+  ],
+  "parameter_lineages": {
+    "r344": {
+      "artifact": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r344_extended_window.json",
+      "artifact_sha256": "2549f75ec759eb0a6cf40e3cd5534a6b45eac5d64c093676af47eef0b25153b3",
+      "classification": "post-hoc temporal-extension validation of the frozen R343 10% C satellite portfolio with monthly gold 200-day trend proxy",
+      "families": {
+        "cap_plateau": {
+          "annual_range": [
+            0.117054,
+            0.121277
+          ],
+          "cell_count": 4,
+          "cells": {
+            "0.05": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.121277,
+                "bootstrap_mdd_p05": -0.102328,
+                "bootstrap_positive_rate": 0.915,
+                "mdd": -0.090889,
+                "recent": 0.052525,
+                "sharpe": 1.3012,
+                "stress_annual": 0.106774,
+                "stress_mdd": -0.095368,
+                "stress_sharpe": 1.1598
+              },
+              "parameters": {
+                "cap": 0.05
+              }
+            },
+            "0.10": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.119925,
+                "bootstrap_mdd_p05": -0.102704,
+                "bootstrap_positive_rate": 0.914,
+                "mdd": -0.090912,
+                "recent": 0.052405,
+                "sharpe": 1.289,
+                "stress_annual": 0.105858,
+                "stress_mdd": -0.095312,
+                "stress_sharpe": 1.1515
+              },
+              "parameters": {
+                "cap": 0.1
+              }
+            },
+            "0.15": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.118513,
+                "bootstrap_mdd_p05": -0.103735,
+                "bootstrap_positive_rate": 0.912,
+                "mdd": -0.091002,
+                "recent": 0.052226,
+                "sharpe": 1.276,
+                "stress_annual": 0.104889,
+                "stress_mdd": -0.095308,
+                "stress_sharpe": 1.1426
+              },
+              "parameters": {
+                "cap": 0.15
+              }
+            },
+            "0.20": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.117054,
+                "bootstrap_mdd_p05": -0.105208,
+                "bootstrap_positive_rate": 0.912,
+                "mdd": -0.091087,
+                "recent": 0.052044,
+                "sharpe": 1.2624,
+                "stress_annual": 0.103884,
+                "stress_mdd": -0.095199,
+                "stress_sharpe": 1.1332
+              },
+              "parameters": {
+                "cap": 0.2
+              }
+            }
+          },
+          "mdd_range": [
+            -0.091087,
+            -0.090889
+          ],
+          "pass_count": 4,
+          "pass_rate": 1.0,
+          "plateau_pass": true,
+          "sharpe_range": [
+            1.2624,
+            1.3012
+          ]
+        },
+        "joint_target_grid": {
+          "annual_range": [
+            0.115067,
+            0.121996
+          ],
+          "cell_count": 3,
+          "cells": {
+            "joint_T12": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.115067,
+                "bootstrap_mdd_p05": -0.094338,
+                "bootstrap_positive_rate": 0.917,
+                "mdd": -0.082491,
+                "recent": 0.054674,
+                "sharpe": 1.3185,
+                "stress_annual": 0.109085,
+                "stress_mdd": -0.084485,
+                "stress_sharpe": 1.2562
+              },
+              "parameters": {
+                "equity_target": 0.12,
+                "lookback": 60,
+                "overlay_target": 0.12
+              }
+            },
+            "joint_T15": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.119925,
+                "bootstrap_mdd_p05": -0.102704,
+                "bootstrap_positive_rate": 0.914,
+                "mdd": -0.090912,
+                "recent": 0.052405,
+                "sharpe": 1.289,
+                "stress_annual": 0.113447,
+                "stress_mdd": -0.093207,
+                "stress_sharpe": 1.2255
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 60,
+                "overlay_target": 0.15
+              }
+            },
+            "joint_T18": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.121996,
+                "bootstrap_mdd_p05": -0.104731,
+                "bootstrap_positive_rate": 0.915,
+                "mdd": -0.088699,
+                "recent": 0.054253,
+                "sharpe": 1.2845,
+                "stress_annual": 0.115376,
+                "stress_mdd": -0.09074,
+                "stress_sharpe": 1.2209
+              },
+              "parameters": {
+                "equity_target": 0.18,
+                "lookback": 60,
+                "overlay_target": 0.18
+              }
+            }
+          },
+          "mdd_range": [
+            -0.090912,
+            -0.082491
+          ],
+          "pass_count": 3,
+          "pass_rate": 1.0,
+          "plateau_pass": true,
+          "sharpe_range": [
+            1.2845,
+            1.3185
+          ]
+        },
+        "overlay_grid": {
+          "annual_range": [
+            0.119492,
+            0.12129
+          ],
+          "cell_count": 9,
+          "cells": {
+            "L40_T12": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.119492,
+                "bootstrap_mdd_p05": -0.096579,
+                "bootstrap_positive_rate": 0.918,
+                "mdd": -0.078128,
+                "recent": 0.060518,
+                "sharpe": 1.3227,
+                "stress_annual": 0.112411,
+                "stress_mdd": -0.081696,
+                "stress_sharpe": 1.2517
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 40,
+                "overlay_target": 0.12
+              }
+            },
+            "L40_T15": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.119837,
+                "bootstrap_mdd_p05": -0.098377,
+                "bootstrap_positive_rate": 0.918,
+                "mdd": -0.084854,
+                "recent": 0.055854,
+                "sharpe": 1.3025,
+                "stress_annual": 0.112977,
+                "stress_mdd": -0.087396,
+                "stress_sharpe": 1.2349
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 40,
+                "overlay_target": 0.15
+              }
+            },
+            "L40_T18": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.119927,
+                "bootstrap_mdd_p05": -0.102587,
+                "bootstrap_positive_rate": 0.916,
+                "mdd": -0.091029,
+                "recent": 0.052269,
+                "sharpe": 1.2889,
+                "stress_annual": 0.113247,
+                "stress_mdd": -0.093374,
+                "stress_sharpe": 1.2238
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 40,
+                "overlay_target": 0.18
+              }
+            },
+            "L60_T12": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.119697,
+                "bootstrap_mdd_p05": -0.097735,
+                "bootstrap_positive_rate": 0.918,
+                "mdd": -0.082185,
+                "recent": 0.057888,
+                "sharpe": 1.3107,
+                "stress_annual": 0.113009,
+                "stress_mdd": -0.084541,
+                "stress_sharpe": 1.2439
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 60,
+                "overlay_target": 0.12
+              }
+            },
+            "L60_T15": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.119925,
+                "bootstrap_mdd_p05": -0.102704,
+                "bootstrap_positive_rate": 0.914,
+                "mdd": -0.090912,
+                "recent": 0.052405,
+                "sharpe": 1.289,
+                "stress_annual": 0.113447,
+                "stress_mdd": -0.093207,
+                "stress_sharpe": 1.2255
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 60,
+                "overlay_target": 0.15
+              }
+            },
+            "L60_T18": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.12044,
+                "bootstrap_mdd_p05": -0.102674,
+                "bootstrap_positive_rate": 0.915,
+                "mdd": -0.089424,
+                "recent": 0.054127,
+                "sharpe": 1.2903,
+                "stress_annual": 0.114034,
+                "stress_mdd": -0.091441,
+                "stress_sharpe": 1.2278
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 60,
+                "overlay_target": 0.18
+              }
+            },
+            "L90_T12": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.12129,
+                "bootstrap_mdd_p05": -0.094314,
+                "bootstrap_positive_rate": 0.924,
+                "mdd": -0.079132,
+                "recent": 0.063879,
+                "sharpe": 1.3401,
+                "stress_annual": 0.114772,
+                "stress_mdd": -0.081514,
+                "stress_sharpe": 1.2742
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 90,
+                "overlay_target": 0.12
+              }
+            },
+            "L90_T15": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.119718,
+                "bootstrap_mdd_p05": -0.101119,
+                "bootstrap_positive_rate": 0.92,
+                "mdd": -0.089564,
+                "recent": 0.053965,
+                "sharpe": 1.3038,
+                "stress_annual": 0.113373,
+                "stress_mdd": -0.091592,
+                "stress_sharpe": 1.2407
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 90,
+                "overlay_target": 0.15
+              }
+            },
+            "L90_T18": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.119758,
+                "bootstrap_mdd_p05": -0.10112,
+                "bootstrap_positive_rate": 0.921,
+                "mdd": -0.089424,
+                "recent": 0.054127,
+                "sharpe": 1.3041,
+                "stress_annual": 0.113416,
+                "stress_mdd": -0.091441,
+                "stress_sharpe": 1.241
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 90,
+                "overlay_target": 0.18
+              }
+            }
+          },
+          "mdd_range": [
+            -0.091029,
+            -0.078128
+          ],
+          "pass_count": 9,
+          "pass_rate": 1.0,
+          "plateau_pass": true,
+          "sharpe_range": [
+            1.2889,
+            1.3401
+          ]
+        }
+      },
+      "legacy_all_pass": false,
+      "legacy_selected": null,
+      "v2_plateau_pass": true
+    },
+    "r350": {
+      "artifact": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r350_sleeve_ensemble.json",
+      "artifact_sha256": "bdbab7722ee0c36be4e262fa93fc673cbea38ae1a8f0f1018b957affa789c1f6",
+      "classification": "post-hoc fixed 50/50 ensemble of already frozen Top10 and Top20 A/B sleeves",
+      "families": {
+        "cap_plateau": {
+          "annual_range": [
+            0.11423,
+            0.118483
+          ],
+          "cell_count": 4,
+          "cells": {
+            "0.05": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.118483,
+                "bootstrap_mdd_p05": -0.102674,
+                "bootstrap_positive_rate": 0.917,
+                "mdd": -0.091476,
+                "recent": 0.048829,
+                "sharpe": 1.2798,
+                "stress_annual": 0.103826,
+                "stress_mdd": -0.096918,
+                "stress_sharpe": 1.1356
+              },
+              "parameters": {
+                "cap": 0.05
+              }
+            },
+            "0.10": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.117146,
+                "bootstrap_mdd_p05": -0.103291,
+                "bootstrap_positive_rate": 0.916,
+                "mdd": -0.091488,
+                "recent": 0.049049,
+                "sharpe": 1.2665,
+                "stress_annual": 0.102998,
+                "stress_mdd": -0.096918,
+                "stress_sharpe": 1.1273
+              },
+              "parameters": {
+                "cap": 0.1
+              }
+            },
+            "0.15": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.115736,
+                "bootstrap_mdd_p05": -0.105293,
+                "bootstrap_positive_rate": 0.914,
+                "mdd": -0.091679,
+                "recent": 0.049074,
+                "sharpe": 1.2524,
+                "stress_annual": 0.102088,
+                "stress_mdd": -0.096953,
+                "stress_sharpe": 1.118
+              },
+              "parameters": {
+                "cap": 0.15
+              }
+            },
+            "0.20": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.11423,
+                "bootstrap_mdd_p05": -0.106271,
+                "bootstrap_positive_rate": 0.913,
+                "mdd": -0.092125,
+                "recent": 0.048961,
+                "sharpe": 1.2372,
+                "stress_annual": 0.101062,
+                "stress_mdd": -0.097093,
+                "stress_sharpe": 1.1075
+              },
+              "parameters": {
+                "cap": 0.2
+              }
+            }
+          },
+          "mdd_range": [
+            -0.092125,
+            -0.091476
+          ],
+          "pass_count": 4,
+          "pass_rate": 1.0,
+          "plateau_pass": true,
+          "sharpe_range": [
+            1.2372,
+            1.2798
+          ]
+        },
+        "joint_target_grid": {
+          "annual_range": [
+            0.112748,
+            0.118628
+          ],
+          "cell_count": 3,
+          "cells": {
+            "joint_T12": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.112748,
+                "bootstrap_mdd_p05": -0.095842,
+                "bootstrap_positive_rate": 0.91,
+                "mdd": -0.084908,
+                "recent": 0.051251,
+                "sharpe": 1.2883,
+                "stress_annual": 0.106704,
+                "stress_mdd": -0.086508,
+                "stress_sharpe": 1.2259
+              },
+              "parameters": {
+                "equity_target": 0.12,
+                "lookback": 60,
+                "overlay_target": 0.12
+              }
+            },
+            "joint_T15": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.117146,
+                "bootstrap_mdd_p05": -0.103291,
+                "bootstrap_positive_rate": 0.916,
+                "mdd": -0.091488,
+                "recent": 0.049049,
+                "sharpe": 1.2665,
+                "stress_annual": 0.110769,
+                "stress_mdd": -0.093341,
+                "stress_sharpe": 1.2041
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 60,
+                "overlay_target": 0.15
+              }
+            },
+            "joint_T18": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.118628,
+                "bootstrap_mdd_p05": -0.104317,
+                "bootstrap_positive_rate": 0.915,
+                "mdd": -0.089472,
+                "recent": 0.050844,
+                "sharpe": 1.264,
+                "stress_annual": 0.112151,
+                "stress_mdd": -0.091029,
+                "stress_sharpe": 1.2012
+              },
+              "parameters": {
+                "equity_target": 0.18,
+                "lookback": 60,
+                "overlay_target": 0.18
+              }
+            }
+          },
+          "mdd_range": [
+            -0.091488,
+            -0.084908
+          ],
+          "pass_count": 3,
+          "pass_rate": 1.0,
+          "plateau_pass": true,
+          "sharpe_range": [
+            1.264,
+            1.2883
+          ]
+        },
+        "overlay_grid": {
+          "annual_range": [
+            0.116729,
+            0.118266
+          ],
+          "cell_count": 9,
+          "cells": {
+            "L40_T12": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.117716,
+                "bootstrap_mdd_p05": -0.096631,
+                "bootstrap_positive_rate": 0.919,
+                "mdd": -0.079359,
+                "recent": 0.056344,
+                "sharpe": 1.3089,
+                "stress_annual": 0.110762,
+                "stress_mdd": -0.08202,
+                "stress_sharpe": 1.2389
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 40,
+                "overlay_target": 0.12
+              }
+            },
+            "L40_T15": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.11799,
+                "bootstrap_mdd_p05": -0.099474,
+                "bootstrap_positive_rate": 0.917,
+                "mdd": -0.087175,
+                "recent": 0.051348,
+                "sharpe": 1.2863,
+                "stress_annual": 0.111275,
+                "stress_mdd": -0.089228,
+                "stress_sharpe": 1.2201
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 40,
+                "overlay_target": 0.15
+              }
+            },
+            "L40_T18": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.118266,
+                "bootstrap_mdd_p05": -0.103574,
+                "bootstrap_positive_rate": 0.917,
+                "mdd": -0.091755,
+                "recent": 0.048741,
+                "sharpe": 1.2758,
+                "stress_annual": 0.111734,
+                "stress_mdd": -0.093635,
+                "stress_sharpe": 1.212
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 40,
+                "overlay_target": 0.18
+              }
+            },
+            "L60_T12": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.116877,
+                "bootstrap_mdd_p05": -0.097952,
+                "bootstrap_positive_rate": 0.916,
+                "mdd": -0.084022,
+                "recent": 0.053978,
+                "sharpe": 1.2862,
+                "stress_annual": 0.110266,
+                "stress_mdd": -0.085938,
+                "stress_sharpe": 1.2203
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 60,
+                "overlay_target": 0.12
+              }
+            },
+            "L60_T15": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.117146,
+                "bootstrap_mdd_p05": -0.103291,
+                "bootstrap_positive_rate": 0.916,
+                "mdd": -0.091488,
+                "recent": 0.049049,
+                "sharpe": 1.2665,
+                "stress_annual": 0.110769,
+                "stress_mdd": -0.093341,
+                "stress_sharpe": 1.2041
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 60,
+                "overlay_target": 0.15
+              }
+            },
+            "L60_T18": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.11768,
+                "bootstrap_mdd_p05": -0.103391,
+                "bootstrap_positive_rate": 0.914,
+                "mdd": -0.089936,
+                "recent": 0.050841,
+                "sharpe": 1.2681,
+                "stress_annual": 0.111382,
+                "stress_mdd": -0.091468,
+                "stress_sharpe": 1.2067
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 60,
+                "overlay_target": 0.18
+              }
+            },
+            "L90_T12": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.118208,
+                "bootstrap_mdd_p05": -0.095351,
+                "bootstrap_positive_rate": 0.927,
+                "mdd": -0.080174,
+                "recent": 0.060186,
+                "sharpe": 1.3145,
+                "stress_annual": 0.1118,
+                "stress_mdd": -0.082351,
+                "stress_sharpe": 1.2498
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 90,
+                "overlay_target": 0.12
+              }
+            },
+            "L90_T15": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.116729,
+                "bootstrap_mdd_p05": -0.099791,
+                "bootstrap_positive_rate": 0.917,
+                "mdd": -0.089955,
+                "recent": 0.050819,
+                "sharpe": 1.2801,
+                "stress_annual": 0.110496,
+                "stress_mdd": -0.091497,
+                "stress_sharpe": 1.218
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 90,
+                "overlay_target": 0.15
+              }
+            },
+            "L90_T18": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.116735,
+                "bootstrap_mdd_p05": -0.099791,
+                "bootstrap_positive_rate": 0.917,
+                "mdd": -0.089936,
+                "recent": 0.050841,
+                "sharpe": 1.2802,
+                "stress_annual": 0.110504,
+                "stress_mdd": -0.091468,
+                "stress_sharpe": 1.2181
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 90,
+                "overlay_target": 0.18
+              }
+            }
+          },
+          "mdd_range": [
+            -0.091755,
+            -0.079359
+          ],
+          "pass_count": 9,
+          "pass_rate": 1.0,
+          "plateau_pass": true,
+          "sharpe_range": [
+            1.2665,
+            1.3145
+          ]
+        }
+      },
+      "legacy_all_pass": false,
+      "legacy_selected": null,
+      "v2_plateau_pass": true
+    },
+    "r354": {
+      "artifact": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r354_factor_agreement_gate_backtest.json",
+      "artifact_sha256": "907179e1b2005bfe3914a8426dcf5b63baf1dde07140e4113ba71b246d7ffad4",
+      "classification": "fixed agreement gate on C-sleeve candidates; original C score and all portfolio rules frozen",
+      "families": {
+        "cap_plateau": {
+          "annual_range": [
+            0.116133,
+            0.121079
+          ],
+          "cell_count": 4,
+          "cells": {
+            "0.05": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.121079,
+                "bootstrap_mdd_p05": -0.102647,
+                "bootstrap_positive_rate": 0.916,
+                "mdd": -0.090124,
+                "recent": 0.052028,
+                "sharpe": 1.2995,
+                "stress_annual": 0.106202,
+                "stress_mdd": -0.095348,
+                "stress_sharpe": 1.1541
+              },
+              "parameters": {
+                "cap": 0.05
+              }
+            },
+            "0.10": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.119457,
+                "bootstrap_mdd_p05": -0.102811,
+                "bootstrap_positive_rate": 0.915,
+                "mdd": -0.090285,
+                "recent": 0.051259,
+                "sharpe": 1.2851,
+                "stress_annual": 0.105028,
+                "stress_mdd": -0.095428,
+                "stress_sharpe": 1.1437
+              },
+              "parameters": {
+                "cap": 0.1
+              }
+            },
+            "0.15": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.117816,
+                "bootstrap_mdd_p05": -0.104099,
+                "bootstrap_positive_rate": 0.915,
+                "mdd": -0.090363,
+                "recent": 0.050613,
+                "sharpe": 1.2704,
+                "stress_annual": 0.103859,
+                "stress_mdd": -0.095512,
+                "stress_sharpe": 1.1333
+              },
+              "parameters": {
+                "cap": 0.15
+              }
+            },
+            "0.20": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.116133,
+                "bootstrap_mdd_p05": -0.104957,
+                "bootstrap_positive_rate": 0.912,
+                "mdd": -0.09045,
+                "recent": 0.050011,
+                "sharpe": 1.255,
+                "stress_annual": 0.102647,
+                "stress_mdd": -0.095603,
+                "stress_sharpe": 1.1222
+              },
+              "parameters": {
+                "cap": 0.2
+              }
+            }
+          },
+          "mdd_range": [
+            -0.09045,
+            -0.090124
+          ],
+          "pass_count": 4,
+          "pass_rate": 1.0,
+          "plateau_pass": true,
+          "sharpe_range": [
+            1.255,
+            1.2995
+          ]
+        },
+        "joint_target_grid": {
+          "annual_range": [
+            0.114645,
+            0.121414
+          ],
+          "cell_count": 3,
+          "cells": {
+            "joint_T12": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.114645,
+                "bootstrap_mdd_p05": -0.093933,
+                "bootstrap_positive_rate": 0.917,
+                "mdd": -0.081813,
+                "recent": 0.05403,
+                "sharpe": 1.3145,
+                "stress_annual": 0.108788,
+                "stress_mdd": -0.083224,
+                "stress_sharpe": 1.2532
+              },
+              "parameters": {
+                "equity_target": 0.12,
+                "lookback": 60,
+                "overlay_target": 0.12
+              }
+            },
+            "joint_T15": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.119457,
+                "bootstrap_mdd_p05": -0.102811,
+                "bootstrap_positive_rate": 0.915,
+                "mdd": -0.090285,
+                "recent": 0.051259,
+                "sharpe": 1.2851,
+                "stress_annual": 0.113077,
+                "stress_mdd": -0.091846,
+                "stress_sharpe": 1.2225
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 60,
+                "overlay_target": 0.15
+              }
+            },
+            "joint_T18": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.121414,
+                "bootstrap_mdd_p05": -0.103664,
+                "bootstrap_positive_rate": 0.917,
+                "mdd": -0.088112,
+                "recent": 0.052928,
+                "sharpe": 1.28,
+                "stress_annual": 0.114906,
+                "stress_mdd": -0.0895,
+                "stress_sharpe": 1.217
+              },
+              "parameters": {
+                "equity_target": 0.18,
+                "lookback": 60,
+                "overlay_target": 0.18
+              }
+            }
+          },
+          "mdd_range": [
+            -0.090285,
+            -0.081813
+          ],
+          "pass_count": 3,
+          "pass_rate": 1.0,
+          "plateau_pass": true,
+          "sharpe_range": [
+            1.28,
+            1.3145
+          ]
+        },
+        "overlay_grid": {
+          "annual_range": [
+            0.119106,
+            0.120589
+          ],
+          "cell_count": 9,
+          "cells": {
+            "L40_T12": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.119106,
+                "bootstrap_mdd_p05": -0.095723,
+                "bootstrap_positive_rate": 0.919,
+                "mdd": -0.077622,
+                "recent": 0.05939,
+                "sharpe": 1.3193,
+                "stress_annual": 0.112104,
+                "stress_mdd": -0.080644,
+                "stress_sharpe": 1.2487
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 40,
+                "overlay_target": 0.12
+              }
+            },
+            "L40_T15": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.119409,
+                "bootstrap_mdd_p05": -0.098039,
+                "bootstrap_positive_rate": 0.92,
+                "mdd": -0.084469,
+                "recent": 0.054571,
+                "sharpe": 1.2985,
+                "stress_annual": 0.112647,
+                "stress_mdd": -0.086285,
+                "stress_sharpe": 1.2317
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 40,
+                "overlay_target": 0.15
+              }
+            },
+            "L40_T18": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.119518,
+                "bootstrap_mdd_p05": -0.102858,
+                "bootstrap_positive_rate": 0.916,
+                "mdd": -0.090431,
+                "recent": 0.051091,
+                "sharpe": 1.2855,
+                "stress_annual": 0.112946,
+                "stress_mdd": -0.092035,
+                "stress_sharpe": 1.2212
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 40,
+                "overlay_target": 0.18
+              }
+            },
+            "L60_T12": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.11924,
+                "bootstrap_mdd_p05": -0.097203,
+                "bootstrap_positive_rate": 0.917,
+                "mdd": -0.081679,
+                "recent": 0.056738,
+                "sharpe": 1.3066,
+                "stress_annual": 0.112639,
+                "stress_mdd": -0.083335,
+                "stress_sharpe": 1.2405
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 60,
+                "overlay_target": 0.12
+              }
+            },
+            "L60_T15": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.119457,
+                "bootstrap_mdd_p05": -0.102811,
+                "bootstrap_positive_rate": 0.915,
+                "mdd": -0.090285,
+                "recent": 0.051259,
+                "sharpe": 1.2851,
+                "stress_annual": 0.113077,
+                "stress_mdd": -0.091846,
+                "stress_sharpe": 1.2225
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 60,
+                "overlay_target": 0.15
+              }
+            },
+            "L60_T18": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.119944,
+                "bootstrap_mdd_p05": -0.102781,
+                "bootstrap_positive_rate": 0.915,
+                "mdd": -0.088898,
+                "recent": 0.052862,
+                "sharpe": 1.2863,
+                "stress_annual": 0.11364,
+                "stress_mdd": -0.090179,
+                "stress_sharpe": 1.2246
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 60,
+                "overlay_target": 0.18
+              }
+            },
+            "L90_T12": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.120589,
+                "bootstrap_mdd_p05": -0.094275,
+                "bootstrap_positive_rate": 0.924,
+                "mdd": -0.07905,
+                "recent": 0.062198,
+                "sharpe": 1.3336,
+                "stress_annual": 0.114165,
+                "stress_mdd": -0.080765,
+                "stress_sharpe": 1.2684
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 90,
+                "overlay_target": 0.12
+              }
+            },
+            "L90_T15": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.119123,
+                "bootstrap_mdd_p05": -0.099879,
+                "bootstrap_positive_rate": 0.918,
+                "mdd": -0.088997,
+                "recent": 0.052748,
+                "sharpe": 1.2988,
+                "stress_annual": 0.112898,
+                "stress_mdd": -0.090275,
+                "stress_sharpe": 1.2366
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 90,
+                "overlay_target": 0.15
+              }
+            },
+            "L90_T18": {
+              "evaluation": {
+                "bootstrap_checks": {
+                  "mdd_p05": true,
+                  "positive_rate": true
+                },
+                "bootstrap_pass": true,
+                "failed": [],
+                "joint_pass": true,
+                "point_checks": {
+                  "annual": true,
+                  "mdd": true,
+                  "recent": true,
+                  "sharpe": true,
+                  "stress_annual": true,
+                  "stress_mdd": true,
+                  "stress_sharpe": true,
+                  "year_2022": true,
+                  "year_2023": true
+                },
+                "point_performance_pass": true
+              },
+              "metrics": {
+                "annual": 0.119151,
+                "bootstrap_mdd_p05": -0.099816,
+                "bootstrap_positive_rate": 0.918,
+                "mdd": -0.088898,
+                "recent": 0.052862,
+                "sharpe": 1.299,
+                "stress_annual": 0.112926,
+                "stress_mdd": -0.090179,
+                "stress_sharpe": 1.2369
+              },
+              "parameters": {
+                "equity_target": 0.15,
+                "lookback": 90,
+                "overlay_target": 0.18
+              }
+            }
+          },
+          "mdd_range": [
+            -0.090431,
+            -0.077622
+          ],
+          "pass_count": 9,
+          "pass_rate": 1.0,
+          "plateau_pass": true,
+          "sharpe_range": [
+            1.2851,
+            1.3336
+          ]
+        }
+      },
+      "legacy_all_pass": false,
+      "legacy_selected": null,
+      "v2_plateau_pass": true
+    }
+  },
+  "r360_current_v2_evaluation": {
+    "bootstrap_checks": {
+      "mdd_p05": true,
+      "positive_rate": true
+    },
+    "bootstrap_pass": true,
+    "failed": [],
+    "joint_pass": true,
+    "point_checks": {
+      "annual": true,
+      "mdd": true,
+      "recent": true,
+      "sharpe": true,
+      "stress_annual": true,
+      "stress_mdd": true,
+      "stress_sharpe": true,
+      "year_2022": true,
+      "year_2023": true
+    },
+    "point_performance_pass": true
+  },
+  "r360_path_monte_carlo": {
+    "circular_blocks": {
+      "10": {
+        "block_days": 10,
+        "blocks_needed": 26,
+        "horizon_days": 252,
+        "mdd_median": -0.06025755389158449,
+        "mdd_p05": -0.10461609924323774,
+        "mdd_worst": -0.1657257807657304,
+        "method": "circular_block",
+        "paths": 2000,
+        "positive_rate": 0.922,
+        "return_best": 0.6968317706726213,
+        "return_median": 0.12088131819756742,
+        "return_p05": -0.01517901306247935,
+        "return_p25": 0.061223445164053425,
+        "return_p75": 0.1940030107565074,
+        "return_p95": 0.31395691104907186,
+        "return_worst": -0.11168772440089314,
+        "seed": 20261110,
+        "sharpe_median": 1.3324999251669731,
+        "sharpe_p05": -0.12844082262604495
+      },
+      "20": {
+        "block_days": 20,
+        "blocks_needed": 13,
+        "horizon_days": 252,
+        "mdd_median": -0.06201103336034686,
+        "mdd_p05": -0.10109190352134512,
+        "mdd_worst": -0.17677633703977547,
+        "method": "circular_block",
+        "paths": 2000,
+        "positive_rate": 0.9235,
+        "return_best": 0.5941729797832764,
+        "return_median": 0.11738570275205873,
+        "return_p05": -0.016948748481971313,
+        "return_p25": 0.05956752807878102,
+        "return_p75": 0.189004814814558,
+        "return_p95": 0.3253354960611705,
+        "return_worst": -0.14886673072685197,
+        "seed": 20261110,
+        "sharpe_median": 1.3064284534132435,
+        "sharpe_p05": -0.17398985886683607
+      },
+      "5": {
+        "block_days": 5,
+        "blocks_needed": 51,
+        "horizon_days": 252,
+        "mdd_median": -0.06164805162164011,
+        "mdd_p05": -0.11395403977742778,
+        "mdd_worst": -0.19850645240077336,
+        "method": "circular_block",
+        "paths": 2000,
+        "positive_rate": 0.899,
+        "return_best": 0.5510700820159151,
+        "return_median": 0.11982221494393896,
+        "return_p05": -0.0269544747256423,
+        "return_p25": 0.05927813349331734,
+        "return_p75": 0.18680434654140304,
+        "return_p95": 0.3247554086344965,
+        "return_worst": -0.17393083535859244,
+        "seed": 20261110,
+        "sharpe_median": 1.328989688564541,
+        "sharpe_p05": -0.2662015400590358
+      },
+      "60": {
+        "block_days": 60,
+        "blocks_needed": 5,
+        "horizon_days": 252,
+        "mdd_median": -0.05992700772195125,
+        "mdd_p05": -0.09123239838138952,
+        "mdd_worst": -0.13851886072681463,
+        "method": "circular_block",
+        "paths": 2000,
+        "positive_rate": 0.925,
+        "return_best": 0.5722562369463089,
+        "return_median": 0.11952879252725701,
+        "return_p05": -0.01275263058480225,
+        "return_p25": 0.058101565659194776,
+        "return_p75": 0.19072379014633922,
+        "return_p95": 0.30920696105137,
+        "return_worst": -0.11001380647783865,
+        "seed": 20261110,
+        "sharpe_median": 1.2967662878858086,
+        "sharpe_p05": -0.12047428230194095
+      }
+    },
+    "probabilistic_sharpe_ratio": {
+      "available": true,
+      "daily_sharpe": 0.08376819773011149,
+      "interpretation": "PSR vs zero only; this is not a deflated Sharpe ratio.",
+      "kurtosis": 15.600877383889369,
+      "observations": 1092,
+      "probability_sharpe_above_zero": 0.9969395009984692,
+      "skew": 0.08123768156575283
+    },
+    "seed_sensitivity_block20_positive_rates": [
+      0.928,
+      0.93,
+      0.918
+    ],
+    "seed_sensitivity_range": [
+      0.918,
+      0.93
+    ],
+    "stationary_mean_blocks": {
+      "10": {
+        "block_days": 10,
+        "blocks_needed": 26,
+        "horizon_days": 252,
+        "mdd_median": -0.060742421703517846,
+        "mdd_p05": -0.10507836376944765,
+        "mdd_worst": -0.19253962513882106,
+        "mean_block_days": 10,
+        "method": "stationary_block",
+        "paths": 2000,
+        "positive_rate": 0.9175,
+        "return_best": 0.55222171034727,
+        "return_median": 0.12055786446015315,
+        "return_p05": -0.021189645728110964,
+        "return_p25": 0.05919031650628698,
+        "return_p75": 0.19294321333038195,
+        "return_p95": 0.31390932330231386,
+        "return_worst": -0.10875990521211398,
+        "seed": 20261110,
+        "sharpe_median": 1.3429240454482945,
+        "sharpe_p05": -0.17084199245808762
+      },
+      "20": {
+        "block_days": 20,
+        "blocks_needed": 13,
+        "horizon_days": 252,
+        "mdd_median": -0.06352810078945709,
+        "mdd_p05": -0.10014682503332525,
+        "mdd_worst": -0.1523804569191589,
+        "mean_block_days": 20,
+        "method": "stationary_block",
+        "paths": 2000,
+        "positive_rate": 0.922,
+        "return_best": 0.5262875835353564,
+        "return_median": 0.11626463573422641,
+        "return_p05": -0.016403372287360135,
+        "return_p25": 0.06048297879073011,
+        "return_p75": 0.19081758947339345,
+        "return_p95": 0.2997154816429979,
+        "return_worst": -0.12599730635893436,
+        "seed": 20261110,
+        "sharpe_median": 1.2987090625105906,
+        "sharpe_p05": -0.14699275821439411
+      }
+    }
+  },
+  "r360_reconstruction": {
+    "frozen_result": {
+      "annual": 0.12605400438660253,
+      "days": 1093,
+      "mdd": -0.09037345095533145,
+      "sharpe": 1.329778913819762,
+      "total_return": 0.672720131533546
+    },
+    "matches_frozen_result": true,
+    "original_failed_gates": [
+      "G4_2022_segment_nonnegative"
+    ],
+    "original_preregistered_all_gates_pass": false,
+    "reconstruction_inputs": {
+      "a": "data/research/r344_cache/ai_hs300_macro_gate_quality_2022-05-05_2x_p10.parquet",
+      "b": "data/research/r360_cache/2022-05-05_2x.parquet",
+      "c": [
+        "data/research/r359_v2_cache/ai_hs300_quality_momentum_broad_h60_2022-05-05_2x_p50.parquet",
+        "data/research/r359_v2_cache/ai_hs300_quality_momentum_broad_h60_2022-06-02_2x_p50.parquet",
+        "data/research/r359_v2_cache/ai_hs300_quality_momentum_broad_h60_2022-07-01_2x_p50.parquet"
+      ]
+    },
+    "stats": {
+      "annual": 0.12605400438660253,
+      "days": 1093,
+      "mdd": -0.09037345095533145,
+      "sharpe": 1.329778913819762,
+      "total_return": 0.672720131533546
+    }
+  },
+  "round": "R370",
+  "stop_loss_scan": {
+    "artifact": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r102d_stop_loss_scan.json",
+    "artifact_sha256": "116d61d16426eff730dd426622d872c86dee9e6d1e1ba543e9363dd2d023a9c8",
+    "rows": {
+      "none": {
+        "annual": 0.0958,
+        "mdd": -0.5059,
+        "sharpe": 0.46,
+        "stop_loss": null
+      },
+      "sl_10": {
+        "annual": -0.0096,
+        "mdd": -0.568,
+        "sharpe": 0.12,
+        "stop_loss": -0.1
+      },
+      "sl_15": {
+        "annual": 0.0498,
+        "mdd": -0.5148,
+        "sharpe": 0.31,
+        "stop_loss": -0.15
+      },
+      "sl_20": {
+        "annual": 0.0942,
+        "mdd": -0.4085,
+        "sharpe": 0.45,
+        "stop_loss": -0.2
+      },
+      "sl_25": {
+        "annual": 0.0791,
+        "mdd": -0.5147,
+        "sharpe": 0.41,
+        "stop_loss": -0.25
+      }
+    },
+    "scan_points": 5
+  },
+  "verdict": {
+    "all_parameters_qualified": false,
+    "historical_scan_only": [
+      "max_hold_days",
+      "stop_loss",
+      "max_positions"
+    ],
+    "not_monte_carlo_tested": [
+      "stock_rel_industry_lookback_days",
+      "industry_fade_change_days",
+      "scoring_weights",
+      "basic_filter_thresholds",
+      "gold_trend_lookback_days",
+      "regime_gate_states"
+    ],
+    "partially_qualified": [],
+    "qualified_plateau": [
+      "risk_parity_lookback_days",
+      "overlay_target_vol",
+      "joint_equity_target_vol",
+      "c_satellite_cap"
+    ],
+    "r360_current_metrics_pass_v2": true,
+    "r360_original_preregistered_gates_pass": false,
+    "recommended_scope": "research_only_paper_review",
+    "status": "not_all_parameters_qualified"
+  }
+}

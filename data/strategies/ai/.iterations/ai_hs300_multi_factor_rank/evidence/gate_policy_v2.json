@@ -1,0 +1,96 @@
+{
+  "version": 2,
+  "effective_date": "2026-11-10",
+  "status": "post_hoc_gate_policy_correction",
+  "purpose": "Replace extreme one-shot rejection gates with a layered investability policy while preserving the original preregistered evidence and decisions.",
+  "cost_semantics": {
+    "2x": "realistic execution-cost case; 2x the project's standard cost assumption",
+    "3x": "severe execution-cost stress",
+    "4x": "secondary stress diagnostic",
+    "5x": "transaction-cost stress, not leverage",
+    "leverage": "no leverage; long-only, nonnegative target weights, total target weight <= 100%"
+  },
+  "tiers": {
+    "data_integrity": {
+      "hard": true,
+      "required": [
+        "point_in_time_financial_data",
+        "historical_hs300_membership",
+        "no_lookahead_signal_timing",
+        "t_plus_one_open_execution",
+        "limit_up_limit_down_and_suspension_constraints",
+        "stable_input_fingerprints",
+        "no_leverage"
+      ]
+    },
+    "core_2x": {
+      "hard": true,
+      "thresholds": {
+        "annual_return_min": 0.08,
+        "sharpe_min": 1.0,
+        "max_drawdown_min": -0.2,
+        "year_2022_min": -0.05,
+        "year_2023_min": 0.0,
+        "recent_return_strictly_positive": true,
+        "fresh_starts_positive_min": 4,
+        "fresh_start_median_strictly_positive": true
+      },
+      "rationale": "A long-only HS300 strategy must clear a modest absolute-return hurdle, a Sharpe near 1, and a drawdown no deeper than 20%. A -5% loss in the 2022 stress year and 4/6 positive start phases allow normal estimation noise without accepting a broken risk profile."
+    },
+    "relative_control_2x": {
+      "hard": true,
+      "thresholds": {
+        "annual_vs_control_min": -0.02,
+        "sharpe_vs_control_min": -0.1,
+        "recent_vs_control_min": -0.03
+      },
+      "rationale": "A more complex candidate that is materially worse than its matched simpler control has no demonstrated research edge."
+    },
+    "stress_3x": {
+      "hard": true,
+      "use_stricter_available_cost_if_3x_missing": true,
+      "thresholds": {
+        "minimum_cost_factor": 3,
+        "annual_return_min": 0.05,
+        "sharpe_min": 0.8,
+        "max_drawdown_min": -0.25,
+        "total_return_strictly_positive": true,
+        "recent_return_min": -0.02
+      },
+      "rationale": "Severe cost stress should weaken, not destroy, the edge. If a strategy is only viable at unrealistic costs, it is not investable."
+    },
+    "concentration": {
+      "hard": true,
+      "distinct_symbols_minimum": 40,
+      "distinct_symbols_minimum_per_position": 4,
+      "thresholds": {
+        "top1_gross_share_max": 0.2,
+        "top3_gross_share_max": 0.45,
+        "top5_gross_share_max": 0.65,
+        "top_industry_gross_share_max": 0.4,
+        "max_symbol_loss_to_gross_max": 0.1,
+        "single_asset_contribution_max": 0.5
+      },
+      "net_profit_share": "diagnostic_only",
+      "rationale": "Gross-profit contribution is stable when high costs compress the net-profit denominator. Net-profit shares are reported but cannot independently reject a strategy whose gross breadth, loss concentration, and industry exposure are acceptable.",
+      "fallback_when_gross_unavailable": "Use legacy 2x net-share concentration gates only when gross shares were not retained by the historical runner. Never use 5x net-share concentration as a hard gate."
+    },
+    "diagnostic_5x": {
+      "hard_rejection": false,
+      "warnings": {
+        "negative_5x_annual": "annualized return below zero",
+        "negative_5x_total_return": "total return <= 0",
+        "5x_drawdown_deterioration": "5x MDD more than 5 percentage points worse than the severe stress case",
+        "thin_5x_net_to_gross": "net profit is less than 10% of gross profit"
+      },
+      "rationale": "5x costs are far beyond the project's standard and realistic assumptions. They should trigger a warning and manual review, not automatic rejection."
+    }
+  },
+  "known_legacy_problems": [
+    "12% annualized and Sharpe 1.25 were often applied as universal promotion gates rather than experiment-specific hypotheses.",
+    "Requiring 2022 returns to be nonnegative rejected small losses despite otherwise strong risk-adjusted performance.",
+    "Requiring 5 of 6 fresh starts to be positive left only one phase of tolerance.",
+    "5x net-profit concentration shares were used as hard gates although the net-profit denominator becomes thin and unstable under 5x costs.",
+    "5x cost labels were repeatedly confused with capital leverage even though all strategies remained fully funded and long-only."
+  ]
+}

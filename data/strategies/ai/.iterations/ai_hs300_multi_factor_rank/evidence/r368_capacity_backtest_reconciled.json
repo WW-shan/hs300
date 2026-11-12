@@ -1,0 +1,881 @@
+{
+  "all_gates_pass": false,
+  "classification": "post-run reconciliation summary over the unchanged 48 R368 system-backtest curves",
+  "comparisons": {
+    "candidate_20_minus_10_annual": -0.09007866919739715,
+    "candidate_20_minus_10_mdd": 0.07051905333660069,
+    "candidate_20_minus_10_recent": 0.005393740673413028,
+    "candidate_20_minus_10_sharpe": -0.08501215127442352,
+    "candidate_control_edge_10": 9.08659849416793e-05,
+    "candidate_control_edge_20": 0.0074148648790726135,
+    "candidate_control_edge_change_20_minus_10": 0.007323998894130934,
+    "cap20_candidate_annual_change_vs_r367": -0.09007866919739715,
+    "cap20_candidate_mdd_change_vs_r367": 0.07051905333660069,
+    "cap20_candidate_recent_change_vs_r367": 0.005393740673413028,
+    "cap20_control_annual_change_vs_r367": -0.09740266809152809,
+    "control_20_minus_10_annual": -0.09740266809152809,
+    "control_20_minus_10_mdd": 0.009508484750293422,
+    "control_20_minus_10_recent": 0.0125767660608338
+  },
+  "decision": {
+    "leverage": "none",
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "research_only_no_candidate_after_r368"
+  },
+  "gates": {
+    "G1_cap20_candidate_mdd_improves_3pp": true,
+    "G2_cap20_candidate_recent_improves_3pp": false,
+    "G3_cap20_candidate_annual_not_more_than_3pp_lower": false,
+    "G4_cap20_sharpe_not_more_than_0_05_lower": false,
+    "G5_candidate_control_edge_not_worse_2pp": true,
+    "G6_cap20_candidate_recent_at_least_control": false,
+    "G7_at_least_4_of_6_cap20_phases_positive": true,
+    "G8_cap20_candidate_3x_annual_nonnegative": true,
+    "G9_unlevered": true
+  },
+  "hypothesis": "R367 showed size-neutral candidate and quality control are nearly equal in full-window annual return (~31.2%) but the candidate has deeper MDD. Increasing maximum positions from 10 to 20 may diversify idiosyncratic trade risk and improve drawdown/recent performance. The candidate and matched quality control will both receive the same capacity change; only capacity varies, with all score, filter, holding, stop, costs, regime and execution rules fixed.",
+  "input_data_fingerprints": {
+    "alternative_config": "c144d4207b9d35e649f6a3fbc567f2200c29cf1e9b811bb85bfec991ea10ab42",
+    "alternative_factors": {
+      "bytes": 251443214,
+      "files": 2143,
+      "sha256": "154094de9374ac3cb59722466a0dccbcea41b35c93a4b9598fe3354a99a7a846"
+    },
+    "custom_factors": {
+      "bytes": 15028,
+      "files": 33,
+      "sha256": "145a2df2753347cf7877bdf04293789023b575f81db2b386c2cafcea6542ac3d"
+    },
+    "custom_signals": {
+      "bytes": 9803,
+      "files": 23,
+      "sha256": "b3eaab96fed5bb63540a22451ea139d7032e28a2a48b4f5959b5d24d0187272e"
+    },
+    "industry_snapshot": "702605875a44b978baaef9a6815ad64561bf69c0cc25f803a65875df24dc41f2",
+    "instruments": "f02713442043b09cc03bb0c81812c964d1eeae00cb2a5116bf75d5cd3b4b8efa",
+    "membership_daily": "6e5114f16ecd936be0bf7fb62f474d169dca25f1bad78bb27fd0ea413d3ed748",
+    "membership_monthly": "5f3284b954847ccf63d7349d884c2a986dec7a580cf9abd38075c7ed8f810d36",
+    "production_enriched": {
+      "bytes": 47704926,
+      "files": 2143,
+      "sha256": "7ce95ff388a8c9c6ccc9c989092b0b52875519993e97c076a81ba5ef378a9209"
+    },
+    "r367_preregistration": "7eed90f7c9124ea91715d1777a5832f81bce6b56008caca87e8882a16d6b145b",
+    "r367_result": "5f958b4894ed17d879da14db2743dca3f55792d5623820d820cf61ba75445335",
+    "r367_status": "9336cb004baa38c2258713fadd1b0cb3bb4bdfcd02aa87ea0aa1859075abf212",
+    "r40_enriched": {
+      "bytes": 49897492,
+      "files": 1544,
+      "sha256": "7127e4b2999e13455eff1ca0714bddb34a517de8e1e6f75e132f780506ffae2b"
+    },
+    "raw_daily": {
+      "bytes": 21308282,
+      "files": 2143,
+      "sha256": "2f46b1dc8231c56b91620884367372aa831a694389dd743d5b39c4996628bb52"
+    },
+    "regime_history": "474332dcb2d0b3bc7b27c37973c78bb7c7f4e6bff535350a07dc4d8d7819c058"
+  },
+  "limits": [
+    "The 10/20 capacity comparison uses overlapping market history and is not independent OOS.",
+    "More positions change portfolio concentration, turnover, trade overlap, and exposure utilization together; this is a capacity-policy experiment, not isolated security-level alpha.",
+    "Current THS labels are backfilled and historical HS300 membership has monthly granularity before 2020-12.",
+    "log_float_mv is an enriched turnover-implied size proxy.",
+    "2x/3x are transaction-cost assumptions; gross exposure is capped at 100%."
+  ],
+  "metrics": {
+    "candidate": {
+      "10": {
+        "2x": {
+          "annual": 0.3121838270238739,
+          "days": 1078,
+          "mdd": -0.28684349318757096,
+          "sharpe": 1.0063530234662055,
+          "total_return": 2.19364611
+        },
+        "3x": {
+          "annual": 0.2886607463579349,
+          "days": 1078,
+          "mdd": -0.2922812619624712,
+          "sharpe": 0.9502936021858253,
+          "total_return": 1.95604742
+        },
+        "phase_2x": {
+          "2022-05-05": {
+            "annual": 0.3121838270238739,
+            "days": 1078,
+            "mdd": -0.28684349318757096,
+            "sharpe": 1.0063530234662055,
+            "total_return": 2.19364611
+          },
+          "2023-01-03": {
+            "annual": 0.36360941266999447,
+            "days": 913,
+            "mdd": -0.28679298932228625,
+            "sharpe": 1.0946286994857795,
+            "total_return": 2.07220003
+          },
+          "2024-01-02": {
+            "annual": 0.4393290722464456,
+            "days": 671,
+            "mdd": -0.2860789679232353,
+            "sharpe": 1.1860842354910452,
+            "total_return": 1.63332839
+          },
+          "2025-01-02": {
+            "annual": 0.5439832167620104,
+            "days": 429,
+            "mdd": -0.28489335289724294,
+            "sharpe": 1.3768421357394303,
+            "total_return": 1.0911873600000002
+          },
+          "2025-10-14": {
+            "annual": 0.01058673633536178,
+            "days": 243,
+            "mdd": -0.2758535940322203,
+            "sharpe": 0.20960729626136732,
+            "total_return": 0.01016449999999991
+          },
+          "2026-01-05": {
+            "annual": 0.0024391557119041174,
+            "days": 186,
+            "mdd": -0.27700945365236784,
+            "sharpe": 0.1935478430283862,
+            "total_return": 0.001790069999999977
+          }
+        },
+        "recent_2x": 0.026457066362878923
+      },
+      "20": {
+        "2x": {
+          "annual": 0.22210515782647677,
+          "days": 1078,
+          "mdd": -0.21632443985097027,
+          "sharpe": 0.921340872191782,
+          "total_return": 1.35659779
+        },
+        "3x": {
+          "annual": 0.20259057365987299,
+          "days": 1078,
+          "mdd": -0.22946540805367854,
+          "sharpe": 0.8575665063080435,
+          "total_return": 1.1999266299999998
+        },
+        "phase_2x": {
+          "2022-05-05": {
+            "annual": 0.22210515782647677,
+            "days": 1078,
+            "mdd": -0.21632443985097027,
+            "sharpe": 0.921340872191782,
+            "total_return": 1.35659779
+          },
+          "2023-01-03": {
+            "annual": 0.2516991973652465,
+            "days": 913,
+            "mdd": -0.21150910990829386,
+            "sharpe": 0.9873125259075507,
+            "total_return": 1.25349733
+          },
+          "2024-01-02": {
+            "annual": 0.3440341296933407,
+            "days": 671,
+            "mdd": -0.21163641454798165,
+            "sharpe": 1.1798341486038906,
+            "total_return": 1.1948676099999997
+          },
+          "2025-01-02": {
+            "annual": 0.4809439372879414,
+            "days": 429,
+            "mdd": -0.20926358579409965,
+            "sharpe": 1.5140353865902736,
+            "total_return": 0.94825121
+          },
+          "2025-10-14": {
+            "annual": -0.03219476661769549,
+            "days": 243,
+            "mdd": -0.20045406093169593,
+            "sharpe": 0.013168013972436148,
+            "total_return": -0.03093717000000007
+          },
+          "2026-01-05": {
+            "annual": -0.04618272581413496,
+            "days": 186,
+            "mdd": -0.2009773979461853,
+            "sharpe": -0.04062157071898406,
+            "total_return": -0.0341163000000001
+          }
+        },
+        "recent_2x": 0.03185080703629195
+      }
+    },
+    "control": {
+      "10": {
+        "2x": {
+          "annual": 0.31209296103893225,
+          "days": 1078,
+          "mdd": -0.24845167376424426,
+          "sharpe": 1.0421211868395055,
+          "total_return": 2.1927010499999997
+        },
+        "3x": {
+          "annual": 0.28611795478078594,
+          "days": 1078,
+          "mdd": -0.2562233787937337,
+          "sharpe": 0.9773294146946482,
+          "total_return": 1.9311991699999997
+        },
+        "phase_2x": {
+          "2022-05-05": {
+            "annual": 0.31209296103893225,
+            "days": 1078,
+            "mdd": -0.24845167376424426,
+            "sharpe": 1.0421211868395055,
+            "total_return": 2.1927010499999997
+          },
+          "2023-01-03": {
+            "annual": 0.32153600941220417,
+            "days": 913,
+            "mdd": -0.24788342606547953,
+            "sharpe": 1.038025693379938,
+            "total_return": 1.7427780899999998
+          },
+          "2024-01-02": {
+            "annual": 0.4081621237509019,
+            "days": 671,
+            "mdd": -0.24704399306494906,
+            "sharpe": 1.1859702476189964,
+            "total_return": 1.4844331
+          },
+          "2025-01-02": {
+            "annual": 0.6611433080482596,
+            "days": 429,
+            "mdd": -0.24802773463070782,
+            "sharpe": 1.6356545450091975,
+            "total_return": 1.3677847500000002
+          },
+          "2025-10-14": {
+            "annual": -0.03797851217119841,
+            "days": 243,
+            "mdd": -0.26435641204018523,
+            "sharpe": 0.032994898089898576,
+            "total_return": -0.03649928000000002
+          },
+          "2026-01-05": {
+            "annual": 0.019281501419019076,
+            "days": 186,
+            "mdd": -0.2367460075055734,
+            "sharpe": 0.22016181741890695,
+            "total_return": 0.01411907999999995
+          }
+        },
+        "recent_2x": 0.024708484220781424
+      },
+      "20": {
+        "2x": {
+          "annual": 0.21469029294740416,
+          "days": 1078,
+          "mdd": -0.23894318901395084,
+          "sharpe": 0.9450262101125924,
+          "total_return": 1.29609429
+        },
+        "3x": {
+          "annual": 0.19491657122318018,
+          "days": 1078,
+          "mdd": -0.24147339063807538,
+          "sharpe": 0.8736605026390766,
+          "total_return": 1.1405535800000002
+        },
+        "phase_2x": {
+          "2022-05-05": {
+            "annual": 0.21469029294740416,
+            "days": 1078,
+            "mdd": -0.23894318901395084,
+            "sharpe": 0.9450262101125924,
+            "total_return": 1.29609429
+          },
+          "2023-01-03": {
+            "annual": 0.24016642380599373,
+            "days": 913,
+            "mdd": -0.2371716920511473,
+            "sharpe": 1.0085543760264783,
+            "total_return": 1.17925705
+          },
+          "2024-01-02": {
+            "annual": 0.3173920583036576,
+            "days": 671,
+            "mdd": -0.23809364594869153,
+            "sharpe": 1.2001987902794928,
+            "total_return": 1.0810858200000002
+          },
+          "2025-01-02": {
+            "annual": 0.43924265834003084,
+            "days": 429,
+            "mdd": -0.23177403818781583,
+            "sharpe": 1.5323797491420752,
+            "total_return": 0.8559951299999999
+          },
+          "2025-10-14": {
+            "annual": -0.04012354375068761,
+            "days": 243,
+            "mdd": -0.2292660073434436,
+            "sharpe": -0.051935025468872,
+            "total_return": -0.038562449999999915
+          },
+          "2026-01-05": {
+            "annual": -0.090682688688971,
+            "days": 186,
+            "mdd": -0.21731226662169245,
+            "sharpe": -0.2883064481419192,
+            "total_return": -0.06740753
+          }
+        },
+        "recent_2x": 0.03728525028161522
+      }
+    }
+  },
+  "original_runner_failure": "r368_capacity_backtest_attempt1_failure.json",
+  "preflight_sha256": "3485d99c5ea431716aa9212921492c9cc69457975b182402085027ffe694d9b8",
+  "preregistration_sha256": "343836cbc7bcb778fd8c721eebe6b5a4686007655a19af2bcb4fe8b15f589054",
+  "reconciliation_manifest_sha256": "3c440d4ed6e290ee3fba04d22b75ca0322be368964c1ef7b569bee1b9c413ad2",
+  "round": "R368",
+  "rule": {
+    "candidate_scoring": {
+      "cf_weak_reversal_blend": 0.2,
+      "ext_alt_hs300_industry_mom_20d": 0.15,
+      "ext_alt_hs300_stock_rel_industry_20d": 0.35,
+      "uf_cash_quality": 0.2,
+      "uf_quality_value_defensive": 0.1
+    },
+    "candidate_strategy": "ai_hs300_weak_reversal_blend_size_h20_sl20_r368",
+    "control_scoring": {
+      "ext_alt_hs300_industry_mom_20d": 0.15,
+      "ext_alt_hs300_stock_rel_industry_20d": 0.35,
+      "uf_cash_quality": 0.2,
+      "uf_quality_value_defensive": 0.3
+    },
+    "control_strategy": "ai_hs300_quality_size_h20_sl20_r368",
+    "execution": "T close score; T+1 open; 2x/3x costs; no leverage or borrowing",
+    "holding_sessions": 20,
+    "max_exposure_pct": 1.0,
+    "neutralization": {
+      "exclude": [],
+      "shrink": 1.0,
+      "styles": [
+        "log_float_mv"
+      ]
+    },
+    "position_capacities": [
+      10,
+      20
+    ],
+    "position_sizing": "equal",
+    "regime_filter": {
+      "alignment": "T-1",
+      "states": [
+        "weak"
+      ]
+    },
+    "stop_loss": -0.2
+  },
+  "scorecard": {
+    "candidate": {
+      "10": {
+        "candidate_cap10_2022-05-05_2x": {
+          "metrics": {
+            "annual": 0.3121838270238739,
+            "days": 1078,
+            "mdd": -0.28684349318757096,
+            "sharpe": 1.0063530234662055,
+            "total_return": 2.19364611
+          },
+          "trades": null
+        },
+        "candidate_cap10_2022-05-05_3x": {
+          "metrics": {
+            "annual": 0.2886607463579349,
+            "days": 1078,
+            "mdd": -0.2922812619624712,
+            "sharpe": 0.9502936021858253,
+            "total_return": 1.95604742
+          },
+          "trades": null
+        },
+        "candidate_cap10_2023-01-03_2x": {
+          "metrics": {
+            "annual": 0.36360941266999447,
+            "days": 913,
+            "mdd": -0.28679298932228625,
+            "sharpe": 1.0946286994857795,
+            "total_return": 2.07220003
+          },
+          "trades": null
+        },
+        "candidate_cap10_2023-01-03_3x": {
+          "metrics": {
+            "annual": 0.33730623408699967,
+            "days": 913,
+            "mdd": -0.2881058354281669,
+            "sharpe": 1.0362901427879434,
+            "total_return": 1.8630934700000004
+          },
+          "trades": null
+        },
+        "candidate_cap10_2024-01-02_2x": {
+          "metrics": {
+            "annual": 0.4393290722464456,
+            "days": 671,
+            "mdd": -0.2860789679232353,
+            "sharpe": 1.1860842354910452,
+            "total_return": 1.63332839
+          },
+          "trades": null
+        },
+        "candidate_cap10_2024-01-02_3x": {
+          "metrics": {
+            "annual": 0.41444914627431273,
+            "days": 671,
+            "mdd": -0.28946169584138803,
+            "sharpe": 1.1377533346559432,
+            "total_return": 1.51403371
+          },
+          "trades": null
+        },
+        "candidate_cap10_2025-01-02_2x": {
+          "metrics": {
+            "annual": 0.5439832167620104,
+            "days": 429,
+            "mdd": -0.28489335289724294,
+            "sharpe": 1.3768421357394303,
+            "total_return": 1.0911873600000002
+          },
+          "trades": null
+        },
+        "candidate_cap10_2025-01-02_3x": {
+          "metrics": {
+            "annual": 0.5174069769563563,
+            "days": 429,
+            "mdd": -0.2889052206630669,
+            "sharpe": 1.3272022184279424,
+            "total_return": 1.03042086
+          },
+          "trades": null
+        },
+        "candidate_cap10_2025-10-14_2x": {
+          "metrics": {
+            "annual": 0.01058673633536178,
+            "days": 243,
+            "mdd": -0.2758535940322203,
+            "sharpe": 0.20960729626136732,
+            "total_return": 0.01016449999999991
+          },
+          "trades": null
+        },
+        "candidate_cap10_2025-10-14_3x": {
+          "metrics": {
+            "annual": -0.009122368075534348,
+            "days": 243,
+            "mdd": -0.2805435924946458,
+            "sharpe": 0.15517858560931172,
+            "total_return": -0.008761959999999958
+          },
+          "trades": null
+        },
+        "candidate_cap10_2026-01-05_2x": {
+          "metrics": {
+            "annual": 0.0024391557119041174,
+            "days": 186,
+            "mdd": -0.27700945365236784,
+            "sharpe": 0.1935478430283862,
+            "total_return": 0.001790069999999977
+          },
+          "trades": null
+        },
+        "candidate_cap10_2026-01-05_3x": {
+          "metrics": {
+            "annual": -0.015269344998043444,
+            "days": 186,
+            "mdd": -0.28103562432789797,
+            "sharpe": 0.1469005571514544,
+            "total_return": -0.011232540000000069
+          },
+          "trades": null
+        }
+      },
+      "20": {
+        "candidate_cap20_2022-05-05_2x": {
+          "metrics": {
+            "annual": 0.22210515782647677,
+            "days": 1078,
+            "mdd": -0.21632443985097027,
+            "sharpe": 0.921340872191782,
+            "total_return": 1.35659779
+          },
+          "trades": null
+        },
+        "candidate_cap20_2022-05-05_3x": {
+          "metrics": {
+            "annual": 0.20259057365987299,
+            "days": 1078,
+            "mdd": -0.22946540805367854,
+            "sharpe": 0.8575665063080435,
+            "total_return": 1.1999266299999998
+          },
+          "trades": null
+        },
+        "candidate_cap20_2023-01-03_2x": {
+          "metrics": {
+            "annual": 0.2516991973652465,
+            "days": 913,
+            "mdd": -0.21150910990829386,
+            "sharpe": 0.9873125259075507,
+            "total_return": 1.25349733
+          },
+          "trades": null
+        },
+        "candidate_cap20_2023-01-03_3x": {
+          "metrics": {
+            "annual": 0.22708433359449098,
+            "days": 913,
+            "mdd": -0.21673670871652284,
+            "sharpe": 0.9134613997627063,
+            "total_return": 1.0972042400000004
+          },
+          "trades": null
+        },
+        "candidate_cap20_2024-01-02_2x": {
+          "metrics": {
+            "annual": 0.3440341296933407,
+            "days": 671,
+            "mdd": -0.21163641454798165,
+            "sharpe": 1.1798341486038906,
+            "total_return": 1.1948676099999997
+          },
+          "trades": null
+        },
+        "candidate_cap20_2024-01-02_3x": {
+          "metrics": {
+            "annual": 0.31823492781071905,
+            "days": 671,
+            "mdd": -0.2107075793849058,
+            "sharpe": 1.1118057413778641,
+            "total_return": 1.0846277500000001
+          },
+          "trades": null
+        },
+        "candidate_cap20_2025-01-02_2x": {
+          "metrics": {
+            "annual": 0.4809439372879414,
+            "days": 429,
+            "mdd": -0.20926358579409965,
+            "sharpe": 1.5140353865902736,
+            "total_return": 0.94825121
+          },
+          "trades": null
+        },
+        "candidate_cap20_2025-01-02_3x": {
+          "metrics": {
+            "annual": 0.45145701588685494,
+            "days": 429,
+            "mdd": -0.2107007023980797,
+            "sharpe": 1.44407593494088,
+            "total_return": 0.8828263700000001
+          },
+          "trades": null
+        },
+        "candidate_cap20_2025-10-14_2x": {
+          "metrics": {
+            "annual": -0.03219476661769549,
+            "days": 243,
+            "mdd": -0.20045406093169593,
+            "sharpe": 0.013168013972436148,
+            "total_return": -0.03093717000000007
+          },
+          "trades": null
+        },
+        "candidate_cap20_2025-10-14_3x": {
+          "metrics": {
+            "annual": -0.05264781516304029,
+            "days": 243,
+            "mdd": -0.20170923151186126,
+            "sharpe": -0.06652321060622628,
+            "total_return": -0.05061241999999999
+          },
+          "trades": null
+        },
+        "candidate_cap20_2026-01-05_2x": {
+          "metrics": {
+            "annual": -0.04618272581413496,
+            "days": 186,
+            "mdd": -0.2009773979461853,
+            "sharpe": -0.04062157071898406,
+            "total_return": -0.0341163000000001
+          },
+          "trades": null
+        },
+        "candidate_cap20_2026-01-05_3x": {
+          "metrics": {
+            "annual": -0.06315258764390841,
+            "days": 186,
+            "mdd": -0.20244181712119869,
+            "sharpe": -0.10746109133254057,
+            "total_return": -0.04676199999999997
+          },
+          "trades": null
+        }
+      }
+    },
+    "control": {
+      "10": {
+        "control_cap10_2022-05-05_2x": {
+          "metrics": {
+            "annual": 0.31209296103893225,
+            "days": 1078,
+            "mdd": -0.24845167376424426,
+            "sharpe": 1.0421211868395055,
+            "total_return": 2.1927010499999997
+          },
+          "trades": null
+        },
+        "control_cap10_2022-05-05_3x": {
+          "metrics": {
+            "annual": 0.28611795478078594,
+            "days": 1078,
+            "mdd": -0.2562233787937337,
+            "sharpe": 0.9773294146946482,
+            "total_return": 1.9311991699999997
+          },
+          "trades": null
+        },
+        "control_cap10_2023-01-03_2x": {
+          "metrics": {
+            "annual": 0.32153600941220417,
+            "days": 913,
+            "mdd": -0.24788342606547953,
+            "sharpe": 1.038025693379938,
+            "total_return": 1.7427780899999998
+          },
+          "trades": null
+        },
+        "control_cap10_2023-01-03_3x": {
+          "metrics": {
+            "annual": 0.29938367701549784,
+            "days": 913,
+            "mdd": -0.2522205959076079,
+            "sharpe": 0.9825751484515063,
+            "total_return": 1.5800082299999998
+          },
+          "trades": null
+        },
+        "control_cap10_2024-01-02_2x": {
+          "metrics": {
+            "annual": 0.4081621237509019,
+            "days": 671,
+            "mdd": -0.24704399306494906,
+            "sharpe": 1.1859702476189964,
+            "total_return": 1.4844331
+          },
+          "trades": null
+        },
+        "control_cap10_2024-01-02_3x": {
+          "metrics": {
+            "annual": 0.36969272600828607,
+            "days": 671,
+            "mdd": -0.2535207840409479,
+            "sharpe": 1.104552774089915,
+            "total_return": 1.30804402
+          },
+          "trades": null
+        },
+        "control_cap10_2025-01-02_2x": {
+          "metrics": {
+            "annual": 0.6611433080482596,
+            "days": 429,
+            "mdd": -0.24802773463070782,
+            "sharpe": 1.6356545450091975,
+            "total_return": 1.3677847500000002
+          },
+          "trades": null
+        },
+        "control_cap10_2025-01-02_3x": {
+          "metrics": {
+            "annual": 0.6293544088350138,
+            "days": 429,
+            "mdd": -0.25339089695348194,
+            "sharpe": 1.5772677493904939,
+            "total_return": 1.29134202
+          },
+          "trades": null
+        },
+        "control_cap10_2025-10-14_2x": {
+          "metrics": {
+            "annual": -0.03797851217119841,
+            "days": 243,
+            "mdd": -0.26435641204018523,
+            "sharpe": 0.032994898089898576,
+            "total_return": -0.03649928000000002
+          },
+          "trades": null
+        },
+        "control_cap10_2025-10-14_3x": {
+          "metrics": {
+            "annual": -0.05695779866670281,
+            "days": 243,
+            "mdd": -0.2690309261203431,
+            "sharpe": -0.02979345335322816,
+            "total_return": -0.05476064000000003
+          },
+          "trades": null
+        },
+        "control_cap10_2026-01-05_2x": {
+          "metrics": {
+            "annual": 0.019281501419019076,
+            "days": 186,
+            "mdd": -0.2367460075055734,
+            "sharpe": 0.22016181741890695,
+            "total_return": 0.01411907999999995
+          },
+          "trades": null
+        },
+        "control_cap10_2026-01-05_3x": {
+          "metrics": {
+            "annual": 0.0007041947672057347,
+            "days": 186,
+            "mdd": -0.23711994697055894,
+            "sharpe": 0.16189458003604199,
+            "total_return": 0.0005169200000001428
+          },
+          "trades": null
+        }
+      },
+      "20": {
+        "control_cap20_2022-05-05_2x": {
+          "metrics": {
+            "annual": 0.21469029294740416,
+            "days": 1078,
+            "mdd": -0.23894318901395084,
+            "sharpe": 0.9450262101125924,
+            "total_return": 1.29609429
+          },
+          "trades": null
+        },
+        "control_cap20_2022-05-05_3x": {
+          "metrics": {
+            "annual": 0.19491657122318018,
+            "days": 1078,
+            "mdd": -0.24147339063807538,
+            "sharpe": 0.8736605026390766,
+            "total_return": 1.1405535800000002
+          },
+          "trades": null
+        },
+        "control_cap20_2023-01-03_2x": {
+          "metrics": {
+            "annual": 0.24016642380599373,
+            "days": 913,
+            "mdd": -0.2371716920511473,
+            "sharpe": 1.0085543760264783,
+            "total_return": 1.17925705
+          },
+          "trades": null
+        },
+        "control_cap20_2023-01-03_3x": {
+          "metrics": {
+            "annual": 0.21348144005555825,
+            "days": 913,
+            "mdd": -0.2422920709357399,
+            "sharpe": 0.9197400503609405,
+            "total_return": 1.01428041
+          },
+          "trades": null
+        },
+        "control_cap20_2024-01-02_2x": {
+          "metrics": {
+            "annual": 0.3173920583036576,
+            "days": 671,
+            "mdd": -0.23809364594869153,
+            "sharpe": 1.2001987902794928,
+            "total_return": 1.0810858200000002
+          },
+          "trades": null
+        },
+        "control_cap20_2024-01-02_3x": {
+          "metrics": {
+            "annual": 0.2843340139304118,
+            "days": 671,
+            "mdd": -0.2431367196694898,
+            "sharpe": 1.1000587160361286,
+            "total_return": 0.94511568
+          },
+          "trades": null
+        },
+        "control_cap20_2025-01-02_2x": {
+          "metrics": {
+            "annual": 0.43924265834003084,
+            "days": 429,
+            "mdd": -0.23177403818781583,
+            "sharpe": 1.5323797491420752,
+            "total_return": 0.8559951299999999
+          },
+          "trades": null
+        },
+        "control_cap20_2025-01-02_3x": {
+          "metrics": {
+            "annual": 0.4130960421381298,
+            "days": 429,
+            "mdd": -0.2371011253545361,
+            "sharpe": 1.4706887931942112,
+            "total_return": 0.7990924799999999
+          },
+          "trades": null
+        },
+        "control_cap20_2025-10-14_2x": {
+          "metrics": {
+            "annual": -0.04012354375068761,
+            "days": 243,
+            "mdd": -0.2292660073434436,
+            "sharpe": -0.051935025468872,
+            "total_return": -0.038562449999999915
+          },
+          "trades": null
+        },
+        "control_cap20_2025-10-14_3x": {
+          "metrics": {
+            "annual": -0.04797440533837127,
+            "days": 243,
+            "mdd": -0.2271690091160734,
+            "sharpe": -0.08667577553472558,
+            "total_return": -0.04611525999999999
+          },
+          "trades": null
+        },
+        "control_cap20_2026-01-05_2x": {
+          "metrics": {
+            "annual": -0.090682688688971,
+            "days": 186,
+            "mdd": -0.21731226662169245,
+            "sharpe": -0.2883064481419192,
+            "total_return": -0.06740753
+          },
+          "trades": null
+        },
+        "control_cap20_2026-01-05_3x": {
+          "metrics": {
+            "annual": -0.11058256492247354,
+            "days": 186,
+            "mdd": -0.22249468832876707,
+            "sharpe": -0.38241385510944914,
+            "total_return": -0.08243449999999997
+          },
+          "trades": null
+        }
+      }
+    }
+  },
+  "selected": null,
+  "summary_only": true,
+  "summary_source_curves": "data/research/r368_cache",
+  "system_backtests_rerun": false,
+  "trade_count_limitation": "The original R368 runner did not persist trade counts alongside the 48 preserved curves; scorecard trades remain null rather than inferred.",
+  "trades_persisted": false
+}
