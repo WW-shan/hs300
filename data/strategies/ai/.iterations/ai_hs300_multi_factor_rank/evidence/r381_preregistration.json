@@ -1,0 +1,161 @@
+{
+  "round": "R381",
+  "created_at": "2026-11-21",
+  "classification": "pre-registered data-lineage hardening of the frozen R380 candidate; research-only, no parameter search",
+  "question": "After closing the historical HS300 membership tail and replacing the current-snapshot industry labels used by the B sleeve with the Shenwan classification effective-date history, does the frozen fade05_h30_sl20 portfolio retain its R380 performance, sealed-window advantage and 3x-cost resilience without changing strategy or portfolio parameters?",
+  "trigger": {
+    "r380_candidate": "candidate_for_paper_trading_review",
+    "r380_evidence": "r380_trade_audit_v2.json",
+    "r380_evidence_sha256": "7591b15f5c6004d0a418a2f5cac84f0d5cba57c33f0ddabc6786358245c92cf0",
+    "membership_gap": {
+      "observed_daily_snapshot_end": "2026-10-14",
+      "frozen_backtest_end": "2026-11-05",
+      "root_cause": "The historical membership frame had no observations after 2026-10-14; the backtest helper carried the last snapshot forward for all later sessions.",
+      "required_repair": "Fetch every missing session from 2026-10-16 through 2026-11-05 from BaoStock and verify 300 unique symbols per date before rerunning."
+    },
+    "industry_gap": {
+      "production_loader": "backend/app/services/industry_map.py",
+      "observed_semantics": "The production loader reads one current ext_hy_ths snapshot and applies it to all history.",
+      "required_repair": "Rebuild only the two B-sleeve industry fields from the Shenwan StockClassifyUse_stock effective-date history in an isolated engine root; leave all other extension fields unchanged."
+    }
+  },
+  "input_bindings_before_repair": {
+    "daily_membership": {
+      "path": "data/research/r78_daily_membership/daily_snapshots.parquet",
+      "sha256": "6e5114f16ecd936be0bf7fb62f474d169dca25f1bad78bb27fd0ea413d3ed748",
+      "date_min": "2020-12-31",
+      "date_max": "2026-10-14",
+      "rows": 419700
+    },
+    "monthly_membership_2018_2020": {
+      "path": "data/research/r157_membership/monthly_snapshots.parquet",
+      "sha256": "5f3284b954847ccf63d7349d884c2a986dec7a580cf9abd38075c7ed8f810d36",
+      "date_min": "2018-01-01",
+      "date_max": "2020-12-01",
+      "snapshot_count": 36
+    },
+    "shenwan_industry_history": {
+      "path": "data/research/r77_sw_industry/StockClassifyUse_stock.xls",
+      "sha256": "0bd177b9160a11d2785f192f6c8f87ab572e4e85979f40476e9f2bffde828ab9",
+      "rows": 12929,
+      "code_count": 5934
+    }
+  },
+  "frozen_design": {
+    "parameters_unchanged": true,
+    "cell": "fade05_h30_sl20",
+    "control_cell": "fade05_h20_sl20",
+    "A_strategy": "ai_hs300_macro_gate_quality",
+    "B_variant": "r371_industry_fade_5d_quality_h20_sl20 with overrides max_hold_days=30 and stop_loss=-0.20",
+    "B20_control_variant": "r371_industry_fade_5d_quality_h20_sl20 with overrides max_hold_days=20 and stop_loss=-0.20",
+    "C_strategy": "ai_hs300_quality_momentum_broad_h60",
+    "C_cohort_starts": [
+      "2022-05-05",
+      "2022-06-02",
+      "2022-07-01"
+    ],
+    "portfolio": "monthly 60-day inverse-vol risk parity, 10% C cap, 15% joint equity volatility target, 60-day overlay at 15%, one-third equity-weight cap, gold 200-day trend defensive bucket",
+    "windows": {
+      "full": [
+        "2022-05-05",
+        "2026-11-05"
+      ],
+      "sealed": [
+        "2025-05-06",
+        "2026-11-05"
+      ],
+      "recent": [
+        "2025-11-05",
+        "2026-11-05"
+      ],
+      "rolling_starts": [
+        "2022-05-05",
+        "2023-05-05",
+        "2024-05-05",
+        "2025-05-05"
+      ],
+      "rolling_length": 252
+    },
+    "costs": {
+      "2x": {
+        "fees_pct": 0.0004,
+        "commission_pct": 0.0004,
+        "stamp_tax_pct": 0.0005,
+        "slippage_bps": 10.0,
+        "portfolio_turnover": 0.0052,
+        "defensive_turnover": 0.001
+      },
+      "3x": {
+        "fees_pct": 0.0006,
+        "commission_pct": 0.0006,
+        "stamp_tax_pct": 0.001,
+        "slippage_bps": 15.0,
+        "portfolio_turnover": 0.0078,
+        "defensive_turnover": 0.0015
+      }
+    },
+    "matching": "T+1 open",
+    "max_positions": {
+      "A": 10,
+      "B": 10,
+      "C_per_cohort": 50
+    },
+    "max_exposure_pct": 1.0,
+    "leverage": "none"
+  },
+  "data_integrity_gates": {
+    "membership_sessions_complete": true,
+    "membership_unique_symbols_per_session": 300,
+    "membership_update_date_not_after_query_date": true,
+    "membership_start_max": "2021-01-04",
+    "membership_end_min": "2026-11-05",
+    "industry_min_symbol_day_coverage": 0.99,
+    "industry_lookup_rule": "For each symbol and market date, use the latest Shenwan row whose effective 计入日期 is not after the market date; use the first two digits of 行业代码 as an L1 proxy.",
+    "industry_missing_policy": "Rows without an effective industry label remain null and are excluded by the strategy filter; no current-snapshot fallback is allowed.",
+    "industry_vintage_limit": "The source workbook is an effective-date classification history, not a captured publication-vintage archive. It removes current-snapshot backfill but cannot prove that every historical revision was publicly known on its effective date."
+  },
+  "performance_gates": {
+    "pit_2x_full": {
+      "annual_min": 0.08,
+      "sharpe_min": 1.0,
+      "mdd_min": -0.2,
+      "year_2022_min": -0.05,
+      "year_2023_min": 0.0,
+      "recent_return_min_exclusive": 0.0,
+      "rolling_positive_count_min": 3
+    },
+    "pit_3x_full": {
+      "annual_min": 0.05,
+      "sharpe_min": 0.8,
+      "mdd_min": -0.25
+    },
+    "pit_sealed": {
+      "centre_total_return_positive": true,
+      "centre_sharpe_min": 1.0,
+      "centre_mdd_min": -0.1,
+      "centre_beats_control_total_return": true,
+      "centre_beats_control_sharpe": true
+    },
+    "sensitivity_vs_r380": {
+      "absolute_annual_delta_max": 0.01,
+      "absolute_sharpe_delta_max": 0.05,
+      "mdd_deterioration_max": 0.01
+    }
+  },
+  "decision_rules": [
+    "Complete the data-integrity stage before reading any R381 portfolio performance.",
+    "Rerun all A, B30, B20 and three C cohorts for both 2x and 3x costs under the repaired membership and isolated effective-date industry inputs; do not reuse R380 curves.",
+    "Do not change fade, hold, stop, position count, portfolio weights, volatility targets, benchmarks, windows or costs.",
+    "If any data-integrity gate fails, do not interpret strategy performance and record a data-gap result.",
+    "If any performance or sensitivity gate fails, retain the frozen result as research-only and do not advance it to paper trading.",
+    "No leverage, no paper target, no orders and no production enablement are generated by this round."
+  ],
+  "known_limits": [
+    "The Shenwan workbook provides effective dates but not a complete publication-vintage history.",
+    "Industry code first two digits are only a proxy for L1 nomenclature.",
+    "As in R119, the industry group mean is computed over the 459-symbol historical HS300 union present in alt_hs300, not only the same-day member subset; this is a fixed-universe limitation, not a current-snapshot industry fallback.",
+    "Rebuilding the B industry fields changes the historical candidate set; A and C are rerun to keep the full portfolio on one input vintage.",
+    "The sealed window remains one approximately 17-month period.",
+    "This round tests data lineage sensitivity, not a new market regime or independent alpha sample."
+  ]
+}

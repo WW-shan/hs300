@@ -19225,3 +19225,25 @@ B 单袖在行业相对 20 日收益 <0 且继续走弱时，于 T+1 开盘退�
 - 组合层 2×/3× 复核和交易级集中度、执行、容量四类门槛全部通过。
 
 **判定**: `candidate_for_paper_trading_review`，但仍不是生产启用。旧 R374-R379 结论只在各自引擎 vintage 内成立；当前可引用结果以 `r380_trade_audit_v2.json` 为准。R380 没有调参、没有杠杆、没有生成纸面目标或订单。剩余风险：行业标签仍为当前快照；日成交额只是流动性代理；封存窗口只有约 17 个月；买入涨停拒买率 4.84% 是真实执行摩擦。证据：`evidence/r380_preregistration.json`、`evidence/r380_attempt1_failure.json`、`evidence/r380_preregistration_amendment_A1.json`、`evidence/r380_trade_audit_v2.json`、`evidence/r380_result_v2.md`、`backend/tests/test_r380_trade_audit.py`。
+
+# R381 · PIT 名单与行业血缘修复（2026-11-21）
+
+**动机**: R380 已把 hold-30 中心重建到当前引擎，但仍有两个数据口径缺口：历史 HS300 名单在 2026-10-14 后没有独立快照，回测曾把最后一日名单向后沿用；B 袖使用的行业字段由当前 `ext_hy_ths` 快照回填历史，不是逐日生效口径。R381 只做数据血缘修复和冻结策略敏感性复核，不搜索新参数。
+
+**数据修复**:
+
+- 从 BaoStock 补齐 2026-10-16 至 2026-11-05 的 15 个缺失交易日；R381 回测窗口 2022-05-05 至 2026-11-05 共 1,093 个交易日，每日 300 只，缺失日、非 300 只日、未来更新日、重复行均为 0。
+- 使用 `StockClassifyUse_stock.xls` 的 `计入日期` 做 as-of 行业映射，行业代码前两位作为一级行业代理；日名单的逐日行业覆盖率为 99.09%，alt_hs300 历史并集覆盖率为 99.56%，只重建 B 袖两个行业字段，不回退当前快照。
+
+**冻结结果**:
+
+| 组合 | 年化 | Sharpe | MDD | 近一年 | 封存段 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| hold-30 中心 2× | 13.75% | 1.441 | -8.02% | 7.14% | 24.54% |
+| 20 日对照 2× | 12.64% | 1.337 | -8.54% | 5.64% | 21.52% |
+| hold-30 中心 3× | 13.00% | 1.371 | -8.23% | 6.24% | 23.15% |
+
+- 相对 R380 主口径 2×：年化 +0.56pp、Sharpe +0.0474、MDD 改善 +0.02pp，三项敏感性门槛通过；绩效门槛 15/15 通过。
+- 3× 只作绝对压力口径，年化 13.00%、Sharpe 1.371、MDD -8.23%，三项绝对门槛通过；相对 R380 的 Sharpe 差为 +0.0507，已在报告中单列诊断，不替换预注册主口径。
+
+**判定**: `candidate_for_paper_trading_review` 保持，未进入生产。数据修复没有改变策略、仓位、成本、窗口或组合参数；R381 是同一冻结候选的数据血缘敏感性复核，不是新的独立 alpha 发现。行业文件是 effective-date 分类历史而非完整公告 vintage，99.09% 的逐日覆盖率也仅为刚性下限，且行业组均值仍在 459 只历史并集上计算。证据：`evidence/r381_preregistration.json`（SHA-256 `9efd6a1cc9e240da7ea14b1342f3e0472ba33c7d9ea78d83fbdb87962d249d4b`）、`evidence/r381_input_audit.json`、`evidence/r381_pit_data_audit.json`、`evidence/r381_result.md`、`backend/tests/test_r381_pit_data_audit.py`。生产仍 `pause_production`，无杠杆、无订单、无纸面目标。
