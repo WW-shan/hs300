@@ -1,0 +1,924 @@
+{
+  "schema_version": 1,
+  "method_version": "financial_operating_efficiency_r383_v1",
+  "financial_pit_research_id": "sha256:9295cd76fcdc44d07aec403ec63d65cc54bb330acefcdd1e2054bee57f02968a",
+  "verified_factor_ids": [
+    "accrual",
+    "core_earnings_ratio",
+    "debt_ratio_latest",
+    "ext_alt_hs300_dividend_growth_ttm",
+    "ext_alt_hs300_dividend_initiation_flag",
+    "ext_alt_hs300_dividend_ttm_cash",
+    "ext_alt_hs300_dividend_yield",
+    "gross_margin_latest",
+    "inventory_turnover_ttm",
+    "net_income_yoy_latest",
+    "net_margin_latest",
+    "ocf_debt",
+    "ocf_ni",
+    "pb_latest",
+    "receivable_turnover_ttm",
+    "revenue_yoy_latest",
+    "roe_latest"
+  ],
+  "p5_research_id": "sha256:641f0df5849264ea133ea0a8ccb58b057816afd47d916014f0d5baabb93cb6c7",
+  "catalog_snapshot_id": "sha256:82124c041a664be2774ac8a3f5487ddecddd193858a8e2da3212d23e7673d839",
+  "p6_admission_catalog_snapshot_id": "sha256:82124c041a664be2774ac8a3f5487ddecddd193858a8e2da3212d23e7673d839",
+  "input_manifest_sha256": "sha256:020b73b3f0c65be4146c47dff4e07466ff597692f6328562fddc850b918ce974",
+  "input_manifest": [
+    {
+      "label": "enriched_daily",
+      "root": "kline_daily_enriched",
+      "patterns": [
+        "date=*/part.parquet"
+      ],
+      "file_count": 2143,
+      "bytes": 47704926,
+      "sha256": "sha256:a9b22f1c53e629f7ccb72fe68e4b1f4ffbb8f1fdd0c93093a22c2c965ac5b777"
+    },
+    {
+      "label": "index_daily",
+      "root": "kline_index_daily",
+      "patterns": [
+        "date=*/part.parquet"
+      ],
+      "file_count": 2133,
+      "bytes": 5951798,
+      "sha256": "sha256:282ddba171383b54a2bb0f7940aa55ec23fc059db4a481ca39321c06dab7368d"
+    },
+    {
+      "label": "existing_extension_factors",
+      "root": "ext_data/alt_hs300/timeseries",
+      "patterns": [
+        "date=*/part.parquet"
+      ],
+      "file_count": 2143,
+      "bytes": 267574660,
+      "sha256": "sha256:84397feef8d5a5a945c5cecc1b48615f5bc6d587d81e988b76583c3dee8ecc1a"
+    },
+    {
+      "label": "industry_map",
+      "root": "ext_data/ext_hy_ths",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 1,
+      "bytes": 103818,
+      "sha256": "sha256:a5635df79fc61d7a8115b05db9a33ef5c05e89ff2155770d807529298614ba7c"
+    },
+    {
+      "label": "instruments",
+      "root": "instruments",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 1,
+      "bytes": 162939,
+      "sha256": "sha256:9e918f0d3dbd5f21d04959745d38a0e3c1c04140d74fa23f96e84c514fdb996e"
+    },
+    {
+      "label": "insider_events",
+      "root": "research/r90_insider_trade",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 29,
+      "bytes": 1401612,
+      "sha256": "sha256:007e38a6358c8f590e16608f3cc4b6edfa0a1208533f5bf6b1c990919fc50597"
+    },
+    {
+      "label": "lhb_events",
+      "root": "research/r43_lhb",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 128,
+      "bytes": 19460906,
+      "sha256": "sha256:3274ff1ff2ddf851c9227dc2ba61cea58a62bd7933cb673a437e8661fd801c44"
+    },
+    {
+      "label": "repurchase_events",
+      "root": "research/external_r39",
+      "patterns": [
+        "repurchase.parquet"
+      ],
+      "file_count": 1,
+      "bytes": 534208,
+      "sha256": "sha256:62927d8c7e6b2d494acfe5609c553d251b2f706e447594cd133016ac388d22ff"
+    },
+    {
+      "label": "block_trade_events",
+      "root": "research/external_r39",
+      "patterns": [
+        "dzjy_*.parquet"
+      ],
+      "file_count": 37,
+      "bytes": 5103507,
+      "sha256": "sha256:8c2a4111568b9462f1960b63fa0b2e0d082e3e670a0c78e742546fbeece0dc7a"
+    },
+    {
+      "label": "analyst_reports",
+      "root": "research/r47_analyst",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 1301,
+      "bytes": 8950338,
+      "sha256": "sha256:701faab6676a078c558fc7be41cad5ea2c0e6d582d7371f026200ee1081dec70"
+    },
+    {
+      "label": "treasury_futures",
+      "root": "research/r193_treasury",
+      "patterns": [
+        "T0.parquet",
+        "TF0.parquet"
+      ],
+      "file_count": 2,
+      "bytes": 85185,
+      "sha256": "sha256:5d2e1f9777925cfc96cdaa2d095b49e4bf3437d32219708fc299237d808fad26"
+    },
+    {
+      "label": "hong_kong_indices",
+      "root": "research/r195_hk",
+      "patterns": [
+        "HSI.parquet",
+        "HSCEI.parquet"
+      ],
+      "file_count": 2,
+      "bytes": 41373,
+      "sha256": "sha256:57c98d2b6191c16b2138f845b8b2793ab197d8f616f296aa020a8de810c7e6b1"
+    },
+    {
+      "label": "etf_shares",
+      "root": "research/r74_etf_flow",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 71,
+      "bytes": 735542,
+      "sha256": "sha256:1d242dcba762fd8ee8a51d7df262bfd5cfa8d97a6f5a8700d04b4e3ecfd81c30"
+    },
+    {
+      "label": "qvix",
+      "root": "research/r75_qvix",
+      "patterns": [
+        "qvix_300etf.parquet"
+      ],
+      "file_count": 1,
+      "bytes": 31426,
+      "sha256": "sha256:d2ab9d933c9f5173cc51523030fca6a88b61a93cdef5d261d11a61fa5f7f2e34"
+    },
+    {
+      "label": "p1_p4_research",
+      "file_count": 4,
+      "bytes": 5047098,
+      "sha256": "sha256:b790de8893c4a0780bc7f0d1fec2d2bcd152ab04b0ebdf0e5df036d069c5ddfe",
+      "files": [
+        {
+          "path": "factor_research/research/parameters/p1_parameter_mc_2026-11-11.json",
+          "bytes": 267768,
+          "sha256": "sha256:a6bc94c4b572b5daba771e0a8d8544531f0030bd5afc6687732c7f69eecb3bb7"
+        },
+        {
+          "path": "factor_research/research/parameters/p2_builtin_parameter_mc_2026-11-11_v2.json",
+          "bytes": 1218453,
+          "sha256": "sha256:b2162789150bd3b7d2b2f61b123e28c8f24cffec50638c696e360a500f9e77ea"
+        },
+        {
+          "path": "factor_research/research/parameters/p3_extended_parameter_mc_2026-11-11_v3.json",
+          "bytes": 1059795,
+          "sha256": "sha256:b79bcdec6911323e1e8416ac39310a1f0a26bd85464d59f739e9390b4d125661"
+        },
+        {
+          "path": "factor_research/research/parameters/p4_threshold_parameter_mc_2026-11-11.json",
+          "bytes": 2501082,
+          "sha256": "sha256:9c65600b73b19cab7d89c76a7b83ef416cdc3125dadc7ce61e0d47353e63f1d4"
+        }
+      ]
+    },
+    {
+      "label": "p5_research_candidates",
+      "file_count": 9,
+      "bytes": 3576,
+      "sha256": "sha256:d04d63e3ffbc9dafd367021c23705c22121ff21d52c1dff70ae97cb239c69dcb",
+      "files": [
+        {
+          "path": "factor_research/candidates/p5/uf_p5_annual_vol10_low.json",
+          "bytes": 419,
+          "sha256": "sha256:3e957fb935ef878a1d493e95559a37ba518cea744533939fb5ba2a9433ec8bb2"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_atr5_low.json",
+          "bytes": 419,
+          "sha256": "sha256:5eeb304e3d8dd140dcda271ac8ed4bf6c50bb203c7631e1b3fbc3b0d00e77d9b"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_boll_width10_low.json",
+          "bytes": 349,
+          "sha256": "sha256:55c1d4fc2083ebbf5d39dd0d4c84905c3a30a5fda9d32a4e431f373f1b3c1eaf"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_amihud120.json",
+          "bytes": 398,
+          "sha256": "sha256:1f133388cb053d1f0d01f9c7b658bf2de655fcb87aa84e4c95826facc9c22f03"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_amount5_low.json",
+          "bytes": 352,
+          "sha256": "sha256:4afc4a3808148259ce622ac136f92c20ab2f21e426a7d883d8c367b1786a5c60"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_turnover5_low.json",
+          "bytes": 346,
+          "sha256": "sha256:bedca1be8b15ca0017e1b92994369dcef1c3cdb29f3cc7cae5a591b76a04438e"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_max_ret60_low.json",
+          "bytes": 383,
+          "sha256": "sha256:17cf2dd34dc0fbff42462a1bbfb53862994acf60b5c4673f429545ff40c2fc9c"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_div_yield_abs015.json",
+          "bytes": 449,
+          "sha256": "sha256:20e9769c9b3435483b859aaf433d4db8549b7382687a049f6db29daa9e0a3b95"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_margin_q50.json",
+          "bytes": 461,
+          "sha256": "sha256:34fa351781e1463b6b8595486db734a9e9a7287a7bb33845e88308578b64a30c"
+        }
+      ]
+    },
+    {
+      "label": "base_watch_version",
+      "file_count": 1,
+      "bytes": 8650,
+      "sha256": "sha256:0748c7469c6569cf4d903d322719ffe6dcadd94ea2dff5e749a1a8fbc9047ecb",
+      "files": [
+        {
+          "path": "factor_research/sets/multi_dimension_v1/versions/v0001.json",
+          "bytes": 8650,
+          "sha256": "sha256:d6c2ad44c2f08738cdb25214909cae812c887ac08a81593ba59a84f1c0802515"
+        }
+      ]
+    },
+    {
+      "label": "financial_tables",
+      "file_count": 4,
+      "bytes": 31673341,
+      "sha256": "sha256:6da00e458e56ad16f9779c950bd9fd075e09ee14c20943a4988db6c35dc4f164",
+      "files": [
+        {
+          "path": "financials/balance_sheet/part.parquet",
+          "bytes": 6890578,
+          "sha256": "sha256:9253a260bb045c37c0409617bdb3082624e7f21f253d35a147036e5eeac47283"
+        },
+        {
+          "path": "financials/cash_flow/part.parquet",
+          "bytes": 6867147,
+          "sha256": "sha256:f34a3365dd92713d91a007b784b9ac8cd266cc7e7d19b5ab1df75a82381e3b5b"
+        },
+        {
+          "path": "financials/income/part.parquet",
+          "bytes": 8349539,
+          "sha256": "sha256:9bf784d2939de14c4f9da2e96ad3fbecd3c87ae85e8c7dfea056b636ee8164e2"
+        },
+        {
+          "path": "financials/metrics/part.parquet",
+          "bytes": 9566077,
+          "sha256": "sha256:d458c82807fbd0957344021930ba065b478dae78d7bb17a6aea9e4cab4757886"
+        }
+      ]
+    },
+    {
+      "label": "financial_pit_p7",
+      "file_count": 3,
+      "bytes": 9269,
+      "sha256": "sha256:9c1bd92901295b44e1bbe7c365a572f573e425702acb4948e2e8ba9e3fb24290",
+      "files": [
+        {
+          "path": "factor_research/pit/latest.json",
+          "bytes": 1055,
+          "sha256": "sha256:6eac23a1fd2d2dc04344016b1264b755cc7ffd62596cdd0f07521ede464b2d0e"
+        },
+        {
+          "path": "factor_research/pit/runs/9295cd76fcdc44d07aec403ec63d65cc54bb330acefcdd1e2054bee57f02968a.json",
+          "bytes": 6438,
+          "sha256": "sha256:eb2f60efd45feb167522e5d3b0b27e77a73d36041fb4167382dab564ab337b98"
+        },
+        {
+          "path": "factor_research/pit/runs/9295cd76fcdc44d07aec403ec63d65cc54bb330acefcdd1e2054bee57f02968a.md",
+          "bytes": 1776,
+          "sha256": "sha256:27ac355778b9abca17368ba000d72acf53761267039c395ab9ce6dda0dfe038f"
+        }
+      ]
+    },
+    {
+      "label": "p5_increment_baseline",
+      "file_count": 3,
+      "bytes": 116907,
+      "sha256": "sha256:72b4faa597d8f5edb847131457cb35f1916d19e42390123f880cc60b1ea0bacb",
+      "files": [
+        {
+          "path": "factor_research/research/p5_incremental_2026-11-12.json",
+          "bytes": 103654,
+          "sha256": "sha256:9ed3171ad440ae677b73b8b820ad022b0230b9e27c8d3198a2b386afb3f1cd91"
+        },
+        {
+          "path": "factor_research/research/p5_incremental_2026-11-12.md",
+          "bytes": 4603,
+          "sha256": "sha256:cf9e0df67fe534435378e377d6321b1d09ea1cbc2a9bf389b35988bf06f0daf8"
+        },
+        {
+          "path": "factor_research/sets/multi_dimension_v1/versions/v0001.json",
+          "bytes": 8650,
+          "sha256": "sha256:d6c2ad44c2f08738cdb25214909cae812c887ac08a81593ba59a84f1c0802515"
+        }
+      ]
+    },
+    {
+      "label": "catalog_snapshot",
+      "file_count": 1,
+      "bytes": 369628,
+      "sha256": "sha256:669eb7491725f6cf0b30bedab7e02f198c5c78a8152c45ad6ad4386ba4710324",
+      "files": [
+        {
+          "path": "factor_research/catalog/snapshots/6cb4e69da0a5a3097459e32ddd662979c4602f7327c3b737c4130de147b9b3f6.json",
+          "bytes": 369628,
+          "sha256": "sha256:8d600f9fe02bf2a072b5fbbe00ebc2fcf8cbdc1c63ae00b6a15621d7feeb20ed"
+        }
+      ]
+    }
+  ],
+  "data_fingerprint": "sha256:04800d3982b4f19dcb57efe4fc6cbcc99ce0c0e3cf44d76ca396b0b039e05ab1",
+  "period": {
+    "start": "2021-06-01",
+    "recent_start": "2025-10-14",
+    "end": "2026-11-05",
+    "weak_start": "2025-07-01",
+    "weak_end": "2026-06-30"
+  },
+  "universe": {
+    "name": "hs300_current_non_financial",
+    "symbol_count": 250,
+    "excluded_industries": [
+      "银行",
+      "非银金融"
+    ],
+    "survivorship_bias": true
+  },
+  "base_set": {
+    "set_id": "multi_dimension_v1",
+    "version": 1,
+    "content_sha256": "sha256:9eb577a43d549e1b9218ae61d125fa393dd65263988f0d5b221067a23c61822b",
+    "factor_ids": [
+      "ext_alt_hs300_cash_flow_stability_4q_low",
+      "ext_alt_hs300_dividend_yield",
+      "ext_alt_hs300_fund_holding_ratio_low",
+      "ext_alt_hs300_holder_top10_share_chg_yoy",
+      "ext_alt_hs300_idio_vol_40d_low",
+      "ext_alt_hs300_margin_chg_1m_low",
+      "ext_alt_hs300_ocf_margin_4q",
+      "ext_alt_hs300_vol_of_vol_20d_low"
+    ]
+  },
+  "research_design": {
+    "horizons": [
+      5,
+      20,
+      60
+    ],
+    "primary_horizon": 60,
+    "newey_west_lag": 60,
+    "minimum_cross_section": 30,
+    "neutral_variants_required": 2,
+    "incremental_weight": 0.2,
+    "fdr_threshold": 0.1,
+    "max_correlation": 0.9
+  },
+  "candidate_count": 2,
+  "statistical_pass_count": 1,
+  "incremental_pass_count": 0,
+  "portfolio_pass_count": 0,
+  "ic_grid": {
+    "inventory_turnover_ttm": {
+      "5": {
+        "raw": {
+          "directional_ic": 0.016542,
+          "nw_t": 1.847247,
+          "p_value": 0.06471136,
+          "n_dates": 1088,
+          "valid_rows": 260249
+        },
+        "industry": {
+          "directional_ic": 0.007273,
+          "nw_t": 1.515763,
+          "p_value": 0.12957928,
+          "n_dates": 1088,
+          "valid_rows": 260249
+        },
+        "size": {
+          "directional_ic": 0.012152,
+          "nw_t": 1.498419,
+          "p_value": 0.13402439,
+          "n_dates": 1088,
+          "valid_rows": 260249
+        },
+        "industry_size": {
+          "directional_ic": 0.005314,
+          "nw_t": 1.21951,
+          "p_value": 0.2226508,
+          "n_dates": 1088,
+          "valid_rows": 260249
+        }
+      },
+      "20": {
+        "raw": {
+          "directional_ic": 0.017982,
+          "nw_t": 1.088864,
+          "p_value": 0.27621395,
+          "n_dates": 1073,
+          "valid_rows": 256549
+        },
+        "industry": {
+          "directional_ic": 0.005435,
+          "nw_t": 0.577378,
+          "p_value": 0.56368403,
+          "n_dates": 1073,
+          "valid_rows": 256549
+        },
+        "size": {
+          "directional_ic": 0.015711,
+          "nw_t": 1.030189,
+          "p_value": 0.30292122,
+          "n_dates": 1073,
+          "valid_rows": 256549
+        },
+        "industry_size": {
+          "directional_ic": 0.009939,
+          "nw_t": 1.104931,
+          "p_value": 0.26918958,
+          "n_dates": 1073,
+          "valid_rows": 256549
+        }
+      },
+      "60": {
+        "raw": {
+          "directional_ic": 0.026837,
+          "nw_t": 1.192228,
+          "p_value": 0.23317186,
+          "n_dates": 1033,
+          "valid_rows": 246721
+        },
+        "industry": {
+          "directional_ic": 0.009769,
+          "nw_t": 0.685116,
+          "p_value": 0.49327096,
+          "n_dates": 1033,
+          "valid_rows": 246721
+        },
+        "size": {
+          "directional_ic": 0.029815,
+          "nw_t": 1.435179,
+          "p_value": 0.15123605,
+          "n_dates": 1033,
+          "valid_rows": 246721
+        },
+        "industry_size": {
+          "directional_ic": 0.022428,
+          "nw_t": 1.284032,
+          "p_value": 0.19913059,
+          "n_dates": 1033,
+          "valid_rows": 246721
+        }
+      }
+    },
+    "receivable_turnover_ttm": {
+      "5": {
+        "raw": {
+          "directional_ic": -0.005276,
+          "nw_t": -0.524296,
+          "p_value": 0.60007236,
+          "n_dates": 1088,
+          "valid_rows": 263227
+        },
+        "industry": {
+          "directional_ic": -0.005024,
+          "nw_t": -1.291765,
+          "p_value": 0.19643845,
+          "n_dates": 1088,
+          "valid_rows": 263227
+        },
+        "size": {
+          "directional_ic": 0.013409,
+          "nw_t": 1.531338,
+          "p_value": 0.12568586,
+          "n_dates": 1088,
+          "valid_rows": 263227
+        },
+        "industry_size": {
+          "directional_ic": 0.009889,
+          "nw_t": 1.88756,
+          "p_value": 0.05908498,
+          "n_dates": 1088,
+          "valid_rows": 263227
+        }
+      },
+      "20": {
+        "raw": {
+          "directional_ic": -0.0103,
+          "nw_t": -0.55605,
+          "p_value": 0.5781769,
+          "n_dates": 1073,
+          "valid_rows": 259482
+        },
+        "industry": {
+          "directional_ic": -0.009734,
+          "nw_t": -1.37114,
+          "p_value": 0.17033123,
+          "n_dates": 1073,
+          "valid_rows": 259482
+        },
+        "size": {
+          "directional_ic": 0.042353,
+          "nw_t": 2.339928,
+          "p_value": 0.01928748,
+          "n_dates": 1073,
+          "valid_rows": 259482
+        },
+        "industry_size": {
+          "directional_ic": 0.027448,
+          "nw_t": 2.660075,
+          "p_value": 0.00781233,
+          "n_dates": 1073,
+          "valid_rows": 259482
+        }
+      },
+      "60": {
+        "raw": {
+          "directional_ic": -0.023502,
+          "nw_t": -0.809405,
+          "p_value": 0.41828251,
+          "n_dates": 1033,
+          "valid_rows": 249522
+        },
+        "industry": {
+          "directional_ic": -0.016047,
+          "nw_t": -1.273174,
+          "p_value": 0.20295621,
+          "n_dates": 1033,
+          "valid_rows": 249522
+        },
+        "size": {
+          "directional_ic": 0.081645,
+          "nw_t": 3.194495,
+          "p_value": 0.00140076,
+          "n_dates": 1033,
+          "valid_rows": 249522
+        },
+        "industry_size": {
+          "directional_ic": 0.051757,
+          "nw_t": 3.062428,
+          "p_value": 0.00219549,
+          "n_dates": 1033,
+          "valid_rows": 249522
+        }
+      }
+    }
+  },
+  "candidates": [
+    {
+      "candidate_key": "r383_inventory_turnover_ttm",
+      "economic_key": "inventory_turnover_ttm",
+      "label": "存货周转率(TTM)",
+      "factor_id": "inventory_turnover_ttm",
+      "direction": "high",
+      "registered": true,
+      "transform": "pit_latest",
+      "set_role": "new",
+      "replaces_factor_id": null,
+      "score_column": "_score_inventory_turnover_ttm",
+      "coverage": {
+        "rows": 444817,
+        "non_null_rows": 261484,
+        "non_null_ratio": 0.587846,
+        "symbol_count": 247,
+        "first_value_date": "2022-05-05"
+      },
+      "primary_horizon": 60,
+      "horizon_gate": {
+        "pass": false,
+        "confirmations": [],
+        "required_confirmations": 2,
+        "reasons": [
+          "fewer_than_two_neutralized_confirmations"
+        ]
+      },
+      "marginal_ic": {
+        "comparison_basis": "current_composite",
+        "n_dates": 1033,
+        "base_ic_mean": 0.064632,
+        "combined_ic_mean": 0.064394,
+        "directional_delta_mean": -0.000238,
+        "delta_nw_t": -0.041551,
+        "delta_p_value": 0.96685696,
+        "recent_directional_delta_mean": -0.005986,
+        "correlations": [
+          {
+            "current_factor_id": "ext_alt_hs300_idio_vol_40d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1083,
+            "mean_symbols": 239.026,
+            "mean_signed": 0.165283,
+            "mean_abs": 0.165283,
+            "max_abs": 0.295785,
+            "min_signed": 0.041593,
+            "max_signed": 0.295785
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_dividend_yield",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 221.858,
+            "mean_signed": 0.26738,
+            "mean_abs": 0.26738,
+            "max_abs": 0.368766,
+            "min_signed": 0.108982,
+            "max_signed": 0.368766
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 239.096,
+            "mean_signed": 0.135434,
+            "mean_abs": 0.141353,
+            "max_abs": 0.395225,
+            "min_signed": -0.113435,
+            "max_signed": 0.395225
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 238.889,
+            "mean_signed": 0.172911,
+            "mean_abs": 0.172911,
+            "max_abs": 0.29179,
+            "min_signed": 0.078116,
+            "max_signed": 0.29179
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 238.951,
+            "mean_signed": 0.296915,
+            "mean_abs": 0.296915,
+            "max_abs": 0.38107,
+            "min_signed": 0.203458,
+            "max_signed": 0.38107
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_ocf_margin_4q",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 239.221,
+            "mean_signed": 0.144161,
+            "mean_abs": 0.144161,
+            "max_abs": 0.226816,
+            "min_signed": 0.033692,
+            "max_signed": 0.226816
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 235.428,
+            "mean_signed": 0.017532,
+            "mean_abs": 0.071849,
+            "max_abs": 0.292306,
+            "min_signed": -0.159046,
+            "max_signed": 0.292306
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 236.541,
+            "mean_signed": 0.039007,
+            "mean_abs": 0.084268,
+            "max_abs": 0.2001,
+            "min_signed": -0.151779,
+            "max_signed": 0.2001
+          }
+        ],
+        "max_abs_correlation_all_members": 0.296915,
+        "max_abs_correlation_for_gate": 0.296915,
+        "delta_q_value": 0.96685696
+      },
+      "incremental_gate": {
+        "pass": false,
+        "reasons": [
+          "marginal_ic_not_positive",
+          "marginal_ic_p_above_0_10",
+          "marginal_ic_q_above_0_10"
+        ]
+      },
+      "status": "horizon_rejected",
+      "portfolio_result": null
+    },
+    {
+      "candidate_key": "r383_receivable_turnover_ttm",
+      "economic_key": "receivable_turnover_ttm",
+      "label": "应收周转率(TTM)",
+      "factor_id": "receivable_turnover_ttm",
+      "direction": "high",
+      "registered": true,
+      "transform": "pit_latest",
+      "set_role": "new",
+      "replaces_factor_id": null,
+      "score_column": "_score_receivable_turnover_ttm",
+      "coverage": {
+        "rows": 444817,
+        "non_null_rows": 264477,
+        "non_null_ratio": 0.594575,
+        "symbol_count": 250,
+        "first_value_date": "2022-05-05"
+      },
+      "primary_horizon": 60,
+      "horizon_gate": {
+        "pass": true,
+        "confirmations": [
+          "size",
+          "industry_size"
+        ],
+        "required_confirmations": 2,
+        "reasons": []
+      },
+      "marginal_ic": {
+        "comparison_basis": "current_composite",
+        "n_dates": 1033,
+        "base_ic_mean": 0.068857,
+        "combined_ic_mean": 0.045499,
+        "directional_delta_mean": -0.023358,
+        "delta_nw_t": -2.411996,
+        "delta_p_value": 0.01586544,
+        "recent_directional_delta_mean": -0.01287,
+        "correlations": [
+          {
+            "current_factor_id": "ext_alt_hs300_idio_vol_40d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1083,
+            "mean_symbols": 241.762,
+            "mean_signed": 0.115182,
+            "mean_abs": 0.121815,
+            "max_abs": 0.290403,
+            "min_signed": -0.097549,
+            "max_signed": 0.290403
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_dividend_yield",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 224.565,
+            "mean_signed": 0.258509,
+            "mean_abs": 0.258509,
+            "max_abs": 0.363857,
+            "min_signed": 0.098944,
+            "max_signed": 0.363857
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 241.834,
+            "mean_signed": 0.098119,
+            "mean_abs": 0.115784,
+            "max_abs": 0.331115,
+            "min_signed": -0.223834,
+            "max_signed": 0.331115
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 241.628,
+            "mean_signed": 0.002902,
+            "mean_abs": 0.025496,
+            "max_abs": 0.063775,
+            "min_signed": -0.048154,
+            "max_signed": 0.063775
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 241.689,
+            "mean_signed": 0.012949,
+            "mean_abs": 0.055474,
+            "max_abs": 0.13657,
+            "min_signed": -0.124218,
+            "max_signed": 0.13657
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_ocf_margin_4q",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 241.96,
+            "mean_signed": 0.213574,
+            "mean_abs": 0.213574,
+            "max_abs": 0.271623,
+            "min_signed": 0.091755,
+            "max_signed": 0.271623
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 238.167,
+            "mean_signed": 0.004302,
+            "mean_abs": 0.078817,
+            "max_abs": 0.202728,
+            "min_signed": -0.195688,
+            "max_signed": 0.202728
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+            "is_replaced_slot": false,
+            "n_dates": 1093,
+            "mean_symbols": 239.389,
+            "mean_signed": 0.035633,
+            "mean_abs": 0.070597,
+            "max_abs": 0.168947,
+            "min_signed": -0.121931,
+            "max_signed": 0.168947
+          }
+        ],
+        "max_abs_correlation_all_members": 0.258509,
+        "max_abs_correlation_for_gate": 0.258509,
+        "delta_q_value": 0.03173088
+      },
+      "incremental_gate": {
+        "pass": false,
+        "reasons": [
+          "marginal_ic_not_positive"
+        ]
+      },
+      "status": "incremental_rejected",
+      "portfolio_result": null
+    }
+  ],
+  "portfolio": {
+    "run": false,
+    "reason": "no_incremental_candidate",
+    "baseline": null,
+    "screen": {},
+    "passing_candidates": [],
+    "final": null,
+    "ablation": null,
+    "ablation_gate": null,
+    "rolling_year": null,
+    "cost_warning_5x": null
+  },
+  "negative_knowledge": [
+    {
+      "candidate_key": "r383_inventory_turnover_ttm",
+      "factor_id": "inventory_turnover_ttm",
+      "status": "horizon_rejected",
+      "reasons": [
+        "fewer_than_two_neutralized_confirmations",
+        "horizon_rejected",
+        "marginal_ic_not_positive",
+        "marginal_ic_p_above_0_10",
+        "marginal_ic_q_above_0_10"
+      ]
+    },
+    {
+      "candidate_key": "r383_receivable_turnover_ttm",
+      "factor_id": "receivable_turnover_ttm",
+      "status": "incremental_rejected",
+      "reasons": [
+        "incremental_rejected",
+        "marginal_ic_not_positive"
+      ]
+    }
+  ],
+  "decision": {
+    "status": "no_incremental_candidate",
+    "factor_ids": [],
+    "active_version": null,
+    "paper_target_generated": false,
+    "orders_generated": false,
+    "production_enabled": false
+  },
+  "caveats": [
+    "Current HS300 membership is applied to history; survivorship bias remains.",
+    "Industry classification is the current snapshot, not historical PIT.",
+    "A standalone IC is not enough; the 80% base + 20% candidate incremental gate is mandatory.",
+    "No leverage, paper target, order, or production activation is produced.",
+    "Coinventory and receivable turnover are not silently added to the strategy when incremental evidence fails."
+  ],
+  "research_id": "sha256:6f889972896655cad70984e44984f7d968f37f8b7715ef2e672f9dcab496a0c6",
+  "generated_at": "2026-11-20T20:59:40Z"
+}

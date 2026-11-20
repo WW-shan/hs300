@@ -28,8 +28,12 @@ def test_published_p7_audit_is_verified_and_content_addressed() -> None:
     payload = json.loads((DATA / latest["run_json"]).read_text(encoding="utf-8"))
 
     assert payload["status"] == "verified"
-    assert len(payload["verified_factor_ids"]) == 15
+    assert len(payload["verified_factor_ids"]) == 17
     assert set(payload["verified_factor_ids"]) == set(payload["factors"])
+    assert {
+        "inventory_turnover_ttm",
+        "receivable_turnover_ttm",
+    } <= set(payload["verified_factor_ids"])
     assert latest["research_id"] == payload["research_id"]
     assert sha256_json({
         key: value

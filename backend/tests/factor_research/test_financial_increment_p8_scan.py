@@ -11,7 +11,6 @@ import pytest
 
 from app.factor_research.financial_pit import (
     BUILTIN_FINANCIAL_DIRECTIONS,
-    BUILTIN_FINANCIAL_FACTOR_IDS,
 )
 from app.factor_research.fingerprints import sha256_json
 
@@ -46,14 +45,13 @@ def _candidate(factor_id: str) -> dict:
 
 def test_financial_candidates_cover_all_p7_verified_builtin_factors() -> None:
     module = _module()
+    factor_ids = list(module.P8_FINANCIAL_FACTOR_IDS)
 
     audit = module.load_verified_audit(DATA)
     candidates = module.financial_candidates(audit)
 
-    assert len(candidates) == 11
-    assert {item["factor_id"] for item in candidates} == set(
-        BUILTIN_FINANCIAL_DIRECTIONS
-    )
+    assert len(candidates) == len(factor_ids)
+    assert {item["factor_id"] for item in candidates} == set(factor_ids)
     assert all(
         item["direction"] == BUILTIN_FINANCIAL_DIRECTIONS[item["factor_id"]]
         for item in candidates
@@ -62,7 +60,7 @@ def test_financial_candidates_cover_all_p7_verified_builtin_factors() -> None:
 
 def test_financial_candidates_reject_any_unverified_factor() -> None:
     module = _module()
-    verified = list(BUILTIN_FINANCIAL_DIRECTIONS)
+    verified = list(module.P8_FINANCIAL_FACTOR_IDS)
     audit = {
         "verified_factor_ids": verified[:-1],
         "factors": {
@@ -112,8 +110,9 @@ def test_financial_candidates_fail_closed_on_p6_admission(monkeypatch) -> None:
     candidates = [_candidate("pb_latest")]
     checked: list[list[str]] = []
 
-    def reject(_data_dir, factor_ids):
+    def reject(_data_dir, factor_ids, *, research_id):
         checked.append(list(factor_ids))
+        assert research_id == module.P6_ADMISSION_RESEARCH_ID
         raise ValueError("portfolio admission rejected: financial_pit_not_verified")
 
     monkeypatch.setattr(module, "assert_portfolio_candidates_admitted", reject)
@@ -154,16 +153,17 @@ def test_select_final_set_never_exceeds_eight_members_and_prefers_ic_order() -> 
 def test_financial_panel_attaches_all_verified_factors() -> None:
     module = _module()
     from app.hs300.current import current_symbols
+    factor_ids = list(module.P8_FINANCIAL_FACTOR_IDS)
 
     panel, coverage = module.load_financial_panel(
         DATA,
         current_symbols(),
-        list(BUILTIN_FINANCIAL_FACTOR_IDS),
+        factor_ids,
     )
 
     assert panel.height > 0
-    assert set(coverage) == set(BUILTIN_FINANCIAL_FACTOR_IDS)
-    for factor_id in BUILTIN_FINANCIAL_FACTOR_IDS:
+    assert set(coverage) == set(factor_ids)
+    for factor_id in factor_ids:
         assert factor_id in panel.columns
         assert coverage[factor_id]["non_null_rows"] > 0
         assert coverage[factor_id]["symbol_count"] > 0

@@ -44,6 +44,8 @@ BUILTIN_FINANCIAL_DIRECTIONS = {
     "accrual": "low",
     "ocf_debt": "high",
     "core_earnings_ratio": "high",
+    "inventory_turnover_ttm": "high",
+    "receivable_turnover_ttm": "high",
 }
 
 

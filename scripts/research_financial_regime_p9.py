@@ -68,6 +68,9 @@ p8 = _load_sibling("research_financial_increment_p8")
 p5 = p8.p5
 P8_RESULT = DATA / "factor_research" / "research" / "p8_financial_increment_2026-11-12.json"
 P5_RESULT = p8.P5_RESULT
+P6_ADMISSION_RESEARCH_ID = (
+    "sha256:30ac3399ccac92a01aa59027caf6baee9e010039690505817d27e3d8871d8a6c"
+)
 COST_WARNING_5X = p8.COST_WARNING_5X
 
 
@@ -634,7 +637,11 @@ def run_p9_research(
         }
         for factor_id in REGIME_HYPOTHESES
     ]
-    admission = p8.admit_financial_candidates(data_dir, funding_candidates)
+    admission = p8.admit_financial_candidates(
+        data_dir,
+        funding_candidates,
+        admission_research_id=P6_ADMISSION_RESEARCH_ID,
+    )
     _sets, _head, current_version = p8._current_set(data_dir)
     _base_weights_raw, current_directions, current_ids = p5._current_inputs(
         current_version

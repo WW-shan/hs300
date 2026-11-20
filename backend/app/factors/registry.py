@@ -315,6 +315,14 @@ _CATALOG: tuple[FactorSpec, ...] = (
         "core_earnings_ratio", "核心利润占比(TTM)",
         "TTM 营业利润 / TTM 利润总额; 利润总额<=0、季度不完整或数据缺失时为空; 高值代表利润更依赖主营经营",
     ),
+    _financial(
+        "inventory_turnover_ttm", "存货周转率(TTM)",
+        "TTM 营业成本 / 平均存货; 当前与一年前存货需恰好相隔四季度且分母>0",
+    ),
+    _financial(
+        "receivable_turnover_ttm", "应收周转率(TTM)",
+        "TTM 营业收入 / 平均应收账款; 当前与一年前应收需恰好相隔四季度且分母>0",
+    ),
 )
 
 _REGISTRY: dict[str, FactorSpec] = {}
@@ -357,7 +365,7 @@ def _ensure_ext_factors() -> None:
         from app.factors.ext_factors import ensure_synced
 
         ensure_synced()
-    except Exception:
+    except Exception:  # noqa: BLE001 - optional sync must not block registry reads
         import logging
 
         logging.getLogger(__name__).debug("ext factor sync skipped", exc_info=True)

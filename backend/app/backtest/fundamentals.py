@@ -16,7 +16,9 @@
   * accrual = max(metrics, cash_flow, balance_sheet);
   * ocf_debt = max(cash_flow, balance_sheet);
   * debt_ratio_latest = balance_sheet (缺失时退回 metrics);
-  * core_earnings_ratio = TTM 营业利润 / TTM 利润总额, 利润总额<=0 或季度不完整时为空。
+  * core_earnings_ratio = TTM 营业利润 / TTM 利润总额, 利润总额<=0 或季度不完整时为空;
+  * inventory_turnover_ttm / receivable_turnover_ttm = TTM 流量 / 当前与
+    一年前资产负债项目的平均值, 依赖四个连续利润表季度以及两期资产负债表。
 - 因子只在 **严格晚于生效日的交易日** 才有值 (公告多在盘后发布, 保守取 T+1),
   此前保持 null; 无财务数据一律 null, 绝不填 0。
 - TTM: 累计值(YTD)按同财年连续季度差分还原单季, 再滚动 4 季求和;
@@ -61,6 +63,16 @@ DERIVED_FUNDAMENTAL_FACTORS: dict[str, dict[str, Any]] = {
         "column": "core_earnings_ratio",
         "price_ratio": False,
         "announce_column": "_announce_core_earnings",
+    },
+    "inventory_turnover_ttm": {
+        "column": "inventory_turnover_ttm",
+        "price_ratio": False,
+        "announce_column": "_announce_inventory_turnover_ttm",
+    },
+    "receivable_turnover_ttm": {
+        "column": "receivable_turnover_ttm",
+        "price_ratio": False,
+        "announce_column": "_announce_receivable_turnover_ttm",
     },
 }
 
@@ -168,17 +180,32 @@ def _load_optional_table(
     table: str,
     short_name: str,
     value_columns: list[str],
+    *,
+    optional_columns: list[str] | None = None,
 ) -> pl.DataFrame | None:
-    """读取可选侧表并计算该表自己的 PIT 生效日。"""
+    """读取可选侧表并计算该表自己的 PIT 生效日。
+
+    新资产项目以可选列加载: 旧 Parquet 缺少这些列时只让依赖它们的新因子
+    保持 null, 不能让同一张表上的既有财务因子整体失效。
+    """
     frame = _read_parquet(data_dir / "financials" / table / "part.parquet", table)
     if frame is None:
         return None
-    needed = {"symbol", "period_end", "announce_date", *value_columns}
-    if not needed.issubset(frame.columns):
-        logger.debug("财务侧表 %s 缺少列: %s", table, sorted(needed - set(frame.columns)))
+    required = {"symbol", "period_end", "announce_date", *value_columns}
+    if not required.issubset(frame.columns):
+        logger.debug("财务侧表 %s 缺少列: %s", table, sorted(required - set(frame.columns)))
         return None
+    optional = set(optional_columns or ())
+    selected = required | (optional & set(frame.columns))
+    loaded = frame.select(sorted(selected))
+    missing_optional = optional - set(frame.columns)
+    if missing_optional:
+        loaded = loaded.with_columns([
+            pl.lit(None, dtype=pl.Float64).alias(column)
+            for column in sorted(missing_optional)
+        ])
     return (
-        frame.select(sorted(needed))
+        loaded
         .filter(
             pl.col("symbol").is_not_null()
             & pl.col("period_end").is_not_null()
@@ -257,21 +284,47 @@ def _quarterly_flow(column: str) -> pl.Expr:
 
 
 def _derive_ttm_factors(snapshot: pl.DataFrame) -> pl.DataFrame:
-    """在四表并集上计算 TTM 现金流、应计与核心利润因子。"""
+    """在四表并集上计算 TTM 现金流、应计、核心利润与营运效率因子。"""
+    period_index = pl.col("period_end").dt.year() * 4 + pl.col("period_end").dt.quarter()
+    lag_four_consecutive = (period_index - period_index.shift(4).over("symbol")) == 4
     q_net_income = _quarterly_flow("net_income")
     q_ocf = _quarterly_flow("net_operating_cash_flow")
     q_operating_profit = _quarterly_flow("operating_profit")
     q_total_profit = _quarterly_flow("total_profit")
+    q_income_revenue = _quarterly_flow("income_revenue")
+    q_income_operating_costs = _quarterly_flow("income_operating_costs")
     enriched = snapshot.with_columns([
         q_net_income.alias("_q_net_income"),
         q_ocf.alias("_q_ocf"),
         q_operating_profit.alias("_q_operating_profit"),
         q_total_profit.alias("_q_total_profit"),
+        q_income_revenue.alias("_q_income_revenue"),
+        q_income_operating_costs.alias("_q_income_operating_costs"),
     ]).with_columns([
         pl.col("_q_net_income").rolling_sum(window_size=4, min_samples=4).over("symbol").alias("_ttm_net_income"),
         pl.col("_q_ocf").rolling_sum(window_size=4, min_samples=4).over("symbol").alias("_ttm_ocf"),
         pl.col("_q_operating_profit").rolling_sum(window_size=4, min_samples=4).over("symbol").alias("_ttm_operating_profit"),
         pl.col("_q_total_profit").rolling_sum(window_size=4, min_samples=4).over("symbol").alias("_ttm_total_profit"),
+        pl.col("_q_income_revenue").rolling_sum(window_size=4, min_samples=4).over("symbol").alias("_ttm_income_revenue"),
+        pl.col("_q_income_operating_costs").rolling_sum(window_size=4, min_samples=4).over("symbol").alias("_ttm_income_operating_costs"),
+        pl.when(lag_four_consecutive)
+        .then(pl.col("inventory").shift(4).over("symbol"))
+        .otherwise(None)
+        .alias("_inventory_lag4"),
+        pl.when(lag_four_consecutive)
+        .then(pl.col("accounts_receivable").shift(4).over("symbol"))
+        .otherwise(None)
+        .alias("_receivable_lag4"),
+        pl.when(lag_four_consecutive)
+        .then(pl.col("_announce_balance").shift(4).over("symbol"))
+        .otherwise(None)
+        .alias("_announce_balance_lag4"),
+        pl.col("_announce_income").shift(1).over("symbol").alias("_announce_income_lag1"),
+        pl.col("_announce_income").shift(2).over("symbol").alias("_announce_income_lag2"),
+        pl.col("_announce_income").shift(3).over("symbol").alias("_announce_income_lag3"),
+    ]).with_columns([
+        ((pl.col("inventory") + pl.col("_inventory_lag4")) / 2.0).alias("_inventory_avg4"),
+        ((pl.col("accounts_receivable") + pl.col("_receivable_lag4")) / 2.0).alias("_receivable_avg4"),
     ])
     return enriched.with_columns([
         (pl.col("_ttm_net_income").is_not_null() & pl.col("_ttm_ocf").is_not_null()).alias("_ttm_complete"),
@@ -291,21 +344,49 @@ def _derive_ttm_factors(snapshot: pl.DataFrame) -> pl.DataFrame:
         .then(pl.col("_ttm_operating_profit") / pl.col("_ttm_total_profit"))
         .otherwise(None)
         .alias("core_earnings_ratio"),
+        pl.when(
+            (pl.col("_ttm_income_operating_costs") > 0)
+            & (pl.col("inventory") > 0)
+            & (pl.col("_inventory_lag4") > 0)
+        )
+        .then(pl.col("_ttm_income_operating_costs") / pl.col("_inventory_avg4"))
+        .otherwise(None)
+        .alias("inventory_turnover_ttm"),
+        pl.when(
+            (pl.col("_ttm_income_revenue") > 0)
+            & (pl.col("accounts_receivable") > 0)
+            & (pl.col("_receivable_lag4") > 0)
+        )
+        .then(pl.col("_ttm_income_revenue") / pl.col("_receivable_avg4"))
+        .otherwise(None)
+        .alias("receivable_turnover_ttm"),
         _rowwise_max_dates("_announce_metrics", "_announce_cash").alias("_announce_ocf_ni"),
         _rowwise_max_dates("_announce_metrics", "_announce_cash", "_announce_balance").alias("_announce_accrual"),
         _rowwise_max_dates("_announce_cash", "_announce_balance").alias("_announce_ocf_debt"),
         pl.col("_announce_income").alias("_announce_core_earnings"),
+        _rowwise_max_dates(
+            "_announce_balance", "_announce_balance_lag4", "_announce_income",
+            "_announce_income_lag1", "_announce_income_lag2", "_announce_income_lag3",
+        ).alias("_announce_inventory_turnover_ttm"),
+        _rowwise_max_dates(
+            "_announce_balance", "_announce_balance_lag4", "_announce_income",
+            "_announce_income_lag1", "_announce_income_lag2", "_announce_income_lag3",
+        ).alias("_announce_receivable_turnover_ttm"),
     ]).drop([
         "_q_net_income", "_q_ocf", "_q_operating_profit", "_q_total_profit",
+        "_q_income_revenue", "_q_income_operating_costs",
         "_ttm_net_income", "_ttm_ocf", "_ttm_operating_profit", "_ttm_total_profit",
+        "_ttm_income_revenue", "_ttm_income_operating_costs",
+        "_inventory_lag4", "_receivable_lag4", "_inventory_avg4", "_receivable_avg4",
+        "_announce_balance_lag4", "_announce_income_lag1", "_announce_income_lag2",
+        "_announce_income_lag3",
     ])
-
 
 def load_fundamental_snapshot(data_dir: Path | None) -> pl.DataFrame | None:
     """读取财务指标快照, 并附加多表 TTM 派生列。
 
     返回列: symbol, period_end, announce_date (原始), 各 PIT 生效日列, 基础
-    metrics 列, 以及 ocf_ni / accrual / ocf_debt / core_earnings_ratio
+    metrics 列, 以及 TTM 现金流、应计、核心利润和营运效率派生列
     (无法计算时为 null)。
     """
     if data_dir is None:
@@ -315,14 +396,28 @@ def load_fundamental_snapshot(data_dir: Path | None) -> pl.DataFrame | None:
         return None
 
     balance = _load_optional_table(
-        data_dir, "balance_sheet", "balance", ["total_assets", "total_liabilities"]
+        data_dir,
+        "balance_sheet",
+        "balance",
+        ["total_assets", "total_liabilities"],
+        optional_columns=["inventory", "accounts_receivable"],
     )
     cash = _load_optional_table(
         data_dir, "cash_flow", "cash", ["net_operating_cash_flow"]
     )
     income = _load_optional_table(
-        data_dir, "income", "income", ["operating_profit", "total_profit"]
+        data_dir,
+        "income",
+        "income",
+        ["operating_profit", "total_profit"],
+        optional_columns=["revenue", "operating_costs"],
     )
+    if income is not None:
+        # metrics 也有 revenue 列；营运效率只允许使用同表 income 版本。
+        income = income.rename({
+            "revenue": "income_revenue",
+            "operating_costs": "income_operating_costs",
+        })
 
     snapshot = metrics
     if balance is None:
@@ -330,6 +425,8 @@ def load_fundamental_snapshot(data_dir: Path | None) -> pl.DataFrame | None:
             pl.lit(None, dtype=pl.Date).alias("_announce_balance"),
             pl.lit(None, dtype=pl.Float64).alias("total_assets"),
             pl.lit(None, dtype=pl.Float64).alias("total_liabilities"),
+            pl.lit(None, dtype=pl.Float64).alias("inventory"),
+            pl.lit(None, dtype=pl.Float64).alias("accounts_receivable"),
         ])
     else:
         snapshot = _coalesce_full_join_keys(
@@ -351,6 +448,8 @@ def load_fundamental_snapshot(data_dir: Path | None) -> pl.DataFrame | None:
             pl.lit(None, dtype=pl.Date).alias("_announce_income"),
             pl.lit(None, dtype=pl.Float64).alias("operating_profit"),
             pl.lit(None, dtype=pl.Float64).alias("total_profit"),
+            pl.lit(None, dtype=pl.Float64).alias("income_revenue"),
+            pl.lit(None, dtype=pl.Float64).alias("income_operating_costs"),
         ])
     else:
         snapshot = _coalesce_full_join_keys(
@@ -371,8 +470,10 @@ def load_fundamental_snapshot(data_dir: Path | None) -> pl.DataFrame | None:
         "_announce", "_announce_metrics", "_announce_balance", "_announce_cash", "_announce_income",
         "_announce_debt_ratio", "_announce_ocf_ni", "_announce_accrual", "_announce_ocf_debt",
         "_announce_core_earnings",
+        "_announce_inventory_turnover_ttm", "_announce_receivable_turnover_ttm",
         *sorted({spec["column"] for spec in BASE_FUNDAMENTAL_FACTORS.values()}),
-        "ocf_ni", "accrual", "ocf_debt", "core_earnings_ratio", "_ttm_complete",
+        "ocf_ni", "accrual", "ocf_debt", "core_earnings_ratio",
+        "inventory_turnover_ttm", "receivable_turnover_ttm", "_ttm_complete",
     ]
     return snapshot.select(keep).sort(["symbol", "period_end"])
 

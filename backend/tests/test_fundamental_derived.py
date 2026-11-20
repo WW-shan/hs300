@@ -30,6 +30,22 @@ METRICS_ANNOUNCE = [date(2025, 4, 30), date(2025, 8, 31), date(2025, 10, 31), da
 BALANCE_ANNOUNCE = [date(2024, 4, 25), date(2024, 8, 25), date(2024, 10, 25), date(2025, 4, 15)]
 CASH_ANNOUNCE = [date(2024, 4, 25), date(2024, 8, 25), date(2024, 10, 25), date(2025, 4, 15)]
 INCOME_ANNOUNCE = [date(2024, 4, 25), date(2024, 8, 25), date(2024, 10, 25), date(2025, 4, 15)]
+LONG_PERIODS = [
+    date(2023, 3, 31), date(2023, 6, 30), date(2023, 9, 30), date(2023, 12, 31),
+    date(2024, 3, 31), date(2024, 6, 30), date(2024, 9, 30), date(2024, 12, 31),
+]
+LONG_METRICS_ANNOUNCE = [
+    date(2023, 4, 28), date(2023, 8, 31), date(2023, 10, 31), date(2024, 4, 30),
+    date(2024, 4, 30), date(2024, 8, 31), date(2024, 10, 31), date(2025, 4, 30),
+]
+LONG_BALANCE_ANNOUNCE = [
+    date(2023, 4, 15), date(2023, 8, 15), date(2023, 10, 15), date(2024, 4, 15),
+    date(2024, 4, 20), date(2024, 8, 20), date(2024, 10, 20), date(2025, 4, 20),
+]
+LONG_INCOME_ANNOUNCE = [
+    date(2023, 4, 25), date(2023, 8, 25), date(2023, 10, 25), date(2024, 4, 15),
+    date(2024, 4, 25), date(2024, 8, 25), date(2024, 10, 25), date(2025, 4, 25),
+]
 
 
 def _metrics_frame(
@@ -85,6 +101,61 @@ def _income_frame(
         "announce_date": [d.isoformat() for d in INCOME_ANNOUNCE],
         "operating_profit": cumulative_operating_profit or [9.0, 20.0, 32.0, 48.0],
         "total_profit": cumulative_total_profit or [10.0, 22.0, 36.0, 52.0],
+    })
+
+
+def _long_metrics_frame() -> pl.DataFrame:
+    return pl.DataFrame({
+        "symbol": ["600000.SH"] * len(LONG_PERIODS),
+        "period_end": [p.isoformat() for p in LONG_PERIODS],
+        "announce_date": [d.isoformat() for d in LONG_METRICS_ANNOUNCE],
+        "bps": [5.0] * len(LONG_PERIODS),
+        "roe": [10.0] * len(LONG_PERIODS),
+        "gross_margin": [30.0] * len(LONG_PERIODS),
+        "net_margin": [10.0] * len(LONG_PERIODS),
+        "revenue_yoy": [8.0] * len(LONG_PERIODS),
+        "net_income_yoy": [6.0] * len(LONG_PERIODS),
+        "debt_to_asset_ratio": [40.0] * len(LONG_PERIODS),
+        "revenue": [100.0, 220.0, 360.0, 520.0] * 2,
+        "net_income": [10.0, 22.0, 36.0, 52.0] * 2,
+    })
+
+
+def _long_balance_frame() -> pl.DataFrame:
+    return pl.DataFrame({
+        "symbol": ["600000.SH"] * len(LONG_PERIODS),
+        "period_end": [p.isoformat() for p in LONG_PERIODS],
+        "announce_date": [d.isoformat() for d in LONG_BALANCE_ANNOUNCE],
+        "total_assets": [1000.0] * len(LONG_PERIODS),
+        "total_liabilities": [400.0] * len(LONG_PERIODS),
+        "total_equity": [600.0] * len(LONG_PERIODS),
+        "debt_to_asset_ratio": [40.0] * len(LONG_PERIODS),
+        # 2023Q4 -> 2024Q4: 存货 100 -> 130; 应收 160 -> 220
+        "inventory": [80.0, 90.0, 95.0, 100.0, 110.0, 120.0, 125.0, 130.0],
+        "accounts_receivable": [120.0, 130.0, 145.0, 160.0, 175.0, 190.0, 205.0, 220.0],
+    })
+
+
+def _long_income_frame() -> pl.DataFrame:
+    return pl.DataFrame({
+        "symbol": ["600000.SH"] * len(LONG_PERIODS),
+        "period_end": [p.isoformat() for p in LONG_PERIODS],
+        "announce_date": [d.isoformat() for d in LONG_INCOME_ANNOUNCE],
+        "operating_profit": [9.0, 20.0, 32.0, 48.0] * 2,
+        "total_profit": [10.0, 22.0, 36.0, 52.0] * 2,
+        # 2024 累计营收 -> 单季 100/120/140/160, TTM=520
+        "revenue": [90.0, 190.0, 320.0, 430.0, 100.0, 220.0, 360.0, 520.0],
+        # 2024 累计营业成本 -> 单季 60/80/80/80, TTM=300
+        "operating_costs": [55.0, 115.0, 190.0, 260.0, 60.0, 140.0, 220.0, 300.0],
+    })
+
+
+def _long_cash_frame() -> pl.DataFrame:
+    return pl.DataFrame({
+        "symbol": ["600000.SH"] * len(LONG_PERIODS),
+        "period_end": [p.isoformat() for p in LONG_PERIODS],
+        "announce_date": [d.isoformat() for d in LONG_BALANCE_ANNOUNCE],
+        "net_operating_cash_flow": [8.0, 18.0, 30.0, 44.0] * 2,
     })
 
 
@@ -165,6 +236,127 @@ def test_snapshot_computes_ttm_factors_and_per_factor_announce_dates(tmp_path: P
     assert early["accrual"] is None
     assert early["ocf_debt"] is None
     assert early["_ttm_complete"] is False
+
+
+def test_snapshot_computes_operating_efficiency_ttm_and_dependency_pit(tmp_path: Path):
+    _write_tables(
+        tmp_path,
+        metrics=_long_metrics_frame(),
+        balance=_long_balance_frame(),
+        cash=_long_cash_frame(),
+        income=_long_income_frame(),
+    )
+    snapshot = load_fundamental_snapshot(tmp_path)
+    assert snapshot is not None
+    q4 = snapshot.filter(pl.col("period_end") == date(2024, 12, 31)).row(0, named=True)
+
+    np.testing.assert_allclose(q4["inventory_turnover_ttm"], 300.0 / 115.0, rtol=1e-12)
+    np.testing.assert_allclose(q4["receivable_turnover_ttm"], 520.0 / 190.0, rtol=1e-12)
+    # 新因子只依赖利润表和资产负债表，不被同报告期的 metrics 公告日拖后。
+    assert q4["_announce_inventory_turnover_ttm"] == date(2025, 4, 25)
+    assert q4["_announce_receivable_turnover_ttm"] == date(2025, 4, 25)
+
+
+def test_operating_efficiency_requires_consecutive_quarters(tmp_path: Path):
+    root = tmp_path / "income_gap"
+    _write_tables(
+        root,
+        metrics=_long_metrics_frame(),
+        balance=_long_balance_frame(),
+        cash=_long_cash_frame(),
+        income=_long_income_frame().filter(pl.col("period_end") != "2024-06-30"),
+    )
+    snapshot = load_fundamental_snapshot(root)
+    assert snapshot is not None
+    q4 = snapshot.filter(pl.col("period_end") == date(2024, 12, 31)).row(0, named=True)
+    assert q4["inventory_turnover_ttm"] is None
+    assert q4["receivable_turnover_ttm"] is None
+
+    balance_root = tmp_path / "balance_gap"
+    _write_tables(
+        balance_root,
+        metrics=_long_metrics_frame(),
+        balance=_long_balance_frame().filter(pl.col("period_end") != "2023-12-31"),
+        cash=_long_cash_frame(),
+        income=_long_income_frame(),
+    )
+    balance_snapshot = load_fundamental_snapshot(balance_root)
+    assert balance_snapshot is not None
+    q4_balance = balance_snapshot.filter(
+        pl.col("period_end") == date(2024, 12, 31)
+    ).row(0, named=True)
+    assert q4_balance["inventory_turnover_ttm"] is None
+    assert q4_balance["receivable_turnover_ttm"] is None
+
+
+def test_operating_efficiency_guards_nonpositive_inputs(tmp_path: Path):
+    inventory_root = tmp_path / "inventory"
+    inventory = _long_balance_frame().with_columns(
+        pl.when(pl.col("period_end") == "2024-12-31")
+        .then(pl.lit(0.0))
+        .otherwise(pl.col("inventory"))
+        .alias("inventory")
+    )
+    _write_tables(
+        inventory_root,
+        metrics=_long_metrics_frame(),
+        balance=inventory,
+        cash=_long_cash_frame(),
+        income=_long_income_frame(),
+    )
+    inventory_snapshot = load_fundamental_snapshot(inventory_root)
+    assert inventory_snapshot is not None
+    inventory_q4 = inventory_snapshot.filter(
+        pl.col("period_end") == date(2024, 12, 31)
+    ).row(0, named=True)
+    assert inventory_q4["inventory_turnover_ttm"] is None
+    np.testing.assert_allclose(
+        inventory_q4["receivable_turnover_ttm"], 520.0 / 190.0, rtol=1e-12
+    )
+
+    income_root = tmp_path / "income"
+    income = _long_income_frame().with_columns(
+        pl.when(pl.col("period_end") == "2024-12-31")
+        .then(pl.lit(-10.0))
+        .otherwise(pl.col("operating_costs"))
+        .alias("operating_costs")
+    )
+    _write_tables(
+        income_root,
+        metrics=_long_metrics_frame(),
+        balance=_long_balance_frame(),
+        cash=_long_cash_frame(),
+        income=income,
+    )
+    income_snapshot = load_fundamental_snapshot(income_root)
+    assert income_snapshot is not None
+    income_q4 = income_snapshot.filter(
+        pl.col("period_end") == date(2024, 12, 31)
+    ).row(0, named=True)
+    assert income_q4["inventory_turnover_ttm"] is None
+    np.testing.assert_allclose(
+        income_q4["receivable_turnover_ttm"], 520.0 / 190.0, rtol=1e-12
+    )
+
+
+def test_legacy_side_tables_keep_existing_factors_and_null_new_ones(tmp_path: Path):
+    _write_tables(
+        tmp_path,
+        metrics=_metrics_frame(),
+        balance=_balance_frame(),
+        cash=_cash_frame(),
+        income=_income_frame(),
+    )
+    snapshot = load_fundamental_snapshot(tmp_path)
+    assert snapshot is not None
+    panel = _daily_panel(date(2025, 4, 15), 20)
+    names = ["ocf_debt", "inventory_turnover_ttm", "receivable_turnover_ttm"]
+    attached = attach_fundamental_factors(panel, snapshot, names).sort("date")
+    by_date = {row["date"]: row for row in attached.iter_rows(named=True)}
+
+    np.testing.assert_allclose(by_date[date(2025, 4, 16)]["ocf_debt"], 0.11, rtol=1e-12)
+    assert attached["inventory_turnover_ttm"].null_count() == attached.height
+    assert attached["receivable_turnover_ttm"].null_count() == attached.height
 
 
 def test_attach_uses_each_factor_own_pit_date(tmp_path: Path):
@@ -277,8 +469,53 @@ def test_matrix_matches_panel_for_derived_factors(tmp_path: Path):
     snapshot = load_fundamental_snapshot(tmp_path)
     assert snapshot is not None
     panel = _daily_panel(date(2025, 4, 10), 30)
-    names = ["ocf_ni", "accrual", "ocf_debt", "core_earnings_ratio"]
+    names = [
+        "ocf_ni", "accrual", "ocf_debt", "core_earnings_ratio",
+        "inventory_turnover_ttm", "receivable_turnover_ttm",
+    ]
     attached = attach_fundamental_factors(panel, snapshot, names).sort("date")
+    market = build_market_data_matrix(panel)
+    matrices = build_fundamental_matrices(market, snapshot, names)
+    column = market.symbols.index("600000.SH")
+    for row_index, row in enumerate(attached.iter_rows(named=True)):
+        for name in names:
+            value = row[name]
+            actual = matrices[name][row_index, column]
+            if value is None:
+                assert np.isnan(actual), (name, row["date"], actual)
+            else:
+                np.testing.assert_allclose(actual, value, rtol=1e-6)
+
+
+def test_operating_efficiency_pit_and_matrix_match(tmp_path: Path):
+    _write_tables(
+        tmp_path,
+        metrics=_long_metrics_frame(),
+        balance=_long_balance_frame(),
+        cash=_long_cash_frame(),
+        income=_long_income_frame(),
+    )
+    snapshot = load_fundamental_snapshot(tmp_path)
+    assert snapshot is not None
+    panel = _daily_panel(date(2025, 4, 24), 6)
+    names = ["inventory_turnover_ttm", "receivable_turnover_ttm"]
+    attached = attach_fundamental_factors(panel, snapshot, names).sort("date")
+    by_date = {row["date"]: row for row in attached.iter_rows(named=True)}
+
+    # 4/25 是 2024Q4 的公告日，新一期尚未生效，只能保留 2024Q3 旧值。
+    np.testing.assert_allclose(
+        by_date[date(2025, 4, 25)][names[0]], 290.0 / 110.0, rtol=1e-12
+    )
+    np.testing.assert_allclose(
+        by_date[date(2025, 4, 25)][names[1]], 470.0 / 175.0, rtol=1e-12
+    )
+    np.testing.assert_allclose(
+        by_date[date(2025, 4, 26)][names[0]], 300.0 / 115.0, rtol=1e-12
+    )
+    np.testing.assert_allclose(
+        by_date[date(2025, 4, 26)][names[1]], 520.0 / 190.0, rtol=1e-12
+    )
+
     market = build_market_data_matrix(panel)
     matrices = build_fundamental_matrices(market, snapshot, names)
     column = market.symbols.index("600000.SH")

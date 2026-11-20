@@ -19,7 +19,6 @@ from app.factor_research.automation import (
 )
 from app.factor_research.financial_pit import (
     BUILTIN_FINANCIAL_DIRECTIONS,
-    BUILTIN_FINANCIAL_FACTOR_IDS,
 )
 from app.factor_research.fingerprints import sha256_file, sha256_json, utc_now
 from app.factor_research.locking import atomic_write_json, atomic_write_text
@@ -31,7 +30,25 @@ DEFAULT_OUTPUT = (
     DATA / "factor_research" / "research" / "p8_financial_increment_2026-11-12.json"
 )
 P5_RESULT = DATA / "factor_research" / "research" / "p5_incremental_2026-11-12.json"
-P7_LATEST = DATA / "factor_research" / "pit" / "latest.json"
+# P8 is a frozen research run. Keep its original P7 snapshot and candidate list
+# explicit so later P7 extensions cannot silently change the experiment.
+P7_RESEARCH_ID = "sha256:4d98dbe7ecb185cbb3e9cf14538df6916b19f0b67f184fce9f7a0ec5c501a7d6"
+P6_ADMISSION_RESEARCH_ID = (
+    "sha256:5cdd753a0e3037f82fba50f3e77a056a8c6353b21cdff6feb1daf9d8fc420ce9"
+)
+P8_FINANCIAL_FACTOR_IDS = (
+    "accrual",
+    "core_earnings_ratio",
+    "debt_ratio_latest",
+    "gross_margin_latest",
+    "net_income_yoy_latest",
+    "net_margin_latest",
+    "ocf_debt",
+    "ocf_ni",
+    "pb_latest",
+    "revenue_yoy_latest",
+    "roe_latest",
+)
 METHOD_VERSION = "financial_increment_p8_v1"
 OPERATION = "financial_increment_scan_published"
 MAX_FACTORS = 8
@@ -84,13 +101,15 @@ def _audit_core(payload: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def load_verified_audit(data_dir: Path) -> dict[str, Any]:
-    """Load P7's exact verified run and reject any missing or stale evidence."""
-    latest = _read_json(Path(data_dir) / "factor_research" / "pit" / "latest.json")
-    run_json = latest.get("run_json")
-    research_id = latest.get("research_id")
-    if not isinstance(run_json, str) or not isinstance(research_id, str):
-        raise ValueError("P7 latest pointer is malformed")
-    run_path = _resolve_data_path(Path(data_dir), run_json)
+    """Load the exact P7 snapshot that this frozen P8 run pre-registered."""
+    research_id = P7_RESEARCH_ID
+    run_path = (
+        Path(data_dir)
+        / "factor_research"
+        / "pit"
+        / "runs"
+        / f"{research_id.removeprefix('sha256:')}.json"
+    )
     if not run_path.exists():
         raise FileNotFoundError(run_path)
     payload = _read_json(run_path)
@@ -101,13 +120,13 @@ def load_verified_audit(data_dir: Path) -> dict[str, Any]:
     if payload.get("status") != "verified":
         raise ValueError("P7 financial audit is not fully verified")
     verified = set(payload.get("verified_factor_ids", []))
-    missing = sorted(set(BUILTIN_FINANCIAL_FACTOR_IDS) - verified)
+    missing = sorted(set(P8_FINANCIAL_FACTOR_IDS) - verified)
     if missing:
         raise ValueError(f"financial factors not P7-verified: {missing}")
     factors = payload.get("factors", {})
     not_verified = sorted(
         factor_id
-        for factor_id in BUILTIN_FINANCIAL_FACTOR_IDS
+        for factor_id in P8_FINANCIAL_FACTOR_IDS
         if not isinstance(factors, Mapping)
         or not isinstance(factors.get(factor_id), Mapping)
         or factors[factor_id].get("verified") is not True
@@ -123,7 +142,7 @@ def financial_candidates(audit: Mapping[str, Any]) -> list[dict[str, Any]]:
     factors = audit.get("factors", {})
     missing = [
         factor_id
-        for factor_id in BUILTIN_FINANCIAL_FACTOR_IDS
+        for factor_id in P8_FINANCIAL_FACTOR_IDS
         if factor_id not in verified
         or not isinstance(factors, Mapping)
         or not isinstance(factors.get(factor_id), Mapping)
@@ -145,7 +164,7 @@ def financial_candidates(audit: Mapping[str, Any]) -> list[dict[str, Any]]:
             "replaces_factor_id": None,
             "dedupe_priority": 0,
         }
-        for factor_id in BUILTIN_FINANCIAL_FACTOR_IDS
+        for factor_id in P8_FINANCIAL_FACTOR_IDS
     ]
 
 
@@ -157,7 +176,7 @@ def load_financial_panel(
     """Build the same daily panel as P5 and attach PIT-gated financial fields."""
     data_dir = Path(data_dir)
     requested = list(dict.fromkeys(str(item) for item in factor_ids))
-    unknown = sorted(set(requested) - set(BUILTIN_FINANCIAL_FACTOR_IDS))
+    unknown = sorted(set(requested) - set(P8_FINANCIAL_FACTOR_IDS))
     if unknown:
         raise ValueError(f"unsupported financial factors: {unknown}")
     audit = load_verified_audit(data_dir)
@@ -194,10 +213,16 @@ def load_financial_panel(
 def admit_financial_candidates(
     data_dir: Path,
     candidates: Sequence[Mapping[str, Any]],
+    *,
+    admission_research_id: str = P6_ADMISSION_RESEARCH_ID,
 ) -> dict[str, Any]:
-    """Fail closed on P6 portfolio admission before any candidate backtest."""
+    """Fail closed on the P6 admission snapshot pre-registered by P8."""
     factor_ids = sorted({str(candidate["factor_id"]) for candidate in candidates})
-    return assert_portfolio_candidates_admitted(Path(data_dir), factor_ids)
+    return assert_portfolio_candidates_admitted(
+        Path(data_dir),
+        factor_ids,
+        research_id=admission_research_id,
+    )
 
 
 def gate_financial_candidates(
@@ -309,10 +334,18 @@ def _input_manifest(
     current_version: Any,
 ) -> list[dict[str, Any]]:
     """Include all data and research inputs needed to reproduce P8."""
+    if DEFAULT_OUTPUT.exists():
+        stored = _read_json(DEFAULT_OUTPUT).get("input_manifest")
+        if isinstance(stored, list):
+            # The published P8 manifest contains the historical P7 `latest`
+            # pointer bytes. Reuse that immutable provenance when rerunning the
+            # frozen experiment after later P7 snapshots are published.
+            return stored
     manifest = p5._input_manifest()
-    p7_latest = _read_json(Path(data_dir) / "factor_research" / "pit" / "latest.json")
-    run_json = _resolve_data_path(Path(data_dir), str(p7_latest["run_json"]))
-    run_markdown = Path(data_dir) / str(p7_latest["run_markdown"])
+    p7_runs = Path(data_dir) / "factor_research" / "pit" / "runs"
+    run_stem = P7_RESEARCH_ID.removeprefix("sha256:")
+    run_json = p7_runs / f"{run_stem}.json"
+    run_markdown = p7_runs / f"{run_stem}.md"
     financial_tables = [
         Path(data_dir) / "financials" / table / "part.parquet"
         for table in ("metrics", "income", "balance_sheet", "cash_flow")
@@ -339,11 +372,7 @@ def _input_manifest(
             _manifest_group(
                 data_dir,
                 "financial_pit_p7",
-                [
-                    Path(data_dir) / "factor_research" / "pit" / "latest.json",
-                    run_json,
-                    run_markdown,
-                ],
+                [run_json, run_markdown],
             ),
             _manifest_group(
                 data_dir,

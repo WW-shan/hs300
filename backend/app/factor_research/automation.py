@@ -605,17 +605,29 @@ def _resolve_data_path(data_dir: Path, raw_path: str, *, field: str) -> Path:
 def assert_portfolio_candidates_admitted(
     data_dir: Path,
     factor_ids: Sequence[str],
+    *,
+    research_id: str | None = None,
 ) -> dict[str, Any]:
-    """Fail closed unless every requested factor is admitted by the latest P6 run."""
+    """Fail closed unless every factor is admitted by the selected P6 run.
+
+    ``research_id`` pins a published P6 run for reproducible historical
+    research. Omitting it preserves the live validation path against latest.
+    """
     data_dir = Path(data_dir)
-    latest_path = data_dir / "factor_research" / "automation" / "latest.json"
-    if not latest_path.exists():
-        raise FileNotFoundError("automation latest manifest is unavailable")
-    latest = json.loads(latest_path.read_text(encoding="utf-8"))
-    run_json = latest.get("run_json")
-    research_id = latest.get("research_id")
-    if not isinstance(run_json, str) or not isinstance(research_id, str):
-        raise ValueError("automation latest manifest is malformed")
+    if research_id is None:
+        latest_path = data_dir / "factor_research" / "automation" / "latest.json"
+        if not latest_path.exists():
+            raise FileNotFoundError("automation latest manifest is unavailable")
+        latest = json.loads(latest_path.read_text(encoding="utf-8"))
+        run_json = latest.get("run_json")
+        research_id = latest.get("research_id")
+        if not isinstance(run_json, str) or not isinstance(research_id, str):
+            raise ValueError("automation latest manifest is malformed")
+    else:
+        stem = research_id.removeprefix("sha256:")
+        if stem == research_id or not stem:
+            raise ValueError("automation research ID must use sha256: prefix")
+        run_json = f"factor_research/automation/runs/{stem}.json"
     run_path = _resolve_data_path(data_dir, run_json, field="run_json")
     if not run_path.exists():
         raise FileNotFoundError(run_path)

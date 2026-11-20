@@ -204,8 +204,8 @@ def test_p1_manifest_covers_eight_families_and_all_catalog_members() -> None:
     assert catalog is not None
     registry = load_parameter_registry(root / "data")
 
-    assert catalog.factor_count == 223
-    assert len(catalog.factors) == 223
+    assert catalog.factor_count == 225
+    assert len(catalog.factors) == 225
     assert {
         "idio_vol",
         "cs_spread",
@@ -219,7 +219,7 @@ def test_p1_manifest_covers_eight_families_and_all_catalog_members() -> None:
     assert validate_parameter_registry(registry, {item.factor_id for item in catalog.factors}) == []
 
     rows = classify_factor_parameters(catalog.factors, registry)
-    assert len(rows) == 223
+    assert len(rows) == 225
     assert all(
         row.status == "grouped"
         for row in rows

@@ -182,6 +182,35 @@ def test_portfolio_guard_rejects_blocked_factor(tmp_path: Path) -> None:
         assert_portfolio_candidates_admitted(tmp_path, ["factor_x"])
 
 
+def test_portfolio_guard_can_pin_a_published_run_without_latest(tmp_path: Path) -> None:
+    automation = tmp_path / "factor_research" / "automation"
+    runs = automation / "runs"
+    runs.mkdir(parents=True)
+    payload = {
+        "research_id": "pending",
+        "generated_at": "2026-11-11T00:00:00Z",
+        "admission": {
+            "factor_x": {
+                "portfolio_ready": True,
+                "reasons": [],
+            }
+        },
+    }
+    payload["research_id"] = automation_research_id(payload)
+    run_stem = payload["research_id"].removeprefix("sha256:")
+    run_path = runs / f"{run_stem}.json"
+    run_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    admitted = assert_portfolio_candidates_admitted(
+        tmp_path,
+        ["factor_x"],
+        research_id=payload["research_id"],
+    )
+
+    assert admitted["research_id"] == payload["research_id"]
+    assert admitted["run_json"].endswith(f"/runs/{run_stem}.json")
+
+
 def _window_family(*, family_id: str = "family_a") -> ParameterFamily:
     return ParameterFamily(
         family_id=family_id,
