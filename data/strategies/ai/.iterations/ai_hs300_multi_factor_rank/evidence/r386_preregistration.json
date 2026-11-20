@@ -1,0 +1,225 @@
+{
+  "round": "R386",
+  "created_at": "2026-11-21",
+  "classification": "pre-registered MC-advantage parameter confirmation and regime-conditioning falsification on the R385 stable platform; research-only",
+  "question": "Can the R385 stable platform be improved by selecting a practically rounded five-parameter portfolio configuration from the 96 actual R385 Monte Carlo backtests using only the first three one-year training folds, and does any economically motivated market-state switch improve that fixed configuration on the 2025-05-06 holdout?",
+  "disclosure": {
+    "scratch_scan_performed": true,
+    "scope": "The R385 96 parameter outcomes, a small set of regime-switch mappings and local parameter ranges were inspected before R386 registration.",
+    "status": "R386 is a disclosed confirmation test, not a blind discovery.",
+    "protection": "The MC-advantage candidate and defensive comparator are selected exclusively from the first three 252-return training folds. The 2025-05-06 holdout is evaluated only after those choices are fixed.",
+    "reason": "The user requested continued actual-backtest optimization, so the already observed information is disclosed rather than presented as an independent discovery."
+  },
+  "source_evidence": {
+    "r385_report": {
+      "path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r385_pit_platform_monte_carlo.json",
+      "sha256": "4aeb40ea9146d8b7dcf5db2c1d5e4390d45641c68ce22da4474f1b2b9866768f"
+    },
+    "r385_preregistration": {
+      "path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r385_preregistration.json",
+      "sha256": "933debcbb38dbc146302e4f7b94525d89a94a00be1f966897a6a26362d4777fa"
+    },
+    "r385_runner": {
+      "path": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/run_r385_pit_platform_monte_carlo.py",
+      "sha256": "febdb56ea869334dd39a142489bb45ddd638baeb132734fb0e3ea9e8dd061bac"
+    },
+    "regime_history": {
+      "path": "data/regime_history/part.parquet",
+      "sha256": "474332dcb2d0b3bc7b27c37973c78bb7c7f4e6bff535350a07dc4d8d7819c058"
+    },
+    "engine": {
+      "path": "backend/app/backtest/engine.py",
+      "sha256": "6698b1fbbf1400bc3a53864102763149e87ad595b8be8e9a9b79e044656ba2b6"
+    },
+    "all_sidecars_and_input_hashes_must_match_before_performance_is_read": true
+  },
+  "base": {
+    "strategy": "R385 frozen fade05_h30_sl20 platform centre",
+    "parameters": {
+      "c_satellite_cap": 0.10,
+      "equity_target_vol": 0.15,
+      "overlay_lookback_days": 60,
+      "overlay_target_vol": 0.15,
+      "overlay_equity_weight_max": 0.3333333333333333
+    },
+    "purpose": "Incremental comparator; it is not re-estimated in R386."
+  },
+  "training_design": {
+    "folds": [
+      {
+        "id": "fold_1",
+        "start": "2022-05-05",
+        "returns": 252
+      },
+      {
+        "id": "fold_2",
+        "start": "2023-05-05",
+        "returns": 252
+      },
+      {
+        "id": "fold_3",
+        "start": "2024-05-05",
+        "returns": 252
+      }
+    ],
+    "holdout_start": "2025-05-06",
+    "recent_start": "2025-11-05",
+    "end": "2026-11-05",
+    "selection_must_not_read_holdout": true
+  },
+  "monte_carlo_parameter_synthesis": {
+    "candidate_source": "R385 96 five-dimensional Latin-hypercube portfolio-parameter samples",
+    "practical_rounding": {
+      "c_satellite_cap": 0.01,
+      "equity_target_vol": 0.01,
+      "overlay_lookback_days": 5,
+      "overlay_target_vol": 0.01,
+      "overlay_equity_weight_max": 0.01
+    },
+    "eligibility": {
+      "every_training_fold_return_positive": true,
+      "every_training_fold_sharpe_min": 1.2,
+      "every_training_fold_mdd_min": -0.10
+    },
+    "advantage_selection": "Among eligible rounded candidates, maximize mean annualised return over the three training folds; tie-break by worst fold annual return, then median fold Sharpe, then lower c_satellite_cap.",
+    "defensive_selection": "Among eligible rounded candidates, maximize worst fold annual return; tie-break by median fold Sharpe, then lower mean equity exposure proxy.",
+    "regime_comparator": "The selected advantage candidate is the fixed default. The defensive candidate is used only as the off-state leg of the predeclared regime mappings."
+  },
+  "regime_mappings": {
+    "mechanism": "At a month-end, use the latest already-observed regime row to select the next month's complete portfolio curve. Any switch pays 0.52% of changed notional at the rebalance. No leverage is permitted.",
+    "signal_lag_days": 1,
+    "rules": {
+      "state_strength": "advantage if lagged state is strong or lean_strong; otherwise defensive",
+      "state_nonweak": "advantage if lagged state is strong, lean_strong or range; otherwise defensive",
+      "trend_breadth": "advantage if lagged trend_score >= 50 and above_ma20_pct >= 0.50; otherwise defensive",
+      "score_trend": "advantage if lagged 20-day mean score >= 55 and lagged trend_score >= 50; otherwise defensive",
+      "vol_trend": "advantage if lagged 20-day index volatility <= its lagged trailing 252-day median and lagged trend_score >= 50; otherwise defensive"
+    },
+    "training_rule_gate": {
+      "worst_fold_annual_must_exceed_fixed_advantage_by_min": 0.0025,
+      "mean_fold_annual_must_be_at_least_fixed_advantage": true,
+      "median_fold_sharpe_may_underperform_fixed_advantage_by_max": 0.02
+    },
+    "selection": "At most one mapping may advance. If several advance, choose highest worst-fold annual, then highest mean-fold annual, then fewer switches.",
+    "rejection_rule": "If no mapping clears the training rule gate and the holdout incremental gate, regime conditioning is negative knowledge and the fixed advantage parameter remains the candidate."
+  },
+  "candidate_gates": {
+    "full_2x": {
+      "annual_min": 0.12,
+      "sharpe_min": 1.30,
+      "mdd_min": -0.10,
+      "year_2022_min": 0.0,
+      "year_2023_min": 0.0,
+      "recent_total_return_min_exclusive": 0.0,
+      "rolling_positive_count_min": 4
+    },
+    "full_3x": {
+      "annual_min": 0.10,
+      "sharpe_min": 1.20,
+      "mdd_min": -0.12,
+      "recent_total_return_min_exclusive": 0.0,
+      "rolling_positive_count_min": 3
+    },
+    "sealed_holdout": {
+      "total_return_min_exclusive": 0.0,
+      "sharpe_min": 1.20,
+      "mdd_min": -0.10
+    },
+    "increment_over_r385_centre": {
+      "full_annual_min_delta": 0.0025,
+      "full_sharpe_min_delta": 0.0,
+      "sealed_total_return_min_delta_exclusive": 0.0,
+      "recent_total_return_min_delta_exclusive": 0.0
+    },
+    "paired_block_bootstrap": {
+      "paths": 3000,
+      "block_days": 20,
+      "horizon_days": 252,
+      "full_probability_positive_min": 0.60,
+      "full_p05_min": -0.02,
+      "sealed_probability_positive_min": 0.60,
+      "sealed_p05_min": -0.01
+    },
+    "axis_neighbour_plateau": {
+      "steps": {
+        "c_satellite_cap": 0.01,
+        "equity_target_vol": 0.01,
+        "overlay_lookback_days": 5,
+        "overlay_target_vol": 0.01,
+        "overlay_equity_weight_max": 0.01
+      },
+      "centre_plus_ten_axis_neighbours_must_pass_both_2x_and_3x": true,
+      "require_all_eleven": true
+    },
+    "local_monte_carlo": {
+      "samples": 128,
+      "seed": 486,
+      "method": "Latin hypercube around the selected advantage candidate, followed by the same practical rounding",
+      "ranges": {
+        "c_satellite_cap": [0.11, 0.15],
+        "equity_target_vol": [0.15, 0.19],
+        "overlay_lookback_days": [90, 130],
+        "overlay_target_vol": [0.15, 0.19],
+        "overlay_equity_weight_max": [0.35, 0.39]
+      },
+      "unique_samples_min": 120,
+      "pass_rate_2x_min": 0.95,
+      "pass_rate_3x_min": 0.95,
+      "per_sample_gate": {
+        "annual_min": 0.10,
+        "sharpe_min": 1.20,
+        "mdd_min": -0.10,
+        "recent_total_return_min_exclusive": 0.0,
+        "rolling_positive_count_min": 3,
+        "sealed_total_return_min_exclusive": 0.0,
+        "sealed_sharpe_min": 1.10,
+        "sealed_mdd_min": -0.11
+      }
+    },
+    "five_x": {
+      "role": "diagnostic warning only; never a hard rejection",
+      "warning_if_annual_below": 0.05,
+      "warning_if_sharpe_below": 0.80,
+      "warning_if_mdd_below": -0.25
+    },
+    "no_leverage": {
+      "max_weight_sum": 1.0,
+      "applies_to": "candidate, all axis neighbours, all local Monte Carlo samples and 5x diagnostic"
+    }
+  },
+  "stable_platform_rationale": {
+    "empirical_inputs": [
+      "R385 27-cell 2x and 3x platform",
+      "R386 11-point local axis neighbourhood",
+      "R386 local Monte Carlo",
+      "R385 rolling selector comparison"
+    ],
+    "claim": "A stable platform is chosen because eligibility is broad and perturbation-resistant, not because one cell has the highest realised return. The highest-return cell may be reported for transparency but cannot replace the pre-registered centre after observing results.",
+    "required_evidence": [
+      "27/27 R385 cells pass 2x and 3x",
+      "11/11 local axis neighbours pass both costs",
+      "at least 95% of local Monte Carlo draws pass both costs",
+      "fixed centre is not dominated across the R385 rolling selector comparison"
+    ]
+  },
+  "decision_rules": [
+    "Verify all source hashes and the R385 candidate status before reading R386 performance.",
+    "Select the MC-advantage and defensive parameters using training folds only.",
+    "Apply the holdout gate to the already selected fixed advantage parameter and the already selected defensive comparator.",
+    "A regime mapping advances only if it clears its training rule gate and all candidate incremental and holdout gates; it must also beat the fixed advantage parameter on holdout return and Sharpe.",
+    "Regime rejection does not reject a passing fixed advantage parameter; it records negative knowledge for market-state switching.",
+    "All local axis neighbours and at least 95% of unique local Monte Carlo draws must pass both 2x and 3x gates.",
+    "No threshold may be changed after R386 performance is read.",
+    "5x remains warning-only and never rejects a no-leverage passing candidate.",
+    "A complete pass may set status candidate_for_paper_trading_review only; no paper targets, orders or production configuration are generated."
+  ],
+  "known_limits": [
+    "The holdout and several regime mappings were observed in scratch analysis before registration; R386 is a disclosed confirmation test, not a blind out-of-sample study.",
+    "The underlying stock-selection backtests remain daily T+1 approximations and do not model intraday market impact.",
+    "regime_history state changes almost daily and its latest row ends before the R385 backtest end; month-end selection carries the latest known state.",
+    "The 96 R385 parameter draws and the 124 unique local draws are correlated, not independent multiple-testing trials.",
+    "Parameter synthesis perturbs portfolio construction only; A, B and C stock selection remain fixed.",
+    "Historical industry classification is not a complete publication-vintage history.",
+    "No leverage is evaluated or permitted."
+  ]
+}
