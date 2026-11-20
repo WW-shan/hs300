@@ -624,6 +624,29 @@ def _decision_status(
     return "watch_candidate_passed_no_promotion"
 
 
+def _load_frozen_result(path: Path) -> dict[str, Any]:
+    """Authenticate and reuse an already published R383 result."""
+    payload = _read_json(path)
+    if payload.get("schema_version") != 1:
+        raise ValueError(f"R383 result schema mismatch: {path}")
+    if payload.get("method_version") != METHOD_VERSION:
+        raise ValueError(f"R383 result method version mismatch: {path}")
+    core = _audit_core(payload)
+    if sha256_json(core) != payload.get("research_id"):
+        raise ValueError(f"R383 result canonical identity mismatch: {path}")
+    candidates = payload.get("candidates")
+    if not isinstance(candidates, list) or {
+        str(item.get("factor_id"))
+        for item in candidates
+        if isinstance(item, Mapping)
+    } != set(FACTOR_DIRECTIONS):
+        raise ValueError(f"R383 result candidate set mismatch: {path}")
+    markdown_path = path.with_suffix(".md")
+    if not markdown_path.is_file():
+        raise FileNotFoundError(markdown_path)
+    return payload
+
+
 def _publish_json(path: Path, payload: dict[str, Any]) -> dict[str, Any]:
     if path.exists():
         existing = _read_json(path)
@@ -651,6 +674,9 @@ def run_research(
     stats_only: bool = False,
 ) -> dict[str, Any]:
     data_dir = Path(data_dir).resolve()
+    output_path = Path(output_path).resolve()
+    if output_path.exists() and not stats_only:
+        return _load_frozen_result(output_path)
     audit = load_p7_audit(data_dir)
     candidates = [dict(item) for item in CANDIDATES]
     admission = p8.admit_financial_candidates(

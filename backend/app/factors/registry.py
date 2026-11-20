@@ -323,6 +323,22 @@ _CATALOG: tuple[FactorSpec, ...] = (
         "receivable_turnover_ttm", "应收周转率(TTM)",
         "TTM 营业收入 / 平均应收账款; 当前与一年前应收需恰好相隔四季度且分母>0",
     ),
+    _financial(
+        "inventory_turnover_improvement_yoy", "存货周转同比改善",
+        "ln(存货周转率(TTM) / 四个季度前存货周转率(TTM)); 需九季度资产负债表和八季度利润表且依赖均>0",
+    ),
+    _financial(
+        "receivable_turnover_improvement_yoy", "应收周转同比改善",
+        "ln(应收周转率(TTM) / 四个季度前应收周转率(TTM)); 需九季度资产负债表和八季度利润表且依赖均>0",
+    ),
+    _financial(
+        "receivable_growth_minus_revenue_growth", "应收相对营收增速差",
+        "ln(应收账款/四季度前应收账款) - ln(TTM营业收入/四季度前TTM营业收入); 低值代表应收增速相对营收更慢",
+    ),
+    _financial(
+        "inventory_growth_minus_cogs_growth", "存货相对营业成本增速差",
+        "ln(存货/四季度前存货) - ln(TTM营业成本/四季度前TTM营业成本); 低值代表存货增速相对成本更慢",
+    ),
 )
 
 _REGISTRY: dict[str, FactorSpec] = {}

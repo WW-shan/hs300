@@ -106,6 +106,10 @@ GOLDEN_COLUMNS: list[dict] = [
     {"id": "core_earnings_ratio", "label": "核心利润占比(TTM)", "group": "财务", "desc": "TTM 营业利润 / TTM 利润总额; 利润总额<=0、季度不完整或数据缺失时为空; 高值代表利润更依赖主营经营"},
     {"id": "inventory_turnover_ttm", "label": "存货周转率(TTM)", "group": "财务", "desc": "TTM 营业成本 / 平均存货; 当前与一年前存货需恰好相隔四季度且分母>0"},
     {"id": "receivable_turnover_ttm", "label": "应收周转率(TTM)", "group": "财务", "desc": "TTM 营业收入 / 平均应收账款; 当前与一年前应收需恰好相隔四季度且分母>0"},
+    {"id": "inventory_turnover_improvement_yoy", "label": "存货周转同比改善", "group": "财务", "desc": "ln(存货周转率(TTM) / 四个季度前存货周转率(TTM)); 需九季度资产负债表和八季度利润表且依赖均>0"},
+    {"id": "receivable_turnover_improvement_yoy", "label": "应收周转同比改善", "group": "财务", "desc": "ln(应收周转率(TTM) / 四个季度前应收周转率(TTM)); 需九季度资产负债表和八季度利润表且依赖均>0"},
+    {"id": "receivable_growth_minus_revenue_growth", "label": "应收相对营收增速差", "group": "财务", "desc": "ln(应收账款/四季度前应收账款) - ln(TTM营业收入/四季度前TTM营业收入); 低值代表应收增速相对营收更慢"},
+    {"id": "inventory_growth_minus_cogs_growth", "label": "存货相对营业成本增速差", "group": "财务", "desc": "ln(存货/四季度前存货) - ln(TTM营业成本/四季度前TTM营业成本); 低值代表存货增速相对成本更慢"},
 ]
 
 GOLDEN_VIRTUAL_DEPS: dict[str, frozenset[str]] = {
@@ -237,12 +241,12 @@ def test_scoring_warmup_snapshot() -> None:
 
 def test_catalog_counts_and_kinds() -> None:
     specs = all_factors()
-    assert len(specs) == 83
-    assert len({spec.id for spec in specs}) == 83  # id 唯一
+    assert len(specs) == 87
+    assert len({spec.id for spec in specs}) == 87  # id 唯一
     virtual = [spec for spec in specs if spec.kind == "virtual"]
     assert len(virtual) == 52  # ma/ema 10 + 原有 26 + 扩充批次 16
     financial = [spec for spec in specs if spec.pit]
-    assert len(financial) == 13
+    assert len(financial) == 17
     assert all(spec.pit_source == "financial_announce" for spec in financial)
     assert all(spec.asset_types == frozenset({"stock"}) for spec in financial)
 
@@ -268,12 +272,19 @@ def test_get_factor_and_dependencies() -> None:
 def test_asset_type_filter() -> None:
     stock = all_factors(asset_type="stock")
     etf = all_factors(asset_type="etf")
-    assert len(stock) == 83
+    assert len(stock) == 87
     assert len(etf) == 70  # 财务 7 项仅股票
 
 
 def test_operating_efficiency_factors_are_stock_only_pit() -> None:
-    for factor_id in ("inventory_turnover_ttm", "receivable_turnover_ttm"):
+    for factor_id in (
+        "inventory_turnover_ttm",
+        "receivable_turnover_ttm",
+        "inventory_turnover_improvement_yoy",
+        "receivable_turnover_improvement_yoy",
+        "receivable_growth_minus_revenue_growth",
+        "inventory_growth_minus_cogs_growth",
+    ):
         spec = get_factor(factor_id)
         assert spec is not None
         assert spec.pit is True
@@ -325,7 +336,7 @@ def test_factors_api_contract() -> None:
     assert response.status_code == 200
     payload = response.json()
     factors = payload["factors"]
-    assert len(factors) == 83
+    assert len(factors) == 87
     first = factors[0]
     assert first["id"] == "momentum_5d"
     assert first["kind"] == "base"

@@ -1,0 +1,2487 @@
+{
+  "schema_version": 1,
+  "method_version": "financial_operating_efficiency_improvement_r384_v1",
+  "financial_pit_research_id": "sha256:c4b0b1e460c58f2f7facc0b2237dd834ab7bc494ba6225dc0194ba74b2e2bd32",
+  "verified_factor_ids": [
+    "accrual",
+    "core_earnings_ratio",
+    "debt_ratio_latest",
+    "ext_alt_hs300_dividend_growth_ttm",
+    "ext_alt_hs300_dividend_initiation_flag",
+    "ext_alt_hs300_dividend_ttm_cash",
+    "ext_alt_hs300_dividend_yield",
+    "gross_margin_latest",
+    "inventory_growth_minus_cogs_growth",
+    "inventory_turnover_improvement_yoy",
+    "inventory_turnover_ttm",
+    "net_income_yoy_latest",
+    "net_margin_latest",
+    "ocf_debt",
+    "ocf_ni",
+    "pb_latest",
+    "receivable_growth_minus_revenue_growth",
+    "receivable_turnover_improvement_yoy",
+    "receivable_turnover_ttm",
+    "revenue_yoy_latest",
+    "roe_latest"
+  ],
+  "p5_research_id": "sha256:641f0df5849264ea133ea0a8ccb58b057816afd47d916014f0d5baabb93cb6c7",
+  "catalog_snapshot_id": "sha256:bf7cd02d5540d76b4b233a2d6518b9cc8e28e0c2e07fb2f90dfb9c2464d3a3f1",
+  "p6_admission_research_id": "sha256:1513dbc1e614f6ab31552bdb18771bdecf3162ad3b343e2681bda9b2e9cba298",
+  "p6_admission_catalog_snapshot_id": "sha256:bf7cd02d5540d76b4b233a2d6518b9cc8e28e0c2e07fb2f90dfb9c2464d3a3f1",
+  "input_manifest_sha256": "sha256:d1a7b4751aaca748f96558ed59c32e1252a7b8f17b7d2c7e807b4ca36aeee6ab",
+  "input_manifest": [
+    {
+      "label": "enriched_daily",
+      "root": "kline_daily_enriched",
+      "patterns": [
+        "date=*/part.parquet"
+      ],
+      "file_count": 2143,
+      "bytes": 47704926,
+      "sha256": "sha256:a9b22f1c53e629f7ccb72fe68e4b1f4ffbb8f1fdd0c93093a22c2c965ac5b777"
+    },
+    {
+      "label": "index_daily",
+      "root": "kline_index_daily",
+      "patterns": [
+        "date=*/part.parquet"
+      ],
+      "file_count": 2133,
+      "bytes": 5951798,
+      "sha256": "sha256:282ddba171383b54a2bb0f7940aa55ec23fc059db4a481ca39321c06dab7368d"
+    },
+    {
+      "label": "existing_extension_factors",
+      "root": "ext_data/alt_hs300/timeseries",
+      "patterns": [
+        "date=*/part.parquet"
+      ],
+      "file_count": 2143,
+      "bytes": 267574660,
+      "sha256": "sha256:84397feef8d5a5a945c5cecc1b48615f5bc6d587d81e988b76583c3dee8ecc1a"
+    },
+    {
+      "label": "industry_map",
+      "root": "ext_data/ext_hy_ths",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 1,
+      "bytes": 103818,
+      "sha256": "sha256:a5635df79fc61d7a8115b05db9a33ef5c05e89ff2155770d807529298614ba7c"
+    },
+    {
+      "label": "instruments",
+      "root": "instruments",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 1,
+      "bytes": 162939,
+      "sha256": "sha256:9e918f0d3dbd5f21d04959745d38a0e3c1c04140d74fa23f96e84c514fdb996e"
+    },
+    {
+      "label": "insider_events",
+      "root": "research/r90_insider_trade",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 29,
+      "bytes": 1401612,
+      "sha256": "sha256:007e38a6358c8f590e16608f3cc4b6edfa0a1208533f5bf6b1c990919fc50597"
+    },
+    {
+      "label": "lhb_events",
+      "root": "research/r43_lhb",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 128,
+      "bytes": 19460906,
+      "sha256": "sha256:3274ff1ff2ddf851c9227dc2ba61cea58a62bd7933cb673a437e8661fd801c44"
+    },
+    {
+      "label": "repurchase_events",
+      "root": "research/external_r39",
+      "patterns": [
+        "repurchase.parquet"
+      ],
+      "file_count": 1,
+      "bytes": 534208,
+      "sha256": "sha256:62927d8c7e6b2d494acfe5609c553d251b2f706e447594cd133016ac388d22ff"
+    },
+    {
+      "label": "block_trade_events",
+      "root": "research/external_r39",
+      "patterns": [
+        "dzjy_*.parquet"
+      ],
+      "file_count": 37,
+      "bytes": 5103507,
+      "sha256": "sha256:8c2a4111568b9462f1960b63fa0b2e0d082e3e670a0c78e742546fbeece0dc7a"
+    },
+    {
+      "label": "analyst_reports",
+      "root": "research/r47_analyst",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 1301,
+      "bytes": 8950338,
+      "sha256": "sha256:701faab6676a078c558fc7be41cad5ea2c0e6d582d7371f026200ee1081dec70"
+    },
+    {
+      "label": "treasury_futures",
+      "root": "research/r193_treasury",
+      "patterns": [
+        "T0.parquet",
+        "TF0.parquet"
+      ],
+      "file_count": 2,
+      "bytes": 85185,
+      "sha256": "sha256:5d2e1f9777925cfc96cdaa2d095b49e4bf3437d32219708fc299237d808fad26"
+    },
+    {
+      "label": "hong_kong_indices",
+      "root": "research/r195_hk",
+      "patterns": [
+        "HSI.parquet",
+        "HSCEI.parquet"
+      ],
+      "file_count": 2,
+      "bytes": 41373,
+      "sha256": "sha256:57c98d2b6191c16b2138f845b8b2793ab197d8f616f296aa020a8de810c7e6b1"
+    },
+    {
+      "label": "etf_shares",
+      "root": "research/r74_etf_flow",
+      "patterns": [
+        "*.parquet"
+      ],
+      "file_count": 71,
+      "bytes": 735542,
+      "sha256": "sha256:1d242dcba762fd8ee8a51d7df262bfd5cfa8d97a6f5a8700d04b4e3ecfd81c30"
+    },
+    {
+      "label": "qvix",
+      "root": "research/r75_qvix",
+      "patterns": [
+        "qvix_300etf.parquet"
+      ],
+      "file_count": 1,
+      "bytes": 31426,
+      "sha256": "sha256:d2ab9d933c9f5173cc51523030fca6a88b61a93cdef5d261d11a61fa5f7f2e34"
+    },
+    {
+      "label": "p1_p4_research",
+      "file_count": 4,
+      "bytes": 5047098,
+      "sha256": "sha256:b790de8893c4a0780bc7f0d1fec2d2bcd152ab04b0ebdf0e5df036d069c5ddfe",
+      "files": [
+        {
+          "path": "factor_research/research/parameters/p1_parameter_mc_2026-11-11.json",
+          "bytes": 267768,
+          "sha256": "sha256:a6bc94c4b572b5daba771e0a8d8544531f0030bd5afc6687732c7f69eecb3bb7"
+        },
+        {
+          "path": "factor_research/research/parameters/p2_builtin_parameter_mc_2026-11-11_v2.json",
+          "bytes": 1218453,
+          "sha256": "sha256:b2162789150bd3b7d2b2f61b123e28c8f24cffec50638c696e360a500f9e77ea"
+        },
+        {
+          "path": "factor_research/research/parameters/p3_extended_parameter_mc_2026-11-11_v3.json",
+          "bytes": 1059795,
+          "sha256": "sha256:b79bcdec6911323e1e8416ac39310a1f0a26bd85464d59f739e9390b4d125661"
+        },
+        {
+          "path": "factor_research/research/parameters/p4_threshold_parameter_mc_2026-11-11.json",
+          "bytes": 2501082,
+          "sha256": "sha256:9c65600b73b19cab7d89c76a7b83ef416cdc3125dadc7ce61e0d47353e63f1d4"
+        }
+      ]
+    },
+    {
+      "label": "p5_research_candidates",
+      "file_count": 9,
+      "bytes": 3576,
+      "sha256": "sha256:d04d63e3ffbc9dafd367021c23705c22121ff21d52c1dff70ae97cb239c69dcb",
+      "files": [
+        {
+          "path": "factor_research/candidates/p5/uf_p5_annual_vol10_low.json",
+          "bytes": 419,
+          "sha256": "sha256:3e957fb935ef878a1d493e95559a37ba518cea744533939fb5ba2a9433ec8bb2"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_atr5_low.json",
+          "bytes": 419,
+          "sha256": "sha256:5eeb304e3d8dd140dcda271ac8ed4bf6c50bb203c7631e1b3fbc3b0d00e77d9b"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_boll_width10_low.json",
+          "bytes": 349,
+          "sha256": "sha256:55c1d4fc2083ebbf5d39dd0d4c84905c3a30a5fda9d32a4e431f373f1b3c1eaf"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_amihud120.json",
+          "bytes": 398,
+          "sha256": "sha256:1f133388cb053d1f0d01f9c7b658bf2de655fcb87aa84e4c95826facc9c22f03"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_amount5_low.json",
+          "bytes": 352,
+          "sha256": "sha256:4afc4a3808148259ce622ac136f92c20ab2f21e426a7d883d8c367b1786a5c60"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_turnover5_low.json",
+          "bytes": 346,
+          "sha256": "sha256:bedca1be8b15ca0017e1b92994369dcef1c3cdb29f3cc7cae5a591b76a04438e"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_max_ret60_low.json",
+          "bytes": 383,
+          "sha256": "sha256:17cf2dd34dc0fbff42462a1bbfb53862994acf60b5c4673f429545ff40c2fc9c"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_div_yield_abs015.json",
+          "bytes": 449,
+          "sha256": "sha256:20e9769c9b3435483b859aaf433d4db8549b7382687a049f6db29daa9e0a3b95"
+        },
+        {
+          "path": "factor_research/candidates/p5/uf_p5_margin_q50.json",
+          "bytes": 461,
+          "sha256": "sha256:34fa351781e1463b6b8595486db734a9e9a7287a7bb33845e88308578b64a30c"
+        }
+      ]
+    },
+    {
+      "label": "base_watch_version",
+      "file_count": 1,
+      "bytes": 8650,
+      "sha256": "sha256:0748c7469c6569cf4d903d322719ffe6dcadd94ea2dff5e749a1a8fbc9047ecb",
+      "files": [
+        {
+          "path": "factor_research/sets/multi_dimension_v1/versions/v0001.json",
+          "bytes": 8650,
+          "sha256": "sha256:d6c2ad44c2f08738cdb25214909cae812c887ac08a81593ba59a84f1c0802515"
+        }
+      ]
+    },
+    {
+      "label": "financial_tables",
+      "file_count": 4,
+      "bytes": 31673341,
+      "sha256": "sha256:6da00e458e56ad16f9779c950bd9fd075e09ee14c20943a4988db6c35dc4f164",
+      "files": [
+        {
+          "path": "financials/balance_sheet/part.parquet",
+          "bytes": 6890578,
+          "sha256": "sha256:9253a260bb045c37c0409617bdb3082624e7f21f253d35a147036e5eeac47283"
+        },
+        {
+          "path": "financials/cash_flow/part.parquet",
+          "bytes": 6867147,
+          "sha256": "sha256:f34a3365dd92713d91a007b784b9ac8cd266cc7e7d19b5ab1df75a82381e3b5b"
+        },
+        {
+          "path": "financials/income/part.parquet",
+          "bytes": 8349539,
+          "sha256": "sha256:9bf784d2939de14c4f9da2e96ad3fbecd3c87ae85e8c7dfea056b636ee8164e2"
+        },
+        {
+          "path": "financials/metrics/part.parquet",
+          "bytes": 9566077,
+          "sha256": "sha256:d458c82807fbd0957344021930ba065b478dae78d7bb17a6aea9e4cab4757886"
+        }
+      ]
+    },
+    {
+      "label": "financial_pit_p7",
+      "file_count": 2,
+      "bytes": 10022,
+      "sha256": "sha256:1d6d5180ac15e00e159d7aa3437dae6881d1b3b6e3622a2ec1091833e4aa4721",
+      "files": [
+        {
+          "path": "factor_research/pit/runs/c4b0b1e460c58f2f7facc0b2237dd834ab7bc494ba6225dc0194ba74b2e2bd32.json",
+          "bytes": 7929,
+          "sha256": "sha256:1d0c1006a975faa65ead4fd71804488f7b08e778867114a73b675ae932a08a25"
+        },
+        {
+          "path": "factor_research/pit/runs/c4b0b1e460c58f2f7facc0b2237dd834ab7bc494ba6225dc0194ba74b2e2bd32.md",
+          "bytes": 2093,
+          "sha256": "sha256:23a25bc9af9eca0f9f4ac65fe1c49e0cb17ed783f02348deebb9291e0514b3ea"
+        }
+      ]
+    },
+    {
+      "label": "p5_increment_baseline",
+      "file_count": 3,
+      "bytes": 116907,
+      "sha256": "sha256:72b4faa597d8f5edb847131457cb35f1916d19e42390123f880cc60b1ea0bacb",
+      "files": [
+        {
+          "path": "factor_research/research/p5_incremental_2026-11-12.json",
+          "bytes": 103654,
+          "sha256": "sha256:9ed3171ad440ae677b73b8b820ad022b0230b9e27c8d3198a2b386afb3f1cd91"
+        },
+        {
+          "path": "factor_research/research/p5_incremental_2026-11-12.md",
+          "bytes": 4603,
+          "sha256": "sha256:cf9e0df67fe534435378e377d6321b1d09ea1cbc2a9bf389b35988bf06f0daf8"
+        },
+        {
+          "path": "factor_research/sets/multi_dimension_v1/versions/v0001.json",
+          "bytes": 8650,
+          "sha256": "sha256:d6c2ad44c2f08738cdb25214909cae812c887ac08a81593ba59a84f1c0802515"
+        }
+      ]
+    },
+    {
+      "label": "catalog_snapshot",
+      "file_count": 1,
+      "bytes": 369628,
+      "sha256": "sha256:669eb7491725f6cf0b30bedab7e02f198c5c78a8152c45ad6ad4386ba4710324",
+      "files": [
+        {
+          "path": "factor_research/catalog/snapshots/6cb4e69da0a5a3097459e32ddd662979c4602f7327c3b737c4130de147b9b3f6.json",
+          "bytes": 369628,
+          "sha256": "sha256:8d600f9fe02bf2a072b5fbbe00ebc2fcf8cbdc1c63ae00b6a15621d7feeb20ed"
+        }
+      ]
+    }
+  ],
+  "data_fingerprint": "sha256:9a3533fd7d318c21d4318cfc3774633dcf084669e4a074ea6fd8aabbb345d3bf",
+  "period": {
+    "start": "2021-06-01",
+    "recent_start": "2025-10-14",
+    "end": "2026-11-05",
+    "weak_start": "2025-07-01",
+    "weak_end": "2026-06-30"
+  },
+  "universe": {
+    "name": "hs300_current_non_financial",
+    "symbol_count": 250,
+    "excluded_industries": [
+      "银行",
+      "非银金融"
+    ],
+    "survivorship_bias": true
+  },
+  "base_set": {
+    "set_id": "multi_dimension_v1",
+    "version": 1,
+    "content_sha256": "sha256:9eb577a43d549e1b9218ae61d125fa393dd65263988f0d5b221067a23c61822b",
+    "factor_ids": [
+      "ext_alt_hs300_cash_flow_stability_4q_low",
+      "ext_alt_hs300_dividend_yield",
+      "ext_alt_hs300_fund_holding_ratio_low",
+      "ext_alt_hs300_holder_top10_share_chg_yoy",
+      "ext_alt_hs300_idio_vol_40d_low",
+      "ext_alt_hs300_margin_chg_1m_low",
+      "ext_alt_hs300_ocf_margin_4q",
+      "ext_alt_hs300_vol_of_vol_20d_low"
+    ]
+  },
+  "research_design": {
+    "horizons": [
+      5,
+      20,
+      60
+    ],
+    "primary_horizon": 60,
+    "newey_west_lag": 60,
+    "minimum_cross_section": 30,
+    "neutral_variants_required": 2,
+    "incremental_weight": 0.2,
+    "fdr_threshold": 0.1,
+    "max_correlation": 0.9
+  },
+  "candidate_count": 4,
+  "statistical_pass_count": 2,
+  "incremental_pass_count": 2,
+  "portfolio_pass_count": 0,
+  "ic_grid": {
+    "inventory_turnover_improvement_yoy": {
+      "5": {
+        "raw": {
+          "directional_ic": 0.022796,
+          "nw_t": 3.870321,
+          "p_value": 0.00010869,
+          "n_dates": 845,
+          "valid_rows": 201278
+        },
+        "industry": {
+          "directional_ic": 0.015165,
+          "nw_t": 3.306976,
+          "p_value": 0.00094309,
+          "n_dates": 845,
+          "valid_rows": 201278
+        },
+        "size": {
+          "directional_ic": 0.024245,
+          "nw_t": 3.929127,
+          "p_value": 8.525e-05,
+          "n_dates": 845,
+          "valid_rows": 201278
+        },
+        "industry_size": {
+          "directional_ic": 0.017598,
+          "nw_t": 3.960873,
+          "p_value": 7.468e-05,
+          "n_dates": 845,
+          "valid_rows": 201278
+        }
+      },
+      "20": {
+        "raw": {
+          "directional_ic": 0.04133,
+          "nw_t": 3.732385,
+          "p_value": 0.00018968,
+          "n_dates": 830,
+          "valid_rows": 197593
+        },
+        "industry": {
+          "directional_ic": 0.024321,
+          "nw_t": 2.62555,
+          "p_value": 0.0086509,
+          "n_dates": 830,
+          "valid_rows": 197593
+        },
+        "size": {
+          "directional_ic": 0.044009,
+          "nw_t": 3.895183,
+          "p_value": 9.812e-05,
+          "n_dates": 830,
+          "valid_rows": 197593
+        },
+        "industry_size": {
+          "directional_ic": 0.029819,
+          "nw_t": 3.500763,
+          "p_value": 0.00046393,
+          "n_dates": 830,
+          "valid_rows": 197593
+        }
+      },
+      "60": {
+        "raw": {
+          "directional_ic": 0.073762,
+          "nw_t": 5.37066,
+          "p_value": 8e-08,
+          "n_dates": 790,
+          "valid_rows": 187811
+        },
+        "industry": {
+          "directional_ic": 0.047133,
+          "nw_t": 3.775475,
+          "p_value": 0.0001597,
+          "n_dates": 790,
+          "valid_rows": 187811
+        },
+        "size": {
+          "directional_ic": 0.079368,
+          "nw_t": 5.353169,
+          "p_value": 9e-08,
+          "n_dates": 790,
+          "valid_rows": 187811
+        },
+        "industry_size": {
+          "directional_ic": 0.05704,
+          "nw_t": 5.342518,
+          "p_value": 9e-08,
+          "n_dates": 790,
+          "valid_rows": 187811
+        }
+      }
+    },
+    "receivable_turnover_improvement_yoy": {
+      "5": {
+        "raw": {
+          "directional_ic": 0.012132,
+          "nw_t": 1.912993,
+          "p_value": 0.05574893,
+          "n_dates": 845,
+          "valid_rows": 203408
+        },
+        "industry": {
+          "directional_ic": 0.004566,
+          "nw_t": 1.065014,
+          "p_value": 0.28686942,
+          "n_dates": 845,
+          "valid_rows": 203408
+        },
+        "size": {
+          "directional_ic": 0.012841,
+          "nw_t": 2.034349,
+          "p_value": 0.04191647,
+          "n_dates": 845,
+          "valid_rows": 203408
+        },
+        "industry_size": {
+          "directional_ic": 0.005244,
+          "nw_t": 1.230196,
+          "p_value": 0.2186239,
+          "n_dates": 845,
+          "valid_rows": 203408
+        }
+      },
+      "20": {
+        "raw": {
+          "directional_ic": 0.018402,
+          "nw_t": 1.338903,
+          "p_value": 0.18060222,
+          "n_dates": 830,
+          "valid_rows": 199677
+        },
+        "industry": {
+          "directional_ic": 8.2e-05,
+          "nw_t": 0.008225,
+          "p_value": 0.99343779,
+          "n_dates": 830,
+          "valid_rows": 199677
+        },
+        "size": {
+          "directional_ic": 0.022886,
+          "nw_t": 1.657643,
+          "p_value": 0.09738952,
+          "n_dates": 830,
+          "valid_rows": 199677
+        },
+        "industry_size": {
+          "directional_ic": 0.004306,
+          "nw_t": 0.44553,
+          "p_value": 0.65593648,
+          "n_dates": 830,
+          "valid_rows": 199677
+        }
+      },
+      "60": {
+        "raw": {
+          "directional_ic": 0.03115,
+          "nw_t": 1.38053,
+          "p_value": 0.16742343,
+          "n_dates": 790,
+          "valid_rows": 189775
+        },
+        "industry": {
+          "directional_ic": 0.003853,
+          "nw_t": 0.244271,
+          "p_value": 0.80702085,
+          "n_dates": 790,
+          "valid_rows": 189775
+        },
+        "size": {
+          "directional_ic": 0.037836,
+          "nw_t": 1.647944,
+          "p_value": 0.09936416,
+          "n_dates": 790,
+          "valid_rows": 189775
+        },
+        "industry_size": {
+          "directional_ic": 0.010678,
+          "nw_t": 0.623236,
+          "p_value": 0.5331295,
+          "n_dates": 790,
+          "valid_rows": 189775
+        }
+      }
+    },
+    "receivable_growth_minus_revenue_growth": {
+      "5": {
+        "raw": {
+          "directional_ic": 0.007941,
+          "nw_t": 1.454912,
+          "p_value": 0.14569358,
+          "n_dates": 845,
+          "valid_rows": 206591
+        },
+        "industry": {
+          "directional_ic": 0.001208,
+          "nw_t": 0.289933,
+          "p_value": 0.77186744,
+          "n_dates": 845,
+          "valid_rows": 206591
+        },
+        "size": {
+          "directional_ic": 0.01145,
+          "nw_t": 2.125137,
+          "p_value": 0.03357515,
+          "n_dates": 845,
+          "valid_rows": 206591
+        },
+        "industry_size": {
+          "directional_ic": 0.003961,
+          "nw_t": 0.918596,
+          "p_value": 0.35830673,
+          "n_dates": 845,
+          "valid_rows": 206591
+        }
+      },
+      "20": {
+        "raw": {
+          "directional_ic": 0.0134,
+          "nw_t": 1.351824,
+          "p_value": 0.17643157,
+          "n_dates": 830,
+          "valid_rows": 202846
+        },
+        "industry": {
+          "directional_ic": 0.00157,
+          "nw_t": 0.19748,
+          "p_value": 0.84345167,
+          "n_dates": 830,
+          "valid_rows": 202846
+        },
+        "size": {
+          "directional_ic": 0.022615,
+          "nw_t": 2.341909,
+          "p_value": 0.01918538,
+          "n_dates": 830,
+          "valid_rows": 202846
+        },
+        "industry_size": {
+          "directional_ic": 0.009298,
+          "nw_t": 1.152125,
+          "p_value": 0.24926956,
+          "n_dates": 830,
+          "valid_rows": 202846
+        }
+      },
+      "60": {
+        "raw": {
+          "directional_ic": 0.013121,
+          "nw_t": 0.739967,
+          "p_value": 0.45932002,
+          "n_dates": 790,
+          "valid_rows": 192904
+        },
+        "industry": {
+          "directional_ic": 0.00189,
+          "nw_t": 0.150146,
+          "p_value": 0.88064976,
+          "n_dates": 790,
+          "valid_rows": 192904
+        },
+        "size": {
+          "directional_ic": 0.024971,
+          "nw_t": 1.430323,
+          "p_value": 0.15262439,
+          "n_dates": 790,
+          "valid_rows": 192904
+        },
+        "industry_size": {
+          "directional_ic": 0.013193,
+          "nw_t": 1.015549,
+          "p_value": 0.30984413,
+          "n_dates": 790,
+          "valid_rows": 192904
+        }
+      }
+    },
+    "inventory_growth_minus_cogs_growth": {
+      "5": {
+        "raw": {
+          "directional_ic": 0.010418,
+          "nw_t": 2.115781,
+          "p_value": 0.03436345,
+          "n_dates": 845,
+          "valid_rows": 203988
+        },
+        "industry": {
+          "directional_ic": 0.007616,
+          "nw_t": 1.882581,
+          "p_value": 0.0597572,
+          "n_dates": 845,
+          "valid_rows": 203988
+        },
+        "size": {
+          "directional_ic": 0.01088,
+          "nw_t": 2.057372,
+          "p_value": 0.03965049,
+          "n_dates": 845,
+          "valid_rows": 203988
+        },
+        "industry_size": {
+          "directional_ic": 0.007448,
+          "nw_t": 1.74837,
+          "p_value": 0.08039995,
+          "n_dates": 845,
+          "valid_rows": 203988
+        }
+      },
+      "20": {
+        "raw": {
+          "directional_ic": 0.024484,
+          "nw_t": 3.295937,
+          "p_value": 0.00098094,
+          "n_dates": 830,
+          "valid_rows": 200288
+        },
+        "industry": {
+          "directional_ic": 0.015962,
+          "nw_t": 2.469193,
+          "p_value": 0.01354181,
+          "n_dates": 830,
+          "valid_rows": 200288
+        },
+        "size": {
+          "directional_ic": 0.026679,
+          "nw_t": 3.389337,
+          "p_value": 0.00070062,
+          "n_dates": 830,
+          "valid_rows": 200288
+        },
+        "industry_size": {
+          "directional_ic": 0.015955,
+          "nw_t": 2.470265,
+          "p_value": 0.01350131,
+          "n_dates": 830,
+          "valid_rows": 200288
+        }
+      },
+      "60": {
+        "raw": {
+          "directional_ic": 0.051053,
+          "nw_t": 4.06558,
+          "p_value": 4.791e-05,
+          "n_dates": 790,
+          "valid_rows": 190478
+        },
+        "industry": {
+          "directional_ic": 0.032744,
+          "nw_t": 3.27421,
+          "p_value": 0.00105958,
+          "n_dates": 790,
+          "valid_rows": 190478
+        },
+        "size": {
+          "directional_ic": 0.060444,
+          "nw_t": 4.0209,
+          "p_value": 5.798e-05,
+          "n_dates": 790,
+          "valid_rows": 190478
+        },
+        "industry_size": {
+          "directional_ic": 0.036572,
+          "nw_t": 3.431103,
+          "p_value": 0.00060113,
+          "n_dates": 790,
+          "valid_rows": 190478
+        }
+      }
+    }
+  },
+  "candidates": [
+    {
+      "candidate_key": "r384_inventory_turnover_improvement_yoy",
+      "economic_key": "inventory_turnover_improvement_yoy",
+      "label": "存货周转同比改善",
+      "factor_id": "inventory_turnover_improvement_yoy",
+      "direction": "high",
+      "registered": true,
+      "transform": "pit_latest",
+      "set_role": "new",
+      "replaces_factor_id": null,
+      "score_column": "_score_inventory_turnover_improvement_yoy",
+      "coverage": {
+        "rows": 444817,
+        "non_null_rows": 202498,
+        "non_null_ratio": 0.455239,
+        "symbol_count": 246,
+        "first_value_date": "2023-05-04"
+      },
+      "primary_horizon": 60,
+      "horizon_gate": {
+        "pass": true,
+        "confirmations": [
+          "industry",
+          "size",
+          "industry_size"
+        ],
+        "required_confirmations": 2,
+        "reasons": []
+      },
+      "marginal_ic": {
+        "comparison_basis": "current_composite",
+        "n_dates": 790,
+        "base_ic_mean": 0.051318,
+        "combined_ic_mean": 0.083557,
+        "directional_delta_mean": 0.032239,
+        "delta_nw_t": 3.064284,
+        "delta_p_value": 0.00218191,
+        "recent_directional_delta_mean": 0.034939,
+        "correlations": [
+          {
+            "current_factor_id": "ext_alt_hs300_idio_vol_40d_low",
+            "is_replaced_slot": false,
+            "n_dates": 840,
+            "mean_symbols": 238.142,
+            "mean_signed": -0.060034,
+            "mean_abs": 0.07879,
+            "max_abs": 0.288562,
+            "min_signed": -0.288562,
+            "max_signed": 0.112639
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_dividend_yield",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 222.025,
+            "mean_signed": -0.069861,
+            "mean_abs": 0.079616,
+            "max_abs": 0.200348,
+            "min_signed": -0.200348,
+            "max_signed": 0.110074
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 238.212,
+            "mean_signed": -0.022323,
+            "mean_abs": 0.067637,
+            "max_abs": 0.280183,
+            "min_signed": -0.280183,
+            "max_signed": 0.153399
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 238.211,
+            "mean_signed": -0.01563,
+            "mean_abs": 0.052626,
+            "max_abs": 0.195443,
+            "min_signed": -0.128997,
+            "max_signed": 0.195443
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 238.175,
+            "mean_signed": -0.030377,
+            "mean_abs": 0.068629,
+            "max_abs": 0.139332,
+            "min_signed": -0.139332,
+            "max_signed": 0.099423
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_ocf_margin_4q",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 238.215,
+            "mean_signed": 0.139779,
+            "mean_abs": 0.148143,
+            "max_abs": 0.238648,
+            "min_signed": -0.074315,
+            "max_signed": 0.238648
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 237.073,
+            "mean_signed": -0.026683,
+            "mean_abs": 0.065269,
+            "max_abs": 0.245706,
+            "min_signed": -0.245706,
+            "max_signed": 0.184405
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 237.728,
+            "mean_signed": -0.049878,
+            "mean_abs": 0.059219,
+            "max_abs": 0.169852,
+            "min_signed": -0.169852,
+            "max_signed": 0.068803
+          }
+        ],
+        "max_abs_correlation_all_members": 0.148143,
+        "max_abs_correlation_for_gate": 0.148143,
+        "delta_q_value": 0.00872764
+      },
+      "incremental_gate": {
+        "pass": true,
+        "reasons": []
+      },
+      "status": "incremental_pass",
+      "portfolio_result": {
+        "statistical_gate": {
+          "pass": true,
+          "reasons": []
+        },
+        "portfolio_gate": {
+          "pass": false,
+          "checks": {
+            "full_annual_within_tolerance": false,
+            "recent_total_within_tolerance": true,
+            "full_sharpe_within_tolerance": false,
+            "recent_sharpe_within_tolerance": true,
+            "full_drawdown_within_tolerance": true,
+            "recent_drawdown_within_tolerance": true,
+            "full_3x_annual_within_tolerance": false,
+            "not_simultaneously_worse_full_and_recent": true
+          },
+          "deltas": {
+            "full_2x_annual_return": -0.0376,
+            "recent_2x_total_return": 0.0256
+          },
+          "tolerances": {
+            "return": 0.01,
+            "sharpe": 0.05,
+            "drawdown": 0.02
+          }
+        },
+        "portfolio": {
+          "factor_ids": [
+            "ext_alt_hs300_cash_flow_stability_4q_low",
+            "ext_alt_hs300_dividend_yield",
+            "ext_alt_hs300_fund_holding_ratio_low",
+            "ext_alt_hs300_idio_vol_40d_low",
+            "ext_alt_hs300_margin_chg_1m_low",
+            "ext_alt_hs300_ocf_margin_4q",
+            "ext_alt_hs300_vol_of_vol_20d_low",
+            "inventory_turnover_improvement_yoy"
+          ],
+          "scoring": {
+            "ext_alt_hs300_cash_flow_stability_4q_low": 0.125,
+            "ext_alt_hs300_dividend_yield": 0.125,
+            "ext_alt_hs300_fund_holding_ratio_low": 0.125,
+            "ext_alt_hs300_idio_vol_40d_low": 0.125,
+            "ext_alt_hs300_margin_chg_1m_low": 0.125,
+            "ext_alt_hs300_ocf_margin_4q": 0.125,
+            "ext_alt_hs300_vol_of_vol_20d_low": 0.125,
+            "inventory_turnover_improvement_yoy": 0.125
+          },
+          "directions": {
+            "ext_alt_hs300_cash_flow_stability_4q_low": "high",
+            "ext_alt_hs300_dividend_yield": "high",
+            "ext_alt_hs300_fund_holding_ratio_low": "high",
+            "ext_alt_hs300_idio_vol_40d_low": "high",
+            "ext_alt_hs300_margin_chg_1m_low": "high",
+            "ext_alt_hs300_ocf_margin_4q": "high",
+            "ext_alt_hs300_vol_of_vol_20d_low": "high",
+            "inventory_turnover_improvement_yoy": "high"
+          },
+          "full_2x": {
+            "label": "r384_inventory_turnover_improvement_yoy_full_2x",
+            "start": "2021-06-01",
+            "end": "2026-11-05",
+            "cost": "2x",
+            "max_positions": 20,
+            "error": null,
+            "stats": {
+              "total_return": 0.0574,
+              "annual_return": 0.0107,
+              "max_drawdown": -0.1512,
+              "sharpe": 0.16,
+              "sortino": 0.22,
+              "win_rate": 0.471,
+              "profit_factor": 1.22,
+              "n_trades": 569.0,
+              "avg_exposure": 0.5601,
+              "worst": -0.1129
+            },
+            "trade_count": 569,
+            "benchmark_return": 0.00919
+          },
+          "full_3x": {
+            "label": "r384_inventory_turnover_improvement_yoy_full_3x",
+            "start": "2021-06-01",
+            "end": "2026-11-05",
+            "cost": "3x",
+            "max_positions": 20,
+            "error": null,
+            "stats": {
+              "total_return": 0.016,
+              "annual_return": 0.003,
+              "max_drawdown": -0.1553,
+              "sharpe": 0.08,
+              "sortino": 0.11,
+              "win_rate": 0.4675,
+              "profit_factor": 1.18,
+              "n_trades": 569.0,
+              "avg_exposure": 0.5604,
+              "worst": -0.1142
+            },
+            "trade_count": 569,
+            "benchmark_return": 0.00919
+          },
+          "recent_2x": {
+            "label": "r384_inventory_turnover_improvement_yoy_recent_2x",
+            "start": "2025-10-14",
+            "end": "2026-11-05",
+            "cost": "2x",
+            "max_positions": 20,
+            "error": null,
+            "stats": {
+              "total_return": 0.0496,
+              "annual_return": 0.0484,
+              "max_drawdown": -0.1551,
+              "sharpe": 0.44,
+              "sortino": 0.67,
+              "win_rate": 0.459,
+              "profit_factor": 1.46,
+              "n_trades": 183.0,
+              "avg_exposure": 0.9395,
+              "worst": -0.1207
+            },
+            "trade_count": 183,
+            "benchmark_return": -0.053607
+          },
+          "weak_2x": {
+            "label": "r384_inventory_turnover_improvement_yoy_weak_2x",
+            "start": "2025-07-01",
+            "end": "2026-06-30",
+            "cost": "2x",
+            "max_positions": 20,
+            "error": null,
+            "stats": {
+              "total_return": -0.025,
+              "annual_return": -0.0261,
+              "max_drawdown": -0.1401,
+              "sharpe": -0.16,
+              "sortino": -0.23,
+              "win_rate": 0.4368,
+              "profit_factor": 1.21,
+              "n_trades": 190.0,
+              "avg_exposure": 0.9746,
+              "worst": -0.0867
+            },
+            "trade_count": 190,
+            "benchmark_return": 0.184123
+          }
+        },
+        "status": "portfolio_rejected"
+      }
+    },
+    {
+      "candidate_key": "r384_receivable_turnover_improvement_yoy",
+      "economic_key": "receivable_turnover_improvement_yoy",
+      "label": "应收周转同比改善",
+      "factor_id": "receivable_turnover_improvement_yoy",
+      "direction": "high",
+      "registered": true,
+      "transform": "pit_latest",
+      "set_role": "new",
+      "replaces_factor_id": null,
+      "score_column": "_score_receivable_turnover_improvement_yoy",
+      "coverage": {
+        "rows": 444817,
+        "non_null_rows": 204648,
+        "non_null_ratio": 0.460072,
+        "symbol_count": 250,
+        "first_value_date": "2023-05-04"
+      },
+      "primary_horizon": 60,
+      "horizon_gate": {
+        "pass": false,
+        "confirmations": [
+          "size"
+        ],
+        "required_confirmations": 2,
+        "reasons": [
+          "fewer_than_two_neutralized_confirmations"
+        ]
+      },
+      "marginal_ic": {
+        "comparison_basis": "current_composite",
+        "n_dates": 790,
+        "base_ic_mean": 0.054904,
+        "combined_ic_mean": 0.064384,
+        "directional_delta_mean": 0.00948,
+        "delta_nw_t": 0.785317,
+        "delta_p_value": 0.43226793,
+        "recent_directional_delta_mean": 0.003449,
+        "correlations": [
+          {
+            "current_factor_id": "ext_alt_hs300_idio_vol_40d_low",
+            "is_replaced_slot": false,
+            "n_dates": 840,
+            "mean_symbols": 240.658,
+            "mean_signed": -0.061494,
+            "mean_abs": 0.121914,
+            "max_abs": 0.2933,
+            "min_signed": -0.2933,
+            "max_signed": 0.145245
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_dividend_yield",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 224.518,
+            "mean_signed": -0.12177,
+            "mean_abs": 0.122114,
+            "max_abs": 0.309368,
+            "min_signed": -0.309368,
+            "max_signed": 0.039555
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 240.741,
+            "mean_signed": -0.033802,
+            "mean_abs": 0.079369,
+            "max_abs": 0.253272,
+            "min_signed": -0.253272,
+            "max_signed": 0.160672
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 240.74,
+            "mean_signed": -0.026565,
+            "mean_abs": 0.057498,
+            "max_abs": 0.139427,
+            "min_signed": -0.139427,
+            "max_signed": 0.056423
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 240.705,
+            "mean_signed": -0.046117,
+            "mean_abs": 0.062074,
+            "max_abs": 0.197346,
+            "min_signed": -0.197346,
+            "max_signed": 0.085239
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_ocf_margin_4q",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 240.745,
+            "mean_signed": 0.143308,
+            "mean_abs": 0.143308,
+            "max_abs": 0.203698,
+            "min_signed": 0.057118,
+            "max_signed": 0.203698
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 239.602,
+            "mean_signed": -0.026288,
+            "mean_abs": 0.057732,
+            "max_abs": 0.180363,
+            "min_signed": -0.170448,
+            "max_signed": 0.180363
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 240.166,
+            "mean_signed": -0.029884,
+            "mean_abs": 0.040049,
+            "max_abs": 0.161249,
+            "min_signed": -0.161249,
+            "max_signed": 0.095207
+          }
+        ],
+        "max_abs_correlation_all_members": 0.143308,
+        "max_abs_correlation_for_gate": 0.143308,
+        "delta_q_value": 0.57635724
+      },
+      "incremental_gate": {
+        "pass": false,
+        "reasons": [
+          "marginal_ic_p_above_0_10",
+          "marginal_ic_q_above_0_10"
+        ]
+      },
+      "status": "horizon_rejected",
+      "portfolio_result": null
+    },
+    {
+      "candidate_key": "r384_receivable_growth_minus_revenue_growth",
+      "economic_key": "receivable_growth_minus_revenue_growth",
+      "label": "应收相对营收增速差",
+      "factor_id": "receivable_growth_minus_revenue_growth",
+      "direction": "low",
+      "registered": true,
+      "transform": "pit_latest",
+      "set_role": "new",
+      "replaces_factor_id": null,
+      "score_column": "_score_receivable_growth_minus_revenue_growth",
+      "coverage": {
+        "rows": 444817,
+        "non_null_rows": 207841,
+        "non_null_ratio": 0.467251,
+        "symbol_count": 250,
+        "first_value_date": "2023-05-04"
+      },
+      "primary_horizon": 60,
+      "horizon_gate": {
+        "pass": false,
+        "confirmations": [],
+        "required_confirmations": 2,
+        "reasons": [
+          "fewer_than_two_neutralized_confirmations"
+        ]
+      },
+      "marginal_ic": {
+        "comparison_basis": "current_composite",
+        "n_dates": 790,
+        "base_ic_mean": 0.053115,
+        "combined_ic_mean": 0.053174,
+        "directional_delta_mean": 5.9e-05,
+        "delta_nw_t": 0.0059,
+        "delta_p_value": 0.99529215,
+        "recent_directional_delta_mean": 0.021249,
+        "correlations": [
+          {
+            "current_factor_id": "ext_alt_hs300_idio_vol_40d_low",
+            "is_replaced_slot": false,
+            "n_dates": 840,
+            "mean_symbols": 244.443,
+            "mean_signed": -0.037236,
+            "mean_abs": 0.07832,
+            "max_abs": 0.263647,
+            "min_signed": -0.263647,
+            "max_signed": 0.148446
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_dividend_yield",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 227.438,
+            "mean_signed": -0.056074,
+            "mean_abs": 0.071166,
+            "max_abs": 0.249882,
+            "min_signed": -0.249882,
+            "max_signed": 0.093277
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 244.498,
+            "mean_signed": -0.016584,
+            "mean_abs": 0.061198,
+            "max_abs": 0.206796,
+            "min_signed": -0.206796,
+            "max_signed": 0.158634
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 244.496,
+            "mean_signed": -0.017495,
+            "mean_abs": 0.036561,
+            "max_abs": 0.169389,
+            "min_signed": -0.169389,
+            "max_signed": 0.067354
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 244.461,
+            "mean_signed": -0.023387,
+            "mean_abs": 0.039118,
+            "max_abs": 0.160867,
+            "min_signed": -0.160867,
+            "max_signed": 0.053453
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_ocf_margin_4q",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 244.501,
+            "mean_signed": 0.15519,
+            "mean_abs": 0.15519,
+            "max_abs": 0.282691,
+            "min_signed": 0.066486,
+            "max_signed": 0.282691
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 243.359,
+            "mean_signed": -0.0079,
+            "mean_abs": 0.053272,
+            "max_abs": 0.129782,
+            "min_signed": -0.126685,
+            "max_signed": 0.129782
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 242.915,
+            "mean_signed": -0.021354,
+            "mean_abs": 0.041608,
+            "max_abs": 0.145583,
+            "min_signed": -0.145583,
+            "max_signed": 0.129145
+          }
+        ],
+        "max_abs_correlation_all_members": 0.15519,
+        "max_abs_correlation_for_gate": 0.15519,
+        "delta_q_value": 0.99529215
+      },
+      "incremental_gate": {
+        "pass": false,
+        "reasons": [
+          "marginal_ic_p_above_0_10",
+          "marginal_ic_q_above_0_10"
+        ]
+      },
+      "status": "horizon_rejected",
+      "portfolio_result": null
+    },
+    {
+      "candidate_key": "r384_inventory_growth_minus_cogs_growth",
+      "economic_key": "inventory_growth_minus_cogs_growth",
+      "label": "存货相对营业成本增速差",
+      "factor_id": "inventory_growth_minus_cogs_growth",
+      "direction": "low",
+      "registered": true,
+      "transform": "pit_latest",
+      "set_role": "new",
+      "replaces_factor_id": null,
+      "score_column": "_score_inventory_growth_minus_cogs_growth",
+      "coverage": {
+        "rows": 444817,
+        "non_null_rows": 205223,
+        "non_null_ratio": 0.461365,
+        "symbol_count": 247,
+        "first_value_date": "2023-05-04"
+      },
+      "primary_horizon": 60,
+      "horizon_gate": {
+        "pass": true,
+        "confirmations": [
+          "industry",
+          "size",
+          "industry_size"
+        ],
+        "required_confirmations": 2,
+        "reasons": []
+      },
+      "marginal_ic": {
+        "comparison_basis": "current_composite",
+        "n_dates": 790,
+        "base_ic_mean": 0.049938,
+        "combined_ic_mean": 0.074549,
+        "directional_delta_mean": 0.024611,
+        "delta_nw_t": 2.82254,
+        "delta_p_value": 0.00476449,
+        "recent_directional_delta_mean": 0.042032,
+        "correlations": [
+          {
+            "current_factor_id": "ext_alt_hs300_idio_vol_40d_low",
+            "is_replaced_slot": false,
+            "n_dates": 840,
+            "mean_symbols": 241.362,
+            "mean_signed": -0.043089,
+            "mean_abs": 0.066247,
+            "max_abs": 0.167649,
+            "min_signed": -0.167649,
+            "max_signed": 0.106834
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_dividend_yield",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 224.455,
+            "mean_signed": -0.058674,
+            "mean_abs": 0.073727,
+            "max_abs": 0.160411,
+            "min_signed": -0.160411,
+            "max_signed": 0.126212
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_vol_of_vol_20d_low",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 241.418,
+            "mean_signed": -0.0125,
+            "mean_abs": 0.058524,
+            "max_abs": 0.167219,
+            "min_signed": -0.167219,
+            "max_signed": 0.156241
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_cash_flow_stability_4q_low",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 241.416,
+            "mean_signed": 0.017353,
+            "mean_abs": 0.046351,
+            "max_abs": 0.161489,
+            "min_signed": -0.08568,
+            "max_signed": 0.161489
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_fund_holding_ratio_low",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 241.381,
+            "mean_signed": -0.013271,
+            "mean_abs": 0.027049,
+            "max_abs": 0.138766,
+            "min_signed": -0.109859,
+            "max_signed": 0.138766
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_ocf_margin_4q",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 241.421,
+            "mean_signed": 0.124629,
+            "mean_abs": 0.128098,
+            "max_abs": 0.206468,
+            "min_signed": -0.068984,
+            "max_signed": 0.206468
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_margin_chg_1m_low",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 240.279,
+            "mean_signed": -0.0066,
+            "mean_abs": 0.04801,
+            "max_abs": 0.115165,
+            "min_signed": -0.110646,
+            "max_signed": 0.115165
+          },
+          {
+            "current_factor_id": "ext_alt_hs300_holder_top10_share_chg_yoy",
+            "is_replaced_slot": false,
+            "n_dates": 850,
+            "mean_symbols": 239.966,
+            "mean_signed": -0.055695,
+            "mean_abs": 0.068103,
+            "max_abs": 0.169194,
+            "min_signed": -0.169194,
+            "max_signed": 0.085086
+          }
+        ],
+        "max_abs_correlation_all_members": 0.128098,
+        "max_abs_correlation_for_gate": 0.128098,
+        "delta_q_value": 0.00952898
+      },
+      "incremental_gate": {
+        "pass": true,
+        "reasons": []
+      },
+      "status": "incremental_pass",
+      "portfolio_result": {
+        "statistical_gate": {
+          "pass": true,
+          "reasons": []
+        },
+        "portfolio_gate": {
+          "pass": false,
+          "checks": {
+            "full_annual_within_tolerance": true,
+            "recent_total_within_tolerance": true,
+            "full_sharpe_within_tolerance": true,
+            "recent_sharpe_within_tolerance": true,
+            "full_drawdown_within_tolerance": true,
+            "recent_drawdown_within_tolerance": false,
+            "full_3x_annual_within_tolerance": true,
+            "not_simultaneously_worse_full_and_recent": true
+          },
+          "deltas": {
+            "full_2x_annual_return": 0.0118,
+            "recent_2x_total_return": 0.0092
+          },
+          "tolerances": {
+            "return": 0.01,
+            "sharpe": 0.05,
+            "drawdown": 0.02
+          }
+        },
+        "portfolio": {
+          "factor_ids": [
+            "ext_alt_hs300_cash_flow_stability_4q_low",
+            "ext_alt_hs300_dividend_yield",
+            "ext_alt_hs300_fund_holding_ratio_low",
+            "ext_alt_hs300_idio_vol_40d_low",
+            "ext_alt_hs300_margin_chg_1m_low",
+            "ext_alt_hs300_ocf_margin_4q",
+            "ext_alt_hs300_vol_of_vol_20d_low",
+            "inventory_growth_minus_cogs_growth"
+          ],
+          "scoring": {
+            "ext_alt_hs300_cash_flow_stability_4q_low": 0.125,
+            "ext_alt_hs300_dividend_yield": 0.125,
+            "ext_alt_hs300_fund_holding_ratio_low": 0.125,
+            "ext_alt_hs300_idio_vol_40d_low": 0.125,
+            "ext_alt_hs300_margin_chg_1m_low": 0.125,
+            "ext_alt_hs300_ocf_margin_4q": 0.125,
+            "ext_alt_hs300_vol_of_vol_20d_low": 0.125,
+            "inventory_growth_minus_cogs_growth": 0.125
+          },
+          "directions": {
+            "ext_alt_hs300_cash_flow_stability_4q_low": "high",
+            "ext_alt_hs300_dividend_yield": "high",
+            "ext_alt_hs300_fund_holding_ratio_low": "high",
+            "ext_alt_hs300_idio_vol_40d_low": "high",
+            "ext_alt_hs300_margin_chg_1m_low": "high",
+            "ext_alt_hs300_ocf_margin_4q": "high",
+            "ext_alt_hs300_vol_of_vol_20d_low": "high",
+            "inventory_growth_minus_cogs_growth": "low"
+          },
+          "full_2x": {
+            "label": "r384_inventory_growth_minus_cogs_growth_full_2x",
+            "start": "2021-06-01",
+            "end": "2026-11-05",
+            "cost": "2x",
+            "max_positions": 20,
+            "error": null,
+            "stats": {
+              "total_return": 0.3566,
+              "annual_return": 0.0601,
+              "max_drawdown": -0.1474,
+              "sharpe": 0.59,
+              "sortino": 0.87,
+              "win_rate": 0.5239,
+              "profit_factor": 1.36,
+              "n_trades": 544.0,
+              "avg_exposure": 0.5441,
+              "worst": -0.1248
+            },
+            "trade_count": 544,
+            "benchmark_return": 0.00919
+          },
+          "full_3x": {
+            "label": "r384_inventory_growth_minus_cogs_growth_full_3x",
+            "start": "2021-06-01",
+            "end": "2026-11-05",
+            "cost": "3x",
+            "max_positions": 20,
+            "error": null,
+            "stats": {
+              "total_return": 0.307,
+              "annual_return": 0.0526,
+              "max_drawdown": -0.1513,
+              "sharpe": 0.52,
+              "sortino": 0.77,
+              "win_rate": 0.5165,
+              "profit_factor": 1.34,
+              "n_trades": 544.0,
+              "avg_exposure": 0.5436,
+              "worst": -0.126
+            },
+            "trade_count": 544,
+            "benchmark_return": 0.00919
+          },
+          "recent_2x": {
+            "label": "r384_inventory_growth_minus_cogs_growth_recent_2x",
+            "start": "2025-10-14",
+            "end": "2026-11-05",
+            "cost": "2x",
+            "max_positions": 20,
+            "error": null,
+            "stats": {
+              "total_return": 0.0332,
+              "annual_return": 0.0324,
+              "max_drawdown": -0.1684,
+              "sharpe": 0.32,
+              "sortino": 0.49,
+              "win_rate": 0.4603,
+              "profit_factor": 1.35,
+              "n_trades": 189.0,
+              "avg_exposure": 0.9429,
+              "worst": -0.1098
+            },
+            "trade_count": 189,
+            "benchmark_return": -0.053607
+          },
+          "weak_2x": {
+            "label": "r384_inventory_growth_minus_cogs_growth_weak_2x",
+            "start": "2025-07-01",
+            "end": "2026-06-30",
+            "cost": "2x",
+            "max_positions": 20,
+            "error": null,
+            "stats": {
+              "total_return": -0.0055,
+              "annual_return": -0.0057,
+              "max_drawdown": -0.1277,
+              "sharpe": 0.02,
+              "sortino": 0.02,
+              "win_rate": 0.4249,
+              "profit_factor": 1.37,
+              "n_trades": 193.0,
+              "avg_exposure": 0.9736,
+              "worst": -0.101
+            },
+            "trade_count": 193,
+            "benchmark_return": 0.184123
+          }
+        },
+        "status": "portfolio_rejected"
+      }
+    }
+  ],
+  "portfolio": {
+    "run": true,
+    "reason": null,
+    "baseline": {
+      "full_2x": {
+        "label": "p8_baseline_full_2x",
+        "start": "2021-06-01",
+        "end": "2026-11-05",
+        "cost": "2x",
+        "max_positions": 20,
+        "error": null,
+        "stats": {
+          "total_return": 0.2791,
+          "annual_return": 0.0483,
+          "max_drawdown": -0.1475,
+          "sharpe": 0.45,
+          "sortino": 0.63,
+          "win_rate": 0.4765,
+          "profit_factor": 1.39,
+          "n_trades": 745.0,
+          "avg_exposure": 0.7365,
+          "worst": -0.1301
+        },
+        "trade_count": 745,
+        "benchmark_return": 0.00919
+      },
+      "full_3x": {
+        "label": "p8_baseline_full_3x",
+        "start": "2021-06-01",
+        "end": "2026-11-05",
+        "cost": "3x",
+        "max_positions": 20,
+        "error": null,
+        "stats": {
+          "total_return": 0.2107,
+          "annual_return": 0.0373,
+          "max_drawdown": -0.161,
+          "sharpe": 0.36,
+          "sortino": 0.51,
+          "win_rate": 0.4725,
+          "profit_factor": 1.35,
+          "n_trades": 745.0,
+          "avg_exposure": 0.7361,
+          "worst": -0.1313
+        },
+        "trade_count": 745,
+        "benchmark_return": 0.00919
+      },
+      "recent_2x": {
+        "label": "p8_baseline_recent_2x",
+        "start": "2025-10-14",
+        "end": "2026-11-05",
+        "cost": "2x",
+        "max_positions": 20,
+        "error": null,
+        "stats": {
+          "total_return": 0.024,
+          "annual_return": 0.0234,
+          "max_drawdown": -0.1423,
+          "sharpe": 0.26,
+          "sortino": 0.38,
+          "win_rate": 0.4598,
+          "profit_factor": 1.34,
+          "n_trades": 174.0,
+          "avg_exposure": 0.8933,
+          "worst": -0.1248
+        },
+        "trade_count": 174,
+        "benchmark_return": -0.053607
+      },
+      "weak_2x": {
+        "label": "p8_baseline_weak_2x",
+        "start": "2025-07-01",
+        "end": "2026-06-30",
+        "cost": "2x",
+        "max_positions": 20,
+        "error": null,
+        "stats": {
+          "total_return": -0.0107,
+          "annual_return": -0.0112,
+          "max_drawdown": -0.1365,
+          "sharpe": -0.03,
+          "sortino": -0.05,
+          "win_rate": 0.4062,
+          "profit_factor": 1.46,
+          "n_trades": 192.0,
+          "avg_exposure": 0.9697,
+          "worst": -0.083
+        },
+        "trade_count": 192,
+        "benchmark_return": 0.184123
+      }
+    },
+    "leave_one_out": {
+      "ext_alt_hs300_cash_flow_stability_4q_low": {
+        "full": {
+          "label": "drop_ext_alt_hs300_cash_flow_stability_4q_low_full_2x",
+          "start": "2021-06-01",
+          "end": "2026-11-05",
+          "cost": "2x",
+          "max_positions": 20,
+          "error": null,
+          "stats": {
+            "total_return": 0.218,
+            "annual_return": 0.0385,
+            "max_drawdown": -0.1415,
+            "sharpe": 0.47,
+            "sortino": 0.7,
+            "win_rate": 0.4943,
+            "profit_factor": 1.34,
+            "n_trades": 530.0,
+            "avg_exposure": 0.5286,
+            "worst": -0.138
+          },
+          "trade_count": 530,
+          "benchmark_return": 0.00919
+        },
+        "recent": {
+          "label": "drop_ext_alt_hs300_cash_flow_stability_4q_low_recent_2x",
+          "start": "2025-10-14",
+          "end": "2026-11-05",
+          "cost": "2x",
+          "max_positions": 20,
+          "error": null,
+          "stats": {
+            "total_return": 0.0078,
+            "annual_return": 0.0076,
+            "max_drawdown": -0.1408,
+            "sharpe": 0.12,
+            "sortino": 0.18,
+            "win_rate": 0.4819,
+            "profit_factor": 1.14,
+            "n_trades": 166.0,
+            "avg_exposure": 0.8667,
+            "worst": -0.1249
+          },
+          "trade_count": 166,
+          "benchmark_return": -0.053607
+        },
+        "full_marginal_contribution": 0.0611,
+        "recent_marginal_contribution": 0.0162
+      },
+      "ext_alt_hs300_dividend_yield": {
+        "full": {
+          "label": "drop_ext_alt_hs300_dividend_yield_full_2x",
+          "start": "2021-06-01",
+          "end": "2026-11-05",
+          "cost": "2x",
+          "max_positions": 20,
+          "error": null,
+          "stats": {
+            "total_return": 0.3161,
+            "annual_return": 0.054,
+            "max_drawdown": -0.1774,
+            "sharpe": 0.47,
+            "sortino": 0.68,
+            "win_rate": 0.4911,
+            "profit_factor": 1.31,
+            "n_trades": 839.0,
+            "avg_exposure": 0.8098,
+            "worst": -0.115
+          },
+          "trade_count": 839,
+          "benchmark_return": 0.00919
+        },
+        "recent": {
+          "label": "drop_ext_alt_hs300_dividend_yield_recent_2x",
+          "start": "2025-10-14",
+          "end": "2026-11-05",
+          "cost": "2x",
+          "max_positions": 20,
+          "error": null,
+          "stats": {
+            "total_return": 0.0071,
+            "annual_return": 0.0069,
+            "max_drawdown": -0.139,
+            "sharpe": 0.12,
+            "sortino": 0.17,
+            "win_rate": 0.4416,
+            "profit_factor": 1.31,
+            "n_trades": 197.0,
+            "avg_exposure": 0.9439,
+            "worst": -0.1086
+          },
+          "trade_count": 197,
+          "benchmark_return": -0.053607
+        },
+        "full_marginal_contribution": -0.037,
+        "recent_marginal_contribution": 0.0169
+      },
+      "ext_alt_hs300_fund_holding_ratio_low": {
+        "full": {
+          "label": "drop_ext_alt_hs300_fund_holding_ratio_low_full_2x",
+          "start": "2021-06-01",
+          "end": "2026-11-05",
+          "cost": "2x",
+          "max_positions": 20,
+          "error": null,
+          "stats": {
+            "total_return": 0.0689,
+            "annual_return": 0.0128,
+            "max_drawdown": -0.1464,
+            "sharpe": 0.18,
+            "sortino": 0.25,
+            "win_rate": 0.4413,
+            "profit_factor": 1.37,
+            "n_trades": 639.0,
+            "avg_exposure": 0.6229,
+            "worst": -0.1182
+          },
+          "trade_count": 639,
+          "benchmark_return": 0.00919
+        },
+        "recent": {
+          "label": "drop_ext_alt_hs300_fund_holding_ratio_low_recent_2x",
+          "start": "2025-10-14",
+          "end": "2026-11-05",
+          "cost": "2x",
+          "max_positions": 20,
+          "error": null,
+          "stats": {
+            "total_return": -0.0312,
+            "annual_return": -0.0305,
+            "max_drawdown": -0.1808,
+            "sharpe": -0.22,
+            "sortino": -0.31,
+            "win_rate": 0.3988,
+            "profit_factor": 1.34,
+            "n_trades": 173.0,
+            "avg_exposure": 0.8591,
+            "worst": -0.1166
+          },
+          "trade_count": 173,
+          "benchmark_return": -0.053607
+        },
+        "full_marginal_contribution": 0.2102,
+        "recent_marginal_contribution": 0.0552
+      },
+      "ext_alt_hs300_holder_top10_share_chg_yoy": {
+        "full": {
+          "label": "drop_ext_alt_hs300_holder_top10_share_chg_yoy_full_2x",
+          "start": "2021-06-01",
+          "end": "2026-11-05",
+          "cost": "2x",
+          "max_positions": 20,
+          "error": null,
+          "stats": {
+            "total_return": 0.5235,
+            "annual_return": 0.084,
+            "max_drawdown": -0.1386,
+            "sharpe": 0.69,
+            "sortino": 1.02,
+            "win_rate": 0.5197,
+            "profit_factor": 1.36,
+            "n_trades": 814.0,
+            "avg_exposure": 0.813,
+            "worst": -0.1086
+          },
+          "trade_count": 814,
+          "benchmark_return": 0.00919
+        },
+        "recent": {
+          "label": "drop_ext_alt_hs300_holder_top10_share_chg_yoy_recent_2x",
+          "start": "2025-10-14",
+          "end": "2026-11-05",
+          "cost": "2x",
+          "max_positions": 20,
+          "error": null,
+          "stats": {
+            "total_return": 0.0152,
+            "annual_return": 0.0149,
+            "max_drawdown": -0.1462,
+            "sharpe": 0.18,
+            "sortino": 0.27,
+            "win_rate": 0.4603,
+            "profit_factor": 1.28,
+            "n_trades": 189.0,
+            "avg_exposure": 0.9424,
+            "worst": -0.1166
+          },
+          "trade_count": 189,
+          "benchmark_return": -0.053607
+        },
+        "full_marginal_contribution": -0.2444,
+        "recent_marginal_contribution": 0.0088
+      },
+      "ext_alt_hs300_idio_vol_40d_low": {
+        "full": {
+          "label": "drop_ext_alt_hs300_idio_vol_40d_low_full_2x",
+          "start": "2021-06-01",
+          "end": "2026-11-05",
+          "cost": "2x",
+          "max_positions": 20,
+          "error": null,
+          "stats": {
+            "total_return": 0.2942,
+            "annual_return": 0.0506,
+            "max_drawdown": -0.1375,
+            "sharpe": 0.49,
+            "sortino": 0.71,
+            "win_rate": 0.4893,
+            "profit_factor": 1.36,
+            "n_trades": 656.0,
+            "avg_exposure": 0.637,
+            "worst": -0.138
+          },
+          "trade_count": 656,
+          "benchmark_return": 0.00919
+        },
+        "recent": {
+          "label": "drop_ext_alt_hs300_idio_vol_40d_low_recent_2x",
+          "start": "2025-10-14",
+          "end": "2026-11-05",
+          "cost": "2x",
+          "max_positions": 20,
+          "error": null,
+          "stats": {
+            "total_return": 0.0513,
+            "annual_return": 0.0501,
+            "max_drawdown": -0.1615,
+            "sharpe": 0.45,
+            "sortino": 0.69,
+            "win_rate": 0.4824,
+            "profit_factor": 1.33,
+            "n_trades": 170.0,
+            "avg_exposure": 0.8551,
+            "worst": -0.1248
+          },
+          "trade_count": 170,
+          "benchmark_return": -0.053607
+        },
+        "full_marginal_contribution": -0.0151,
+        "recent_marginal_contribution": -0.0273
+      },
+      "ext_alt_hs300_margin_chg_1m_low": {
+        "full": {
+          "label": "drop_ext_alt_hs300_margin_chg_1m_low_full_2x",
+          "start": "2021-06-01",
+          "end": "2026-11-05",
+          "cost": "2x",
+          "max_positions": 20,
+          "error": null,
+          "stats": {
+            "total_return": 0.2884,
+            "annual_return": 0.0497,
+            "max_drawdown": -0.1416,
+            "sharpe": 0.48,
+            "sortino": 0.71,
+            "win_rate": 0.4873,
+            "profit_factor": 1.36,
+            "n_trades": 706.0,
+            "avg_exposure": 0.6997,
+            "worst": -0.1249
+          },
+          "trade_count": 706,
+          "benchmark_return": 0.00919
+        },
+        "recent": {
+          "label": "drop_ext_alt_hs300_margin_chg_1m_low_recent_2x",
+          "start": "2025-10-14",
+          "end": "2026-11-05",
+          "cost": "2x",
+          "max_positions": 20,
+          "error": null,
+          "stats": {
+            "total_return": 0.0287,
+            "annual_return": 0.0281,
+            "max_drawdown": -0.1354,
+            "sharpe": 0.29,
+            "sortino": 0.43,
+            "win_rate": 0.4914,
+            "profit_factor": 1.21,
+            "n_trades": 175.0,
+            "avg_exposure": 0.9021,
+            "worst": -0.1248
+          },
+          "trade_count": 175,
+          "benchmark_return": -0.053607
+        },
+        "full_marginal_contribution": -0.0093,
+        "recent_marginal_contribution": -0.0047
+      },
+      "ext_alt_hs300_ocf_margin_4q": {
+        "full": {
+          "label": "drop_ext_alt_hs300_ocf_margin_4q_full_2x",
+          "start": "2021-06-01",
+          "end": "2026-11-05",
+          "cost": "2x",
+          "max_positions": 20,
+          "error": null,
+          "stats": {
+            "total_return": 0.5043,
+            "annual_return": 0.0813,
+            "max_drawdown": -0.1348,
+            "sharpe": 0.65,
+            "sortino": 0.96,
+            "win_rate": 0.5112,
+            "profit_factor": 1.37,
+            "n_trades": 806.0,
+            "avg_exposure": 0.795,
+            "worst": -0.1106
+          },
+          "trade_count": 806,
+          "benchmark_return": 0.00919
+        },
+        "recent": {
+          "label": "drop_ext_alt_hs300_ocf_margin_4q_recent_2x",
+          "start": "2025-10-14",
+          "end": "2026-11-05",
+          "cost": "2x",
+          "max_positions": 20,
+          "error": null,
+          "stats": {
+            "total_return": 0.0028,
+            "annual_return": 0.0028,
+            "max_drawdown": -0.1687,
+            "sharpe": 0.08,
+            "sortino": 0.12,
+            "win_rate": 0.4479,
+            "profit_factor": 1.26,
+            "n_trades": 192.0,
+            "avg_exposure": 0.9433,
+            "worst": -0.1207
+          },
+          "trade_count": 192,
+          "benchmark_return": -0.053607
+        },
+        "full_marginal_contribution": -0.2252,
+        "recent_marginal_contribution": 0.0212
+      },
+      "ext_alt_hs300_vol_of_vol_20d_low": {
+        "full": {
+          "label": "drop_ext_alt_hs300_vol_of_vol_20d_low_full_2x",
+          "start": "2021-06-01",
+          "end": "2026-11-05",
+          "cost": "2x",
+          "max_positions": 20,
+          "error": null,
+          "stats": {
+            "total_return": 0.2538,
+            "annual_return": 0.0443,
+            "max_drawdown": -0.148,
+            "sharpe": 0.5,
+            "sortino": 0.73,
+            "win_rate": 0.4767,
+            "profit_factor": 1.44,
+            "n_trades": 579.0,
+            "avg_exposure": 0.5792,
+            "worst": -0.1447
+          },
+          "trade_count": 579,
+          "benchmark_return": 0.00919
+        },
+        "recent": {
+          "label": "drop_ext_alt_hs300_vol_of_vol_20d_low_recent_2x",
+          "start": "2025-10-14",
+          "end": "2026-11-05",
+          "cost": "2x",
+          "max_positions": 20,
+          "error": null,
+          "stats": {
+            "total_return": 0.0274,
+            "annual_return": 0.0267,
+            "max_drawdown": -0.1351,
+            "sharpe": 0.29,
+            "sortino": 0.44,
+            "win_rate": 0.472,
+            "profit_factor": 1.29,
+            "n_trades": 161.0,
+            "avg_exposure": 0.8201,
+            "worst": -0.1292
+          },
+          "trade_count": 161,
+          "benchmark_return": -0.053607
+        },
+        "full_marginal_contribution": 0.0253,
+        "recent_marginal_contribution": -0.0034
+      }
+    },
+    "weakest_factor": "ext_alt_hs300_holder_top10_share_chg_yoy",
+    "screen": {
+      "r384_inventory_turnover_improvement_yoy": {
+        "statistical_gate": {
+          "pass": true,
+          "reasons": []
+        },
+        "portfolio_gate": {
+          "pass": false,
+          "checks": {
+            "full_annual_within_tolerance": false,
+            "recent_total_within_tolerance": true,
+            "full_sharpe_within_tolerance": false,
+            "recent_sharpe_within_tolerance": true,
+            "full_drawdown_within_tolerance": true,
+            "recent_drawdown_within_tolerance": true,
+            "full_3x_annual_within_tolerance": false,
+            "not_simultaneously_worse_full_and_recent": true
+          },
+          "deltas": {
+            "full_2x_annual_return": -0.0376,
+            "recent_2x_total_return": 0.0256
+          },
+          "tolerances": {
+            "return": 0.01,
+            "sharpe": 0.05,
+            "drawdown": 0.02
+          }
+        },
+        "portfolio": {
+          "factor_ids": [
+            "ext_alt_hs300_cash_flow_stability_4q_low",
+            "ext_alt_hs300_dividend_yield",
+            "ext_alt_hs300_fund_holding_ratio_low",
+            "ext_alt_hs300_idio_vol_40d_low",
+            "ext_alt_hs300_margin_chg_1m_low",
+            "ext_alt_hs300_ocf_margin_4q",
+            "ext_alt_hs300_vol_of_vol_20d_low",
+            "inventory_turnover_improvement_yoy"
+          ],
+          "scoring": {
+            "ext_alt_hs300_cash_flow_stability_4q_low": 0.125,
+            "ext_alt_hs300_dividend_yield": 0.125,
+            "ext_alt_hs300_fund_holding_ratio_low": 0.125,
+            "ext_alt_hs300_idio_vol_40d_low": 0.125,
+            "ext_alt_hs300_margin_chg_1m_low": 0.125,
+            "ext_alt_hs300_ocf_margin_4q": 0.125,
+            "ext_alt_hs300_vol_of_vol_20d_low": 0.125,
+            "inventory_turnover_improvement_yoy": 0.125
+          },
+          "directions": {
+            "ext_alt_hs300_cash_flow_stability_4q_low": "high",
+            "ext_alt_hs300_dividend_yield": "high",
+            "ext_alt_hs300_fund_holding_ratio_low": "high",
+            "ext_alt_hs300_idio_vol_40d_low": "high",
+            "ext_alt_hs300_margin_chg_1m_low": "high",
+            "ext_alt_hs300_ocf_margin_4q": "high",
+            "ext_alt_hs300_vol_of_vol_20d_low": "high",
+            "inventory_turnover_improvement_yoy": "high"
+          },
+          "full_2x": {
+            "label": "r384_inventory_turnover_improvement_yoy_full_2x",
+            "start": "2021-06-01",
+            "end": "2026-11-05",
+            "cost": "2x",
+            "max_positions": 20,
+            "error": null,
+            "stats": {
+              "total_return": 0.0574,
+              "annual_return": 0.0107,
+              "max_drawdown": -0.1512,
+              "sharpe": 0.16,
+              "sortino": 0.22,
+              "win_rate": 0.471,
+              "profit_factor": 1.22,
+              "n_trades": 569.0,
+              "avg_exposure": 0.5601,
+              "worst": -0.1129
+            },
+            "trade_count": 569,
+            "benchmark_return": 0.00919
+          },
+          "full_3x": {
+            "label": "r384_inventory_turnover_improvement_yoy_full_3x",
+            "start": "2021-06-01",
+            "end": "2026-11-05",
+            "cost": "3x",
+            "max_positions": 20,
+            "error": null,
+            "stats": {
+              "total_return": 0.016,
+              "annual_return": 0.003,
+              "max_drawdown": -0.1553,
+              "sharpe": 0.08,
+              "sortino": 0.11,
+              "win_rate": 0.4675,
+              "profit_factor": 1.18,
+              "n_trades": 569.0,
+              "avg_exposure": 0.5604,
+              "worst": -0.1142
+            },
+            "trade_count": 569,
+            "benchmark_return": 0.00919
+          },
+          "recent_2x": {
+            "label": "r384_inventory_turnover_improvement_yoy_recent_2x",
+            "start": "2025-10-14",
+            "end": "2026-11-05",
+            "cost": "2x",
+            "max_positions": 20,
+            "error": null,
+            "stats": {
+              "total_return": 0.0496,
+              "annual_return": 0.0484,
+              "max_drawdown": -0.1551,
+              "sharpe": 0.44,
+              "sortino": 0.67,
+              "win_rate": 0.459,
+              "profit_factor": 1.46,
+              "n_trades": 183.0,
+              "avg_exposure": 0.9395,
+              "worst": -0.1207
+            },
+            "trade_count": 183,
+            "benchmark_return": -0.053607
+          },
+          "weak_2x": {
+            "label": "r384_inventory_turnover_improvement_yoy_weak_2x",
+            "start": "2025-07-01",
+            "end": "2026-06-30",
+            "cost": "2x",
+            "max_positions": 20,
+            "error": null,
+            "stats": {
+              "total_return": -0.025,
+              "annual_return": -0.0261,
+              "max_drawdown": -0.1401,
+              "sharpe": -0.16,
+              "sortino": -0.23,
+              "win_rate": 0.4368,
+              "profit_factor": 1.21,
+              "n_trades": 190.0,
+              "avg_exposure": 0.9746,
+              "worst": -0.0867
+            },
+            "trade_count": 190,
+            "benchmark_return": 0.184123
+          }
+        },
+        "status": "portfolio_rejected"
+      },
+      "r384_inventory_growth_minus_cogs_growth": {
+        "statistical_gate": {
+          "pass": true,
+          "reasons": []
+        },
+        "portfolio_gate": {
+          "pass": false,
+          "checks": {
+            "full_annual_within_tolerance": true,
+            "recent_total_within_tolerance": true,
+            "full_sharpe_within_tolerance": true,
+            "recent_sharpe_within_tolerance": true,
+            "full_drawdown_within_tolerance": true,
+            "recent_drawdown_within_tolerance": false,
+            "full_3x_annual_within_tolerance": true,
+            "not_simultaneously_worse_full_and_recent": true
+          },
+          "deltas": {
+            "full_2x_annual_return": 0.0118,
+            "recent_2x_total_return": 0.0092
+          },
+          "tolerances": {
+            "return": 0.01,
+            "sharpe": 0.05,
+            "drawdown": 0.02
+          }
+        },
+        "portfolio": {
+          "factor_ids": [
+            "ext_alt_hs300_cash_flow_stability_4q_low",
+            "ext_alt_hs300_dividend_yield",
+            "ext_alt_hs300_fund_holding_ratio_low",
+            "ext_alt_hs300_idio_vol_40d_low",
+            "ext_alt_hs300_margin_chg_1m_low",
+            "ext_alt_hs300_ocf_margin_4q",
+            "ext_alt_hs300_vol_of_vol_20d_low",
+            "inventory_growth_minus_cogs_growth"
+          ],
+          "scoring": {
+            "ext_alt_hs300_cash_flow_stability_4q_low": 0.125,
+            "ext_alt_hs300_dividend_yield": 0.125,
+            "ext_alt_hs300_fund_holding_ratio_low": 0.125,
+            "ext_alt_hs300_idio_vol_40d_low": 0.125,
+            "ext_alt_hs300_margin_chg_1m_low": 0.125,
+            "ext_alt_hs300_ocf_margin_4q": 0.125,
+            "ext_alt_hs300_vol_of_vol_20d_low": 0.125,
+            "inventory_growth_minus_cogs_growth": 0.125
+          },
+          "directions": {
+            "ext_alt_hs300_cash_flow_stability_4q_low": "high",
+            "ext_alt_hs300_dividend_yield": "high",
+            "ext_alt_hs300_fund_holding_ratio_low": "high",
+            "ext_alt_hs300_idio_vol_40d_low": "high",
+            "ext_alt_hs300_margin_chg_1m_low": "high",
+            "ext_alt_hs300_ocf_margin_4q": "high",
+            "ext_alt_hs300_vol_of_vol_20d_low": "high",
+            "inventory_growth_minus_cogs_growth": "low"
+          },
+          "full_2x": {
+            "label": "r384_inventory_growth_minus_cogs_growth_full_2x",
+            "start": "2021-06-01",
+            "end": "2026-11-05",
+            "cost": "2x",
+            "max_positions": 20,
+            "error": null,
+            "stats": {
+              "total_return": 0.3566,
+              "annual_return": 0.0601,
+              "max_drawdown": -0.1474,
+              "sharpe": 0.59,
+              "sortino": 0.87,
+              "win_rate": 0.5239,
+              "profit_factor": 1.36,
+              "n_trades": 544.0,
+              "avg_exposure": 0.5441,
+              "worst": -0.1248
+            },
+            "trade_count": 544,
+            "benchmark_return": 0.00919
+          },
+          "full_3x": {
+            "label": "r384_inventory_growth_minus_cogs_growth_full_3x",
+            "start": "2021-06-01",
+            "end": "2026-11-05",
+            "cost": "3x",
+            "max_positions": 20,
+            "error": null,
+            "stats": {
+              "total_return": 0.307,
+              "annual_return": 0.0526,
+              "max_drawdown": -0.1513,
+              "sharpe": 0.52,
+              "sortino": 0.77,
+              "win_rate": 0.5165,
+              "profit_factor": 1.34,
+              "n_trades": 544.0,
+              "avg_exposure": 0.5436,
+              "worst": -0.126
+            },
+            "trade_count": 544,
+            "benchmark_return": 0.00919
+          },
+          "recent_2x": {
+            "label": "r384_inventory_growth_minus_cogs_growth_recent_2x",
+            "start": "2025-10-14",
+            "end": "2026-11-05",
+            "cost": "2x",
+            "max_positions": 20,
+            "error": null,
+            "stats": {
+              "total_return": 0.0332,
+              "annual_return": 0.0324,
+              "max_drawdown": -0.1684,
+              "sharpe": 0.32,
+              "sortino": 0.49,
+              "win_rate": 0.4603,
+              "profit_factor": 1.35,
+              "n_trades": 189.0,
+              "avg_exposure": 0.9429,
+              "worst": -0.1098
+            },
+            "trade_count": 189,
+            "benchmark_return": -0.053607
+          },
+          "weak_2x": {
+            "label": "r384_inventory_growth_minus_cogs_growth_weak_2x",
+            "start": "2025-07-01",
+            "end": "2026-06-30",
+            "cost": "2x",
+            "max_positions": 20,
+            "error": null,
+            "stats": {
+              "total_return": -0.0055,
+              "annual_return": -0.0057,
+              "max_drawdown": -0.1277,
+              "sharpe": 0.02,
+              "sortino": 0.02,
+              "win_rate": 0.4249,
+              "profit_factor": 1.37,
+              "n_trades": 193.0,
+              "avg_exposure": 0.9736,
+              "worst": -0.101
+            },
+            "trade_count": 193,
+            "benchmark_return": 0.184123
+          }
+        },
+        "status": "portfolio_rejected"
+      }
+    },
+    "passing_candidates": [],
+    "final": null,
+    "ablation": null,
+    "ablation_gate": null,
+    "rolling_year": null,
+    "cost_warning_5x": null
+  },
+  "negative_knowledge": [
+    {
+      "candidate_key": "r384_inventory_turnover_improvement_yoy",
+      "factor_id": "inventory_turnover_improvement_yoy",
+      "status": "incremental_pass",
+      "portfolio_status": "portfolio_rejected",
+      "reasons": [
+        "portfolio_check_failed:full_3x_annual_within_tolerance",
+        "portfolio_check_failed:full_annual_within_tolerance",
+        "portfolio_check_failed:full_sharpe_within_tolerance",
+        "portfolio_rejected"
+      ]
+    },
+    {
+      "candidate_key": "r384_receivable_turnover_improvement_yoy",
+      "factor_id": "receivable_turnover_improvement_yoy",
+      "status": "horizon_rejected",
+      "portfolio_status": null,
+      "reasons": [
+        "fewer_than_two_neutralized_confirmations",
+        "horizon_rejected",
+        "marginal_ic_p_above_0_10",
+        "marginal_ic_q_above_0_10"
+      ]
+    },
+    {
+      "candidate_key": "r384_receivable_growth_minus_revenue_growth",
+      "factor_id": "receivable_growth_minus_revenue_growth",
+      "status": "horizon_rejected",
+      "portfolio_status": null,
+      "reasons": [
+        "fewer_than_two_neutralized_confirmations",
+        "horizon_rejected",
+        "marginal_ic_p_above_0_10",
+        "marginal_ic_q_above_0_10"
+      ]
+    },
+    {
+      "candidate_key": "r384_inventory_growth_minus_cogs_growth",
+      "factor_id": "inventory_growth_minus_cogs_growth",
+      "status": "incremental_pass",
+      "portfolio_status": "portfolio_rejected",
+      "reasons": [
+        "portfolio_check_failed:recent_drawdown_within_tolerance",
+        "portfolio_rejected"
+      ]
+    }
+  ],
+  "decision": {
+    "status": "no_portfolio_candidate",
+    "factor_ids": [],
+    "incremental_pass_factor_ids": [
+      "inventory_turnover_improvement_yoy",
+      "inventory_growth_minus_cogs_growth"
+    ],
+    "active_version": null,
+    "paper_target_generated": false,
+    "orders_generated": false,
+    "production_enabled": false
+  },
+  "caveats": [
+    "Current HS300 membership is applied to history; survivorship bias remains.",
+    "Industry classification is the current snapshot, not historical PIT.",
+    "A standalone IC is not enough; the 80% base + 20% candidate incremental gate is mandatory.",
+    "No leverage, paper target, order, or production activation is produced.",
+    "The four operating-efficiency improvement factors are not silently added to the strategy when incremental evidence fails."
+  ],
+  "research_id": "sha256:5335ecd07782d763d96827527bd0b6ef15ad5e122b5fe3dc67e1e6b13069b48a",
+  "generated_at": "2026-11-20T21:39:24Z"
+}

@@ -74,6 +74,26 @@ DERIVED_FUNDAMENTAL_FACTORS: dict[str, dict[str, Any]] = {
         "price_ratio": False,
         "announce_column": "_announce_receivable_turnover_ttm",
     },
+    "inventory_turnover_improvement_yoy": {
+        "column": "inventory_turnover_improvement_yoy",
+        "price_ratio": False,
+        "announce_column": "_announce_inventory_turnover_improvement_yoy",
+    },
+    "receivable_turnover_improvement_yoy": {
+        "column": "receivable_turnover_improvement_yoy",
+        "price_ratio": False,
+        "announce_column": "_announce_receivable_turnover_improvement_yoy",
+    },
+    "receivable_growth_minus_revenue_growth": {
+        "column": "receivable_growth_minus_revenue_growth",
+        "price_ratio": False,
+        "announce_column": "_announce_receivable_growth_minus_revenue_growth",
+    },
+    "inventory_growth_minus_cogs_growth": {
+        "column": "inventory_growth_minus_cogs_growth",
+        "price_ratio": False,
+        "announce_column": "_announce_inventory_growth_minus_cogs_growth",
+    },
 }
 
 FUNDAMENTAL_FACTORS: dict[str, dict[str, Any]] = {
@@ -284,9 +304,10 @@ def _quarterly_flow(column: str) -> pl.Expr:
 
 
 def _derive_ttm_factors(snapshot: pl.DataFrame) -> pl.DataFrame:
-    """在四表并集上计算 TTM 现金流、应计、核心利润与营运效率因子。"""
+    """在四表并集上计算 TTM 与营运效率水平和改善因子。"""
     period_index = pl.col("period_end").dt.year() * 4 + pl.col("period_end").dt.quarter()
     lag_four_consecutive = (period_index - period_index.shift(4).over("symbol")) == 4
+    lag_eight_consecutive = (period_index - period_index.shift(8).over("symbol")) == 8
     q_net_income = _quarterly_flow("net_income")
     q_ocf = _quarterly_flow("net_operating_cash_flow")
     q_operating_profit = _quarterly_flow("operating_profit")
@@ -315,18 +336,33 @@ def _derive_ttm_factors(snapshot: pl.DataFrame) -> pl.DataFrame:
         .then(pl.col("accounts_receivable").shift(4).over("symbol"))
         .otherwise(None)
         .alias("_receivable_lag4"),
+        pl.when(lag_eight_consecutive)
+        .then(pl.col("_announce_balance").shift(8).over("symbol"))
+        .otherwise(None)
+        .alias("_announce_balance_lag8"),
         pl.when(lag_four_consecutive)
         .then(pl.col("_announce_balance").shift(4).over("symbol"))
         .otherwise(None)
         .alias("_announce_balance_lag4"),
-        pl.col("_announce_income").shift(1).over("symbol").alias("_announce_income_lag1"),
-        pl.col("_announce_income").shift(2).over("symbol").alias("_announce_income_lag2"),
-        pl.col("_announce_income").shift(3).over("symbol").alias("_announce_income_lag3"),
+        *[
+            pl.col("_announce_income").shift(lag).over("symbol").alias(
+                f"_announce_income_lag{lag}"
+            )
+            for lag in range(1, 8)
+        ],
     ]).with_columns([
         ((pl.col("inventory") + pl.col("_inventory_lag4")) / 2.0).alias("_inventory_avg4"),
         ((pl.col("accounts_receivable") + pl.col("_receivable_lag4")) / 2.0).alias("_receivable_avg4"),
+        pl.when(lag_four_consecutive)
+        .then(pl.col("_ttm_income_revenue").shift(4).over("symbol"))
+        .otherwise(None)
+        .alias("_ttm_income_revenue_lag4"),
+        pl.when(lag_four_consecutive)
+        .then(pl.col("_ttm_income_operating_costs").shift(4).over("symbol"))
+        .otherwise(None)
+        .alias("_ttm_income_operating_costs_lag4"),
     ])
-    return enriched.with_columns([
+    enriched = enriched.with_columns([
         (pl.col("_ttm_net_income").is_not_null() & pl.col("_ttm_ocf").is_not_null()).alias("_ttm_complete"),
         pl.when(pl.col("_ttm_net_income") > 0)
         .then(pl.col("_ttm_ocf") / pl.col("_ttm_net_income"))
@@ -360,26 +396,96 @@ def _derive_ttm_factors(snapshot: pl.DataFrame) -> pl.DataFrame:
         .then(pl.col("_ttm_income_revenue") / pl.col("_receivable_avg4"))
         .otherwise(None)
         .alias("receivable_turnover_ttm"),
+    ]).with_columns([
+        pl.when(lag_four_consecutive)
+        .then(pl.col("inventory_turnover_ttm").shift(4).over("symbol"))
+        .otherwise(None)
+        .alias("_inventory_turnover_lag4"),
+        pl.when(lag_four_consecutive)
+        .then(pl.col("receivable_turnover_ttm").shift(4).over("symbol"))
+        .otherwise(None)
+        .alias("_receivable_turnover_lag4"),
+    ]).with_columns([
+        pl.when(
+            (pl.col("inventory_turnover_ttm") > 0)
+            & (pl.col("_inventory_turnover_lag4") > 0)
+        )
+        .then((pl.col("inventory_turnover_ttm") / pl.col("_inventory_turnover_lag4")).log())
+        .otherwise(None)
+        .alias("inventory_turnover_improvement_yoy"),
+        pl.when(
+            (pl.col("receivable_turnover_ttm") > 0)
+            & (pl.col("_receivable_turnover_lag4") > 0)
+        )
+        .then((pl.col("receivable_turnover_ttm") / pl.col("_receivable_turnover_lag4")).log())
+        .otherwise(None)
+        .alias("receivable_turnover_improvement_yoy"),
+        pl.when(
+            (pl.col("accounts_receivable") > 0)
+            & (pl.col("_receivable_lag4") > 0)
+            & (pl.col("_ttm_income_revenue") > 0)
+            & (pl.col("_ttm_income_revenue_lag4") > 0)
+        )
+        .then(
+            (pl.col("accounts_receivable") / pl.col("_receivable_lag4")).log()
+            - (pl.col("_ttm_income_revenue") / pl.col("_ttm_income_revenue_lag4")).log()
+        )
+        .otherwise(None)
+        .alias("receivable_growth_minus_revenue_growth"),
+        pl.when(
+            (pl.col("inventory") > 0)
+            & (pl.col("_inventory_lag4") > 0)
+            & (pl.col("_ttm_income_operating_costs") > 0)
+            & (pl.col("_ttm_income_operating_costs_lag4") > 0)
+        )
+        .then(
+            (pl.col("inventory") / pl.col("_inventory_lag4")).log()
+            - (
+                pl.col("_ttm_income_operating_costs")
+                / pl.col("_ttm_income_operating_costs_lag4")
+            ).log()
+        )
+        .otherwise(None)
+        .alias("inventory_growth_minus_cogs_growth"),
         _rowwise_max_dates("_announce_metrics", "_announce_cash").alias("_announce_ocf_ni"),
         _rowwise_max_dates("_announce_metrics", "_announce_cash", "_announce_balance").alias("_announce_accrual"),
         _rowwise_max_dates("_announce_cash", "_announce_balance").alias("_announce_ocf_debt"),
         pl.col("_announce_income").alias("_announce_core_earnings"),
         _rowwise_max_dates(
             "_announce_balance", "_announce_balance_lag4", "_announce_income",
-            "_announce_income_lag1", "_announce_income_lag2", "_announce_income_lag3",
+            *[f"_announce_income_lag{lag}" for lag in range(1, 4)],
         ).alias("_announce_inventory_turnover_ttm"),
         _rowwise_max_dates(
             "_announce_balance", "_announce_balance_lag4", "_announce_income",
-            "_announce_income_lag1", "_announce_income_lag2", "_announce_income_lag3",
+            *[f"_announce_income_lag{lag}" for lag in range(1, 4)],
         ).alias("_announce_receivable_turnover_ttm"),
-    ]).drop([
+        _rowwise_max_dates(
+            "_announce_balance", "_announce_balance_lag4", "_announce_balance_lag8",
+            "_announce_income", *[f"_announce_income_lag{lag}" for lag in range(1, 8)],
+        ).alias("_announce_inventory_turnover_improvement_yoy"),
+        _rowwise_max_dates(
+            "_announce_balance", "_announce_balance_lag4", "_announce_balance_lag8",
+            "_announce_income", *[f"_announce_income_lag{lag}" for lag in range(1, 8)],
+        ).alias("_announce_receivable_turnover_improvement_yoy"),
+        _rowwise_max_dates(
+            "_announce_balance", "_announce_balance_lag4",
+            "_announce_income", *[f"_announce_income_lag{lag}" for lag in range(1, 8)],
+        ).alias("_announce_receivable_growth_minus_revenue_growth"),
+        _rowwise_max_dates(
+            "_announce_balance", "_announce_balance_lag4",
+            "_announce_income", *[f"_announce_income_lag{lag}" for lag in range(1, 8)],
+        ).alias("_announce_inventory_growth_minus_cogs_growth"),
+    ])
+    return enriched.drop([
         "_q_net_income", "_q_ocf", "_q_operating_profit", "_q_total_profit",
         "_q_income_revenue", "_q_income_operating_costs",
         "_ttm_net_income", "_ttm_ocf", "_ttm_operating_profit", "_ttm_total_profit",
         "_ttm_income_revenue", "_ttm_income_operating_costs",
+        "_ttm_income_revenue_lag4", "_ttm_income_operating_costs_lag4",
         "_inventory_lag4", "_receivable_lag4", "_inventory_avg4", "_receivable_avg4",
-        "_announce_balance_lag4", "_announce_income_lag1", "_announce_income_lag2",
-        "_announce_income_lag3",
+        "_inventory_turnover_lag4", "_receivable_turnover_lag4",
+        "_announce_balance_lag4", "_announce_balance_lag8",
+        *[f"_announce_income_lag{lag}" for lag in range(1, 8)],
     ])
 
 def load_fundamental_snapshot(data_dir: Path | None) -> pl.DataFrame | None:
@@ -471,9 +577,16 @@ def load_fundamental_snapshot(data_dir: Path | None) -> pl.DataFrame | None:
         "_announce_debt_ratio", "_announce_ocf_ni", "_announce_accrual", "_announce_ocf_debt",
         "_announce_core_earnings",
         "_announce_inventory_turnover_ttm", "_announce_receivable_turnover_ttm",
+        "_announce_inventory_turnover_improvement_yoy",
+        "_announce_receivable_turnover_improvement_yoy",
+        "_announce_receivable_growth_minus_revenue_growth",
+        "_announce_inventory_growth_minus_cogs_growth",
         *sorted({spec["column"] for spec in BASE_FUNDAMENTAL_FACTORS.values()}),
         "ocf_ni", "accrual", "ocf_debt", "core_earnings_ratio",
-        "inventory_turnover_ttm", "receivable_turnover_ttm", "_ttm_complete",
+        "inventory_turnover_ttm", "receivable_turnover_ttm",
+        "inventory_turnover_improvement_yoy", "receivable_turnover_improvement_yoy",
+        "receivable_growth_minus_revenue_growth", "inventory_growth_minus_cogs_growth",
+        "_ttm_complete",
     ]
     return snapshot.select(keep).sort(["symbol", "period_end"])
 

@@ -536,3 +536,253 @@ def test_derived_names_are_registered():
     from app.backtest.factor import FACTOR_COLUMNS
 
     assert {item["id"] for item in FACTOR_COLUMNS} >= DERIVED_FUNDAMENTAL_FACTOR_NAMES
+
+
+R384_PERIODS = [
+    date(2022, 3, 31), date(2022, 6, 30), date(2022, 9, 30), date(2022, 12, 31),
+    date(2023, 3, 31), date(2023, 6, 30), date(2023, 9, 30), date(2023, 12, 31),
+    date(2024, 3, 31),
+]
+R384_METRICS_ANNOUNCE = [
+    date(2022, 4, 27), date(2022, 8, 29), date(2022, 10, 29), date(2023, 4, 27),
+    date(2023, 4, 27), date(2023, 8, 29), date(2023, 10, 29), date(2024, 4, 27),
+    date(2024, 4, 27),
+]
+R384_BALANCE_ANNOUNCE = [
+    date(2022, 4, 25), date(2022, 8, 25), date(2022, 10, 25), date(2023, 4, 25),
+    date(2023, 4, 25), date(2023, 8, 25), date(2023, 10, 25), date(2024, 4, 25),
+    date(2024, 4, 28),
+]
+R384_INCOME_ANNOUNCE = [
+    date(2022, 4, 25), date(2022, 8, 25), date(2022, 10, 25), date(2023, 4, 25),
+    date(2023, 4, 25), date(2023, 8, 25), date(2023, 10, 25), date(2024, 4, 25),
+    date(2024, 4, 30),
+]
+
+
+def _improvement_metrics_frame() -> pl.DataFrame:
+    return pl.DataFrame({
+        "symbol": ["600000.SH"] * len(R384_PERIODS),
+        "period_end": [p.isoformat() for p in R384_PERIODS],
+        "announce_date": [d.isoformat() for d in R384_METRICS_ANNOUNCE],
+        "bps": [5.0] * len(R384_PERIODS),
+        "roe": [10.0] * len(R384_PERIODS),
+        "gross_margin": [30.0] * len(R384_PERIODS),
+        "net_margin": [10.0] * len(R384_PERIODS),
+        "revenue_yoy": [8.0] * len(R384_PERIODS),
+        "net_income_yoy": [6.0] * len(R384_PERIODS),
+        "debt_to_asset_ratio": [40.0] * len(R384_PERIODS),
+        "revenue": [80.0, 170.0, 270.0, 380.0, 120.0, 250.0, 390.0, 540.0, 160.0],
+        "net_income": [8.0, 17.0, 27.0, 38.0, 12.0, 25.0, 39.0, 54.0, 16.0],
+    })
+
+
+def _improvement_balance_frame() -> pl.DataFrame:
+    return pl.DataFrame({
+        "symbol": ["600000.SH"] * len(R384_PERIODS),
+        "period_end": [p.isoformat() for p in R384_PERIODS],
+        "announce_date": [d.isoformat() for d in R384_BALANCE_ANNOUNCE],
+        "total_assets": [1000.0] * len(R384_PERIODS),
+        "total_liabilities": [400.0] * len(R384_PERIODS),
+        "total_equity": [600.0] * len(R384_PERIODS),
+        "debt_to_asset_ratio": [40.0] * len(R384_PERIODS),
+        "inventory": [120.0, 115.0, 110.0, 105.0, 100.0, 110.0, 120.0, 125.0, 130.0],
+        "accounts_receivable": [120.0, 130.0, 140.0, 150.0, 160.0, 175.0, 190.0, 205.0, 220.0],
+    })
+
+
+def _improvement_income_frame() -> pl.DataFrame:
+    return pl.DataFrame({
+        "symbol": ["600000.SH"] * len(R384_PERIODS),
+        "period_end": [p.isoformat() for p in R384_PERIODS],
+        "announce_date": [d.isoformat() for d in R384_INCOME_ANNOUNCE],
+        "operating_profit": [9.0, 19.0, 29.0, 39.0, 10.0, 20.0, 30.0, 40.0, 11.0],
+        "total_profit": [10.0, 21.0, 32.0, 43.0, 11.0, 22.0, 33.0, 44.0, 12.0],
+        "revenue": [80.0, 170.0, 270.0, 380.0, 120.0, 250.0, 390.0, 540.0, 160.0],
+        "operating_costs": [55.0, 115.0, 180.0, 250.0, 75.0, 155.0, 240.0, 330.0, 95.0],
+    })
+
+
+def _improvement_cash_frame() -> pl.DataFrame:
+    return pl.DataFrame({
+        "symbol": ["600000.SH"] * len(R384_PERIODS),
+        "period_end": [p.isoformat() for p in R384_PERIODS],
+        "announce_date": [d.isoformat() for d in R384_BALANCE_ANNOUNCE],
+        "net_operating_cash_flow": [8.0, 18.0, 28.0, 40.0, 10.0, 22.0, 34.0, 46.0, 12.0],
+    })
+
+
+def test_improvement_factors_require_nine_balance_quarters_and_eight_income_quarters(
+    tmp_path: Path,
+) -> None:
+    _write_tables(
+        tmp_path,
+        metrics=_improvement_metrics_frame(),
+        balance=_improvement_balance_frame(),
+        cash=_improvement_cash_frame(),
+        income=_improvement_income_frame(),
+    )
+    snapshot = load_fundamental_snapshot(tmp_path)
+    assert snapshot is not None
+    row = snapshot.filter(pl.col("period_end") == date(2024, 3, 31)).row(
+        0, named=True
+    )
+
+    np.testing.assert_allclose(
+        row["inventory_turnover_improvement_yoy"],
+        np.log((350.0 / 115.0) / (270.0 / 110.0)),
+        rtol=1e-12,
+    )
+    np.testing.assert_allclose(
+        row["receivable_turnover_improvement_yoy"],
+        np.log((580.0 / 190.0) / (420.0 / 140.0)),
+        rtol=1e-12,
+    )
+    np.testing.assert_allclose(
+        row["receivable_growth_minus_revenue_growth"],
+        np.log(220.0 / 160.0) - np.log(580.0 / 420.0),
+        rtol=1e-12,
+    )
+    np.testing.assert_allclose(
+        row["inventory_growth_minus_cogs_growth"],
+        np.log(130.0 / 100.0) - np.log(350.0 / 270.0),
+        rtol=1e-12,
+    )
+    assert row["_announce_inventory_turnover_improvement_yoy"] == date(2024, 4, 30)
+    assert row["_announce_receivable_turnover_improvement_yoy"] == date(2024, 4, 30)
+    assert row["_announce_receivable_growth_minus_revenue_growth"] == date(2024, 4, 30)
+    assert row["_announce_inventory_growth_minus_cogs_growth"] == date(2024, 4, 30)
+
+
+def test_improvement_factors_fail_closed_on_gaps_and_nonpositive_inputs(
+    tmp_path: Path,
+) -> None:
+    gap_root = tmp_path / "gap"
+    _write_tables(
+        gap_root,
+        metrics=_improvement_metrics_frame(),
+        balance=_improvement_balance_frame(),
+        cash=_improvement_cash_frame(),
+        income=_improvement_income_frame().filter(
+            pl.col("period_end") != "2023-09-30"
+        ),
+    )
+    gap = load_fundamental_snapshot(gap_root)
+    assert gap is not None
+    gap_row = gap.filter(pl.col("period_end") == date(2024, 3, 31)).row(0, named=True)
+    assert gap_row["inventory_turnover_improvement_yoy"] is None
+    assert gap_row["receivable_turnover_improvement_yoy"] is None
+    assert gap_row["receivable_growth_minus_revenue_growth"] is None
+    assert gap_row["inventory_growth_minus_cogs_growth"] is None
+
+    zero_root = tmp_path / "zero"
+    balance = _improvement_balance_frame().with_columns(
+        pl.when(pl.col("period_end") == "2024-03-31")
+        .then(pl.lit(0.0))
+        .otherwise(pl.col("inventory"))
+        .alias("inventory")
+    )
+    _write_tables(
+        zero_root,
+        metrics=_improvement_metrics_frame(),
+        balance=balance,
+        cash=_improvement_cash_frame(),
+        income=_improvement_income_frame(),
+    )
+    zero = load_fundamental_snapshot(zero_root)
+    assert zero is not None
+    zero_row = zero.filter(pl.col("period_end") == date(2024, 3, 31)).row(0, named=True)
+    assert zero_row["inventory_turnover_improvement_yoy"] is None
+    assert zero_row["inventory_growth_minus_cogs_growth"] is None
+    assert zero_row["receivable_turnover_improvement_yoy"] is not None
+    assert zero_row["receivable_growth_minus_revenue_growth"] is not None
+
+
+def test_improvement_factors_use_independent_pit_and_matrix_path(tmp_path: Path) -> None:
+    _write_tables(
+        tmp_path,
+        metrics=_improvement_metrics_frame(),
+        balance=_improvement_balance_frame(),
+        cash=_improvement_cash_frame(),
+        income=_improvement_income_frame(),
+    )
+    snapshot = load_fundamental_snapshot(tmp_path)
+    assert snapshot is not None
+    panel = _daily_panel(date(2024, 4, 29), 4)
+    names = [
+        "inventory_turnover_improvement_yoy",
+        "receivable_turnover_improvement_yoy",
+        "receivable_growth_minus_revenue_growth",
+        "inventory_growth_minus_cogs_growth",
+    ]
+    attached = attach_fundamental_factors(panel, snapshot, names).sort("date")
+    by_date = {row["date"]: row for row in attached.iter_rows(named=True)}
+
+    assert by_date[date(2024, 4, 30)][names[0]] is None
+    expected_receivable_growth = (
+        np.log(205.0 / 150.0) - np.log(540.0 / 380.0)
+    )
+    expected_inventory_growth = (
+        np.log(125.0 / 105.0) - np.log(330.0 / 250.0)
+    )
+    np.testing.assert_allclose(
+        by_date[date(2024, 4, 30)][names[2]],
+        expected_receivable_growth,
+        rtol=1e-12,
+    )
+    np.testing.assert_allclose(
+        by_date[date(2024, 4, 30)][names[3]],
+        expected_inventory_growth,
+        rtol=1e-12,
+    )
+    np.testing.assert_allclose(
+        by_date[date(2024, 5, 1)][names[0]],
+        np.log((350.0 / 115.0) / (270.0 / 110.0)),
+        rtol=1e-12,
+    )
+
+    market = build_market_data_matrix(panel)
+    matrices = build_fundamental_matrices(market, snapshot, names)
+    column = market.symbols.index("600000.SH")
+    for row_index, row in enumerate(attached.iter_rows(named=True)):
+        for name in names:
+            value = row[name]
+            actual = matrices[name][row_index, column]
+            if value is None:
+                assert np.isnan(actual), (name, row["date"], actual)
+            else:
+                np.testing.assert_allclose(actual, value, rtol=1e-6)
+
+
+def test_legacy_snapshot_without_improvement_columns_returns_null(
+    tmp_path: Path,
+) -> None:
+    _write_tables(
+        tmp_path,
+        metrics=_improvement_metrics_frame(),
+        balance=_improvement_balance_frame(),
+        cash=_improvement_cash_frame(),
+        income=_improvement_income_frame(),
+    )
+    snapshot = load_fundamental_snapshot(tmp_path)
+    assert snapshot is not None
+    legacy = snapshot.drop([
+        "inventory_turnover_improvement_yoy",
+        "receivable_turnover_improvement_yoy",
+        "receivable_growth_minus_revenue_growth",
+        "inventory_growth_minus_cogs_growth",
+        "_announce_inventory_turnover_improvement_yoy",
+        "_announce_receivable_turnover_improvement_yoy",
+        "_announce_receivable_growth_minus_revenue_growth",
+        "_announce_inventory_growth_minus_cogs_growth",
+    ])
+    panel = _daily_panel(date(2024, 5, 1), 3)
+    names = [
+        "inventory_turnover_improvement_yoy",
+        "receivable_turnover_improvement_yoy",
+        "receivable_growth_minus_revenue_growth",
+        "inventory_growth_minus_cogs_growth",
+    ]
+    attached = attach_fundamental_factors(panel, legacy, names)
+    for name in names:
+        assert attached[name].null_count() == attached.height

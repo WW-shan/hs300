@@ -36,6 +36,10 @@ BUILTIN_FINANCIAL_DEFINITIONS = (
     ("core_earnings_ratio", "high"),
     ("inventory_turnover_ttm", "high"),
     ("receivable_turnover_ttm", "high"),
+    ("inventory_turnover_improvement_yoy", "high"),
+    ("receivable_turnover_improvement_yoy", "high"),
+    ("receivable_growth_minus_revenue_growth", "low"),
+    ("inventory_growth_minus_cogs_growth", "low"),
 )
 
 
