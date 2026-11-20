@@ -1,0 +1,151 @@
+{
+  "round": "R380",
+  "amendment": "A1",
+  "created_at": "2026-11-21",
+  "classification": "pre-registered engine-vintage reconciliation and full A/B/C rebuild before any trade-level audit result is accepted; research-only",
+  "trigger": {
+    "failure_evidence": "r380_attempt1_failure.json",
+    "failure_sha256_expected": "553e39ac4c92f4044ba0676ca9b0f9ab730d32233d41bb1fdc6d94af1730c321",
+    "engine_commit": "229ecdf65153eee5865b04545065f48986d4ec0c",
+    "reason": "R371 2x curves predate the ext-field matrix attachment fix. Reusing them together with current-engine trades is invalid.",
+    "attempt1_runner": "run_r380_trade_audit_attempt1.py",
+    "attempt1_runner_sha256": "f93323a95b598b64cc30cae724e20d6c4cdde5898cd3aa11aab63e1ee2ae5ba3"
+  },
+  "question": "After rebuilding A, B (hold-30 centre), B20 control and all C cohorts under the current engine, does the hold-30 centre still pass performance, sealed-window and pressure gates, and only then does its trade-level concentration, execution and capacity audit pass?",
+  "frozen_design": {
+    "parameters_unchanged": true,
+    "cell": "fade05_h30_sl20",
+    "control_cell": "fade05_h20_sl20",
+    "A_strategy": "ai_hs300_macro_gate_quality",
+    "B_variant": "r371_industry_fade_5d_quality_h20_sl20 with max_hold_days=30 and stop_loss=-0.20",
+    "B20_control_variant": "r371_industry_fade_5d_quality_h20_sl20 with max_hold_days=20 and stop_loss=-0.20",
+    "C_strategy": "ai_hs300_quality_momentum_broad_h60",
+    "C_cohort_starts": [
+      "2022-05-05",
+      "2022-06-02",
+      "2022-07-01"
+    ],
+    "portfolio": "monthly 60-day inverse-vol risk parity, 10% C cap, 15% joint equity volatility target, 60-day overlay at 15%, one-third equity-weight cap, gold 200-day trend defensive bucket",
+    "windows": {
+      "full": [
+        "2022-05-05",
+        "2026-11-05"
+      ],
+      "sealed": [
+        "2025-05-06",
+        "2026-11-05"
+      ],
+      "recent": [
+        "2025-11-05",
+        "2026-11-05"
+      ],
+      "rolling_starts": [
+        "2022-05-05",
+        "2023-05-05",
+        "2024-05-05",
+        "2025-05-05"
+      ],
+      "rolling_length": 252
+    },
+    "costs": {
+      "2x": {
+        "fees_pct": 0.0004,
+        "commission_pct": 0.0004,
+        "stamp_tax_pct": 0.0005,
+        "slippage_bps": 10.0,
+        "portfolio_turnover": 0.0052,
+        "defensive_turnover": 0.001
+      },
+      "3x": {
+        "fees_pct": 0.0006,
+        "commission_pct": 0.0006,
+        "stamp_tax_pct": 0.001,
+        "slippage_bps": 15.0,
+        "portfolio_turnover": 0.0078,
+        "defensive_turnover": 0.0015
+      }
+    },
+    "matching": "T+1 open",
+    "max_positions": {
+      "A": 10,
+      "B": 10,
+      "C_per_cohort": 50
+    },
+    "max_exposure_pct": 1.0,
+    "leverage": "none"
+  },
+  "reconciliation_gates": {
+    "current_2x_full": {
+      "annual_min": 0.08,
+      "sharpe_min": 1.0,
+      "mdd_min": -0.2,
+      "year_2022_min": -0.05,
+      "year_2023_min": 0.0,
+      "recent_return_min_exclusive": 0.0,
+      "rolling_positive_count_min": 3
+    },
+    "current_3x_full": {
+      "annual_min": 0.05,
+      "sharpe_min": 0.8,
+      "mdd_min": -0.25
+    },
+    "current_sealed": {
+      "centre_total_return_positive": true,
+      "centre_sharpe_min": 1.0,
+      "centre_mdd_min": -0.1,
+      "centre_beats_control_total_return": true,
+      "centre_beats_control_sharpe": true
+    },
+    "old_vs_current": {
+      "report_annual_delta": true,
+      "report_sharpe_delta": true,
+      "report_mdd_delta": true,
+      "old_results_accepted_only_if_exact_else_label_pre_fix_vintage": true
+    }
+  },
+  "trade_audit_gates": {
+    "concentration": {
+      "distinct_symbols_min": 80,
+      "top1_gross_profit_share_max": 0.25,
+      "top3_gross_profit_share_max": 0.55,
+      "top5_gross_profit_share_max": 0.75,
+      "top_industry_gross_profit_share_max": 0.45,
+      "max_single_symbol_loss_to_gross_profit_max": 0.2,
+      "recent_positive_symbols_min": 8
+    },
+    "execution": {
+      "hard_entry_miss_rate_max": 0.05,
+      "hard_exit_miss_rate_max": 0.05,
+      "blocked_exit_trade_share_max": 0.05,
+      "max_blocked_exit_days_per_trade_max": 10
+    },
+    "capacity": {
+      "capital_levels_cny": [
+        10000000,
+        50000000,
+        100000000,
+        250000000,
+        500000000,
+        1000000000
+      ],
+      "minimum_gate_capital_cny": 100000000,
+      "p95_single_trade_participation_max": 0.05,
+      "p99_single_trade_participation_max": 0.1,
+      "p95_days_to_liquidate_at_10pct_daily_amount_max": 1.0
+    }
+  },
+  "decision_rules": [
+    "Rebuild every A/B/B20/C curve under the current engine; do not splice any old 2x curve into the current portfolio.",
+    "Reconciliation must pass before concentration, execution and capacity are used for a candidate decision.",
+    "If reconciliation fails, the trade audit is still reported diagnostically but the candidate is not advanced.",
+    "Report old-versus-current deltas explicitly and label R374-R379 as pre-fix engine vintage if exact reconstruction does not hold.",
+    "No parameter changes, no best-cell selection, no leverage, no paper target, no orders and no production enablement."
+  ],
+  "known_limits": [
+    "The current engine rebuild is a new engine vintage, not an independent market sample.",
+    "C and A capacity notionals are reconstructed from equal-position nominal size because their abbreviated caches lack full entry_value records.",
+    "Daily amount is a liquidity proxy; intraday depth and impact curves are unavailable.",
+    "Industry labels remain a current snapshot.",
+    "The sealed window remains one approximately 17-month period."
+  ]
+}

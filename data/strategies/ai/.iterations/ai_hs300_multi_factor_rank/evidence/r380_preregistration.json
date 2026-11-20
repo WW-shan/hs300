@@ -1,0 +1,83 @@
+{
+  "round": "R380",
+  "created_at": "2026-11-21",
+  "classification": "pre-registered trade-level concentration, execution and capacity audit of the frozen R377/R378 hold-30 centre; research-only",
+  "question": "The hold-30 centre has passed curve-level, cost and parameter-platform tests. Can its trades actually be concentrated, filled and liquidated within the stated assumptions, and at what capital scale does liquidity become binding?",
+  "frozen_strategy": {
+    "cell": "fade05_h30_sl20",
+    "B_sleeve_strategy": "r371_industry_fade_5d_quality_h20_sl20",
+    "A_sleeve": "ai_hs300_macro_gate_quality",
+    "C_sleeve": "ai_hs300_quality_momentum_broad_h60",
+    "portfolio": "monthly 60-day inverse-vol risk parity, 10% C cap, 15% joint equity volatility target, 60-day overlay at 15%, one-third equity-weight cap, gold 200-day trend defensive bucket",
+    "cost": "2x",
+    "matching": "T+1 open",
+    "max_positions": {"A": 10, "B": 10, "C_per_cohort": 50, "C_cohorts": 3},
+    "leverage": "none",
+    "max_exposure_pct": 1.0,
+    "window": ["2022-05-05", "2026-11-05"],
+    "recent_start": "2025-11-05"
+  },
+  "source_artifacts": {
+    "r374": "r374_platform_validation.json",
+    "r377": "r377_holdout.json",
+    "r378": "r378_cost_stress.json",
+    "a_trades": "data/research/r344_cache/ai_hs300_macro_gate_quality_2022-05-05_2x_p10.trades.json",
+    "c_trades": [
+      "data/research/r359_v2_cache/ai_hs300_quality_momentum_broad_h60_2022-05-05_2x_p50.trades.json",
+      "data/research/r359_v2_cache/ai_hs300_quality_momentum_broad_h60_2022-06-02_2x_p50.trades.json",
+      "data/research/r359_v2_cache/ai_hs300_quality_momentum_broad_h60_2022-07-01_2x_p50.trades.json"
+    ]
+  },
+  "trade_scope": {
+    "B_sleeve": "rerun the frozen hold-30 variant under the same isolated engine, membership, costs and execution rules, and persist every trade record plus execution counters",
+    "portfolio": "scale A/B/C trade P&L by holding-period average final defensive equity weight and sleeve weight; C also receives the one-third cohort weight",
+    "capacity": "use the same trade composition but revalue each position at multiple portfolio capital levels against the actual daily amount of the entry and exit sessions"
+  },
+  "gates": {
+    "curve_reconstruction": {
+      "rule": "2x final portfolio annual, Sharpe and MDD each reproduce R374 exactly at abs tolerance 1e-9"
+    },
+    "concentration": {
+      "distinct_symbols_min": 80,
+      "top1_gross_profit_share_max": 0.25,
+      "top3_gross_profit_share_max": 0.55,
+      "top5_gross_profit_share_max": 0.75,
+      "top_industry_gross_profit_share_max": 0.45,
+      "max_single_symbol_loss_to_gross_profit_max": 0.20,
+      "recent_positive_symbols_min": 8,
+      "reason": "same v2 concentration policy used for the prior multi-asset candidate; gross-profit shares avoid the 5x net-profit denominator distortion"
+    },
+    "execution": {
+      "hard_entry_miss_rate_max": 0.05,
+      "hard_exit_miss_rate_max": 0.05,
+      "blocked_exit_trade_share_max": 0.05,
+      "max_blocked_exit_days_per_trade_max": 10,
+      "hard_entry_misses": ["buy_limit_up", "buy_suspended", "buy_invalid_price", "buy_cash", "buy_exposure"],
+      "hard_exit_misses": ["sell_limit_down", "sell_suspended", "sell_invalid_price"],
+      "reason": "no-slot and same-day-reentry counters are strategy behaviour, not failed executions; cash/exposure rejections are treated as hard misses"
+    },
+    "capacity": {
+      "capital_levels_cny": [10000000, 50000000, 100000000, 250000000, 500000000, 1000000000],
+      "minimum_gate_capital_cny": 100000000,
+      "p95_single_trade_participation_max_of_entry_exit_max": 0.05,
+      "p99_single_trade_participation_max_of_entry_exit_max": 0.10,
+      "p95_days_to_liquidate_at_10pct_daily_amount_max": 1.0,
+      "reason": "positions should normally be no more than 5% of a session's amount, with a 10% hard tail bound, and no more than one day to exit at a 10% participation cap"
+    }
+  },
+  "decision_rules": [
+    "All curve, concentration, execution and capacity gates must pass.",
+    "Capacity is reported at every declared capital level; the hard gate is 100 million CNY, not the highest level.",
+    "No parameter may be changed, no position count may be altered, and no new cost model may be fitted from these results.",
+    "Trade-level P&L is an attribution diagnostic, not a compounded account ledger.",
+    "No leverage, paper target, order or production change is permitted."
+  ],
+  "known_limits": [
+    "A and C trade caches contain abbreviated records, so their capacity notional is reconstructed from the equal-position nominal size rather than from a full entry_value field.",
+    "The C sleeve uses three cohorts, each weighted one third; failing to apply that weight would triple-count C.",
+    "Industry classification is a current snapshot, not point-in-time.",
+    "Daily amount is a proxy for executable liquidity; intraday depth, order-book impact and market impact curves are unavailable.",
+    "The audit is a feasibility screen, not a guarantee that a broker would fill every order at the assumed price.",
+    "2x trade detail is the primary composition audit; the 3x result remains the curve-level R378 validation."
+  ]
+}
