@@ -1,0 +1,66 @@
+{
+  "round": "R373",
+  "created_at": "2026-11-20",
+  "classification": "pre-registered follow-up to the R371 post-hoc grid; research-only",
+  "hypothesis": "The R371 hold-30 region with nonnegative 2022 should survive an independent portfolio reconstruction and rolling-year checks, rather than being a single grid artefact.",
+  "fixed_grid": {
+    "industry_fade_change_days": [3, 5, 10],
+    "max_hold_days": [20, 30],
+    "stop_loss": [-0.15, -0.20, -0.25]
+  },
+  "candidate_focus": [
+    [3, 30, -0.15],
+    [5, 30, -0.15],
+    [5, 30, -0.20],
+    [5, 30, -0.25],
+    [10, 30, -0.15],
+    [10, 30, -0.20],
+    [10, 30, -0.25]
+  ],
+  "control": [5, 20, -0.20],
+  "portfolio": {
+    "construction": "same A/C curves, monthly risk parity, 10% C cap, 15% joint equity target, 60-day overlay lookback, 15% overlay target, one-third equity-weight cap",
+    "costs": ["2x", "3x"],
+    "start": "2022-05-05",
+    "end": "2026-11-05",
+    "recent_start": "2025-11-05",
+    "rolling_year_starts": ["2022-05-05", "2023-05-05", "2024-05-05", "2025-05-05"]
+  },
+  "evaluation": {
+    "core_2x": {
+      "annual_min": 0.08,
+      "sharpe_min": 1.0,
+      "mdd_min": -0.20,
+      "year_2022_min_inclusive": 0.0,
+      "year_2023_min_inclusive": 0.0,
+      "recent_return_min_exclusive": 0.0
+    },
+    "core_3x": {
+      "annual_min": 0.05,
+      "sharpe_min": 0.80,
+      "mdd_min": -0.25
+    },
+    "rolling": {
+      "positive_year_count_min": 3,
+      "window_count": 4
+    },
+    "platform": {
+      "must_have_multiple_adjacent_cells": true,
+      "do_not_select_best_annual_cell": true
+    }
+  },
+  "decision_rules": [
+    "Reconstruct all candidate cells from the frozen R371 B-sleeve curves and the frozen A/C curves; do not retune the strategy.",
+    "The 20-day centre remains the control and must reconstruct the R360 portfolio metrics.",
+    "A candidate can advance only if 2x and 3x costs, 2022/2023/recent and rolling gates pass.",
+    "Do not select the highest annual cell; prefer the centre of a contiguous passing region.",
+    "Concentration cannot be claimed from curve-only evidence; mark it as a required follow-up if trade-level data is unavailable.",
+    "No leverage, paper target, order or production change is permitted."
+  ],
+  "known_limits": [
+    "The candidate list is post-hoc selected from the R371 grid and therefore is not independent discovery evidence.",
+    "The rolling starts are overlapping and only four windows are available for a 2022 start.",
+    "Curve-only reconstruction cannot produce trade-level concentration or capacity evidence.",
+    "Current HS300 membership, current industry snapshot backfill and ETF adjustment limitations remain."
+  ]
+}
