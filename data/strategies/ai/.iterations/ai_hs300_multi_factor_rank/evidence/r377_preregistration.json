@@ -1,0 +1,43 @@
+{
+  "round": "R377",
+  "created_at": "2026-11-20",
+  "classification": "pre-registered held-out evaluation of the R374 hold-30 centre; research-only",
+  "question": "The R374 centre and its platform were selected using data through 2026-11-05. If the centre had been frozen at 2025-05-06, would it have held up over the following ~17 months, and would it have beaten the R360 20-day control on the same sealed segment?",
+  "hypothesis": "The pre-registered hold-30 centre continues to meet the v2 gates and beats the R360 20-day control on a segment that was not used to choose it.",
+  "design": {
+    "development_window": ["2022-05-05", "2025-05-05"],
+    "sealed_window": ["2025-05-06", "2026-11-05"],
+    "sealed_sessions": 366,
+    "fixed_decision_date": "2025-05-05",
+    "no_parameter_change_after_sealed_window": true,
+    "selected_cell_rule": "the cell declared in R374 before any sealed-window number was computed: fade05_h30_sl20",
+    "control_cell": "fade05_h20_sl20 (the R360 centre), with the same 27-cell grid available"
+  },
+  "procedures": [
+    "Reconstruct every 27-cell portfolio curve exactly as in R371/R374 (2x cost) and truncate at the sealed-window start.",
+    "Apply the R374 pre-registered selection rule using only development-window data: take the pre-declared centre, do not reselect after seeing sealed results.",
+    "Measure the centre and the control on the sealed window only: total return, annualised return, Sharpe, max drawdown, and the excess of the centre over the control.",
+    "Also report how the sealed-window ranking of the 27 cells compares with their development-window ranking, to show whether the platform ordering persisted.",
+    "Do not use the sealed window to choose, rank, weight, or modify any parameter."
+  ],
+  "gates": {
+    "centre_sealed_positive": "sealed total return > 0",
+    "centre_sealed_sharpe": "sealed Sharpe >= 1.0",
+    "centre_sealed_mdd": "sealed MDD >= -0.10",
+    "centre_beats_control": "sealed total return of centre > sealed total return of the R360 20-day control",
+    "centre_beats_control_sharpe": "sealed Sharpe of centre >= sealed Sharpe of control",
+    "ranking_persistence": "Spearman rank correlation between development-window and sealed-window annualised return across the 27 cells >= 0.30"
+  },
+  "decision_rules": [
+    "All five gates must pass for the held-out claim to advance.",
+    "Any failed gate is recorded as evidence against out-of-sample superiority of the hold-30 change; the R374 centre can remain a parameter default but cannot be called validated out of sample.",
+    "The sealed window is evaluated once only. No additional holdout slicing may be invented after seeing these numbers to rescue the claim.",
+    "No leverage, paper target, order or production change is permitted."
+  ],
+  "known_limits": [
+    "The 27-cell grid was already observed on the full 2022-2026 window in R371; this is a time-split re-read of the same curves, not newly generated data.",
+    "The B-sleeve curves are generated once from a 2022-05-05 start; the sealed window inherits that path and its warm-up.",
+    "Industry classification remains a current-snapshot backfill and HS300 membership is not point-in-time for the earliest part of the sample.",
+    "One 17-month sealed segment is a single noisy observation; failure of the ranking-persistence gate is likely even if the strategy is genuinely robust."
+  ]
+}

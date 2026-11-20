@@ -1,0 +1,59 @@
+{
+  "round": "R378",
+  "created_at": "2026-11-20",
+  "classification": "pre-registered cost-stress confirmation of the R377 sealed-window result; research-only",
+  "question": "Does the R377 hold-30 centre advantage survive 3x and 5x execution costs on the sealed 2025-05-06 through 2026-11-05 window, or is it an artefact of 2x cost assumptions?",
+  "basis": {
+    "r377": "r377_holdout.json",
+    "centre": "fade05_h30_sl20",
+    "control": "fade05_h20_sl20",
+    "sealed_window": ["2025-05-06", "2026-11-05"]
+  },
+  "cost_scenarios": {
+    "2x": {
+      "stock": {"fees_pct": 0.0004, "commission_pct": 0.0004, "stamp_tax_pct": 0.0005, "slippage_bps": 10.0},
+      "portfolio_turnover": 0.0052,
+      "defensive_turnover": 0.001
+    },
+    "3x": {
+      "stock": {"fees_pct": 0.0006, "commission_pct": 0.0006, "stamp_tax_pct": 0.001, "slippage_bps": 15.0},
+      "portfolio_turnover": 0.0078,
+      "defensive_turnover": 0.0015
+    },
+    "5x": {
+      "stock": {"fees_pct": 0.0010, "commission_pct": 0.0010, "stamp_tax_pct": 0.00125, "slippage_bps": 25.0},
+      "portfolio_turnover": 0.013,
+      "defensive_turnover": 0.0025
+    }
+  },
+  "evaluation": {
+    "2x": {
+      "must_reproduce_r377": true,
+      "centre_total_return_positive": true
+    },
+    "3x": {
+      "centre_total_return_positive": true,
+      "centre_sharpe_min": 0.80,
+      "centre_mdd_min": -0.12,
+      "centre_beats_control_total_return": true,
+      "centre_beats_control_sharpe": true
+    },
+    "5x": {
+      "centre_total_return_positive": true,
+      "hard_rejection": false,
+      "note": "5x is a diagnostic only, as fixed in gate policy v2."
+    }
+  },
+  "decision_rules": [
+    "The sealed-window advantage is robust only if 3x clears every gate; 5x is reported but never used as a hard rejection.",
+    "2x must exactly reproduce the R377 sealed centre before any stress result is accepted.",
+    "No parameter may be changed based on the sealed window.",
+    "No leverage, paper target, order or production change is permitted."
+  ],
+  "known_limits": [
+    "The sealed window is about 17 months and overlaps the 2025-2026 regime.",
+    "Same B-sleeve curves and same current HS300 membership / industry backfill as R371-R377.",
+    "Only the centre and the 20-day control are evaluated under 3x/5x; the full 27-cell grid is not re-materialised.",
+    "5x is diagnostic and is not a hard rejection condition."
+  ]
+}
