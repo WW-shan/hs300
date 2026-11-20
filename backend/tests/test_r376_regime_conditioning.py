@@ -26,9 +26,32 @@ def test_scaling_is_never_below_declared_floor_and_never_levers_up() -> None:
     assert all(0.2 <= value <= 1.0 for value in json.loads(module.PREREG.read_text(encoding="utf-8"))["scale_levels"])
 
 
-def test_regime_fields_are_all_lagged() -> None:
+def test_regime_fields_are_all_lagged(monkeypatch) -> None:
+    import polars as pl
+
     module = _module()
+    dates = pl.date_range(
+        pl.date(2024, 1, 1),
+        pl.date(2024, 3, 29),
+        interval="1d",
+        eager=True,
+    )
+    base = pl.DataFrame({
+        "date": dates,
+        "score": list(range(len(dates))),
+        "above_ma20_pct": [0.5] * len(dates),
+        "trend_score": [50] * len(dates),
+        "profit_score": [60] * len(dates),
+        "speculation_score": [30] * len(dates),
+        "index_pct": [0.01] * len(dates),
+    })
+    monkeypatch.setattr(module.pl, "read_parquet", lambda _path: base)
     frame = module.regime_frame()
+
+    # Every derived signal must be shifted at least one session and must not
+    # equal the same-day source at the first observable row.
+    assert frame["score_lag1"][0] is None
+    assert frame["score_chg5_lag1"][0] is None
     for column in frame.columns:
         if column == "date":
             continue
