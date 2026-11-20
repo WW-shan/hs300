@@ -1,0 +1,173 @@
+{
+  "round": "R376",
+  "created_at": "2026-11-20",
+  "classification": "pre-registered regime-conditioned exposure test on the frozen hold-30 platform centre; research-only",
+  "disclosure": "A scratch exploration of regime overlays was run before this pre-registration and produced no improvement over the unconditioned centre. This round is therefore a confirmation test with a fixed, disclosed hypothesis set, not a blind search; the scratch pass is recorded as already_observed.",
+  "already_observed": {
+    "scratch_scope": "single-atom monthly exposure scaling on the R374 platform centre, 2x cost, thresholds on lagged regime score, score change, breadth, trend score, profit score, speculation score and 20-day index momentum",
+    "scratch_best_sharpe": 1.41,
+    "frozen_centre_sharpe": 1.395,
+    "scratch_note": "No scratch variant improved annual return; the best Sharpe improvement came from a breadth gate that was never binding enough to change annual return materially."
+  },
+  "base": {
+    "construction": "R374 hold-30 platform centre fade05_h30_sl20 inside the frozen A/B/C pipeline: monthly 60-day inverse-vol risk parity, 10% C cap, 15% joint equity volatility target, 60-day overlay at 15%, one-third equity-weight cap, gold 200-day trend defensive bucket",
+    "cost": "2x",
+    "window": [
+      "2022-05-05",
+      "2026-11-05"
+    ],
+    "recent_start": "2025-11-05",
+    "rolling_year_starts": [
+      "2022-05-05",
+      "2023-05-05",
+      "2024-05-05",
+      "2025-05-05"
+    ],
+    "measured": {
+      "annual": 0.13213756101409513,
+      "sharpe": 1.3954595098289966,
+      "mdd": -0.08008543300277826
+    }
+  },
+  "mechanism": "Monthly exposure scaling applied to the equity sleeve between the 15% volatility target and the three-asset defensive bucket. The defensive bucket is never scaled down, so a risk-off month moves money toward gold/treasury/dividend rather than to cash only. Turnover pays the same 0.52% round-trip cost as the other portfolio layers.",
+  "atoms": {
+    "score_level": {
+      "field": "market_emotion_score",
+      "lag": 1,
+      "thresholds": [
+        20,
+        30,
+        40,
+        50,
+        60,
+        70,
+        80
+      ]
+    },
+    "score_change_5d": {
+      "field": "market_emotion_score",
+      "lag": 1,
+      "formula": "score - score.shift(5)",
+      "thresholds": [
+        -10,
+        -5,
+        0,
+        5,
+        10
+      ]
+    },
+    "breadth_above_ma20": {
+      "field": "market_breadth_above_ma20",
+      "lag": 1,
+      "thresholds": [
+        0.15,
+        0.2,
+        0.25,
+        0.3,
+        0.4,
+        0.5
+      ]
+    },
+    "trend_score": {
+      "field": "market_trend_score",
+      "lag": 1,
+      "thresholds": [
+        20,
+        30,
+        40,
+        50,
+        60
+      ]
+    },
+    "profit_score": {
+      "field": "market_profit_score",
+      "lag": 1,
+      "thresholds": [
+        30,
+        40,
+        50,
+        60,
+        70,
+        80
+      ]
+    },
+    "speculation_score": {
+      "field": "market_speculation_score",
+      "lag": 1,
+      "thresholds": [
+        20,
+        30,
+        40,
+        50,
+        60
+      ]
+    },
+    "index_momentum_20d": {
+      "field": "index_pct",
+      "lag": 1,
+      "formula": "rolling_mean(20)",
+      "thresholds": [
+        -0.05,
+        -0.02,
+        0.0,
+        0.02,
+        0.05
+      ]
+    }
+  },
+  "scale_levels": [
+    0.2,
+    0.3,
+    0.5,
+    0.7,
+    0.85,
+    1.0
+  ],
+  "gates": {
+    "core_2x": {
+      "annual_min": 0.08,
+      "sharpe_min": 1.0,
+      "mdd_min": -0.2,
+      "year_2022_min_inclusive": 0.0,
+      "year_2023_min_inclusive": 0.0,
+      "recent_return_min_exclusive": 0.0
+    },
+    "rolling": {
+      "positive_year_count_min": 3,
+      "window_count": 4
+    },
+    "increment_over_frozen_centre": {
+      "annual_tolerance": 0.005,
+      "rule": "annual >= base_annual - 0.005 AND (sharpe >= base_sharpe + 0.03 OR mdd >= base_mdd + 0.01)",
+      "reason": "A conditioning layer must either raise risk-adjusted return or cut drawdown without giving up more than 0.5pp of annual return."
+    },
+    "plateau": {
+      "rule": "at least 2 of the 3 scale levels centred on the tested level must pass every gate",
+      "reason": "A single scale point that passes while both neighbours fail is a knife-edge, not a usable rule."
+    }
+  },
+  "decision_rules": [
+    "A variant advances only if it clears core_2x, rolling, increment and plateau simultaneously.",
+    "If no variant advances, the unconditioned frozen centre remains the research default and regime conditioning is recorded as negative knowledge.",
+    "If a variant advances, it still cannot be described as an independent out-of-sample finding, because the atom set was partly observed in the scratch pass.",
+    "No leverage, paper target, order or production change is permitted.",
+    "3x and 5x stress are not re-run here; R374 already covers them for the unconditioned centre."
+  ],
+  "known_limits": [
+    "The regime atoms and scale levels were partly observed in a scratch pass, so this is a confirmation test rather than a blind discovery.",
+    "regime_history is a whole-market breadth/emotion series aligned by trading date; it is not a per-stock PIT dataset.",
+    "Overlapping rolling windows and a single 2022-2026 sample limit the effective evidence.",
+    "Current HS300 membership and current industry snapshot backfill remain non-point-in-time inputs.",
+    "The defensive bucket and overlay parameters are held at their R374 values; this round tests only the regime layer."
+  ],
+  "selection_rule": "If more than one variant clears every gate, select the one with the highest Sharpe; if two are within 0.01 Sharpe, prefer the lower mean exposure (simpler, cheaper), then the variant with fewer distinct scale levels activated, and finally the larger threshold.",
+  "bootstrap": {
+    "method": "paired circular block bootstrap of the daily return difference between the conditioned equity sleeve and the frozen centre equity sleeve",
+    "block_days": 20,
+    "paths": 2000,
+    "horizon": 252,
+    "seed": 376,
+    "require": "P(annualised difference > 0) >= 0.60 and the 5th percentile of the annualised difference >= -0.01",
+    "reason": "A conditioning layer must survive resampling of the realised return path, not only the realised ordering."
+  }
+}

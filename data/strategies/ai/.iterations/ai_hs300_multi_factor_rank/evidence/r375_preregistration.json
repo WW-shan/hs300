@@ -1,0 +1,47 @@
+{
+  "round": "R375",
+  "created_at": "2026-11-20",
+  "classification": "pre-registered walk-forward test of platform-centre selection versus chasing the trailing best cell; research-only",
+  "question": "R374 selected the centre of a contiguous parameter platform instead of the highest-annual cell. That choice was justified analytically but never tested on realised forward returns. Does rule-based platform selection actually beat chasing the trailing best cell out of sample?",
+  "hypothesis": "Cells chosen by trailing performance alone lose most of their advantage in the following year, while a rule-based centre of the currently passing parameter region is more stable; if that is not true, the platform claim must be limited to parameter robustness and the fixed centre remains the default.",
+  "universe": {
+    "cells": "the full 27-cell R371 alpha grid (industry fade change 3/5/10 days x max hold 10/20/30 days x stop loss -15/-20/-25%)",
+    "source_curves": "data/research/r371_cache/{cell}.parquet (B sleeve, 2x cost, already committed)",
+    "composition": "identical frozen pipeline: monthly 60-day inverse-vol risk parity across A/B/C, 10% C cap, 15% joint equity volatility target, 60-day overlay at 15%, one-third equity-weight cap, gold 200-day trend defensive bucket",
+    "cost": "2x only; this round measures selection behaviour, not cost stress",
+    "window": ["2022-05-05", "2026-11-05"]
+  },
+  "decision_points": {
+    "rule": "first trading session of each calendar month that has at least 252 trailing returns and at least 252 forward returns available",
+    "trailing_length": 252,
+    "forward_length": 252,
+    "information_set": "only data on or before the decision session; no forward data may enter any selection rule"
+  },
+  "policies": {
+    "P1_trailing_best_annual": "pick the cell with the highest trailing 252-session total return",
+    "P2_trailing_best_sharpe": "pick the cell with the highest trailing 252-session Sharpe",
+    "P3_platform_medoid": "restrict to cells passing the trailing v2 gate (annual >= 8%, Sharpe >= 1.0, MDD >= -20% on the trailing window); if fewer than 5 cells pass, fall back to the fixed centre; otherwise pick the passing cell with the smallest sum of L1 squared-index parameter distances to the other passing cells (geometric medoid of the passing region), tie-break by higher trailing Sharpe then cell name",
+    "P4_maximin_neighbour": "for each cell compute the minimum trailing Sharpe among its existing axis-adjacent neighbours (one index step in exactly one of fade/hold/stop); pick the cell maximising that minimum, tie-break by higher own trailing Sharpe then cell name",
+    "P5_fixed_centre": "always fade05_h30_sl20; the R374 pre-registered centre, used as the benchmark"
+  },
+  "metrics": {
+    "primary": "mean and median realised forward 252-session total return per policy across all decision points",
+    "risk": "worst realised forward return, count of negative forward windows, mean forward max drawdown",
+    "stability": "number of distinct cells selected, and the share of decision points whose selected cell matches the modal selection",
+    "rank_persistence": "Spearman rank correlation between trailing 252-session return and forward 252-session return across the 27 cells at each decision point"
+  },
+  "decision_rules": [
+    "The platform-selection hypothesis is supported only if P3_platform_medoid has both a higher mean and a higher worst realised forward return than P1_trailing_best_annual over the full set of decision points.",
+    "If P3 does not clear that bar, the platform claim is limited to parameter robustness and must not be stated as a superior selection rule.",
+    "If P5_fixed_centre dominates every selector, the outcome is that no ex-ante selector adds value and the fixed centre stays the default.",
+    "Overlapping forward windows are reported as overlapping; they are not independent trials.",
+    "No leverage, paper target, order or production change is permitted."
+  ],
+  "known_limits": [
+    "All 27 cells and both the 7-cell hold-30 region and the fixed centre were already observed in R371/R373/R374; this is a post-hoc policy test, not a new independent alpha discovery.",
+    "The curves are composed from B-sleeve curves generated on the 2022-05-05 start, so the earliest decision point is about 2023-05 and the test covers roughly 30 monthly decisions.",
+    "Overlapping 252-session forward windows are strongly autocorrelated; effective sample size is far below the nominal count.",
+    "Current HS300 membership and current industry snapshot backfill remain non-point-in-time inputs.",
+    "Only 2x cost is evaluated here; R374 already covers the 3x and 5x diagnostics for the hold-30 region."
+  ]
+}
