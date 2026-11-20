@@ -1,0 +1,99 @@
+{
+  "round": "R374",
+  "created_at": "2026-11-20",
+  "classification": "pre-registered full-cost and rolling-year validation of the R373 hold-30 region; research-only",
+  "hypothesis": "The seven hold-30 cells selected by R373 remain a contiguous no-leverage platform after 3x execution costs and rolling one-year checks, and the centre of that region is preferable to the highest-annual cell.",
+  "source_evidence": {
+    "r373": "r373_hold30_recheck.json",
+    "r373_preregistration": "r373_preregistration.json",
+    "r371": "r371_alpha_parameter_grid.json"
+  },
+  "platform_cells": [
+    "fade03_h30_sl15",
+    "fade05_h30_sl15",
+    "fade05_h30_sl20",
+    "fade05_h30_sl25",
+    "fade10_h30_sl15",
+    "fade10_h30_sl20",
+    "fade10_h30_sl25"
+  ],
+  "centre_cell": "fade05_h30_sl20",
+  "control_cell": "fade05_h20_sl20",
+  "cost_contract": {
+    "hard_gate": "3x",
+    "diagnostic": "5x",
+    "5x_hard_rejection": false,
+    "leverage": "none",
+    "max_exposure": 1.0,
+    "all_turnover_layers_scaled": true,
+    "scenarios": {
+      "2x": {
+        "stock": "2x baseline",
+        "portfolio_turnover": 0.0052,
+        "defensive_turnover": 0.001
+      },
+      "3x": {
+        "stock": "3x",
+        "portfolio_turnover": 0.0078,
+        "defensive_turnover": 0.0015
+      },
+      "5x": {
+        "stock": "5x",
+        "portfolio_turnover": 0.013,
+        "defensive_turnover": 0.0025
+      }
+    }
+  },
+  "windows": {
+    "full": [
+      "2022-05-05",
+      "2026-11-05"
+    ],
+    "recent": [
+      "2025-11-05",
+      "2026-11-05"
+    ],
+    "rolling_starts": [
+      "2022-05-05",
+      "2023-05-05",
+      "2024-05-05",
+      "2025-05-05"
+    ],
+    "rolling_return_observations": 252
+  },
+  "evaluation": {
+    "2x": {
+      "annual_min": 0.08,
+      "sharpe_min": 1.0,
+      "mdd_min": -0.2,
+      "year_2022_min_inclusive": 0.0,
+      "year_2023_min_inclusive": 0.0,
+      "recent_return_min_exclusive": 0.0
+    },
+    "3x": {
+      "annual_min": 0.05,
+      "sharpe_min": 0.8,
+      "mdd_min": -0.25
+    },
+    "platform": {
+      "require_all_cells_2x_and_3x": true,
+      "rolling_positive_count_min": 3,
+      "rolling_window_count": 4,
+      "must_select_centre_not_highest_annual": true
+    }
+  },
+  "decision_rules": [
+    "Use the existing R371/R373 curves for 2x; do not retune the B sleeve.",
+    "Run every pre-registered platform cell at 3x, not only the centre.",
+    "Use 5x only as a diagnostic for the selected centre and never as a hard rejection.",
+    "A cell is accepted only if 2x and 3x point checks pass and at least three of four rolling one-year windows are positive.",
+    "The platform passes only if every pre-registered cell passes; the selected cell is the pre-registered centre, never the highest-annual cell.",
+    "No leverage, orders, paper targets or production changes are permitted."
+  ],
+  "known_limits": [
+    "The platform cells are a post-hoc R373 subset of the R371 grid, not independent discoveries.",
+    "Rolling windows overlap and the 2022 start is partial.",
+    "Current HS300 membership and current industry snapshot remain non-point-in-time inputs.",
+    "Curve-only validation cannot establish trade-level concentration or capacity."
+  ]
+}
