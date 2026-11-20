@@ -1,0 +1,66 @@
+{
+  "round": "R379",
+  "created_at": "2026-11-20",
+  "classification": "pre-registered Monte Carlo portfolio-parameter audit on the R377 sealed hold-30 centre; research-only",
+  "question": "R370 perturbed the portfolio parameters around the R360 20-day centre. Does the R377 hold-30 centre keep its sealed-window advantage across a five-dimensional Monte Carlo of portfolio construction parameters, or is it dependent on the exact R374 values?",
+  "basis": {
+    "r377": "r377_holdout.json",
+    "r370": "r370_monte_carlo_parameter_audit.json",
+    "centre": "fade05_h30_sl20",
+    "control": "fade05_h20_sl20"
+  },
+  "design": {
+    "samples": 96,
+    "seed": 379,
+    "method": "Latin hypercube over five portfolio-level parameters, identical spans to R370",
+    "ranges": {
+      "c_satellite_cap": [0.05, 0.20],
+      "equity_target_vol": [0.10, 0.20],
+      "overlay_lookback_days": [30, 120],
+      "overlay_target_vol": [0.10, 0.20],
+      "overlay_equity_weight_max": [0.20, 0.40]
+    },
+    "windows": {
+      "full": ["2022-05-05", "2026-11-05"],
+      "sealed": ["2025-05-06", "2026-11-05"],
+      "recent": ["2025-11-05", "2026-11-05"]
+    },
+    "pairing": "each Latin-hypercube sample is applied identically to the hold-30 centre and the 20-day control"
+  },
+  "evaluation": {
+    "full_window_v2": {
+      "annual_min": 0.08,
+      "sharpe_min": 1.0,
+      "mdd_min": -0.20,
+      "year_2022_min": 0.0,
+      "year_2023_min": 0.0,
+      "recent_min_exclusive": 0.0
+    },
+    "sealed_window": {
+      "centre_total_return_positive": true,
+      "centre_sharpe_min": 1.0,
+      "centre_mdd_min": -0.10
+    },
+    "sealed_advantage": {
+      "rule": "centre total return > control total return on the same Monte Carlo sample"
+    },
+    "plateau": {
+      "minimum_full_pass_rate": 0.75,
+      "minimum_sealed_pass_rate": 0.75,
+      "minimum_sealed_advantage_rate": 0.75,
+      "reason": "A centre whose advantage disappears under most nearby portfolio parameter draws is a knife-edge, not a platform."
+    }
+  },
+  "decision_rules": [
+    "The centre is parameter-robust only if all three plateau thresholds pass.",
+    "The control is run on the same samples so that a general market-level shift cannot be mistaken for parameter robustness.",
+    "The sealed window is not used to reselect any parameter; it is only reported.",
+    "No leverage, paper target, order or production change is permitted."
+  ],
+  "known_limits": [
+    "The B-sleeve curves are fixed; only portfolio construction parameters are perturbed.",
+    "The sealed window is about 17 months and overlaps the 2025-2026 regime.",
+    "The 96 Latin-hypercube samples are correlated with the original R370 audit and are not independent trials.",
+    "Current HS300 membership and industry backfill limitations remain."
+  ]
+}
