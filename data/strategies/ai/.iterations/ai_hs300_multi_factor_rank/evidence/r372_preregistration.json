@@ -1,0 +1,99 @@
+{
+  "round": "R372",
+  "created_at": "2026-11-20",
+  "classification": "post-hoc real-backtest validation of Monte Carlo parameter recommendations and neighbourhood stability; research-only",
+  "hypothesis": "Monte Carlo-recommended parameter values should improve or preserve the existing 8-factor portfolio after execution costs, while the R360 core alpha platform should remain stable across adjacent core settings.",
+  "data_contract": {
+    "portfolio_engine": "StrategyBacktestService factor_rank_research",
+    "core_engine": "StrategyBacktestService with R360 strategy variants",
+    "matching": "open_t+1",
+    "leverage": "none",
+    "max_exposure_pct": 1.0,
+    "hs300_membership": "current HS300 snapshot applied to history; survivorship bias is retained",
+    "cost_scenarios": {
+      "2x": {"fees_pct": 0.0004, "commission_pct": 0.0004, "stamp_tax_pct": 0.0005, "slippage_bps": 10.0},
+      "3x": {"fees_pct": 0.0006, "commission_pct": 0.0006, "stamp_tax_pct": 0.0005, "slippage_bps": 15.0}
+    }
+  },
+  "periods": {
+    "portfolio_full": ["2021-06-01", "2026-11-05"],
+    "portfolio_recent": ["2025-10-14", "2026-11-05"],
+    "core_full": ["2022-05-05", "2026-11-05"],
+    "core_recent": ["2025-11-05", "2026-11-05"]
+  },
+  "portfolio_line": {
+    "base_factor_ids": [
+      "ext_alt_hs300_cash_flow_stability_4q_low",
+      "ext_alt_hs300_dividend_yield",
+      "ext_alt_hs300_fund_holding_ratio_low",
+      "ext_alt_hs300_holder_top10_share_chg_yoy",
+      "ext_alt_hs300_idio_vol_40d_low",
+      "ext_alt_hs300_margin_chg_1m_low",
+      "ext_alt_hs300_ocf_margin_4q",
+      "ext_alt_hs300_vol_of_vol_20d_low"
+    ],
+    "base_weights": {
+      "ext_alt_hs300_idio_vol_40d_low": 0.125,
+      "ext_alt_hs300_dividend_yield": 0.125,
+      "ext_alt_hs300_vol_of_vol_20d_low": 0.125,
+      "ext_alt_hs300_cash_flow_stability_4q_low": 0.125,
+      "ext_alt_hs300_fund_holding_ratio_low": 0.125,
+      "ext_alt_hs300_ocf_margin_4q": 0.125,
+      "ext_alt_hs300_margin_chg_1m_low": 0.125,
+      "ext_alt_hs300_holder_top10_share_chg_yoy": 0.125
+    },
+    "lines": [
+      {
+        "id": "base_current",
+        "description": "frozen 8-factor watch portfolio with existing members",
+        "replacements": {}
+      },
+      {
+        "id": "mc_recommended",
+        "description": "replace existing factor-family slots with MC recommended parameter variants when available",
+        "replacements": {
+          "ext_alt_hs300_idio_vol_40d_low": "ext_alt_hs300_idio_vol_20d_low",
+          "ext_alt_hs300_vol_of_vol_20d_low": "ext_alt_hs300_vol_of_vol_20d_low"
+        },
+        "reason": "P1 MC recommends idio_vol 20 and vol_of_vol 20; vol_of_vol 20 is already the base member, so only idio_vol is a replacement."
+      }
+    ],
+    "entry_score": 70.0,
+    "exit_score": 40.0,
+    "max_positions": 20,
+    "top_rank": 20,
+    "costs": ["2x", "3x"]
+  },
+  "core_line": {
+    "base_strategy": "ai_hs300_industry_fade_quality_h20_sl20",
+    "grid": {
+      "industry_fade_change_days": [3, 5, 10],
+      "max_hold_days": [10, 20, 30],
+      "stop_loss": [-0.15, -0.20, -0.25]
+    },
+    "center": [5, 20, -0.20],
+    "cost": "2x",
+    "portfolio": "same A/B/C sleeves, monthly risk parity, C cap 10%, joint equity target vol 15%, overlay lookback 60, overlay target vol 15%, one-third equity-weight cap"
+  },
+  "evaluation": {
+    "portfolio_2x": {"annual_min": 0.08, "sharpe_min": 1.0, "mdd_min": -0.20, "recent_return_exclusive_min": 0.0, "rolling_positive_rate_min": 0.70},
+    "portfolio_3x": {"annual_min": 0.05, "sharpe_min": 0.80, "mdd_min": -0.25},
+    "core_2x": {"annual_min": 0.08, "sharpe_min": 1.0, "mdd_min": -0.20, "recent_return_exclusive_min": 0.0},
+    "platform": {"overall_pass_rate_min": 0.75, "minimum_marginal_pass_rate_min": 0.666667}
+  },
+  "decision_rules": [
+    "Run all pre-registered portfolio lines and all 27 core cells; do not stop after a favourable cell.",
+    "A change is accepted only if 2x and 3x costs, recent sample and rolling gates all pass; simulation alone is not acceptance.",
+    "Do not choose the highest-return cell. Choose a stable centre only if its neighbourhood passes.",
+    "Do not claim PBO or Deflated Sharpe unless a complete trial ledger and non-identical trial count are available.",
+    "No leverage, paper target, order or production change is permitted."
+  ],
+  "known_limits": [
+    "The 15 MC recommended values are not 15 new factors; P5 already found most candidates statistically non-incremental.",
+    "The portfolio full/recent history uses current HS300 membership and therefore has survivorship bias.",
+    "Industry membership is a current snapshot backfilled through history, not point-in-time data.",
+    "The 27 core cells are highly correlated and are not independent trial discoveries.",
+    "The MC recommendation files use a current-HS300 universe and declared PIT assumptions.",
+    "Gold trend, basic filter and regime mapping require separate executable tests if they cannot be represented by the existing override contract."
+  ]
+}

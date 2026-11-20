@@ -523,3 +523,22 @@ def test_cjk_string_field_end_to_end(data_dir):
     assert col in frame.columns
     out = custom_signals.inject(frame, custom_signals.build_expressions([sig]))
     assert out["csg_robot"].to_list() == [True]
+
+
+def test_timeseries_frame_cache_respects_requested_field_subset(data_dir):
+    """A cached narrow projection must not serve a later wider field request."""
+    cfg = _mk_config(data_dir, mode="timeseries")
+    write_ext_parquet(
+        pl.DataFrame({"symbol": ["600000.SH"], "hot": [0.2], "cnt": [7]}),
+        cfg, data_dir, snapshot_date=date(2026, 1, 5),
+    )
+
+    hot_field = next(f for f in cfg.fields if f.name == "hot")
+    cnt_field = next(f for f in cfg.fields if f.name == "cnt")
+    first = ext_factors._timeseries_frame(data_dir, cfg, [hot_field])
+    second = ext_factors._timeseries_frame(data_dir, cfg, [cnt_field])
+
+    assert COL in first.columns
+    assert "ext_tags_cnt" not in first.columns
+    assert "ext_tags_cnt" in second.columns
+    assert COL not in second.columns

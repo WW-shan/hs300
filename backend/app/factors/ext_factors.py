@@ -44,8 +44,10 @@ _NUMERIC_DTYPES = frozenset({"int", "float"})
 # 信号通道支持的 dtype: 数值 (Float64) + 字符串 (Utf8, contains/==/!=)
 _SIGNAL_DTYPES = _NUMERIC_DTYPES | {"string"}
 
-# 帧缓存: (data_dir, config_id, mode) -> (目录/分区签名, DataFrame)
-_frame_cache: dict[tuple[str, str, str], tuple[tuple, pl.DataFrame]] = {}
+# 帧缓存: (data_dir, config_id, mode, requested_field_names) ->
+# (目录/分区签名, DataFrame)。字段集合必须进 key: 同一扩展表会因不同策略请求
+# 而产生不同投影，若只按表/模式缓存，先跑的窄请求会把后跑的宽请求“污染”成缺列帧。
+_frame_cache: dict[tuple[str, str, str, tuple[str, ...]], tuple[tuple, pl.DataFrame]] = {}
 # 注册同步状态: (data_dir, 配置签名); None/失配 → 下次调用重新同步。
 # 已注册集合以注册表为权威 (ext_ 前缀条目), 不单独记账 —— 失效入口清空
 # 状态后, 重新同步仍能从注册表注销已移除的扩展因子。
@@ -217,7 +219,12 @@ def _timeseries_frame(root: Path, config, fields: list) -> pl.DataFrame:
     sig = _timeseries_signature(ts_dir)
     if sig is not None and not sig:
         return pl.DataFrame()
-    key = (str(root), config.id, "timeseries")
+    key = (
+        str(root),
+        config.id,
+        "timeseries",
+        tuple(sorted(f.name for f in fields)),
+    )
     if sig is not None:
         cached = _frame_cache.get(key)
         if cached is not None and cached[0] == sig:
@@ -255,7 +262,12 @@ def _snapshot_frame(root: Path, config, fields: list) -> pl.DataFrame:
             sig = (st.st_mtime_ns, st.st_size)
         if sig is None:
             return pl.DataFrame()
-        key = (str(root), config.id, "snapshot")
+        key = (
+            str(root),
+            config.id,
+            "snapshot",
+            tuple(sorted(f.name for f in fields)),
+        )
         cached = _frame_cache.get(key)
         if cached is not None and cached[0] == sig:
             return cached[1]
