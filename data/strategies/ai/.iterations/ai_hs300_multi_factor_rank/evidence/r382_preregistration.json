@@ -1,0 +1,144 @@
+{
+  "round": "R382",
+  "created_at": "2026-11-21",
+  "classification": "pre-registered PIT trade-level re-audit of the frozen hold-30 candidate; research-only, no parameter search",
+  "question": "After R381 repaired HS300 membership and B-sleeve industry lineage, do the frozen hold-30 trades still pass concentration, execution and capacity gates when trade P&L is weighted by the actual portfolio path and industry labels are resolved as of each entry date?",
+  "trigger": {
+    "r381_status": "candidate_for_paper_trading_review",
+    "r381_preregistration": "r381_preregistration.json",
+    "r381_preregistration_sha256": "9efd6a1cc9e240da7ea14b1342f3e0472ba33c7d9ea78d83fbdb87962d249d4b",
+    "r381_input_audit": "r381_input_audit.json",
+    "r381_input_audit_sha256": "8b938723bb17198547bdffbc0bb8e89fbb479f908b2d248618e781363c7b30be",
+    "r381_pit_data_audit": "r381_pit_data_audit.json",
+    "r381_pit_data_audit_sha256": "dc6384867e03ce59c30b41d8987e2cf45ea7fd74c5b3aefe57b26fa57dbdb107",
+    "r380_trade_audit": "r380_trade_audit_v2.json",
+    "r380_trade_audit_sha256": "7591b15f5c6004d0a418a2f5cac84f0d5cba57c33f0ddabc6786358245c92cf0",
+    "reason": "R381 repaired portfolio inputs but did not rerun the trade-level audit. Inspection also found that R380 concentration aggregation consumed unscaled pnl_amount even though scale_trades had produced portfolio_pnl_amount, and it mapped every trade to one current industry snapshot. R380 trade-level concentration therefore cannot be carried forward as the current audit."
+  },
+  "input_bindings": {
+    "membership": {
+      "path": "data/research/r381_membership/daily_snapshots.parquet",
+      "sha256": "3c7bee9c7dd8cb318cd1038a560dd3742a36f63f1ecb45a07d24e77c1d24781d",
+      "sessions": 1093,
+      "symbols_per_session": 300
+    },
+    "pit_industry": {
+      "path": "data/research/r381_pit_industry/industry_history.parquet",
+      "sha256": "4f9fd44eb17e2a3acb5c91c0b6c15afb2595e36a9174f70de29611e6d3c6a30f",
+      "lookup": "latest Shenwan effective_date not later than the trade entry date",
+      "missing_policy": "unknown; no current-snapshot fallback"
+    },
+    "extension_frame": {
+      "path": "data/research/r381_pit_industry/alt_hs300_required_fields.parquet",
+      "sha256": "8d9b2c63029efe4555765d460423d9b57f3161f55482c2a5a385d2a83896d391"
+    },
+    "engine": {
+      "sha256": "6698b1fbbf1400bc3a53864102763149e87ad595b8be8e9a9b79e044656ba2b6"
+    }
+  },
+  "frozen_design": {
+    "parameters_unchanged": true,
+    "cell": "fade05_h30_sl20",
+    "control_cell": "fade05_h20_sl20",
+    "A_strategy": "ai_hs300_macro_gate_quality",
+    "B_variant": "r371_industry_fade_5d_quality_h20_sl20 with max_hold_days=30 and stop_loss=-0.20",
+    "B20_control_variant": "r371_industry_fade_5d_quality_h20_sl20 with max_hold_days=20 and stop_loss=-0.20",
+    "C_strategy": "ai_hs300_quality_momentum_broad_h60",
+    "C_cohort_starts": [
+      "2022-05-05",
+      "2022-06-02",
+      "2022-07-01"
+    ],
+    "portfolio": "monthly 60-day inverse-vol risk parity, 10% C cap, 15% joint equity volatility target, 60-day overlay at 15%, one-third equity-weight cap, gold 200-day trend defensive bucket",
+    "windows": {
+      "full": ["2022-05-05", "2026-11-05"],
+      "sealed": ["2025-05-06", "2026-11-05"],
+      "recent": ["2025-11-05", "2026-11-05"]
+    },
+    "costs": {
+      "2x": {
+        "fees_pct": 0.0004,
+        "commission_pct": 0.0004,
+        "stamp_tax_pct": 0.0005,
+        "slippage_bps": 10.0,
+        "portfolio_turnover": 0.0052,
+        "defensive_turnover": 0.001
+      },
+      "3x": {
+        "fees_pct": 0.0006,
+        "commission_pct": 0.0006,
+        "stamp_tax_pct": 0.001,
+        "slippage_bps": 15.0,
+        "portfolio_turnover": 0.0078,
+        "defensive_turnover": 0.0015
+      }
+    },
+    "matching": "T+1 open",
+    "max_positions": {"A": 10, "B": 10, "C_per_cohort": 50},
+    "max_exposure_pct": 1.0,
+    "leverage": "none"
+  },
+  "audit_method": {
+    "curve_reconciliation": "Rerun all A, B30, B20 and three C cohorts from R381 inputs; current portfolio annual, Sharpe, MDD, recent and sealed metrics must reproduce r381_pit_data_audit.json at absolute tolerance 1e-9.",
+    "trade_count_reconciliation": "The R381 run summary freezes A at 290 trades, B30 at 732 and combined C at 2467, for 3489 total trades.",
+    "pnl_basis": "portfolio_pnl_amount, after applying the holding-period average final defensive equity weight and sleeve weight; raw sleeve-account pnl_amount is not used for portfolio concentration.",
+    "industry_basis": "Each trade is assigned the latest PIT industry effective on its entry date; missing labels remain unknown and count against coverage.",
+    "capacity_basis": "Portfolio entry and exit notionals at the trade date, revalued linearly across declared portfolio capital levels against actual daily amount.",
+    "execution_basis": "B30 hard entry and exit miss counters from the current engine, plus blocked-exit days from the rebuilt B30 trades."
+  },
+  "gates": {
+    "curve_reconciliation": {
+      "absolute_tolerance": 1e-9,
+      "center_2x": ["annual", "sharpe", "mdd", "recent.total_return", "sealed.total_return"],
+      "control_2x": ["annual", "sharpe", "mdd", "sealed.total_return"],
+      "center_3x": ["annual", "sharpe", "mdd"]
+    },
+    "trade_count_reconciliation": {
+      "A": 290,
+      "B": 732,
+      "C": 2467,
+      "total": 3489
+    },
+    "concentration": {
+      "industry_trade_label_coverage_min": 0.99,
+      "distinct_symbols_min": 80,
+      "top1_gross_profit_share_max": 0.25,
+      "top3_gross_profit_share_max": 0.55,
+      "top5_gross_profit_share_max": 0.75,
+      "top_industry_gross_profit_share_max": 0.45,
+      "max_single_symbol_loss_to_gross_profit_max": 0.20,
+      "recent_positive_symbols_min": 8,
+      "reason": "Retain the existing v2 concentration policy; the 99% industry coverage floor is the same data-coverage floor used by R381."
+    },
+    "execution": {
+      "hard_entry_miss_rate_max": 0.05,
+      "hard_exit_miss_rate_max": 0.05,
+      "blocked_exit_trade_share_max": 0.05,
+      "max_blocked_exit_days_per_trade_max": 10,
+      "reason": "Retain R380 execution limits; no-slot and same-day-reentry counters are strategy behaviour, not failed execution."
+    },
+    "capacity": {
+      "capital_levels_cny": [10000000, 50000000, 100000000, 250000000, 500000000, 1000000000],
+      "minimum_gate_capital_cny": 100000000,
+      "p95_single_trade_participation_max_of_entry_exit_max": 0.05,
+      "p99_single_trade_participation_max_of_entry_exit_max": 0.10,
+      "p95_days_to_liquidate_at_10pct_daily_amount_max": 1.0,
+      "missing_daily_amount_count_max": 0
+    }
+  },
+  "decision_rules": [
+    "Curve and trade-count reconciliation must pass before trade-level audit values are used for a candidate decision.",
+    "Concentration must use portfolio_pnl_amount and entry-date PIT industry labels; do not reuse R380 concentration fields as current evidence.",
+    "All concentration, execution and capacity gates must pass.",
+    "If any reconciliation or audit gate fails, retain the result as research-only and do not advance it to paper trading.",
+    "No parameter changes, best-cell selection, leverage, paper target, orders or production enablement are permitted."
+  ],
+  "known_limits": [
+    "The Shenwan workbook provides effective dates but not a complete publication-vintage history.",
+    "Industry code first two digits are only an L1 proxy, and 99.09% symbol-day coverage is a lower bound rather than complete classification.",
+    "The industry group mean used to build the B-sleeve field still uses the 459-symbol historical alt_hs300 union.",
+    "Daily amount is a liquidity proxy; intraday depth, order-book impact and market-impact curves are unavailable.",
+    "The sealed window remains one approximately 17-month period.",
+    "This is a re-audit of the same frozen candidate, not an independent alpha sample."
+  ]
+}
