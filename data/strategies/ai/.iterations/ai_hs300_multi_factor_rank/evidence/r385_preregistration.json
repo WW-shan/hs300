@@ -1,0 +1,175 @@
+{
+  "round": "R385",
+  "created_at": "2026-11-21",
+  "classification": "pre-registered current-PIT platform and paired Monte Carlo revalidation of the frozen hold-30 candidate; research-only",
+  "question": "After the R381 membership repair and effective-date industry rebuild, does fade05_h30_sl20 remain the centre of a contiguous 27-cell alpha neighbourhood and a seven-cell hold-30 platform under real T+1 2x/3x backtests, and does its sealed-window advantage survive a paired five-dimensional portfolio-parameter Monte Carlo?",
+  "trigger": {
+    "reason": "R374-R379 platform and Monte Carlo evidence was produced before the R380/R381 engine and PIT lineage repairs. Those curves are marked pre_fix_vintage_R374_R379 and cannot be carried forward as current evidence.",
+    "r381_status": "candidate_for_paper_trading_review",
+    "r382_status": "candidate_for_paper_trading_review",
+    "current_pit_source": "R381 repaired HS300 daily membership and effective-date Shenwan industry fields"
+  },
+  "input_bindings": {
+    "r381_pit_data_audit": "r381_pit_data_audit.json",
+    "r381_input_audit": "r381_input_audit.json",
+    "membership": "data/research/r381_membership/daily_snapshots.parquet",
+    "industry_history": "data/research/r381_pit_industry/industry_history.parquet",
+    "extension_frame": "data/research/r381_pit_industry/alt_hs300_required_fields.parquet",
+    "all_inputs_must_be_hash_verified_before_portfolio_returns_are_read": true
+  },
+  "frozen_design": {
+    "alpha_grid": {
+      "fade_days": [3, 5, 10],
+      "hold_days": [10, 20, 30],
+      "stop_loss": [-0.15, -0.20, -0.25],
+      "cells": 27
+    },
+    "platform_cells": [
+      "fade03_h30_sl15",
+      "fade05_h30_sl15",
+      "fade05_h30_sl20",
+      "fade05_h30_sl25",
+      "fade10_h30_sl15",
+      "fade10_h30_sl20",
+      "fade10_h30_sl25"
+    ],
+    "centre_cell": "fade05_h30_sl20",
+    "control_cell": "fade05_h20_sl20",
+    "A_strategy": "ai_hs300_macro_gate_quality",
+    "B_strategy_family": "r371_industry_fade_{fade}d_quality_h20_sl20 with overrides for hold and stop",
+    "C_strategy": "ai_hs300_quality_momentum_broad_h60",
+    "C_cohort_starts": ["2022-05-05", "2022-06-02", "2022-07-01"],
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0,
+    "portfolio": {
+      "c_satellite_cap": 0.10,
+      "equity_target_vol": 0.15,
+      "overlay_lookback_days": 60,
+      "overlay_target_vol": 0.15,
+      "overlay_equity_weight_max": 0.3333333333333333
+    },
+    "windows": {
+      "full": ["2022-05-05", "2026-11-05"],
+      "sealed": ["2025-05-06", "2026-11-05"],
+      "recent": ["2025-11-05", "2026-11-05"],
+      "rolling_starts": ["2022-05-05", "2023-05-05", "2024-05-05", "2025-05-05"],
+      "rolling_return_observations": 252
+    }
+  },
+  "cost_contract": {
+    "2x": {
+      "role": "hard primary gate",
+      "stock": {"fees": 0.0004, "commission": 0.0004, "stamp": 0.0005, "slippage_bps": 10.0},
+      "portfolio_turnover": 0.0052,
+      "defensive_turnover": 0.001
+    },
+    "3x": {
+      "role": "hard cost-stress gate",
+      "stock": {"fees": 0.0006, "commission": 0.0006, "stamp": 0.001, "slippage_bps": 15.0},
+      "portfolio_turnover": 0.0078,
+      "defensive_turnover": 0.0015
+    },
+    "5x": {
+      "role": "diagnostic warning only; never a hard rejection",
+      "stock": {"fees": 0.001, "commission": 0.001, "stamp": 0.00125, "slippage_bps": 25.0},
+      "portfolio_turnover": 0.013,
+      "defensive_turnover": 0.0025
+    },
+    "leverage": "none",
+    "max_exposure_pct": 1.0
+  },
+  "evaluation": {
+    "2x_point_gate": {
+      "annual_min": 0.08,
+      "sharpe_min": 1.0,
+      "mdd_min": -0.20,
+      "year_2022_min": -0.05,
+      "year_2023_min": 0.0,
+      "recent_total_return_min_exclusive": 0.0,
+      "rolling_positive_count_min": 3
+    },
+    "3x_point_gate": {
+      "annual_min": 0.05,
+      "sharpe_min": 0.80,
+      "mdd_min": -0.25,
+      "rolling_positive_count_min": 3
+    },
+    "broad_grid": {
+      "all_27_cells_2x_required": false,
+      "pass_rate_2x_min": 0.75,
+      "each_parameter_level_pass_rate_2x_min": 0.666667,
+      "reason": "The broad grid tests whether the local neighbourhood is a plateau rather than one isolated cell. The platform itself is stricter and must pass every selected cell."
+    },
+    "platform": {
+      "all_seven_cells_2x_and_3x_required": true,
+      "rolling_positive_count_min": 3,
+      "centre_must_be_selected": true,
+      "do_not_select_highest_annual_cell": true
+    },
+    "monte_carlo": {
+      "samples": 96,
+      "seed": 379,
+      "method": "Latin hypercube over five portfolio-construction parameters; each sample is applied identically to the centre and control",
+      "ranges": {
+        "c_satellite_cap": [0.05, 0.20],
+        "equity_target_vol": [0.10, 0.20],
+        "overlay_lookback_days": [30, 120],
+        "overlay_target_vol": [0.10, 0.20],
+        "overlay_equity_weight_max": [0.20, 0.40]
+      },
+      "full_v2_gate": {
+        "annual_min": 0.08,
+        "sharpe_min": 1.0,
+        "mdd_min": -0.20,
+        "year_2022_min": -0.05,
+        "year_2023_min": 0.0,
+        "recent_total_return_min_exclusive": 0.0
+      },
+      "sealed_gate": {
+        "total_return_min_exclusive": 0.0,
+        "sharpe_min": 1.0,
+        "mdd_min": -0.10
+      },
+      "centre_paired_sealed_advantage_min_exclusive": 0.0,
+      "full_pass_rate_min": 0.75,
+      "sealed_pass_rate_min": 0.75,
+      "paired_sealed_advantage_rate_min": 0.75
+    },
+    "walkforward": {
+      "trailing_returns": 252,
+      "forward_returns": 252,
+      "decision_step_sessions": 21,
+      "role": "diagnostic; determines whether ex-ante parameter selection adds value. The fixed centre remains the default unless a preregistered selector beats both the fixed centre and trailing-best policy on mean and worst forward return."
+    },
+    "ablation": {
+      "role": "diagnostic; uses actual current-PIT sleeve curves",
+      "variants": [
+        "full_candidate",
+        "without_equity_volatility_target",
+        "without_defensive_overlay",
+        "without_C_satellite"
+      ]
+    }
+  },
+  "decision_rules": [
+    "Verify every R381 input and engine hash before reading any R385 portfolio performance.",
+    "Run all 27 alpha cells at 2x and 3x with the current engine and current PIT inputs; do not reuse R371, R374, R379 or R380 curves.",
+    "Use the same A/C sleeve curves for a given cost across alpha cells and rerun every B cell rather than interpolating.",
+    "The seven-cell hold-30 platform passes only if every cell passes both 2x and 3x point gates and at least three of four rolling one-year windows are positive.",
+    "The broad 27-cell grid passes only if its overall and every marginal parameter-level 2x pass rate clear the preregistered thresholds.",
+    "The Monte Carlo passes only if the full and sealed pass rates and paired sealed advantage rate each clear 75%.",
+    "Never change thresholds or reselect parameters after seeing R385 results.",
+    "5x is reported as a warning only and must not reject an otherwise passing no-leverage candidate.",
+    "A complete pass may set status candidate_for_paper_trading_review only; it does not generate paper targets, orders or production configuration.",
+    "Any failure records negative knowledge and keeps the result research-only."
+  ],
+  "known_limits": [
+    "The sealed window was used in earlier research and is not a fresh independent sample.",
+    "The Shenwan workbook has effective dates but not a complete publication-vintage history.",
+    "Industry L1 codes are proxied by the first two digits and the historical group mean retains the fixed 459-symbol union limitation.",
+    "The 27 cells and 96 portfolio-parameter draws are correlated, not independent multiple-testing trials.",
+    "The five-dimensional Monte Carlo perturbs portfolio construction only; A, B and C stock selection remain fixed.",
+    "Daily amount supports a liquidity proxy but not intraday depth or market-impact estimation.",
+    "No leverage is used or evaluated."
+  ]
+}
