@@ -1,0 +1,90 @@
+{
+  "bootstrap": {
+    "block_days": 20,
+    "replications": 5000,
+    "seed": 446
+  },
+  "classification": "long-history defensive ETF rotation; no leverage; train/validation/test; no promotion",
+  "created_at": "2026-11-22",
+  "data": "data/kline_etf_enriched，2018-01-02..2026-11-20（本轮已补齐 6 个标的）",
+  "execution": {
+    "cash_return": 0.0,
+    "cost_main_bps": 10,
+    "cost_stress_bps": 20,
+    "no_leverage": true
+  },
+  "gates": {
+    "recent_total_p05_positive": true,
+    "test_annual_min": 0.03,
+    "test_mdd_min": -0.12,
+    "test_sharpe_min": 0.5,
+    "test_total_p05_positive": true,
+    "train_annual_min": 0.05,
+    "validation_annual_min": 0.05
+  },
+  "known_limits": [
+    "ETF prices are forward-adjusted local enriched data; execution uses next open.",
+    "Only six long-history ETFs are available; no overseas or broad commodity ETF.",
+    "The test window has been observed before.",
+    "No leverage; costs are 10/20 bps per rebalance.",
+    "ETF tracking difference and liquidity impact are not fully modeled."
+  ],
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "defensive_etf_rotation_complete_no_promotion"
+  },
+  "rebalance": "monthly，月末信号，下一交易日开盘换仓",
+  "round": "R446",
+  "rule_families": [
+    {
+      "lookback": 20,
+      "mode": "relative_momentum",
+      "name": "momentum_20",
+      "top_n": 2
+    },
+    {
+      "lookback": 60,
+      "mode": "relative_momentum",
+      "name": "momentum_60",
+      "top_n": 2
+    },
+    {
+      "lookback": 120,
+      "mode": "relative_momentum",
+      "name": "momentum_120",
+      "top_n": 2
+    },
+    {
+      "lookback": 20,
+      "mode": "risk_adjusted_momentum",
+      "name": "risk_adjusted_20",
+      "top_n": 2
+    },
+    {
+      "lookback": 60,
+      "mode": "risk_adjusted_momentum",
+      "name": "risk_adjusted_60",
+      "top_n": 2
+    }
+  ],
+  "universe": {
+    "510300.SH": "沪深300",
+    "510500.SH": "中证500",
+    "510880.SH": "红利ETF",
+    "511010.SH": "国债ETF",
+    "512100.SH": "中证1000",
+    "518880.SH": "黄金ETF"
+  },
+  "windows": {
+    "recent_start": "2025-10-14",
+    "test_end": "2026-11-05",
+    "test_start": "2025-05-06",
+    "train_end": "2022-05-05",
+    "train_start": "2018-06-01",
+    "validation_end": "2025-05-05",
+    "validation_start": "2022-05-06"
+  }
+}
