@@ -96,12 +96,27 @@ class FactorRankResearchMatrixStrategy:
     def required_fields_for_params(self, params: dict) -> frozenset[str]:
         if self._scoring is not None:
             return frozenset(self._scoring)
+        dynamic = params.get("dynamic_scoring")
+        if dynamic is not None:
+            if not isinstance(dynamic, dict) or not dynamic:
+                raise ValueError("dynamic_scoring must be a non-empty mapping")
+            fields: set[str] = set()
+            for entry in dynamic.values():
+                if not isinstance(entry, dict):
+                    raise ValueError("dynamic_scoring entries must be mappings")
+                scoring = _validated_scoring(entry.get("scoring"))
+                _validated_directions(entry.get("directions"), scoring)
+                fields.update(scoring)
+            return frozenset(fields)
         raw = params.get("scoring")
         if raw is None:
             return frozenset()
         return frozenset(_validated_scoring(raw))
 
     def compute_signals(self, market: MarketDataMatrix, params: dict) -> SignalMatrix:
+        dynamic = params.get("dynamic_scoring")
+        if dynamic is not None:
+            return self._compute_dynamic_signals(market, params, dynamic)
         scoring = self._scoring or _validated_scoring(params.get("scoring"))
         directions = self._directions or _validated_directions(
             params.get("directions"), scoring
@@ -150,6 +165,78 @@ class FactorRankResearchMatrixStrategy:
             exit_signal_ids=("signal_factor_rank_exit",),
         )
 
+
+    def _compute_dynamic_signals(
+        self,
+        market: MarketDataMatrix,
+        params: dict,
+        dynamic: object,
+    ) -> SignalMatrix:
+        if self._scoring is not None or self._directions is not None:
+            raise ValueError("dynamic_scoring cannot be combined with instance scoring")
+        if not isinstance(dynamic, dict) or not dynamic:
+            raise ValueError("dynamic_scoring must be a non-empty mapping")
+        entry_score = _bounded_float(params.get("entry_score", 70.0), "entry_score")
+        exit_score = _bounded_float(params.get("exit_score", 40.0), "exit_score")
+        top_rank = int(params.get("top_rank", 20))
+        if not 1 <= top_rank <= 100:
+            raise ValueError("top_rank must be between 1 and 100")
+        if exit_score > entry_score:
+            raise ValueError("exit_score must not exceed entry_score")
+        universe = np.isfinite(market.close)
+        score = np.zeros(market.shape, dtype=np.float32)
+        dates = tuple(str(label)[:10] for label in market.timestamp_labels)
+        for time_id, day in enumerate(dates):
+            raw = dynamic.get(day)
+            if not isinstance(raw, dict):
+                raise ValueError(f"dynamic scoring missing date: {day}")
+            scoring = _validated_scoring(raw.get("scoring"))
+            directions = _validated_directions(raw.get("directions"), scoring)
+            day_market = _slice_market_row(market, time_id)
+            day_universe = np.isfinite(day_market.close)
+            day_score = build_matrix_score(
+                day_market,
+                day_universe,
+                scoring,
+                "score",
+                True,
+                fallback=np.zeros(day_market.shape, dtype=np.float32),
+                directions=directions,
+            )
+            score[time_id] = day_score[0]
+        entry = universe & (score >= np.float32(entry_score))
+        entry = _limit_top_rank(entry, score, top_rank)
+        exit_ = universe & (score <= np.float32(exit_score))
+        return make_signal_matrix(
+            market.shape,
+            entry=entry.astype(np.uint8),
+            exit=exit_.astype(np.uint8),
+            score=score,
+            entry_signal_code=np.where(entry, 0, -1).astype(np.int16),
+            exit_signal_code=np.where(exit_, 0, -1).astype(np.int16),
+            entry_signal_ids=("signal_factor_rank_entry",),
+            exit_signal_ids=("signal_factor_rank_exit",),
+        )
+
+
+def _slice_market_row(market: MarketDataMatrix, time_id: int) -> MarketDataMatrix:
+    start, stop = time_id, time_id + 1
+    return MarketDataMatrix(
+        timestamps=market.timestamps[start:stop],
+        timestamp_labels=market.timestamp_labels[start:stop],
+        session_ids=market.session_ids[start:stop],
+        symbols=market.symbols,
+        names=market.names,
+        open=market.open[start:stop],
+        high=market.high[start:stop],
+        low=market.low[start:stop],
+        close=market.close[start:stop],
+        volume=market.volume[start:stop],
+        tradable=market.tradable[start:stop],
+        limit_up_locked=market.limit_up_locked[start:stop],
+        limit_down_locked=market.limit_down_locked[start:stop],
+        fields={name: values[start:stop] for name, values in market.fields.items()},
+    )
 
 def _validated_scoring(raw: object) -> dict[str, float]:
     if not isinstance(raw, dict) or not raw:

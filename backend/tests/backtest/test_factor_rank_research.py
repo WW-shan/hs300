@@ -266,3 +266,73 @@ def test_strategy_rejects_uncontrolled_or_invalid_research_params(params, messag
 
     with pytest.raises(ValueError, match=message):
         strategy.compute_signals(_market(), params)
+
+
+def test_dynamic_scoring_switches_weights_by_lagged_state():
+    strategy = StrategyEngine._load_file(STRATEGY_PATH).matrix_strategy
+    market = _market()
+    params = {
+        "entry_score": 0.0,
+        "exit_score": 0.0,
+        "top_rank": 4,
+        "dynamic_scoring": {
+            "2024-01-02": {
+                "scoring": {"amount": 1.0},
+                "directions": {"amount": "high"},
+            },
+            "2024-01-03": {
+                "scoring": {"turnover_rate": 1.0},
+                "directions": {"turnover_rate": "low"},
+            },
+        },
+    }
+
+    signals = strategy.compute_signals(market, params)
+
+    validate_signal_matrix(signals, market.shape)
+    np.testing.assert_allclose(signals.score[0], [0.0, 100.0 / 3.0, 200.0 / 3.0, 100.0])
+    np.testing.assert_allclose(signals.score[1], [100.0, 200.0 / 3.0, 100.0 / 3.0, 0.0])
+    assert not np.allclose(signals.score[0], signals.score[1])
+
+
+def test_dynamic_scoring_fails_closed_when_state_missing():
+    strategy = StrategyEngine._load_file(STRATEGY_PATH).matrix_strategy
+    market = _market()
+    params = {
+        "dynamic_scoring": {
+            "2024-01-02": {
+                "scoring": {"amount": 1.0},
+                "directions": {"amount": "high"},
+            },
+        },
+    }
+
+    with pytest.raises(ValueError, match="dynamic scoring missing date"):
+        strategy.compute_signals(market, params)
+
+
+def test_dynamic_scoring_matches_per_date_static_scoring():
+    strategy = StrategyEngine._load_file(STRATEGY_PATH).matrix_strategy
+    market = _market()
+    dynamic = strategy.compute_signals(
+        market,
+        {
+            "entry_score": 0.0,
+            "exit_score": 0.0,
+            "top_rank": 4,
+            "dynamic_scoring": {
+                "2024-01-02": {"scoring": {"amount": 1.0}, "directions": {"amount": "high"}},
+                "2024-01-03": {"scoring": {"turnover_rate": 1.0}, "directions": {"turnover_rate": "low"}},
+            },
+        },
+    )
+    first = strategy.compute_signals(
+        market,
+        {"scoring": {"amount": 1.0}, "directions": {"amount": "high"}, "entry_score": 0.0, "exit_score": 0.0, "top_rank": 4},
+    )
+    second = strategy.compute_signals(
+        market,
+        {"scoring": {"turnover_rate": 1.0}, "directions": {"turnover_rate": "low"}, "entry_score": 0.0, "exit_score": 0.0, "top_rank": 4},
+    )
+    np.testing.assert_allclose(dynamic.score[0], first.score[0])
+    np.testing.assert_allclose(dynamic.score[1], second.score[1])
