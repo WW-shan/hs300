@@ -1,0 +1,82 @@
+{
+  "classification": "preregistered factor-subset and weight search; training-only selection, no promotion",
+  "comparison": {
+    "baseline": "R395 selected weights",
+    "test_is_confirmation_only": true
+  },
+  "created_at": "2026-11-22",
+  "directions": {
+    "ext_alt_hs300_cash_flow_stability_4q_low": "high",
+    "ext_alt_hs300_dividend_yield": "high",
+    "ext_alt_hs300_fund_holding_ratio_low": "high",
+    "ext_alt_hs300_holder_top10_share_chg_yoy": "high",
+    "ext_alt_hs300_idio_vol_40d_low": "high",
+    "ext_alt_hs300_margin_chg_1m_low": "high",
+    "ext_alt_hs300_ocf_margin_4q": "high",
+    "ext_alt_hs300_vol_of_vol_20d_low": "high"
+  },
+  "factor_ids": [
+    "ext_alt_hs300_cash_flow_stability_4q_low",
+    "ext_alt_hs300_dividend_yield",
+    "ext_alt_hs300_fund_holding_ratio_low",
+    "ext_alt_hs300_holder_top10_share_chg_yoy",
+    "ext_alt_hs300_idio_vol_40d_low",
+    "ext_alt_hs300_margin_chg_1m_low",
+    "ext_alt_hs300_ocf_margin_4q",
+    "ext_alt_hs300_vol_of_vol_20d_low"
+  ],
+  "holding_days_status": "invalid_previous_run",
+  "known_limits": [
+    "Subsets are not new factor formulas.",
+    "Current HS300 membership applied to history retains survivorship bias.",
+    "Portfolio-grid points are correlated, not independent trials.",
+    "Five-x cost is not a hard rejection gate.",
+    "BUG-R397-01: holding_days 20/30/40 did not take effect because the matrix strategy has a fixed 30-day max hold. This preregistration does not authorize treating those points as independent."
+  ],
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "subset_mc_complete_no_promotion"
+  },
+  "portfolio": {
+    "holding_days": [
+      20,
+      30,
+      40
+    ],
+    "matching": "open_t+1",
+    "max_positions": [
+      10,
+      20,
+      30
+    ],
+    "maximum_exposure_pct": 1.0,
+    "no_leverage": true
+  },
+  "round": "R397",
+  "selection_gate": {
+    "maximum_train_mdd": -0.12,
+    "minimum_test_annual_diagnostic": 0.07,
+    "minimum_test_sharpe_diagnostic": 0.6,
+    "minimum_train_annual": 0.08,
+    "minimum_train_sharpe": 0.9
+  },
+  "source_r395_sha256": "588b9e723adf55e7c4454a1b0f871ff8694c51def1a46cf8b76752e0a9a1354e",
+  "source_r396_sha256": "2560d6799039eae0abe361a256c6bbda82e8b5ccef098383cb0c617d4cd7ee6f",
+  "subset_search": {
+    "all_nonempty_subsets": false,
+    "design": "one_drop_from_8_plus_r395_selected_leave_one_out",
+    "maximum_members": 7,
+    "minimum_members": 3,
+    "selection_basis": "training_only",
+    "weights": "equal_within_subset"
+  },
+  "windows": {
+    "test_end": "2026-11-05",
+    "test_start": "2025-05-06",
+    "train_end": "2025-05-05",
+    "train_start": "2022-05-05"
+  }
+}
