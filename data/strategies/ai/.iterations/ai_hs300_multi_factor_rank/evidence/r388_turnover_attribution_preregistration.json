@@ -1,0 +1,85 @@
+{
+  "round": "R388",
+  "created_at": "2026-11-21",
+  "classification": "frozen-strategy turnover and cost attribution; no tuning, no execution",
+  "question": "Where does the R386/R387 frozen candidate's stock turnover come from, and how much of the observed performance is attributable to the three sleeves rather than a strategy change?",
+  "source_evidence": {
+    "source_round": "R387",
+    "source_status_required": "shadow_observation_complete_no_decision",
+    "source_report": "r387_forward_shadow_confirmation.json",
+    "source_result": "r387_forward_shadow_result.md",
+    "source_runner": "run_r387_forward_shadow_confirmation.py",
+    "all_sidecars_and_hashes_must_match_before_attribution": true
+  },
+  "window": {
+    "full_start": "2022-05-05",
+    "full_end": "2026-11-20",
+    "shadow_start": "2026-11-06",
+    "shadow_end": "2026-11-20",
+    "shadow_sessions": 11
+  },
+  "freeze": {
+    "parameter_search_allowed": false,
+    "strategy_change_allowed": false,
+    "portfolio_parameter_change_allowed": false,
+    "regime_switch_allowed": false,
+    "parameters": {
+      "c_satellite_cap": 0.13,
+      "equity_target_vol": 0.17,
+      "overlay_lookback_days": 110,
+      "overlay_target_vol": 0.17,
+      "overlay_equity_weight_max": 0.37
+    },
+    "strategy_a": "ai_hs300_macro_gate_quality",
+    "strategy_b": "fade05_h30_sl20",
+    "strategy_c": "ai_hs300_quality_momentum_broad_h60"
+  },
+  "attribution_protocol": {
+    "initial_capital": 1000000.0,
+    "main_cost": "2x",
+    "stress_cost": "3x",
+    "warning_cost": "5x",
+    "one_way_turnover_formula": "(buy_notional + sell_notional) / (2 * initial_capital)",
+    "buy_cost_formula": "buy_notional * (commission_pct + slippage_bps / 10000)",
+    "sell_cost_formula": "sell_notional * (commission_pct + stamp_tax_pct + slippage_bps / 10000)",
+    "sleeve_turnover_source": "R387 cache window_trades; C is the sum of all three cohort caches",
+    "cost_is_approximation": true,
+    "sleeve_share_denominator": "sum of A/B/C gross buy and sell notional"
+  },
+  "cost_protocol": {
+    "main": "2x",
+    "stress": "3x",
+    "warning_only": "5x",
+    "five_x_can_hard_reject": false,
+    "stock_costs": {
+      "2x": {"commission_pct": 0.0004, "stamp_tax_pct": 0.0005, "slippage_bps": 10.0},
+      "3x": {"commission_pct": 0.0006, "stamp_tax_pct": 0.001, "slippage_bps": 15.0},
+      "5x": {"commission_pct": 0.001, "stamp_tax_pct": 0.00125, "slippage_bps": 25.0}
+    }
+  },
+  "warning_protocol": {
+    "one_way_turnover_warning_threshold": 5.0,
+    "warning_only": true,
+    "five_x_is_warning_only": true,
+    "no_hard_rejection_from_eleven_days": true
+  },
+  "output_policy": {
+    "status": "attribution_complete_no_decision",
+    "append_only": true,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "known_limits": [
+    "This is a frozen-strategy attribution, not a new strategy search.",
+    "The 2026-11-06 through 2026-11-20 window is too short for a strategy decision.",
+    "Sleeve cost attribution is an approximation based on window notional; it is not a replacement for the engine's full equity accounting.",
+    "R387's holder and historical industry limitations remain in force.",
+    "No leverage is used or permitted."
+  ],
+  "input_sha256": {
+    "r387_runner": "1dc65d663ec27cb74efe4285789354132ffa6c818099446b7296474ba7d05b0a",
+    "r387_report": "1a272163c8bdcf5f7f69acaf78110583afde50d7ba77318b0c05170e1d975d0a",
+    "r387_result": "b8c013f012c21e9a8e58dfffc67760376d9027d4d394b3e966e1cecd747a73df"
+  }
+}
