@@ -63,3 +63,11 @@
 - 9 个孤儿推荐里只有 amihud 同时满足 R391 统计通过；其余 amount_level、turnover_level、max_return 的增量 IC 为负且被统计拒绝。
 - amihud 120 替换 holder 后，训练 17.85%→13.61%、验证 27.57%→23.04%，被拒绝。
 - 结论：MC 推荐参数和统计通过因子都不能直接等于组合增量；当前组合的参数选择不是“全部合格”，而是少数可调族在当前结构下的折中。
+
+## 追加证据（R435）
+
+- 新增可选双准入守卫：组合候选可同时要求 P6 `portfolio_ready` 与 R418 `research_admitted`，默认行为保持兼容。
+- 当前 8 腿中只有 3 腿同时通过双准入：股息率、基金持仓比例低位、40 日残差低波。
+- `vol_of_vol`、`margin_chg`、`holder_top10` 只有 P6 就绪，缺 R418 统计准入。
+- `cash_flow_stability`、`ocf_margin` 在 P6 层即 blocked（financial_pit_not_verified / future_data_unknown）。
+- 结论：当前 8 腿组合在严格治理口径下本身不是“全部合格因子”的组合；收益问题之前，先存在准入结构问题。
