@@ -1,0 +1,22 @@
+{
+  "round": "R406",
+  "created_at": "2026-11-22",
+  "classification": "lagged market-state drawdown control on frozen 80/20; no promotion",
+  "source_rounds": ["R405", "R404"],
+  "source_candidate": {"core_weight": 0.8, "beta_weight": 0.2},
+  "state_data": "data/regime_history/part.parquet",
+  "rules": {
+    "baseline": "always exposed",
+    "weak_off": "core+beta exposure 0.5 when lagged state == weak, else 1.0",
+    "weak_or_leanweak_off": "exposure 0.5 when lagged state in weak/lean_weak, else 1.0",
+    "breadth_defensive": "exposure 0.5 when lagged above_ma20_pct < 0.35, else 1.0",
+    "trend_defensive": "exposure 0.5 when lagged trend_score < 40, else 1.0",
+    "combined_defensive": "exposure 0.5 when lagged weak/lean_weak or breadth < 0.35 or trend < 40, else 1.0"
+  },
+  "mode": {"type": "daily_signals_on_frozen_returns", "cash_return": 0.0, "switch_cost": 0.0005},
+  "windows": {"train_start": "2022-05-05", "train_end": "2024-05-05", "validation_start": "2024-05-06", "validation_end": "2025-05-05", "test_start": "2025-05-06", "test_end": "2026-11-05", "recent_start": "2025-10-14", "recent_end": "2026-11-05"},
+  "bootstrap": {"replications": 5000, "block_days": 20, "seed": 406},
+  "gates": {"test_total_p05_positive": true, "recent_total_p05_positive": true, "test_sharpe_p50_min": 0.8, "recent_sharpe_p50_min": 0.5, "test_mdd_not_worse_than_baseline": true, "recent_mdd_not_worse_than_baseline": true},
+  "output_policy": {"status": "state_drawdown_mc_complete_no_promotion", "active_version": null, "orders_generated": false, "paper_target_generated": false, "production_enabled": false},
+  "known_limits": ["Rules use lagged state, but regime history is not a full real-time vintage audit.", "Daily exposure changes are an approximation; cash return is zero.", "This is a new defense test after observing R405; it is not an independent discovery.", "No leverage and no hard 5x rejection."]
+}
