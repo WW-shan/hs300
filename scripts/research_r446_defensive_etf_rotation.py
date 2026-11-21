@@ -71,34 +71,36 @@ def pick_assets(frame: pl.DataFrame, signal_date: date, lookback: int, mode: str
 def simulate(frame: pl.DataFrame, rule: dict[str, Any], start: date, end: date, cost_bps: float) -> list[dict[str, Any]]:
     dates = sorted(frame["date"].unique().to_list())
     dates = [day for day in dates if start <= day <= end]
-    by_symbol_date = {(str(row["symbol"]), row["date"]): row for row in frame.iter_rows(named=True)}
-    month_ends = set(month_end_dates(frame.filter(pl.col("date") >= start - __import__("datetime").timedelta(days=400))))
-    holdings: list[str] = []
-    curve = []
+    if len(dates) < 2:
+        return [{"date": str(day), "value": 1.0} for day in dates]
+    by_symbol = {
+        symbol: frame.filter(pl.col("symbol") == symbol).sort("date").select(["date", "open", "close"]).to_dicts()
+        for symbol in frame["symbol"].unique().to_list()
+    }
+    lookup = {symbol: {row["date"]: row for row in rows} for symbol, rows in by_symbol.items()}
+    signal_dates = set(month_end_dates(frame))
+    holdings: dict[str, float] = {}
+    curve: list[dict[str, Any]] = []
     value = 1.0
+    # Start fully in cash; the first month-end signal buys at the next open.
     for index, day in enumerate(dates):
-        if day in month_ends and index + 1 < len(dates):
-            signal_date = day
-            selected = pick_assets(frame, signal_date, int(rule["lookback"]), str(rule["mode"]))
-            if selected != holdings:
-                turnover = 2.0 if holdings and selected else 1.0
-                value *= 1.0 - cost_bps / 10000.0 * turnover
-                holdings = selected
-        if not holdings or index == 0:
-            curve.append({"date": str(day), "value": value})
-            continue
-        next_day = dates[index]
-        daily_returns = []
-        for symbol in holdings:
-            previous = by_symbol_date.get((symbol, dates[index - 1]))
-            current = by_symbol_date.get((symbol, next_day))
-            if previous and current and float(previous["open"]) > 0:
-                daily_returns.append(float(current["open"]) / float(previous["open"]) - 1.0)
-        if daily_returns:
-            value *= 1.0 + sum(daily_returns) / len(daily_returns)
+        if index > 0 and dates[index - 1] in signal_dates:
+            selected = pick_assets(frame, dates[index - 1], int(rule["lookback"]), str(rule["mode"]))
+            next_weights = {symbol: 1.0 / len(selected) for symbol in selected} if selected else {}
+            turnover = sum(abs(next_weights.get(symbol, 0.0) - holdings.get(symbol, 0.0)) for symbol in set(next_weights) | set(holdings))
+            value *= 1.0 - (cost_bps / 10000.0) * turnover
+            holdings = next_weights
+        if index > 0 and holdings:
+            previous_day = dates[index - 1]
+            returns = []
+            for symbol, weight in holdings.items():
+                previous = lookup.get(symbol, {}).get(previous_day)
+                current = lookup.get(symbol, {}).get(day)
+                if previous and current and float(previous["open"]) > 0:
+                    returns.append(weight * (float(current["open"]) / float(previous["open"]) - 1.0))
+            value *= 1.0 + sum(returns)
         curve.append({"date": str(day), "value": value})
     return curve
-
 
 def metrics(curve: list[dict[str, Any]]) -> dict[str, float]:
     values = [float(item["value"]) for item in curve]

@@ -1,0 +1,310 @@
+{
+  "classification": "corrected next-open ETF rotation timing; supersedes R446 timing bug; no promotion",
+  "decision": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "rejected"
+  },
+  "gate": {
+    "checks": {
+      "has_eligible_rule": false,
+      "recent_total_p05_positive": false,
+      "test_annual_min": false,
+      "test_mdd_min": false,
+      "test_sharpe_min": false,
+      "test_total_p05_positive": false
+    },
+    "pass": false
+  },
+  "known_limits": [
+    "R446 used a misaligned open-to-open return loop and is superseded by R447.",
+    "Execution is next trading day open after month-end signal.",
+    "ETF prices are local forward-adjusted enriched data.",
+    "No leverage; costs are 10/20 bps per rebalance.",
+    "The test window has been observed before."
+  ],
+  "preregistration_sha256": "726f622cd1221b78fd19722c7601c0fca15d1c6446db54ed76ce1d86f72d78f2",
+  "round": "R447",
+  "rows": [
+    {
+      "name": "momentum_20",
+      "recent": {
+        "annual": -0.0866595290279949,
+        "mdd": -0.22678469073669416,
+        "sharpe": -0.31408492480319755,
+        "total_return": -0.08862862159736007
+      },
+      "recent_bootstrap": {
+        "mdd_p05": -0.4389221940285779,
+        "sharpe_p50": -0.2532697001711873,
+        "total_p05": -0.36811431055599864,
+        "total_p50": -0.07434432265612212
+      },
+      "rule": {
+        "lookback": 20,
+        "mode": "relative_momentum",
+        "name": "momentum_20",
+        "top_n": 2
+      },
+      "test": {
+        "annual": 0.11967038222743498,
+        "mdd": -0.22678469073669327,
+        "sharpe": 0.6506351018656495,
+        "total_return": 0.17841335937134017
+      },
+      "test_bootstrap": {
+        "mdd_p05": -0.3859772691537451,
+        "sharpe_p50": 0.6765737789992248,
+        "total_p05": -0.2302060244032199,
+        "total_p50": 0.18647571855115785
+      },
+      "train": {
+        "annual": 0.13159234515732066,
+        "mdd": -0.12799502801133034,
+        "sharpe": 0.7814461245520452,
+        "total_return": 0.5944681073276945
+      },
+      "validation": {
+        "annual": 0.01932770015024521,
+        "mdd": -0.16445626363172183,
+        "sharpe": 0.19580571153332785,
+        "total_return": 0.05661980389536048
+      }
+    },
+    {
+      "name": "momentum_60",
+      "recent": {
+        "annual": -0.15156121192612337,
+        "mdd": -0.2660396572143834,
+        "sharpe": -0.696889907235298,
+        "total_return": -0.1548748940518816
+      },
+      "recent_bootstrap": {
+        "mdd_p05": -0.4620364273501929,
+        "sharpe_p50": -0.6652172610484546,
+        "total_p05": -0.41750412026046935,
+        "total_p50": -0.14396591646422063
+      },
+      "rule": {
+        "lookback": 60,
+        "mode": "relative_momentum",
+        "name": "momentum_60",
+        "top_n": 2
+      },
+      "test": {
+        "annual": 0.002678954540940026,
+        "mdd": -0.2660396572143844,
+        "sharpe": 0.11415584377778308,
+        "total_return": 0.0038932190795422095
+      },
+      "test_bootstrap": {
+        "mdd_p05": -0.4270667422353731,
+        "sharpe_p50": 0.15013225922728685,
+        "total_p05": -0.3340164623905363,
+        "total_p50": 0.014301191301489213
+      },
+      "train": {
+        "annual": 0.05726018158549406,
+        "mdd": -0.17544715253794374,
+        "sharpe": 0.390009451911522,
+        "total_return": 0.23383701407702673
+      },
+      "validation": {
+        "annual": 0.008649815680563666,
+        "mdd": -0.18444115516832293,
+        "sharpe": 0.13565801741855085,
+        "total_return": 0.025087907231808426
+      }
+    },
+    {
+      "name": "momentum_120",
+      "recent": {
+        "annual": -0.08280835813245546,
+        "mdd": -0.25588946548510805,
+        "sharpe": -0.2638934277104297,
+        "total_return": -0.0846940594503226
+      },
+      "recent_bootstrap": {
+        "mdd_p05": -0.4647905161175456,
+        "sharpe_p50": -0.2518428138756262,
+        "total_p05": -0.3950185100938297,
+        "total_p50": -0.0806163938284028
+      },
+      "rule": {
+        "lookback": 120,
+        "mode": "relative_momentum",
+        "name": "momentum_120",
+        "top_n": 2
+      },
+      "test": {
+        "annual": 0.025009571843242373,
+        "mdd": -0.25588946548510727,
+        "sharpe": 0.2233117762886381,
+        "total_return": 0.03652797564136212
+      },
+      "test_bootstrap": {
+        "mdd_p05": -0.4346362733713316,
+        "sharpe_p50": 0.24178304139539605,
+        "total_p05": -0.32470336879396555,
+        "total_p50": 0.041914988330441494
+      },
+      "train": {
+        "annual": 0.06342593692103304,
+        "mdd": -0.1889880064405025,
+        "sharpe": 0.4385355346577781,
+        "total_return": 0.2612119262813073
+      },
+      "validation": {
+        "annual": 0.041023232404997945,
+        "mdd": -0.22019971807895844,
+        "sharpe": 0.3293717008512991,
+        "total_return": 0.12262150193331678
+      }
+    },
+    {
+      "name": "risk_adjusted_20",
+      "recent": {
+        "annual": -0.07607718337359226,
+        "mdd": -0.20615571086556295,
+        "sharpe": -0.34642814031241964,
+        "total_return": -0.07781618766966947
+      },
+      "recent_bootstrap": {
+        "mdd_p05": -0.4064695414018572,
+        "sharpe_p50": -0.27081467021848393,
+        "total_p05": -0.3473469600372435,
+        "total_p50": -0.06259071402977423
+      },
+      "rule": {
+        "lookback": 20,
+        "mode": "risk_adjusted_momentum",
+        "name": "risk_adjusted_20",
+        "top_n": 2
+      },
+      "test": {
+        "annual": 0.09750389402380089,
+        "mdd": -0.20615571086556317,
+        "sharpe": 0.6141050891017247,
+        "total_return": 0.14468240204217486
+      },
+      "test_bootstrap": {
+        "mdd_p05": -0.3645048738407196,
+        "sharpe_p50": 0.6513192059724913,
+        "total_p05": -0.22450527706033974,
+        "total_p50": 0.1537062198609549
+      },
+      "train": {
+        "annual": 0.08867026245847742,
+        "mdd": -0.14937185286660715,
+        "sharpe": 0.6708964554740323,
+        "total_return": 0.3779702305016588
+      },
+      "validation": {
+        "annual": 0.0018901925445491408,
+        "mdd": -0.20397226043317074,
+        "sharpe": 0.08909425025564657,
+        "total_return": 0.005447706008518072
+      }
+    },
+    {
+      "name": "risk_adjusted_60",
+      "recent": {
+        "annual": -0.16736246475970118,
+        "mdd": -0.28759323232924683,
+        "sharpe": -0.8185341428082834,
+        "total_return": -0.17098558947317377
+      },
+      "recent_bootstrap": {
+        "mdd_p05": -0.4569756469693368,
+        "sharpe_p50": -0.7957581950705268,
+        "total_p05": -0.41560854987565865,
+        "total_p50": -0.1616492654088556
+      },
+      "rule": {
+        "lookback": 60,
+        "mode": "risk_adjusted_momentum",
+        "name": "risk_adjusted_60",
+        "top_n": 2
+      },
+      "test": {
+        "annual": -0.02805037645620012,
+        "mdd": -0.2875932323292463,
+        "sharpe": -0.04950927811528565,
+        "total_return": -0.04048001123029399
+      },
+      "test_bootstrap": {
+        "mdd_p05": -0.42425772300094355,
+        "sharpe_p50": -0.011095626761600058,
+        "total_p05": -0.35014128935202626,
+        "total_p50": -0.029739217554930142
+      },
+      "train": {
+        "annual": 0.06570035075450686,
+        "mdd": -0.17443619177081737,
+        "sharpe": 0.5249409279250412,
+        "total_return": 0.2714217497275033
+      },
+      "validation": {
+        "annual": -0.019712422309171806,
+        "mdd": -0.2198175029642132,
+        "sharpe": -0.041511122815934984,
+        "total_return": -0.05566920033150358
+      }
+    }
+  ],
+  "selected": {
+    "name": "momentum_120",
+    "recent": {
+      "annual": -0.08280835813245546,
+      "mdd": -0.25588946548510805,
+      "sharpe": -0.2638934277104297,
+      "total_return": -0.0846940594503226
+    },
+    "recent_bootstrap": {
+      "mdd_p05": -0.4647905161175456,
+      "sharpe_p50": -0.2518428138756262,
+      "total_p05": -0.3950185100938297,
+      "total_p50": -0.0806163938284028
+    },
+    "rule": {
+      "lookback": 120,
+      "mode": "relative_momentum",
+      "name": "momentum_120",
+      "top_n": 2
+    },
+    "test": {
+      "annual": 0.025009571843242373,
+      "mdd": -0.25588946548510727,
+      "sharpe": 0.2233117762886381,
+      "total_return": 0.03652797564136212
+    },
+    "test_bootstrap": {
+      "mdd_p05": -0.4346362733713316,
+      "sharpe_p50": 0.24178304139539605,
+      "total_p05": -0.32470336879396555,
+      "total_p50": 0.041914988330441494
+    },
+    "train": {
+      "annual": 0.06342593692103304,
+      "mdd": -0.1889880064405025,
+      "sharpe": 0.4385355346577781,
+      "total_return": 0.2612119262813073
+    },
+    "validation": {
+      "annual": 0.041023232404997945,
+      "mdd": -0.22019971807895844,
+      "sharpe": 0.3293717008512991,
+      "total_return": 0.12262150193331678
+    }
+  },
+  "universe": {
+    "510300.SH": "沪深300",
+    "510500.SH": "中证500",
+    "510880.SH": "红利ETF",
+    "511010.SH": "国债ETF",
+    "512100.SH": "中证1000",
+    "518880.SH": "黄金ETF"
+  }
+}
