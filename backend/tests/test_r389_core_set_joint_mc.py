@@ -105,25 +105,25 @@ def test_committed_r389_evidence_matches_final_runner_and_no_execution_policy() 
     assert "不生成订单" in markdown
 
 
-def test_benchmark_construction_reproduces_r386_equity_sleeve() -> None:
+def test_risk_parity_curve_is_synthesized_with_all_three_sleeves() -> None:
     module = _module()
-    result = module.evaluate_sample(
-        {
-            "sample": 0,
-            "construction": {"lookback_days": 60, "min_weight": 0.20, "max_weight": 0.60},
-            "parameters": {
-                "c_satellite_cap": 0.13,
-                "equity_target_vol": 0.17,
-                "overlay_lookback_days": 110,
-                "overlay_target_vol": 0.17,
-                "overlay_equity_weight_max": 0.37,
-            },
-            "execution": {"entry_score": 70, "exit_score": 40, "hold_days": 30, "max_positions": 20},
-            "dropped": [],
-            "weights": {"A": 0.5, "B": 0.3, "C": 0.2},
-        },
-        cost="2x",
+    pl = pytest.importorskip("polars")
+    dates = pl.date_range(
+        pl.date(2022, 5, 5), pl.date(2022, 12, 30), interval="1d", eager=True
     )
-    assert result["sleeve_curve"].height > 900
-    assert result["curve"].height > 900
-    assert result["max_weight_sum"] <= 1.0
+    curves = tuple(
+        pl.DataFrame({
+            "date": dates,
+            "value": [1.0 + (index + 1) * (0.0001 + sleeve * 0.00001) for index in range(len(dates))],
+        })
+        for sleeve in range(3)
+    )
+    curve, weights = module._risk_parity_curve(
+        curves,
+        {"lookback_days": 20, "min_weight": 0.20, "max_weight": 0.60},
+        0.13,
+        0.0052,
+    )
+    assert curve.height == dates.len()
+    assert len(weights) >= 6
+    assert all(abs(sum((row["weight_a"], row["weight_b"], row["weight_c"])) - 1.0) < 1e-12 for row in weights)
