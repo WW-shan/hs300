@@ -607,6 +607,7 @@ def assert_portfolio_candidates_admitted(
     factor_ids: Sequence[str],
     *,
     research_id: str | None = None,
+    require_research_admission: bool = False,
 ) -> dict[str, Any]:
     """Fail closed unless every factor is admitted by the selected P6 run.
 
@@ -659,10 +660,33 @@ def assert_portfolio_candidates_admitted(
             for factor_id, reasons in sorted(rejected.items())
         )
         raise ValueError(f"portfolio admission rejected: {details}")
+    research_audit_path = (
+        data_dir / "factor_research" / "research"
+        / "r418_factor_admission_audit_2026-11-22.json"
+    )
+    if require_research_admission:
+        if not research_audit_path.exists():
+            raise FileNotFoundError(
+                f"research admission audit is unavailable: {research_audit_path}"
+            )
+        audit = json.loads(research_audit_path.read_text(encoding="utf-8"))
+        admitted = set(audit.get("admitted", []))
+        research_rejected = {
+            factor_id: ["research_admission_missing"]
+            for factor_id in factor_ids
+            if factor_id not in admitted
+        }
+        if research_rejected:
+            details = "; ".join(
+                f"{factor_id}: {', '.join(reasons)}"
+                for factor_id, reasons in sorted(research_rejected.items())
+            )
+            raise ValueError(f"research admission rejected: {details}")
     return {
         "research_id": research_id,
         "run_json": run_json,
         "catalog_snapshot_id": payload.get("catalog", {}).get("snapshot_id"),
+        "research_admitted": require_research_admission,
     }
 
 

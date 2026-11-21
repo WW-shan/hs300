@@ -130,3 +130,35 @@ def test_p6_admission_guard_accepts_ready_and_rejects_blocked_factor() -> None:
     assert admitted["research_id"] == payload["research_id"]
     with pytest.raises(ValueError, match="portfolio admission rejected"):
         assert_portfolio_candidates_admitted(DATA, [blocked])
+
+
+def test_optional_research_admission_rejects_non_r418_factor() -> None:
+    from app.factor_research.automation import assert_portfolio_candidates_admitted
+
+    _latest, payload = _latest_payload()
+    blocked = next(
+        factor_id
+        for factor_id, row in payload["admission"].items()
+        if row["portfolio_ready"] is True
+    )
+    with pytest.raises(ValueError, match="research admission rejected"):
+        assert_portfolio_candidates_admitted(
+            DATA,
+            [blocked],
+            require_research_admission=True,
+        )
+
+
+def test_optional_research_admission_accepts_r418_admitted_factor() -> None:
+    from app.factor_research.automation import assert_portfolio_candidates_admitted
+
+    audit = json.loads(
+        (DATA / "factor_research" / "research" / "r418_factor_admission_audit_2026-11-22.json").read_text(encoding="utf-8")
+    )
+    admitted = audit["admitted"][0]
+    result = assert_portfolio_candidates_admitted(
+        DATA,
+        [admitted],
+        require_research_admission=True,
+    )
+    assert result["research_admitted"] is True
