@@ -1,0 +1,43 @@
+{
+  "round": "R390",
+  "created_at": "2026-11-21",
+  "classification": "incremental stock-alpha screening of remaining factor library",
+  "source_round": "P6",
+  "windows": {
+    "train_start": "2022-05-05",
+    "train_end": "2025-05-05",
+    "test_start": "2025-05-06",
+    "test_end": "2026-11-05"
+  },
+  "exclusions": {
+    "require_portfolio_ready": true,
+    "exclude_p5_p8_studied": true,
+    "exclude_fixed": true,
+    "exclude_blocked": true,
+    "exclude_conditioner": true,
+    "exclude_exit_signal": true
+  },
+  "cost_protocol": {
+    "main": "2x",
+    "stress": "3x",
+    "warning_only": "5x",
+    "five_x_can_hard_reject": false,
+    "no_leverage": true,
+    "max_total_weight": 1.0
+  },
+  "output_policy": {
+    "status": "screening_complete_no_promotion",
+    "append_only": true,
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "known_limits": [
+    "This screens only existing catalog factors; it does not invent formulas.",
+    "P5/P8 already studied candidates are excluded rather than retested.",
+    "Current HS300 membership applied to history retains survivorship bias.",
+    "Daily T+1 approximation does not model intraday impact.",
+    "5x is diagnostic warning only and cannot hard-reject a candidate."
+  ]
+}
