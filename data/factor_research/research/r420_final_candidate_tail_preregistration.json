@@ -1,0 +1,78 @@
+{
+  "bootstrap": {
+    "block_days": 20,
+    "primary_block": 20,
+    "replications": 5000,
+    "seed": 420,
+    "sensitivity_blocks": [
+      10,
+      40
+    ]
+  },
+  "candidates": {
+    "compact_4f": {
+      "max_hold_days": 40,
+      "max_positions": 10,
+      "members": [
+        "ext_alt_hs300_dividend_yield",
+        "ext_alt_hs300_fund_holding_ratio_low",
+        "ext_alt_hs300_idio_vol_40d_low",
+        "ext_alt_hs300_vol_of_vol_60d_low"
+      ]
+    },
+    "current_8f": {
+      "max_hold_days": 30,
+      "max_positions": 20,
+      "members": [
+        "ext_alt_hs300_idio_vol_40d_low",
+        "ext_alt_hs300_dividend_yield",
+        "ext_alt_hs300_vol_of_vol_20d_low",
+        "ext_alt_hs300_cash_flow_stability_4q_low",
+        "ext_alt_hs300_fund_holding_ratio_low",
+        "ext_alt_hs300_ocf_margin_4q",
+        "ext_alt_hs300_margin_chg_1m_low",
+        "ext_alt_hs300_holder_top10_share_chg_yoy"
+      ]
+    }
+  },
+  "classification": "frozen R419 compact candidate vs current 8-leg tail and recent-year audit; no promotion",
+  "cost_protocol": {
+    "five_x_hard_rejection": false,
+    "main": "2x",
+    "stress": "3x"
+  },
+  "created_at": "2026-11-22",
+  "gates": {
+    "compact_recent_sharpe_p50_min": 0.4,
+    "compact_recent_total_p05_positive": true,
+    "compact_test_mdd_p05_not_worse_than_8f": true,
+    "compact_test_total_p05_positive": true
+  },
+  "known_limits": [
+    "Bootstrap resamples historical paths; it does not create new market regimes.",
+    "The test/recent windows have been observed before.",
+    "Current HS300 membership applied to history retains survivorship bias.",
+    "No leverage and five-x is warning-only."
+  ],
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "tail_comparison_complete_no_promotion"
+  },
+  "round": "R420",
+  "source_rounds": [
+    "R418",
+    "R419"
+  ],
+  "windows": {
+    "recent_start": "2025-10-14",
+    "test_end": "2026-11-05",
+    "test_start": "2025-05-06",
+    "train_end": "2024-05-05",
+    "train_start": "2022-05-05",
+    "validation_end": "2025-05-05",
+    "validation_start": "2024-05-06"
+  }
+}
