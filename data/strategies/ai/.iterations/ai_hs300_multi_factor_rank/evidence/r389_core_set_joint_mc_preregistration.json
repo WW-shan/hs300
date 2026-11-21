@@ -1,0 +1,63 @@
+{
+  "round": "R389",
+  "created_at": "2026-11-21",
+  "classification": "joint factor-set Monte Carlo; frozen R385/R386 construction, no factor invention, no production",
+  "question": "Does the frozen R386 candidate remain robust when its risk-parity sleeves, C cap, defensive overlay, execution parameters and member dropout are jointly perturbed?",
+  "freeze": {
+    "source_round": "R386",
+    "parameter_search_allowed": false,
+    "factor_formula_change_allowed": false,
+    "parameters": {
+      "c_satellite_cap": 0.13,
+      "equity_target_vol": 0.17,
+      "overlay_lookback_days": 110,
+      "overlay_target_vol": 0.17,
+      "overlay_equity_weight_max": 0.37
+    },
+    "construction": {
+      "sleeve_method": "monthly inverse-volatility risk parity over A/B/C with C cap",
+      "risk_parity_lookback_days": 60,
+      "risk_parity_min_weight": 0.20,
+      "risk_parity_max_weight": 0.60,
+      "defensive_overlay": "R331 three-asset bucket with gold trend proxy"
+    }
+  },
+  "windows": {
+    "train_start": "2022-05-05",
+    "train_end": "2025-05-05",
+    "test_start": "2025-05-06",
+    "test_end": "2026-11-05"
+  },
+  "samples": {
+    "latin_hypercube": 96,
+    "seed": 389,
+    "risk_parity_lookback_days": [40, 60, 90],
+    "risk_parity_min_weight": [0.15, 0.20, 0.25],
+    "risk_parity_max_weight": [0.50, 0.60, 0.70],
+    "member_dropout_probability": 0.10
+  },
+  "cost_protocol": {
+    "main": "2x",
+    "stress": "3x",
+    "warning_only": "5x",
+    "five_x_can_hard_reject": false,
+    "no_leverage": true,
+    "max_total_weight": 1.0
+  },
+  "output_policy": {
+    "status": "joint_mc_complete_no_promotion",
+    "append_only": true,
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "known_limits": [
+    "The factor set is frozen from R386; this is not a new factor search.",
+    "Risk-parity weights are state-dependent monthly outputs, not a fixed static weight vector.",
+    "Daily T+1 approximation does not model intraday impact.",
+    "Current HS300 membership applied to history retains survivorship bias.",
+    "Financial and extended factor PIT evidence is not fully field-level verified.",
+    "5x is diagnostic warning only and cannot hard-reject a candidate."
+  ]
+}

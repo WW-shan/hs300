@@ -409,8 +409,19 @@ def run_current_pit_engine() -> dict[str, Any]:
             if parquet.exists() and sidecar.exists():
                 cached = json.loads(sidecar.read_text(encoding="utf-8"))
                 if cached.get("meta") == meta:
-                    print(f"R385 cache hit {name}", flush=True)
-                    return _read_curve(parquet), {**cached["run"], "cache_hit": True}
+                    cached_curve = _read_curve(parquet)
+                    if (
+                        cached_curve.height >= 2
+                        and cached_curve["date"].min() == start
+                        and cached_curve["date"].max() == END
+                    ):
+                        print(f"R385 cache hit {name}", flush=True)
+                        return cached_curve, {**cached["run"], "cache_hit": True}
+                    print(
+                        f"R385 cache invalid {name}: rows={cached_curve.height} "
+                        f"range={cached_curve['date'].min()}..{cached_curve['date'].max()}",
+                        flush=True,
+                    )
             stock = SCENARIOS[cost]["stock"]
             config = StrategyBacktestConfig(
                 strategy_id=strategy_id,
