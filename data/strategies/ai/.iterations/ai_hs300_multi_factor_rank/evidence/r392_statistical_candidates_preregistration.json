@@ -1,0 +1,45 @@
+{
+  "round": "R392",
+  "created_at": "2026-11-22",
+  "classification": "portfolio slot-replacement screen of R391 statistical candidates; no promotion",
+  "source_round": "R391",
+  "candidate_source": "statistical_pass_new_to_portfolio_base",
+  "exclude_candidates_already_in_portfolio_base": true,
+  "portfolio_base": "multi_dimension_v1:v1",
+  "portfolio_base_reason": "core_v1 contains matrix-incompatible custom factors; P5 multi_dimension_v1 is the validated matrix-compatible baseline",
+  "windows": {
+    "train_start": "2022-05-05",
+    "train_end": "2025-05-05",
+    "test_start": "2025-05-06",
+    "test_end": "2026-11-05"
+  },
+  "grid": {
+    "mode": "replace_one_core_slot",
+    "candidate_weight": "inherit_replaced_slot",
+    "max_positions": [20],
+    "max_hold_days": [30],
+    "selection_rule": "per candidate, choose replacement slot with highest train 2x annual; test is evaluation only"
+  },
+  "cost_protocol": {
+    "main": "2x",
+    "stress": "3x",
+    "warning_only": "5x",
+    "five_x_can_hard_reject": false,
+    "no_leverage": true,
+    "max_total_weight": 1.0
+  },
+  "output_policy": {
+    "status": "portfolio_slot_screen_complete_no_promotion",
+    "append_only": true,
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "known_limits": [
+    "Only the R391 statistical pass set is evaluated.",
+    "Portfolio MC uses daily T+1 approximation.",
+    "Current HS300 membership applied to history retains survivorship bias.",
+    "5x is warning only and cannot hard-reject."
+  ]
+}
