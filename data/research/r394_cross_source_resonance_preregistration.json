@@ -1,0 +1,33 @@
+{
+  "round": "R394",
+  "created_at": "2026-11-22",
+  "classification": "cross-source factor interaction feasibility audit; no portfolio promotion",
+  "sources": {
+    "analyst_rating_change_20d": {"direction": "positive", "rule": "> 0"},
+    "fund_holding_ratio_low": {"direction": "negative", "rule": "< 0"},
+    "margin_chg_1m_low": {"direction": "positive", "rule": "> 0"},
+    "lhb_inst_net_buy_ratio_20d": {"direction": "positive", "rule": "> 0 OR lhb_event_count_20d_low < 0"}
+  },
+  "resonance_rules": [
+    {"layers": 1, "description": "analyst upgrade only"},
+    {"layers": 2, "description": "analyst upgrade + low fund crowding"},
+    {"layers": 3, "description": "analyst upgrade + low fund crowding + margin balance decline"},
+    {"layers": 4, "description": "three layers + LHB institutional net buy or event"}
+  ],
+  "minimum_valid_dates": 120,
+  "minimum_valid_symbols": 30,
+  "minimum_coverage_ratio": 0.02,
+  "output_policy": {
+    "status": "resonance_feasibility_complete_no_promotion",
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "known_limits": [
+    "Signal frequency and cross-source overlap are not alpha evidence.",
+    "LHB is sparse and zero is an event-state value, not a neutral observation.",
+    "This audit does not run portfolio backtests.",
+    "Current HS300 membership applied to history retains survivorship bias."
+  ]
+}
