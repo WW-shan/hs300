@@ -1,0 +1,116 @@
+{
+  "bootstrap": {
+    "block_days": 20,
+    "replications": 5000,
+    "seed": 449
+  },
+  "classification": "five-factor dual-admitted portfolio versus four-factor control: marginal return, industry exposure, and block-bootstrap stability; no promotion",
+  "controls": {
+    "all_equal_weight": true,
+    "eight_leg_control": "current_multi_dimension_v1_watch_set",
+    "four_factor_members": [
+      "ext_alt_hs300_cash_flow_stability_4q_low",
+      "ext_alt_hs300_dividend_yield",
+      "ext_alt_hs300_fund_holding_ratio_low",
+      "ext_alt_hs300_idio_vol_40d_low"
+    ],
+    "no_leverage": true
+  },
+  "created_at": "2026-11-22",
+  "directions": {
+    "ext_alt_hs300_cash_flow_stability_4q_low": "high",
+    "ext_alt_hs300_dividend_yield": "high",
+    "ext_alt_hs300_fund_holding_ratio_low": "high",
+    "ext_alt_hs300_idio_vol_40d_low": "high",
+    "ext_alt_hs300_vol_of_vol_60d_low": "high"
+  },
+  "execution": {
+    "cost_diagnostic": "5x",
+    "cost_main": "2x",
+    "cost_stress": "3x",
+    "five_x_hard_rejection": false,
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0
+  },
+  "gates": {
+    "five_factor_beats_four_factor": true,
+    "industry_size_neutral_signal": true,
+    "no_leverage": true,
+    "recent_annual_min": 0.0,
+    "recent_total_p05_positive": true,
+    "stress_3x_positive": true,
+    "test_annual_min": 0.03,
+    "test_mdd_min": -0.18,
+    "test_sharpe_min": 0.45,
+    "test_total_p05_positive": true,
+    "train_annual_min": 0.08,
+    "validation_annual_min": 0.12
+  },
+  "grid": {
+    "max_hold_days": [
+      20,
+      30,
+      40,
+      60
+    ],
+    "max_positions": [
+      10,
+      20
+    ],
+    "platform_min_points": 4,
+    "selection": "rank by min(train,validation) annual return; test/recent are confirmation only"
+  },
+  "implementation_note": "The final gate uses the full five-member set; industry-capped rows are separate neutralization controls, not post-hoc replacements.",
+  "known_limits": [
+    "The five-factor membership is dual-admitted as of R439 but the added vol-of-vol leg has weaker marginal IC than the four-factor control.",
+    "The test and recent windows have been observed in earlier rounds.",
+    "Current HS300 membership applied to history retains survivorship bias.",
+    "5x cost is warning-only and is never a hard rejection.",
+    "The composite is a research candidate until all gates pass."
+  ],
+  "members": [
+    "ext_alt_hs300_cash_flow_stability_4q_low",
+    "ext_alt_hs300_dividend_yield",
+    "ext_alt_hs300_fund_holding_ratio_low",
+    "ext_alt_hs300_idio_vol_40d_low",
+    "ext_alt_hs300_vol_of_vol_60d_low"
+  ],
+  "neutrality": {
+    "cross_sectional_ic": "industry + log_float_mv",
+    "gate": "at least one neutralized variant has directional IC > 0, NW p <= 0.10, yearly consistency >= 0.80, and recent directional IC > 0",
+    "horizons": [
+      5,
+      20,
+      60
+    ],
+    "levels": [
+      "raw",
+      "industry",
+      "size",
+      "industry_size"
+    ],
+    "minimum_cross_section": 30
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "five_factor_composite_complete_no_promotion"
+  },
+  "round": "R449",
+  "source_rounds": [
+    "R439",
+    "R442",
+    "R448"
+  ],
+  "windows": {
+    "recent_start": "2025-10-14",
+    "test_end": "2026-11-05",
+    "test_start": "2025-05-06",
+    "train_end": "2024-05-05",
+    "train_start": "2022-05-05",
+    "validation_end": "2025-05-05",
+    "validation_start": "2024-05-06"
+  }
+}

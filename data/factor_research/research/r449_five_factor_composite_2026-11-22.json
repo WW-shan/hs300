@@ -1,0 +1,1362 @@
+{
+  "classification": "five-factor dual-admitted portfolio versus four-factor control: marginal return, industry exposure, and block-bootstrap stability; no promotion",
+  "control": {
+    "hold": 30,
+    "industry_cap": 0,
+    "members": "four",
+    "positions": 10,
+    "recent": {
+      "stats": {
+        "annual_return": 0.0899,
+        "avg_exposure": 0.9553,
+        "max_drawdown": -0.0994,
+        "n_trades": 91.0,
+        "profit_factor": 1.48,
+        "sharpe": 0.73,
+        "sortino": 1.09,
+        "total_return": 0.0925,
+        "win_rate": 0.5165,
+        "worst": -0.0922
+      },
+      "trades": 91
+    },
+    "test": {
+      "stats": {
+        "annual_return": 0.0303,
+        "avg_exposure": 0.9645,
+        "max_drawdown": -0.1414,
+        "n_trades": 134.0,
+        "profit_factor": 1.11,
+        "sharpe": 0.3,
+        "sortino": 0.43,
+        "total_return": 0.0444,
+        "win_rate": 0.5149,
+        "worst": -0.1015
+      },
+      "trades": 134
+    },
+    "test_3x": {
+      "stats": {
+        "annual_return": 0.0167,
+        "avg_exposure": 0.9646,
+        "max_drawdown": -0.1528,
+        "n_trades": 134.0,
+        "profit_factor": 1.11,
+        "sharpe": 0.19,
+        "sortino": 0.28,
+        "total_return": 0.0245,
+        "win_rate": 0.5,
+        "worst": -0.1028
+      },
+      "trades": 134
+    },
+    "train": {
+      "stats": {
+        "annual_return": 0.2098,
+        "avg_exposure": 0.9885,
+        "max_drawdown": -0.078,
+        "n_trades": 175.0,
+        "profit_factor": 1.71,
+        "sharpe": 1.56,
+        "sortino": 2.45,
+        "total_return": 0.4428,
+        "win_rate": 0.6,
+        "worst": -0.083
+      },
+      "trades": 175
+    },
+    "validation": {
+      "stats": {
+        "annual_return": 0.2107,
+        "avg_exposure": 0.9832,
+        "max_drawdown": -0.0998,
+        "n_trades": 94.0,
+        "profit_factor": 1.53,
+        "sharpe": 1.05,
+        "sortino": 1.53,
+        "total_return": 0.2015,
+        "win_rate": 0.5638,
+        "worst": -0.0939
+      },
+      "trades": 94
+    }
+  },
+  "decision": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "rejected"
+  },
+  "diagnostics": {
+    "five_x_hard_rejection": false,
+    "five_x_stats": {
+      "annual_return": -0.0012,
+      "avg_exposure": 0.9658,
+      "max_drawdown": -0.181,
+      "n_trades": 133.0,
+      "profit_factor": 1.08,
+      "sharpe": 0.06,
+      "sortino": 0.08,
+      "total_return": -0.0017,
+      "win_rate": 0.4887,
+      "worst": -0.1079
+    },
+    "five_x_warning_only": true
+  },
+  "gate": {
+    "checks": {
+      "five_factor_beats_four_factor": true,
+      "has_eligible_rule": true,
+      "industry_size_neutral_signal": false,
+      "no_leverage": true,
+      "recent_annual_min": true,
+      "recent_total_p05_positive": false,
+      "stress_3x_positive": true,
+      "test_annual_min": true,
+      "test_mdd_min": true,
+      "test_sharpe_min": false,
+      "test_total_p05_positive": false,
+      "train_annual_min": true,
+      "validation_annual_min": true
+    },
+    "pass": false
+  },
+  "implementation_sha256": "806a1fca3adf49f1085a2269c931e189db48b48478208ce7b3a851f2d96feab5",
+  "known_limits": [
+    "The five-factor membership is dual-admitted as of R439 but the added vol-of-vol leg has weaker marginal IC than the four-factor control.",
+    "The test and recent windows have been observed in earlier rounds.",
+    "Current HS300 membership applied to history retains survivorship bias.",
+    "5x cost is warning-only and is never a hard rejection.",
+    "The composite is a research candidate until all gates pass."
+  ],
+  "neutral_ic": {
+    "ext_alt_hs300_cash_flow_stability_4q_low": {
+      "20": {
+        "directional_ic": 0.01921,
+        "p_value": 0.00565296,
+        "recent_directional_ic": 0.025059,
+        "rows": 1073,
+        "yearly_sign_consistency": 0.8
+      },
+      "5": {
+        "directional_ic": 0.009529,
+        "p_value": 0.00653917,
+        "recent_directional_ic": 0.012983,
+        "rows": 1088,
+        "yearly_sign_consistency": 0.8
+      },
+      "60": {
+        "directional_ic": 0.040075,
+        "p_value": 0.00053043,
+        "recent_directional_ic": 0.027188,
+        "rows": 1033,
+        "yearly_sign_consistency": 0.8
+      }
+    },
+    "ext_alt_hs300_dividend_yield": {
+      "20": {
+        "directional_ic": 0.026404,
+        "p_value": 0.01795956,
+        "recent_directional_ic": 0.077357,
+        "rows": 1880,
+        "yearly_sign_consistency": 0.625
+      },
+      "5": {
+        "directional_ic": 0.018204,
+        "p_value": 0.00048358,
+        "recent_directional_ic": 0.045012,
+        "rows": 1895,
+        "yearly_sign_consistency": 0.75
+      },
+      "60": {
+        "directional_ic": 0.034227,
+        "p_value": 0.0824972,
+        "recent_directional_ic": 0.107482,
+        "rows": 1840,
+        "yearly_sign_consistency": 0.625
+      }
+    },
+    "ext_alt_hs300_fund_holding_ratio_low": {
+      "20": {
+        "directional_ic": 0.015459,
+        "p_value": 0.07292472,
+        "recent_directional_ic": 0.004754,
+        "rows": 1365,
+        "yearly_sign_consistency": 0.666667
+      },
+      "5": {
+        "directional_ic": 0.009393,
+        "p_value": 0.03487362,
+        "recent_directional_ic": 0.002235,
+        "rows": 1380,
+        "yearly_sign_consistency": 0.666667
+      },
+      "60": {
+        "directional_ic": 0.025384,
+        "p_value": 0.09857397,
+        "recent_directional_ic": -0.01335,
+        "rows": 1325,
+        "yearly_sign_consistency": 0.5
+      }
+    },
+    "ext_alt_hs300_idio_vol_40d_low": {
+      "20": {
+        "directional_ic": 0.021567,
+        "p_value": 0.03303546,
+        "recent_directional_ic": 0.066434,
+        "rows": 1880,
+        "yearly_sign_consistency": 0.625
+      },
+      "5": {
+        "directional_ic": 0.01475,
+        "p_value": 0.00289637,
+        "recent_directional_ic": 0.034626,
+        "rows": 1890,
+        "yearly_sign_consistency": 0.75
+      },
+      "60": {
+        "directional_ic": 0.025878,
+        "p_value": 0.10261595,
+        "recent_directional_ic": 0.084899,
+        "rows": 1840,
+        "yearly_sign_consistency": 0.625
+      }
+    },
+    "ext_alt_hs300_vol_of_vol_60d_low": {
+      "20": {
+        "directional_ic": 0.02084,
+        "p_value": 0.00541764,
+        "recent_directional_ic": 0.076177,
+        "rows": 1880,
+        "yearly_sign_consistency": 0.75
+      },
+      "5": {
+        "directional_ic": 0.014474,
+        "p_value": 0.00028274,
+        "recent_directional_ic": 0.043548,
+        "rows": 1895,
+        "yearly_sign_consistency": 0.875
+      },
+      "60": {
+        "directional_ic": 0.028002,
+        "p_value": 0.00339464,
+        "recent_directional_ic": 0.094056,
+        "rows": 1840,
+        "yearly_sign_consistency": 0.875
+      }
+    }
+  },
+  "preregistration_sha256": "af0fd5c10a9435df92c2e10267b00f5ba718a66a3cdb227f282d3d97abcf0cae",
+  "round": "R449",
+  "rows": [
+    {
+      "hold": 30,
+      "industry_cap": 0,
+      "members": "four",
+      "positions": 10,
+      "recent": {
+        "stats": {
+          "annual_return": 0.0899,
+          "avg_exposure": 0.9553,
+          "max_drawdown": -0.0994,
+          "n_trades": 91.0,
+          "profit_factor": 1.48,
+          "sharpe": 0.73,
+          "sortino": 1.09,
+          "total_return": 0.0925,
+          "win_rate": 0.5165,
+          "worst": -0.0922
+        },
+        "trades": 91
+      },
+      "test": {
+        "stats": {
+          "annual_return": 0.0303,
+          "avg_exposure": 0.9645,
+          "max_drawdown": -0.1414,
+          "n_trades": 134.0,
+          "profit_factor": 1.11,
+          "sharpe": 0.3,
+          "sortino": 0.43,
+          "total_return": 0.0444,
+          "win_rate": 0.5149,
+          "worst": -0.1015
+        },
+        "trades": 134
+      },
+      "test_3x": {
+        "stats": {
+          "annual_return": 0.0167,
+          "avg_exposure": 0.9646,
+          "max_drawdown": -0.1528,
+          "n_trades": 134.0,
+          "profit_factor": 1.11,
+          "sharpe": 0.19,
+          "sortino": 0.28,
+          "total_return": 0.0245,
+          "win_rate": 0.5,
+          "worst": -0.1028
+        },
+        "trades": 134
+      },
+      "train": {
+        "stats": {
+          "annual_return": 0.2098,
+          "avg_exposure": 0.9885,
+          "max_drawdown": -0.078,
+          "n_trades": 175.0,
+          "profit_factor": 1.71,
+          "sharpe": 1.56,
+          "sortino": 2.45,
+          "total_return": 0.4428,
+          "win_rate": 0.6,
+          "worst": -0.083
+        },
+        "trades": 175
+      },
+      "validation": {
+        "stats": {
+          "annual_return": 0.2107,
+          "avg_exposure": 0.9832,
+          "max_drawdown": -0.0998,
+          "n_trades": 94.0,
+          "profit_factor": 1.53,
+          "sharpe": 1.05,
+          "sortino": 1.53,
+          "total_return": 0.2015,
+          "win_rate": 0.5638,
+          "worst": -0.0939
+        },
+        "trades": 94
+      }
+    },
+    {
+      "hold": 30,
+      "industry_cap": 2,
+      "members": "four",
+      "positions": 10,
+      "recent": {
+        "stats": {
+          "annual_return": 0.0905,
+          "avg_exposure": 0.9457,
+          "max_drawdown": -0.0975,
+          "n_trades": 93.0,
+          "profit_factor": 1.33,
+          "sharpe": 0.74,
+          "sortino": 1.13,
+          "total_return": 0.0932,
+          "win_rate": 0.5376,
+          "worst": -0.1094
+        },
+        "trades": 93
+      },
+      "test": {
+        "stats": {
+          "annual_return": 0.0706,
+          "avg_exposure": 0.9492,
+          "max_drawdown": -0.14,
+          "n_trades": 133.0,
+          "profit_factor": 1.34,
+          "sharpe": 0.61,
+          "sortino": 0.92,
+          "total_return": 0.1044,
+          "win_rate": 0.5038,
+          "worst": -0.1094
+        },
+        "trades": 133
+      },
+      "test_3x": {
+        "stats": {
+          "annual_return": 0.0572,
+          "avg_exposure": 0.95,
+          "max_drawdown": -0.1437,
+          "n_trades": 133.0,
+          "profit_factor": 1.35,
+          "sharpe": 0.51,
+          "sortino": 0.76,
+          "total_return": 0.0844,
+          "win_rate": 0.4887,
+          "worst": -0.1106
+        },
+        "trades": 133
+      },
+      "train": {
+        "stats": {
+          "annual_return": 0.1802,
+          "avg_exposure": 0.9435,
+          "max_drawdown": -0.0857,
+          "n_trades": 172.0,
+          "profit_factor": 1.26,
+          "sharpe": 1.36,
+          "sortino": 2.11,
+          "total_return": 0.3755,
+          "win_rate": 0.6163,
+          "worst": -0.0846
+        },
+        "trades": 172
+      },
+      "validation": {
+        "stats": {
+          "annual_return": 0.2019,
+          "avg_exposure": 0.9647,
+          "max_drawdown": -0.0978,
+          "n_trades": 92.0,
+          "profit_factor": 1.57,
+          "sharpe": 1.04,
+          "sortino": 1.52,
+          "total_return": 0.1931,
+          "win_rate": 0.5435,
+          "worst": -0.0939
+        },
+        "trades": 92
+      }
+    },
+    {
+      "hold": 30,
+      "industry_cap": 3,
+      "members": "four",
+      "positions": 10,
+      "recent": {
+        "stats": {
+          "annual_return": 0.0671,
+          "avg_exposure": 0.9494,
+          "max_drawdown": -0.1298,
+          "n_trades": 95.0,
+          "profit_factor": 1.28,
+          "sharpe": 0.57,
+          "sortino": 0.84,
+          "total_return": 0.069,
+          "win_rate": 0.5158,
+          "worst": -0.1015
+        },
+        "trades": 95
+      },
+      "test": {
+        "stats": {
+          "annual_return": 0.0874,
+          "avg_exposure": 0.9571,
+          "max_drawdown": -0.1094,
+          "n_trades": 131.0,
+          "profit_factor": 1.4,
+          "sharpe": 0.72,
+          "sortino": 1.08,
+          "total_return": 0.1298,
+          "win_rate": 0.5115,
+          "worst": -0.1272
+        },
+        "trades": 131
+      },
+      "test_3x": {
+        "stats": {
+          "annual_return": 0.0733,
+          "avg_exposure": 0.9572,
+          "max_drawdown": -0.1129,
+          "n_trades": 131.0,
+          "profit_factor": 1.33,
+          "sharpe": 0.62,
+          "sortino": 0.92,
+          "total_return": 0.1085,
+          "win_rate": 0.5115,
+          "worst": -0.1284
+        },
+        "trades": 131
+      },
+      "train": {
+        "stats": {
+          "annual_return": 0.152,
+          "avg_exposure": 0.9707,
+          "max_drawdown": -0.0937,
+          "n_trades": 176.0,
+          "profit_factor": 1.23,
+          "sharpe": 1.14,
+          "sortino": 1.77,
+          "total_return": 0.3131,
+          "win_rate": 0.6023,
+          "worst": -0.0846
+        },
+        "trades": 176
+      },
+      "validation": {
+        "stats": {
+          "annual_return": 0.2107,
+          "avg_exposure": 0.9676,
+          "max_drawdown": -0.0939,
+          "n_trades": 92.0,
+          "profit_factor": 1.55,
+          "sharpe": 1.06,
+          "sortino": 1.55,
+          "total_return": 0.2016,
+          "win_rate": 0.5543,
+          "worst": -0.0939
+        },
+        "trades": 92
+      }
+    },
+    {
+      "hold": 30,
+      "industry_cap": 0,
+      "members": "four",
+      "positions": 20,
+      "recent": {
+        "stats": {
+          "annual_return": 0.0456,
+          "avg_exposure": 0.9416,
+          "max_drawdown": -0.1157,
+          "n_trades": 188.0,
+          "profit_factor": 1.2,
+          "sharpe": 0.43,
+          "sortino": 0.63,
+          "total_return": 0.0469,
+          "win_rate": 0.5106,
+          "worst": -0.1015
+        },
+        "trades": 188
+      },
+      "test": {
+        "stats": {
+          "annual_return": 0.0836,
+          "avg_exposure": 0.9564,
+          "max_drawdown": -0.1165,
+          "n_trades": 265.0,
+          "profit_factor": 1.41,
+          "sharpe": 0.72,
+          "sortino": 1.06,
+          "total_return": 0.124,
+          "win_rate": 0.5019,
+          "worst": -0.1145
+        },
+        "trades": 265
+      },
+      "test_3x": {
+        "stats": {
+          "annual_return": 0.0696,
+          "avg_exposure": 0.9558,
+          "max_drawdown": -0.1203,
+          "n_trades": 265.0,
+          "profit_factor": 1.36,
+          "sharpe": 0.62,
+          "sortino": 0.9,
+          "total_return": 0.1029,
+          "win_rate": 0.4981,
+          "worst": -0.1158
+        },
+        "trades": 265
+      },
+      "train": {
+        "stats": {
+          "annual_return": 0.1839,
+          "avg_exposure": 0.9353,
+          "max_drawdown": -0.0883,
+          "n_trades": 329.0,
+          "profit_factor": 1.47,
+          "sharpe": 1.48,
+          "sortino": 2.31,
+          "total_return": 0.3838,
+          "win_rate": 0.614,
+          "worst": -0.0846
+        },
+        "trades": 329
+      },
+      "validation": {
+        "stats": {
+          "annual_return": 0.2198,
+          "avg_exposure": 0.973,
+          "max_drawdown": -0.0869,
+          "n_trades": 176.0,
+          "profit_factor": 1.59,
+          "sharpe": 1.14,
+          "sortino": 1.64,
+          "total_return": 0.2102,
+          "win_rate": 0.5852,
+          "worst": -0.1395
+        },
+        "trades": 176
+      }
+    },
+    {
+      "hold": 30,
+      "industry_cap": 2,
+      "members": "four",
+      "positions": 20,
+      "recent": {
+        "stats": {
+          "annual_return": 0.0521,
+          "avg_exposure": 0.731,
+          "max_drawdown": -0.1016,
+          "n_trades": 148.0,
+          "profit_factor": 1.3,
+          "sharpe": 0.55,
+          "sortino": 0.84,
+          "total_return": 0.0536,
+          "win_rate": 0.5068,
+          "worst": -0.1272
+        },
+        "trades": 148
+      },
+      "test": {
+        "stats": {
+          "annual_return": 0.0564,
+          "avg_exposure": 0.7529,
+          "max_drawdown": -0.1119,
+          "n_trades": 212.0,
+          "profit_factor": 1.28,
+          "sharpe": 0.59,
+          "sortino": 0.91,
+          "total_return": 0.0832,
+          "win_rate": 0.5142,
+          "worst": -0.1272
+        },
+        "trades": 212
+      },
+      "test_3x": {
+        "stats": {
+          "annual_return": 0.0456,
+          "avg_exposure": 0.7528,
+          "max_drawdown": -0.1144,
+          "n_trades": 212.0,
+          "profit_factor": 1.26,
+          "sharpe": 0.49,
+          "sortino": 0.75,
+          "total_return": 0.0671,
+          "win_rate": 0.5047,
+          "worst": -0.1284
+        },
+        "trades": 212
+      },
+      "train": {
+        "stats": {
+          "annual_return": 0.1038,
+          "avg_exposure": 0.5943,
+          "max_drawdown": -0.0618,
+          "n_trades": 210.0,
+          "profit_factor": 1.38,
+          "sharpe": 1.29,
+          "sortino": 1.97,
+          "total_return": 0.2094,
+          "win_rate": 0.6,
+          "worst": -0.0952
+        },
+        "trades": 210
+      },
+      "validation": {
+        "stats": {
+          "annual_return": 0.1052,
+          "avg_exposure": 0.6194,
+          "max_drawdown": -0.0672,
+          "n_trades": 121.0,
+          "profit_factor": 1.48,
+          "sharpe": 0.86,
+          "sortino": 1.24,
+          "total_return": 0.1008,
+          "win_rate": 0.5207,
+          "worst": -0.0923
+        },
+        "trades": 121
+      }
+    },
+    {
+      "hold": 30,
+      "industry_cap": 3,
+      "members": "four",
+      "positions": 20,
+      "recent": {
+        "stats": {
+          "annual_return": 0.0316,
+          "avg_exposure": 0.8045,
+          "max_drawdown": -0.1037,
+          "n_trades": 168.0,
+          "profit_factor": 1.21,
+          "sharpe": 0.34,
+          "sortino": 0.51,
+          "total_return": 0.0325,
+          "win_rate": 0.494,
+          "worst": -0.1015
+        },
+        "trades": 168
+      },
+      "test": {
+        "stats": {
+          "annual_return": 0.0584,
+          "avg_exposure": 0.8265,
+          "max_drawdown": -0.1096,
+          "n_trades": 233.0,
+          "profit_factor": 1.31,
+          "sharpe": 0.58,
+          "sortino": 0.87,
+          "total_return": 0.0862,
+          "win_rate": 0.5064,
+          "worst": -0.1184
+        },
+        "trades": 233
+      },
+      "test_3x": {
+        "stats": {
+          "annual_return": 0.0475,
+          "avg_exposure": 0.8259,
+          "max_drawdown": -0.112,
+          "n_trades": 233.0,
+          "profit_factor": 1.24,
+          "sharpe": 0.49,
+          "sortino": 0.72,
+          "total_return": 0.07,
+          "win_rate": 0.5064,
+          "worst": -0.1196
+        },
+        "trades": 233
+      },
+      "train": {
+        "stats": {
+          "annual_return": 0.1064,
+          "avg_exposure": 0.6566,
+          "max_drawdown": -0.0615,
+          "n_trades": 232.0,
+          "profit_factor": 1.37,
+          "sharpe": 1.23,
+          "sortino": 1.88,
+          "total_return": 0.2149,
+          "win_rate": 0.5948,
+          "worst": -0.083
+        },
+        "trades": 232
+      },
+      "validation": {
+        "stats": {
+          "annual_return": 0.0873,
+          "avg_exposure": 0.6653,
+          "max_drawdown": -0.0698,
+          "n_trades": 130.0,
+          "profit_factor": 1.47,
+          "sharpe": 0.72,
+          "sortino": 1.01,
+          "total_return": 0.0837,
+          "win_rate": 0.5,
+          "worst": -0.0923
+        },
+        "trades": 130
+      }
+    },
+    {
+      "hold": 30,
+      "industry_cap": 0,
+      "members": "five",
+      "positions": 10,
+      "recent": {
+        "stats": {
+          "annual_return": 0.0629,
+          "avg_exposure": 0.9541,
+          "max_drawdown": -0.0991,
+          "n_trades": 95.0,
+          "profit_factor": 1.24,
+          "sharpe": 0.53,
+          "sortino": 0.78,
+          "total_return": 0.0647,
+          "win_rate": 0.5263,
+          "worst": -0.1145
+        },
+        "trades": 95
+      },
+      "recent_bootstrap": {
+        "mdd_p05": -0.19748708477129462,
+        "sharpe_p50": 0.5124146054063612,
+        "total_p05": -0.12705234400801368,
+        "total_p50": 0.06202407287520195
+      },
+      "test": {
+        "stats": {
+          "annual_return": 0.0375,
+          "avg_exposure": 0.9656,
+          "max_drawdown": -0.15,
+          "n_trades": 133.0,
+          "profit_factor": 1.13,
+          "sharpe": 0.35,
+          "sortino": 0.51,
+          "total_return": 0.0551,
+          "win_rate": 0.5188,
+          "worst": -0.1041
+        },
+        "trades": 133
+      },
+      "test_3x": {
+        "stats": {
+          "annual_return": 0.0236,
+          "avg_exposure": 0.9656,
+          "max_drawdown": -0.1614,
+          "n_trades": 133.0,
+          "profit_factor": 1.17,
+          "sharpe": 0.25,
+          "sortino": 0.35,
+          "total_return": 0.0346,
+          "win_rate": 0.4962,
+          "worst": -0.1054
+        },
+        "trades": 133
+      },
+      "test_5x": {
+        "stats": {
+          "annual_return": -0.0012,
+          "avg_exposure": 0.9658,
+          "max_drawdown": -0.181,
+          "n_trades": 133.0,
+          "profit_factor": 1.08,
+          "sharpe": 0.06,
+          "sortino": 0.08,
+          "total_return": -0.0017,
+          "win_rate": 0.4887,
+          "worst": -0.1079
+        },
+        "trades": 133
+      },
+      "test_bootstrap": {
+        "mdd_p05": -0.2682975578594977,
+        "sharpe_p50": 0.35124249598277024,
+        "total_p05": -0.18763997684907519,
+        "total_p50": 0.05476184460795275
+      },
+      "train": {
+        "stats": {
+          "annual_return": 0.2275,
+          "avg_exposure": 0.9893,
+          "max_drawdown": -0.0888,
+          "n_trades": 172.0,
+          "profit_factor": 1.89,
+          "sharpe": 1.69,
+          "sortino": 2.71,
+          "total_return": 0.4835,
+          "win_rate": 0.6047,
+          "worst": -0.0909
+        },
+        "trades": 172
+      },
+      "validation": {
+        "stats": {
+          "annual_return": 0.2655,
+          "avg_exposure": 0.9862,
+          "max_drawdown": -0.0853,
+          "n_trades": 88.0,
+          "profit_factor": 1.57,
+          "sharpe": 1.26,
+          "sortino": 1.83,
+          "total_return": 0.2538,
+          "win_rate": 0.6136,
+          "worst": -0.083
+        },
+        "trades": 88
+      }
+    },
+    {
+      "hold": 30,
+      "industry_cap": 2,
+      "members": "five",
+      "positions": 10,
+      "recent": {
+        "stats": {
+          "annual_return": 0.0495,
+          "avg_exposure": 0.9489,
+          "max_drawdown": -0.1104,
+          "n_trades": 97.0,
+          "profit_factor": 1.24,
+          "sharpe": 0.44,
+          "sortino": 0.66,
+          "total_return": 0.0509,
+          "win_rate": 0.5052,
+          "worst": -0.1015
+        },
+        "trades": 97
+      },
+      "test": {
+        "stats": {
+          "annual_return": 0.0325,
+          "avg_exposure": 0.9458,
+          "max_drawdown": -0.0995,
+          "n_trades": 126.0,
+          "profit_factor": 1.37,
+          "sharpe": 0.33,
+          "sortino": 0.5,
+          "total_return": 0.0477,
+          "win_rate": 0.4683,
+          "worst": -0.0894
+        },
+        "trades": 126
+      },
+      "test_3x": {
+        "stats": {
+          "annual_return": 0.0214,
+          "avg_exposure": 0.9453,
+          "max_drawdown": -0.1052,
+          "n_trades": 126.0,
+          "profit_factor": 1.33,
+          "sharpe": 0.24,
+          "sortino": 0.36,
+          "total_return": 0.0314,
+          "win_rate": 0.4603,
+          "worst": -0.0907
+        },
+        "trades": 126
+      },
+      "train": {
+        "stats": {
+          "annual_return": 0.2238,
+          "avg_exposure": 0.9597,
+          "max_drawdown": -0.0957,
+          "n_trades": 175.0,
+          "profit_factor": 1.41,
+          "sharpe": 1.55,
+          "sortino": 2.49,
+          "total_return": 0.475,
+          "win_rate": 0.6229,
+          "worst": -0.1015
+        },
+        "trades": 175
+      },
+      "validation": {
+        "stats": {
+          "annual_return": 0.1868,
+          "avg_exposure": 0.9522,
+          "max_drawdown": -0.0921,
+          "n_trades": 91.0,
+          "profit_factor": 1.81,
+          "sharpe": 0.99,
+          "sortino": 1.45,
+          "total_return": 0.1788,
+          "win_rate": 0.4945,
+          "worst": -0.0886
+        },
+        "trades": 91
+      }
+    },
+    {
+      "hold": 30,
+      "industry_cap": 3,
+      "members": "five",
+      "positions": 10,
+      "recent": {
+        "stats": {
+          "annual_return": 0.006,
+          "avg_exposure": 0.9515,
+          "max_drawdown": -0.156,
+          "n_trades": 97.0,
+          "profit_factor": 1.23,
+          "sharpe": 0.11,
+          "sortino": 0.16,
+          "total_return": 0.0062,
+          "win_rate": 0.4639,
+          "worst": -0.1015
+        },
+        "trades": 97
+      },
+      "test": {
+        "stats": {
+          "annual_return": 0.0293,
+          "avg_exposure": 0.9576,
+          "max_drawdown": -0.1215,
+          "n_trades": 134.0,
+          "profit_factor": 1.33,
+          "sharpe": 0.29,
+          "sortino": 0.43,
+          "total_return": 0.043,
+          "win_rate": 0.4701,
+          "worst": -0.1015
+        },
+        "trades": 134
+      },
+      "test_3x": {
+        "stats": {
+          "annual_return": 0.0168,
+          "avg_exposure": 0.957,
+          "max_drawdown": -0.1274,
+          "n_trades": 134.0,
+          "profit_factor": 1.33,
+          "sharpe": 0.2,
+          "sortino": 0.28,
+          "total_return": 0.0246,
+          "win_rate": 0.4552,
+          "worst": -0.1028
+        },
+        "trades": 134
+      },
+      "train": {
+        "stats": {
+          "annual_return": 0.2481,
+          "avg_exposure": 0.9706,
+          "max_drawdown": -0.0907,
+          "n_trades": 175.0,
+          "profit_factor": 1.46,
+          "sharpe": 1.72,
+          "sortino": 2.83,
+          "total_return": 0.532,
+          "win_rate": 0.6343,
+          "worst": -0.0984
+        },
+        "trades": 175
+      },
+      "validation": {
+        "stats": {
+          "annual_return": 0.2094,
+          "avg_exposure": 0.9747,
+          "max_drawdown": -0.0988,
+          "n_trades": 92.0,
+          "profit_factor": 1.66,
+          "sharpe": 1.05,
+          "sortino": 1.51,
+          "total_return": 0.2003,
+          "win_rate": 0.5435,
+          "worst": -0.083
+        },
+        "trades": 92
+      }
+    },
+    {
+      "hold": 30,
+      "industry_cap": 0,
+      "members": "five",
+      "positions": 20,
+      "recent": {
+        "stats": {
+          "annual_return": 0.0179,
+          "avg_exposure": 0.9441,
+          "max_drawdown": -0.1201,
+          "n_trades": 191.0,
+          "profit_factor": 1.27,
+          "sharpe": 0.21,
+          "sortino": 0.3,
+          "total_return": 0.0184,
+          "win_rate": 0.466,
+          "worst": -0.1041
+        },
+        "trades": 191
+      },
+      "test": {
+        "stats": {
+          "annual_return": 0.0548,
+          "avg_exposure": 0.9556,
+          "max_drawdown": -0.131,
+          "n_trades": 262.0,
+          "profit_factor": 1.41,
+          "sharpe": 0.5,
+          "sortino": 0.73,
+          "total_return": 0.0807,
+          "win_rate": 0.4809,
+          "worst": -0.0975
+        },
+        "trades": 262
+      },
+      "test_3x": {
+        "stats": {
+          "annual_return": 0.0421,
+          "avg_exposure": 0.9549,
+          "max_drawdown": -0.1408,
+          "n_trades": 262.0,
+          "profit_factor": 1.37,
+          "sharpe": 0.4,
+          "sortino": 0.58,
+          "total_return": 0.0619,
+          "win_rate": 0.4733,
+          "worst": -0.0988
+        },
+        "trades": 262
+      },
+      "train": {
+        "stats": {
+          "annual_return": 0.1794,
+          "avg_exposure": 0.9233,
+          "max_drawdown": -0.0857,
+          "n_trades": 326.0,
+          "profit_factor": 1.53,
+          "sharpe": 1.47,
+          "sortino": 2.33,
+          "total_return": 0.3737,
+          "win_rate": 0.5982,
+          "worst": -0.1015
+        },
+        "trades": 326
+      },
+      "validation": {
+        "stats": {
+          "annual_return": 0.2862,
+          "avg_exposure": 0.9722,
+          "max_drawdown": -0.0898,
+          "n_trades": 172.0,
+          "profit_factor": 1.92,
+          "sharpe": 1.38,
+          "sortino": 1.98,
+          "total_return": 0.2734,
+          "win_rate": 0.593,
+          "worst": -0.083
+        },
+        "trades": 172
+      }
+    },
+    {
+      "hold": 30,
+      "industry_cap": 2,
+      "members": "five",
+      "positions": 20,
+      "recent": {
+        "stats": {
+          "annual_return": 0.0127,
+          "avg_exposure": 0.7496,
+          "max_drawdown": -0.105,
+          "n_trades": 150.0,
+          "profit_factor": 1.33,
+          "sharpe": 0.17,
+          "sortino": 0.26,
+          "total_return": 0.0131,
+          "win_rate": 0.4533,
+          "worst": -0.0846
+        },
+        "trades": 150
+      },
+      "test": {
+        "stats": {
+          "annual_return": 0.0,
+          "avg_exposure": 0.7433,
+          "max_drawdown": -0.1073,
+          "n_trades": 206.0,
+          "profit_factor": 1.37,
+          "sharpe": 0.05,
+          "sortino": 0.07,
+          "total_return": 0.0,
+          "win_rate": 0.4272,
+          "worst": -0.0894
+        },
+        "trades": 206
+      },
+      "test_3x": {
+        "stats": {
+          "annual_return": -0.009,
+          "avg_exposure": 0.7423,
+          "max_drawdown": -0.1119,
+          "n_trades": 206.0,
+          "profit_factor": 1.32,
+          "sharpe": -0.04,
+          "sortino": -0.06,
+          "total_return": -0.0131,
+          "win_rate": 0.4223,
+          "worst": -0.0907
+        },
+        "trades": 206
+      },
+      "train": {
+        "stats": {
+          "annual_return": 0.1128,
+          "avg_exposure": 0.6135,
+          "max_drawdown": -0.0585,
+          "n_trades": 219.0,
+          "profit_factor": 1.44,
+          "sharpe": 1.36,
+          "sortino": 2.13,
+          "total_return": 0.2283,
+          "win_rate": 0.5936,
+          "worst": -0.1015
+        },
+        "trades": 219
+      },
+      "validation": {
+        "stats": {
+          "annual_return": 0.1375,
+          "avg_exposure": 0.6168,
+          "max_drawdown": -0.0716,
+          "n_trades": 118.0,
+          "profit_factor": 1.85,
+          "sharpe": 0.97,
+          "sortino": 1.44,
+          "total_return": 0.1317,
+          "win_rate": 0.5,
+          "worst": -0.0923
+        },
+        "trades": 118
+      }
+    },
+    {
+      "hold": 30,
+      "industry_cap": 3,
+      "members": "five",
+      "positions": 20,
+      "recent": {
+        "stats": {
+          "annual_return": 0.0254,
+          "avg_exposure": 0.8043,
+          "max_drawdown": -0.1114,
+          "n_trades": 161.0,
+          "profit_factor": 1.37,
+          "sharpe": 0.29,
+          "sortino": 0.43,
+          "total_return": 0.0262,
+          "win_rate": 0.4596,
+          "worst": -0.1145
+        },
+        "trades": 161
+      },
+      "test": {
+        "stats": {
+          "annual_return": 0.0049,
+          "avg_exposure": 0.7957,
+          "max_drawdown": -0.1125,
+          "n_trades": 224.0,
+          "profit_factor": 1.21,
+          "sharpe": 0.1,
+          "sortino": 0.14,
+          "total_return": 0.0072,
+          "win_rate": 0.4643,
+          "worst": -0.1145
+        },
+        "trades": 224
+      },
+      "test_3x": {
+        "stats": {
+          "annual_return": -0.005,
+          "avg_exposure": 0.7949,
+          "max_drawdown": -0.1176,
+          "n_trades": 224.0,
+          "profit_factor": 1.15,
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "total_return": -0.0073,
+          "win_rate": 0.4643,
+          "worst": -0.1158
+        },
+        "trades": 224
+      },
+      "train": {
+        "stats": {
+          "annual_return": 0.1107,
+          "avg_exposure": 0.6558,
+          "max_drawdown": -0.0711,
+          "n_trades": 234.0,
+          "profit_factor": 1.47,
+          "sharpe": 1.29,
+          "sortino": 1.99,
+          "total_return": 0.2239,
+          "win_rate": 0.5812,
+          "worst": -0.1015
+        },
+        "trades": 234
+      },
+      "validation": {
+        "stats": {
+          "annual_return": 0.1385,
+          "avg_exposure": 0.6992,
+          "max_drawdown": -0.0851,
+          "n_trades": 135.0,
+          "profit_factor": 1.67,
+          "sharpe": 0.91,
+          "sortino": 1.34,
+          "total_return": 0.1327,
+          "win_rate": 0.5111,
+          "worst": -0.0923
+        },
+        "trades": 135
+      }
+    }
+  ],
+  "selected": {
+    "hold": 30,
+    "industry_cap": 0,
+    "members": "five",
+    "positions": 10,
+    "recent": {
+      "stats": {
+        "annual_return": 0.0629,
+        "avg_exposure": 0.9541,
+        "max_drawdown": -0.0991,
+        "n_trades": 95.0,
+        "profit_factor": 1.24,
+        "sharpe": 0.53,
+        "sortino": 0.78,
+        "total_return": 0.0647,
+        "win_rate": 0.5263,
+        "worst": -0.1145
+      },
+      "trades": 95
+    },
+    "recent_bootstrap": {
+      "mdd_p05": -0.19748708477129462,
+      "sharpe_p50": 0.5124146054063612,
+      "total_p05": -0.12705234400801368,
+      "total_p50": 0.06202407287520195
+    },
+    "test": {
+      "stats": {
+        "annual_return": 0.0375,
+        "avg_exposure": 0.9656,
+        "max_drawdown": -0.15,
+        "n_trades": 133.0,
+        "profit_factor": 1.13,
+        "sharpe": 0.35,
+        "sortino": 0.51,
+        "total_return": 0.0551,
+        "win_rate": 0.5188,
+        "worst": -0.1041
+      },
+      "trades": 133
+    },
+    "test_3x": {
+      "stats": {
+        "annual_return": 0.0236,
+        "avg_exposure": 0.9656,
+        "max_drawdown": -0.1614,
+        "n_trades": 133.0,
+        "profit_factor": 1.17,
+        "sharpe": 0.25,
+        "sortino": 0.35,
+        "total_return": 0.0346,
+        "win_rate": 0.4962,
+        "worst": -0.1054
+      },
+      "trades": 133
+    },
+    "test_5x": {
+      "stats": {
+        "annual_return": -0.0012,
+        "avg_exposure": 0.9658,
+        "max_drawdown": -0.181,
+        "n_trades": 133.0,
+        "profit_factor": 1.08,
+        "sharpe": 0.06,
+        "sortino": 0.08,
+        "total_return": -0.0017,
+        "win_rate": 0.4887,
+        "worst": -0.1079
+      },
+      "trades": 133
+    },
+    "test_bootstrap": {
+      "mdd_p05": -0.2682975578594977,
+      "sharpe_p50": 0.35124249598277024,
+      "total_p05": -0.18763997684907519,
+      "total_p50": 0.05476184460795275
+    },
+    "train": {
+      "stats": {
+        "annual_return": 0.2275,
+        "avg_exposure": 0.9893,
+        "max_drawdown": -0.0888,
+        "n_trades": 172.0,
+        "profit_factor": 1.89,
+        "sharpe": 1.69,
+        "sortino": 2.71,
+        "total_return": 0.4835,
+        "win_rate": 0.6047,
+        "worst": -0.0909
+      },
+      "trades": 172
+    },
+    "validation": {
+      "stats": {
+        "annual_return": 0.2655,
+        "avg_exposure": 0.9862,
+        "max_drawdown": -0.0853,
+        "n_trades": 88.0,
+        "profit_factor": 1.57,
+        "sharpe": 1.26,
+        "sortino": 1.83,
+        "total_return": 0.2538,
+        "win_rate": 0.6136,
+        "worst": -0.083
+      },
+      "trades": 88
+    }
+  },
+  "test_increment_annual": 0.007199999999999998
+}
