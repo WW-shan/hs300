@@ -1,0 +1,109 @@
+{
+  "append_only": {
+    "output_exists_must_refuse": true,
+    "result_exists_must_refuse": true,
+    "sidecars_required": true
+  },
+  "classification": "frozen-parameter forward shadow confirmation on newly refreshed PIT data; research-only, no tuning and no execution",
+  "cost_protocol": {
+    "five_x_can_hard_reject": false,
+    "main": "2x",
+    "max_total_weight": 1.0,
+    "no_leverage": true,
+    "robustness": "3x",
+    "warning_only": "5x"
+  },
+  "created_at": "2026-11-21",
+  "data_integrity_gate": {
+    "benchmark_required_tail": "2026-11-20",
+    "defensive_asset_required_tail": "2026-11-20",
+    "enriched_each_new_session_symbol_count": 300,
+    "extension_macro_fields_non_null": true,
+    "industry_fields_non_null_for_new_sessions": true,
+    "membership_daily_count": 300,
+    "membership_update_not_after_query": true,
+    "no_duplicate_symbol_date": true,
+    "no_future_dates": true,
+    "stale_or_missing_inputs_fail_closed": true
+  },
+  "evaluation_protocol": {
+    "blind_test_claim_allowed": false,
+    "failure_status": "no_go",
+    "performance_hard_gate_on_eleven_days": false,
+    "required_reporting": [
+      "portfolio_curve",
+      "benchmark_000300",
+      "total_return",
+      "sharpe",
+      "mdd",
+      "stock_turnover",
+      "defensive_rebalances",
+      "sleeve_returns",
+      "sleeve_weights",
+      "exposures",
+      "data_freshness",
+      "missing_symbols",
+      "fail_closed_status"
+    ],
+    "success_status": "shadow_observation_complete_no_decision",
+    "upgrade_allowed": false
+  },
+  "freeze": {
+    "parameter_search_allowed": false,
+    "parameters": {
+      "c_satellite_cap": 0.13,
+      "equity_target_vol": 0.17,
+      "overlay_equity_weight_max": 0.37,
+      "overlay_lookback_days": 110,
+      "overlay_target_vol": 0.17
+    },
+    "post_result_parameter_change_allowed": false,
+    "regime_switch_allowed": false,
+    "source_advantage_sample": 14,
+    "source_round": "R386",
+    "strategy_a": "ai_hs300_macro_gate_quality",
+    "strategy_b": "fade05_h30_sl20",
+    "strategy_c": "ai_hs300_quality_momentum_broad_h60",
+    "strategy_hashes_frozen": true
+  },
+  "input_sha256": {
+    "bond_10y": "d6b1d154a765ee77bce7c0c90f39dd966a9c6b1f0e7496fce1f47ef9e70d8de4",
+    "credit_spread_2026": "0e36604f0289abcee5cf2581558a9fd0c856f7ac903a73577de093665d7db604",
+    "dividend_assets": "7164618e7c144684b95be950f0126b53bb2c2f87ccb3a3a09bb911d8e1ee32b8",
+    "engine": "6698b1fbbf1400bc3a53864102763149e87ad595b8be8e9a9b79e044656ba2b6",
+    "extension_frame": "915113512ecf0ffdda1353a54c40cb84c08c59f880fc692b9f21e2c523a24d27",
+    "gold_assets": "e93b9ccae95909435ddfe8633db2762758db0cd2e37cb275dbd3ab862318f249",
+    "hs300_pe": "6208fbaaecf5fae8f91f41f76f26eb91584c552849082b802fb64dcc0ef1207e",
+    "membership": "4634484e36c13612bbbd3ca0ddffa226a9e9b85202fc4d157f5730c3aadd61a8",
+    "r385_report": "4aeb40ea9146d8b7dcf5db2c1d5e4390d45641c68ce22da4474f1b2b9866768f",
+    "r385_runner": "febdb56ea869334dd39a142489bb45ddd638baeb132734fb0e3ea9e8dd061bac",
+    "r386_preregistration": "ad18a83be629f8c53ae987ffd94a83b22733e3c24f7155e7711daed863ad854d",
+    "r386_report": "743b12edcbd82697666b2749847bcaf96d47d4054db6c3cc844cd87da78c75e3",
+    "r386_runner": "21bd5a08fc4d9d0525e17e6ccdf5b402f3262288dddb2be6c208f809fd55c0f6",
+    "strategy_a": "8cc54b21b2508bf35527687bac061518e8d8caac9887a7e86a07345bdc33526e",
+    "strategy_c": "6a120d44e00be96bccc1641bcec300f1bf62f1a1af56476bc37fc4561495051d",
+    "treasury_assets": "b02b71c50b572e3f3a684b026d98f7a0bc7598ff81e025c2f4ae8c8b544aaed4"
+  },
+  "known_limits": [
+    "Eleven trading days are statistically insufficient for a strategy decision.",
+    "This is a forward shadow observation, not an independent blind test because the broader research path and candidate were already observed.",
+    "A/B/C stock backtests remain daily T+1 approximations and do not model intraday impact.",
+    "Holder fields are stale-forward after the latest known announcement because no complete new announcement vintage was established for the new window.",
+    "Historical industry classification is effective-date mapped but not a complete publication-vintage archive."
+  ],
+  "output_policy": {
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "question": "After refreshing the complete research chain through 2026-11-20, how does the frozen R386 candidate behave on the eleven newly observed trading days without changing parameters, state rules or portfolio construction?",
+  "round": "R387",
+  "window": {
+    "anchor_date": "2026-11-05",
+    "end": "2026-11-20",
+    "new_observation_start": "2026-11-06",
+    "new_sessions": 11,
+    "reason": "Full-history warmup preserves the 110-day overlay and cohort state; only the new eleven trading days are reported as the shadow window.",
+    "warmup_start": "2022-05-05"
+  }
+}
