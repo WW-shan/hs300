@@ -1,0 +1,121 @@
+{
+  "benchmark": {
+    "role": "hard gate for beta completion",
+    "symbol": "000300.SH"
+  },
+  "beta_factors": [
+    {
+      "direction": "high",
+      "factor_id": "momentum_60d",
+      "role": "medium momentum"
+    },
+    {
+      "direction": "high",
+      "factor_id": "ext_alt_hs300_trend_efficiency_60d",
+      "role": "trend efficiency"
+    },
+    {
+      "direction": "high",
+      "factor_id": "ext_alt_hs300_risk_adjusted_momentum_60d",
+      "role": "risk-adjusted momentum"
+    },
+    {
+      "direction": "high",
+      "factor_id": "ext_alt_hs300_stock_rel_industry_20d",
+      "role": "industry relative strength"
+    }
+  ],
+  "classification": "frozen defensive quality/dividend core plus momentum/industry-relative-strength beta completion; no promotion",
+  "core_candidates": [
+    {
+      "id": 1,
+      "max_hold_days": 30,
+      "max_positions": 10,
+      "members": [
+        "ext_alt_hs300_cash_flow_stability_4q_low",
+        "ext_alt_hs300_dividend_yield",
+        "ext_alt_hs300_fund_holding_ratio_low",
+        "ext_alt_hs300_vol_of_vol_20d_low"
+      ]
+    },
+    {
+      "id": 4,
+      "max_hold_days": 40,
+      "max_positions": 10,
+      "members": [
+        "ext_alt_hs300_cash_flow_stability_4q_low",
+        "ext_alt_hs300_dividend_yield",
+        "ext_alt_hs300_fund_holding_ratio_low"
+      ]
+    },
+    {
+      "id": 9,
+      "max_hold_days": 40,
+      "max_positions": 20,
+      "members": [
+        "ext_alt_hs300_cash_flow_stability_4q_low",
+        "ext_alt_hs300_dividend_yield",
+        "ext_alt_hs300_fund_holding_ratio_low",
+        "ext_alt_hs300_idio_vol_40d_low",
+        "ext_alt_hs300_ocf_margin_4q",
+        "ext_alt_hs300_vol_of_vol_20d_low"
+      ]
+    }
+  ],
+  "created_at": "2026-11-22",
+  "gate": {
+    "minimum_hs300_excess": 0.02,
+    "minimum_test_annual": 0.08,
+    "minimum_test_sharpe": 0.6,
+    "minimum_train_annual": 0.08,
+    "minimum_train_sharpe": 0.9,
+    "minimum_validation_annual": 0.12,
+    "minimum_validation_sharpe": 1.0
+  },
+  "known_limits": [
+    "This is a combination of already-registered factors, not a new formula.",
+    "Validation and test windows have been observed in prior work; the design is new, not blind.",
+    "Current HS300 membership applied to history retains survivorship bias.",
+    "Five-x cost is not a hard rejection gate."
+  ],
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "growth_beta_complete_no_promotion"
+  },
+  "portfolio": {
+    "matching": "open_t+1",
+    "max_hold_days": [
+      20,
+      30,
+      40
+    ],
+    "max_positions": [
+      10,
+      20,
+      30
+    ],
+    "no_leverage": true
+  },
+  "round": "R400",
+  "source_rounds": [
+    "R398",
+    "R399"
+  ],
+  "weights": {
+    "beta_equal_or_single": "predeclared grid",
+    "beta_total": 0.25,
+    "core_equal_within": "true",
+    "core_total": 0.75
+  },
+  "windows": {
+    "test_end": "2026-11-05",
+    "test_start": "2025-05-06",
+    "train_end": "2024-05-05",
+    "train_start": "2022-05-05",
+    "validation_end": "2025-05-05",
+    "validation_start": "2024-05-06"
+  }
+}
