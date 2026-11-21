@@ -176,6 +176,8 @@ def _backtest_config(
     max_positions: int,
     cost: dict[str, float],
     max_hold_days: int = 30,
+    industry_by_symbol: dict[str, str] | None = None,
+    max_industry_positions: int = 0,
 ) -> StrategyBacktestConfig:
     return StrategyBacktestConfig(
         strategy_id="factor_rank_research",
@@ -188,6 +190,14 @@ def _backtest_config(
             "entry_score": ENTRY_SCORE,
             "exit_score": EXIT_SCORE,
             "top_rank": max(20, max_positions),
+            **(
+                {
+                    "industry_by_symbol": industry_by_symbol,
+                    "max_industry_positions": max_industry_positions,
+                }
+                if industry_by_symbol and max_industry_positions > 0
+                else {}
+            ),
         },
         overrides={"max_hold_days": max_hold_days},
         matching="open_t+1",

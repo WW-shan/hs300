@@ -111,6 +111,10 @@ class FactorRankResearchMatrixStrategy:
         top_rank = int(params.get("top_rank", 20))
         if not 1 <= top_rank <= 100:
             raise ValueError("top_rank must be between 1 and 100")
+        industry_by_symbol = _validated_industry_map(params.get("industry_by_symbol"))
+        max_industry_positions = int(params.get("max_industry_positions", 0) or 0)
+        if max_industry_positions < 0:
+            raise ValueError("max_industry_positions must be non-negative")
         if exit_score > entry_score:
             raise ValueError("exit_score must not exceed entry_score")
 
@@ -126,6 +130,14 @@ class FactorRankResearchMatrixStrategy:
         )
         entry = universe & (score >= np.float32(entry_score))
         entry = _limit_top_rank(entry, score, top_rank)
+        if industry_by_symbol and max_industry_positions > 0:
+            entry = _limit_industry_count(
+                entry,
+                score,
+                market.symbols,
+                industry_by_symbol,
+                max_industry_positions,
+            )
         exit_ = universe & (score <= np.float32(exit_score))
         return make_signal_matrix(
             market.shape,
@@ -187,6 +199,45 @@ def _bounded_float(value: object, name: str) -> float:
     if not np.isfinite(number) or not 0.0 <= number <= 100.0:
         raise ValueError(f"{name} must be between 0 and 100")
     return number
+
+
+def _validated_industry_map(raw: object) -> dict[str, str]:
+    if raw is None:
+        return {}
+    if not isinstance(raw, dict):
+        raise ValueError("industry_by_symbol must be a mapping")
+    output: dict[str, str] = {}
+    for symbol, industry in raw.items():
+        if not isinstance(symbol, str) or not symbol:
+            raise ValueError("industry_by_symbol keys must be non-empty strings")
+        if not isinstance(industry, str) or not industry:
+            raise ValueError(
+                f"industry_by_symbol[{symbol!r}] must be a non-empty string"
+            )
+        output[symbol] = industry
+    return output
+
+
+def _limit_industry_count(
+    eligible: np.ndarray,
+    score: np.ndarray,
+    symbols: tuple[str, ...],
+    industry_by_symbol: dict[str, str],
+    maximum: int,
+) -> np.ndarray:
+    capped = np.zeros(eligible.shape, dtype=bool)
+    for time_id in range(eligible.shape[0]):
+        asset_ids = np.flatnonzero(eligible[time_id])
+        order = asset_ids[np.argsort(-score[time_id, asset_ids], kind="stable")]
+        counts: dict[str, int] = {}
+        for asset_id in order:
+            symbol = symbols[int(asset_id)]
+            industry = industry_by_symbol.get(symbol, "unclassified")
+            if counts.get(industry, 0) >= maximum:
+                continue
+            counts[industry] = counts.get(industry, 0) + 1
+            capped[time_id, asset_id] = True
+    return capped
 
 
 def _limit_top_rank(

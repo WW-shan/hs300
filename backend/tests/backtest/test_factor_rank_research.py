@@ -148,6 +148,27 @@ def test_strategy_uses_controlled_scoring_directions_thresholds_and_top_rank():
     assert not signals.score.flags.writeable
 
 
+def test_optional_industry_cap_limits_daily_entries():
+    strategy = StrategyEngine._load_file(STRATEGY_PATH).matrix_strategy
+    market = _market()
+    params = {
+        "scoring": {"amount": 1.0},
+        "directions": {"amount": "high"},
+        "entry_score": 0.0,
+        "exit_score": 0.0,
+        "top_rank": 4,
+        "industry_by_symbol": {
+            "000001.SZ": "银行",
+            "000002.SZ": "银行",
+            "000003.SZ": "银行",
+            "000004.SZ": "公用事业",
+        },
+        "max_industry_positions": 1,
+    }
+    signals = strategy.compute_signals(market, params)
+    assert signals.entry.sum(axis=1).tolist() == [2, 2]
+
+
 def test_strategy_direction_changes_score_without_dynamic_formula_execution():
     strategy = StrategyEngine._load_file(STRATEGY_PATH).matrix_strategy
     market = _market()
