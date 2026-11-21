@@ -1,0 +1,14 @@
+{
+  "round": "R407",
+  "created_at": "2026-11-22",
+  "classification": "industry concentration cap overlay on frozen core; no promotion",
+  "source_rounds": ["R405", "R406"],
+  "candidate": {"core_weight": 0.8, "beta_weight": 0.2, "core_members": ["ext_alt_hs300_cash_flow_stability_4q_low", "ext_alt_hs300_dividend_yield", "ext_alt_hs300_fund_holding_ratio_low"], "max_positions": 10, "max_hold_days": 40},
+  "industry_source": {"path": "ext_data/ext_hy_ths/part.parquet", "level": "first segment before '-'", "classification": "static current industry snapshot; historical vintage unavailable"},
+  "rules": {"baseline": "no cap", "cap_2": "maximum 2 stocks per level-1 industry", "cap_3": "maximum 3 stocks per level-1 industry"},
+  "windows": {"test_start": "2025-05-06", "test_end": "2026-11-05", "recent_start": "2025-10-14", "recent_end": "2026-11-05"},
+  "gates": {"test_mdd_improvement_min": 0.01, "recent_mdd_improvement_min": 0.01, "test_total_return_not_worse_by": 0.02, "recent_total_return_not_worse_by": 0.02, "test_sharpe_not_worse_by": 0.05},
+  "cost_protocol": {"stock": "2x", "index": "same R403V2 blend", "five_x_hard_rejection": false},
+  "output_policy": {"status": "industry_cap_complete_no_promotion", "active_version": null, "orders_generated": false, "paper_target_generated": false, "production_enabled": false},
+  "known_limits": ["Current industry labels are static and may leak classifications across history.", "This overlay changes selection, not factor formulas.", "No historical industry vintage audit."]
+}
