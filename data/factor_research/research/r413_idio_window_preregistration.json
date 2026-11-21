@@ -1,0 +1,80 @@
+{
+  "baseline_members": [
+    "ext_alt_hs300_idio_vol_40d_low",
+    "ext_alt_hs300_dividend_yield",
+    "ext_alt_hs300_vol_of_vol_20d_low",
+    "ext_alt_hs300_cash_flow_stability_4q_low",
+    "ext_alt_hs300_fund_holding_ratio_low",
+    "ext_alt_hs300_ocf_margin_4q",
+    "ext_alt_hs300_margin_chg_1m_low",
+    "ext_alt_hs300_holder_top10_share_chg_yoy"
+  ],
+  "classification": "same-universe idio_vol 40d vs 20d composition confirmation; no promotion",
+  "created_at": "2026-11-22",
+  "directions": {
+    "ext_alt_hs300_cash_flow_stability_4q_low": "high",
+    "ext_alt_hs300_dividend_yield": "high",
+    "ext_alt_hs300_fund_holding_ratio_low": "high",
+    "ext_alt_hs300_holder_top10_share_chg_yoy": "high",
+    "ext_alt_hs300_idio_vol_20d_low": "high",
+    "ext_alt_hs300_idio_vol_40d_low": "high",
+    "ext_alt_hs300_margin_chg_1m_low": "high",
+    "ext_alt_hs300_ocf_margin_4q": "high",
+    "ext_alt_hs300_vol_of_vol_20d_low": "high"
+  },
+  "execution": {
+    "cost_main": "2x",
+    "cost_stress": "3x",
+    "five_x_hard_rejection": false,
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0,
+    "max_hold_days": 30,
+    "max_positions": 20,
+    "no_leverage": true
+  },
+  "gates": {
+    "must_beat_baseline_annual": true,
+    "must_not_worsen_mdd": true,
+    "must_pass_3x_positive": true,
+    "test_annual_min": 0.05,
+    "test_mdd_min": -0.18,
+    "test_sharpe_min": 0.5,
+    "train_annual_min": 0.05
+  },
+  "known_limits": [
+    "Both variants use the same prepared price panel but different pre-warmed factor columns.",
+    "Current HS300 membership applied to history retains survivorship bias.",
+    "This tests one replacement only; it is not a new factor formula.",
+    "No leverage and five-x is warning-only."
+  ],
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "watch_only"
+  },
+  "round": "R413",
+  "source_parameter_evidence": "factor_research/research/parameters/p1_parameter_mc_2026-11-11.json",
+  "source_rounds": [
+    "P1",
+    "R395",
+    "R397"
+  ],
+  "variant_members": [
+    "ext_alt_hs300_idio_vol_20d_low",
+    "ext_alt_hs300_dividend_yield",
+    "ext_alt_hs300_vol_of_vol_20d_low",
+    "ext_alt_hs300_cash_flow_stability_4q_low",
+    "ext_alt_hs300_fund_holding_ratio_low",
+    "ext_alt_hs300_ocf_margin_4q",
+    "ext_alt_hs300_margin_chg_1m_low",
+    "ext_alt_hs300_holder_top10_share_chg_yoy"
+  ],
+  "windows": {
+    "test_end": "2026-11-05",
+    "test_start": "2025-05-06",
+    "train_end": "2025-05-05",
+    "train_start": "2022-05-05"
+  }
+}
