@@ -301,6 +301,15 @@ def main() -> int:
     ledger_bindings = audit_research_bindings(DATA, declarations)
     current_config_sha256 = _extension_config_sha256(DATA)
     audit = _latest_audit(DATA)
+    extended_pit_path = (
+        DATA / "factor_research" / "research"
+        / "r436_extended_financial_pit_2026-11-22.json"
+    )
+    extended_pit_verified: set[str] = set()
+    if extended_pit_path.exists():
+        extended_pit = json.loads(extended_pit_path.read_text(encoding="utf-8"))
+        if extended_pit.get("decision", {}).get("status") == "extended_financial_pit_audit_complete_no_promotion":
+            extended_pit_verified = set(extended_pit.get("results", {}))
     payload = build_automation_payload(
         catalog=catalog,
         window_registry=window_registry,
@@ -313,6 +322,7 @@ def main() -> int:
         current_audit_config_sha256=current_config_sha256,
         audit=audit,
         generated_at=utc_now(),
+        extended_financial_pit_verified=extended_pit_verified,
     )
     published, run_json, run_markdown = _publish_run(payload)
     ledger = _bind_p6(published, run_json, run_markdown, payloads)

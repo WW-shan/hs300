@@ -4,7 +4,7 @@ from __future__ import annotations
 import json
 import math
 from collections import Counter
-from collections.abc import Mapping, Sequence
+from collections.abc import Collection, Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
@@ -73,6 +73,7 @@ def evaluate_factor_readiness(
     audit: Mapping[str, Any] | None,
     *,
     current_audit_config_sha256: str | None,
+    extended_financial_pit_verified: Collection[str] = frozenset(),
 ) -> dict[str, dict[str, Any]]:
     """Evaluate research and portfolio readiness for every catalog factor."""
     classification_by_id = {row.factor_id: row for row in classifications}
@@ -108,7 +109,11 @@ def evaluate_factor_readiness(
         else:
             audit_status = "not_required"
 
-        if factor.data_class == "financial" and factor.pit_status != "verified":
+        if (
+            factor.data_class == "financial"
+            and factor.pit_status != "verified"
+            and factor.factor_id not in extended_financial_pit_verified
+        ):
             portfolio_reasons.append("financial_pit_not_verified")
 
         scan_reasons = sorted(set(scan_reasons))
@@ -386,6 +391,7 @@ def build_automation_payload(
     current_audit_config_sha256: str | None,
     audit: Mapping[str, Any] | None,
     generated_at: str,
+    extended_financial_pit_verified: Collection[str] = frozenset(),
 ) -> dict[str, Any]:
     """Build the complete deterministic P6 automation payload."""
     factor_ids = {factor.factor_id for factor in catalog.factors}
@@ -408,6 +414,7 @@ def build_automation_payload(
         classifications,
         audit,
         current_audit_config_sha256=current_audit_config_sha256,
+        extended_financial_pit_verified=extended_financial_pit_verified,
     )
     coverage = build_research_coverage(
         window_payloads,

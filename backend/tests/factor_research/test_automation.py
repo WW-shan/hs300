@@ -387,3 +387,23 @@ def test_unclassified_numeric_factor_generates_blocked_task_and_negative_knowled
     assert payload["pending_tasks"][0]["kind"] == "classification"
     assert payload["pending_tasks"][0]["status"] == "blocked"
     assert payload["negative_knowledge"][0]["reasons"] == ["classification_unclassified"]
+
+
+def test_extended_financial_pit_evidence_can_clear_financial_block() -> None:
+    factor = _factor(
+        "ext_alt_hs300_cash_flow_stability_4q_low",
+        source_type="extension",
+        data_class="financial",
+        pit_status="declared",
+        future_data_status="unknown",
+    )
+    readiness = evaluate_factor_readiness(
+        _catalog(factor),
+        [],
+        None,
+        current_audit_config_sha256=None,
+        extended_financial_pit_verified={factor.factor_id},
+    )
+    row = readiness[factor.factor_id]
+    assert "financial_pit_not_verified" not in row["reasons"]
+    assert "future_data_unknown" in row["reasons"]
