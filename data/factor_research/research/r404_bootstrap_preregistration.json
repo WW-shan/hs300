@@ -1,0 +1,51 @@
+{
+  "round": "R404",
+  "created_at": "2026-11-22",
+  "classification": "paired moving-block Monte Carlo validation of frozen core+HS300 blends; no promotion",
+  "source_rounds": ["R398", "R399", "R403"],
+  "core_candidate": {
+    "id": 4,
+    "members": [
+      "ext_alt_hs300_cash_flow_stability_4q_low",
+      "ext_alt_hs300_dividend_yield",
+      "ext_alt_hs300_fund_holding_ratio_low"
+    ],
+    "max_positions": 10,
+    "max_hold_days": 40
+  },
+  "beta": {"symbol": "000300.SH", "instrument": "CSI 300 index / ETF proxy"},
+  "weight_grid": {"core": [0.7, 0.8, 0.9], "beta": [0.3, 0.2, 0.1]},
+  "windows": {
+    "train_start": "2022-05-05", "train_end": "2024-05-05",
+    "validation_start": "2024-05-06", "validation_end": "2025-05-05",
+    "test_start": "2025-05-06", "test_end": "2026-11-05",
+    "recent_start": "2025-10-14", "recent_end": "2026-11-05"
+  },
+  "bootstrap": {"method": "paired circular moving-block bootstrap", "replications": 5000, "block_days": 20, "seed": 404},
+  "cost_protocol": {
+    "main": "2x stock cost plus index fee/rebalance proxy",
+    "stress": "3x stock cost for primary 0.8/0.2 candidate",
+    "five_x": "warning only, not a hard rejection gate"
+  },
+  "gates": {
+    "train_p05_total_positive": true,
+    "validation_p05_total_positive": true,
+    "test_p05_total_positive": true,
+    "test_p05_hs300_excess_positive": true,
+    "recent_p05_total_positive": true,
+    "recent_p05_hs300_excess_positive": true,
+    "test_median_sharpe_min": 0.8,
+    "recent_median_sharpe_min": 0.5,
+    "primary_3x_p05_total_positive": true,
+    "primary_3x_p05_hs300_excess_positive": true,
+    "weight_platform": "all 0.7, 0.8, 0.9 must pass 2x test/recent gates"
+  },
+  "primary": {"core_weight": 0.8, "beta_weight": 0.2},
+  "output_policy": {"status": "bootstrap_mc_complete_no_promotion", "active_version": null, "orders_generated": false, "paper_target_generated": false, "production_enabled": false},
+  "known_limits": [
+    "Moving-block bootstrap resamples the observed path; it does not create new market regimes.",
+    "CSI300 index return is not an executable ETF NAV; tracking difference is unobserved.",
+    "Current HS300 membership applied to history retains survivorship bias.",
+    "The test window has been observed in prior rounds; this is a robustness confirmation, not a virgin holdout."
+  ]
+}

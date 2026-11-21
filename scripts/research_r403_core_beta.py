@@ -16,8 +16,8 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 E = DATA / "factor_research" / "research"
 PREREG = E / "r403_core_beta_preregistration.json"
-OUTPUT = E / "r403_core_beta_2026-11-22.json"
-RESULT = E / "r403_core_beta_2026-11-22.md"
+OUTPUT = E / "r403_core_beta_curve_2026-11-22.json"
+RESULT = E / "r403_core_beta_curve_2026-11-22.md"
 
 
 def sha(path: Path) -> str:
@@ -126,7 +126,7 @@ def main() -> int:
         row["pass"] = bool(row["train_2x"]["annual"] >= 0.08 and row["validation_2x"]["annual"] >= 0.12 and row["test_2x"]["annual"] >= 0.08 and row["test_2x"]["sharpe"] >= 0.8 and row["test_2x"]["mdd"] >= -0.15 and row["test_excess"] >= 0.02)
         rows.append(row)
         print(json.dumps(row, ensure_ascii=False), flush=True)
-    payload = {"round": "R403", "classification": prereg["classification"], "runner_sha256": sha(Path(__file__)), "preregistration_sha256": sha(PREREG), "core_candidate": core, "rows": rows, "decision": {"status": "core_beta_complete_no_promotion", "active_version": None, "orders_generated": False, "paper_target_generated": False, "production_enabled": False}, "known_limits": prereg["known_limits"]}
+    payload = {"round": "R403", "classification": prereg["classification"], "runner_sha256": sha(Path(__file__)), "preregistration_sha256": sha(PREREG), "core_candidate": core, "rows": rows, "curves": {str(core_weight): {boundary: [{"date": str(item["date"]), "value": item["value"]} for item in curve.select(["date", "value"]).to_dicts()] for boundary, curve in mixed.items()} for core_weight in prereg["weight_grid"]["core"]}, "decision": {"status": "core_beta_complete_no_promotion", "active_version": None, "orders_generated": False, "paper_target_generated": False, "production_enabled": False}, "known_limits": prereg["known_limits"]}
     raw = (json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode()
     OUTPUT.write_bytes(raw)
     OUTPUT.with_name(OUTPUT.name + ".sha256").write_text(f"{hashlib.sha256(raw).hexdigest()}  {OUTPUT.name}\n", encoding="ascii")
