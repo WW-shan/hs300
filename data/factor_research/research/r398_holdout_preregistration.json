@@ -1,0 +1,82 @@
+{
+  "classification": "strict three-way walk-forward factor-subset and execution search; no promotion",
+  "cost_protocol": {
+    "five_x_hard_rejection": false,
+    "main": "2x",
+    "stress": "3x"
+  },
+  "created_at": "2026-11-22",
+  "design": {
+    "max_hold_days": [
+      20,
+      30,
+      40
+    ],
+    "max_positions": [
+      10,
+      20,
+      30
+    ],
+    "platform_rule": "for each subset require at least 7/9 execution points passing in both train and validation",
+    "selection_basis": "train and validation only; test is a one-shot holdout",
+    "subsets": "all combinations of 3..7 factors",
+    "train_gate": {
+      "annual_min": 0.08,
+      "mdd_min": -0.12,
+      "sharpe_min": 0.9
+    },
+    "validation_gate": {
+      "annual_min": 0.06,
+      "mdd_min": -0.15,
+      "sharpe_min": 0.7
+    },
+    "weights": "equal within subset"
+  },
+  "factor_ids": [
+    "ext_alt_hs300_cash_flow_stability_4q_low",
+    "ext_alt_hs300_dividend_yield",
+    "ext_alt_hs300_fund_holding_ratio_low",
+    "ext_alt_hs300_holder_top10_share_chg_yoy",
+    "ext_alt_hs300_idio_vol_40d_low",
+    "ext_alt_hs300_margin_chg_1m_low",
+    "ext_alt_hs300_ocf_margin_4q",
+    "ext_alt_hs300_vol_of_vol_20d_low"
+  ],
+  "known_limits": [
+    "Strict 2018 start is impossible for this eight-factor set: financial/flow fields are empty before 2021 and complete only from 2022-05-05.",
+    "The test window has been observed in prior exploratory rounds; this is a new protocol confirmation, not a fully virgin holdout.",
+    "Current HS300 membership applied to history retains survivorship bias.",
+    "The prior R395/R397 tests were already observed; R398 is the first strict three-way holdout for these eight factors.",
+    "Subsets and execution grids are correlated trials; selection multiplicity remains a risk.",
+    "Daily T+1 approximation does not model intraday impact.",
+    "Five-x cost is not a hard rejection gate."
+  ],
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "strict_holdout_complete_no_promotion"
+  },
+  "portfolio": {
+    "matching": "open_t+1",
+    "max_hold_override": true,
+    "maximum_exposure_pct": 1.0,
+    "no_leverage": true
+  },
+  "round": "R398",
+  "source_rounds": [
+    "R394",
+    "R395",
+    "R396",
+    "R397"
+  ],
+  "windows": {
+    "test_end": "2026-11-05",
+    "test_start": "2025-05-06",
+    "train_end": "2024-05-05",
+    "train_start": "2022-05-05",
+    "validation_end": "2025-05-05",
+    "validation_start": "2024-05-06"
+  }
+}

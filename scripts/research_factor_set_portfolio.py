@@ -175,6 +175,7 @@ def _backtest_config(
     end: date,
     max_positions: int,
     cost: dict[str, float],
+    max_hold_days: int = 30,
 ) -> StrategyBacktestConfig:
     return StrategyBacktestConfig(
         strategy_id="factor_rank_research",
@@ -188,7 +189,7 @@ def _backtest_config(
             "exit_score": EXIT_SCORE,
             "top_rank": max(20, max_positions),
         },
-        overrides={},
+        overrides={"max_hold_days": max_hold_days},
         matching="open_t+1",
         fees_pct=cost["fees_pct"],
         commission_pct=cost["commission_pct"],
