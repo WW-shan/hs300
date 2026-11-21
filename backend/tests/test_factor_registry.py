@@ -110,6 +110,12 @@ GOLDEN_COLUMNS: list[dict] = [
     {"id": "receivable_turnover_improvement_yoy", "label": "应收周转同比改善", "group": "财务", "desc": "ln(应收周转率(TTM) / 四个季度前应收周转率(TTM)); 需九季度资产负债表和八季度利润表且依赖均>0"},
     {"id": "receivable_growth_minus_revenue_growth", "label": "应收相对营收增速差", "group": "财务", "desc": "ln(应收账款/四季度前应收账款) - ln(TTM营业收入/四季度前TTM营业收入); 低值代表应收增速相对营收更慢"},
     {"id": "inventory_growth_minus_cogs_growth", "label": "存货相对营业成本增速差", "group": "财务", "desc": "ln(存货/四季度前存货) - ln(TTM营业成本/四季度前TTM营业成本); 低值代表存货增速相对成本更慢"},
+    {"id": "sales_expense_ratio_ttm_low", "label": "销售费用率(TTM)", "group": "财务", "desc": "TTM 销售费用 / TTM 营业收入; 低值代表销售费用效率更高"},
+    {"id": "management_expense_ratio_ttm_low", "label": "管理费用率(TTM)", "group": "财务", "desc": "TTM 管理费用 / TTM 营业收入; 低值代表管理费用效率更高"},
+    {"id": "ocf_to_revenue_ttm", "label": "经营现金流/营收(TTM)", "group": "财务", "desc": "TTM 经营现金流 / TTM 营业收入; 高值代表现金转换效率更高"},
+    {"id": "fcf_proxy_to_revenue_ttm", "label": "自由现金流代理/营收(TTM)", "group": "财务", "desc": "(TTM 经营现金流 + 净投资现金流) / TTM 营业收入; 投资现金流代理资本开支，非真实 capex"},
+    {"id": "cash_to_assets_latest", "label": "现金资产比(最新公告)", "group": "财务", "desc": "现金及等价物 / 总资产; 高值代表资产负债表现金缓冲"},
+    {"id": "payables_to_cogs_ttm", "label": "应付款/营业成本(TTM)", "group": "财务", "desc": "应付账款 / TTM 营业成本; 低值代表对供应商资金占用较少"},
 ]
 
 GOLDEN_VIRTUAL_DEPS: dict[str, frozenset[str]] = {
@@ -241,12 +247,12 @@ def test_scoring_warmup_snapshot() -> None:
 
 def test_catalog_counts_and_kinds() -> None:
     specs = all_factors()
-    assert len(specs) == 87
-    assert len({spec.id for spec in specs}) == 87  # id 唯一
+    assert len(specs) == 93
+    assert len({spec.id for spec in specs}) == 93  # id 唯一
     virtual = [spec for spec in specs if spec.kind == "virtual"]
     assert len(virtual) == 52  # ma/ema 10 + 原有 26 + 扩充批次 16
     financial = [spec for spec in specs if spec.pit]
-    assert len(financial) == 17
+    assert len(financial) == 23
     assert all(spec.pit_source == "financial_announce" for spec in financial)
     assert all(spec.asset_types == frozenset({"stock"}) for spec in financial)
 
@@ -272,7 +278,7 @@ def test_get_factor_and_dependencies() -> None:
 def test_asset_type_filter() -> None:
     stock = all_factors(asset_type="stock")
     etf = all_factors(asset_type="etf")
-    assert len(stock) == 87
+    assert len(stock) == 93
     assert len(etf) == 70  # 财务 7 项仅股票
 
 
@@ -336,7 +342,7 @@ def test_factors_api_contract() -> None:
     assert response.status_code == 200
     payload = response.json()
     factors = payload["factors"]
-    assert len(factors) == 87
+    assert len(factors) == 93
     first = factors[0]
     assert first["id"] == "momentum_5d"
     assert first["kind"] == "base"

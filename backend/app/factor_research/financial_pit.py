@@ -50,6 +50,12 @@ BUILTIN_FINANCIAL_DIRECTIONS = {
     "receivable_turnover_improvement_yoy": "high",
     "receivable_growth_minus_revenue_growth": "low",
     "inventory_growth_minus_cogs_growth": "low",
+    "sales_expense_ratio_ttm_low": "low",
+    "management_expense_ratio_ttm_low": "low",
+    "ocf_to_revenue_ttm": "high",
+    "fcf_proxy_to_revenue_ttm": "high",
+    "cash_to_assets_latest": "high",
+    "payables_to_cogs_ttm": "low",
 }
 
 

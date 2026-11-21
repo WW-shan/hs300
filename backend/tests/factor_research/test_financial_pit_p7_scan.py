@@ -28,7 +28,7 @@ def test_published_p7_audit_is_verified_and_content_addressed() -> None:
     payload = json.loads((DATA / latest["run_json"]).read_text(encoding="utf-8"))
 
     assert payload["status"] == "verified"
-    assert len(payload["verified_factor_ids"]) == 21
+    assert len(payload["verified_factor_ids"]) == 27
     assert set(payload["verified_factor_ids"]) == set(payload["factors"])
     assert {
         "inventory_turnover_ttm",

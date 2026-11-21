@@ -339,6 +339,30 @@ _CATALOG: tuple[FactorSpec, ...] = (
         "inventory_growth_minus_cogs_growth", "存货相对营业成本增速差",
         "ln(存货/四季度前存货) - ln(TTM营业成本/四季度前TTM营业成本); 低值代表存货增速相对成本更慢",
     ),
+    _financial(
+        "sales_expense_ratio_ttm_low", "销售费用率(TTM)",
+        "TTM 销售费用 / TTM 营业收入; 低值代表销售费用效率更高",
+    ),
+    _financial(
+        "management_expense_ratio_ttm_low", "管理费用率(TTM)",
+        "TTM 管理费用 / TTM 营业收入; 低值代表管理费用效率更高",
+    ),
+    _financial(
+        "ocf_to_revenue_ttm", "经营现金流/营收(TTM)",
+        "TTM 经营现金流 / TTM 营业收入; 高值代表现金转换效率更高",
+    ),
+    _financial(
+        "fcf_proxy_to_revenue_ttm", "自由现金流代理/营收(TTM)",
+        "(TTM 经营现金流 + 净投资现金流) / TTM 营业收入; 投资现金流代理资本开支，非真实 capex",
+    ),
+    _financial(
+        "cash_to_assets_latest", "现金资产比(最新公告)",
+        "现金及等价物 / 总资产; 高值代表资产负债表现金缓冲",
+    ),
+    _financial(
+        "payables_to_cogs_ttm", "应付款/营业成本(TTM)",
+        "应付账款 / TTM 营业成本; 低值代表对供应商资金占用较少",
+    ),
 )
 
 _REGISTRY: dict[str, FactorSpec] = {}
