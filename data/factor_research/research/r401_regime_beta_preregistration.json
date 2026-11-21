@@ -1,0 +1,83 @@
+{
+  "benchmark": {
+    "symbol": "000300.SH"
+  },
+  "beta": {
+    "beta_active_weight": 0.25,
+    "core_active_weight": 0.75,
+    "factor_id": "ext_alt_hs300_trend_efficiency_60d"
+  },
+  "classification": "conditional beta activation using lagged market regime; no promotion",
+  "core": {
+    "id": 9,
+    "max_hold_days": 40,
+    "max_positions": 20,
+    "members": [
+      "ext_alt_hs300_cash_flow_stability_4q_low",
+      "ext_alt_hs300_dividend_yield",
+      "ext_alt_hs300_fund_holding_ratio_low",
+      "ext_alt_hs300_idio_vol_40d_low",
+      "ext_alt_hs300_ocf_margin_4q",
+      "ext_alt_hs300_vol_of_vol_20d_low"
+    ],
+    "weights": "equal"
+  },
+  "created_at": "2026-11-22",
+  "known_limits": [
+    "Regime labels are lagged by one trading day but are not a full real-time vintage audit.",
+    "The test window has been observed before; this is a new protocol confirmation.",
+    "Current HS300 membership applied to history retains survivorship bias."
+  ],
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "regime_beta_complete_no_promotion"
+  },
+  "portfolio": {
+    "matching": "open_t+1",
+    "max_hold_days": [
+      20,
+      30,
+      40
+    ],
+    "max_positions": [
+      10,
+      20,
+      30
+    ],
+    "no_leverage": true
+  },
+  "regime_rules": {
+    "always_on": "baseline comparator",
+    "breadth_50": "beta on when lagged above_ma20_pct >= 0.5",
+    "score_trend": "beta on when lagged score_ma20 >= 55 and trend_score >= 50",
+    "strong_only": "beta on when lagged state == strong",
+    "strong_or_lean_strong": "beta on when lagged state in strong/lean_strong",
+    "trend_score_50": "beta on when lagged trend_score >= 50"
+  },
+  "round": "R401",
+  "selection": {
+    "basis": "train_and_validation",
+    "minimum_hs300_excess": 0.02,
+    "minimum_train_annual": 0.08,
+    "minimum_train_sharpe": 0.9,
+    "minimum_validation_annual": 0.12,
+    "minimum_validation_sharpe": 1.0,
+    "platform_rule": "at least 7/9 execution points"
+  },
+  "source_rounds": [
+    "R398",
+    "R399",
+    "R400"
+  ],
+  "windows": {
+    "test_end": "2026-11-05",
+    "test_start": "2025-05-06",
+    "train_end": "2024-05-05",
+    "train_start": "2022-05-05",
+    "validation_end": "2025-05-05",
+    "validation_start": "2024-05-06"
+  }
+}
