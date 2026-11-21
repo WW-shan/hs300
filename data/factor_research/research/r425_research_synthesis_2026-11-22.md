@@ -40,3 +40,12 @@
 - No new statistical or portfolio experiment is run.
 - The test windows have been observed before.
 - Current HS300 membership applied to history retains survivorship bias.
+
+## 追加证据（R427–R431）
+
+- 动态状态权重：检验年化 3.66%，低于静态 7.06%；MDD -15.36%，更差，拒绝。
+- 财报质量缺口：FCF/收入、OCF/收入在 5/20/60 日单因子中性 IC 均通过。
+- 但两者对当前 8 腿的边际 IC 在 5/20/60 日全部为负或接近零，合格周期为 0。
+- FCF/OCF 替换当前 8 腿后训练/验证均下降，拒绝。
+- PB+OCF+低波独立组合检验年化 -1.85%，拒绝。
+- 结论：财报质量因子有独立截面信号，但对当前 8 腿没有组合边际价值；继续硬塞不会改善策略。
