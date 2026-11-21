@@ -1,0 +1,74 @@
+{
+  "bootstrap": {
+    "block_days": 20,
+    "replications": 5000,
+    "seed": 428
+  },
+  "classification": "PB + OCF/debt + low-vol quality-defensive combination; no promotion",
+  "created_at": "2026-11-22",
+  "directions": {
+    "ext_alt_hs300_idio_vol_40d_low": "high",
+    "ocf_debt": "high",
+    "pb_latest": "low"
+  },
+  "execution": {
+    "cost_main": "2x",
+    "cost_stress": "3x",
+    "five_x_hard_rejection": false,
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0,
+    "no_leverage": true
+  },
+  "gates": {
+    "recent_annual_min": 0.0,
+    "stress_3x_positive": true,
+    "test_annual_min": 0.04,
+    "test_mdd_min": -0.2,
+    "test_sharpe_min": 0.4,
+    "train_annual_min": 0.05,
+    "validation_annual_min": 0.08
+  },
+  "grid": {
+    "max_hold_days": [
+      30,
+      40
+    ],
+    "max_positions": [
+      10,
+      20
+    ]
+  },
+  "known_limits": [
+    "The combination is motivated by observed PB IC and pure-PB failure; it is not an independent discovery.",
+    "The test window has been observed before.",
+    "Current HS300 membership applied to history retains survivorship bias.",
+    "No leverage; five-x warning only."
+  ],
+  "members": [
+    "pb_latest",
+    "ocf_debt",
+    "ext_alt_hs300_idio_vol_40d_low"
+  ],
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "pb_ocf_lowvol_complete_no_promotion"
+  },
+  "round": "R428",
+  "source_rounds": [
+    "R422",
+    "R423",
+    "R424"
+  ],
+  "windows": {
+    "recent_start": "2025-10-14",
+    "test_end": "2026-11-05",
+    "test_start": "2025-05-06",
+    "train_end": "2024-05-05",
+    "train_start": "2022-05-05",
+    "validation_end": "2025-05-05",
+    "validation_start": "2024-05-06"
+  }
+}
