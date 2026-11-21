@@ -8,36 +8,41 @@ import sys
 from pathlib import Path
 
 
-def _git(root: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
+def _git(root: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[bytes]:
     result = subprocess.run(
         ["git", *args],
         cwd=root,
         capture_output=True,
-        text=True,
         check=False,
     )
     if check and result.returncode != 0:
-        detail = (result.stderr or result.stdout).strip()
+        detail = (result.stderr or result.stdout).decode("utf-8", errors="replace").strip()
         raise RuntimeError(detail or f"git {' '.join(args)} failed")
     return result
 
 
-def _lines(result: subprocess.CompletedProcess[str]) -> set[str]:
-    return {line.strip() for line in result.stdout.splitlines() if line.strip()}
+def _text(result: subprocess.CompletedProcess[bytes]) -> str:
+    # merge-tree may include binary asset payloads in ordinary diff hunks; the
+    # overlap report must not fail merely because those bytes are not UTF-8.
+    return result.stdout.decode("utf-8", errors="replace")
+
+
+def _lines(result: subprocess.CompletedProcess[bytes]) -> set[str]:
+    return {line.strip() for line in _text(result).splitlines() if line.strip()}
 
 
 def _resolve_repo(path: Path) -> Path:
     result = _git(path, "rev-parse", "--show-toplevel")
-    return Path(result.stdout.strip()).resolve()
+    return Path(_text(result).strip()).resolve()
 
 
 def _resolve_commit(root: Path, ref: str) -> str:
-    return _git(root, "rev-parse", "--verify", f"{ref}^{{commit}}").stdout.strip()
+    return _text(_git(root, "rev-parse", "--verify", f"{ref}^{{commit}}")).strip()
 
 
 def _merge_tree_conflicts(root: Path, base: str, current: str, target: str) -> list[str]:
     result = _git(root, "merge-tree", base, current, target)
-    lines = result.stdout.splitlines()
+    lines = _text(result).splitlines()
     conflicts: list[str] = []
     current_path: str | None = None
     current_conflicted = False
@@ -81,7 +86,7 @@ def main(argv: list[str] | None = None) -> int:
         root = _resolve_repo(args.repo.resolve())
         current = _resolve_commit(root, "HEAD")
         target = _resolve_commit(root, args.target)
-        base = _git(root, "merge-base", current, target).stdout.strip()
+        base = _text(_git(root, "merge-base", current, target)).strip()
         if not base:
             raise RuntimeError("当前分支与目标版本没有共同基线")
 
