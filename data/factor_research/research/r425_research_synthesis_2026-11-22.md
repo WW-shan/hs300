@@ -71,3 +71,11 @@
 - `vol_of_vol`、`margin_chg`、`holder_top10` 只有 P6 就绪，缺 R418 统计准入。
 - `cash_flow_stability`、`ocf_margin` 在 P6 层即 blocked（financial_pit_not_verified / future_data_unknown）。
 - 结论：当前 8 腿组合在严格治理口径下本身不是“全部合格因子”的组合；收益问题之前，先存在准入结构问题。
+
+## 追加证据（R436–R440）
+
+- 扩展财务因子 `cash_flow_stability_4q_low`、`ocf_margin_4q` 完成独立 PIT 审计和未来数据审计，构建路径均使用法定截止日、截止日后生效、backward join，前缀不变。
+- taxonomy 显式迁移 `future_data_status=clear`，参数注册表从 blocked 移到 fixed；P6 portfolio_ready 从 176 增至 178。
+- 严格研究准入：cash_flow_stability 在 60 日通过边际 IC 准入；ocf_margin 未通过；vol_of_vol_20d 也未通过（年度同号 0.625，边际 IC 不显著）。
+- 双准入复核：当前 8 腿从 3 腿提升到 4 腿；仍不合格的是 vol_of_vol_20d、ocf_margin、margin_chg、holder_top10。
+- 结论：数据/PIT 层已修复，但统计/组合准入仍只覆盖一半当前组合。
