@@ -1,0 +1,76 @@
+{
+  "baseline_members": [
+    "ext_alt_hs300_idio_vol_40d_low",
+    "ext_alt_hs300_dividend_yield",
+    "ext_alt_hs300_vol_of_vol_20d_low",
+    "ext_alt_hs300_cash_flow_stability_4q_low",
+    "ext_alt_hs300_fund_holding_ratio_low",
+    "ext_alt_hs300_ocf_margin_4q",
+    "ext_alt_hs300_margin_chg_1m_low",
+    "ext_alt_hs300_holder_top10_share_chg_yoy"
+  ],
+  "classification": "portfolio confirmation of R416 new_panic_reversal_5d by replacing one weakest leg; no promotion",
+  "created_at": "2026-11-22",
+  "execution": {
+    "cost_main": "2x",
+    "cost_stress": "3x",
+    "five_x_hard_rejection": false,
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0,
+    "max_hold_days": 30,
+    "max_positions": 20,
+    "no_leverage": true
+  },
+  "gates": {
+    "beat_baseline_train": true,
+    "beat_baseline_validation": true,
+    "recent_positive": true,
+    "stress_3x_positive": true,
+    "test_annual_min": 0.05,
+    "test_mdd_min": -0.18,
+    "test_sharpe_min": 0.5,
+    "train_annual_min": 0.08,
+    "validation_annual_min": 0.12
+  },
+  "known_limits": [
+    "New factor is research-only until separately registered and audited.",
+    "The source statistical screen observed the test window; this is confirmation but not independent discovery.",
+    "Current HS300 membership applied to history retains survivorship bias.",
+    "No leverage; five-x warning only.",
+    "Only one replacement is allowed per variant; eight-leg cap enforced."
+  ],
+  "new_factor_direction": "high",
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "watch_only"
+  },
+  "round": "R417",
+  "source_factor": "new_panic_reversal_5d",
+  "source_round": "R416",
+  "variant_replacements": [
+    {
+      "drop": "ext_alt_hs300_holder_top10_share_chg_yoy",
+      "name": "replace_holder"
+    },
+    {
+      "drop": "ext_alt_hs300_dividend_yield",
+      "name": "replace_dividend"
+    },
+    {
+      "drop": "ext_alt_hs300_ocf_margin_4q",
+      "name": "replace_ocf"
+    }
+  ],
+  "windows": {
+    "recent_start": "2025-10-14",
+    "test_end": "2026-11-05",
+    "test_start": "2025-05-06",
+    "train_end": "2024-05-05",
+    "train_start": "2022-05-05",
+    "validation_end": "2025-05-05",
+    "validation_start": "2024-05-06"
+  }
+}

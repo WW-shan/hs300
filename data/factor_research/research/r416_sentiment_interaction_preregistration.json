@@ -1,0 +1,68 @@
+{
+  "baseline_members": [
+    "ext_alt_hs300_idio_vol_40d_low",
+    "ext_alt_hs300_dividend_yield",
+    "ext_alt_hs300_vol_of_vol_20d_low",
+    "ext_alt_hs300_cash_flow_stability_4q_low",
+    "ext_alt_hs300_fund_holding_ratio_low",
+    "ext_alt_hs300_ocf_margin_4q",
+    "ext_alt_hs300_margin_chg_1m_low",
+    "ext_alt_hs300_holder_top10_share_chg_yoy"
+  ],
+  "candidates": [
+    {
+      "direction": "high",
+      "factor_id": "new_panic_reversal_5d",
+      "formula": "-past_return_5d * clip(volume / rolling_mean_volume_20d, 1, 3), active only in lagged weak or lean_weak state"
+    },
+    {
+      "direction": "high",
+      "factor_id": "new_repair_momentum_10d",
+      "formula": "past_return_10d * up_day_ratio_10d, active only in lagged strong or lean_strong state with above_ma20_pct >= 0.50"
+    },
+    {
+      "direction": "high",
+      "factor_id": "new_crowding_reversal_20d",
+      "formula": "-past_return_20d * clip(volume / rolling_mean_volume_20d, 1, 3), active only when volume ratio >= 1.5"
+    }
+  ],
+  "classification": "new sentiment interaction factors; statistical screen only; no promotion",
+  "condition_data": "data/regime_history/part.parquet; lagged one trading day",
+  "created_at": "2026-11-22",
+  "gates": {
+    "bh_q_max": 0.1,
+    "marginal_ic_positive": true,
+    "max_correlation_max": 0.9,
+    "minimum_n_dates": 120,
+    "nw_p_max": 0.1,
+    "recent_delta_positive": true
+  },
+  "horizon_days": 5,
+  "known_limits": [
+    "New formulas are research-only and not registered factors until independently confirmed.",
+    "Regime labels are lagged but not a full real-time vintage audit.",
+    "Current HS300 membership applied to history retains survivorship bias.",
+    "The evaluation window has been observed before.",
+    "No leverage and no portfolio promotion in this screen."
+  ],
+  "minimum_cross_section": 30,
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "sentiment_stats_complete_no_promotion"
+  },
+  "round": "R416",
+  "source_rounds": [
+    "R391",
+    "R414",
+    "R405",
+    "R409"
+  ],
+  "windows": {
+    "end": "2026-11-05",
+    "recent_start": "2025-10-14",
+    "start": "2022-05-05"
+  }
+}
