@@ -24,8 +24,34 @@ def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def preflight_etf_history(symbols: list[str], start: date, end: date) -> dict[str, Any]:
+    """Fail closed when the ignored local ETF cache is missing or incomplete."""
+    paths = sorted((DATA / "kline_etf_enriched").glob("date=*/part.parquet"))
+    if not paths:
+        raise FileNotFoundError(
+            "R448 requires data/kline_etf_enriched; sync the six ETF histories before rerunning"
+        )
+    frame = load_prices(symbols, start, end)
+    coverage = {
+        symbol: {
+            "rows": int(frame.filter(pl.col("symbol") == symbol).height),
+            "first": str(frame.filter(pl.col("symbol") == symbol)["date"].min()),
+            "last": str(frame.filter(pl.col("symbol") == symbol)["date"].max()),
+        }
+        for symbol in symbols
+    }
+    missing = [symbol for symbol, row in coverage.items() if row["rows"] == 0]
+    if missing:
+        raise FileNotFoundError(f"R448 ETF history missing symbols: {missing}")
+    return {"source": "data/kline_etf_enriched", "coverage": coverage}
+
+
 def load_prices(symbols: list[str], start: date, end: date) -> pl.DataFrame:
     paths = sorted((DATA / "kline_etf_enriched").glob("date=*/part.parquet"))
+    if not paths:
+        raise FileNotFoundError(
+            "R448 requires data/kline_etf_enriched; sync the six ETF histories before rerunning"
+        )
     return (
         pl.scan_parquet([str(path) for path in paths], extra_columns="ignore")
         .filter(pl.col("symbol").is_in(symbols) & (pl.col("date") >= start) & (pl.col("date") <= end))
@@ -314,6 +340,7 @@ def main() -> int:
     # A new risk model must not observe the first return it will trade. Start
     # the price feed exactly when the first pre-registered window starts.
     frame = load_prices(symbols, date.fromisoformat(prereg["windows"]["train_start"]), date.fromisoformat(prereg["windows"]["test_end"]))
+    preflight = preflight_etf_history(symbols, date.fromisoformat(prereg["windows"]["train_start"]), date.fromisoformat(prereg["windows"]["test_end"]))
     rows = []
     for rule in prereg["rule_families"]:
         row = {"name": rule["name"], "rule": rule}
@@ -367,6 +394,7 @@ def main() -> int:
         "gate": {"pass": all(checks.values()), "checks": checks},
         "diagnostics": {"five_x_warning_only": True, "hard_rejection": False, "risk_model_uses_past_returns_only": True},
         "decision": {"status": "watch_candidate" if all(checks.values()) else "rejected", "active_version": None, "orders_generated": False, "paper_target_generated": False, "production_enabled": False},
+        "data_preflight": preflight,
         "known_limits": prereg["known_limits"],
     }
     raw = (json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode()

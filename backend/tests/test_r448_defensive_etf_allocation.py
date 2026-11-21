@@ -66,3 +66,10 @@ def test_r448_no_lookahead_synthetic_flow() -> None:
     rule = {"name": "fixture", "kind": "fixed", "weights": {"A": 0.5, "B": 0.5, "C": 0.0}}
     curve = module.simulate(pl.DataFrame(rows), rule, list(prices), date(2023, 12, 1), date(2024, 2, 2), 0.0)
     assert curve[-1]["value"] == pytest.approx(1.0 - 0.5 * (11.0 - 10.0) / 11.0)
+
+
+def test_r448_preflight_fails_closed_when_etf_cache_is_missing(monkeypatch, tmp_path) -> None:
+    module = _module()
+    monkeypatch.setattr(module, "DATA", tmp_path)
+    with pytest.raises(FileNotFoundError, match="kline_etf_enriched"):
+        module.preflight_etf_history(["510300.SH"], date(2024, 1, 1), date(2024, 1, 31))
