@@ -79,3 +79,10 @@
 - 严格研究准入：cash_flow_stability 在 60 日通过边际 IC 准入；ocf_margin 未通过；vol_of_vol_20d 也未通过（年度同号 0.625，边际 IC 不显著）。
 - 双准入复核：当前 8 腿从 3 腿提升到 4 腿；仍不合格的是 vol_of_vol_20d、ocf_margin、margin_chg、holder_top10。
 - 结论：数据/PIT 层已修复，但统计/组合准入仍只覆盖一半当前组合。
+
+## 追加证据（R441）
+
+- `margin_chg_1m_low` 5 日边际 IC 0.000718、NW p=0.032、q=0.096，但年度同号仅 0.667，严格规则拒绝。
+- `holder_top10_share_chg_yoy` 已由 R418 以年度同号 0.5 拒绝，未重复测试。
+- 当前 8 腿双准入最终为 4/8：股息率、基金持仓比例低位、40 日残差低波、现金流稳定性 4Q。
+- 另外 4 腿（vol_of_vol_20d、ocf_margin、margin_chg、holder_top10）均未通过严格研究准入。
