@@ -1,0 +1,153 @@
+{
+  "bootstrap": {
+    "block_days": 20,
+    "replications": 5000,
+    "seed": 448
+  },
+  "classification": "preregistered defensive ETF allocation families under corrected next-open timing; train+validation selection only; no promotion",
+  "created_at": "2026-11-22",
+  "data": "data/kline_etf_enriched, 2018-01-02..2026-11-20, six long-history ETFs",
+  "execution": {
+    "cash_return": 0.0,
+    "cost_diagnostic_bps": 50,
+    "cost_main_bps": 10,
+    "cost_stress_bps": 20,
+    "five_x_hard_rejection": false,
+    "fully_allocated": true,
+    "matching": "month-end close signal; next trading day open rebalance",
+    "max_weight_sum": 1.0,
+    "no_leverage": true
+  },
+  "gates": {
+    "fully_allocated_no_cash_drag": true,
+    "recent_annual_min": 0.0,
+    "recent_total_p05_positive": true,
+    "stress_3x_positive": true,
+    "test_annual_min": 0.03,
+    "test_mdd_min": -0.12,
+    "test_sharpe_min": 0.5,
+    "test_total_p05_positive": true,
+    "train_annual_min": 0.04,
+    "validation_annual_min": 0.04
+  },
+  "implementation_note": "Trend-gate fixed weights include the full six-asset book; gates only move disabled equity sleeves into Treasury.",
+  "known_limits": [
+    "ETF forward-adjusted prices are local data and are not committed to Git.",
+    "Only six long-history ETFs; results do not generalise to unavailable asset classes.",
+    "No leverage; weights are long-only and sum to one on every rebalance.",
+    "Cash earns zero only during the first month before a signal becomes executable.",
+    "The test and recent windows have been observed in earlier research.",
+    "5x transaction cost is warning-only, never a hard rejection.",
+    "ETF tracking error, spreads, and market impact beyond the bps grid are not modeled."
+  ],
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "defensive_etf_allocation_complete_no_promotion"
+  },
+  "round": "R448",
+  "rule_families": [
+    {
+      "kind": "fixed",
+      "name": "fixed_equal_6",
+      "weights": {
+        "510300.SH": 0.16666666666666666,
+        "510500.SH": 0.16666666666666666,
+        "510880.SH": 0.16666666666666666,
+        "511010.SH": 0.16666666666666666,
+        "512100.SH": 0.16666666666666666,
+        "518880.SH": 0.16666666666666666
+      }
+    },
+    {
+      "kind": "fixed",
+      "name": "fixed_equity60_bond25_gold15",
+      "weights": {
+        "510300.SH": 0.3,
+        "510500.SH": 0.15,
+        "511010.SH": 0.25,
+        "512100.SH": 0.15,
+        "518880.SH": 0.15
+      }
+    },
+    {
+      "kind": "fixed",
+      "name": "fixed_core40_dividend20_bond30_gold10",
+      "weights": {
+        "510300.SH": 0.4,
+        "510880.SH": 0.2,
+        "511010.SH": 0.3,
+        "518880.SH": 0.1
+      }
+    },
+    {
+      "kind": "risk_parity",
+      "lookback": 20,
+      "name": "risk_parity_vol20"
+    },
+    {
+      "kind": "risk_parity",
+      "lookback": 60,
+      "name": "risk_parity_vol60"
+    },
+    {
+      "kind": "risk_parity",
+      "lookback": 120,
+      "name": "risk_parity_vol120"
+    },
+    {
+      "kind": "min_variance",
+      "lookback": 60,
+      "name": "min_variance_60"
+    },
+    {
+      "kind": "min_variance",
+      "lookback": 120,
+      "name": "min_variance_120"
+    },
+    {
+      "kind": "trend_gate_risk_parity",
+      "lookback": 60,
+      "name": "trend_gate_risk_parity_60",
+      "trend_lookback": 120
+    },
+    {
+      "kind": "trend_gate_fixed",
+      "lookback": 120,
+      "name": "trend_gate_fixed60",
+      "weights": {
+        "510300.SH": 0.3,
+        "510500.SH": 0.15,
+        "510880.SH": 0.0,
+        "511010.SH": 0.25,
+        "512100.SH": 0.15,
+        "518880.SH": 0.15
+      }
+    }
+  ],
+  "selection": "Among rules meeting train_annual_min and validation_annual_min, rank by min(train,validation) annual return; test and recent are confirmation only.",
+  "supersedes_rounds": [
+    "R446",
+    "R447"
+  ],
+  "supersedes_scope": "all numeric ETF timing evidence in R446/R447 is invalid and retained only as negative provenance",
+  "universe": {
+    "510300.SH": "沪深300",
+    "510500.SH": "中证500",
+    "510880.SH": "红利ETF",
+    "511010.SH": "国债ETF",
+    "512100.SH": "中证1000",
+    "518880.SH": "黄金ETF"
+  },
+  "windows": {
+    "recent_start": "2025-10-14",
+    "test_end": "2026-11-05",
+    "test_start": "2025-05-06",
+    "train_end": "2022-05-05",
+    "train_start": "2018-06-01",
+    "validation_end": "2025-05-05",
+    "validation_start": "2022-05-06"
+  }
+}

@@ -84,13 +84,10 @@ def simulate(frame: pl.DataFrame, rule: dict[str, Any], start: date, end: date, 
     value = 1.0
     # Start fully in cash; the first month-end signal buys at the next open.
     for index, day in enumerate(dates):
-        if index > 0 and dates[index - 1] in signal_dates:
-            selected = pick_assets(frame, dates[index - 1], int(rule["lookback"]), str(rule["mode"]))
-            next_weights = {symbol: 1.0 / len(selected) for symbol in selected} if selected else {}
-            turnover = sum(abs(next_weights.get(symbol, 0.0) - holdings.get(symbol, 0.0)) for symbol in set(next_weights) | set(holdings))
-            value *= 1.0 - (cost_bps / 10000.0) * turnover
-            holdings = next_weights
-        if index > 0 and holdings:
+        if index > 0:
+            # Settle the previous holdings over the interval ending at today's
+            # open before applying a signal from yesterday's close. A position
+            # bought at today's open must not earn yesterday-to-today return.
             previous_day = dates[index - 1]
             returns = []
             for symbol, weight in holdings.items():
@@ -99,6 +96,13 @@ def simulate(frame: pl.DataFrame, rule: dict[str, Any], start: date, end: date, 
                 if previous and current and float(previous["open"]) > 0:
                     returns.append(weight * (float(current["open"]) / float(previous["open"]) - 1.0))
             value *= 1.0 + sum(returns)
+
+            if previous_day in signal_dates:
+                selected = pick_assets(frame, previous_day, int(rule["lookback"]), str(rule["mode"]))
+                next_weights = {symbol: 1.0 / len(selected) for symbol in selected} if selected else {}
+                turnover = sum(abs(next_weights.get(symbol, 0.0) - holdings.get(symbol, 0.0)) for symbol in set(next_weights) | set(holdings))
+                value *= 1.0 - (cost_bps / 10000.0) * turnover
+                holdings = next_weights
         curve.append({"date": str(day), "value": value})
     return curve
 
