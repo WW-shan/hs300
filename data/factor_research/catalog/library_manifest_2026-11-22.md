@@ -37,3 +37,4 @@
 - 这个清单是研究索引，不是 active 因子集。
 - 缺失 IC/增量证据显示为 `null`，不代表 0。
 - 参数族信息来自 `parameters/families.json`；新增因子应走同一套审计、增量和组合验证。
+- 本次仅同步 current catalog 的 PIT/future-data 状态：现金流稳定性与 OCF margin 已从 `unknown` 更新为 `clear`，研究数值未改。

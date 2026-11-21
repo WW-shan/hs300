@@ -24,3 +24,20 @@ def test_manifest_does_not_infer_missing_evidence_as_zero() -> None:
     payload = json.loads(JSON.read_text(encoding="utf-8"))
     assert any(row["research"]["ic_5d_full"] is None for row in payload["records"])
     assert all("library_state" in row for row in payload["records"])
+
+
+def test_manifest_future_data_status_matches_latest_catalog() -> None:
+    payload = json.loads(JSON.read_text(encoding="utf-8"))
+    catalog_dir = ROOT / "data/factor_research/catalog"
+    latest = json.loads((catalog_dir / "latest.json").read_text(encoding="utf-8"))
+    snapshot = json.loads(
+        (catalog_dir / "snapshots" / f"{latest['snapshot_id'].removeprefix('sha256:')}.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    status_by_id = {row["factor_id"]: row["future_data_status"] for row in snapshot["factors"]}
+    assert all(
+        row["future_data_status"] == status_by_id[row["factor_id"]]
+        for row in payload["records"]
+        if row["factor_id"] in status_by_id
+    )
