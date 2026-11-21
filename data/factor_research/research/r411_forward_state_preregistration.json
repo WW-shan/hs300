@@ -1,0 +1,13 @@
+{
+  "round": "R411",
+  "created_at": "2026-11-22",
+  "classification": "forward-state feasibility audit; no orders; no paper account write",
+  "candidate_id": 4,
+  "requested_evidence": ["current target holdings", "current scores", "last trade date"],
+  "windows": {"start": "2026-10-01", "end": "2026-11-20"},
+  "result": "blocked",
+  "blocker": "The current StrategyBacktestResult exposes closed trades but not engine-level final positions. Trade-ledger inference cannot distinguish open positions from end-of-window closes.",
+  "next_probe": "Add an optional engine-level final-position snapshot, then rerun this preregistration without changing candidate parameters.",
+  "output_policy": {"status": "forward_state_blocked_no_orders", "active_version": null, "orders_generated": false, "paper_target_generated": false, "production_enabled": false},
+  "known_limits": ["No target holdings are reported until the engine snapshot exists.", "This is not a user paper account."]
+}
