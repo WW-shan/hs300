@@ -1,0 +1,73 @@
+{
+  "round": "R519",
+  "classification": "macro conditional IC audit for R506 sleeves; no portfolio promotion",
+  "created_at": "2026-11-22",
+  "source_rounds": ["R506", "R518"],
+  "conditioners": [
+    "shibor_3m",
+    "shibor_3m_chg_20d",
+    "m1_m2_scissors",
+    "m2_yoy",
+    "term_spread_10y_2y",
+    "credit_spread_5y_low",
+    "equity_risk_premium",
+    "equity_risk_premium_chg3m"
+  ],
+  "conditioning": {
+    "lag_days": 1,
+    "partition": "expanding terciles of the cross-sectional median conditioner value",
+    "minimum_history_days": 120
+  },
+  "sleeves": {
+    "admitted_core": {
+      "members": {
+        "ext_alt_hs300_cash_flow_stability_4q_low": 0.25,
+        "ext_alt_hs300_dividend_yield": 0.25,
+        "ext_alt_hs300_fund_holding_ratio_low": 0.25,
+        "ext_alt_hs300_idio_vol_40d_low": 0.25
+      },
+      "directions": {
+        "ext_alt_hs300_cash_flow_stability_4q_low": "high",
+        "ext_alt_hs300_dividend_yield": "high",
+        "ext_alt_hs300_fund_holding_ratio_low": "high",
+        "ext_alt_hs300_idio_vol_40d_low": "high"
+      }
+    },
+    "value_quality_sleeve": {
+      "members": {"value_quality": 1.0},
+      "directions": {"value_quality": "high"}
+    }
+  },
+  "return_horizons": [5, 20, 60],
+  "neutralization": {
+    "industry": "industry_l1",
+    "styles": ["log_float_mv"],
+    "shrink": 1.0
+  },
+  "windows": {
+    "start": "2022-05-05",
+    "end": "2026-11-05",
+    "recent_start": "2025-10-14"
+  },
+  "minimum_cross_section": 30,
+  "gates": {
+    "high_minus_low_abs_min": 0.02,
+    "newey_west_p_max": 0.1,
+    "bh_q_max": 0.1,
+    "minimum_days_per_state": 80,
+    "recent_sign_matches_full": true
+  },
+  "known_limits": [
+    "Coverage is not alpha.",
+    "Macro release timing is represented by local effective-date fields.",
+    "Conditional IC is not a portfolio return.",
+    "No leverage and no production activation."
+  ],
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "macro_conditioning_complete"
+  }
+}
