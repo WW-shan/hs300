@@ -1,0 +1,83 @@
+{
+  "bootstrap": {
+    "block_days": 20,
+    "replications": 5000,
+    "seed": 467
+  },
+  "classification": "append-only correction audit for R466 risk-budget degeneracy; train+validation selection; test/recent confirmation; no promotion",
+  "confirmation_gates": {
+    "no_leverage": true,
+    "recent_annual_min": 0.0,
+    "recent_total_p05_positive": true,
+    "stress_3x_positive": true,
+    "test_annual_min": 0.03,
+    "test_mdd_min": -0.18,
+    "test_sharpe_min": 0.45,
+    "test_total_p05_positive": true
+  },
+  "control_methods": [
+    "equal"
+  ],
+  "created_at": "2026-11-22",
+  "degeneracy": {
+    "minimum_distinct_weight_vectors": 3,
+    "require_max_weight_above_inverse_count": true,
+    "weight_vector_round_digits": 10
+  },
+  "dynamic_methods": [
+    "inverse_vol",
+    "erc",
+    "min_variance"
+  ],
+  "execution": {
+    "cost_diagnostic": "5x",
+    "cost_main": "2x",
+    "cost_stress": "3x",
+    "five_x_hard_rejection": false,
+    "no_leverage": true
+  },
+  "known_limits": [
+    "This is a correction audit, not a new factor or strategy.",
+    "R466 evidence is preserved and not overwritten.",
+    "Sleeve curves retain current HS300 survivorship bias.",
+    "Dynamic weights use trailing returns only.",
+    "5x cost is warning-only and never a hard rejection.",
+    "No leverage and no production activation."
+  ],
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "risk_budget_degeneracy_complete_no_promotion"
+  },
+  "round": "R467",
+  "selection": {
+    "basis": "train_and_validation_only",
+    "bootstrap_finalists": 12,
+    "neighborhood_finalists": 4,
+    "neighborhood_pass_rate_min": 0.8,
+    "train_annual_min": 0.03,
+    "validation_annual_min": 0.03,
+    "validation_bootstrap_p05_positive": true,
+    "validation_mdd_min": -0.18,
+    "validation_sharpe_min": 0.45
+  },
+  "sleeve_overlay": {
+    "min_weight": 0.02,
+    "no_leverage": true,
+    "turnover_cost_bps": 5.0,
+    "weight_sum": 1.0
+  },
+  "source_result": "data/factor_research/research/r466_sleeve_risk_budget_mc_2026-11-22.json",
+  "source_round": "R466",
+  "windows": {
+    "recent_start": "2025-10-14",
+    "test_end": "2026-11-05",
+    "test_start": "2025-05-06",
+    "train_end": "2024-05-05",
+    "train_start": "2022-05-05",
+    "validation_end": "2025-05-05",
+    "validation_start": "2024-05-06"
+  }
+}
