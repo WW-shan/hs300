@@ -1,23 +1,54 @@
 {
-  "round": "R458",
   "classification": "emotion-conditioned forward-return audit for selected factor sleeves; no portfolio promotion",
   "created_at": "2026-11-22",
-  "factor_sleeves": {
-    "value_quality_54": {"factors": {"pb_latest": 0.5, "ocf_debt": 0.4, "debt_ratio_latest": 0.1}, "directions": {"pb_latest": "low", "ocf_debt": "high", "debt_ratio_latest": "low"}},
-    "idio_vol_40_low": {"factors": {"ext_alt_hs300_idio_vol_40d_low": 1.0}, "directions": {"ext_alt_hs300_idio_vol_40d_low": "high"}}
+  "emotion_partition": {
+    "high": "upper third",
+    "low": "lower third",
+    "method": "expanding historical monthly tercile",
+    "mid": "middle third",
+    "min_history_months": 24
   },
-  "emotion_states": ["market_emotion_score", "market_profit_score", "market_speculation_score", "market_breadth_above_ma20"],
-  "emotion_partition": {"method": "expanding historical monthly tercile", "low": "lower third", "mid": "middle third", "high": "upper third", "min_history_months": 24},
-  "return_horizons": [20, 60],
+  "emotion_states": [
+    "market_emotion_score",
+    "market_profit_score",
+    "market_speculation_score",
+    "market_breadth_above_ma20"
+  ],
+  "execution": {
+    "no_leverage": true,
+    "orders_generated": false,
+    "portfolio_backtest": false
+  },
+  "factor_sleeves": {
+    "idio_vol_40_low": {
+      "directions": {
+        "ext_alt_hs300_idio_vol_40d_low": "high"
+      },
+      "factors": {
+        "ext_alt_hs300_idio_vol_40d_low": 1.0
+      }
+    },
+    "value_quality_54": {
+      "directions": {
+        "debt_ratio_latest": "low",
+        "ocf_debt": "high",
+        "pb_latest": "low"
+      },
+      "factors": {
+        "debt_ratio_latest": 0.1,
+        "ocf_debt": 0.4,
+        "pb_latest": 0.5
+      }
+    }
+  },
   "forward_return": "close-to-close, signal date to horizon date",
-  "windows": {"start": "2022-05-05", "end": "2026-11-05", "recent_start": "2025-10-14"},
-  "execution": {"no_leverage": true, "portfolio_backtest": false, "orders_generated": false},
   "gates": {
-    "minimum_observations_per_state": 80,
     "high_low_difference_sign_consistent": true,
-    "newey_west_p_le": 0.10,
+    "minimum_observations_per_state": 80,
+    "newey_west_p_le": 0.1,
     "recent_high_low_sign_consistent": true
   },
+  "implementation_note": "Expanding monthly terciles; daily cross-sectional rank IC requires at least 30 finite observations per date; pass additionally requires NW p<=0.10, BH q<=0.10, at least 80 low/high daily observations, and a consistent high-minus-low sign.",
   "known_limits": [
     "This is a conditional return audit, not a portfolio backtest.",
     "Stock returns are cross-sectionally rank-scored and equal weighted within the eligible universe.",
@@ -25,5 +56,21 @@
     "Current HS300 membership and current industry classification retain survivorship bias.",
     "No leverage and no production activation."
   ],
-  "output_policy": {"status": "emotion_condition_audit_complete_no_promotion", "active_version": null, "orders_generated": false, "paper_target_generated": false, "production_enabled": false}
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "emotion_condition_audit_complete_no_promotion"
+  },
+  "return_horizons": [
+    20,
+    60
+  ],
+  "round": "R458",
+  "windows": {
+    "end": "2026-11-05",
+    "recent_start": "2025-10-14",
+    "start": "2022-05-05"
+  }
 }
