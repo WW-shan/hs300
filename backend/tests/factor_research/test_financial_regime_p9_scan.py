@@ -301,12 +301,39 @@ def test_p9_rerun_is_idempotent() -> None:
     ]
     before = _hash(paths)
 
-    subprocess.run(
+    completed = subprocess.run(
         [sys.executable, str(SCRIPT)],
         cwd=ROOT / "backend",
-        check=True,
+        check=False,
         capture_output=True,
         text=True,
     )
 
+    # The frozen experiment is idempotent when it either publishes the same
+    # evidence or fail-closes on an existing immutable result.  Neither path
+    # may mutate the published JSON/Markdown or the ledger.
+    if completed.returncode != 0:
+        assert "result already exists" in completed.stderr
     assert _hash(paths) == before
+
+
+def test_p9_missing_calendar_day_uses_prior_trading_session() -> None:
+    module = _module()
+    panel_dates = pl.DataFrame(
+        {"date": [date(2026, 10, 14), date(2026, 10, 15), date(2026, 10, 16)]}
+    )
+    history = pl.DataFrame(
+        {
+            "date": [date(2026, 10, 14), date(2026, 10, 16)],
+            "state": ["weak", "strong"],
+        }
+    )
+
+    mask = module.regime_mask_t_minus_one(panel_dates, history)
+
+    assert mask["regime_date"].to_list() == [
+        None,
+        date(2026, 10, 14),
+        date(2026, 10, 14),
+    ]
+    assert mask["is_weak"].to_list() == [False, True, True]

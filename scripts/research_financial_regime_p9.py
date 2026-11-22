@@ -118,11 +118,16 @@ def regime_mask_t_minus_one(
         .unique(subset=["regime_date"], keep="last")
         .sort("regime_date")
     )
-    aligned = dates.with_columns(pl.col("date").shift(1).alias("regime_date")).join(
-        history,
-        on="regime_date",
-        how="left",
-        maintain_order="left",
+    aligned = (
+        dates.with_columns(pl.col("date").shift(1).alias("_previous_panel_date"))
+        .join_asof(
+            history.rename({"regime_date": "_regime_date"}),
+            left_on="_previous_panel_date",
+            right_on="_regime_date",
+            strategy="backward",
+        )
+        .rename({"_regime_date": "regime_date"})
+        .drop("_previous_panel_date")
     )
     if require_previous:
         # The first panel row has no in-panel predecessor. It is a warmup row
