@@ -1,0 +1,84 @@
+{
+  "round": "R454",
+  "classification": "pre-registered HS300 value-quality sleeve plus defensive ETF mix; train/validation selection, test/recent confirmation; no promotion",
+  "created_at": "2026-11-22",
+  "source_rounds": ["R453", "R448"],
+  "equity_composite": {
+    "name": "value_quality",
+    "members": ["pb_latest", "ocf_debt", "debt_ratio_latest"],
+    "directions": {"pb_latest": "low", "ocf_debt": "high", "debt_ratio_latest": "low"},
+    "score_method": "daily cross-sectional rank z-score, equal weight, all members required"
+  },
+  "defensive_etfs": {
+    "510300.SH": "沪深300",
+    "510500.SH": "中证500",
+    "512100.SH": "中证1000",
+    "510880.SH": "红利ETF",
+    "511010.SH": "国债ETF",
+    "518880.SH": "黄金ETF"
+  },
+  "mix_variants": [
+    {"name": "equity100", "equity_weight": 1.0, "defensive_weight": 0.0, "defensive_mode": "fixed_equal", "cash_weight": 0.0},
+    {"name": "equity80_defensive20_equal", "equity_weight": 0.8, "defensive_weight": 0.2, "defensive_mode": "fixed_equal", "cash_weight": 0.0},
+    {"name": "equity70_defensive30_equal", "equity_weight": 0.7, "defensive_weight": 0.3, "defensive_mode": "fixed_equal", "cash_weight": 0.0},
+    {"name": "equity80_defensive20_bond_gold", "equity_weight": 0.8, "defensive_weight": 0.2, "defensive_mode": "bond_gold_equal", "cash_weight": 0.0},
+    {"name": "equity70_defensive30_bond_gold", "equity_weight": 0.7, "defensive_weight": 0.3, "defensive_mode": "bond_gold_equal", "cash_weight": 0.0},
+    {"name": "equity75_defensive20_cash5", "equity_weight": 0.75, "defensive_weight": 0.2, "defensive_mode": "fixed_equal", "cash_weight": 0.05}
+  ],
+  "execution": {
+    "equity_matching": "open_t+1",
+    "equity_cost_main": "2x",
+    "equity_cost_stress": "3x",
+    "etf_matching": "month-end close signal; next trading day open rebalance",
+    "etf_cost_main_bps": 10,
+    "etf_cost_stress_bps": 20,
+    "etf_cost_diagnostic_bps": 50,
+    "five_x_hard_rejection": false,
+    "no_leverage": true,
+    "max_weight_sum": 1.0,
+    "cash_return": 0.0
+  },
+  "windows": {
+    "train_start": "2022-05-05",
+    "train_end": "2024-05-05",
+    "validation_start": "2024-05-06",
+    "validation_end": "2025-05-05",
+    "test_start": "2025-05-06",
+    "test_end": "2026-11-05",
+    "recent_start": "2025-10-14"
+  },
+  "grid": {
+    "equity_positions": [10, 20],
+    "equity_hold_days": [30, 40],
+    "selection": "train+validation only; rank by min annual return; test/recent confirmation only"
+  },
+  "bootstrap": {"block_days": 20, "replications": 5000, "seed": 454},
+  "gates": {
+    "train_annual_min": 0.03,
+    "validation_annual_min": 0.03,
+    "test_annual_min": 0.03,
+    "test_sharpe_min": 0.45,
+    "test_mdd_min": -0.15,
+    "recent_annual_min": 0.0,
+    "stress_3x_positive": true,
+    "test_total_p05_positive": true,
+    "recent_total_p05_positive": true,
+    "equity_plus_defensive_improves_tail": true,
+    "no_leverage": true
+  },
+  "known_limits": [
+    "Equity sleeve uses current HS300 membership and retains survivorship bias.",
+    "Defensive ETF history is local ignored data; the script fails closed when it is absent.",
+    "ETF and equity sleeves use different execution models; this is a research mix, not a broker-level portfolio recommendation.",
+    "The test and recent windows have been observed previously.",
+    "5x ETF cost is warning-only.",
+    "No leverage, orders, paper targets, or production activation."
+  ],
+  "output_policy": {
+    "status": "value_quality_defensive_mix_complete_no_promotion",
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  }
+}
