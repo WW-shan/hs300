@@ -1,0 +1,109 @@
+{
+  "round": "R508",
+  "classification": "low-weight adjunct screening of R391 statistical-pass factors not in R499; train+validation selection; test/recent confirmation; no promotion unless all gates pass",
+  "created_at": "2026-11-22",
+  "source_rounds": ["R391", "R499", "R506"],
+  "source_r391": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r391_factor_library_statistical.json",
+  "source_r499": "r499_weak_state_value_quality_tilt_2026-11-22.json",
+  "source_r506": "r506_r499_cap1_confirmation_2026-11-22.json",
+  "benchmark": "000300.SH",
+  "base_members": [
+    "ext_alt_hs300_cash_flow_stability_4q_low",
+    "ext_alt_hs300_dividend_yield",
+    "ext_alt_hs300_fund_holding_ratio_low",
+    "ext_alt_hs300_idio_vol_40d_low",
+    "value_quality"
+  ],
+  "base_weights": {
+    "ext_alt_hs300_cash_flow_stability_4q_low": 0.2375,
+    "ext_alt_hs300_dividend_yield": 0.2375,
+    "ext_alt_hs300_fund_holding_ratio_low": 0.2375,
+    "ext_alt_hs300_idio_vol_40d_low": 0.2375,
+    "value_quality": 0.05
+  },
+  "candidate_source": "R391 statistical_pass minus R499 base members",
+  "candidates": [
+    "amihud_20d",
+    "ext_alt_hs300_holder_top10_share_chg_qoq",
+    "ext_alt_hs300_holder_top10_share_chg_yoy",
+    "ext_alt_hs300_lhb_event_count_20d_low",
+    "ext_alt_hs300_lhb_inst_net_buy_ratio_20d",
+    "ext_alt_hs300_short_ratio_low",
+    "ext_alt_hs300_vol_of_vol_60d_low",
+    "inventory_turnover_improvement_yoy"
+  ],
+  "directions": {
+    "amihud_20d": "low",
+    "ext_alt_hs300_holder_top10_share_chg_qoq": "high",
+    "ext_alt_hs300_holder_top10_share_chg_yoy": "high",
+    "ext_alt_hs300_lhb_event_count_20d_low": "high",
+    "ext_alt_hs300_lhb_inst_net_buy_ratio_20d": "high",
+    "ext_alt_hs300_short_ratio_low": "high",
+    "ext_alt_hs300_vol_of_vol_60d_low": "high",
+    "inventory_turnover_improvement_yoy": "high"
+  },
+  "added_weight_grid": [0.05, 0.1],
+  "fixed_execution": {
+    "max_positions": 10,
+    "max_hold_days": 25,
+    "entry_score": 70.0,
+    "exit_score": 40.0,
+    "top_rank": 20,
+    "max_new_positions_per_day": 1,
+    "max_exposure_pct": 1.0,
+    "matching": "open_t+1",
+    "cost_main": "2x",
+    "cost_stress": "3x",
+    "cost_diagnostic": "5x",
+    "five_x_hard_rejection": false,
+    "no_leverage": true
+  },
+  "selection": {
+    "basis": "train_and_validation_only",
+    "train_annual_min": 0.03,
+    "validation_annual_min": 0.03,
+    "validation_sharpe_min": 0.45,
+    "validation_mdd_min": -0.18,
+    "validation_bootstrap_p05_min_for_platform": -0.01,
+    "increment_train_min": 0.0,
+    "increment_validation_min": 0.0,
+    "ranking": "maximize min(train,validation) annual; then validation bootstrap p05; then lower added weight"
+  },
+  "confirmation_gates": {
+    "test_annual_min": 0.05,
+    "test_sharpe_min": 0.6,
+    "test_mdd_min": -0.18,
+    "recent_annual_min": 0.0,
+    "stress_3x_positive": true,
+    "validation_bootstrap_p05_positive": true,
+    "test_bootstrap_p05_positive": true,
+    "recent_bootstrap_p05_positive": true,
+    "test_excess_hs300_positive": true,
+    "no_leverage": true
+  },
+  "bootstrap": {"block_days": 20, "replications": 5000, "seed": 508},
+  "windows": {
+    "train_start": "2022-05-05",
+    "train_end": "2024-05-05",
+    "validation_start": "2024-05-06",
+    "validation_end": "2025-05-05",
+    "test_start": "2025-05-06",
+    "test_end": "2026-11-05",
+    "recent_start": "2025-10-14"
+  },
+  "known_limits": [
+    "Adjunct weights are a small pre-registered grid, not an exhaustive optimizer.",
+    "Candidates were already statistically screened and are not independent discoveries.",
+    "The test/recent windows have been observed before.",
+    "Current HS300 membership and industry classification retain survivorship bias.",
+    "5x cost is warning-only and never a hard rejection.",
+    "No leverage and no production activation."
+  ],
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "r499_adjunct_screening_complete"
+  }
+}
