@@ -1,0 +1,113 @@
+{
+  "bootstrap": {
+    "block_days": 20,
+    "replications": 5000,
+    "seed": 475
+  },
+  "classification": "standalone sleeve confirmation for earnings forecast/express surprise PEAD; train+validation selection; test/recent confirmation; no promotion",
+  "confirmation_gates": {
+    "no_leverage": true,
+    "recent_annual_min": 0.0,
+    "recent_total_p05_positive": true,
+    "stress_3x_positive": true,
+    "test_annual_min": 0.03,
+    "test_mdd_min": -0.18,
+    "test_sharpe_min": 0.45,
+    "test_total_p05_positive": true
+  },
+  "created_at": "2026-11-22",
+  "execution": {
+    "cost_diagnostic": "5x",
+    "cost_main": "2x",
+    "cost_stress": "3x",
+    "five_x_hard_rejection": false,
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0,
+    "no_leverage": true
+  },
+  "known_limits": [
+    "This is a standalone confirmation of existing PEAD fields, not a new data source.",
+    "R100 historical-membership and event evidence are preserved.",
+    "Current HS300 membership and current industry classification retain survivorship bias.",
+    "The test and recent windows have been observed before.",
+    "5x cost is warning-only and never a hard rejection.",
+    "No leverage and no production activation."
+  ],
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "earnings_surprise_standalone_complete_no_promotion"
+  },
+  "parameter_space": {
+    "entry_score": [
+      60.0,
+      70.0,
+      80.0
+    ],
+    "exit_score": [
+      30.0,
+      40.0,
+      50.0
+    ],
+    "max_hold_days": [
+      10,
+      20,
+      30
+    ],
+    "max_positions": [
+      10,
+      20
+    ]
+  },
+  "round": "R475",
+  "selection": {
+    "basis": "train_and_validation_only",
+    "bootstrap_finalists": 8,
+    "neighborhood_pass_rate_min": 0.8,
+    "train_annual_min": 0.03,
+    "validation_annual_min": 0.03,
+    "validation_bootstrap_p05_positive": true,
+    "validation_mdd_min": -0.18,
+    "validation_sharpe_min": 0.45
+  },
+  "sleeves": {
+    "combined": {
+      "directions": {
+        "ext_alt_hs300_express_surprise_60d": "high",
+        "ext_alt_hs300_forecast_surprise_60d": "high"
+      },
+      "weights": {
+        "ext_alt_hs300_express_surprise_60d": 0.5,
+        "ext_alt_hs300_forecast_surprise_60d": 0.5
+      }
+    },
+    "express": {
+      "directions": {
+        "ext_alt_hs300_express_surprise_60d": "high"
+      },
+      "weights": {
+        "ext_alt_hs300_express_surprise_60d": 1.0
+      }
+    },
+    "forecast": {
+      "directions": {
+        "ext_alt_hs300_forecast_surprise_60d": "high"
+      },
+      "weights": {
+        "ext_alt_hs300_forecast_surprise_60d": 1.0
+      }
+    }
+  },
+  "source_round": "R100",
+  "windows": {
+    "recent_start": "2025-10-14",
+    "test_end": "2026-11-05",
+    "test_start": "2025-05-06",
+    "train_end": "2024-05-05",
+    "train_start": "2022-05-05",
+    "validation_end": "2025-05-05",
+    "validation_start": "2024-05-06"
+  }
+}
