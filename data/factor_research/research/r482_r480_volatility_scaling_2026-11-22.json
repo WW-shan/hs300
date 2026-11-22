@@ -1,0 +1,514 @@
+{
+  "benchmark": "000300.SH",
+  "benchmark_returns": {
+    "recent": -0.093776,
+    "test": 0.080049
+  },
+  "classification": "no-leverage volatility-scaling overlay on frozen R480 eight-leg subset; diagnostic confirmation; no promotion unless all gates pass",
+  "decision": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "rejected"
+  },
+  "diagnostics": {
+    "five_x_warning_only": true,
+    "no_leverage": true
+  },
+  "eligible_count": 2,
+  "gate": {
+    "checks": {
+      "no_leverage": true,
+      "recent_annual_min": true,
+      "recent_bootstrap_positive": false,
+      "test_annual_min": false,
+      "test_bootstrap_positive": false,
+      "test_excess_hs300_positive": false,
+      "test_mdd_min": true,
+      "test_sharpe_min": false,
+      "training_platform_exists": true
+    },
+    "pass": false
+  },
+  "known_limits": [
+    "Overlays only shift exposure between cash and the frozen R480 sleeve; they cannot improve stock selection.",
+    "Trailing volatility and drawdown estimates are not forecasts.",
+    "Test/recent windows are reused confirmation windows.",
+    "Current HS300 membership retains survivorship bias.",
+    "5x cost is warning-only and never a hard rejection.",
+    "No leverage and no production activation."
+  ],
+  "preregistration_sha256": "09e7cf27a4df950e0c0de66506dbacc7fb8ca5b25c4dab2f83e520b1620e4ce6",
+  "recent_used_for_selection": false,
+  "round": "R482",
+  "rows": [
+    {
+      "name": "baseline",
+      "overlay": {
+        "type": "none",
+        "weight": 1.0
+      },
+      "recent": {
+        "bootstrap": {
+          "mdd_p05": -0.17178259873827573,
+          "sharpe_p50": 0.6154344053852646,
+          "total_p05": -0.08655409546016501,
+          "total_p50": 0.08077464627569197
+        },
+        "metrics": {
+          "annual_return": 0.079182,
+          "max_drawdown": -0.101873,
+          "sharpe": 0.615197,
+          "total_return": 0.081142
+        },
+        "weight_max": 1.0,
+        "weight_mean": 1.0,
+        "weight_min": 1.0
+      },
+      "test": {
+        "bootstrap": {
+          "mdd_p05": -0.24575073777336576,
+          "sharpe_p50": 0.48702207895596455,
+          "total_p05": -0.15546759690825962,
+          "total_p50": 0.08933093394256186
+        },
+        "metrics": {
+          "annual_return": 0.06173,
+          "max_drawdown": -0.165617,
+          "sharpe": 0.494297,
+          "total_return": 0.090893
+        },
+        "weight_max": 1.0,
+        "weight_mean": 1.0,
+        "weight_min": 1.0
+      },
+      "train": {
+        "bootstrap": {
+          "mdd_p05": -0.16982435106741745,
+          "sharpe_p50": 1.3377724003720035,
+          "total_p05": 0.06986885034072854,
+          "total_p50": 0.405477689926637
+        },
+        "metrics": {
+          "annual_return": 0.196001,
+          "max_drawdown": -0.094648,
+          "sharpe": 1.342746,
+          "total_return": 0.410243
+        },
+        "weight_max": 1.0,
+        "weight_mean": 1.0,
+        "weight_min": 1.0
+      },
+      "validation": {
+        "bootstrap": {
+          "mdd_p05": -0.165752943933415,
+          "sharpe_p50": 1.4253364930785966,
+          "total_p05": 0.0009849857190384892,
+          "total_p50": 0.2753886472175764
+        },
+        "metrics": {
+          "annual_return": 0.306597,
+          "max_drawdown": -0.092878,
+          "sharpe": 1.441273,
+          "total_return": 0.291433
+        },
+        "weight_max": 1.0,
+        "weight_mean": 1.0,
+        "weight_min": 1.0
+      }
+    },
+    {
+      "name": "vol_target_12",
+      "overlay": {
+        "annual_target": 0.12,
+        "lookback_days": 60,
+        "max_weight": 1.0,
+        "min_weight": 0.2,
+        "type": "vol_target"
+      },
+      "recent": {
+        "bootstrap": {
+          "mdd_p05": -0.138011513954034,
+          "sharpe_p50": 0.5882593361386399,
+          "total_p05": -0.06696470508932584,
+          "total_p50": 0.06224024399795769
+        },
+        "metrics": {
+          "annual_return": 0.061058,
+          "max_drawdown": -0.087753,
+          "sharpe": 0.587941,
+          "total_return": 0.062557
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.688472,
+        "weight_min": 0.2
+      },
+      "test": {
+        "bootstrap": {
+          "mdd_p05": -0.22703820716174405,
+          "sharpe_p50": 0.08614771322536127,
+          "total_p05": -0.1724904797642497,
+          "total_p50": 0.0048120324310769735
+        },
+        "metrics": {
+          "annual_return": 0.004674,
+          "max_drawdown": -0.127889,
+          "sharpe": 0.097648,
+          "total_return": 0.006796
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.746058,
+        "weight_min": 0.2
+      },
+      "train": {
+        "bootstrap": {
+          "mdd_p05": -0.13422557964874515,
+          "sharpe_p50": 1.4869670611654702,
+          "total_p05": 0.08075657338776665,
+          "total_p50": 0.3813562339407086
+        },
+        "metrics": {
+          "annual_return": 0.184471,
+          "max_drawdown": -0.075589,
+          "sharpe": 1.491309,
+          "total_return": 0.384247
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.79488,
+        "weight_min": 0.2
+      },
+      "validation": {
+        "bootstrap": {
+          "mdd_p05": -0.13119798557540996,
+          "sharpe_p50": 1.0991445741610397,
+          "total_p05": -0.03447681886290166,
+          "total_p50": 0.11884110950262694
+        },
+        "metrics": {
+          "annual_return": 0.134978,
+          "max_drawdown": -0.079583,
+          "sharpe": 1.129515,
+          "total_return": 0.128723
+        },
+        "weight_max": 0.9503085720470665,
+        "weight_mean": 0.52756,
+        "weight_min": 0.2
+      }
+    },
+    {
+      "name": "vol_target_15",
+      "overlay": {
+        "annual_target": 0.15,
+        "lookback_days": 60,
+        "max_weight": 1.0,
+        "min_weight": 0.2,
+        "type": "vol_target"
+      },
+      "recent": {
+        "bootstrap": {
+          "mdd_p05": -0.15813624518733183,
+          "sharpe_p50": 0.657919550011036,
+          "total_p05": -0.07365824168436774,
+          "total_p50": 0.0793334729861992
+        },
+        "metrics": {
+          "annual_return": 0.078822,
+          "max_drawdown": -0.10207,
+          "sharpe": 0.658188,
+          "total_return": 0.080773
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.783636,
+        "weight_min": 0.2
+      },
+      "test": {
+        "bootstrap": {
+          "mdd_p05": -0.25083044775801544,
+          "sharpe_p50": 0.12930322167814962,
+          "total_p05": -0.18894569466297206,
+          "total_p50": 0.012170956035173708
+        },
+        "metrics": {
+          "annual_return": 0.010139,
+          "max_drawdown": -0.146691,
+          "sharpe": 0.142957,
+          "total_return": 0.01476
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.842611,
+        "weight_min": 0.2
+      },
+      "train": {
+        "bootstrap": {
+          "mdd_p05": -0.14721519040493813,
+          "sharpe_p50": 1.4539220411471185,
+          "total_p05": 0.08578397687050443,
+          "total_p50": 0.4101135383822401
+        },
+        "metrics": {
+          "annual_return": 0.198776,
+          "max_drawdown": -0.075589,
+          "sharpe": 1.461977,
+          "total_return": 0.416534
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.862308,
+        "weight_min": 0.2
+      },
+      "validation": {
+        "bootstrap": {
+          "mdd_p05": -0.1518370559718174,
+          "sharpe_p50": 1.112209472275929,
+          "total_p05": -0.0408227506300759,
+          "total_p50": 0.14696308159737703
+        },
+        "metrics": {
+          "annual_return": 0.167095,
+          "max_drawdown": -0.092338,
+          "sharpe": 1.144729,
+          "total_return": 0.15925
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.632251,
+        "weight_min": 0.2
+      }
+    },
+    {
+      "name": "vol_target_18",
+      "overlay": {
+        "annual_target": 0.18,
+        "lookback_days": 60,
+        "max_weight": 1.0,
+        "min_weight": 0.2,
+        "type": "vol_target"
+      },
+      "recent": {
+        "bootstrap": {
+          "mdd_p05": -0.16152446310819446,
+          "sharpe_p50": 0.6657040892906956,
+          "total_p05": -0.07383096313222126,
+          "total_p50": 0.08363828819810881
+        },
+        "metrics": {
+          "annual_return": 0.082563,
+          "max_drawdown": -0.101873,
+          "sharpe": 0.667174,
+          "total_return": 0.084609
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.810768,
+        "weight_min": 0.2
+      },
+      "test": {
+        "bootstrap": {
+          "mdd_p05": -0.25028442480943625,
+          "sharpe_p50": 0.17312419925617895,
+          "total_p05": -0.18614055497021498,
+          "total_p50": 0.020776000993505184
+        },
+        "metrics": {
+          "annual_return": 0.016362,
+          "max_drawdown": -0.146552,
+          "sharpe": 0.189386,
+          "total_return": 0.023851
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.864904,
+        "weight_min": 0.2
+      },
+      "train": {
+        "bootstrap": {
+          "mdd_p05": -0.15457982324150965,
+          "sharpe_p50": 1.419092082124399,
+          "total_p05": 0.08114780559340451,
+          "total_p50": 0.4106536182917486
+        },
+        "metrics": {
+          "annual_return": 0.198949,
+          "max_drawdown": -0.089119,
+          "sharpe": 1.422819,
+          "total_return": 0.416928
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.883035,
+        "weight_min": 0.2
+      },
+      "validation": {
+        "bootstrap": {
+          "mdd_p05": -0.15409571208780803,
+          "sharpe_p50": 1.2012679805016724,
+          "total_p05": -0.0348797537486315,
+          "total_p50": 0.17929114079753083
+        },
+        "metrics": {
+          "annual_return": 0.206996,
+          "max_drawdown": -0.092878,
+          "sharpe": 1.245431,
+          "total_return": 0.197124
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.695543,
+        "weight_min": 0.2
+      }
+    },
+    {
+      "name": "drawdown_guard",
+      "overlay": {
+        "defensive_weight": 0.5,
+        "normal_weight": 1.0,
+        "threshold": -0.1,
+        "type": "drawdown_guard"
+      },
+      "recent": {
+        "bootstrap": {
+          "mdd_p05": -0.17413609291444265,
+          "sharpe_p50": 0.5934567384538654,
+          "total_p05": -0.0899017543161772,
+          "total_p50": 0.07757287769998733
+        },
+        "metrics": {
+          "annual_return": 0.075897,
+          "max_drawdown": -0.102097,
+          "sharpe": 0.593587,
+          "total_return": 0.077772
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.992278,
+        "weight_min": 0.0
+      },
+      "test": {
+        "bootstrap": {
+          "mdd_p05": -0.24879045118956,
+          "sharpe_p50": 0.17258226667216114,
+          "total_p05": -0.1863880091229302,
+          "total_p50": 0.02012070404918931
+        },
+        "metrics": {
+          "annual_return": 0.015479,
+          "max_drawdown": -0.174051,
+          "sharpe": 0.185477,
+          "total_return": 0.02256
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.876022,
+        "weight_min": 0.0
+      },
+      "train": {
+        "bootstrap": {
+          "mdd_p05": -0.1677545289761616,
+          "sharpe_p50": 1.3612974022254376,
+          "total_p05": 0.07730966481474333,
+          "total_p50": 0.4153592941813802
+        },
+        "metrics": {
+          "annual_return": 0.200467,
+          "max_drawdown": -0.094648,
+          "sharpe": 1.370369,
+          "total_return": 0.420375
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.997938,
+        "weight_min": 0.0
+      },
+      "validation": {
+        "bootstrap": {
+          "mdd_p05": -0.16485882039580946,
+          "sharpe_p50": 1.4403432549269204,
+          "total_p05": 0.004309465563752335,
+          "total_p50": 0.2807549004348977
+        },
+        "metrics": {
+          "annual_return": 0.311376,
+          "max_drawdown": -0.092878,
+          "sharpe": 1.459992,
+          "total_return": 0.29595
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.995868,
+        "weight_min": 0.0
+      }
+    }
+  ],
+  "sample_count": 5,
+  "selected": {
+    "name": "drawdown_guard",
+    "overlay": {
+      "defensive_weight": 0.5,
+      "normal_weight": 1.0,
+      "threshold": -0.1,
+      "type": "drawdown_guard"
+    },
+    "recent": {
+      "bootstrap": {
+        "mdd_p05": -0.17413609291444265,
+        "sharpe_p50": 0.5934567384538654,
+        "total_p05": -0.0899017543161772,
+        "total_p50": 0.07757287769998733
+      },
+      "metrics": {
+        "annual_return": 0.075897,
+        "max_drawdown": -0.102097,
+        "sharpe": 0.593587,
+        "total_return": 0.077772
+      },
+      "weight_max": 1.0,
+      "weight_mean": 0.992278,
+      "weight_min": 0.0
+    },
+    "test": {
+      "bootstrap": {
+        "mdd_p05": -0.24879045118956,
+        "sharpe_p50": 0.17258226667216114,
+        "total_p05": -0.1863880091229302,
+        "total_p50": 0.02012070404918931
+      },
+      "metrics": {
+        "annual_return": 0.015479,
+        "max_drawdown": -0.174051,
+        "sharpe": 0.185477,
+        "total_return": 0.02256
+      },
+      "weight_max": 1.0,
+      "weight_mean": 0.876022,
+      "weight_min": 0.0
+    },
+    "train": {
+      "bootstrap": {
+        "mdd_p05": -0.1677545289761616,
+        "sharpe_p50": 1.3612974022254376,
+        "total_p05": 0.07730966481474333,
+        "total_p50": 0.4153592941813802
+      },
+      "metrics": {
+        "annual_return": 0.200467,
+        "max_drawdown": -0.094648,
+        "sharpe": 1.370369,
+        "total_return": 0.420375
+      },
+      "weight_max": 1.0,
+      "weight_mean": 0.997938,
+      "weight_min": 0.0
+    },
+    "validation": {
+      "bootstrap": {
+        "mdd_p05": -0.16485882039580946,
+        "sharpe_p50": 1.4403432549269204,
+        "total_p05": 0.004309465563752335,
+        "total_p50": 0.2807549004348977
+      },
+      "metrics": {
+        "annual_return": 0.311376,
+        "max_drawdown": -0.092878,
+        "sharpe": 1.459992,
+        "total_return": 0.29595
+      },
+      "weight_max": 1.0,
+      "weight_mean": 0.995868,
+      "weight_min": 0.0
+    }
+  },
+  "selection_basis": "train_and_validation_only",
+  "source_r480_sha256": "3ed087d8be98fd3b153185630109cd3fb9a22e88f05ed23d567f660c503ef60b",
+  "test_used_for_selection": false
+}

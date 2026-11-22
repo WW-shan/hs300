@@ -1,0 +1,61 @@
+{
+  "round": "R482",
+  "classification": "no-leverage volatility-scaling overlay on frozen R480 eight-leg subset; diagnostic confirmation; no promotion unless all gates pass",
+  "created_at": "2026-11-22",
+  "source_round": "R480",
+  "source_result": "r480_winner_dependence_budget_2026-11-22.json",
+  "source_selected_label": "core8_no_ocf_margin",
+  "benchmark": "000300.SH",
+  "overlays": {
+    "baseline": {"type": "none", "weight": 1.0},
+    "vol_target_12": {"type": "vol_target", "annual_target": 0.12, "lookback_days": 60, "min_weight": 0.2, "max_weight": 1.0},
+    "vol_target_15": {"type": "vol_target", "annual_target": 0.15, "lookback_days": 60, "min_weight": 0.2, "max_weight": 1.0},
+    "vol_target_18": {"type": "vol_target", "annual_target": 0.18, "lookback_days": 60, "min_weight": 0.2, "max_weight": 1.0},
+    "drawdown_guard": {"type": "drawdown_guard", "threshold": -0.10, "defensive_weight": 0.5, "normal_weight": 1.0}
+  },
+  "selection": {
+    "basis": "train_and_validation_only",
+    "train_annual_min": 0.03,
+    "validation_annual_min": 0.03,
+    "validation_sharpe_min": 0.45,
+    "validation_mdd_min": -0.18,
+    "validation_bootstrap_p05_min_for_platform": -0.01,
+    "ranking": "maximize min(train,validation) annual, then lower overlay turnover, then simpler overlay"
+  },
+  "confirmation_gates": {
+    "test_annual_min": 0.03,
+    "test_sharpe_min": 0.45,
+    "test_mdd_min": -0.18,
+    "recent_annual_min": 0.0,
+    "stress_3x_positive": true,
+    "test_bootstrap_p05_positive": true,
+    "recent_bootstrap_p05_positive": true,
+    "test_excess_hs300_positive": true,
+    "no_leverage": true
+  },
+  "bootstrap": {"block_days": 20, "replications": 5000, "seed": 482},
+  "windows": {
+    "train_start": "2022-05-05",
+    "train_end": "2024-05-05",
+    "validation_start": "2024-05-06",
+    "validation_end": "2025-05-05",
+    "test_start": "2025-05-06",
+    "test_end": "2026-11-05",
+    "recent_start": "2025-10-14"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "volatility_scaling_complete"
+  },
+  "known_limits": [
+    "Overlays only shift exposure between cash and the frozen R480 sleeve; they cannot improve stock selection.",
+    "Trailing volatility and drawdown estimates are not forecasts.",
+    "Test/recent windows are reused confirmation windows.",
+    "Current HS300 membership retains survivorship bias.",
+    "5x cost is warning-only and never a hard rejection.",
+    "No leverage and no production activation."
+  ]
+}
