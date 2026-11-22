@@ -1,0 +1,102 @@
+{
+  "bootstrap": {
+    "block_days": 20,
+    "replications": 5000,
+    "seed": 473
+  },
+  "classification": "incremental sleeve confirmation of R468 operating-efficiency factor against R463 four-factor control; train+validation selection; test/recent confirmation; no promotion",
+  "confirmation_gates": {
+    "increment_vs_four_recent_positive": true,
+    "increment_vs_four_test_positive": true,
+    "no_leverage": true,
+    "recent_annual_min": 0.0,
+    "recent_total_p05_positive": true,
+    "stress_3x_positive": true,
+    "test_annual_min": 0.03,
+    "test_mdd_min": -0.18,
+    "test_sharpe_min": 0.45,
+    "test_total_p05_positive": true
+  },
+  "created_at": "2026-11-22",
+  "directions": {
+    "ext_alt_hs300_cash_flow_stability_4q_low": "high",
+    "ext_alt_hs300_dividend_yield": "high",
+    "ext_alt_hs300_fund_holding_ratio_low": "high",
+    "ext_alt_hs300_idio_vol_40d_low": "high",
+    "inventory_growth_minus_cogs_growth": "low"
+  },
+  "execution": {
+    "cost_diagnostic": "5x",
+    "cost_main": "2x",
+    "cost_stress": "3x",
+    "five_x_hard_rejection": false,
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0,
+    "no_leverage": true
+  },
+  "four_execution": {
+    "entry_score": 70.0,
+    "exit_score": 40.0,
+    "max_hold_days": 25,
+    "max_positions": 10
+  },
+  "four_factor": [
+    "ext_alt_hs300_cash_flow_stability_4q_low",
+    "ext_alt_hs300_dividend_yield",
+    "ext_alt_hs300_fund_holding_ratio_low",
+    "ext_alt_hs300_idio_vol_40d_low"
+  ],
+  "known_limits": [
+    "This is an incremental sleeve test, not a new factor formula.",
+    "The operating-efficiency factor starts in 2023 and has lower early exposure.",
+    "Current HS300 membership and current industry classification retain survivorship bias.",
+    "The test and recent windows have been observed before.",
+    "5x cost is warning-only and never a hard rejection.",
+    "No leverage and no production activation."
+  ],
+  "op_execution": {
+    "entry_score": 70.0,
+    "exit_score": 30.0,
+    "max_hold_days": 20,
+    "max_positions": 10
+  },
+  "op_factor": "inventory_growth_minus_cogs_growth",
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "operating_efficiency_incremental_complete_no_promotion"
+  },
+  "round": "R473",
+  "selection": {
+    "basis": "train_and_validation_only",
+    "bootstrap_finalists": 3,
+    "neighborhood_pass_rate_min": 0.8,
+    "train_annual_min": 0.03,
+    "validation_annual_min": 0.03,
+    "validation_bootstrap_p05_positive": true,
+    "validation_mdd_min": -0.18,
+    "validation_sharpe_min": 0.45
+  },
+  "source_rounds": [
+    "R463",
+    "R468",
+    "R469",
+    "R472"
+  ],
+  "weight_grid": [
+    0.1,
+    0.2,
+    0.3
+  ],
+  "windows": {
+    "recent_start": "2025-10-14",
+    "test_end": "2026-11-05",
+    "test_start": "2025-05-06",
+    "train_end": "2024-05-05",
+    "train_start": "2022-05-05",
+    "validation_end": "2025-05-05",
+    "validation_start": "2024-05-06"
+  }
+}
