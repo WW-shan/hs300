@@ -1,0 +1,18 @@
+{
+  "round": "R463",
+  "classification": "pre-registered hold-window neighborhood confirmation for R452/R453 value_quality; train/validation selection, test/recent confirmation; no promotion",
+  "created_at": "2026-11-22",
+  "source_rounds": ["R452", "R453"],
+  "members": ["ext_alt_hs300_cash_flow_stability_4q_low", "ext_alt_hs300_dividend_yield", "ext_alt_hs300_fund_holding_ratio_low", "ext_alt_hs300_idio_vol_40d_low", "value_quality"],
+  "directions": {"ext_alt_hs300_cash_flow_stability_4q_low": "high", "ext_alt_hs300_dividend_yield": "high", "ext_alt_hs300_fund_holding_ratio_low": "high", "ext_alt_hs300_idio_vol_40d_low": "high", "value_quality": "high"},
+  "weights": {"ext_alt_hs300_cash_flow_stability_4q_low": 0.225, "ext_alt_hs300_dividend_yield": 0.225, "ext_alt_hs300_fund_holding_ratio_low": 0.225, "ext_alt_hs300_idio_vol_40d_low": 0.225, "value_quality": 0.1},
+  "hold_days_grid": [20, 25, 30, 35, 40, 45],
+  "positions_grid": [10, 20],
+  "windows": {"train_start": "2022-05-05", "train_end": "2024-05-05", "validation_start": "2024-05-06", "validation_end": "2025-05-05", "test_start": "2025-05-06", "test_end": "2026-11-05", "recent_start": "2025-10-14"},
+  "selection": "train+validation only; require positive neighboring hold windows 25/30/35 and rank by min annual return; test/recent confirmation only",
+  "execution": {"matching": "open_t+1", "cost_main": "2x", "cost_stress": "3x", "cost_diagnostic": "5x", "no_leverage": true, "max_weight_sum": 1.0},
+  "bootstrap": {"block_days": 20, "replications": 5000, "seed": 463},
+  "gates": {"train_annual_min": 0.03, "validation_annual_min": 0.03, "test_annual_min": 0.05, "test_sharpe_min": 0.6, "test_mdd_min": -0.18, "recent_annual_min": 0.0, "stress_3x_positive": true, "test_total_p05_positive": true, "recent_total_p05_positive": true, "neighbor_hold_platform_positive": true, "no_leverage": true},
+  "known_limits": ["This is a local hold-window neighborhood test, not an exhaustive parameter search.", "The test and recent windows have been observed before.", "Current HS300 membership and industry classification retain survivorship bias.", "5x cost is warning-only.", "No production activation."],
+  "output_policy": {"status": "hold25_confirm_complete_no_promotion", "active_version": null, "orders_generated": false, "paper_target_generated": false, "production_enabled": false}
+}
