@@ -1,0 +1,63 @@
+{
+  "round": "R514",
+  "classification": "trailing-return-only dynamic risk budget on frozen R506 cap-1 sleeve; train+validation selection; test/recent confirmation; no promotion unless all gates pass",
+  "created_at": "2026-11-22",
+  "source_rounds": ["R506"],
+  "source_r506": "r506_r499_cap1_confirmation_2026-11-22.json",
+  "benchmark": "000300.SH",
+  "overlays": {
+    "baseline": {"type": "none"},
+    "vol_target_10": {"type": "vol_target", "annual_target": 0.10, "lookback_days": 20, "min_weight": 0.25, "max_weight": 1.0},
+    "vol_target_12": {"type": "vol_target", "annual_target": 0.12, "lookback_days": 20, "min_weight": 0.25, "max_weight": 1.0},
+    "vol_target_15": {"type": "vol_target", "annual_target": 0.15, "lookback_days": 20, "min_weight": 0.25, "max_weight": 1.0},
+    "drawdown_10_half": {"type": "drawdown_guard", "threshold": -0.10, "defensive_weight": 0.5, "normal_weight": 1.0},
+    "drawdown_12_half": {"type": "drawdown_guard", "threshold": -0.12, "defensive_weight": 0.5, "normal_weight": 1.0},
+    "drawdown_10_cash": {"type": "drawdown_guard", "threshold": -0.10, "defensive_weight": 0.0, "normal_weight": 1.0}
+  },
+  "selection": {
+    "basis": "train_and_validation_only",
+    "train_annual_min": 0.03,
+    "validation_annual_min": 0.03,
+    "validation_sharpe_min": 0.45,
+    "validation_mdd_min": -0.18,
+    "validation_bootstrap_p05_min_for_platform": -0.01,
+    "ranking": "maximize min(train,validation) annual; then validation bootstrap p05; then higher average exposure"
+  },
+  "confirmation_gates": {
+    "test_annual_min": 0.05,
+    "test_sharpe_min": 0.6,
+    "test_mdd_min": -0.18,
+    "recent_annual_min": 0.0,
+    "stress_3x_positive": true,
+    "validation_bootstrap_p05_positive": true,
+    "test_bootstrap_p05_positive": true,
+    "recent_bootstrap_p05_positive": true,
+    "test_excess_hs300_positive": true,
+    "no_leverage": true
+  },
+  "bootstrap": {"block_days": 20, "replications": 5000, "seed": 514},
+  "windows": {
+    "train_start": "2022-05-05",
+    "train_end": "2024-05-05",
+    "validation_start": "2024-05-06",
+    "validation_end": "2025-05-05",
+    "test_start": "2025-05-06",
+    "test_end": "2026-11-05",
+    "recent_start": "2025-10-14"
+  },
+  "known_limits": [
+    "Overlays scale an already-simulated equity curve rather than rebalancing individual holdings.",
+    "Trailing volatility and drawdown are not forecasts.",
+    "The test/recent windows have been observed before.",
+    "Current HS300 membership retains survivorship bias.",
+    "5x cost is warning-only and never a hard rejection.",
+    "No leverage and no production activation."
+  ],
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "r506_dynamic_risk_budget_complete"
+  }
+}
