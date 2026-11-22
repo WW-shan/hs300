@@ -1,0 +1,74 @@
+{
+  "classification": "read-only membership-generality audit; no recomputation; no promotion",
+  "comparison": {
+    "causal_claim": false,
+    "different_vintages": true,
+    "direct_winner": null,
+    "explanation": "R385/R386 passed on repaired daily membership; R506/R522 were evaluated on current membership backfilled over history. Headline returns are descriptive, not a controlled comparison.",
+    "r385_historical_membership": {
+      "full_annual": 0.13751702652882236,
+      "full_mdd": -0.08023780742988318,
+      "full_sharpe": 1.4411202081199717,
+      "membership_sha256": "d2d84253dc17dade6c3ba7cf14dd8c3a932a0d45f493ac149b60517cdcc2814f",
+      "status": "candidate_for_paper_trading_review",
+      "window": [
+        "2022-05-05",
+        "2026-11-05"
+      ]
+    },
+    "r506_current_membership": {
+      "fresh_start_latest_annual": 0.1542,
+      "fresh_start_latest_mdd": -0.0889,
+      "fresh_start_positive_count": 5,
+      "fresh_start_worst_p05": -0.10699696056666952,
+      "recent_annual": 0.1542,
+      "recent_mdd": -0.0889,
+      "recent_sharpe": 1.17,
+      "status": "rejected",
+      "test_annual": 0.1284,
+      "test_mdd": -0.1027,
+      "test_sharpe": 1.03,
+      "window": [
+        "2025-05-06",
+        "2026-11-05"
+      ]
+    }
+  },
+  "decision": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "membership_generality_audit_complete"
+  },
+  "gate": {
+    "checks": {
+      "all_sources_exist": true,
+      "no_execution_artifacts": true,
+      "r385_historical_membership_evidence_present": true,
+      "r506_current_membership_evidence_present": true,
+      "r524_not_directly_rankable": true
+    },
+    "pass": true
+  },
+  "known_limits": [
+    "This is a lineage and metric audit, not a new backtest.",
+    "R385/R386 and R506 are not directly rankable on headline returns.",
+    "Membership vintage is one possible cause of differences, not a proved causal effect.",
+    "No leverage and no production activation."
+  ],
+  "preregistration_sha256": "9807d0336b1dc7544e74dc1c2cce8e90455ca3b0b3ac4e429349a358b7b48979",
+  "round": "R525",
+  "source_hashes": {
+    "r385": "4aeb40ea9146d8b7dcf5db2c1d5e4390d45641c68ce22da4474f1b2b9866768f",
+    "r386": "743b12edcbd82697666b2749847bcaf96d47d4054db6c3cc844cd87da78c75e3",
+    "r506": "7906faad8c1a3943198e5dedfdeae45966d7e0a6e9396b7caa56cf7eff9b8597",
+    "r522": "3efe8b8fdd40cf706eb9d64043c0a5aae3d8db6a16d6b5cb14e1de73211d52b5",
+    "r524": "54da96409043c11e91866558afb67d435f2c0900ed3054a64fa11a92989e4dbb"
+  },
+  "verdict": {
+    "direct_winner": null,
+    "next_action": "rerun both candidate families on one frozen PIT input bundle",
+    "reason": "membership vintage and industry vintage differ"
+  }
+}
