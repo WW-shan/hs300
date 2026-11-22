@@ -64,7 +64,8 @@ def _wait_cache_results(tmp_path, want_ids, timeout=8.0) -> dict:
     deadline = time.time() + timeout
     while time.time() < deadline:
         results = (strategy_cache.read_cache(tmp_path) or {}).get("results") or {}
-        if all(i in results for i in want_ids):
+        timings = strategy_run_queue.load_run_timings(tmp_path)
+        if all(i in results for i in want_ids) and all(i in timings for i in want_ids):
             return results
         time.sleep(0.05)
     return (strategy_cache.read_cache(tmp_path) or {}).get("results") or {}
