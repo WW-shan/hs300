@@ -1,0 +1,64 @@
+{
+  "round": "R512",
+  "classification": "significance correction for R511 growth composites; no new factors; no promotion",
+  "created_at": "2026-11-22",
+  "source_round": "R511",
+  "source_r511": "r511_growth_acceleration_ic_2026-11-22.json",
+  "composites": {
+    "growth_acceleration": {
+      "members": {
+        "revenue_yoy_latest": 0.5,
+        "net_income_yoy_latest": 0.5
+      },
+      "directions": {
+        "revenue_yoy_latest": "high",
+        "net_income_yoy_latest": "high"
+      },
+      "requires_change_vs_lagged_report": true
+    },
+    "quality_confirmed_growth": {
+      "members": {
+        "revenue_yoy_latest": 0.35,
+        "net_income_yoy_latest": 0.35,
+        "accrual": 0.30
+      },
+      "directions": {
+        "revenue_yoy_latest": "high",
+        "net_income_yoy_latest": "high",
+        "accrual": "low"
+      }
+    }
+  },
+  "neutralization": {
+    "industry": "industry_l1",
+    "styles": ["log_float_mv"],
+    "shrink": 1.0
+  },
+  "return_horizons": [5, 20, 60],
+  "windows": {
+    "start": "2022-05-05",
+    "end": "2026-11-05",
+    "recent_start": "2025-10-14"
+  },
+  "minimum_cross_section": 30,
+  "gates": {
+    "neutral_ic_positive": true,
+    "newey_west_p_max": 0.1,
+    "bh_q_max": 0.1,
+    "yearly_sign_consistency_min": 0.8,
+    "minimum_valid_dates": 120
+  },
+  "known_limits": [
+    "R511 remains unchanged and is the source of the composite definitions.",
+    "Approximately 78% of financial rows use statutory-deadline fallback dates.",
+    "This is an IC audit, not a portfolio backtest.",
+    "No leverage and no production activation."
+  ],
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "growth_acceleration_significance_complete"
+  }
+}
