@@ -1,0 +1,62 @@
+{
+  "classification": "read-only cross-generation evidence reconciliation; no backtest; no reselection; no promotion",
+  "comparability": {
+    "direct_return_comparison_allowed": false,
+    "r385_r386_basis": "repaired daily HS300 membership + effective-date Shenwan industry history",
+    "r385_r386_engine": {
+      "extension_frame_sha256": "8d9b2c63029efe4555765d460423d9b57f3161f55482c2a5a385d2a83896d391",
+      "membership_sha256": "d2d84253dc17dade6c3ba7cf14dd8c3a932a0d45f493ac149b60517cdcc2814f"
+    },
+    "r499_r506_basis": "current official HS300 membership applied to history",
+    "r499_r506_candidate": {
+      "r499_limit_mentions_current_membership": true,
+      "r499_rejected": true,
+      "r506_limit_mentions_current_membership": true,
+      "r506_rejected": true,
+      "r522_limit_mentions_current_membership": true,
+      "r522_rejected": true
+    },
+    "reason": "membership and industry vintage differ",
+    "verdict": "not_directly_rankable"
+  },
+  "decision": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "cross_generation_reconciliation_complete"
+  },
+  "gate": {
+    "checks": {
+      "all_sidecars_match": true,
+      "all_sources_exist": true,
+      "no_execution_artifacts": true,
+      "r385_r386_candidate_status_recorded": true,
+      "r499_r506_rejected_status_recorded": true
+    },
+    "pass": true
+  },
+  "known_limits": [
+    "This is a source audit, not a new backtest.",
+    "R385/R386 and R499/R506 cannot be ranked by their published headline returns because their data vintages differ.",
+    "Both candidates remain research-only.",
+    "No leverage and no production activation."
+  ],
+  "next_comparison": {
+    "must_recompute": [
+      "R385/R386",
+      "R499/R506"
+    ],
+    "no_direct_winner_claim_before_recompute": true,
+    "required": "one common membership vintage and one common industry vintage"
+  },
+  "preregistration_sha256": "1a41eca9a33fb1c30842fd4944ab3bd64ad5f0834d8fbeee5e668bda27f6d7ae",
+  "round": "R524",
+  "source_hashes": {
+    "r385": "4aeb40ea9146d8b7dcf5db2c1d5e4390d45641c68ce22da4474f1b2b9866768f",
+    "r386": "743b12edcbd82697666b2749847bcaf96d47d4054db6c3cc844cd87da78c75e3",
+    "r499": "000a2df97fd53291e74491720f35688cf6b98f8bbca80b97db7e289c5fff0b9a",
+    "r506": "7906faad8c1a3943198e5dedfdeae45966d7e0a6e9396b7caa56cf7eff9b8597",
+    "r522": "3efe8b8fdd40cf706eb9d64043c0a5aae3d8db6a16d6b5cb14e1de73211d52b5"
+  }
+}
