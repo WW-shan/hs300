@@ -22,6 +22,7 @@ vi.mock('@/lib/api', async importOriginal => {
     watchlistList: vi.fn(async () => ({ symbols: [] })),
     monitorRulesList: vi.fn(async () => ({ rules: [] })),
     minuteRefreshStatus: vi.fn(async () => ({ enabled: false, running: false })),
+    hs300Current: vi.fn(async () => ({ as_of: '2026-11-06', source: 'cache', count: 0, members: [] })),
   } }
 })
 vi.mock('@/lib/useSharedQueries', () => ({
@@ -150,7 +151,7 @@ it('still displays a genuine error from the currently selected strategy', async 
   await render()
   await clickCard('分钟策略')
   expect(host.textContent).toContain(errorMessage)
-  expect(api.screenerRunPreset).toHaveBeenCalledWith('minute', undefined, undefined, undefined, 'stock', '1m', true)
+  expect(api.screenerRunPreset).toHaveBeenCalledWith('minute', undefined, undefined, undefined, 'stock', '1m', true, false)
 })
 
 it('does not attach a late failure from the previous card to the cached strategy now being viewed', async () => {

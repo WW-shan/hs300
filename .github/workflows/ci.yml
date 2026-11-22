@@ -32,6 +32,10 @@ jobs:
           - {os: macos-26, python: '3.12'}
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Windows runners need core.longpaths for the committed research
+          # archive; the evidence filenames are intentionally preserved.
+          longpaths: true
       - uses: astral-sh/setup-uv@v3
         with:
           enable-cache: true
@@ -60,6 +64,8 @@ jobs:
         working-directory: backend
     steps:
       - uses: actions/checkout@v4
+        with:
+          longpaths: true
 
       - name: 安装 uv
         uses: astral-sh/setup-uv@v3
@@ -82,6 +88,8 @@ jobs:
         working-directory: frontend
     steps:
       - uses: actions/checkout@v4
+        with:
+          longpaths: true
 
       - name: 安装 pnpm
         uses: pnpm/action-setup@v4
@@ -115,6 +123,10 @@ jobs:
         working-directory: backend
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Windows runners need core.longpaths for the committed research
+          # archive; the evidence filenames are intentionally preserved.
+          longpaths: true
       - uses: astral-sh/setup-uv@v3
         with:
           enable-cache: true
