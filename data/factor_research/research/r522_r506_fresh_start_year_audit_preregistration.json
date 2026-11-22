@@ -1,0 +1,60 @@
+{
+  "round": "R522",
+  "classification": "frozen R506 cap-1 fresh-start one-year audit; no reselection; no promotion",
+  "created_at": "2026-11-23",
+  "source_round": "R506",
+  "source_r506": "r506_r499_cap1_confirmation_2026-11-22.json",
+  "source_r506_sha256": "7906faad8c1a3943198e5dedfdeae45966d7e0a6e9396b7caa56cf7eff9b8597",
+  "starts": [
+    "2025-10-14",
+    "2025-11-14",
+    "2025-12-15",
+    "2026-01-14",
+    "2026-02-16"
+  ],
+  "end": "2026-11-05",
+  "benchmark": "000300.SH",
+  "fixed_execution": {
+    "max_positions": 10,
+    "max_hold_days": 25,
+    "entry_score": 70.0,
+    "exit_score": 40.0,
+    "top_rank": 20,
+    "max_new_positions_per_day": 1,
+    "max_exposure_pct": 1.0,
+    "matching": "open_t+1",
+    "cost_main": "2x",
+    "cost_stress": "3x",
+    "cost_warning": "5x",
+    "five_x_hard_rejection": false,
+    "no_leverage": true
+  },
+  "bootstrap": {
+    "block_days": 20,
+    "replications": 5000,
+    "seed": 522
+  },
+  "gates": {
+    "all_windows_positive_absolute": true,
+    "all_windows_positive_excess": false,
+    "worst_window_mdd_min": -0.18,
+    "stress_3x_positive_all": true,
+    "worst_bootstrap_total_p05_positive": true,
+    "no_leverage": true
+  },
+  "output_policy": {
+    "status": "r506_fresh_start_year_audit_complete",
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "known_limits": [
+    "Fresh-start one-year windows overlap heavily and are not independent samples.",
+    "R506 was already selected and rejected by its full gate set; this audit does not promote it.",
+    "The test/recent windows have been observed before.",
+    "Current HS300 membership retains survivorship bias.",
+    "5x cost is warning-only and never a hard rejection.",
+    "No leverage and no production activation."
+  ]
+}
