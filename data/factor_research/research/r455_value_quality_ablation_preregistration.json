@@ -1,0 +1,41 @@
+{
+  "round": "R455",
+  "classification": "component ablation of R452 value_quality; train/validation/long-horizon IC only; no portfolio promotion",
+  "created_at": "2026-11-22",
+  "source_round": "R452",
+  "components": {
+    "pb_latest": {"direction": "low", "role": "value"},
+    "ocf_debt": {"direction": "high", "role": "cash-flow quality"},
+    "debt_ratio_latest": {"direction": "low", "role": "balance-sheet safety"}
+  },
+  "variants": [
+    {"name": "pb_only", "weights": {"pb_latest": 1.0, "ocf_debt": 0.0, "debt_ratio_latest": 0.0}},
+    {"name": "ocf_debt_only", "weights": {"pb_latest": 0.0, "ocf_debt": 1.0, "debt_ratio_latest": 0.0}},
+    {"name": "debt_only", "weights": {"pb_latest": 0.0, "ocf_debt": 0.0, "debt_ratio_latest": 1.0}},
+    {"name": "pb_ocf", "weights": {"pb_latest": 0.5, "ocf_debt": 0.5, "debt_ratio_latest": 0.0}},
+    {"name": "pb_debt", "weights": {"pb_latest": 0.5, "ocf_debt": 0.0, "debt_ratio_latest": 0.5}},
+    {"name": "ocf_debt", "weights": {"pb_latest": 0.0, "ocf_debt": 0.5, "debt_ratio_latest": 0.5}},
+    {"name": "equal_three", "weights": {"pb_latest": 0.333333333333, "ocf_debt": 0.333333333333, "debt_ratio_latest": 0.333333333334}},
+    {"name": "focused_541", "weights": {"pb_latest": 0.5, "ocf_debt": 0.4, "debt_ratio_latest": 0.1}}
+  ],
+  "neutralization": "industry_l1 + log_float_mv",
+  "horizons": [5, 20, 60],
+  "recent_start": "2025-10-14",
+  "minimum_cross_section": 30,
+  "windows": {"start": "2022-05-05", "end": "2026-11-05"},
+  "bootstrap": {"block_days": 20, "replications": 5000, "seed": 455},
+  "known_limits": [
+    "Ablation changes weights only; no new data source.",
+    "Industry classification is a current snapshot.",
+    "Current HS300 membership applied to history retains survivorship bias.",
+    "IC is not a strategy return.",
+    "No leverage and no portfolio/order promotion."
+  ],
+  "output_policy": {
+    "status": "value_quality_ablation_complete_no_promotion",
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  }
+}
