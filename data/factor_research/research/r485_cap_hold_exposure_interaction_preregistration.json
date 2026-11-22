@@ -1,0 +1,70 @@
+{
+  "round": "R485",
+  "classification": "hold/exposure interaction around frozen R484 cap=1 sleeve; train+validation selection; test/recent confirmation; no promotion unless all gates pass",
+  "created_at": "2026-11-22",
+  "source_round": "R484",
+  "source_result": "r484_daily_entry_batch_cap_2026-11-22.json",
+  "source_selected_label": "cap_1",
+  "benchmark": "000300.SH",
+  "grid": {
+    "max_hold_days": [20, 30, 40, 50],
+    "max_exposure_pct": [0.8, 0.9, 1.0]
+  },
+  "fixed": {
+    "max_positions": 10,
+    "entry_score": 70.0,
+    "exit_score": 40.0,
+    "top_rank": 20,
+    "max_new_positions_per_day": 1,
+    "cost_main": "2x",
+    "cost_stress": "3x",
+    "cost_diagnostic": "5x",
+    "five_x_hard_rejection": false,
+    "no_leverage": true
+  },
+  "windows": {
+    "train_start": "2022-05-05",
+    "train_end": "2024-05-05",
+    "validation_start": "2024-05-06",
+    "validation_end": "2025-05-05",
+    "test_start": "2025-05-06",
+    "test_end": "2026-11-05",
+    "recent_start": "2025-10-14"
+  },
+  "selection": {
+    "basis": "train_and_validation_only",
+    "train_annual_min": 0.03,
+    "validation_annual_min": 0.03,
+    "validation_sharpe_min": 0.45,
+    "validation_mdd_min": -0.18,
+    "validation_bootstrap_p05_min_for_platform": -0.01,
+    "ranking": "maximize min(train,validation) annual, then validation bootstrap p05, then higher exposure"
+  },
+  "confirmation_gates": {
+    "test_annual_min": 0.03,
+    "test_sharpe_min": 0.45,
+    "test_mdd_min": -0.18,
+    "recent_annual_min": 0.0,
+    "stress_3x_positive": true,
+    "test_bootstrap_p05_positive": true,
+    "recent_bootstrap_p05_positive": true,
+    "test_excess_hs300_positive": true,
+    "no_leverage": true
+  },
+  "bootstrap": {"block_days": 20, "replications": 5000, "seed": 485},
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "cap_hold_exposure_interaction_complete"
+  },
+  "known_limits": [
+    "The grid is small and centered on R484; it is not an exhaustive optimizer.",
+    "Lower exposure mechanically reduces both return and tail.",
+    "Test/recent windows are reused confirmation windows.",
+    "Current HS300 membership retains survivorship bias.",
+    "5x cost is warning-only and never a hard rejection.",
+    "No leverage and no production activation."
+  ]
+}
