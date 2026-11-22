@@ -1,0 +1,87 @@
+{
+  "round": "R521",
+  "classification": "Shenwan industry-index momentum cross-section; research only; no direct-trading or production claim",
+  "created_at": "2026-11-23",
+  "data_source": {
+    "catalog": "akshare.sw_index_first_info",
+    "history": "akshare.index_hist_sw",
+    "qualified_universe_source": "R520 long-history set",
+    "raw_bars_committed": false
+  },
+  "universe_rule": {
+    "minimum_long_history_industries": 20,
+    "require_start_on_or_before": "2018-01-02",
+    "require_end_on_or_after": "2026-11-05",
+    "require_positive_amount": true,
+    "excluded_start_after": "2018-01-02"
+  },
+  "signal": {
+    "frequency": "month_end",
+    "lookbacks": [20, 60, 120],
+    "scores": ["raw_momentum", "risk_adjusted_momentum"],
+    "top_n": [1, 2, 3, 5],
+    "weighting": "equal",
+    "cash_when_incomplete": true
+  },
+  "execution": {
+    "signal_time": "last completed trading day of month",
+    "entry_exit": "next trading day open",
+    "no_leverage": true,
+    "cash_return": 0.0,
+    "main_cost_bps": 40,
+    "stress_cost_bps": 60,
+    "warning_cost_bps": 100
+  },
+  "windows": {
+    "train_start": "2018-06-01",
+    "train_end": "2022-05-05",
+    "validation_start": "2022-05-06",
+    "validation_end": "2025-05-05",
+    "test_start": "2025-05-06",
+    "test_end": "2026-11-05",
+    "recent_start": "2025-10-14"
+  },
+  "bootstrap": {
+    "block_days": 20,
+    "replications": 5000,
+    "seed": 521,
+    "confidence": 0.95,
+    "common_random_numbers": true
+  },
+  "gates": {
+    "train_annual_min": 0.03,
+    "validation_annual_min": 0.03,
+    "test_annual_min": 0.02,
+    "test_sharpe_min": 0.3,
+    "test_mdd_min": -0.20,
+    "recent_annual_min": 0.0,
+    "recent_total_p05_positive": true,
+    "test_total_p05_positive": true,
+    "stress_3x_positive": true,
+    "parameter_plateau": true,
+    "fdr_q_max": 0.10
+  },
+  "selection": {
+    "fit_windows": ["train", "validation"],
+    "confirmation_windows": ["test", "recent"],
+    "require_all_selection_windows_positive": true,
+    "rank_by": ["min_train_validation_annual", "validation_sharpe", "parameter_simplicity"],
+    "no_test_selection": true
+  },
+  "output_policy": {
+    "status": "industry_index_momentum_research_only",
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "known_limits": [
+    "Industry-index returns are not directly tradable without validated fund mapping.",
+    "R520 industry index history does not prove historical stock industry membership.",
+    "The test and recent windows have been observed in prior research.",
+    "Costs are 2x/3x/5x the local stock 1x round-trip estimate; the index ETF implementation would add tracking and fund-specific costs not modeled here.",
+    "Monthly month-end signals and next-open execution simplify intraday execution and liquidity.",
+    "The 5x cost result is warning-only, not a hard gate.",
+    "No leverage and no production activation."
+  ]
+}
