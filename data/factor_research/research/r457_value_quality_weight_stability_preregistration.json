@@ -1,0 +1,55 @@
+{
+  "center_weights": {
+    "debt_ratio_latest": 0.1,
+    "ocf_debt": 0.4,
+    "pb_latest": 0.5
+  },
+  "classification": "pre-registered weight-neighborhood and moving-block stability audit for R452 value_quality; no new raw data and no promotion",
+  "components": [
+    "pb_latest",
+    "ocf_debt",
+    "debt_ratio_latest"
+  ],
+  "created_at": "2026-11-22",
+  "directions": {
+    "debt_ratio_latest": "low",
+    "ocf_debt": "high",
+    "pb_latest": "low"
+  },
+  "gates": {
+    "all_positive_weight_variants_positive": true,
+    "bootstrap_ci_low_positive": true,
+    "center_ic_positive": true,
+    "center_newey_west_p_le": 0.1,
+    "min_distance_to_center": 0.15,
+    "neighbor_5pct_ic_positive": true,
+    "neighbor_median_ic_positive": true
+  },
+  "grid": {
+    "block_days": 20,
+    "bootstrap": "5000 moving-block resamples of the daily 60-day neutral IC series",
+    "bootstrap_replications": 5000,
+    "seed": 457,
+    "simplex": "all nonnegative weights on a 0.05 grid summing to 1.0",
+    "step": 0.05
+  },
+  "known_limits": [
+    "Weight grids are correlated, not independent experiments.",
+    "The audit uses neutralized IC, not a portfolio return.",
+    "No new financial fields are introduced.",
+    "Current HS300 membership and current industry classification retain survivorship bias.",
+    "No leverage; no production activation."
+  ],
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "value_quality_weight_stability_complete_no_promotion"
+  },
+  "round": "R457",
+  "source_rounds": [
+    "R452",
+    "R455"
+  ]
+}
