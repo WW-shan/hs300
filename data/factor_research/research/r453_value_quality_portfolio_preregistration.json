@@ -1,0 +1,76 @@
+{
+  "round": "R453",
+  "classification": "portfolio confirmation of R452 value_quality and its incremental contribution to four/five-factor controls; no promotion",
+  "created_at": "2026-11-22",
+  "source_round": "R452",
+  "value_quality": {
+    "members": ["pb_latest", "ocf_debt", "debt_ratio_latest"],
+    "directions": {"pb_latest": "low", "ocf_debt": "high", "debt_ratio_latest": "low"},
+    "score_method": "daily cross-sectional rank z-score, equal weight, all three members required"
+  },
+  "controls": {
+    "four": ["ext_alt_hs300_cash_flow_stability_4q_low", "ext_alt_hs300_dividend_yield", "ext_alt_hs300_fund_holding_ratio_low", "ext_alt_hs300_idio_vol_40d_low"],
+    "five": ["ext_alt_hs300_cash_flow_stability_4q_low", "ext_alt_hs300_dividend_yield", "ext_alt_hs300_fund_holding_ratio_low", "ext_alt_hs300_idio_vol_40d_low", "ext_alt_hs300_vol_of_vol_60d_low"],
+    "directions": {"ext_alt_hs300_cash_flow_stability_4q_low": "high", "ext_alt_hs300_dividend_yield": "high", "ext_alt_hs300_fund_holding_ratio_low": "high", "ext_alt_hs300_idio_vol_40d_low": "high", "ext_alt_hs300_vol_of_vol_60d_low": "high"}
+  },
+  "variants": [
+    {"name": "value_quality_only", "members": ["value_quality"], "weights": {"value_quality": 1.0}},
+    {"name": "four_plus_value_quality_20", "members": ["four", "value_quality"], "weights": {"four": 0.8, "value_quality": 0.2}},
+    {"name": "five_plus_value_quality_20", "members": ["five", "value_quality"], "weights": {"five": 0.8, "value_quality": 0.2}},
+    {"name": "four_plus_value_quality_10", "members": ["four", "value_quality"], "weights": {"four": 0.9, "value_quality": 0.1}}
+  ],
+  "execution": {
+    "matching": "open_t+1",
+    "cost_main": "2x",
+    "cost_stress": "3x",
+    "cost_diagnostic": "5x",
+    "five_x_hard_rejection": false,
+    "max_exposure_pct": 1.0,
+    "max_industry_positions": 0
+  },
+  "windows": {
+    "train_start": "2022-05-05",
+    "train_end": "2024-05-05",
+    "validation_start": "2024-05-06",
+    "validation_end": "2025-05-05",
+    "test_start": "2025-05-06",
+    "test_end": "2026-11-05",
+    "recent_start": "2025-10-14"
+  },
+  "grid": {
+    "max_positions": [10, 20],
+    "max_hold_days": [30, 40],
+    "selection": "train+validation only; rank by min annual return; test/recent confirmation only"
+  },
+  "bootstrap": {"block_days": 20, "replications": 5000, "seed": 453},
+  "gates": {
+    "train_annual_min": 0.03,
+    "validation_annual_min": 0.03,
+    "test_annual_min": 0.03,
+    "test_sharpe_min": 0.45,
+    "test_mdd_min": -0.18,
+    "recent_annual_min": 0.0,
+    "stress_3x_positive": true,
+    "test_total_p05_positive": true,
+    "recent_total_p05_positive": true,
+    "increment_vs_four_test_positive": true,
+    "increment_vs_four_recent_positive": true,
+    "no_leverage": true
+  },
+  "known_limits": [
+    "The composite is built from existing catalog factors and does not create new fundamental fields.",
+    "The test and recent windows have been observed in prior rounds.",
+    "Current HS300 membership applied to history retains survivorship bias.",
+    "Industry classification is a current snapshot.",
+    "Financial PIT is builder-audited; announcement-source ambiguity uses statutory fallback.",
+    "5x cost is warning-only and never a hard rejection.",
+    "A passing portfolio is still only a watch candidate, not an active version."
+  ],
+  "output_policy": {
+    "status": "value_quality_portfolio_complete_no_promotion",
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  }
+}

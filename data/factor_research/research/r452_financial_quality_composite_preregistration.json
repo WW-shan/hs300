@@ -1,0 +1,100 @@
+{
+  "bootstrap": {
+    "block_days": 20,
+    "replications": 5000,
+    "seed": 452
+  },
+  "candidates": [
+    {
+      "directions": {
+        "debt_ratio_latest": "low",
+        "ocf_debt": "high",
+        "pb_latest": "low"
+      },
+      "members": [
+        "pb_latest",
+        "ocf_debt",
+        "debt_ratio_latest"
+      ],
+      "name": "value_quality"
+    },
+    {
+      "directions": {
+        "fcf_proxy_to_revenue_ttm": "high",
+        "ocf_to_revenue_ttm": "high",
+        "pb_latest": "low"
+      },
+      "members": [
+        "pb_latest",
+        "fcf_proxy_to_revenue_ttm",
+        "ocf_to_revenue_ttm"
+      ],
+      "name": "value_cash"
+    },
+    {
+      "directions": {
+        "accrual": "low",
+        "debt_ratio_latest": "low",
+        "ocf_debt": "high",
+        "pb_latest": "low"
+      },
+      "members": [
+        "pb_latest",
+        "ocf_debt",
+        "accrual",
+        "debt_ratio_latest"
+      ],
+      "name": "value_quality_safety"
+    }
+  ],
+  "classification": "pre-registered financial quality/value composite admission; train/validation selection, test confirmation; no promotion",
+  "comparison_baseline": "current 4 dual-admitted factors (cash-flow stability, dividend yield, fund holding ratio low, idio-vol 40d low)",
+  "created_at": "2026-11-22",
+  "gates": {
+    "bh_q_le": 0.1,
+    "full_directional_ic_positive": true,
+    "incremental_ic_positive_vs_current": true,
+    "incremental_nw_p_le": 0.1,
+    "newey_west_p_le": 0.1,
+    "recent_directional_ic_positive": true,
+    "yearly_sign_consistency_min": 0.8
+  },
+  "horizons": [
+    5,
+    20,
+    60
+  ],
+  "known_limits": [
+    "This is a composite of existing catalog factors, not a new raw data source.",
+    "The current HS300 membership applied to history retains survivorship bias.",
+    "Industry classification is a current snapshot, not historical vintage.",
+    "Financial PIT is verified at the builder level; announcement-source anomalies are addressed by statutory-date fallback.",
+    "No leverage and no portfolio/order promotion."
+  ],
+  "minimum_cross_section": 30,
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "financial_quality_composite_complete_no_promotion"
+  },
+  "positive_control": {
+    "admitted_candidates": [
+      "value_quality",
+      "value_quality_safety"
+    ],
+    "check": "value_quality must pass all three horizons in the frozen output; this proves the gates are satisfiable",
+    "not_a_portfolio_backtest": true
+  },
+  "recent_start": "2025-10-14",
+  "round": "R452",
+  "score_method": "daily cross-sectional rank z-score per member, equal weight; require all members non-null; industry+size neutral IC audit after construction",
+  "source_rounds": [
+    "R393",
+    "R412",
+    "R422",
+    "R429",
+    "P8"
+  ]
+}
