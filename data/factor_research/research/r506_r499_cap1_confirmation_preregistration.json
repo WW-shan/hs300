@@ -1,0 +1,62 @@
+{
+  "round": "R506",
+  "classification": "single frozen cap-1 confirmation after R505 selection inconsistency; no reselection; no promotion unless all gates pass",
+  "created_at": "2026-11-22",
+  "source_rounds": ["R499", "R505"],
+  "source_r499": "r499_weak_state_value_quality_tilt_2026-11-22.json",
+  "source_r505": "r505_r499_daily_entry_cap_2026-11-22.json",
+  "selected_variant": "cap_1",
+  "benchmark": "000300.SH",
+  "fixed_execution": {
+    "max_positions": 10,
+    "max_hold_days": 25,
+    "entry_score": 70.0,
+    "exit_score": 40.0,
+    "top_rank": 20,
+    "max_new_positions_per_day": 1,
+    "max_exposure_pct": 1.0,
+    "matching": "open_t+1",
+    "cost_main": "2x",
+    "cost_stress": "3x",
+    "cost_diagnostic": "5x",
+    "five_x_hard_rejection": false,
+    "no_leverage": true
+  },
+  "confirmation_gates": {
+    "test_annual_min": 0.05,
+    "test_sharpe_min": 0.6,
+    "test_mdd_min": -0.18,
+    "recent_annual_min": 0.0,
+    "stress_3x_positive": true,
+    "validation_bootstrap_p05_positive": true,
+    "test_bootstrap_p05_positive": true,
+    "recent_bootstrap_p05_positive": true,
+    "test_excess_hs300_positive": true,
+    "no_leverage": true
+  },
+  "bootstrap": {"block_days": 20, "replications": 5000, "seed": 506},
+  "windows": {
+    "train_start": "2022-05-05",
+    "train_end": "2024-05-05",
+    "validation_start": "2024-05-06",
+    "validation_end": "2025-05-05",
+    "test_start": "2025-05-06",
+    "test_end": "2026-11-05",
+    "recent_start": "2025-10-14"
+  },
+  "known_limits": [
+    "This is a correction confirmation, not a new independent selection.",
+    "Cap 1 was identified from the R505 train+validation table.",
+    "The test/recent windows have been observed before.",
+    "Current HS300 membership retains survivorship bias.",
+    "5x cost is warning-only and never a hard rejection.",
+    "No leverage and no production activation."
+  ],
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "r499_cap1_confirmation_complete"
+  }
+}
