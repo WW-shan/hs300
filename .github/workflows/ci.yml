@@ -31,11 +31,10 @@ jobs:
           - {os: windows-latest, python: '3.12'}
           - {os: macos-26, python: '3.12'}
     steps:
+      - name: Enable Windows long paths
+        if: runner.os == 'Windows'
+        run: git config --global core.longpaths true
       - uses: actions/checkout@v4
-        with:
-          # Windows runners need core.longpaths for the committed research
-          # archive; the evidence filenames are intentionally preserved.
-          longpaths: true
       - uses: astral-sh/setup-uv@v3
         with:
           enable-cache: true
@@ -63,9 +62,10 @@ jobs:
       run:
         working-directory: backend
     steps:
+      - name: Enable Windows long paths
+        if: runner.os == 'Windows'
+        run: git config --global core.longpaths true
       - uses: actions/checkout@v4
-        with:
-          longpaths: true
 
       - name: 安装 uv
         uses: astral-sh/setup-uv@v3
@@ -87,9 +87,10 @@ jobs:
       run:
         working-directory: frontend
     steps:
+      - name: Enable Windows long paths
+        if: runner.os == 'Windows'
+        run: git config --global core.longpaths true
       - uses: actions/checkout@v4
-        with:
-          longpaths: true
 
       - name: 安装 pnpm
         uses: pnpm/action-setup@v4
@@ -122,11 +123,10 @@ jobs:
       run:
         working-directory: backend
     steps:
+      - name: Enable Windows long paths
+        if: runner.os == 'Windows'
+        run: git config --global core.longpaths true
       - uses: actions/checkout@v4
-        with:
-          # Windows runners need core.longpaths for the committed research
-          # archive; the evidence filenames are intentionally preserved.
-          longpaths: true
       - uses: astral-sh/setup-uv@v3
         with:
           enable-cache: true
