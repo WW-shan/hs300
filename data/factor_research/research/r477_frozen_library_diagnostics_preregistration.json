@@ -1,0 +1,58 @@
+{
+  "round": "R477",
+  "classification": "frozen-sample post-hoc diagnostics of R476 factor-library expansion; no new parameter selection; no promotion",
+  "created_at": "2026-11-22",
+  "source_round": "R476",
+  "source_result": "r476_factor_set_expansion_mc_2026-11-22.json",
+  "source_selected_label": "base_plus_inventory_growth_minus_cogs_growth_at_20",
+  "basis": {
+    "selection_basis": "frozen_r476_train_validation_result",
+    "test_used_for_selection": false,
+    "recent_used_for_selection": false,
+    "new_parameter_search": false
+  },
+  "windows": {
+    "test_start": "2025-05-06",
+    "recent_start": "2025-10-14",
+    "end": "2026-11-05"
+  },
+  "execution": {
+    "cost_main": "2x",
+    "cost_stress": "3x",
+    "cost_diagnostic": "5x",
+    "five_x_hard_rejection": false,
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0,
+    "no_leverage": true,
+    "top_rank": 20
+  },
+  "diagnostics": {
+    "yearly_return": true,
+    "monthly_return": true,
+    "rolling_one_year": true,
+    "benchmark_relative": true,
+    "trade_concentration": true,
+    "symbol_concentration": true,
+    "block_bootstrap": true
+  },
+  "bootstrap": {
+    "block_days": [10, 20, 40],
+    "replications": 5000,
+    "seed": 477
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "frozen_diagnostics_only"
+  },
+  "known_limits": [
+    "The R476 sample was selected on train+validation; this round does not select a new strategy.",
+    "Test and recent windows are reused confirmation windows, not fresh holdouts.",
+    "Current HS300 membership retains survivorship bias.",
+    "Diagnostics explain fragility; they do not promote the R476 strategy.",
+    "5x cost is warning-only and never a hard rejection.",
+    "No leverage and no production activation."
+  ]
+}
