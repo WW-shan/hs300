@@ -1,0 +1,260 @@
+{
+  "bundle": {
+    "industry_input_used_for_neutralization": false,
+    "industry_rows": 11981,
+    "membership_sessions": 1414,
+    "membership_symbols_per_session": 300
+  },
+  "bundle_checks": {
+    "alt_hs300_required_fields.parquet": true,
+    "daily_snapshots.parquet": true,
+    "five_leg_required_fields.parquet": true,
+    "industry_history.parquet": true
+  },
+  "classification": "current-engine, unified-PIT comparison of frozen R385/R386 and R499/R506 families; no reselection; no promotion",
+  "comparison": {
+    "hold30_test_minus_five_leg": {
+      "annual": 0.06111224806769755,
+      "mdd": 0.04006627870059465,
+      "recent_total": -0.06530218403089205,
+      "sharpe": 0.7039554026545138
+    },
+    "point_estimate_leader": "hold30",
+    "same_industry_audit_input_for_both": true,
+    "same_industry_neutralization_mapping": false,
+    "same_membership_for_both": true,
+    "tail_checks": {
+      "five_leg_tail_nonnegative": false,
+      "hold30_tail_nonnegative": false,
+      "no_leverage": true,
+      "same_membership": true
+    },
+    "window_dates": {
+      "recent_start": "2025-10-14",
+      "test_end": "2026-11-05",
+      "test_start": "2025-05-06",
+      "train_end": "2024-05-05",
+      "train_start": "2022-05-05",
+      "validation_end": "2025-05-05",
+      "validation_start": "2024-05-06"
+    },
+    "winner": null,
+    "winner_reason": "both families have negative recent bootstrap p05; no promotion winner"
+  },
+  "decision": {
+    "active_version": null,
+    "family_runs_complete": true,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "r527_unified_pit_family_comparison_complete"
+  },
+  "families": {
+    "five_leg": {
+      "run": {
+        "cost_runs": {
+          "2x": {
+            "annual_return": 0.2019,
+            "avg_exposure": 0.985,
+            "max_drawdown": -0.1135,
+            "n_trades": 458.0,
+            "profit_factor": 1.53,
+            "sharpe": 1.32,
+            "sortino": 1.97,
+            "total_return": 1.2218,
+            "win_rate": 0.5852,
+            "worst": -0.0852
+          },
+          "3x": {
+            "annual_return": 0.1845,
+            "avg_exposure": 0.9848,
+            "max_drawdown": -0.1165,
+            "n_trades": 458.0,
+            "profit_factor": 1.48,
+            "sharpe": 1.22,
+            "sortino": 1.81,
+            "total_return": 1.0859,
+            "win_rate": 0.5786,
+            "worst": -0.0864
+          },
+          "5x": {
+            "annual_return": 0.1501,
+            "avg_exposure": 0.9849,
+            "max_drawdown": -0.1375,
+            "n_trades": 458.0,
+            "profit_factor": 1.45,
+            "sharpe": 1.02,
+            "sortino": 1.5,
+            "total_return": 0.8354,
+            "win_rate": 0.5546,
+            "worst": -0.089
+          }
+        },
+        "curve_points": 1094,
+        "engine_sha256": "282f97fe66fd2c7f8ddeb90bb02f3f8c1d80f7706703630f2f84d1ece3a7c2a2",
+        "industry_neutralization": "not used by the five-leg rank composite",
+        "max_weight_sum": 1.0,
+        "membership_input": "r526/daily_snapshots.parquet"
+      },
+      "windows": {
+        "recent": {
+          "annual": 0.15111385820791812,
+          "bootstrap": {
+            "mdd_p05": -0.1792759308564742,
+            "sharpe_p50": 1.139483097838602,
+            "total_p05": -0.05858135871556003,
+            "total_p50": 0.15456738363528633
+          },
+          "curve_points": 259,
+          "days": 259,
+          "end": "2026-11-05",
+          "mdd": -0.11349219080938955,
+          "sharpe": 1.114288782093591,
+          "start": "2025-10-14",
+          "total_return": 0.154977382286954
+        },
+        "test": {
+          "annual": 0.10882896076070803,
+          "bootstrap": {
+            "mdd_p05": -0.21728916575853008,
+            "sharpe_p50": 0.800811595384803,
+            "total_p05": -0.09709542163900586,
+            "total_p50": 0.14700405135114636
+          },
+          "curve_points": 367,
+          "days": 367,
+          "end": "2026-11-05",
+          "mdd": -0.11349219080938955,
+          "sharpe": 0.8683075604935457,
+          "start": "2025-05-06",
+          "total_return": 0.1618777447080213
+        },
+        "train": {
+          "annual": 0.243262834493168,
+          "curve_points": 485,
+          "days": 485,
+          "end": "2024-04-30",
+          "mdd": -0.09481612706511611,
+          "sharpe": 1.6830885148797055,
+          "start": "2022-05-05",
+          "total_return": 0.5192208300000001
+        },
+        "validation": {
+          "annual": 0.25937574803989105,
+          "curve_points": 242,
+          "days": 242,
+          "end": "2025-04-30",
+          "mdd": -0.07869632711133101,
+          "sharpe": 1.293168950473231,
+          "start": "2024-05-06",
+          "total_return": 0.2467617397866022
+        }
+      }
+    },
+    "hold30": {
+      "run": {
+        "cost_runs": {
+          "2x": {
+            "annual": 0.14472802935621676,
+            "days": 1094,
+            "mdd": -0.07499776651606382,
+            "sharpe": 1.5015276790175525,
+            "total_return": 0.7972548006079232
+          },
+          "3x": {
+            "annual": 0.13700673782459116,
+            "days": 1094,
+            "mdd": -0.07725148847413776,
+            "sharpe": 1.4304825075954526,
+            "total_return": 0.7452639358344852
+          },
+          "5x": {
+            "annual": 0.12524915013473037,
+            "days": 1094,
+            "mdd": -0.08101322817755019,
+            "sharpe": 1.3203933390278997,
+            "total_return": 0.6683264686622659
+          }
+        },
+        "curve_points": 1094,
+        "engine_sha256": "282f97fe66fd2c7f8ddeb90bb02f3f8c1d80f7706703630f2f84d1ece3a7c2a2",
+        "fresh_cache": true,
+        "industry_neutralization": "THS-current industry_l1 (unchanged)",
+        "max_weight_sum": 1.0,
+        "membership_input": "r526/daily_snapshots.parquet"
+      },
+      "windows": {
+        "recent": {
+          "annual": 0.08750106902197086,
+          "bootstrap": {
+            "mdd_p05": -0.13462377945104465,
+            "sharpe_p50": 0.8323027198889478,
+            "total_p05": -0.053051150897056476,
+            "total_p50": 0.09168834426367045
+          },
+          "curve_points": 259,
+          "days": 259,
+          "end": "2026-11-05",
+          "mdd": -0.0734259121087949,
+          "sharpe": 0.7963880747382043,
+          "start": "2025-10-14",
+          "total_return": 0.08967519825606196
+        },
+        "test": {
+          "annual": 0.16994120882840558,
+          "bootstrap": {
+            "mdd_p05": -0.12135404965759755,
+            "sharpe_p50": 1.5763874088253906,
+            "total_p05": 0.054693318362118104,
+            "total_p50": 0.25425659760155206
+          },
+          "curve_points": 367,
+          "days": 367,
+          "end": "2026-11-05",
+          "mdd": -0.0734259121087949,
+          "sharpe": 1.5722629631480596,
+          "start": "2025-05-06",
+          "total_return": 0.2560304004035767
+        },
+        "train": {
+          "annual": 0.10414374691283945,
+          "curve_points": 485,
+          "days": 485,
+          "end": "2024-04-30",
+          "mdd": -0.050763142556223384,
+          "sharpe": 1.4320754865020808,
+          "start": "2022-05-05",
+          "total_return": 0.20958530765221606
+        },
+        "validation": {
+          "annual": 0.18443353832096054,
+          "curve_points": 242,
+          "days": 242,
+          "end": "2025-04-30",
+          "mdd": -0.07499776651606382,
+          "sharpe": 1.5519389418185403,
+          "start": "2024-05-06",
+          "total_return": 0.17571455887606469
+        }
+      }
+    }
+  },
+  "known_limits": [
+    "This is a comparison of two frozen families, not a new alpha search.",
+    "Both families receive the same frozen R526 membership input.",
+    "The R526 Shenwan industry_pit table is an audit input; it is not the THS industry_l1 mapping used by score neutralization.",
+    "R385/R386 family construction still depends on local research caches and strategy files; their hashes are recorded.",
+    "R525's original membership-vintage causal question is only partly answered by this comparison.",
+    "No leverage and no production activation.",
+    "The five-leg extension fields were frozen from the local alt_hs300 timeseries into a small committed bundle."
+  ],
+  "preregistration_sha256": "f3e001a1a61443662d942c1e26d5ae06349191e579142267caa99cc3b56868b5",
+  "round": "R527",
+  "source_hashes": {
+    "r385": "4aeb40ea9146d8b7dcf5db2c1d5e4390d45641c68ce22da4474f1b2b9866768f",
+    "r386": "743b12edcbd82697666b2749847bcaf96d47d4054db6c3cc844cd87da78c75e3",
+    "r499": "000a2df97fd53291e74491720f35688cf6b98f8bbca80b97db7e289c5fff0b9a",
+    "r506": "7906faad8c1a3943198e5dedfdeae45966d7e0a6e9396b7caa56cf7eff9b8597",
+    "r526_manifest": "6f8d6bb474cf5a443aff6f3851b302771e6560f1b2acefe4c45ea6de5aaf2b1d"
+  }
+}

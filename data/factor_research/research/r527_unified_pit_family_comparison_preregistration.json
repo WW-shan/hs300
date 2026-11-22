@@ -1,0 +1,95 @@
+{
+  "round": "R527",
+  "classification": "current-engine, unified-PIT comparison of frozen R385/R386 and R499/R506 families; no reselection; no promotion",
+  "created_at": "2026-11-23",
+  "sources": {
+    "r526_manifest": "data/factor_research/research/r526_unified_pit_bundle_manifest_2026-11-23.json",
+    "r385": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r385_pit_platform_monte_carlo.json",
+    "r386": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/r386_mc_advantage_confirmation.json",
+    "r499": "data/factor_research/research/r499_weak_state_value_quality_tilt_2026-11-22.json",
+    "r506": "data/factor_research/research/r506_r499_cap1_confirmation_2026-11-22.json"
+  },
+  "bundle": {
+    "directory": "data/factor_research/research/r526_unified_pit_bundle_window",
+    "membership": "daily_snapshots.parquet",
+    "industry": "industry_history.parquet",
+    "extension": "alt_hs300_required_fields.parquet",
+    "require_manifest_hash_match": true,
+    "five_leg_extension": "five_leg_required_fields.parquet"
+  },
+  "families": {
+    "hold30": {
+      "description": "R385/R386 frozen A/B/C hold-30 family; B cell fade05_h30_sl20",
+      "portfolio_parameters": {
+        "c_satellite_cap": 0.13,
+        "equity_target_vol": 0.17,
+        "overlay_lookback_days": 110,
+        "overlay_target_vol": 0.17,
+        "overlay_equity_weight_max": 0.37
+      }
+    },
+    "five_leg": {
+      "description": "R499/R506 frozen five-leg value/quality family",
+      "weights": {
+        "ext_alt_hs300_cash_flow_stability_4q_low": 0.225,
+        "ext_alt_hs300_dividend_yield": 0.225,
+        "ext_alt_hs300_fund_holding_ratio_low": 0.225,
+        "ext_alt_hs300_idio_vol_40d_low": 0.225,
+        "value_quality": 0.1
+      },
+      "fixed_execution": {
+        "max_positions": 10,
+        "max_hold_days": 25,
+        "entry_score": 70.0,
+        "exit_score": 40.0,
+        "top_rank": 20,
+        "max_new_positions_per_day": 1,
+        "max_exposure_pct": 1.0
+      }
+    }
+  },
+  "windows": {
+    "train_start": "2022-05-05",
+    "train_end": "2024-05-05",
+    "validation_start": "2024-05-06",
+    "validation_end": "2025-05-05",
+    "test_start": "2025-05-06",
+    "test_end": "2026-11-05",
+    "recent_start": "2025-10-14"
+  },
+  "gates": {
+    "r526_manifest_matches": true,
+    "current_engine_recorded": true,
+    "same_window_dates": true,
+    "same_membership_for_both": true,
+    "same_industry_audit_input_for_both": true,
+    "shared_industry_neutralization_mapping": false,
+    "no_leverage": true,
+    "no_execution_artifacts": true
+  },
+  "conclusion_rules": [
+    "A family may only be called a winner if it passes the same gates and has non-negative test/recent bootstrap p05.",
+    "A positive point estimate cannot override a negative bootstrap tail.",
+    "5x is warning-only, not a hard rejection."
+  ],
+  "bootstrap": {
+    "block_days": 20,
+    "replications": 2000,
+    "seed": 527
+  },
+  "output_policy": {
+    "status": "r527_unified_pit_family_comparison",
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "known_limits": [
+    "This is a comparison of two frozen families, not a new alpha search.",
+    "Both families receive the same frozen R526 membership input.",
+    "The R526 Shenwan industry_pit table is an audit input; it is not the THS industry_l1 mapping used by score neutralization.",
+    "R385/R386 family construction still depends on local research caches and strategy files; their hashes are recorded.",
+    "R525's original membership-vintage causal question is only partly answered by this comparison.",
+    "No leverage and no production activation."
+  ]
+}

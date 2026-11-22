@@ -31,10 +31,10 @@ def test_r526_bundle_has_small_frozen_inputs_and_manifest() -> None:
     assert MANIFEST.exists(), MANIFEST
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     assert manifest["round"] == "R526"
-    assert len(manifest["files"]) == 3
+    assert len(manifest["files"]) == 4
     assert all((BUNDLE / row["name"]).exists() for row in manifest["files"])
     assert all(_sha(BUNDLE / row["name"]) == row["sha256"] for row in manifest["files"])
-    assert sum((BUNDLE / row["name"]).stat().st_size for row in manifest["files"]) < 10 * 1024 * 1024
+    assert sum((BUNDLE / row["name"]).stat().st_size for row in manifest["files"]) < 15 * 1024 * 1024
 
 
 def test_r526_membership_is_complete_daily_300() -> None:
