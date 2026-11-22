@@ -21,6 +21,7 @@ from pathlib import Path
 
 import polars as pl
 
+from app.market_time import cn_today
 from app.services.fs_utils import atomic_write_parquet
 from app.services.rps_rotation import _load_concept_map_df
 
@@ -250,6 +251,15 @@ def compute_mainline_range(repo, data_dir: Path, start: date, end: date,
     return result
 
 
+def replace_mainline_range(data_dir: Path, start: date, end: date, kind: str, new_rows: pl.DataFrame) -> None:
+    """历史修正按范围替换: 新结果为空时, 也要移除该范围旧主线。"""
+    path = mainline_path(data_dir)
+    old = pl.read_parquet(path) if path.exists() else pl.DataFrame()
+    kept = old.filter(~((pl.col("kind") == kind) & pl.col("date").is_between(start, end))) if not old.is_empty() else old
+    combined = pl.concat([kept, new_rows], how="diagonal_relaxed").sort(["date", "kind", "rank"])
+    atomic_write_parquet(combined, path)
+
+
 def upsert_mainline_history(data_dir: Path, new_rows: pl.DataFrame) -> None:
     """按 (date, kind) 整日覆盖 upsert; schema 以 new_rows 为权威(同 regime 模式)。"""
     if new_rows.is_empty() or "date" not in new_rows.columns:
@@ -280,7 +290,7 @@ def upsert_mainline_history(data_dir: Path, new_rows: pl.DataFrame) -> None:
 def compute_mainline_incremental(repo, data_dir: Path, *, today: date | None = None,
                                  kind: str = "concept") -> pl.DataFrame:
     """增量补算主线(供 daily_pipeline / 手动触发): 补 enriched 已有而主线缺失的日。"""
-    today = today or date.today()
+    today = today or cn_today()
     from app.services.regime_builder import enriched_date_set
 
     enriched_dates = enriched_date_set(repo)

@@ -79,17 +79,6 @@ def test_index_sync_uses_custom_capability_without_tickflow_tier(
     )
     monkeypatch.setattr(index_sync, "min_batch", lambda configured, limit: 100)
     monkeypatch.setattr(index_sync, "sleep_between_batches", lambda *args, **kwargs: None)
-    monkeypatch.setattr(
-        index_sync.kline_sync,
-        "sync_daily_batch",
-        lambda symbols, **kwargs: capture(symbols, kwargs),
-    )
-    captured = []
-
-    def capture(symbols, kwargs):
-        captured.append((list(symbols), kwargs))
-        return pl.DataFrame()
-
     class _Capset:
         @staticmethod
         def has(_cap):
@@ -97,6 +86,23 @@ def test_index_sync_uses_custom_capability_without_tickflow_tier(
 
     class _Repo:
         store = SimpleNamespace(data_dir=tmp_path)
+        persisted = []
+
+        @classmethod
+        def append_index_daily(cls, frame):
+            cls.persisted.append(("index", frame))
+
+        @classmethod
+        def append_etf_daily(cls, frame):
+            cls.persisted.append(("etf", frame))
+
+        @staticmethod
+        def append_index_enriched(frame):
+            return None
+
+        @staticmethod
+        def append_etf_enriched(frame):
+            return None
 
         @staticmethod
         def refresh_index_views():
@@ -111,8 +117,10 @@ def test_index_sync_uses_custom_capability_without_tickflow_tier(
         symbols_override=[symbol],
     )
 
-    assert captured[0][0] == [symbol]
-    assert captured[0][1]["asset_type"] == asset_type
+    assert provider.calls[-1][0] == [symbol]
+    assert provider.calls[-1][3] == asset_type
+    assert _Repo.persisted and _Repo.persisted[-1][0] == asset_type
+    assert _Repo.persisted[-1][1]["symbol"].to_list() == [symbol]
 
 
 def test_index_and_etf_instrument_sync_use_custom_daily_provider(monkeypatch):

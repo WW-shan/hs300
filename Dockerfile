@@ -76,6 +76,12 @@ RUN if [ "$USE_CN_MIRROR" = "1" ]; then \
 # Backend deps
 COPY README.md /README.md
 COPY backend/pyproject.toml backend/uv.lock* ./
+# Keep the same ../packages relation as the source checkout.
+COPY packages/tivelo-contracts /packages/tivelo-contracts
+COPY packages/tivelo-extensions /packages/tivelo-extensions
+COPY packages/tivelo-data /packages/tivelo-data
+COPY packages/tivelo-market-cn /packages/tivelo-market-cn
+COPY packages/tivelo-backtest /packages/tivelo-backtest
 # uv 原生支持同时挂多个 index(主源 + 备用源),会自动在两源中查找,
 # 比逐个重试更稳健 —— 任一源缺包时另一源补位。
 RUN if [ "$USE_CN_MIRROR" = "1" ]; then \
@@ -90,16 +96,28 @@ RUN if [ "$USE_CN_MIRROR" = "1" ]; then \
 # Backend code
 # 注意:Docker 里 WORKDIR=/app, 而 config.py 的 _PROJECT_ROOT 是按开发布局
 # (<root>/backend/app/) 推导的, 容器内会错算到 /。这里用环境变量显式指定
-# 三个关键路径, 确保 static / tiers / data 都指向容器内正确位置。
+# 三个关键路径；TSP_DOCKER 也确保 env_file 中的相对 DATA_DIR 按 /app 解析。
 COPY backend/app ./app
 COPY tiers.yaml /app/tiers.yaml
+# 版本号运行时兜底 (issue #513): 非冻结路径 _load_version() 读
+# /app/frontend/package.json, 缺文件会静默回退 _FALLBACK_VERSION 显示旧版本。
+COPY frontend/package.json /app/frontend/package.json
 ENV STATIC_DIR=/app/static \
     TIERS_YAML=/app/tiers.yaml \
     DATA_DIR=/app/data \
+    TSP_DOCKER=1 \
     TICKFLOW_ENV_FILE=/app/.env
 
 # Frontend 静态产物
 COPY --from=frontend-builder /build/dist ./static
+
+# 升级保护清单: 全量程序文件 sha256 基线 (二次开发升级对比用)。
+# 必须在 app/ 与 static/ 都落位之后生成; .venv/data 等由脚本排除规则剔除。
+# 版本号唯一权威 = frontend/package.json (与 app/__init__._load_version 同源)。
+COPY scripts/generate_manifest.py /tmp/generate_manifest.py
+COPY frontend/package.json /tmp/package.json
+RUN APP_VER=$(python3 -c "import json;print(json.load(open('/tmp/package.json'))['version'])") && \
+    python3 /tmp/generate_manifest.py --root /app --output /app/app/upgrade_manifest.json --version "$APP_VER"
 
 # Codex CLI 使用官方 npm 包携带的当前平台原生二进制，无需运行时 Node.js。
 COPY --from=codex-builder /opt/codex-native /usr/local/bin/codex

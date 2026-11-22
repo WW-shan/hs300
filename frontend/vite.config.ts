@@ -12,6 +12,12 @@ export default defineConfig({
   test: {
     setupFiles: ['./src/test/vitest.setup.ts'],
   },
+  experimental: {
+    // 后端将资源挂到带版本的路径；分块预加载和 CSS 字体也须跟随该路径。
+    renderBuiltUrl(_filename, { hostType }) {
+      if (hostType !== 'html') return { relative: true }
+    },
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

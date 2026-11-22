@@ -1,10 +1,13 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo, memo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useQuery } from '@tanstack/react-query'
-import { X, Settings2, RotateCcw, Save, Filter, Star, TrendingUp, Sparkles, Download, Layers, Plus, Trash2, SlidersHorizontal } from 'lucide-react'
+import { X, Settings2, RotateCcw, Save, Filter, Star, TrendingUp, Sparkles, Layers, Plus, Trash2, SlidersHorizontal } from 'lucide-react'
 import { api, type StrategyDetail, type StrategyParamDef, type CompositeChildInfo, type ScoringDirection, type CustomSignalCondition } from '@/lib/api'
 import { QK } from '@/lib/queryKeys'
+import { selectableStrategies, strategyOptionLabel } from '@/lib/strategyLibrary'
 import { toPercentages, normalizeWeights } from '@/lib/weights'
+import { groupParams, visibleParams } from '@/lib/strategyParams'
+import { toast } from '@/components/Toast'
 import { BUILTIN_COLUMNS } from '@/lib/watchlist-columns'
 import { color } from '@/lib/colors'
 import { SignalPicker } from './SignalPicker'
@@ -12,6 +15,7 @@ import { SignalTriggerActions } from '@/components/signals/SignalTriggerActions'
 import { ConditionEditor } from '@/components/signals/ConditionEditor'
 import { Modal } from '@/components/Modal'
 import { ScoringEditor } from '@/components/ScoringEditor'
+import { StrategyExportButton } from './StrategyExportButton'
 
 // 内置列名 → 中文标签
 const FIELD_LABEL: Record<string, string> = {}
@@ -166,10 +170,13 @@ function RiskPctField({ label, value, onChange, min, max, step = 0.5, unit = '%'
 }
 
 // 策略参数字段
-function ParamField({ def, value, onChange }: {
+// memo: 单参数修改只重渲本行 (父组件需传稳定回调, 否则 memo 失效)
+const ParamField = memo(function ParamField({ def, value, onChange, onApplyValues }: {
   def: StrategyParamDef
   value: any
-  onChange: (v: any) => void
+  onChange: (pid: string, v: any) => void
+  /** select 带 option_applies 时, 选中某选项需批量应用一组参数值 (如标的池预设) */
+  onApplyValues?: (values: Record<string, any>) => void
 }) {
   if (def.type === 'bool') {
     const checked = value === true || value === 'true' || value === 'True'
@@ -178,7 +185,7 @@ function ParamField({ def, value, onChange }: {
         <span className={PARAM_LABEL_CLS} title={def.label}>{def.label}</span>
         <button
           type="button"
-          onClick={() => onChange(!checked)}
+          onClick={() => onChange(def.id, !checked)}
           className={`relative inline-flex h-4 w-7 items-center rounded-full transition-colors duration-200 cursor-pointer ${
             checked ? 'bg-accent' : 'bg-elevated'
           }`}
@@ -198,7 +205,15 @@ function ParamField({ def, value, onChange }: {
         <span className={PARAM_LABEL_CLS} title={def.label}>{def.label}</span>
         <select
           value={value ?? def.default}
-          onChange={e => onChange(e.target.value)}
+          onChange={e => {
+            const v = e.target.value
+            const applies = def.option_applies?.[v]
+            if (applies && onApplyValues) {
+              onApplyValues({ [def.id]: v, ...applies })
+              // 预设会覆盖其他参数的当前值, 显式提示避免静默改动
+              toast(`已应用预设「${v}」，覆盖 ${Object.keys(applies).length} 个参数`, 'success')
+            } else onChange(def.id, v)
+          }}
           className={`${FIELD_INPUT_CLS} w-full max-w-[240px] px-1.5`}
         >
           {def.options.map(o => <option key={o} value={o}>{o}</option>)}
@@ -213,12 +228,13 @@ function ParamField({ def, value, onChange }: {
         <input
           type="text"
           value={value ?? def.default ?? ''}
-          onChange={e => onChange(e.target.value)}
+          onChange={e => onChange(def.id, e.target.value)}
           className={`${FIELD_INPUT_CLS} min-w-0 flex-1 px-2`}
         />
       </div>
     )
   }
+
 
   return (
     <div className="flex items-center gap-2">
@@ -226,7 +242,7 @@ function ParamField({ def, value, onChange }: {
       <input
         type="number"
         value={value ?? def.default}
-        onChange={e => onChange(e.target.value === '' ? def.default : Number(e.target.value))}
+        onChange={e => onChange(def.id, e.target.value === '' ? def.default : Number(e.target.value))}
         step={def.step ?? 0.1}
         min={def.min}
         max={def.max}
@@ -237,7 +253,7 @@ function ParamField({ def, value, onChange }: {
       )}
     </div>
   )
-}
+})
 
 // ===== 内容卡片 (分区页内的静态卡片, 取代原三列里的可折叠 Section) =====
 function Card({ icon: Icon, title, accent, extra, children, dim = false }: {
@@ -284,6 +300,8 @@ export function StrategySettingsDialog({ strategyId, onClose, onSaved, onAiModif
   const [strategyDesc, setStrategyDesc] = useState('')
   const [basicFilter, setBasicFilter] = useState<Record<string, any>>({})
   const [params, setParams] = useState<Record<string, any>>({})
+  // 稳定回调: 配合 memo(ParamField), 单参数修改只重渲对应行
+  const handleParamChange = useCallback((pid: string, v: any) => setParams(prev => ({ ...prev, [pid]: v })), [])
   const [scoring, setScoring] = useState<Record<string, number>>({})
   const [scoringDirections, setScoringDirections] = useState<Record<string, ScoringDirection>>({})
   const [stopLoss, setStopLoss] = useState<number | null>(null)
@@ -304,7 +322,12 @@ export function StrategySettingsDialog({ strategyId, onClose, onSaved, onAiModif
   // 点击子策略名打开其配置编辑(composite 专属; 子策略必非 composite, 不会再嵌套)
   const [editingChildId, setEditingChildId] = useState<string | null>(null)
   // 可选子策略列表 + 添加面板开关(composite 设置用)
-  const [allStrategies, setAllStrategies] = useState<{ id: string; name: string; source?: string }[]>([])
+  const childStrategiesQuery = useQuery({
+    queryKey: QK.screenerStrategies('all'),
+    queryFn: () => api.screenerStrategies(),
+    enabled: !!strategyId && detail?.source === 'composite',
+  })
+  const allStrategies = (childStrategiesQuery.data?.presets ?? []).filter(s => s.id !== strategyId && s.source !== 'composite')
   const [showAddChild, setShowAddChild] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
@@ -389,12 +412,6 @@ export function StrategySettingsDialog({ strategyId, onClose, onSaved, onAiModif
     api.strategyGet(strategyId)
       .then(d => {
         loadIntoState(d)
-        // composite 策略: 加载全部可选子策略(排除自身和其他 composite)供添加
-        if (d.source === 'composite') {
-          api.screenerStrategies().then(data => {
-            setAllStrategies((data.presets ?? []).filter(s => s.id !== strategyId && s.source !== 'composite'))
-          }).catch(() => setAllStrategies([]))
-        }
       })
       .catch(() => setDetail(null))
       .finally(() => setLoading(false))
@@ -508,20 +525,6 @@ export function StrategySettingsDialog({ strategyId, onClose, onSaved, onAiModif
     } finally { setDeleting(false) }
   }
 
-  const handleDownload = async () => {
-    if (!strategyId || !detail || (detail.source !== 'ai' && detail.source !== 'custom')) return
-    const src = await api.strategyGetSource(strategyId)
-    const blob = new Blob([src.code], { type: 'text/x-python;charset=utf-8' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${strategyId}.py`
-    document.body.appendChild(a)
-    a.click()
-    a.remove()
-    URL.revokeObjectURL(url)
-  }
-
   // ===== 左侧导航分区 =====
   const isComposite = detail?.source === 'composite'
   const pages = useMemo(() => {
@@ -550,6 +553,7 @@ export function StrategySettingsDialog({ strategyId, onClose, onSaved, onAiModif
   return (
     <>
     <Modal
+      active={!editingChildId}
       onClose={() => {
         // 子策略编辑弹窗打开期间(Esc 会同时到达两层的 document 监听), 只关最上层的子编辑
         if (editingChildId) return
@@ -557,7 +561,7 @@ export function StrategySettingsDialog({ strategyId, onClose, onSaved, onAiModif
       }}
       labelledBy="strategy-settings-title"
       overlayClassName="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
-      panelClassName="w-[1200px] max-w-[95vw] max-h-[88vh] bg-surface/95 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+      panelClassName="w-[1200px] max-w-[95vw] max-h-[88vh] bg-surface/95 border border-border/50 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
     >
           {/* 标题 */}
           <div className="flex items-center justify-between px-5 py-3 border-b border-border/50">
@@ -568,16 +572,9 @@ export function StrategySettingsDialog({ strategyId, onClose, onSaved, onAiModif
               <span className="text-[10px] text-muted/40 font-mono">{strategyId}</span>
             </div>
             <div className="flex items-center gap-2">
-              {detail && (detail.source === 'ai' || detail.source === 'custom') && (
-                <button
-                  aria-label="下载策略"
-                  title="下载策略"
-                  onClick={handleDownload}
-                  className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-lg border border-border/60 bg-surface text-xs text-secondary hover:text-accent hover:border-accent/30 transition-colors cursor-pointer"
-                >
-                  <Download className="h-3.5 w-3.5" />
-                  下载策略
-                </button>
+              {detail && (
+                <StrategyExportButton strategyId={strategyId} disabled={dirtyAny || saving || resetting}
+                  disabledHint="请先保存修改，再导出策略包" className="h-7 w-7 border border-border/60 bg-surface" />
               )}
               <button aria-label="关闭" onClick={onClose} className="p-1.5 rounded-lg hover:bg-elevated transition-colors cursor-pointer"><X className="h-4 w-4 text-muted" /></button>
             </div>
@@ -706,8 +703,17 @@ export function StrategySettingsDialog({ strategyId, onClose, onSaved, onAiModif
                           extra={detail.params.length > 0 ? <span className="text-[10px] text-muted/60">{detail.params.length} 项</span> : undefined}
                         >
                           {detail.params.length > 0 ? (
-                            <div className="space-y-2">
-                              {detail.params.map(p => <ParamField key={p.id} def={p} value={params[p.id]} onChange={v => setParams({ ...params, [p.id]: v })} />)}
+                            <div className="space-y-2.5">
+                              {groupParams(visibleParams(detail.params, params)).map((g, gi) => (
+                                <div key={g.name ?? `ug${gi}`}>
+                                  {g.name && (
+                                    <div className="mb-1 border-b border-border/20 pb-0.5 text-[10px] font-medium text-muted/70">{g.name}</div>
+                                  )}
+                                  <div className="space-y-1.5">
+                                    {g.items.map(p => <ParamField key={p.id} def={p} value={params[p.id]} onChange={handleParamChange} onApplyValues={values => setParams(prev => ({ ...prev, ...values }))} />)}
+                                  </div>
+                                </div>
+                              ))}
                             </div>
                           ) : (
                             <div className="py-4 text-center text-xs text-muted/60">该策略无可调参数</div>
@@ -840,7 +846,7 @@ export function StrategySettingsDialog({ strategyId, onClose, onSaved, onAiModif
                         ai: 'border-purple-500/25 bg-purple-500/10 text-purple-400',
                       }
                       const selectedIds = new Set(compositeChildren.map(c => c.id))
-                      const candidates = allStrategies.filter(s => !selectedIds.has(s.id))
+                      const candidates = selectableStrategies(allStrategies).filter(s => !selectedIds.has(s.id))
                       return (
                       <div className="space-y-3">
                         <p className="text-[11px] leading-5 text-muted/70">叠加策略按权重融合子策略的结果；点击子策略名可单独编辑其配置。</p>
@@ -895,7 +901,7 @@ export function StrategySettingsDialog({ strategyId, onClose, onSaved, onAiModif
                                           title="点击编辑该子策略的配置"
                                           className="truncate text-left text-xs font-medium text-foreground transition-colors hover:text-accent cursor-pointer"
                                         >
-                                          {c.name || c.id}
+                                          {strategyOptionLabel(allStrategies.find(s => s.id === c.id) ?? c)}
                                         </button>
                                         {c.source && (
                                           <span className={`shrink-0 rounded border px-1 text-[8px] ${SRC_CLS[c.source] ?? ''}`}>{SRC_LABEL[c.source] ?? c.source}</span>

@@ -9,6 +9,8 @@ import numpy as np
 import polars as pl
 
 MAIN_BOARD_ST_LIMIT_CHANGE_DATE = date(2026, 7, 6)
+# 创业板注册制改革首日: 此前创业板与主板同为 ±10% (风险警示股 ±5%), 当日起 ±20%。
+GEM_20PCT_LIMIT_START_DATE = date(2020, 8, 24)
 
 MAIN_BOARD_LIMIT = 0.10
 LEGACY_MAIN_BOARD_ST_LIMIT = 0.05
@@ -20,12 +22,19 @@ def is_risk_warning_name(name: str | None) -> bool:
     return "ST" in str(name or "").upper()
 
 
+_GEM_PREFIXES = ("300", "301", "302")
+
+
 def board_limit_pct(symbol: str) -> float:
     if symbol.endswith(".BJ"):
         return BEIJING_BOARD_LIMIT
-    if symbol.startswith(("300", "301", "688", "689")):
+    if symbol.startswith((*_GEM_PREFIXES, "688", "689")):
         return GROWTH_BOARD_LIMIT
     return MAIN_BOARD_LIMIT
+
+
+def _is_gem(symbol: str) -> bool:
+    return not symbol.endswith(".BJ") and symbol.startswith(_GEM_PREFIXES)
 
 
 def price_limit_pct(
@@ -35,6 +44,8 @@ def price_limit_pct(
     is_risk_warning: bool = False,
 ) -> float:
     base = board_limit_pct(symbol)
+    if _is_gem(symbol) and trade_date < GEM_20PCT_LIMIT_START_DATE:
+        base = MAIN_BOARD_LIMIT
     if (
         base == MAIN_BOARD_LIMIT
         and is_risk_warning
@@ -79,7 +90,7 @@ def no_limit_window_days(symbol: str, listing_date: date | None) -> int:
         return 0
     if symbol.endswith(".BJ"):
         return NO_LIMIT_WINDOW_TRADING_DAYS_BJ if listing_date >= BJ_OPENING_DATE else 0
-    if symbol.startswith(("300", "301")):
+    if symbol.startswith(("300", "301", "302")):
         return NO_LIMIT_WINDOW_TRADING_DAYS if listing_date >= GEM_REGISTRATION_DATE else 0
     if symbol.startswith(("688", "689")):
         return NO_LIMIT_WINDOW_TRADING_DAYS if listing_date >= STAR_REGISTRATION_DATE else 0
@@ -132,12 +143,20 @@ def polars_price_limit_pct(
     is_risk_warning: pl.Expr,
 ) -> pl.Expr:
     """Return a vectorized Polars expression for the effective daily limit."""
-    is_growth = symbol.str.starts_with("300") | symbol.str.starts_with("301")
+    is_growth = (
+        symbol.str.starts_with("300")
+        | symbol.str.starts_with("301")
+        | symbol.str.starts_with("302")
+    )
     is_star = symbol.str.starts_with("688") | symbol.str.starts_with("689")
     is_beijing = symbol.str.ends_with(".BJ")
-    is_non_main = is_growth | is_star | is_beijing
+    gem_pre_registration = (
+        is_growth & ~is_beijing & (trade_date < pl.lit(GEM_20PCT_LIMIT_START_DATE))
+    )
+    is_non_main = (is_growth | is_star | is_beijing) & ~gem_pre_registration
     base = (
-        pl.when(is_growth | is_star).then(GROWTH_BOARD_LIMIT)
+        pl.when(gem_pre_registration).then(MAIN_BOARD_LIMIT)
+        .when(is_growth | is_star).then(GROWTH_BOARD_LIMIT)
         .when(is_beijing).then(BEIJING_BOARD_LIMIT)
         .otherwise(MAIN_BOARD_LIMIT)
     )
@@ -183,6 +202,35 @@ def numpy_limit_pct_vectors(
     return legacy, current
 
 
+def numpy_gem_pre_registration_vector(
+    symbols: Sequence[str],
+    legacy: np.ndarray,
+    names: Sequence[str],
+) -> np.ndarray:
+    """Limits before GEM_20PCT_LIMIT_START_DATE: ChiNext falls back to the main-board rule."""
+    result = legacy.copy()
+    for asset_id, (symbol, name) in enumerate(zip(symbols, names, strict=True)):
+        if _is_gem(str(symbol)):
+            result[asset_id] = (
+                LEGACY_MAIN_BOARD_ST_LIMIT if is_risk_warning_name(name) else MAIN_BOARD_LIMIT
+            )
+    return result
+
+
+def numpy_limit_pct_for_date(
+    trade_date: date,
+    pre_gem: np.ndarray,
+    legacy: np.ndarray,
+    current: np.ndarray,
+) -> np.ndarray:
+    """Pick the per-asset limit vector that applies on ``trade_date``."""
+    if trade_date < GEM_20PCT_LIMIT_START_DATE:
+        return pre_gem
+    if trade_date < MAIN_BOARD_ST_LIMIT_CHANGE_DATE:
+        return legacy
+    return current
+
+
 def numpy_price_limit_matrix(
     trading_dates: Sequence[date],
     symbols: Sequence[str],
@@ -217,6 +265,14 @@ def write_numpy_price_limit_matrix(
     )
     if legacy_rows.any():
         target[legacy_rows] = legacy.astype(np.float32, copy=False)
+    pre_gem_rows = np.fromiter(
+        (value < GEM_20PCT_LIMIT_START_DATE for value in trading_dates),
+        dtype=bool,
+        count=len(trading_dates),
+    )
+    if pre_gem_rows.any():
+        pre_gem = numpy_gem_pre_registration_vector(symbols, legacy, names)
+        target[pre_gem_rows] = pre_gem.astype(np.float32, copy=False)
     if valid is not None:
         target[~valid] = np.nan
     return target

@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { DailyResultStaleNotice } from '@/components/data/DailyDataHealthNotice'
 import { motion } from 'framer-motion'
 import { Play, BarChart3, BookmarkPlus, Clock } from 'lucide-react'
 import { api, type FactorColumn, type FactorBacktestResult, type GroupStat } from '@/lib/api'
@@ -10,6 +11,7 @@ import { toast } from '@/components/Toast'
 import { QK } from '@/lib/queryKeys'
 import { useHS300Current } from '@/lib/useHS300Universe'
 import { HS300FilterToggle } from '@/components/hs300/HS300FilterToggle'
+import { selectableDefinitions, definitionOptionLabel } from '@/lib/definitionOptions'
 import { FactorICChart } from './charts/FactorICChart'
 import { FactorGroupNavChart } from './charts/FactorGroupNavChart'
 import { factorResultCandidate } from './researchCandidates'
@@ -85,7 +87,7 @@ function LoadingPanel({ symbolsText }: { symbolsText: string }) {
   )
 }
 
-export function FactorBacktest({ initialFactorName = 'momentum_20d' }: { initialFactorName?: string }) {
+export function FactorBacktest({ initialFactorName = 'momentum_20d', autoRun = false }: { initialFactorName?: string; autoRun?: boolean }) {
   const queryClient = useQueryClient()
   const [factorName, setFactorName] = useState(initialFactorName)
   const [symbols, setSymbols] = useState('')
@@ -112,13 +114,13 @@ export function FactorBacktest({ initialFactorName = 'momentum_20d' }: { initial
 
   // 按 group 分类的因子
   const factorGroups = useMemo(() => {
-    const cols = columns.data?.columns ?? []
+    const cols = selectableDefinitions(columns.data?.columns ?? [], [factorName])
     const groups: Record<string, FactorColumn[]> = {}
     for (const c of cols) {
       ;(groups[c.group] ??= []).push(c)
     }
     return groups
-  }, [columns.data])
+  }, [columns.data, factorName])
 
   // 当前因子描述
   const factorDesc = useMemo(() => {
@@ -135,7 +137,7 @@ export function FactorBacktest({ initialFactorName = 'momentum_20d' }: { initial
       api.factorRun({
         factor_name: factorName,
         asset_type: assetType,
-        symbols: symbols ? symbols.split(',').map(s => s.trim()).filter(Boolean) : null,
+        symbols: symbols ? symbols.split(/[,，;；、\s]+/).map(s => s.trim()).filter(Boolean) : null,
         start: start || null,
         end: end || undefined,
         n_groups: nGroups,
@@ -153,6 +155,15 @@ export function FactorBacktest({ initialFactorName = 'momentum_20d' }: { initial
       }
     },
   })
+
+  // 详情面板等嵌入场景: 挂载即自动运行一次 (默认手动, 页面行为不变)
+  const autoRunRef = useRef(false)
+  useEffect(() => {
+    if (!autoRun || autoRunRef.current) return
+    autoRunRef.current = true
+    run.mutate()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoRun])
 
   const saveCandidate = useMutation({
     mutationFn: () => {
@@ -218,7 +229,7 @@ export function FactorBacktest({ initialFactorName = 'momentum_20d' }: { initial
             {Object.entries(factorGroups).map(([group, cols]) => (
               <optgroup key={group} label={group}>
                 {cols.map(c => (
-                  <option key={c.id} value={c.id}>{c.label}</option>
+                  <option key={c.id} value={c.id}>{definitionOptionLabel(c)}</option>
                 ))}
               </optgroup>
             ))}
@@ -378,7 +389,7 @@ export function FactorBacktest({ initialFactorName = 'momentum_20d' }: { initial
           <EmptyState
             icon={BarChart3}
             title="选择因子并开始分析"
-            hint="因子回测分析因子的预测能力 ( IC/IR ) 和分层收益差异。服务器建议优先使用最近3个月；长周期建议本机或 8GB 以上内存环境运行。"
+            hint="因子回测度量因子的历史有效性 ( IC/IR ) 和分层收益差异。服务器建议优先使用最近3个月；长周期建议本机或 8GB 以上内存环境运行。"
           />
         )}
 
@@ -392,6 +403,7 @@ export function FactorBacktest({ initialFactorName = 'momentum_20d' }: { initial
           <LoadingPanel symbolsText={symbols ? `${symbols.split(',').length} 只标的` : '全市场 · 当前区间'} />
         )}
 
+        <DailyResultStaleNotice result={result} assetType={result?.config.asset_type === 'etf' ? 'etf' : 'stock'} />
         {result && !result.error && (
           <motion.div
             initial={{ opacity: 0, y: 8 }}
@@ -402,7 +414,7 @@ export function FactorBacktest({ initialFactorName = 'momentum_20d' }: { initial
             {/* IC/IR 指标 */}
             <div className="rounded-card border border-border bg-surface p-4">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-medium text-foreground">因子预测能力</h3>
+                <h3 className="text-sm font-medium text-foreground">因子历史有效性</h3>
                 <div className="flex items-center gap-2">
                   <button
                     type="button"

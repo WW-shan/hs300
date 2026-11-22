@@ -1,7 +1,7 @@
 # 构建 Docker 镜像时排除的文件 / 目录。
 # 与 .gitignore 思路一致: 只把 Dockerfile 真正需要的送进构建上下文,
 # 减小上下文体积、加速上传、避免缓存误伤。
-# 注意: .dockerignore 不识别 .gitignore 的取反(!)语法, 这里按白名单思路直接列举排除项。
+# 注意: 取反(!)按最后匹配生效, 仅在 Dockerfile 确需某个文件时使用; 其余直接列举排除项。
 
 # ===== 版本控制 / CI =====
 .git
@@ -11,6 +11,14 @@
 # ===== 用户运行时数据(绝不应进镜像) =====
 data
 backend/data
+**/.playwright-cli
+**/.impeccable
+**/.v2c
+**/MagicMock
+tivelo-pro-dynamic
+**/tivelo-pro-dynamic*.zip
+**/tivelo_pro_dynamic*.whl
+**/*.lic
 
 # ===== 前端构建产物 / 依赖(镜像内会重新 build, 带进来反而污染) =====
 frontend/node_modules
@@ -43,10 +51,11 @@ packaging
 backend/dist
 backend/build
 
-# ===== 开发脚本(本地启服务用, 镜像不用) =====
+# ===== 开发脚本(本地启服务用, 镜像不用; generate_manifest.py 例外 — Dockerfile 构建期生成升级保护清单) =====
 dev.sh
 dev.ps1
-scripts
+scripts/*
+!scripts/generate_manifest.py
 
 # ===== 密钥(防止误打进公开镜像) =====
 .env
