@@ -1,0 +1,667 @@
+{
+  "benchmark": "000300.SH",
+  "benchmark_returns": {
+    "recent": -0.093776,
+    "test": 0.080049
+  },
+  "classification": "T-1 market-regime exposure overlay on frozen R480 eight-leg sleeve; train+validation selection; test/recent confirmation; no promotion unless all gates pass",
+  "decision": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "rejected"
+  },
+  "diagnostics": {
+    "five_x_warning_only": true,
+    "no_leverage": true,
+    "regime_shift_days": 1
+  },
+  "eligible_count": 2,
+  "gate": {
+    "checks": {
+      "no_leverage": true,
+      "recent_annual_min": true,
+      "recent_bootstrap_positive": false,
+      "test_annual_min": true,
+      "test_bootstrap_positive": false,
+      "test_excess_hs300_positive": true,
+      "test_mdd_min": true,
+      "test_sharpe_min": true,
+      "training_platform_exists": true
+    },
+    "pass": false
+  },
+  "known_limits": [
+    "regime_history is not a complete real-time vintage.",
+    "Overlays only shift exposure between cash and the frozen sleeve.",
+    "Test/recent windows are reused confirmation windows.",
+    "Current HS300 membership retains survivorship bias.",
+    "5x cost is warning-only and never a hard rejection.",
+    "No leverage and no production activation."
+  ],
+  "preregistration_sha256": "000baf7f6ee174303e0301ee881c43a7793ba34500f27bdb9ffff6ab1df87d95",
+  "recent_used_for_selection": false,
+  "round": "R483",
+  "rows": [
+    {
+      "name": "baseline",
+      "overlay": {
+        "type": "none",
+        "weight": 1.0
+      },
+      "recent": {
+        "bootstrap": {
+          "mdd_p05": -0.1696422399390607,
+          "sharpe_p50": 0.5898035025619666,
+          "total_p05": -0.08730792113104524,
+          "total_p50": 0.07650184769595958
+        },
+        "metrics": {
+          "annual_return": 0.079182,
+          "max_drawdown": -0.101873,
+          "sharpe": 0.615197,
+          "total_return": 0.081142
+        },
+        "weight_max": 1.0,
+        "weight_mean": 1.0,
+        "weight_min": 1.0
+      },
+      "test": {
+        "bootstrap": {
+          "mdd_p05": -0.24746395315882297,
+          "sharpe_p50": 0.48758453965750415,
+          "total_p05": -0.15826156956581572,
+          "total_p50": 0.08829618334160494
+        },
+        "metrics": {
+          "annual_return": 0.06173,
+          "max_drawdown": -0.165617,
+          "sharpe": 0.494297,
+          "total_return": 0.090893
+        },
+        "weight_max": 1.0,
+        "weight_mean": 1.0,
+        "weight_min": 1.0
+      },
+      "train": {
+        "bootstrap": {
+          "mdd_p05": -0.17041146100076143,
+          "sharpe_p50": 1.334764450096613,
+          "total_p05": 0.07132098645124074,
+          "total_p50": 0.4041612035413409
+        },
+        "metrics": {
+          "annual_return": 0.196001,
+          "max_drawdown": -0.094648,
+          "sharpe": 1.342746,
+          "total_return": 0.410243
+        },
+        "weight_max": 1.0,
+        "weight_mean": 1.0,
+        "weight_min": 1.0
+      },
+      "validation": {
+        "bootstrap": {
+          "mdd_p05": -0.1625891390088564,
+          "sharpe_p50": 1.4140550214897483,
+          "total_p05": 0.0006764533336949263,
+          "total_p50": 0.27312106846481976
+        },
+        "metrics": {
+          "annual_return": 0.306597,
+          "max_drawdown": -0.092878,
+          "sharpe": 1.441273,
+          "total_return": 0.291433
+        },
+        "weight_max": 1.0,
+        "weight_mean": 1.0,
+        "weight_min": 1.0
+      }
+    },
+    {
+      "name": "weak_off",
+      "overlay": {
+        "states": [
+          "weak"
+        ],
+        "type": "state_exclude",
+        "weight": 0.0
+      },
+      "recent": {
+        "bootstrap": {
+          "mdd_p05": -0.26251381667747686,
+          "sharpe_p50": -1.384175634614068,
+          "total_p05": -0.2439949892380272,
+          "total_p50": -0.14061776356281308
+        },
+        "metrics": {
+          "annual_return": -0.136239,
+          "max_drawdown": -0.181367,
+          "sharpe": -1.359015,
+          "total_return": -0.139246
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.733591,
+        "weight_min": 0.0
+      },
+      "test": {
+        "bootstrap": {
+          "mdd_p05": -0.3308669660732444,
+          "sharpe_p50": -0.8601628429788707,
+          "total_p05": -0.30246190454827104,
+          "total_p50": -0.14152600293349138
+        },
+        "metrics": {
+          "annual_return": -0.099727,
+          "max_drawdown": -0.259239,
+          "sharpe": -0.853231,
+          "total_return": -0.141512
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.782016,
+        "weight_min": 0.0
+      },
+      "train": {
+        "bootstrap": {
+          "mdd_p05": -0.2542317900766139,
+          "sharpe_p50": 0.4335642770727849,
+          "total_p05": -0.15433305028141364,
+          "total_p50": 0.09407234924216024
+        },
+        "metrics": {
+          "annual_return": 0.048777,
+          "max_drawdown": -0.126857,
+          "sharpe": 0.43822,
+          "total_return": 0.095784
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.804124,
+        "weight_min": 0.0
+      },
+      "validation": {
+        "bootstrap": {
+          "mdd_p05": -0.16509663896561122,
+          "sharpe_p50": 1.1825642083783583,
+          "total_p05": -0.08393169403521139,
+          "total_p50": 0.20122437772117596
+        },
+        "metrics": {
+          "annual_return": 0.241619,
+          "max_drawdown": -0.100249,
+          "sharpe": 1.290356,
+          "total_return": 0.229945
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.793388,
+        "weight_min": 0.0
+      }
+    },
+    {
+      "name": "weak_leanweak_off",
+      "overlay": {
+        "states": [
+          "weak",
+          "lean_weak"
+        ],
+        "type": "state_exclude",
+        "weight": 0.0
+      },
+      "recent": {
+        "bootstrap": {
+          "mdd_p05": -0.29036716805991536,
+          "sharpe_p50": -2.7790009149583597,
+          "total_p05": -0.28373200891668204,
+          "total_p50": -0.20534387731962944
+        },
+        "metrics": {
+          "annual_return": -0.198659,
+          "max_drawdown": -0.218819,
+          "sharpe": -2.714772,
+          "total_return": -0.202874
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.482625,
+        "weight_min": 0.0
+      },
+      "test": {
+        "bootstrap": {
+          "mdd_p05": -0.3577312044778844,
+          "sharpe_p50": -1.7419357959617132,
+          "total_p05": -0.34374475589838716,
+          "total_p50": -0.2244916624081974
+        },
+        "metrics": {
+          "annual_return": -0.160944,
+          "max_drawdown": -0.274351,
+          "sharpe": -1.740111,
+          "total_return": -0.224976
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.550409,
+        "weight_min": 0.0
+      },
+      "train": {
+        "bootstrap": {
+          "mdd_p05": -0.2613234861915048,
+          "sharpe_p50": -0.05072698821630717,
+          "total_p05": -0.21331770509761694,
+          "total_p50": -0.020595830028103945
+        },
+        "metrics": {
+          "annual_return": -0.010821,
+          "max_drawdown": -0.143558,
+          "sharpe": -0.055236,
+          "total_return": -0.020679
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.56701,
+        "weight_min": 0.0
+      },
+      "validation": {
+        "bootstrap": {
+          "mdd_p05": -0.18263950943492813,
+          "sharpe_p50": 1.084589160134081,
+          "total_p05": -0.11953580209573167,
+          "total_p50": 0.1542740973597685
+        },
+        "metrics": {
+          "annual_return": 0.192698,
+          "max_drawdown": -0.099592,
+          "sharpe": 1.197718,
+          "total_return": 0.183559
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.520661,
+        "weight_min": 0.0
+      }
+    },
+    {
+      "name": "score_lt_25_off",
+      "overlay": {
+        "defensive_weight": 0.0,
+        "threshold": 25.0,
+        "type": "score_guard"
+      },
+      "recent": {
+        "bootstrap": {
+          "mdd_p05": -0.32610423261845334,
+          "sharpe_p50": -1.8352076120935794,
+          "total_p05": -0.3107674201951094,
+          "total_p50": -0.191079548731802
+        },
+        "metrics": {
+          "annual_return": -0.18631,
+          "max_drawdown": -0.227079,
+          "sharpe": -1.822323,
+          "total_return": -0.190294
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.783784,
+        "weight_min": 0.0
+      },
+      "test": {
+        "bootstrap": {
+          "mdd_p05": -0.3706046919131365,
+          "sharpe_p50": -0.9977395734569237,
+          "total_p05": -0.34516062186525087,
+          "total_p50": -0.16762547595338617
+        },
+        "metrics": {
+          "annual_return": -0.118404,
+          "max_drawdown": -0.283802,
+          "sharpe": -0.99086,
+          "total_return": -0.167258
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.825613,
+        "weight_min": 0.0
+      },
+      "train": {
+        "bootstrap": {
+          "mdd_p05": -0.2684569858930653,
+          "sharpe_p50": 0.5225853776212172,
+          "total_p05": -0.16269232885203155,
+          "total_p50": 0.12161255161045559
+        },
+        "metrics": {
+          "annual_return": 0.063598,
+          "max_drawdown": -0.139731,
+          "sharpe": 0.531412,
+          "total_return": 0.125718
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.849485,
+        "weight_min": 0.0
+      },
+      "validation": {
+        "bootstrap": {
+          "mdd_p05": -0.1523649017372889,
+          "sharpe_p50": 1.4339703643915787,
+          "total_p05": -0.04608243666033196,
+          "total_p50": 0.2540864729788914
+        },
+        "metrics": {
+          "annual_return": 0.2972,
+          "max_drawdown": -0.088841,
+          "sharpe": 1.519063,
+          "total_return": 0.28255
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.838843,
+        "weight_min": 0.0
+      }
+    },
+    {
+      "name": "score_lt_40_half",
+      "overlay": {
+        "defensive_weight": 0.5,
+        "threshold": 40.0,
+        "type": "score_guard"
+      },
+      "recent": {
+        "bootstrap": {
+          "mdd_p05": -0.21399893071639886,
+          "sharpe_p50": -0.5284669000819898,
+          "total_p05": -0.18489474932074434,
+          "total_p50": -0.06333641700668347
+        },
+        "metrics": {
+          "annual_return": -0.058751,
+          "max_drawdown": -0.149052,
+          "sharpe": -0.4966,
+          "total_return": -0.060107
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.803089,
+        "weight_min": 0.5
+      },
+      "test": {
+        "bootstrap": {
+          "mdd_p05": -0.29158759560457725,
+          "sharpe_p50": -0.3054139391987132,
+          "total_p05": -0.24831720416286296,
+          "total_p50": -0.06096182445994802
+        },
+        "metrics": {
+          "annual_return": -0.041743,
+          "max_drawdown": -0.222692,
+          "sharpe": -0.30134,
+          "total_return": -0.060049
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.837875,
+        "weight_min": 0.5
+      },
+      "train": {
+        "bootstrap": {
+          "mdd_p05": -0.19043843944177985,
+          "sharpe_p50": 0.8737691977465432,
+          "total_p05": -0.04752008914002803,
+          "total_p50": 0.20601794548772157
+        },
+        "metrics": {
+          "annual_return": 0.103864,
+          "max_drawdown": -0.10057,
+          "sharpe": 0.88032,
+          "total_return": 0.208996
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.836082,
+        "weight_min": 0.5
+      },
+      "validation": {
+        "bootstrap": {
+          "mdd_p05": -0.14270296595045406,
+          "sharpe_p50": 1.3034091575733626,
+          "total_p05": -0.03785064990584197,
+          "total_p50": 0.22130007163321452
+        },
+        "metrics": {
+          "annual_return": 0.257219,
+          "max_drawdown": -0.067618,
+          "sharpe": 1.36944,
+          "total_return": 0.24472
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.820248,
+        "weight_min": 0.5
+      }
+    },
+    {
+      "name": "strong_only",
+      "overlay": {
+        "defensive_weight": 0.0,
+        "states": [
+          "strong",
+          "lean_strong"
+        ],
+        "type": "state_include",
+        "weight": 1.0
+      },
+      "recent": {
+        "bootstrap": {
+          "mdd_p05": -0.19307435848636578,
+          "sharpe_p50": -1.4766821358019266,
+          "total_p05": -0.1792173864268033,
+          "total_p50": -0.1009276087172063
+        },
+        "metrics": {
+          "annual_return": -0.097716,
+          "max_drawdown": -0.130607,
+          "sharpe": -1.439922,
+          "total_return": -0.099922
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.312741,
+        "weight_min": 0.0
+      },
+      "test": {
+        "bootstrap": {
+          "mdd_p05": -0.32144833579698506,
+          "sharpe_p50": -1.5394174063893797,
+          "total_p05": -0.30687648341633444,
+          "total_p50": -0.17177183442733313
+        },
+        "metrics": {
+          "annual_return": -0.123087,
+          "max_drawdown": -0.242317,
+          "sharpe": -1.541666,
+          "total_return": -0.173674
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.370572,
+        "weight_min": 0.0
+      },
+      "train": {
+        "bootstrap": {
+          "mdd_p05": -0.24851606975345697,
+          "sharpe_p50": -0.3087638170916263,
+          "total_p05": -0.21532186277529541,
+          "total_p50": -0.05094155065404837
+        },
+        "metrics": {
+          "annual_return": -0.025833,
+          "max_drawdown": -0.151758,
+          "sharpe": -0.288107,
+          "total_return": -0.049025
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.356701,
+        "weight_min": 0.0
+      },
+      "validation": {
+        "bootstrap": {
+          "mdd_p05": -0.10296422387741944,
+          "sharpe_p50": 1.7908836090472189,
+          "total_p05": -0.002876529779601178,
+          "total_p50": 0.22665058273866756
+        },
+        "metrics": {
+          "annual_return": 0.261111,
+          "max_drawdown": -0.056632,
+          "sharpe": 1.7612,
+          "total_return": 0.248404
+        },
+        "weight_max": 1.0,
+        "weight_mean": 0.322314,
+        "weight_min": 0.0
+      }
+    },
+    {
+      "name": "phase_ebb_off",
+      "overlay": {
+        "phases": [
+          "ebb"
+        ],
+        "type": "phase_exclude",
+        "weight": 0.0
+      },
+      "recent": {
+        "bootstrap": {
+          "mdd_p05": -0.1696422399390607,
+          "sharpe_p50": 0.5898035025619666,
+          "total_p05": -0.08730792113104524,
+          "total_p50": 0.07650184769595958
+        },
+        "metrics": {
+          "annual_return": 0.079182,
+          "max_drawdown": -0.101873,
+          "sharpe": 0.615197,
+          "total_return": 0.081142
+        },
+        "weight_max": 1.0,
+        "weight_mean": 1.0,
+        "weight_min": 1.0
+      },
+      "test": {
+        "bootstrap": {
+          "mdd_p05": -0.24746395315882297,
+          "sharpe_p50": 0.48758453965750415,
+          "total_p05": -0.15826156956581572,
+          "total_p50": 0.08829618334160494
+        },
+        "metrics": {
+          "annual_return": 0.06173,
+          "max_drawdown": -0.165617,
+          "sharpe": 0.494297,
+          "total_return": 0.090893
+        },
+        "weight_max": 1.0,
+        "weight_mean": 1.0,
+        "weight_min": 1.0
+      },
+      "train": {
+        "bootstrap": {
+          "mdd_p05": -0.17041146100076143,
+          "sharpe_p50": 1.334764450096613,
+          "total_p05": 0.07132098645124074,
+          "total_p50": 0.4041612035413409
+        },
+        "metrics": {
+          "annual_return": 0.196001,
+          "max_drawdown": -0.094648,
+          "sharpe": 1.342746,
+          "total_return": 0.410243
+        },
+        "weight_max": 1.0,
+        "weight_mean": 1.0,
+        "weight_min": 1.0
+      },
+      "validation": {
+        "bootstrap": {
+          "mdd_p05": -0.1625891390088564,
+          "sharpe_p50": 1.4140550214897483,
+          "total_p05": 0.0006764533336949263,
+          "total_p50": 0.27312106846481976
+        },
+        "metrics": {
+          "annual_return": 0.306597,
+          "max_drawdown": -0.092878,
+          "sharpe": 1.441273,
+          "total_return": 0.291433
+        },
+        "weight_max": 1.0,
+        "weight_mean": 1.0,
+        "weight_min": 1.0
+      }
+    }
+  ],
+  "selected": {
+    "name": "baseline",
+    "overlay": {
+      "type": "none",
+      "weight": 1.0
+    },
+    "recent": {
+      "bootstrap": {
+        "mdd_p05": -0.1696422399390607,
+        "sharpe_p50": 0.5898035025619666,
+        "total_p05": -0.08730792113104524,
+        "total_p50": 0.07650184769595958
+      },
+      "metrics": {
+        "annual_return": 0.079182,
+        "max_drawdown": -0.101873,
+        "sharpe": 0.615197,
+        "total_return": 0.081142
+      },
+      "weight_max": 1.0,
+      "weight_mean": 1.0,
+      "weight_min": 1.0
+    },
+    "test": {
+      "bootstrap": {
+        "mdd_p05": -0.24746395315882297,
+        "sharpe_p50": 0.48758453965750415,
+        "total_p05": -0.15826156956581572,
+        "total_p50": 0.08829618334160494
+      },
+      "metrics": {
+        "annual_return": 0.06173,
+        "max_drawdown": -0.165617,
+        "sharpe": 0.494297,
+        "total_return": 0.090893
+      },
+      "weight_max": 1.0,
+      "weight_mean": 1.0,
+      "weight_min": 1.0
+    },
+    "train": {
+      "bootstrap": {
+        "mdd_p05": -0.17041146100076143,
+        "sharpe_p50": 1.334764450096613,
+        "total_p05": 0.07132098645124074,
+        "total_p50": 0.4041612035413409
+      },
+      "metrics": {
+        "annual_return": 0.196001,
+        "max_drawdown": -0.094648,
+        "sharpe": 1.342746,
+        "total_return": 0.410243
+      },
+      "weight_max": 1.0,
+      "weight_mean": 1.0,
+      "weight_min": 1.0
+    },
+    "validation": {
+      "bootstrap": {
+        "mdd_p05": -0.1625891390088564,
+        "sharpe_p50": 1.4140550214897483,
+        "total_p05": 0.0006764533336949263,
+        "total_p50": 0.27312106846481976
+      },
+      "metrics": {
+        "annual_return": 0.306597,
+        "max_drawdown": -0.092878,
+        "sharpe": 1.441273,
+        "total_return": 0.291433
+      },
+      "weight_max": 1.0,
+      "weight_mean": 1.0,
+      "weight_min": 1.0
+    }
+  },
+  "selection_basis": "train_and_validation_only",
+  "test_used_for_selection": false
+}

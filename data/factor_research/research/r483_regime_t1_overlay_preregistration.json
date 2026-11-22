@@ -1,0 +1,67 @@
+{
+  "round": "R483",
+  "classification": "T-1 market-regime exposure overlay on frozen R480 eight-leg sleeve; train+validation selection; test/recent confirmation; no promotion unless all gates pass",
+  "created_at": "2026-11-22",
+  "source_round": "R480",
+  "source_result": "r480_winner_dependence_budget_2026-11-22.json",
+  "source_selected_label": "core8_no_ocf_margin",
+  "benchmark": "000300.SH",
+  "regime_source": {
+    "path": "data/regime_history/part.parquet",
+    "use": "previous trading day row only",
+    "fields": ["state", "phase", "score"]
+  },
+  "overlays": {
+    "baseline": {"type": "none", "weight": 1.0},
+    "weak_off": {"type": "state_exclude", "states": ["weak"], "weight": 0.0},
+    "weak_leanweak_off": {"type": "state_exclude", "states": ["weak", "lean_weak"], "weight": 0.0},
+    "score_lt_25_off": {"type": "score_guard", "threshold": 25.0, "defensive_weight": 0.0},
+    "score_lt_40_half": {"type": "score_guard", "threshold": 40.0, "defensive_weight": 0.5},
+    "strong_only": {"type": "state_include", "states": ["strong", "lean_strong"], "weight": 1.0, "defensive_weight": 0.0},
+    "phase_ebb_off": {"type": "phase_exclude", "phases": ["ebb"], "weight": 0.0}
+  },
+  "selection": {
+    "basis": "train_and_validation_only",
+    "train_annual_min": 0.03,
+    "validation_annual_min": 0.03,
+    "validation_sharpe_min": 0.45,
+    "validation_mdd_min": -0.18,
+    "validation_bootstrap_p05_min_for_platform": -0.01,
+    "ranking": "maximize min(train,validation) annual, then lower turnover, then simplest rule"
+  },
+  "confirmation_gates": {
+    "test_annual_min": 0.03,
+    "test_sharpe_min": 0.45,
+    "test_mdd_min": -0.18,
+    "recent_annual_min": 0.0,
+    "test_bootstrap_p05_positive": true,
+    "recent_bootstrap_p05_positive": true,
+    "test_excess_hs300_positive": true,
+    "no_leverage": true
+  },
+  "bootstrap": {"block_days": 20, "replications": 5000, "seed": 483},
+  "windows": {
+    "train_start": "2022-05-05",
+    "train_end": "2024-05-05",
+    "validation_start": "2024-05-06",
+    "validation_end": "2025-05-05",
+    "test_start": "2025-05-06",
+    "test_end": "2026-11-05",
+    "recent_start": "2025-10-14"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "regime_t1_overlay_complete"
+  },
+  "known_limits": [
+    "regime_history is not a complete real-time vintage.",
+    "Overlays only shift exposure between cash and the frozen sleeve.",
+    "Test/recent windows are reused confirmation windows.",
+    "Current HS300 membership retains survivorship bias.",
+    "5x cost is warning-only and never a hard rejection.",
+    "No leverage and no production activation."
+  ]
+}
