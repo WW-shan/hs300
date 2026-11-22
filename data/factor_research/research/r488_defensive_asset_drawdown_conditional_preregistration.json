@@ -1,0 +1,75 @@
+{
+  "round": "R488",
+  "classification": "T-1 drawdown/regime conditional bond-gold defensive overlay on frozen R484 sleeve; train+validation selection; test/recent confirmation; no promotion unless all gates pass",
+  "created_at": "2026-11-22",
+  "source_round": "R484",
+  "source_result": "r484_daily_entry_batch_cap_2026-11-22.json",
+  "source_selected_label": "cap_1",
+  "benchmark": "000300.SH",
+  "defensive_etfs": {"511010.SH": "国债ETF", "518880.SH": "黄金ETF"},
+  "rules": {
+    "baseline": {"equity": 1.0, "bond": 0.0, "gold": 0.0, "condition": "none"},
+    "cash20_always": {"equity": 0.8, "bond": 0.0, "gold": 0.0, "cash": 0.2, "condition": "always"},
+    "bond20_always": {"equity": 0.8, "bond": 0.2, "gold": 0.0, "condition": "always"},
+    "bondgold20_always": {"equity": 0.8, "bond": 0.1, "gold": 0.1, "condition": "always"},
+    "drawdown_bond20": {"equity": 0.7, "bond": 0.3, "gold": 0.0, "condition": "drawdown_le_-0.05", "fallback_equity": 1.0},
+    "drawdown_bondgold30": {"equity": 0.7, "bond": 0.15, "gold": 0.15, "condition": "drawdown_le_-0.05", "fallback_equity": 1.0},
+    "weak_bondgold30": {"equity": 0.7, "bond": 0.15, "gold": 0.15, "condition": "regime_weak_or_lean_weak", "fallback_equity": 1.0}
+  },
+  "execution": {
+    "equity_matching": "open_t+1",
+    "equity_cost_main": "2x",
+    "equity_cost_stress": "3x",
+    "etf_cost_main_bps": 10,
+    "etf_cost_stress_bps": 20,
+    "etf_cost_diagnostic_bps": 50,
+    "five_x_hard_rejection": false,
+    "no_leverage": true,
+    "cash_return": 0.0
+  },
+  "windows": {
+    "train_start": "2022-05-05",
+    "train_end": "2024-05-05",
+    "validation_start": "2024-05-06",
+    "validation_end": "2025-05-05",
+    "test_start": "2025-05-06",
+    "test_end": "2026-11-05",
+    "recent_start": "2025-10-14"
+  },
+  "selection": {
+    "basis": "train_and_validation_only",
+    "train_annual_min": 0.03,
+    "validation_annual_min": 0.03,
+    "validation_sharpe_min": 0.45,
+    "validation_mdd_min": -0.18,
+    "validation_bootstrap_p05_min_for_platform": -0.01,
+    "ranking": "maximize min(train,validation) annual, then validation bootstrap p05, then lower defensive weight"
+  },
+  "confirmation_gates": {
+    "test_annual_min": 0.03,
+    "test_sharpe_min": 0.45,
+    "test_mdd_min": -0.18,
+    "recent_annual_min": 0.0,
+    "stress_3x_positive_at_2x_equity_and_20bps_etf": true,
+    "test_bootstrap_p05_positive": true,
+    "recent_bootstrap_p05_positive": true,
+    "test_excess_hs300_positive": true,
+    "no_leverage": true
+  },
+  "bootstrap": {"block_days": 20, "replications": 5000, "seed": 488},
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "defensive_asset_drawdown_conditional_complete"
+  },
+  "known_limits": [
+    "The defensive ETF history is local ignored data and only covers available instruments.",
+    "Equity and ETF sleeves use different execution models.",
+    "Conditional rules use T-1 signals and may react late.",
+    "Test/recent windows are reused confirmation windows.",
+    "5x equity cost is warning-only.",
+    "No leverage and no production activation."
+  ]
+}

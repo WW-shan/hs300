@@ -1,0 +1,607 @@
+{
+  "benchmark": "000300.SH",
+  "benchmark_returns": {
+    "recent": -0.093776,
+    "test": 0.080049
+  },
+  "classification": "T-1 drawdown/regime conditional bond-gold defensive overlay on frozen R484 sleeve; train+validation selection; test/recent confirmation; no promotion unless all gates pass",
+  "decision": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "rejected"
+  },
+  "diagnostics": {
+    "conditional_t1_only": true,
+    "five_x_warning_only": true,
+    "no_leverage": true
+  },
+  "eligible_count": 6,
+  "gate": {
+    "checks": {
+      "no_leverage": true,
+      "recent_annual_min": true,
+      "recent_bootstrap_positive": false,
+      "test_annual_min": true,
+      "test_bootstrap_positive": false,
+      "test_excess_hs300_positive": true,
+      "test_mdd_min": true,
+      "test_sharpe_min": true,
+      "training_platform_exists": true
+    },
+    "pass": false
+  },
+  "known_limits": [
+    "The defensive ETF history is local ignored data and only covers available instruments.",
+    "Equity and ETF sleeves use different execution models.",
+    "Conditional rules use T-1 signals and may react late.",
+    "Test/recent windows are reused confirmation windows.",
+    "5x equity cost is warning-only.",
+    "No leverage and no production activation."
+  ],
+  "preregistration_sha256": "f504e62988bfec35bcff0e9a7c98447fc45350da25da62454299fe5d7aba5395",
+  "recent_used_for_selection": false,
+  "round": "R488",
+  "rows": [
+    {
+      "name": "baseline",
+      "recent": {
+        "bootstrap": {
+          "mdd_p05": -0.20013933819539975,
+          "sharpe_p50": 0.5553198128440132,
+          "total_p05": -0.1205071933811599,
+          "total_p50": 0.07068956365369283
+        },
+        "metrics": {
+          "annual_return": 0.069633,
+          "max_drawdown": -0.130674,
+          "sharpe": 0.557284,
+          "total_return": 0.071349
+        },
+        "weight_min": 1.0
+      },
+      "rule": {
+        "bond": 0.0,
+        "condition": "none",
+        "equity": 1.0,
+        "gold": 0.0
+      },
+      "test": {
+        "bootstrap": {
+          "mdd_p05": -0.2243970419786171,
+          "sharpe_p50": 0.7468444104298338,
+          "total_p05": -0.10797553124842263,
+          "total_p50": 0.15145415468814027
+        },
+        "metrics": {
+          "annual_return": 0.101118,
+          "max_drawdown": -0.136412,
+          "sharpe": 0.739292,
+          "total_return": 0.150161
+        },
+        "weight_min": 1.0
+      },
+      "train": {
+        "bootstrap": {
+          "mdd_p05": -0.15593709571750047,
+          "sharpe_p50": 1.5458428909376298,
+          "total_p05": 0.11661466143478538,
+          "total_p50": 0.47208531580032176
+        },
+        "metrics": {
+          "annual_return": 0.228974,
+          "max_drawdown": -0.102122,
+          "sharpe": 1.569696,
+          "total_return": 0.485863
+        },
+        "weight_min": 1.0
+      },
+      "validation": {
+        "bootstrap": {
+          "mdd_p05": -0.1578634692427462,
+          "sharpe_p50": 1.3882017654120526,
+          "total_p05": 0.016116535556204292,
+          "total_p50": 0.25246639023683515
+        },
+        "metrics": {
+          "annual_return": 0.277325,
+          "max_drawdown": -0.095005,
+          "sharpe": 1.38928,
+          "total_return": 0.26375
+        },
+        "weight_min": 1.0
+      }
+    },
+    {
+      "name": "cash20_always",
+      "recent": {
+        "bootstrap": {
+          "mdd_p05": -0.16286955069621956,
+          "sharpe_p50": 0.5553198128440114,
+          "total_p05": -0.09632163461156795,
+          "total_p50": 0.05787747018790701
+        },
+        "metrics": {
+          "annual_return": 0.056938,
+          "max_drawdown": -0.105228,
+          "sharpe": 0.557284,
+          "total_return": 0.058332
+        },
+        "weight_min": 0.8
+      },
+      "rule": {
+        "bond": 0.0,
+        "cash": 0.2,
+        "condition": "always",
+        "equity": 0.8,
+        "gold": 0.0
+      },
+      "test": {
+        "bootstrap": {
+          "mdd_p05": -0.18285202094179354,
+          "sharpe_p50": 0.7468444104298139,
+          "total_p05": -0.08480371259695585,
+          "total_p50": 0.12225301242048836
+        },
+        "metrics": {
+          "annual_return": 0.081917,
+          "max_drawdown": -0.10946,
+          "sharpe": 0.739292,
+          "total_return": 0.121147
+        },
+        "weight_min": 0.8
+      },
+      "train": {
+        "bootstrap": {
+          "mdd_p05": -0.12630150548086838,
+          "sharpe_p50": 1.545842890937602,
+          "total_p05": 0.0950745004681286,
+          "total_p50": 0.3662865693527926
+        },
+        "metrics": {
+          "annual_return": 0.181118,
+          "max_drawdown": -0.082202,
+          "sharpe": 1.569696,
+          "total_return": 0.376732
+        },
+        "weight_min": 0.8
+      },
+      "validation": {
+        "bootstrap": {
+          "mdd_p05": -0.12780046906916798,
+          "sharpe_p50": 1.3882017654120506,
+          "total_p05": 0.015315441894425463,
+          "total_p50": 0.20044151627784967
+        },
+        "metrics": {
+          "annual_return": 0.219827,
+          "max_drawdown": -0.076552,
+          "sharpe": 1.38928,
+          "total_return": 0.209292
+        },
+        "weight_min": 0.8
+      }
+    },
+    {
+      "name": "bond20_always",
+      "recent": {
+        "bootstrap": {
+          "mdd_p05": -0.1649649392472674,
+          "sharpe_p50": 0.5328371921421039,
+          "total_p05": -0.09803060821289666,
+          "total_p50": 0.05509788974949226
+        },
+        "metrics": {
+          "annual_return": 0.054524,
+          "max_drawdown": -0.107115,
+          "sharpe": 0.536276,
+          "total_return": 0.055858
+        },
+        "weight_min": 1.0
+      },
+      "rule": {
+        "bond": 0.2,
+        "condition": "always",
+        "equity": 0.8,
+        "gold": 0.0
+      },
+      "test": {
+        "bootstrap": {
+          "mdd_p05": -0.18453941857022715,
+          "sharpe_p50": 0.7344377682672845,
+          "total_p05": -0.08837664709801518,
+          "total_p50": 0.12001319012883216
+        },
+        "metrics": {
+          "annual_return": 0.08044,
+          "max_drawdown": -0.111194,
+          "sharpe": 0.727684,
+          "total_return": 0.118925
+        },
+        "weight_min": 1.0
+      },
+      "train": {
+        "bootstrap": {
+          "mdd_p05": -0.12572030395493494,
+          "sharpe_p50": 1.5665260456818693,
+          "total_p05": 0.09888718520948192,
+          "total_p50": 0.37122775312247813
+        },
+        "metrics": {
+          "annual_return": 0.183419,
+          "max_drawdown": -0.082057,
+          "sharpe": 1.5888,
+          "total_return": 0.381886
+        },
+        "weight_min": 1.0
+      },
+      "validation": {
+        "bootstrap": {
+          "mdd_p05": -0.12572121997149954,
+          "sharpe_p50": 1.4071627835286677,
+          "total_p05": 0.020089049237018042,
+          "total_p50": 0.20347608530635442
+        },
+        "metrics": {
+          "annual_return": 0.222191,
+          "max_drawdown": -0.075908,
+          "sharpe": 1.409638,
+          "total_return": 0.211534
+        },
+        "weight_min": 1.0
+      }
+    },
+    {
+      "name": "bondgold20_always",
+      "recent": {
+        "bootstrap": {
+          "mdd_p05": -0.1525704068517122,
+          "sharpe_p50": 0.599627644397592,
+          "total_p05": -0.08016131495052736,
+          "total_p50": 0.06528563887210326
+        },
+        "metrics": {
+          "annual_return": 0.065813,
+          "max_drawdown": -0.097232,
+          "sharpe": 0.609523,
+          "total_return": 0.067431
+        },
+        "weight_min": 1.0
+      },
+      "rule": {
+        "bond": 0.1,
+        "condition": "always",
+        "equity": 0.8,
+        "gold": 0.1
+      },
+      "test": {
+        "bootstrap": {
+          "mdd_p05": -0.16675847032502555,
+          "sharpe_p50": 0.8640133457597251,
+          "total_p05": -0.057193740778139324,
+          "total_p50": 0.15022163060660465
+        },
+        "metrics": {
+          "annual_return": 0.100533,
+          "max_drawdown": -0.09329,
+          "sharpe": 0.857494,
+          "total_return": 0.149274
+        },
+        "weight_min": 1.0
+      },
+      "train": {
+        "bootstrap": {
+          "mdd_p05": -0.12122354770964172,
+          "sharpe_p50": 1.6911678158854702,
+          "total_p05": 0.1231881568537867,
+          "total_p50": 0.4079296610417953
+        },
+        "metrics": {
+          "annual_return": 0.199297,
+          "max_drawdown": -0.081207,
+          "sharpe": 1.710392,
+          "total_return": 0.417716
+        },
+        "weight_min": 1.0
+      },
+      "validation": {
+        "bootstrap": {
+          "mdd_p05": -0.12300081864779688,
+          "sharpe_p50": 1.5795722218831014,
+          "total_p05": 0.04213629093377591,
+          "total_p50": 0.23560193166545562
+        },
+        "metrics": {
+          "annual_return": 0.257031,
+          "max_drawdown": -0.075801,
+          "sharpe": 1.570262,
+          "total_return": 0.244542
+        },
+        "weight_min": 1.0
+      }
+    },
+    {
+      "name": "drawdown_bond20",
+      "recent": {
+        "bootstrap": {
+          "mdd_p05": -0.19318952281808444,
+          "sharpe_p50": 0.2298106972597337,
+          "total_p05": -0.13516634167834274,
+          "total_p50": 0.020842642909539855
+        },
+        "metrics": {
+          "annual_return": 0.020524,
+          "max_drawdown": -0.135297,
+          "sharpe": 0.230106,
+          "total_return": 0.021018
+        },
+        "weight_min": 1.0
+      },
+      "rule": {
+        "bond": 0.3,
+        "condition": "drawdown_le_-0.05",
+        "equity": 0.7,
+        "fallback_equity": 1.0,
+        "gold": 0.0
+      },
+      "test": {
+        "bootstrap": {
+          "mdd_p05": -0.22172164754132284,
+          "sharpe_p50": 0.3985704945574755,
+          "total_p05": -0.14553973664122632,
+          "total_p50": 0.0635258812391275
+        },
+        "metrics": {
+          "annual_return": 0.04383,
+          "max_drawdown": -0.15906,
+          "sharpe": 0.404182,
+          "total_return": 0.064285
+        },
+        "weight_min": 1.0
+      },
+      "train": {
+        "bootstrap": {
+          "mdd_p05": -0.1556005833912798,
+          "sharpe_p50": 1.4205466528102064,
+          "total_p05": 0.07159162302545274,
+          "total_p50": 0.4043356322341294
+        },
+        "metrics": {
+          "annual_return": 0.199155,
+          "max_drawdown": -0.091032,
+          "sharpe": 1.441498,
+          "total_return": 0.417395
+        },
+        "weight_min": 1.0
+      },
+      "validation": {
+        "bootstrap": {
+          "mdd_p05": -0.1463842344720968,
+          "sharpe_p50": 1.2686436615494017,
+          "total_p05": 0.004256996448196881,
+          "total_p50": 0.21779328416056298
+        },
+        "metrics": {
+          "annual_return": 0.24024,
+          "max_drawdown": -0.081355,
+          "sharpe": 1.273415,
+          "total_return": 0.228638
+        },
+        "weight_min": 1.0
+      }
+    },
+    {
+      "name": "drawdown_bondgold30",
+      "recent": {
+        "bootstrap": {
+          "mdd_p05": -0.1840504428886881,
+          "sharpe_p50": 0.3115806448610918,
+          "total_p05": -0.1272629234077043,
+          "total_p50": 0.03222361299108689
+        },
+        "metrics": {
+          "annual_return": 0.03142,
+          "max_drawdown": -0.12922,
+          "sharpe": 0.309912,
+          "total_return": 0.03218
+        },
+        "weight_min": 1.0
+      },
+      "rule": {
+        "bond": 0.15,
+        "condition": "drawdown_le_-0.05",
+        "equity": 0.7,
+        "fallback_equity": 1.0,
+        "gold": 0.15
+      },
+      "test": {
+        "bootstrap": {
+          "mdd_p05": -0.1964084828073559,
+          "sharpe_p50": 0.6161074696807951,
+          "total_p05": -0.10576021605657915,
+          "total_p50": 0.10989739791769759
+        },
+        "metrics": {
+          "annual_return": 0.073234,
+          "max_drawdown": -0.131805,
+          "sharpe": 0.606365,
+          "total_return": 0.108103
+        },
+        "weight_min": 1.0
+      },
+      "train": {
+        "bootstrap": {
+          "mdd_p05": -0.1551890177331382,
+          "sharpe_p50": 1.438692630702847,
+          "total_p05": 0.07659304174915738,
+          "total_p50": 0.41181863811956076
+        },
+        "metrics": {
+          "annual_return": 0.202322,
+          "max_drawdown": -0.09102,
+          "sharpe": 1.460438,
+          "total_return": 0.424593
+        },
+        "weight_min": 1.0
+      },
+      "validation": {
+        "bootstrap": {
+          "mdd_p05": -0.14395666245374272,
+          "sharpe_p50": 1.2850929613006612,
+          "total_p05": 0.005847577777200241,
+          "total_p50": 0.22113736406070883
+        },
+        "metrics": {
+          "annual_return": 0.245254,
+          "max_drawdown": -0.080277,
+          "sharpe": 1.295238,
+          "total_return": 0.233388
+        },
+        "weight_min": 1.0
+      }
+    },
+    {
+      "name": "weak_bondgold30",
+      "recent": {
+        "bootstrap": {
+          "mdd_p05": -0.230034145519997,
+          "sharpe_p50": -0.20503658354756615,
+          "total_p05": -0.1836302476693873,
+          "total_p50": -0.033135417351559004
+        },
+        "metrics": {
+          "annual_return": -0.03258,
+          "max_drawdown": -0.148308,
+          "sharpe": -0.208207,
+          "total_return": -0.033343
+        },
+        "weight_min": 1.0
+      },
+      "rule": {
+        "bond": 0.15,
+        "condition": "regime_weak_or_lean_weak",
+        "equity": 0.7,
+        "fallback_equity": 1.0,
+        "gold": 0.15
+      },
+      "test": {
+        "bootstrap": {
+          "mdd_p05": -0.2543159587507793,
+          "sharpe_p50": 0.11965575090487002,
+          "total_p05": -0.19095139111620285,
+          "total_p50": 0.010409099286220025
+        },
+        "metrics": {
+          "annual_return": 0.005105,
+          "max_drawdown": -0.169778,
+          "sharpe": 0.104309,
+          "total_return": 0.007423
+        },
+        "weight_min": 1.0
+      },
+      "train": {
+        "bootstrap": {
+          "mdd_p05": -0.18836666994488904,
+          "sharpe_p50": 0.8977619966741522,
+          "total_p05": -0.05751971996738836,
+          "total_p50": 0.21119117868944293
+        },
+        "metrics": {
+          "annual_return": 0.107501,
+          "max_drawdown": -0.109476,
+          "sharpe": 0.919452,
+          "total_return": 0.21666
+        },
+        "weight_min": 1.0
+      },
+      "validation": {
+        "bootstrap": {
+          "mdd_p05": -0.17095419639369347,
+          "sharpe_p50": 0.9102691415357025,
+          "total_p05": -0.07301513451902819,
+          "total_p50": 0.13934331416601298
+        },
+        "metrics": {
+          "annual_return": 0.163898,
+          "max_drawdown": -0.083022,
+          "sharpe": 0.963334,
+          "total_return": 0.156213
+        },
+        "weight_min": 1.0
+      }
+    }
+  ],
+  "selected": {
+    "name": "baseline",
+    "recent": {
+      "bootstrap": {
+        "mdd_p05": -0.20013933819539975,
+        "sharpe_p50": 0.5553198128440132,
+        "total_p05": -0.1205071933811599,
+        "total_p50": 0.07068956365369283
+      },
+      "metrics": {
+        "annual_return": 0.069633,
+        "max_drawdown": -0.130674,
+        "sharpe": 0.557284,
+        "total_return": 0.071349
+      },
+      "weight_min": 1.0
+    },
+    "rule": {
+      "bond": 0.0,
+      "condition": "none",
+      "equity": 1.0,
+      "gold": 0.0
+    },
+    "test": {
+      "bootstrap": {
+        "mdd_p05": -0.2243970419786171,
+        "sharpe_p50": 0.7468444104298338,
+        "total_p05": -0.10797553124842263,
+        "total_p50": 0.15145415468814027
+      },
+      "metrics": {
+        "annual_return": 0.101118,
+        "max_drawdown": -0.136412,
+        "sharpe": 0.739292,
+        "total_return": 0.150161
+      },
+      "weight_min": 1.0
+    },
+    "train": {
+      "bootstrap": {
+        "mdd_p05": -0.15593709571750047,
+        "sharpe_p50": 1.5458428909376298,
+        "total_p05": 0.11661466143478538,
+        "total_p50": 0.47208531580032176
+      },
+      "metrics": {
+        "annual_return": 0.228974,
+        "max_drawdown": -0.102122,
+        "sharpe": 1.569696,
+        "total_return": 0.485863
+      },
+      "weight_min": 1.0
+    },
+    "validation": {
+      "bootstrap": {
+        "mdd_p05": -0.1578634692427462,
+        "sharpe_p50": 1.3882017654120526,
+        "total_p05": 0.016116535556204292,
+        "total_p50": 0.25246639023683515
+      },
+      "metrics": {
+        "annual_return": 0.277325,
+        "max_drawdown": -0.095005,
+        "sharpe": 1.38928,
+        "total_return": 0.26375
+      },
+      "weight_min": 1.0
+    }
+  },
+  "selection_basis": "train_and_validation_only",
+  "source_r484_sha256": "34f2e0f95c23b8deced39993afe605a5c888f0c433c8ce6dbe910e806439c0f9",
+  "test_used_for_selection": false
+}
