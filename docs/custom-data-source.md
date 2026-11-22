@@ -2,20 +2,25 @@
 
 本项目默认使用 TickFlow。自定义数据源是一个可选扩展: 外部 HTTP 服务负责取数和整理, 本项目只把返回结果映射成内部标准字段, 然后复用现有存储、指标、enriched、策略和前端展示逻辑。
 
+## 选用 YAML 的条件
+
+要接管日 K、复权因子、实时行情等标准能力，使用本页的自定义数据源。专用 SDK、自定义签名或复杂请求可用 [Python Provider](./plugin-development.md)。只需向工作台增加一个研究字段、排名或自有数据表时，可以从 [扩展数据表配置](./extension-packages.md#单个扩展数据配置分享)开始。
+
+让 AI 生成 YAML 时，给它一个脱敏的典型请求、当天真实响应、无数据响应与字段单位，再明确日期区间、分页和标的编码。用 [mock 示例](./examples/custom-data-source/README.md)先验证映射和能力路由。
+
 ## 支持范围
 
-当前自定义源支持六类数据:
+当前自定义源支持七类数据:
 
 | 数据集 | 配置名 | 说明 |
 | --- | --- | --- |
-| 日K | `daily` | 批量返回一组股票在指定区间内的日K |
+| 日K | `daily` | 批量返回一组标的在指定区间内的日K。个股、指数与 ETF 的日K同步都会路由到生效源,并按契约传入 `asset_type`(`stock`/`index`/`etf`);仅支持股票的源(如 fuyao/tdxquant/amber)对其他资产类型返回空数据即可,该轮同步会告警并回退 TickFlow,不会写入错误数据 |
 | 除权因子 | `adj_factor` | 批量返回一组股票的复权因子 |
 | 实时行情 | `realtime` | 返回全市场快照,用于盘中 enriched 增量计算 |
 | 分钟K | `minute` | 返回 1m 分钟K(需映射出 symbol / datetime / OHLC / 量; amount 成交额可缺省, 缺省时均价线降级显示 —) |
+| 五档盘口 | `depth5` | 批量返回一组股票的买卖五档快照(逐批注入代码参数,无起止时间) |
 | 全量分钟 | `full_minute` | 与 `minute` 同形;声明后可被路由为「全量分钟」生效源,内置服务盘中按当日窗口全市场批量落盘(仅修复轮语义,节奏下限 60s) |
-| 财务数据 | `financial` | 一个配置覆盖全部财务表,请求时把表名作为参数传给上游;字段由数据源决定,仅需映射出 symbol |
-
-深度盘口(depth5)暂无数据集契约,仍由 TickFlow 提供。
+| 财务数据 | `financial` | 一个配置覆盖全部五张财务表;请求时注入 `table` 参数由上游分发,五表按报告期累积落库(见下 `financial` 字段契约) |
 
 `full_minute` 声明式源只提供修复轮(当日窗口批量);廉价增量端点
 (`get_intraday_latest`)是 Python 插件契约,见
@@ -30,6 +35,8 @@ data/data_sources/*.yaml
 ```
 
 Dev 模式下，默认位置是项目根目录的 `data/`；Docker 部署中，项目的 `data/` 会挂载为容器内的 `/app/data`。可通过 `DATA_DIR` 覆盖。
+
+Docker 里 URL 填 `127.0.0.1` 指的是容器自身：数据源服务跑在宿主机时，应改用 `host.docker.internal`（Linux `docker run` 需加 `--add-host=host.docker.internal:host-gateway` 才能解析，compose 已内置该映射；也可直接用宿主机内网 IP，如 `172.17.0.1`）。
 
 修改 YAML 后可在「设置 -> 数据源」点击「重新加载」,或调用:
 
@@ -152,12 +159,90 @@ datasets:
 | 未声明 | `change_pct` 按截面中位数归一(A 股涨跌停 30% 上限使两种单位物理可分);`amplitude` / `turnover_rate` **置 `None`** 交由 pipeline 按价格与股本口径重算,并记录 WARNING |
 | 列已配置 `transforms` | 视为用户已接管该列单位,原样透传 |
 
+### depth5 必填
+
+| 内部字段 | 含义 |
+| --- | --- |
+| `symbol` | 标准代码 |
+| `asks` | 卖五档,嵌套数组 `[[价,量], ...]`,按卖一至卖五顺序 |
+| `bids` | 买五档,嵌套数组 `[[价,量], ...]`,按买一至买五顺序 |
+
+`asks` / `bids` 每档取前两个元素按数值解析为 `[价格, 手数]`,无法解析的档位被跳过;数量单位沿用现有封单量口径(手),前端计算封单额时再乘 100 换算为股。示例响应行:
+
+```json
+{ "code": "000001.SZ", "sell": [[10.01, 1200], [10.02, 800], [10.03, 500], [10.04, 300], [10.05, 200]],
+  "buy":  [[10.00, 900], [9.99, 700], [9.98, 400], [9.97, 350], [9.96, 150]] }
+```
+
+对应映射 `code→symbol`、`sell→asks`、`buy→bids`。声明 depth5 后即可在设置 → 数据源 → 能力路由把五档生效源切到该自定义源;五档独立路由,失败不跨源回退。
+
+### financial 必填
+
+| 内部字段 | 含义 |
+| --- | --- |
+| `symbol` | 标准代码(唯一硬性要求,缺 symbol 的帧被丢弃) |
+| `period_end` | 报告期 `YYYY-MM-DD`;缺此列的帧不参与报告期合并,页面按时间排序失效 |
+| `announce_date` | 公告日期 `YYYY-MM-DD`;缺省时按报告期排序,换手率用公告日判业务可用性 |
+
+一个 `financial` 配置覆盖全部五张表,每次请求自动注入 `table`
+参数(`metrics` / `income` / `balance_sheet` / `cash_flow` / `shares`)
+由上游分发返回对应表数据;`shares` 表额外注入 `latest`(当期 `True` /
+全历史 `False`)。映射为「外部字段 → 内部列」一对一:同一外部字段名只能
+映射到一个内部列 — 若两张表存在同名字段且含义不同(如 `total` 在
+balance_sheet 是资产、在 shares 是股本),无法分别映射,需要上游区分字段名
+或只映射其一。两个外部字段映射同一内部列会在保存时被校验拒绝。某批响应
+里完全缺失(而非为 null)的字段该批不落该列,跨批/跨轮合并会自动补 null。
+
+每表 canonical 列(前端财务页与回测基本面因子按此消费;不映射的列在
+页面显示为 —,不影响其他列):
+
+- `metrics` 核心指标: `eps_basic` / `eps_diluted` / `bps`(每股净资产) /
+  `ocfps`(每股经营现金流) / `roe` / `roe_diluted` / `roa` /
+  `gross_margin`(毛利率) / `net_margin`(净利率) / `debt_to_asset_ratio`(资产负债率) /
+  `revenue_yoy`(营收同比) / `net_income_yoy`(净利同比) /
+  `operating_cash_to_revenue`(经营现金/营收) / `inventory_turnover`(存货周转率)
+  —— 注意: 百分比列存**百分点**(12.3 表示 12.3%),与 realtime 的小数制不同
+- `income` 利润表: `revenue`(营收) / `operating_cost`(营业成本) /
+  `operating_profit`(营业利润) / `selling_expense`(销售费用) /
+  `admin_expense`(管理费用) / `rd_expense`(研发费用) /
+  `financial_expense`(财务费用) / `non_operating_income`(营业外收入) /
+  `non_operating_expense`(营业外支出) / `total_profit`(利润总额) /
+  `income_tax`(所得税) / `net_income`(净利润) /
+  `net_income_attributable`(归母净利) / `net_income_deducted`(扣非净利) /
+  `basic_eps` / `diluted_eps` —— 金额单位元
+- `balance_sheet` 资产负债表: `total_assets`(资产总计) /
+  `total_current_assets`(流动资产) / `total_non_current_assets`(非流动资产) /
+  `cash_and_equivalents`(货币资金) / `accounts_receivable`(应收账款) /
+  `inventory`(存货) / `fixed_assets`(固定资产) / `intangible_assets`(无形资产) /
+  `goodwill`(商誉) / `total_liabilities`(负债合计) /
+  `total_current_liabilities`(流动负债) / `total_non_current_liabilities`(非流动负债) /
+  `short_term_borrowing`(短期借款) / `long_term_borrowing`(长期借款) /
+  `accounts_payable`(应付账款) / `total_equity`(所有者权益) /
+  `equity_attributable`(归母权益) / `retained_earnings`(未分配利润) /
+  `minority_interest`(少数股东权益) —— 金额单位元
+- `cash_flow` 现金流量表: `net_operating_cash_flow`(经营净额) /
+  `net_investing_cash_flow`(投资净额) / `net_financing_cash_flow`(筹资净额) /
+  `capex`(资本开支) / `net_cash_change`(现金净增加) —— 金额单位元
+- `shares` 股本: `total_shares`(总股本,股) / `float_shares`(流通股本,股) —
+  历史换手率按公告日(缺则报告期)取有效股本,无 `float_shares` 时回退维表最新股本
+
+被切为财务生效源后,财务同步走独立调度(每周 metrics + 手动全表),
+报告期合并按 `(symbol, period_end)` 逐列取最新非空值:多源字段可并集
+共存互不覆盖(如 TickFlow 补齐 metrics 历史各期,自定义源提供当期报表),
+但切换生效源后**不再拉取的表不会自动清空**,旧数据会保留到被新数据覆盖。
+声明了 financial 但上游某表无数据时返回空即可,已有存量靠合并写入保留。
+
 ## 请求约定
 
 - `daily` / `adj_factor` 会按 `batch` 切分 symbols。
+- `minute` 由 HTTP Provider 自己按 `batch` 发请求并流式返回，核心不再额外按 50 只拆批。
+  `rpm` 在同一源实例的连续调用之间继续限速，避免每次首批都跳过等待；`timeout` 沿用原配置。
+  历史落盘逐帧保存，后续请求失败会明确标记未完成，已写入数据保留，不切换数据源。
 - POST 请求会发送 JSON body: `symbols`、`start_time`、`end_time`。
 - GET 请求会发送 query 参数: `symbols=000001.SZ,600000.SH`。
 - `realtime` 必须是全市场快照接口,不支持逐个 symbol 拉实时行情。
+- `depth5` 会按 `batch` 切分 symbols 逐批请求,只注入代码参数(无 `start_time` / `end_time`)。
+- `financial` 同样按 `batch` 切分逐批请求,只注入代码参数 + `table` 表名(无起止时间);`shares` 表额外注入 `latest`。
 
 可通过这些字段改参数名:
 
@@ -175,6 +260,9 @@ freq_param: period
 ```
 
 配置后，分钟请求会分别传入 `stock` / `etf` / `index` 和 `1m`；留空时不向上游发送这两个参数，以兼容已有数据源。
+
+现有 YAML、Key 和本地分钟分区无需迁移。更新已注册的源配置时，在途流式拉取使用原实例，
+结束后才释放旧连接；新调用使用新实例。盘中 `full_minute` 仍由独立刷新服务调度。
 
 ### 请求超时
 
@@ -251,6 +339,20 @@ cp docs/examples/custom-data-source/mock_source.yaml data/data_sources/mock_sour
 | 实时行情没刷新 | 确认实时数据源已保存为 custom,且返回全市场快照 |
 
 ## 用 AI 生成映射配置
+
+接入沪深股票除权因子时，可让 AI 从现成的研究口径与样例开始。请提供脱敏的事件样例、供应商如何证明某只证券没有事件、是否分页，以及接口对开始日和结束日的定义。确认返回的是单次除权前价与除权后价之比后，在除权因子配置中选择对应的研究口径。若上游提供的是累计数列，先在供应商适配端依据其文档还原单次事件。[可直接试跑的样例](../packages/tivelo-data/README.md#从数据源直接采集沪深除权因子)
+
+这个声明式接口要求一次响应返回本次证券和日期范围内的全部事件。数据引擎会拆分证券和日期窗口。若上游另有翻页游标或单页截断，插件应在返回本次响应前读完上游分页，并在任一页失败时返回错误。试拉时可选一只有多次除权的证券，核对首尾事件及累计因子。[请求与覆盖用例](../packages/tivelo-data/tests/test_cn_http.py)
+
+```text
+请为我的 adj_factor 接口生成可供 TSP 和独立 Tivelo Data 共用的 YAML。
+核对单次事件方向、北京时间除权日、完整响应范围、凭据引用和供应商限流。
+在测试中放入发生除权、已证实无事件、响应中缺席的三只股票。
+通过 plan-http-factors 保存计划，再锁定导入，核对覆盖数和各自的累计因子。
+最后改动一个来源字段，验证旧计划拒绝该变化，原快照仍可读取。
+```
+
+如果还需把同一源用于独立研究快照，先核对可用的采集入口及日期、原价和成交量依据。扩展表、供应商 ZIP 和 AI 客户端各有相应入口。[扩展数据与 AI 接入](secondary-development.md#扩展数据与供应商接入)
 
 如果你的数据源 API 文档比较复杂,可以把 API 文档和返回示例丢给 AI,让它帮你生成 `field_map` 和 YAML 配置。
 

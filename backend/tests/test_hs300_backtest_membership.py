@@ -398,7 +398,11 @@ def test_strategy_api_uses_current_membership(
     )
 
     assert response.status_code == 200
-    assert response.json() == {
+    body = response.json()
+    assert {
+        "error": body["error"],
+        "entries": body["entries"],
+    } == {
         "error": None,
         "entries": {
             "2024-01-31": {MEMBER_A: 1, MEMBER_B: 0},
@@ -406,3 +410,4 @@ def test_strategy_api_uses_current_membership(
             "2024-02-02": {MEMBER_A: 1, MEMBER_B: 0},
         },
     }
+    assert set(body["daily_data_revisions"]) == {"stock", "etf", "index"}

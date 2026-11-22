@@ -138,8 +138,10 @@ def test_legitimate_code_still_passes(code):
 
 
 def test_existing_strategies_in_repo_all_pass():
-    """仓库内全部现有策略文件必须仍通过加固后的校验 (兼容性回归)。"""
+    """现有策略使用加载器的依赖规则进行安全检查。"""
     from pathlib import Path
+
+    from app.strategy.engine import StrategyEngine
 
     backend_dir = Path(__file__).resolve().parents[1]
     project_root = backend_dir.parent
@@ -151,7 +153,7 @@ def test_existing_strategies_in_repo_all_pass():
     for root in roots:
         if root.exists():
             files.extend(sorted(root.rglob("*.py")))
-    files = [f for f in files if f.name != "__init__.py"]
+    files = [f for f in files if not f.name.startswith("_")]
     # HS300 fork 在 data/strategies/ai/.iterations/**/evidence/ 下存放研究脚本
     # (台账证据, 需 import json/os 等, 不是可加载策略) — 只校验真正的策略文件。
     files = [f for f in files if ".iterations" not in f.parts]
@@ -159,7 +161,7 @@ def test_existing_strategies_in_repo_all_pass():
         pytest.skip("no strategy files present")
 
     for path in files:
-        AIStrategyGenerator._validate_safety(path.read_text(encoding="utf-8"))
+        StrategyEngine._validate_file(path)
 
 
 # ================================================================
@@ -193,6 +195,31 @@ def test_engine_load_file_rejects_bypass_payload(tmp_path):
         StrategyEngine._load_file(path)
 
     assert not (tmp_path / "TICK_RCE_PROOF.txt").exists()
+
+
+def test_strategy_validation_accepts_a_safe_local_dependency(tmp_path):
+    from app.strategy.engine import StrategyEngine
+
+    helper = tmp_path / "_helpers.py"
+    helper.write_text("def enabled():\n    return True\n", encoding="utf-8")
+    main = tmp_path / "custom_dep.py"
+    main.write_text(
+        '"""依赖文件策略"""\n'
+        "import polars as pl\n"
+        "from _helpers import enabled\n\n"
+        "def filter(df: pl.DataFrame, params: dict) -> pl.Expr:\n"
+        "    return pl.lit(enabled())\n\n"
+        'META = {"id": "custom_dep", "name": "dep", "description": "dep",\n'
+        '        "scoring": {}}\n',
+        encoding="utf-8",
+    )
+
+    assert StrategyEngine._validate_file(main)[1] == frozenset({"_helpers"})
+    assert StrategyEngine._load_file(main).meta["id"] == "custom_dep"
+
+    helper.write_text("def enabled(\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="策略语法错误"):
+        StrategyEngine._validate_file(main)
 
 
 def test_engine_load_file_rejects_dependency_using_vars(tmp_path):
