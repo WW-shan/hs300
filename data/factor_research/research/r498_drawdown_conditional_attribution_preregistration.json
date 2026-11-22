@@ -1,0 +1,87 @@
+{
+  "round": "R498",
+  "classification": "descriptive drawdown-cluster attribution for the frozen R463 five-leg portfolio; train/validation defines weak-state thresholds; test/recent confirmation only; no promotion",
+  "created_at": "2026-11-22",
+  "source_rounds": ["R452", "R453", "R463"],
+  "source_r463": "r463_hold25_confirm_2026-11-22.json",
+  "benchmark": "000300.SH",
+  "portfolio": {
+    "members": [
+      "ext_alt_hs300_cash_flow_stability_4q_low",
+      "ext_alt_hs300_dividend_yield",
+      "ext_alt_hs300_fund_holding_ratio_low",
+      "ext_alt_hs300_idio_vol_40d_low",
+      "value_quality"
+    ],
+    "directions": {
+      "ext_alt_hs300_cash_flow_stability_4q_low": "high",
+      "ext_alt_hs300_dividend_yield": "high",
+      "ext_alt_hs300_fund_holding_ratio_low": "high",
+      "ext_alt_hs300_idio_vol_40d_low": "high",
+      "value_quality": "high"
+    },
+    "weights": {
+      "ext_alt_hs300_cash_flow_stability_4q_low": 0.225,
+      "ext_alt_hs300_dividend_yield": 0.225,
+      "ext_alt_hs300_fund_holding_ratio_low": 0.225,
+      "ext_alt_hs300_idio_vol_40d_low": 0.225,
+      "value_quality": 0.1
+    },
+    "max_positions": 10,
+    "max_hold_days": 25,
+    "entry_score": 70.0,
+    "exit_score": 40.0,
+    "max_exposure_pct": 1.0
+  },
+  "weak_state": {
+    "definition": "T-1 regime score in the bottom third of the train+validation distribution OR T-1 breadth_above_ma20 below 35%",
+    "threshold_source": "train_and_validation_only",
+    "quantile": 1.0,
+    "t1_alignment": "previous trading day in regime_history"
+  },
+  "leg_contribution": {
+    "method": "daily rank z-score times 5-day forward return, cross-sectional equal-weight mean inside weak and non-weak days",
+    "minimum_cross_section": 30,
+    "horizon_days": 5,
+    "unit": "rank/return covariance proxy, not portfolio PnL"
+  },
+  "gates": {
+    "weak_days_train_min": 80,
+    "weak_days_validation_min": 60,
+    "weak_days_test_min": 80,
+    "weak_days_recent_min": 40,
+    "minimum_leg_observations": 30,
+    "stable_leg_sign_across_windows": true,
+    "no_leverage": true
+  },
+  "bootstrap": {
+    "block_days": 20,
+    "replications": 5000,
+    "seed": 498
+  },
+  "windows": {
+    "train_start": "2022-05-05",
+    "train_end": "2024-05-05",
+    "validation_start": "2024-05-06",
+    "validation_end": "2025-05-05",
+    "test_start": "2025-05-06",
+    "test_end": "2026-11-05",
+    "recent_start": "2025-10-14"
+  },
+  "known_limits": [
+    "This is descriptive attribution and cannot promote R463.",
+    "Weak-state labels are based on lagged market-level data and are not a complete real-time vintage.",
+    "Leg contribution is a rank/return covariance proxy, not actual executed PnL attribution.",
+    "The test/recent windows have been observed before and are confirmation-only.",
+    "Current HS300 membership and industry classification retain survivorship bias.",
+    "5x cost is warning-only and never a hard rejection.",
+    "No leverage and no production activation."
+  ],
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "drawdown_conditional_attribution_complete_no_promotion"
+  }
+}
