@@ -1,0 +1,112 @@
+{
+  "round": "R502",
+  "classification": "bounded replacement audit for the two weakest industry+size-neutral R499 legs; train+validation selection; test/recent confirmation; no promotion unless all gates pass",
+  "created_at": "2026-11-22",
+  "source_rounds": [
+    "R499",
+    "R501"
+  ],
+  "source_r499": "r499_weak_state_value_quality_tilt_2026-11-22.json",
+  "source_r501": "r501_r499_industry_size_neutral_attribution_2026-11-22.json",
+  "benchmark": "000300.SH",
+  "base_members": [
+    "ext_alt_hs300_cash_flow_stability_4q_low",
+    "ext_alt_hs300_dividend_yield",
+    "ext_alt_hs300_fund_holding_ratio_low",
+    "ext_alt_hs300_idio_vol_40d_low",
+    "value_quality"
+  ],
+  "directions": {
+    "ext_alt_hs300_cash_flow_stability_4q_low": "high",
+    "ext_alt_hs300_dividend_yield": "high",
+    "ext_alt_hs300_fund_holding_ratio_low": "high",
+    "ext_alt_hs300_idio_vol_40d_low": "high",
+    "value_quality": "high",
+    "ext_alt_hs300_ocf_margin_4q": "high"
+  },
+  "base_weights": {
+    "ext_alt_hs300_cash_flow_stability_4q_low": 0.2375,
+    "ext_alt_hs300_dividend_yield": 0.2375,
+    "ext_alt_hs300_fund_holding_ratio_low": 0.2375,
+    "ext_alt_hs300_idio_vol_40d_low": 0.2375,
+    "value_quality": 0.05
+  },
+  "weak_state": {
+    "source": "R498 frozen threshold",
+    "score_threshold": 39.0,
+    "breadth_threshold": 0.35,
+    "definition": "T-1 regime score <= threshold OR T-1 breadth_above_ma20 < 0.35"
+  },
+  "replacements": [
+    {
+      "name": "replace_cash_flow_with_ocf_margin",
+      "remove": "ext_alt_hs300_cash_flow_stability_4q_low",
+      "add": "ext_alt_hs300_ocf_margin_4q",
+      "status": "diagnostic_non_admitted"
+    }
+  ],
+  "null_policy": "if no replacement exceeds base on both train and validation without worsening validation bootstrap p05 below -0.01, keep base and reject",
+  "fixed_execution": {
+    "max_positions": 10,
+    "max_hold_days": 25,
+    "entry_score": 70.0,
+    "exit_score": 40.0,
+    "top_rank": 20,
+    "max_exposure_pct": 1.0,
+    "matching": "open_t+1",
+    "cost_main": "2x",
+    "cost_stress": "3x",
+    "cost_diagnostic": "5x",
+    "five_x_hard_rejection": false,
+    "no_leverage": true
+  },
+  "selection": {
+    "basis": "train_and_validation_only",
+    "train_annual_min": 0.03,
+    "validation_annual_min": 0.03,
+    "validation_sharpe_min": 0.45,
+    "validation_mdd_min": -0.18,
+    "validation_bootstrap_p05_min_for_platform": -0.01,
+    "ranking": "maximize min(train,validation) annual; then validation bootstrap p05; then prefer base"
+  },
+  "confirmation_gates": {
+    "test_annual_min": 0.05,
+    "test_sharpe_min": 0.6,
+    "test_mdd_min": -0.18,
+    "recent_annual_min": 0.0,
+    "stress_3x_positive": true,
+    "test_bootstrap_p05_positive": true,
+    "recent_bootstrap_p05_positive": true,
+    "test_excess_hs300_positive": true,
+    "validation_bootstrap_p05_positive": true,
+    "no_leverage": true
+  },
+  "bootstrap": {
+    "block_days": 20,
+    "replications": 5000,
+    "seed": 502
+  },
+  "windows": {
+    "train_start": "2022-05-05",
+    "train_end": "2024-05-05",
+    "validation_start": "2024-05-06",
+    "validation_end": "2025-05-05",
+    "test_start": "2025-05-06",
+    "test_end": "2026-11-05",
+    "recent_start": "2025-10-14"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "industry_size_neutral_leg_replacement_complete"
+  },
+  "known_limits": [
+    "The replacement candidates are selected from prior evidence and are not independent discoveries.",
+    "The test/recent windows have been observed before.",
+    "Current HS300 membership and industry classification retain survivorship bias.",
+    "5x cost is warning-only and never a hard rejection.",
+    "No leverage and no production activation."
+  ]
+}
