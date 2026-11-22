@@ -1,0 +1,70 @@
+{
+  "round": "R511",
+  "classification": "growth acceleration and quality-confirmed growth IC audit; no portfolio promotion",
+  "created_at": "2026-11-22",
+  "source_rounds": ["R412", "R422", "R423", "R475"],
+  "source_data": "data/financials/{metrics,income,balance_sheet,cash_flow}/part.parquet via financial PIT attachment",
+  "benchmark": "000300.SH",
+  "composites": {
+    "growth_acceleration": {
+      "description": "revenue growth YoY change plus net-income growth YoY change",
+      "members": {
+        "revenue_yoy_latest": 0.5,
+        "net_income_yoy_latest": 0.5
+      },
+      "directions": {
+        "revenue_yoy_latest": "high",
+        "net_income_yoy_latest": "high"
+      },
+      "requires_change_vs_lagged_report": true
+    },
+    "quality_confirmed_growth": {
+      "description": "growth level interacted with accrual quality",
+      "members": {
+        "revenue_yoy_latest": 0.35,
+        "net_income_yoy_latest": 0.35,
+        "accrual": 0.30
+      },
+      "directions": {
+        "revenue_yoy_latest": "high",
+        "net_income_yoy_latest": "high",
+        "accrual": "low"
+      },
+      "requires_all_members": true
+    }
+  },
+  "neutralization": {
+    "industry": "industry_l1",
+    "styles": ["log_float_mv"],
+    "shrink": 1.0
+  },
+  "return_horizons": [5, 20, 60],
+  "windows": {
+    "start": "2022-05-05",
+    "end": "2026-11-05",
+    "recent_start": "2025-10-14"
+  },
+  "minimum_cross_section": 30,
+  "gates": {
+    "neutral_directional_ic_positive_all_horizons": true,
+    "newey_west_p_max": 0.1,
+    "bh_q_max": 0.1,
+    "yearly_sign_consistency_min": 0.8,
+    "recent_ic_positive": true,
+    "minimum_valid_dates": 120
+  },
+  "known_limits": [
+    "Approximately 78% of financial rows use statutory-deadline fallback dates rather than true announcement dates.",
+    "This is an IC audit, not a portfolio backtest.",
+    "Industry classification is a current snapshot.",
+    "Current HS300 membership retains survivorship bias.",
+    "No leverage and no production activation."
+  ],
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "growth_acceleration_ic_audit_complete"
+  }
+}
