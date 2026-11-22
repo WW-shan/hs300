@@ -64,6 +64,8 @@ class MatcherConfig:
     trailing_take_profit_drawdown_pct: float | None = None
     max_hold_days: int | None = None
     max_positions: int = 10
+    # 研究/风控可选: 单日最多新开仓数; None 保持原有行为。
+    max_new_positions_per_day: int | None = None
     max_exposure_pct: float = 1.0
     score_min: float | None = None
     score_max: float | None = None
@@ -1837,6 +1839,11 @@ class BacktestEngine:
         cash = float(config.initial_capital)
         peak = cash
         max_positions = max(int(config.max_positions), 0)
+        max_new_positions = (
+            max(int(config.max_new_positions_per_day), 0)
+            if config.max_new_positions_per_day is not None
+            else None
+        )
         max_exposure_pct = min(max(float(config.max_exposure_pct), 0.0), 1.0)
         positions: dict[int, dict] = {}
         last_close = np.full(asset_count, np.nan, dtype=np.float64)
@@ -2161,6 +2168,8 @@ class BacktestEngine:
                     candidates.append((asset, score))
                 candidates.sort(key=lambda item: item[1], reverse=True)
                 slots = max_positions - len(positions)
+                if max_new_positions is not None:
+                    slots = min(slots, max_new_positions)
                 if slots <= 0:
                     execution_stats["buy_no_slot"] += len(candidates)
                 elif candidates:

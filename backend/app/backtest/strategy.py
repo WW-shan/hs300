@@ -639,6 +639,8 @@ class StrategyBacktestConfig:
     stamp_tax_pct: float | None = None
     slippage_bps: float = 5.0
     max_positions: int = 10
+    # 研究/风控可选: 单日最多新开仓数; None 保持原有行为。
+    max_new_positions_per_day: int | None = None
     max_exposure_pct: float = 1.0
     initial_capital: float = 1_000_000.0
     position_sizing: Literal["equal", "score_weight"] = "equal"
@@ -1550,6 +1552,7 @@ class StrategyBacktestService:
             trailing_take_profit_drawdown_pct=trailing_take_profit_drawdown,
             max_hold_days=max_hold_days,
             max_positions=config.max_positions,
+            max_new_positions_per_day=config.max_new_positions_per_day,
             max_exposure_pct=config.max_exposure_pct,
             score_min=score_min,
             score_max=score_max,
@@ -2186,6 +2189,7 @@ class StrategyBacktestService:
             trailing_take_profit_drawdown_pct=trailing_take_profit_drawdown,
             max_hold_days=max_hold_days,
             max_positions=config.max_positions,
+            max_new_positions_per_day=config.max_new_positions_per_day,
             max_exposure_pct=config.max_exposure_pct,
             score_min=score_min,
             score_max=score_max,
@@ -2884,6 +2888,7 @@ class StrategyBacktestService:
             "stamp_tax_pct": c.stamp_tax_pct,
             "slippage_bps": c.slippage_bps,
             "max_positions": c.max_positions,
+            "max_new_positions_per_day": c.max_new_positions_per_day,
             "max_exposure_pct": c.max_exposure_pct,
             "initial_capital": c.initial_capital,
             "position_sizing": c.position_sizing,
