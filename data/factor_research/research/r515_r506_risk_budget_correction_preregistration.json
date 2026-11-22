@@ -1,0 +1,60 @@
+{
+  "round": "R515",
+  "classification": "confirmation correction for R514 dynamic risk budget; same overlays and gates; no reselection",
+  "created_at": "2026-11-22",
+  "source_round": "R514",
+  "source_r514": "r514_r506_dynamic_risk_budget_2026-11-22.json",
+  "overlays": {
+    "baseline": {"type": "none"},
+    "vol_target_10": {"type": "vol_target", "annual_target": 0.10, "lookback_days": 20, "min_weight": 0.25, "max_weight": 1.0},
+    "vol_target_12": {"type": "vol_target", "annual_target": 0.12, "lookback_days": 20, "min_weight": 0.25, "max_weight": 1.0},
+    "vol_target_15": {"type": "vol_target", "annual_target": 0.15, "lookback_days": 20, "min_weight": 0.25, "max_weight": 1.0},
+    "drawdown_10_half": {"type": "drawdown_guard", "threshold": -0.10, "defensive_weight": 0.5, "normal_weight": 1.0},
+    "drawdown_12_half": {"type": "drawdown_guard", "threshold": -0.12, "defensive_weight": 0.5, "normal_weight": 1.0},
+    "drawdown_10_cash": {"type": "drawdown_guard", "threshold": -0.10, "defensive_weight": 0.0, "normal_weight": 1.0}
+  },
+  "selection": {
+    "basis": "train_and_validation_only",
+    "train_annual_min": 0.03,
+    "validation_annual_min": 0.03,
+    "validation_sharpe_min": 0.45,
+    "validation_mdd_min": -0.18,
+    "validation_bootstrap_p05_min_for_platform": -0.01,
+    "ranking": "maximize min(train,validation) annual; then validation bootstrap p05; then higher average exposure"
+  },
+  "confirmation_gates": {
+    "test_annual_min": 0.05,
+    "test_sharpe_min": 0.6,
+    "test_mdd_min": -0.18,
+    "recent_annual_min": 0.0,
+    "stress_3x_positive": true,
+    "validation_bootstrap_p05_positive": true,
+    "test_bootstrap_p05_positive": true,
+    "recent_bootstrap_p05_positive": true,
+    "test_excess_hs300_positive": true,
+    "no_leverage": true
+  },
+  "bootstrap": {"block_days": 20, "replications": 5000, "seed": 515},
+  "windows": {
+    "train_start": "2022-05-05",
+    "train_end": "2024-05-05",
+    "validation_start": "2024-05-06",
+    "validation_end": "2025-05-05",
+    "test_start": "2025-05-06",
+    "test_end": "2026-11-05",
+    "recent_start": "2025-10-14"
+  },
+  "known_limits": [
+    "This corrects a missing confirmation branch in R514, not the overlay definitions.",
+    "Overlays scale an already-simulated equity curve.",
+    "The test/recent windows have been observed before.",
+    "No leverage and no production activation."
+  ],
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "r506_risk_budget_confirmation_corrected"
+  }
+}
