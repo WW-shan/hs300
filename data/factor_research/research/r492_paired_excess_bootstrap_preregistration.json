@@ -1,0 +1,33 @@
+{
+  "round": "R492",
+  "classification": "paired-date moving-block bootstrap separating absolute and HS300 excess tail risk for frozen R490; diagnostic only; no reselection",
+  "created_at": "2026-11-22",
+  "source_round": "R491",
+  "source_result": "r491_weight_quality_audit_2026-11-22.json",
+  "source_selected_label": "equal",
+  "benchmark": "000300.SH",
+  "windows": {
+    "test_start": "2025-05-06",
+    "recent_start": "2025-10-14",
+    "end": "2026-11-05"
+  },
+  "bootstrap": {
+    "block_days": [10, 20, 40],
+    "replications": 5000,
+    "seed": 492,
+    "pairing": "exact shared trading date; fail closed if more than 1% of strategy dates lack benchmark; report missing dates"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "paired_excess_bootstrap_complete"
+  },
+  "known_limits": [
+    "Paired bootstrap resamples historical joint paths only.",
+    "Benchmark is price-only close-to-close and excludes dividends.",
+    "R490 remains rejected regardless of this diagnostic.",
+    "No leverage, orders or production activation."
+  ]
+}
