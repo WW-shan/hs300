@@ -1,0 +1,68 @@
+{
+  "round": "R460",
+  "classification": "T+1 emotion and macro condition audit; supersedes R458 same-month state assignment; no portfolio promotion",
+  "created_at": "2026-11-22",
+  "supersedes_round": "R458",
+  "supersedes_reason": "R458 assigned a month-end emotion state to earlier dates in the same month, creating same-month lookahead.",
+  "factors": {
+    "pb_latest": "low",
+    "ocf_debt": "high",
+    "debt_ratio_latest": "low",
+    "ext_alt_hs300_idio_vol_40d_low": "high"
+  },
+  "sleeves": {
+    "value_quality": {
+      "members": ["pb_latest", "ocf_debt", "debt_ratio_latest"],
+      "weights": {"pb_latest": 0.5, "ocf_debt": 0.4, "debt_ratio_latest": 0.1}
+    },
+    "idio_vol_40_low": {
+      "members": ["ext_alt_hs300_idio_vol_40d_low"],
+      "weights": {"ext_alt_hs300_idio_vol_40d_low": 1.0}
+    }
+  },
+  "conditioners": [
+    "ext_alt_hs300_market_emotion_score",
+    "ext_alt_hs300_market_profit_score",
+    "ext_alt_hs300_market_speculation_score",
+    "ext_alt_hs300_market_breadth_above_ma20",
+    "ext_alt_hs300_shibor_3m_chg_20d",
+    "ext_alt_hs300_m1_m2_scissors_chg_1m",
+    "ext_alt_hs300_ah_premium_chg_1m",
+    "ext_alt_hs300_if_net_short_chg_1m"
+  ],
+  "conditioning": {
+    "partition": "month-end value versus trailing 24-month terciles",
+    "state_effective": "next trading day after month-end",
+    "state_carry": "last effective state, no within-month backfill",
+    "low": "lower third",
+    "mid": "middle third",
+    "high": "upper third",
+    "minimum_history_months": 24
+  },
+  "return_horizons": [20, 60],
+  "windows": {"start": "2022-05-05", "end": "2026-11-05", "recent_start": "2025-10-14"},
+  "minimum_cross_section": 30,
+  "bootstrap": {"block_months": 3, "replications": 5000, "seed": 460},
+  "gates": {
+    "minimum_months_per_state": 8,
+    "minimum_recent_months_per_state": 3,
+    "absolute_high_minus_low_ic_min": 0.02,
+    "bootstrap_ci_excludes_zero": true,
+    "recent_sign_matches_full": true,
+    "bh_q_le": 0.10
+  },
+  "known_limits": [
+    "Conditional IC is not a portfolio return.",
+    "State labels are monthly and take effect only after month-end.",
+    "Some macro conditioners are stale after 2026-10-16; the test end remains 2026-11-05 with as-of state carry only.",
+    "Current HS300 membership and industry classification retain survivorship bias.",
+    "No leverage and no production activation."
+  ],
+  "output_policy": {
+    "status": "emotion_macro_t1_condition_complete_no_promotion",
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  }
+}
