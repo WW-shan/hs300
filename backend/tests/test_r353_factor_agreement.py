@@ -26,6 +26,7 @@ def test_r353_factor_agreement_counts_top_ranked_components() -> None:
         "ocf_ni",
         "accrual",
         "annual_vol_20d",
+        "raw_close",
     }
     frame = pl.DataFrame(
         {
@@ -38,6 +39,7 @@ def test_r353_factor_agreement_counts_top_ranked_components() -> None:
             "ocf_ni": [0.0, 0.0, 10.0, 0.0, 12.0],
             "accrual": [0.0, 0.0, 0.0, 0.0, 0.0],
             "annual_vol_20d": [0.5, 0.4, 0.3, 0.2, 0.1],
+            "raw_close": [10.0, 10.0, 10.0, 10.0, 10.0],
         }
     )
     result = compiled.frame_transform(frame)

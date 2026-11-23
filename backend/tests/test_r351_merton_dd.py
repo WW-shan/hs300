@@ -19,12 +19,18 @@ def test_r351_merton_dd_formula_is_structural_and_backward_looking() -> None:
     compiled = compile_formula(definition["formula"])
 
     assert compiled.ok is True
-    assert compiled.dependencies == {"pb_latest", "debt_ratio_latest", "annual_vol_20d"}
+    assert compiled.dependencies == {
+        "pb_latest",
+        "debt_ratio_latest",
+        "annual_vol_20d",
+        "raw_close",
+    }
     frame = pl.DataFrame(
         {
             "pb_latest": [1.0, 2.0, 3.0, None],
             "debt_ratio_latest": [40.0, 40.0, 80.0, 50.0],
             "annual_vol_20d": [0.20, 0.20, 0.40, 0.20],
+            "raw_close": [10.0, 20.0, 30.0, 40.0],
         }
     )
     result = compiled.frame_transform(frame)
