@@ -5,10 +5,13 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-E = ROOT / "data/factor_research/research"
+FACTOR = ROOT / "data/factor_research"
+E = FACTOR / "research"
 A = ROOT / "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence"
 CORRECTIONS = E / "legacy_sidecar_corrections_2026-11-23.json"
 INVENTORY = E / "research_hygiene_inventory_2026-11-23.json"
+LEGACY_SIDECARS = E / "legacy_orphan_sidecars_2026-11-23.json"
+ROUND_ALIASES = E / "round_alias_crosswalk_2026-11-23.json"
 
 
 def _digest(path: Path) -> str:
@@ -19,68 +22,74 @@ def _is_runtime_artifact(path: Path) -> bool:
     return "__pycache__" in path.parts or path.suffix in {".pyc", ".pyo"}
 
 
+def _is_tracked_immutable_artifact(path: Path) -> bool:
+    return not _is_runtime_artifact(path) and path.suffix not in {".tmp", ".lock"}
+
+
+def _assert_sidecar(path: Path) -> bool:
+    sidecar = path.with_name(path.name + ".sha256")
+    if not sidecar.exists():
+        return False
+    parts = sidecar.read_text(encoding="ascii").strip().split()
+    assert len(parts) == 2, sidecar
+    assert parts[1] == path.name, sidecar
+    assert parts[0] == _digest(path), sidecar
+    return True
+
+
 def _assert_tree_sidecars(root: Path) -> None:
     missing = []
     for path in root.rglob("*"):
-        if not path.is_file() or path.suffix in {".sha256", ".parquet"}:
+        if not path.is_file() or path.suffix == ".sha256":
             continue
-        if _is_runtime_artifact(path):
+        if not _is_tracked_immutable_artifact(path):
             continue
-        sidecar = path.with_name(path.name + ".sha256")
-        if not sidecar.exists():
+        if not _assert_sidecar(path):
             missing.append(path.relative_to(ROOT).as_posix())
-            continue
-        parts = sidecar.read_text(encoding="ascii").strip().split()
-        assert len(parts) == 2, sidecar
-        assert parts[1] == path.name, sidecar
-        assert parts[0] == _digest(path), sidecar
     assert not missing, missing
 
 
 def test_factor_research_tree_is_digest_bound() -> None:
-    _assert_tree_sidecars(E)
+    _assert_tree_sidecars(FACTOR)
 
 
-def test_ai_evidence_tree_is_digest_bound_except_missing_xlsx_gaps() -> None:
-    allowed = {
-        str(ROOT / row["sidecar"]) for row in json.loads(CORRECTIONS.read_text())["missing"]
-    }
-    missing = []
-    for path in A.rglob("*"):
-        if not path.is_file() or path.suffix in {".sha256", ".parquet"}:
-            continue
-        if _is_runtime_artifact(path):
-            continue
-        sidecar = path.with_name(path.name + ".sha256")
-        if not sidecar.exists():
-            if str(sidecar) not in allowed:
-                missing.append(path.relative_to(ROOT).as_posix())
-            continue
-        parts = sidecar.read_text(encoding="ascii").strip().split()
-        assert len(parts) == 2, sidecar
-        assert parts[1] == path.name, sidecar
-        assert parts[0] == _digest(path), sidecar
-    assert not missing, missing
+def test_ai_evidence_tree_is_digest_bound() -> None:
+    _assert_tree_sidecars(A)
 
 
-def test_corrections_and_inventory_are_checksummed() -> None:
-    for path in (CORRECTIONS, INVENTORY):
-        assert _digest(path) == path.with_name(path.name + ".sha256").read_text(
-            encoding="ascii"
-        ).split()[0]
+def test_corrections_and_hygiene_audits_are_checksummed() -> None:
+    for path in (CORRECTIONS, INVENTORY, LEGACY_SIDECARS, ROUND_ALIASES):
+        assert _assert_sidecar(path)
     corrections = json.loads(CORRECTIONS.read_text())
     assert corrections["normalized_count"] == len(corrections["corrections"])
     assert corrections["unresolved_attachment_gaps"] == len(corrections["missing"])
     inventory = json.loads(INVENTORY.read_text())
     assert inventory["factor_output_count"] >= 150
+    assert inventory["evidence_file_count"] == 2121
     assert inventory["evidence_missing_sidecars"] == 0
+    assert inventory["known_gaps"][0]["count"] == 4
+
+
+def test_legacy_orphan_sidecars_are_fully_audited_and_removed() -> None:
+    payload = json.loads(LEGACY_SIDECARS.read_text(encoding="utf-8"))
+    assert payload["count"] == len(payload["rows"]) == 21
+    assert all(row["equivalent_duplicate"] for row in payload["rows"])
+    assert not any((ROOT / row["legacy_sidecar"]).exists() for row in payload["rows"])
+    assert all((ROOT / row["canonical_sidecar"]).exists() for row in payload["rows"])
+
+
+def test_supplemental_round_aliases_are_explicit() -> None:
+    payload = json.loads(ROUND_ALIASES.read_text(encoding="utf-8"))
+    rounds = {row["round"] for row in payload["rows"]}
+    assert rounds == {"R398N", "R398R", "R403N", "R403V2"}
+    for row in payload["rows"]:
+        assert (ROOT / row["runner"]).is_file()
+        assert row["source_round"] in row["round"]
 
 
 def test_preregistration_chain_audit_is_checksummed_and_explicit() -> None:
     path = E / "preregistration_chain_audit_2026-11-23.json"
-    assert _digest(path) == path.with_name(path.name + ".sha256").read_text(
-        encoding="ascii"
-    ).split()[0]
+    assert _assert_sidecar(path)
     payload = json.loads(path.read_text(encoding="utf-8"))
     assert payload["mismatch_count"] == sum(not row["match"] for row in payload["checks"])
     assert payload["mismatch_count"] == 4
