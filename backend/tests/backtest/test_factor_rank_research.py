@@ -410,3 +410,73 @@ def test_matrix_pipeline_neutralization_changes_entry_selection() -> None:
     assert base.entry.sum() == 1
     assert neutral.entry.sum() == 2
     assert neutral.entry[0].tolist() != base.entry[0].tolist()
+
+
+def test_matrix_pipeline_neutralizes_parameter_scoring_when_meta_scoring_is_empty() -> None:
+    """Research strategies carry scoring in params; neutralization must see it.
+
+    ``factor_rank_research`` intentionally keeps ``META["scoring"]`` empty and
+    supplies the factor set through ``params["scoring"]``. The formal backtest
+    path therefore constructs ``MatrixPipelineConfig(scoring={})``. A
+    neutralization pass that only reads the config mapping silently becomes a
+    no-op even though the override was accepted.
+    """
+    from app.backtest.matrix import MatrixPipelineConfig, MatrixStrategyPipeline
+
+    panel = pl.DataFrame(
+        {
+            "symbol": ["A", "B", "C", "D"],
+            "date": [date(2024, 1, 2)] * 4,
+            "open": [10.0] * 4,
+            "high": [10.5] * 4,
+            "low": [9.5] * 4,
+            "close": [10.0] * 4,
+            "volume": [1_000.0] * 4,
+            "amount": [1.0, 2.0, 10.0, 11.0],
+            "turnover_rate": [1.0] * 4,
+            "industry_l1": ["bank", "bank", "tech", "tech"],
+            "log_float_mv": [1.0, 2.0, 3.0, 4.0],
+        }
+    )
+    market = build_market_data_matrix(
+        panel, field_columns={"amount", "turnover_rate", "industry_l1", "log_float_mv"}
+    )
+    strategy = StrategyEngine._load_file(STRATEGY_PATH).matrix_strategy
+    params = {
+        "scoring": {"amount": 1.0},
+        "directions": {"amount": "high"},
+        "entry_score": 0.0,
+        "exit_score": 0.0,
+        "top_rank": 2,
+    }
+    base_config = MatrixPipelineConfig(
+        basic_filter={"enabled": False},
+        scoring={},
+        order_by="score",
+        descending=True,
+        scoring_directions={"amount": "high"},
+    )
+    neutral_config = MatrixPipelineConfig(
+        basic_filter={"enabled": False},
+        scoring={},
+        order_by="score",
+        descending=True,
+        scoring_directions={"amount": "high"},
+        neutralize={
+            "industry": "industry_l1",
+            "styles": ["log_float_mv"],
+            "shrink": 1.0,
+        },
+        industry_by_symbol={
+            "A": "bank",
+            "B": "bank",
+            "C": "tech",
+            "D": "tech",
+        },
+    )
+
+    base = MatrixStrategyPipeline().run(strategy, market, params, base_config)
+    neutral = MatrixStrategyPipeline().run(strategy, market, params, neutral_config)
+
+    assert neutral.entry.tolist() != base.entry.tolist()
+    assert neutral.score.tolist() != base.score.tolist()

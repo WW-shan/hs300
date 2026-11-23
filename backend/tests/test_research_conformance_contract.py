@@ -64,3 +64,23 @@ def test_formal_evidence_requires_saved_project_manifest() -> None:
     assert module._formal_evidence_status(
         {"evidence": {"persistence": {"status": "saved"}}}
     ) == "saved"
+
+
+def test_neutralization_config_reaches_strategy_params_and_evidence_override() -> None:
+    module = _portfolio()
+    config = module._backtest_config(
+        {"factor_a": 1.0},
+        {"factor_a": "high"},
+        start=module.FULL_START,
+        end=module.END,
+        max_positions=20,
+        cost=module._cost_parameters("2x"),
+    )
+    neutralize = {
+        "industry": "industry_l1",
+        "styles": ["log_float_mv"],
+        "shrink": 1.0,
+    }
+    config.overrides = {**(config.overrides or {}), "neutralize": neutralize}
+    assert config.params["scoring"] == {"factor_a": 1.0}
+    assert config.overrides["neutralize"] == neutralize

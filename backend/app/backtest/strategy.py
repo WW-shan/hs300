@@ -363,6 +363,10 @@ class StrategyDependencyResolver:
         required_features.update(_basic_filter_dependencies(basic_filter))
         scoring = effective_scoring(strategy.meta.get("scoring"), overrides)
         required_features.update(scoring_dependencies(scoring))
+        neutralize = effective_neutralize(strategy.meta, overrides)
+        neutralize_style_columns = neutralize_columns(neutralize)
+        if neutralize_style_columns:
+            required_features.update(neutralize_style_columns)
         order_by = strategy.meta.get("order_by")
         if order_by and order_by != "score":
             required_features.add(str(order_by))
@@ -382,6 +386,7 @@ class StrategyDependencyResolver:
             int(strategy.matrix_strategy.required_warmup_bars(params)),
             scoring_warmup_bars(scoring),
             scoring_warmup_bars(parameter_scoring),
+            scoring_warmup_bars({name: 1.0 for name in neutralize_style_columns}),
         )
         ext_columns = {field for field in required_features if field.startswith("ext_")}
         matrix_columns = set(base_columns) | set(instrument_columns) | overlay_fields | ext_columns | {
@@ -1778,14 +1783,21 @@ class StrategyBacktestService:
         if prepared is not None:
             if s.execution_backend != "matrix_native":
                 return _err("共享基础矩阵只能用于 matrix_native 策略")
-            # HS300 运行期会把 config.symbols 补成官方当前名单；这只是
-            # 数据加载边界，不是矩阵构建输入。比较构建签名前恢复显式池。
-            signature_config = replace(
-                config,
-                symbols=None if config.hs300 else config.symbols,
-            )
-            if prepared.signature != self._matrix_prepare_signature(signature_config):
-                return _err("共享基础矩阵与当前回测配置不匹配")
+            # Two valid preparation modes must remain compatible:
+            # - explicit pool (P5/P8 research): the signature carries symbols;
+            # - HS300 auto-expansion: prepare used symbols=None, while run()
+            #   fills the current official list only to bound data loading.
+            # Compare the explicit form first, then the auto-expanded form.
+            signature_config = replace(config, symbols=config.symbols)
+            signature = self._matrix_prepare_signature(signature_config)
+            if prepared.signature != signature:
+                auto_hs300_config = replace(config, symbols=None) if config.hs300 else None
+                if (
+                    auto_hs300_config is None
+                    or prepared.signature
+                    != self._matrix_prepare_signature(auto_hs300_config)
+                ):
+                    return _err("共享基础矩阵与当前回测配置不匹配")
             load_start = prepared.load_start
             load_end = prepared.load_end
             sim_end = prepared.sim_end

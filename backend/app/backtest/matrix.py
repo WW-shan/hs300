@@ -3677,6 +3677,9 @@ class MatrixStrategyPipeline:
                 style_columns = neutralize_columns(config.neutralize)
                 if not style_columns:
                     raise ValueError("矩阵评分中性化缺少 style 字段")
+                scoring_names = _neutralize_scoring_names(config, params)
+                if not scoring_names:
+                    raise ValueError("矩阵评分中性化缺少评分字段")
                 industry_ids = np.asarray(
                     [
                         config.industry_by_symbol.get(symbol, "")
@@ -3685,8 +3688,9 @@ class MatrixStrategyPipeline:
                     dtype=object,
                 )
                 style_values = base_resolver(market, style_columns[0])
-                for name in config.scoring:
-                    if name in set(config.neutralize.get("exclude") or []):
+                excluded = set(config.neutralize.get("exclude") or [])
+                for name in scoring_names:
+                    if name in excluded:
                         continue
                     values = base_resolver(market, name)
                     neutralized[name] = neutralize_matrix_feature(
@@ -3741,6 +3745,30 @@ class MatrixStrategyPipeline:
             entry_signal_ids=signals.entry_signal_ids,
             exit_signal_ids=signals.exit_signal_ids,
         )
+
+
+def _neutralize_scoring_names(
+    config: MatrixPipelineConfig,
+    params: dict,
+) -> list[str]:
+    """Return the score fields owned by either the pipeline or the strategy.
+
+    ``factor_rank_research`` deliberately keeps ``META["scoring"]`` empty and
+    passes its research factor set through ``params["scoring"]``.  The
+    pipeline must neutralize those strategy-owned fields too; otherwise the
+    accepted neutralization override silently leaves the signal matrix
+    unchanged.  Dynamic per-day scoring has no single static cross-section to
+    neutralize, so reject it rather than pretending the override applied.
+    """
+    if config.scoring:
+        return list(config.scoring)
+    dynamic = params.get("dynamic_scoring")
+    if dynamic is not None:
+        raise ValueError("矩阵评分中性化暂不支持 dynamic_scoring")
+    raw = params.get("scoring")
+    if not isinstance(raw, Mapping):
+        return []
+    return [str(name) for name in raw]
 
 
 def _estimate_pipeline_cache_bytes(

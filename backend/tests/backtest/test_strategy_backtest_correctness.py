@@ -557,6 +557,73 @@ def test_matrix_prepare_signature_includes_regime_filter():
     )
 
 
+def test_prepared_explicit_pool_is_compatible_with_hs300_runtime_mask(monkeypatch):
+    """A prepared explicit pool must not be mistaken for an auto HS300 pool."""
+    start = date(2024, 1, 1)
+    panel = pl.DataFrame([
+        {
+            "symbol": "A",
+            "name": "A",
+            "date": start + timedelta(days=offset),
+            "open": 10.0,
+            "high": 10.0,
+            "low": 10.0,
+            "close": 10.0,
+            "volume": 1000.0,
+            "amount": 10_000.0,
+            "raw_close": 10.0,
+            "raw_high": 10.0,
+            "signal_limit_up": False,
+            "signal_limit_down": False,
+        }
+        for offset in range(3)
+    ])
+
+    class AlwaysEntry:
+        def required_fields(self):
+            return frozenset({"close"})
+
+        def required_warmup_bars(self, params):
+            return 1
+
+        def compute_signals(self, market, params):
+            return make_signal_matrix(market.shape, entry=np.ones(market.shape))
+
+    engine = _EngineStub(panel)
+    strategy = _strategy(
+        meta={"id": "rolling", "name": "rolling", "scoring": {}, "params": [], "limit": 100},
+        basic_filter={"enabled": False},
+        filter_fn=None,
+        execution_backend="matrix_native",
+        matrix_strategy=AlwaysEntry(),
+        required_features=frozenset({"amount"}),
+        max_hold_days=1,
+    )
+    service = StrategyBacktestService(engine=engine, strategy_engine=_StrategyEngineStub(strategy))
+    config = StrategyBacktestConfig(
+        strategy_id="rolling",
+        symbols=["A"],
+        start=start,
+        end=start + timedelta(days=2),
+        matching="close_t",
+        fees_pct=0,
+        slippage_bps=0,
+        max_positions=1,
+        hs300=True,
+    )
+    monkeypatch.setattr(
+        "app.backtest.strategy._hs300_membership_frame",
+        lambda _start, _end: pl.DataFrame({
+            "effective_date": [date(1900, 1, 1)],
+            "symbol": ["A"],
+        }),
+    )
+    prepared = service.prepare_matrix_optimization([config])
+    result = service.run(config, prepared=prepared)
+    prepared.compute_cache.close()
+    assert result.error is None
+
+
 def test_matrix_cache_preserves_trades_daily_equity_and_core_stats():
     start = date(2024, 1, 1)
     panel = pl.DataFrame([

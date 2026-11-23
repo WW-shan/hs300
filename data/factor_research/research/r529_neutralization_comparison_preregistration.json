@@ -1,0 +1,72 @@
+{
+  "classification": "formal project-chain raw versus industry+size score-neutralization comparison on the frozen multi_dimension_v1 watch set; no promotion",
+  "created_at": "2026-11-23",
+  "execution": {
+    "cost_label": "2x",
+    "engine": "StrategyBacktestService.run_with_evidence",
+    "leverage": "none",
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0,
+    "max_hold_days": 30,
+    "max_positions": 20,
+    "strategy_id": "factor_rank_research",
+    "top_rank": 20
+  },
+  "factor_set": {
+    "active_version": null,
+    "content_sha256": "sha256:9eb577a43d549e1b9218ae61d125fa393dd65263988f0d5b221067a23c61822b",
+    "membership_status": "watch",
+    "set_id": "multi_dimension_v1",
+    "version": 1
+  },
+  "gates": {
+    "execution_timing_passed": true,
+    "formal_evidence_saved": true,
+    "lookahead_passed": true,
+    "no_leverage": true,
+    "raw_trade_list_differs_from_neutral": true
+  },
+  "industry_source": {
+    "field": "所属同花顺行业",
+    "historical_vintage": "unavailable",
+    "level": "first segment before hyphen",
+    "path": "ext_data/ext_hy_ths/part.parquet"
+  },
+  "known_limits": [
+    "Industry mapping is a current snapshot, not historical PIT.",
+    "Current HS300 membership is applied to history; survivorship bias remains.",
+    "No leverage; maximum exposure is 100%.",
+    "This is a controlled comparison of one frozen factor set, not a new factor search."
+  ],
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false,
+    "status": "neutralization_comparison_complete_no_promotion"
+  },
+  "round": "R529",
+  "source_rounds": [
+    "R408",
+    "R506",
+    "R528"
+  ],
+  "variants": {
+    "industry_size_neutral": {
+      "neutralize": {
+        "industry": "industry_l1",
+        "shrink": 1.0,
+        "styles": [
+          "log_float_mv"
+        ]
+      }
+    },
+    "raw": {
+      "neutralize": null
+    }
+  },
+  "windows": {
+    "end": "2026-11-05",
+    "full_start": "2021-06-01"
+  }
+}

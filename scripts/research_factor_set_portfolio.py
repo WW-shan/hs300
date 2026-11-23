@@ -396,6 +396,51 @@ def _checkpoints(
     }
 
 
+def run_neutralization_comparison(
+    *, max_positions: int = 20, cost_label: str = "2x", hold_days: int = 30,
+) -> dict[str, Any]:
+    """Compare raw and industry+size-neutralized scores on the same project data."""
+    if max_positions <= 0:
+        raise ValueError("max_positions must be positive")
+    if hold_days <= 0:
+        raise ValueError("hold_days must be positive")
+    sets = FactorSetStore(DATA)
+    head = sets.head("multi_dimension_v1")
+    if head is None or head.watch_version is None:
+        raise RuntimeError("multi_dimension_v1 watch version is unavailable")
+    version = sets.load_version("multi_dimension_v1", head.watch_version)
+    scoring, directions, _factor_ids = _portfolio_inputs(version)
+    service = _service()
+    base_config = _backtest_config(
+        scoring, directions,
+        start=FULL_START, end=END,
+        max_positions=max_positions,
+        cost=_cost_parameters(cost_label),
+        max_hold_days=hold_days,
+    )
+    prepared = service.prepare_matrix_optimization([base_config])
+    raw = _run_prepared_with_evidence(
+        service, prepared, scoring, directions,
+        start=FULL_START, end=END,
+        max_positions=max_positions, cost_label=cost_label,
+        label="raw", max_hold_days=hold_days,
+    )
+    neutral = _run_prepared_with_evidence(
+        service, prepared, scoring, directions,
+        start=FULL_START, end=END,
+        max_positions=max_positions, cost_label=cost_label,
+        label="industry_size_neutral", max_hold_days=hold_days,
+        neutralize={"industry": "industry_l1", "styles": ["log_float_mv"], "shrink": 1.0},
+    )
+    return {
+        "raw": raw,
+        "industry_size_neutral": neutral,
+        "delta_total_return": neutral["stats"]["total_return"] - raw["stats"]["total_return"],
+        "delta_max_drawdown": neutral["stats"]["max_drawdown"] - raw["stats"]["max_drawdown"],
+        "delta_sharpe": neutral["stats"]["sharpe"] - raw["stats"]["sharpe"],
+    }
+
+
 def run_industry_capped(
     *, max_positions: int = 20, max_industry_positions: int = 2,
     cost_label: str = "2x", hold_days: int = 30,
