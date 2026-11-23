@@ -44,6 +44,7 @@ logger = logging.getLogger(__name__)
 PIT_FALLBACK_BUFFER_DAYS = 3
 
 # 单表基础财务因子: 因子名 -> (快照列名, 是否除以收盘价, 生效日列)
+# price_ratio=True 使用面板中的原始收盘价; 没有 raw_close 时兼容回退 close。
 BASE_FUNDAMENTAL_FACTORS: dict[str, dict[str, Any]] = {
     "pb_latest": {"column": "bps", "price_ratio": True, "announce_column": "_announce_metrics"},
     "roe_latest": {"column": "roe", "price_ratio": False, "announce_column": "_announce_metrics"},
@@ -735,6 +736,7 @@ def attach_fundamental_factors(
             check_sortedness=False,
         )
         announced = pl.col(announce_column).is_not_null() & (pl.col("date") > pl.col(announce_column))
+        quote = pl.col("raw_close" if "raw_close" in panel.columns else "close")
         expressions = []
         for name in group_names:
             spec = FUNDAMENTAL_FACTORS[name]
@@ -742,7 +744,7 @@ def attach_fundamental_factors(
             if spec["price_ratio"]:
                 value = (
                     pl.when(source > 0)
-                    .then(pl.col("close") / source)
+                    .then(quote / source)
                     .otherwise(None)
                 )
             else:
@@ -791,7 +793,8 @@ def build_fundamental_matrices(
     """为 MarketDataMatrix 构建财务因子 TxN float32 字段。
 
     与 attach_fundamental_factors 同一口径: 按各因子自己的 PIT 生效日,
-    公告日次一交易日起前向填充, 无数据为 NaN。
+    公告日次一交易日起前向填充, 无数据为 NaN。PB 使用原始收盘价，
+    兼容没有原价列的历史输入。
     """
     requested = [str(name) for name in names if str(name) in FUNDAMENTAL_FACTOR_NAMES]
     if not requested:
@@ -838,8 +841,9 @@ def build_fundamental_matrices(
             raw[start:, column_index] = numeric if np.isfinite(numeric) else np.nan
 
         if spec["price_ratio"]:
+            quote = market.fields.get("raw_close", market.close)
             with np.errstate(divide="ignore", invalid="ignore"):
-                matrix = (market.close / raw).astype(np.float32)
+                matrix = (quote / raw).astype(np.float32)
             matrix[~(raw > 0)] = np.nan
             matrix[np.isinf(matrix)] = np.nan
         else:
