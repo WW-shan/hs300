@@ -12,7 +12,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 RESEARCH = DATA / "factor_research" / "research"
-OUTPUT = RESEARCH / "research_asset_ledger_2026-11-24.json"
+OUTPUT = RESEARCH / "research_asset_ledger_2026-11-24_v4.json"
 STRATEGY_DIRS = (
     DATA / "strategies" / "ai",
     DATA / "strategies" / "custom",
@@ -55,6 +55,33 @@ def meta_of(path: Path) -> dict[str, Any] | None:
 
 
 def runner_row(path: Path) -> dict[str, Any]:
+    if path.name in {"research_alt_factor_ic.py", "research_factor_increment.py"}:
+        return {
+            "kind": "runner", "path": rel(path), "sha256": sha(path),
+            "status": "statistical_or_derived",
+            "disposition": "keep",
+            "project_engine": True, "project_data": True,
+            "formal_evidence": False, "external_data": False,
+            "research_type": "statistical_screen",
+        }
+    if path.name == "research_r520_industry_index_feasibility.py":
+        return {
+            "kind": "runner", "path": rel(path), "sha256": sha(path),
+            "status": "external_data_feasibility",
+            "disposition": "keep_as_negative_knowledge",
+            "project_engine": False, "project_data": False,
+            "formal_evidence": False, "external_data": True,
+            "research_type": "external_data_feasibility",
+        }
+    if path.name == "research_r521_industry_index_momentum.py":
+        return {
+            "kind": "runner", "path": rel(path), "sha256": sha(path),
+            "status": "external_data_diagnostic_simulation",
+            "disposition": "keep_as_negative_knowledge",
+            "project_engine": False, "project_data": False,
+            "formal_evidence": False, "external_data": True,
+            "research_type": "external_data_diagnostic_simulation",
+        }
     text = path.read_text(encoding="utf-8")
     imports: set[str] = set()
     try:

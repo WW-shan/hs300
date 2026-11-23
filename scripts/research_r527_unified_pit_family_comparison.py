@@ -376,7 +376,7 @@ def run_hold30_family(prereg: dict[str, Any]) -> dict[str, Any]:
                 hs300=True,
             )
             with r371._patched_membership(membership):
-                result = service.run(config)
+                result = service.run_with_evidence(config)
             if result.error:
                 raise RuntimeError(f"R527 hold30 {kind} {cost}: {result.error}")
             curve = r385._curve_frame(result.equity_curve)
@@ -553,7 +553,7 @@ def run_five_leg_family(prereg: dict[str, Any]) -> dict[str, Any]:
         prepared = p5._extend_prepared_with_panel(
             prepared_base, work, ["_r527_five_leg_composite"]
         )
-        result = service.run(config, prepared=prepared)
+        result = service.run_with_evidence(config, prepared=prepared)
         if result.error:
             raise RuntimeError(result.error)
         curve = pl.DataFrame(

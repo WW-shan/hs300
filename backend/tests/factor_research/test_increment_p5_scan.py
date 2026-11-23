@@ -231,10 +231,16 @@ def test_run_prepared_accepts_cost_override_without_new_engine(monkeypatch) -> N
         stats={},
         trades=[],
         benchmark_curve=[],
+        run_id="formal-p5-test",
+        evidence={
+            "persistence": {"status": "saved"},
+            "lookahead": {"status": "passed"},
+            "execution_timing": {"status": "passed"},
+        },
     )
 
     class FakeService:
-        def run(self, config, prepared):
+        def run_with_evidence(self, config, prepared):
             del prepared
             captured["fees_pct"] = config.fees_pct
             captured["slippage_bps"] = config.slippage_bps

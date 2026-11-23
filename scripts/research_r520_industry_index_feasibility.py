@@ -240,6 +240,7 @@ def main() -> int:
     failure_rows = shenwan_failures + ths_failures
     payload: dict[str, Any] = {
         "round": "R520",
+        "research_type": "external_data_feasibility",
         "classification": prereg["classification"],
         "created_at": str(date.today()),
         "preregistration_sha256": sha(PREREG),

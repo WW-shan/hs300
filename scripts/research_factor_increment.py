@@ -197,6 +197,7 @@ def main() -> int:
         key=lambda item: -(item["directional_delta_mean"] or -999.0),
     )
     payload = {
+        "research_type": "statistical_screen",
         "schema_version": 1,
         "research_id": sha256_json({
             "method_version": METHOD_VERSION,

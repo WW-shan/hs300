@@ -498,6 +498,7 @@ def main() -> int:
     }
     payload = {
         "round": "R521",
+        "research_type": "external_data_diagnostic_simulation",
         "classification": prereg["classification"],
         "preregistration_sha256": sha(PREREG),
         "grid_count": len(rows),

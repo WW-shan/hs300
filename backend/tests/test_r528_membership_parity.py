@@ -24,7 +24,7 @@ def test_r528_pins_framework_membership_and_restores_it() -> None:
     seen = []
 
     class Service:
-        def run(self, config, prepared=None):
+        def run_with_evidence(self, config, prepared=None):
             seen.append(strategy_module._hs300_membership_frame(config.start, config.end))
             return object()
 

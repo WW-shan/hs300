@@ -85,10 +85,19 @@ def classify(path: Path, payload: dict[str, Any] | None) -> dict[str, Any]:
     formal_evidence = "run_with_evidence" in text
     research_claim = any(token in text for token in PORTFOLIO_OUTPUT_TOKENS)
     statistical = any(token.lower() in path.name.lower() for token in STATISTICAL_TOKENS)
+    research_type = str((payload or {}).get("research_type") or "").lower()
     if payload:
         classification = str(payload.get("classification") or "").lower()
         statistical = statistical or any(token in classification for token in STATISTICAL_TOKENS)
-    if research_claim and engine and project_data and formal_evidence:
+    diagnostic_types = {
+        "external_data_feasibility",
+        "external_data_diagnostic_simulation",
+        "statistical_screen",
+        "attribution",
+    }
+    if research_type in diagnostic_types:
+        status = f"diagnostic_{research_type}"
+    elif research_claim and engine and project_data and formal_evidence:
         status = "project_chain_with_formal_evidence"
     elif research_claim and engine and project_data:
         status = "project_chain_without_formal_evidence"
@@ -108,6 +117,7 @@ def classify(path: Path, payload: dict[str, Any] | None) -> dict[str, Any]:
         "formal_run_with_evidence": formal_evidence,
         "external_data_import": external_data,
         "return_metric_claim": research_claim,
+        "research_type": research_type or None,
         "status": status,
     }
 
@@ -118,6 +128,23 @@ def main() -> int:
             encoding="utf-8"
         )
     )
+    amendment = json.loads(
+        (RESEARCH / "r520_r521_research_type_amendment_2026-11-24.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    research_types = {
+        row["runner"]: row["research_type"] for row in amendment["rows"]
+        if row.get("runner") and row.get("research_type")
+    }
+    research_types.update({
+        "scripts/research_r520_industry_index_feasibility.py": "external_data_feasibility",
+        "scripts/research_r521_industry_index_momentum.py": "external_data_diagnostic_simulation",
+    })
+    research_types.update({
+        "scripts/research_alt_factor_ic.py": "statistical_screen",
+        "scripts/research_factor_increment.py": "statistical_screen",
+    })
     runners: dict[str, dict[str, Any]] = {}
     for row in inventory["research_output_rows"]:
         for runner in row.get("runner_candidates") or []:
@@ -134,12 +161,22 @@ def main() -> int:
                 except json.JSONDecodeError:
                     payload = None
             item = classify(path, payload)
+            if payload and payload.get("research_type"):
+                item["research_type"] = str(payload["research_type"])
+                item["status"] = f"diagnostic_{item['research_type']}"
+            elif research_types.get(runner):
+                item["research_type"] = research_types[runner]
+                item["status"] = f"diagnostic_{research_types[runner]}"
             runners[runner] = item
     for path in sorted((ROOT / "scripts").glob("research_*.py")):
         rel = path.relative_to(ROOT).as_posix()
         if rel in runners:
             continue
-        runners[rel] = classify(path, None)
+        item = classify(path, None)
+        if research_types.get(rel):
+            item["research_type"] = research_types[rel]
+            item["status"] = f"diagnostic_{research_types[rel]}"
+        runners[rel] = item
     counts: dict[str, int] = {}
     for item in runners.values():
         counts[item["status"]] = counts.get(item["status"], 0) + 1

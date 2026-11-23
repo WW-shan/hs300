@@ -240,6 +240,7 @@ def main() -> int:
         ),
     )
     payload = {
+        "research_type": "statistical_screen",
         "schema_version": 1,
         "research_id": sha256_json({
             "audit_id": args.audit_id,

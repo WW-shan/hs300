@@ -1040,9 +1040,16 @@ def _run_prepared(
         cost=cost_override or portfolio._cost_parameters(cost_label),
     )
     config.symbols = list(prepared.market_data.symbols)
-    result = service.run(config, prepared=prepared)
+    result = service.run_with_evidence(config, prepared=prepared)
     if result.error:
         raise RuntimeError(f"{label} failed: {result.error}")
+    evidence = result.evidence or {}
+    if evidence.get("persistence", {}).get("status") != "saved":
+        raise RuntimeError(f"{label} formal evidence not saved")
+    if evidence.get("lookahead", {}).get("status") != "passed":
+        raise RuntimeError(f"{label} lookahead audit did not pass")
+    if evidence.get("execution_timing", {}).get("status") != "passed":
+        raise RuntimeError(f"{label} execution timing audit did not pass")
     record = {
         "label": label,
         "start": str(start),
@@ -1053,6 +1060,12 @@ def _run_prepared(
         "stats": _select_stats(result.stats),
         "trade_count": len(result.trades),
         "benchmark_return": portfolio._curve_return(result.benchmark_curve),
+        "formal_evidence": {
+            "run_id": result.run_id,
+            "persistence": evidence.get("persistence", {}).get("status"),
+            "lookahead": evidence.get("lookahead", {}).get("status"),
+            "execution_timing": evidence.get("execution_timing", {}).get("status"),
+        },
     }
     print(
         f"{label}: return={record['stats']['total_return']} "
