@@ -139,9 +139,12 @@ def test_matrix_truncated_audit_can_receive_prefix_mask() -> None:
     def evaluate(data):
         return make_signal_matrix(data.shape, entry=np.ones(data.shape))
 
+    mask = np.ones(market.shape, dtype=bool)
+
     def evaluate_truncated(data, cutoff):
         seen.append(data.shape[0])
         assert data.shape[0] == cutoff + 1
+        assert mask[: cutoff + 1].shape == data.shape
         return evaluate(data)
 
     report = audit_matrix(
