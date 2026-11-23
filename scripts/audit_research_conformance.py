@@ -190,6 +190,8 @@ def classify(path: Path, payload: dict[str, Any] | None) -> dict[str, Any]:
     }
     if research_type in diagnostic_types:
         status = f"diagnostic_{research_type}"
+    elif research_type == "diagnostic_custom_simulation":
+        status = "diagnostic_custom_simulation"
     elif guarded_indirect:
         status = "project_chain_with_formal_evidence"
         formal_evidence = True

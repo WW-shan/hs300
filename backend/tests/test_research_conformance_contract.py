@@ -115,11 +115,14 @@ def test_conformance_classifier_rejects_handwritten_return_simulation_as_derived
 
     result = module.classify(
         ROOT / "scripts/research_r446_defensive_etf_rotation.py",
-        {"classification": "hand-written ETF simulation", "research_type": None},
+        {
+            "classification": "hand-written ETF simulation",
+            "research_type": "diagnostic_custom_simulation",
+        },
     )
     assert result["return_metric_claim"] is True
     assert result["project_engine"] is False
-    assert result["status"] == "non_project_backtest_or_custom_simulation"
+    assert result["status"] == "diagnostic_custom_simulation"
 
 
 def test_formal_evidence_guard_rejects_missing_or_failed_audits() -> None:
@@ -220,7 +223,7 @@ def test_research_standard_rules_amendment_matches_runner_hashes() -> None:
 def test_asset_ledger_has_standard_type_for_every_runner() -> None:
     import json
 
-    path = ROOT / "data/factor_research/research/research_asset_ledger_2026-11-24_v20.json"
+    path = ROOT / "data/factor_research/research/research_asset_ledger_2026-11-24_v21.json"
     payload = json.loads(path.read_text(encoding="utf-8"))
     runners = [row for row in payload["rows"] if row.get("kind") == "runner"]
     assert runners
