@@ -276,6 +276,8 @@ def _run(
     end: date,
     max_positions: int,
     cost_label: str,
+    max_industry_positions: int = 0,
+    industry_by_symbol: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     config = _backtest_config(
         scoring,
@@ -284,6 +286,8 @@ def _run(
         end=end,
         max_positions=max_positions,
         cost=_cost_parameters(cost_label),
+        industry_by_symbol=industry_by_symbol,
+        max_industry_positions=max_industry_positions,
     )
     result = service.run_with_evidence(config)
     if result.error:
@@ -298,6 +302,7 @@ def _run(
         "cost": cost_label,
         "max_positions": max_positions,
         "top_rank": max(20, max_positions),
+        "max_industry_positions": max_industry_positions,
         "error": None,
         "stats": dict(result.stats),
         "trade_count": len(result.trades),
