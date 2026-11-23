@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_industry_cash_macro_gate",
     "name": "HS300行业强弱现金质量宏观闸门",
     "description": "行业强弱现金质量复合，在ERP/信用/期限三闸门放行时持有（实验）",

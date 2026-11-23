@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_industry_momentum_quality",
     "name": "HS300行业动量质量",
     "description": "行业20/60日动量、行业RPS、行业宽度 + 质量 + 低波动（实验）",

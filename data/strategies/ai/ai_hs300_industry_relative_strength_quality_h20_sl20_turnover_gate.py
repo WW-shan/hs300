@@ -7,6 +7,7 @@ when the 2017-extended HS300 turnover z-score is below zero.
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_industry_relative_strength_quality_h20_sl20_turnover_gate",
     "name": "HS300 industry relative strength quality (20d/stop20%/turnover gate)",
     "description": "R102d B sleeve plus hs300_turnover_gate_flag_ext2017; experimental R204 test",

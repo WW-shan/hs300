@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_industry_relative_strength_quality",
     "name": "HS300行业内相对强弱质量",
     "description": "个股相对行业20日强弱 + 行业动量 + 质量 + 现金质量（实验）",

@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_industry_fund_reduction_combo",
     "name": "HS300行业强弱基金减仓组合",
     "description": "行业内相对强弱叠加基金持仓下降、现金质量与质量价值防守（实验）",

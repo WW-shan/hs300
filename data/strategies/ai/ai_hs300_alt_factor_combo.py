@@ -7,6 +7,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_alt_factor_combo",
     "name": "HS300另类因子组合",
     "description": "增持+股东集中度+分红增长+质量价值+现金质量跨维度组合（实验）",

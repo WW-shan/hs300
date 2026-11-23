@@ -6,6 +6,7 @@ R98 显示低基金拥挤组合的收益带有明显行业暴露；本文件把�
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_low_fund_crowding_quality_industry_neutral",
     "name": "HS300低基金拥挤质量(行业中性)",
     "description": "低基金覆盖 + 低基金持股比例 + 质量，评分做行业中性化（实验）",

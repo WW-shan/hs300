@@ -93,3 +93,44 @@ def test_preregistration_chain_audit_is_checksummed_and_explicit() -> None:
     payload = json.loads(path.read_text(encoding="utf-8"))
     assert payload["mismatch_count"] == sum(not row["match"] for row in payload["checks"])
     assert payload["mismatch_count"] == 4
+
+
+def test_research_asset_ledger_matches_current_strategy_contract() -> None:
+    """Every versioned AI strategy must be research-only and contract-complete."""
+    from app.strategy.engine import StrategyEngine
+
+    ai_dir = ROOT / "data" / "strategies" / "ai"
+    engine = StrategyEngine(strategy_dirs=[ai_dir])
+    assert engine.load_errors() == []
+    definitions = engine.strategy_definitions()
+    assert definitions
+    assert all(s.meta.get("research_only") is True for s in definitions)
+    assert all(s.meta.get("params") is not None for s in definitions)
+    assert all(s.meta.get("scoring") for s in definitions)
+    assert all(s.execution_backend in {"polars_expr", "matrix_native"} for s in definitions)
+
+    ledger = json.loads(
+        (E / "research_asset_ledger_2026-11-24.json").read_text(encoding="utf-8")
+    )
+    strategy_rows = [
+        row for row in ledger["rows"]
+        if row.get("kind") == "strategy" and row["path"].startswith("data/strategies/ai/")
+    ]
+    assert len(strategy_rows) == len(definitions)
+    assert all(row["status"] == "valid" for row in strategy_rows)
+    assert all(row["disposition"] == "keep" for row in strategy_rows)
+
+
+def test_strategy_audit_ledger_is_checksummed_and_all_ai_strategies_are_kept() -> None:
+    path = E / "research_asset_ledger_2026-11-24.json"
+    assert _assert_sidecar(path)
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    rows = payload["rows"]
+    ai = [
+        row for row in rows
+        if row.get("kind") == "strategy" and row["path"].startswith("data/strategies/ai/")
+    ]
+    assert len(ai) == len(list((ROOT / "data/strategies/ai").glob("*.py")))
+    assert all(row["status"] == "valid" for row in ai)
+    assert all(row["disposition"] == "keep" for row in ai)
+    assert payload["counts"]["valid"] >= len(ai)

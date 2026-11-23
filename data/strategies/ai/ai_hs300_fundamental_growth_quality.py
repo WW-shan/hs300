@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_fundamental_growth_quality",
     "name": "HS300财报增长质量",
     "description": "ROE/毛利率/净利率/营收与净利增速/低负债/现金含量/低应计复合（实验）",

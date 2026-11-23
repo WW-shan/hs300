@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_earnings_surprise_quality",
     "name": "HS300业绩预期差质量",
     "description": "业绩预告/快报正向预期差 + 质量价值 + 现金质量（实验）",

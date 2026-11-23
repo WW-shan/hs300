@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_trend_confirmation_quality",
     "name": "HS300趋势确认质量",
     "description": "均线乖离、MACD、KDJ、距高点、量能趋势复合 + 财务质量（实验）",

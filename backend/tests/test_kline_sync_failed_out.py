@@ -22,6 +22,7 @@ def repo(tmp_path):
 
 
 def test_accepts_failed_out_and_surfaces_failed_symbols(monkeypatch, repo):
+    monkeypatch.setattr(kline_sync.preferences, "get_daily_data_provider", lambda: "tickflow")
     def fake_sync_daily_batch(symbols, **kwargs):
         # 模拟分块拉取失败: 内部经由 failed_out 出参上报失败标的
         kwargs["failed_out"].extend(["600519.SH", "000001.SZ"])
@@ -39,6 +40,7 @@ def test_accepts_failed_out_and_surfaces_failed_symbols(monkeypatch, repo):
 
 
 def test_failed_out_omitted_still_works(monkeypatch, repo):
+    monkeypatch.setattr(kline_sync.preferences, "get_daily_data_provider", lambda: "tickflow")
     monkeypatch.setattr(
         kline_sync, "sync_daily_batch", lambda symbols, **kw: pl.DataFrame())
     capset = SimpleNamespace(has=lambda cap: True, limits=lambda cap: None)

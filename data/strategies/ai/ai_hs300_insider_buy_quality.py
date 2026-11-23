@@ -7,6 +7,7 @@ PIT 扩展因子 ext_alt_hs300_insider_buy_20d；不宣称已通过可部署门�
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_insider_buy_quality",
     "name": "HS300增持事件质量",
     "description": "董监高真实竞价增持事件内，按事件强度+质量价值+低波动选股（实验）",

@@ -39,6 +39,7 @@ R22~R30 多维度研究更新 (2026-10-17): 默认部署仍为 B80 (80% 低风�
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_multi_factor_rank",
     "name": "HS300多因子截面排名",
     "description": "沪深300成分内按隔夜收益动量与振幅趋势的截面综合评分排序, 买入评分最高的个股等权持有, 止损+最长持有离场",

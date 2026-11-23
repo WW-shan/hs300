@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_industry_relative_strength_quality_h20_sl20_forecastfilter",
     "name": "HS300行业内相对强弱质量(20日/止损20%/负向预告过滤)",
     "description": "R102 行业内相对强弱质量评分和交易规则不变，仅剔除近60日负向业绩预告 (实验)",

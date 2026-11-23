@@ -7,6 +7,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_dual_sleeve_proxy",
     "name": "HS300双袖近似(B腿+宏观闸门)",
     "description": "B 腿评分 + 宏观三闸门硬过滤（双袖候选的单策略近似，实验）",

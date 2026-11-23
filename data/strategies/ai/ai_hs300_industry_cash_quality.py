@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_industry_cash_quality",
     "name": "HS300行业强弱现金质量",
     "description": "行业内相对强弱、质量价值防守、现金质量复合，叠加行业RPS与低波动（实验）",

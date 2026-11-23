@@ -7,6 +7,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_shibor_liquidity_gate",
     "name": "HS300 SHIBOR流动性择时",
     "description": "SHIBOR 3M z-score <0（资金成本偏低/流动性宽松）时持有 HS300，否则空仓（R198 实验）",

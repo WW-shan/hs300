@@ -7,6 +7,7 @@ HS300 成分，否则空仓。信号为市场级，广播到所有标的。
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_turnover_concentration_gate",
     "name": "HS300 成交额集中度择时",
     "description": "HS300 成交额 HHI z-score <0（成交分散/参与广泛）时持有 HS300，否则空仓（R199 实验）",

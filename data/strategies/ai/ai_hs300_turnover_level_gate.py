@@ -7,6 +7,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_turnover_level_gate",
     "name": "HS300 换手率水平择时",
     "description": "HS300 换手率 20 日均值 z-score <0（交易偏冷）时持有 HS300，否则空仓（R201 实验）",

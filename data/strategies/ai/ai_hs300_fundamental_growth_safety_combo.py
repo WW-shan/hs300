@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_fundamental_growth_safety_combo",
     "name": "HS300财报增长安全组合",
     "description": "财报增长质量与安全现金两条复合腿 + 低波动（实验）",

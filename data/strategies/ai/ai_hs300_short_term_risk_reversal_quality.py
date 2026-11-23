@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_short_term_risk_reversal_quality",
     "name": "HS300短期风险反转质量",
     "description": "RSI/KDJ/EMA5/ATR/MACD DEA反向复合 + 财务质量（实验）",

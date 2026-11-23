@@ -7,6 +7,7 @@ R139 双段稳定的 `lhb_event_count_20d_low`（龙虎榜上榜次数反向，�
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_industry_relative_strength_quality_h20_sl20_lhb",
     "name": "HS300行业相对强弱质量(20日/止损20%/龙虎榜倾斜)",
     "description": "R102d B 腿 + 10% 龙虎榜低关注度倾斜（R139 唯一双段稳定 IC 因子，实验）",

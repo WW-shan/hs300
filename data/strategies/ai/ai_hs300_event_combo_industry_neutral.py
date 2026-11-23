@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_event_combo_industry_neutral",
     "name": "HS300事件行为组合(行业中性)",
     "description": "龙虎榜+回购+分析师+业绩预期差+质量，评分做行业中性化（实验）",

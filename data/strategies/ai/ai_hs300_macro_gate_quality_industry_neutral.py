@@ -6,6 +6,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_macro_gate_quality_industry_neutral",
     "name": "HS300宏观三闸门质量(行业中性)",
     "description": "宏观三闸门 + 股东集中度质量，评分做行业中性化（实验）",

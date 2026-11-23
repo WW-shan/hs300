@@ -7,6 +7,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_industry_relative_strength_quality_h20_sl20_shortfilter",
     "name": "HS300行业相对强弱质量(20日/止损20%/融券硬过滤)",
     "description": "R102d B 腿 + 剔除融券拥挤度最高 20% 的硬过滤（R181 因子，实验）",
@@ -50,4 +51,4 @@ def filter(df: pl.DataFrame, params: dict) -> pl.Expr:
         & pl.col("ext_alt_hs300_stock_rel_industry_20d").is_not_null()
         & pl.col("ext_alt_hs300_short_ratio_low").is_not_null()
         & (pl.col("ext_alt_hs300_short_ratio_low") >= pl.col("ext_alt_hs300_short_ratio_low").quantile(0.20))
-    )
+    )

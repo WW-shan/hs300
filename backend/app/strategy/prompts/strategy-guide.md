@@ -55,6 +55,7 @@ META = {
     "order_by": "score",              # 排序字段, 通常用 "score"
     "descending": True,               # True = 从高到低
     "limit": 100,                      # 最多返回条数
+    "research_only": True,             # 研究/实验策略必须为 True, 默认不进入公开列表
 }
 
 # 买入信号 (回测 + 监控用, 根据策略逻辑选择合适的信号列)

@@ -6,6 +6,7 @@ R98 发现基金减仓组合在行业中性后长周期表现改善，因此单�
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_fund_reduction_quality_industry_neutral",
     "name": "HS300基金减仓质量(行业中性)",
     "description": "基金家数/持股比例下降 + 质量，评分做行业中性化（实验）",

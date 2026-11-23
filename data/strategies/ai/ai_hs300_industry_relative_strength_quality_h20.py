@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_industry_relative_strength_quality_h20",
     "name": "HS300行业内相对强弱质量(持有20日)",
     "description": "R101行业相对强弱质量评分不变，持有期由35日优化为20日（实验）",

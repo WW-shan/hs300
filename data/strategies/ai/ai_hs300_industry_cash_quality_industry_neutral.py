@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_industry_cash_quality_industry_neutral",
     "name": "HS300行业强弱现金质量(行业中性0.5)",
     "description": "行业强弱现金质量复合评分做行业中性化，收缩系数0.5（实验）",

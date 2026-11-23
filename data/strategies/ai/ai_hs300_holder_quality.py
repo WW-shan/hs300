@@ -6,6 +6,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_holder_quality",
     "name": "HS300筹码集中质量",
     "description": "前十大流通股东集中度 + 质量价值 + 现金质量（实验）",

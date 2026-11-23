@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_price_position_quality",
     "name": "HS300价格位置质量",
     "description": "一年价格位置、距高点、距低点、布林位置、VWAP乖离复合 + 财务质量（实验）",

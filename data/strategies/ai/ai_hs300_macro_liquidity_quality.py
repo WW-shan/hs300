@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_macro_liquidity_quality",
     "name": "HS300流动性质量",
     "description": "M1-M2剪刀差改善时持有质量/现金/低波动组合（实验）",

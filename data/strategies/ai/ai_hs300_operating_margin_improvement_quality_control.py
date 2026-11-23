@@ -22,6 +22,12 @@ MAX_HOLD_DAYS = 20
 REQUIRED_FEATURES = {"ma60", "industry_l1", "ext_alt_hs300_opm_operating_margin_yoy_change_q"}
 
 
+RULES = """
+1. 候选池与 R272 候选一致：排除金融行业，MA60 与经营利润率改善因子必须有效。
+2. 评分只用质量价值防守与现金质量，不把经营利润率改善计入评分。
+3. 持有 20 个交易日或触发 -20% 止损后离场，作为 R272 的匹配对照。
+"""
+
 def filter(df: pl.DataFrame, params: dict) -> pl.Expr:
     del df, params
     return (

@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_gate_quality_no_holder",
     "name": "HS300闸门质量无holder(机制分解V5)",
     "description": "宏观三闸门 + 质量评分（去掉 holder，其余按比例放大，实验）",

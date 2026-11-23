@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_pledge_quality_industry_neutral",
     "name": "HS300低质押质量(行业中性)",
     "description": "低质押比例/质押下降 + 质量，评分做行业中性化（实验）",

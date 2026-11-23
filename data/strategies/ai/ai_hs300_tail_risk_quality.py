@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_tail_risk_quality",
     "name": "HS300低尾部风险质量",
     "description": "低下行波动、低波动、正偏度、低彩票性、稳定波动状态复合 + 财务质量（实验）",

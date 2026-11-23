@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_b_decomp_hold10",
     "name": "HS300 B分解-持有10日",
     "description": "当前 B 腿评分但持有 10 日（B 腿机制分解 V6，实验）",
@@ -23,8 +24,11 @@ EXIT_SIGNALS = []
 STOP_LOSS = -0.20
 MAX_HOLD_DAYS = 10
 REQUIRED_FEATURES = {"ma60", "ext_alt_hs300_stock_rel_industry_20d", "ext_alt_hs300_industry_mom_20d"}
-RULES = "1. 评分同 B 腿。2. 持有 10 日；-20% 止损。"
-
+RULES = """
+1. 候选池与评分沿用 B 腿：相对强弱、行业动量、质量与现金质量。
+2. 相对强弱和行业动量因子必须有效，MA60 必须有效。
+3. 持有 10 个交易日或触发 -20% 止损后离场。
+"""
 
 def filter(df: pl.DataFrame, params: dict) -> pl.Expr:
     del df, params

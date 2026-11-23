@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_goodwill_quality",
     "name": "HS300商誉研发质量",
     "description": "低商誉、低无形资产、研发强度、低资本开支 + 质量价值/现金质量（实验）",

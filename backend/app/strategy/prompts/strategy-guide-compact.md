@@ -40,6 +40,7 @@ META = {
     "order_by": "score",
     "descending": True,
     "limit": 100,
+    "research_only": True,  # AI 研究草稿默认不进入公开列表
 }
 
 EXECUTION_BACKEND = "polars_expr"

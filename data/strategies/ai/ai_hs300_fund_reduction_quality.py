@@ -6,6 +6,7 @@ R60 的基金持仓季度变化单独没有稳定 IC。本策略把“基金家�
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_fund_reduction_quality",
     "name": "HS300基金减仓质量",
     "description": "基金家数/持股比例季度下降 + 质量价值 + 现金质量（实验）",

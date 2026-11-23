@@ -7,6 +7,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_hk_risk_gate",
     "name": "HS300 港股风险偏好联动择时",
     "description": "恒生指数 20 日动量 >0（港股趋势走强）时持有 HS300，否则空仓（R195 实验）",

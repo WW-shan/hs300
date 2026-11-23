@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_r97_combo",
     "name": "HS300另类因子组合R97",
     "description": "股东净增持/集中度变化/两融/商誉/股权供给/分红收益率/质量价值跨维度组合（实验）",

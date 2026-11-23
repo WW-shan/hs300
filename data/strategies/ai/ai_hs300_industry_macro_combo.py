@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_industry_macro_combo",
     "name": "HS300行业宏观组合",
     "description": "行业RPS/相对强弱 + M1-M2改善 + 质量/现金/低波动（实验）",

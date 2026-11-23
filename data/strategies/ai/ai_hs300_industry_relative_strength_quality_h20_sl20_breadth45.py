@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_industry_relative_strength_quality_h20_sl20_breadth45",
     "name": "HS300行业内相对强弱质量(20日/止损20%/宽度45)",
     "description": "最终R102候选叠加市场站上MA20比例≥45%的开仓闸门，降低回撤（实验）",

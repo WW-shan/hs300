@@ -6,6 +6,7 @@ ERP = 沪深300盈利收益率 - 10年国债收益率。R93 只把它作为接�
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_holder_erp_gate",
     "name": "HS300筹码集中ERP闸门",
     "description": "股东集中度+质量价值+低波动，仅在ERP高于阈值时开新仓（实验）",

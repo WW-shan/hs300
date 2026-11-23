@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_repurchase_quality",
     "name": "HS300回购质量",
     "description": "回购计划公告 + 质量价值 + 现金质量 + 低波动（实验）",

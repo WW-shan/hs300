@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_medium_term_trend_quality",
     "name": "HS300中期趋势质量",
     "description": "30日动量、MA/EMA多窗口乖离、MACD DIF复合 + 财务质量（实验）",

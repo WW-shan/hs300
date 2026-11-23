@@ -56,6 +56,7 @@ R22~R30 多维度研究更新 (2026-10-17): 本文件是默认组合 B80 的低�
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_lowrisk_alpha",
     "name": "HS300低风险超额",
     "description": "沪深300成分内按低成交额/小流通市值/低波动三维等权截面排名选股, 等权持有至多35个交易日",

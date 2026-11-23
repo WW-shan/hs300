@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_b_decomp_indmom_only",
     "name": "HS300 B分解-仅行业动量",
     "description": "仅行业动量 100%（B 腿机制分解 V2，实验）",
@@ -18,8 +19,11 @@ EXIT_SIGNALS = []
 STOP_LOSS = -0.20
 MAX_HOLD_DAYS = 20
 REQUIRED_FEATURES = {"ma60", "ext_alt_hs300_industry_mom_20d"}
-RULES = "1. 评分 = 行业动量。2. 持有 20 日；-20% 止损。"
-
+RULES = """
+1. 候选池沿用 B 腿：MA60 与行业动量因子必须有效。
+2. 评分只使用行业动量，取当日截面高分标的。
+3. 持有 20 个交易日或触发 -20% 止损后离场。
+"""
 
 def filter(df: pl.DataFrame, params: dict) -> pl.Expr:
     del df, params

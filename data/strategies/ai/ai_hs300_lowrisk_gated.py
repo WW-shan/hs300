@@ -11,6 +11,7 @@ v2 (1.02) 且总收益大降 —— 削峰来自低暴露, 不是稳定 alpha。
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_lowrisk_gated",
     "name": "HS300低风险(宽度闸门实验)",
     "description": "v2 三元组评分 + 仅当池内 close>ma20 占比 >= 阈值 时允许开新仓 (研究用)",

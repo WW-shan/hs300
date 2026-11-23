@@ -11,6 +11,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_if_position_gate",
     "name": "HS300 IF持仓净空头变化择时",
     "description": "IF 前 20 席位净空头占比月度变化 >0（净空头下降）时持有 HS300，否则空仓（R187 全过因子，实验）",

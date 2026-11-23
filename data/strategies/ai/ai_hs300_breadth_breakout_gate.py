@@ -7,6 +7,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_breadth_breakout_gate",
     "name": "HS300 新高新低宽度择时",
     "description": "HS300 成分 20 日新高减新低比例 z-score >0 时持有 HS300，否则空仓（R197 实验）",

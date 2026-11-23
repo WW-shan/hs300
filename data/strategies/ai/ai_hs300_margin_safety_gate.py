@@ -7,6 +7,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_margin_safety_gate",
     "name": "HS300 两融维持担保比例择时",
     "description": "两融维持担保比例 z-score >0（杠杆结构更安全）时持有 HS300，否则空仓（R196 实验）",

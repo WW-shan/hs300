@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_dividend_yield_quality",
     "name": "HS300分红收益率质量",
     "description": "TTM分红收益率 + 首次分红 + 分红增长 + 质量价值/现金质量（实验）",

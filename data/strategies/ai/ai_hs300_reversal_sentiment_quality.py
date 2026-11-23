@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_reversal_sentiment_quality",
     "name": "HS300反转情绪质量",
     "description": "短期反转、RSI回落、收盘位置、低换手/低彩票性复合 + 财务质量（实验）",

@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_block_trade_quality",
     "name": "HS300大宗交易质量",
     "description": "低大宗成交占比 + 高成交溢价 + 质量价值 + 低波动（实验）",

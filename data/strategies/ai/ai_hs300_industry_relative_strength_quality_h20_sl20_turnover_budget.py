@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_industry_relative_strength_quality_h20_sl20_turnover_budget",
     "name": "HS300 industry relative strength quality (20d/stop20%/turnover budget)",
     "description": "R102d B sleeve; full entries when turnover gate is on, otherwise only top-3 HS300 relative-strength names",

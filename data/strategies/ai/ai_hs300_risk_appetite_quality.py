@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_risk_appetite_quality",
     "name": "HS300风险偏好质量",
     "description": "ETF份额扩张且QVIX不过热时持有质量/低波动组合（实验）",

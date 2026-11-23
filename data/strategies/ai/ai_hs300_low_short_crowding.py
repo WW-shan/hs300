@@ -6,6 +6,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_low_short_crowding",
     "name": "HS300低融券拥挤度",
     "description": "融券余量占流通股本比例最低的 90 只，20日持有（R181 因子，实验）",
@@ -42,4 +43,4 @@ def filter(df: pl.DataFrame, params: dict) -> pl.Expr:
     return (
         pl.col("ma60").is_not_null()
         & pl.col("ext_alt_hs300_short_ratio_low").is_not_null()
-    )
+    )

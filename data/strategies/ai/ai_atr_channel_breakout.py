@@ -19,6 +19,7 @@ from app.backtest.matrix import (
 from app.strategy.market_data import get_index_daily
 
 META = {
+    "research_only": True,
     "id": "ai_atr_channel_breakout",
     "name": "ATR通道突破",
     "description": "上穿 MA20+KxATR14 上轨(趋势+量能确认), 沪深300 与市场宽度双重环境闸门, 跌破通道下轨或环境转弱时离场",
@@ -123,6 +124,13 @@ ENTRY_SIGNALS = ["signal_atr_channel_breakout"]
 EXIT_SIGNALS = ["signal_atr_channel_breakdown", "signal_regime_exit"]
 STOP_LOSS = -0.08
 MAX_HOLD_DAYS = 30
+
+REQUIRED_FEATURES = {
+    "ma20",
+    "ma60",
+    "atr_14",
+    "vol_ratio_5d",
+}
 
 RULES = """
 1. 入场: 收盘价上穿 MA20 + K_entry x ATR14 上轨 (波动率自适应通道突破事件, 非持续状态)。

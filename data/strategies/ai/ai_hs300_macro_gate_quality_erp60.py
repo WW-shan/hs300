@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_macro_gate_quality_erp60",
     "name": "HS300宏观三闸门质量ERP60",
     "description": "ERP阈值6.0的宏观三闸门质量变体（实验；参数来自同一样本敏感性）",

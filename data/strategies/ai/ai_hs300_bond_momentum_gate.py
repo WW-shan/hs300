@@ -7,6 +7,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_bond_momentum_gate",
     "name": "HS300 国债期货动量择时",
     "description": "10Y 国债期货 20 日动量 <0（收益率上行）时持有 HS300，否则空仓（R193 实验）",

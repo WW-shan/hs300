@@ -20,6 +20,7 @@ META = {
         "uf_low_vol": 0.20,
         "uf_cash_quality": 0.20,
     },
+    "params": [],
     "order_by": "score", "descending": True, "limit": 30,
 }
 EXECUTION_BACKEND = "polars_expr"
@@ -34,6 +35,12 @@ REQUIRED_FEATURES = {
     "ext_alt_hs300_term_spread_10y_2y",
 }
 
+
+RULES = """
+1. 候选池要求 MA60 与股东集中度因子有效。
+2. 开仓要求 ERP 不低于 5.5、期限利差不低于 0.3，仅移除信用利差门禁。
+3. 评分由股东集中度、质量价值、低波与现金质量构成；持有 35 个交易日。
+"""
 
 def filter(df: pl.DataFrame, params: dict) -> pl.Expr:
     del df, params

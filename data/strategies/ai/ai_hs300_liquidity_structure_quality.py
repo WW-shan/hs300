@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_liquidity_structure_quality",
     "name": "HS300流动性结构质量",
     "description": "低成交额/换手/换手波动、高非流动性、低成交额对数复合 + 财务质量（实验）",

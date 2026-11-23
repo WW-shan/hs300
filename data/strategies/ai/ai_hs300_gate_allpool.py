@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_gate_allpool",
     "name": "HS300闸门全池(机制分解V1)",
     "description": "宏观三闸门开启时持有流动性最好的股票（无质量评分，实验）",

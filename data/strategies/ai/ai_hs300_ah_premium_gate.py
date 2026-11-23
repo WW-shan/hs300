@@ -7,6 +7,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_ah_premium_gate",
     "name": "HS300 A-H溢价择时",
     "description": "A-H溢价20日中位数 z-score <0（A股相对便宜）时持有 HS300，否则空仓（R194 实验）",

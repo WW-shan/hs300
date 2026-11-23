@@ -7,6 +7,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_gate_closed_leg",
     "name": "HS300闸门关闭腿",
     "description": "仅闸门关闭时开仓，用关闭期专属因子（R154 发现，实验）",

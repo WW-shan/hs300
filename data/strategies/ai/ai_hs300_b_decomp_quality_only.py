@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_b_decomp_quality_only",
     "name": "HS300 B分解-仅质量",
     "description": "仅质量+现金 50/50（B 腿机制分解 V3，实验）",
@@ -18,8 +19,11 @@ EXIT_SIGNALS = []
 STOP_LOSS = -0.20
 MAX_HOLD_DAYS = 20
 REQUIRED_FEATURES = {"ma60"}
-RULES = "1. 评分 = 质量 50% + 现金 50%。2. 持有 20 日；-20% 止损。"
-
+RULES = """
+1. 候选池沿用 B 腿：MA60 必须有效。
+2. 评分由质量价值防守与现金质量各 50% 构成。
+3. 持有 20 个交易日或触发 -20% 止损后离场。
+"""
 
 def filter(df: pl.DataFrame, params: dict) -> pl.Expr:
     del df, params

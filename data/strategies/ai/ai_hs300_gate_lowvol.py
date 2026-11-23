@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_gate_lowvol",
     "name": "HS300闸门低波(机制分解V4)",
     "description": "宏观三闸门开启时按低波动排序（实验）",

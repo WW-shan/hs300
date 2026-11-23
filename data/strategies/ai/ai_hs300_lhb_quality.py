@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_lhb_quality",
     "name": "HS300龙虎榜资金质量",
     "description": "龙虎榜净买/机构净买 + 低上榜拥挤 + 质量价值 + 低波动（实验）",

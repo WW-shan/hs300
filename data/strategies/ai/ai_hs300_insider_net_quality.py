@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_insider_net_quality",
     "name": "HS300内部人净增持质量",
     "description": "董监高净增持 + 减持事件反向 + 质量价值 + 低波动（实验）",

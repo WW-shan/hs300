@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_industry_cash_breadth_gate",
     "name": "HS300行业低风险质量宽度闸门",
     "description": "行业相对强弱+低波+质量，在市场站上MA20比例达阈值时持有（实验）",

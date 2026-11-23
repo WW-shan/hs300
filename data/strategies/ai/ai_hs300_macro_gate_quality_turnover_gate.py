@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_macro_gate_quality_turnover_gate",
     "name": "HS300 macro-gate quality with turnover gate",
     "description": "R125 A sleeve plus hs300_turnover_gate_flag_ext2017; experimental R206 test",

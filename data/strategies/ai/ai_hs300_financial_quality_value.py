@@ -6,6 +6,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_financial_quality_value",
     "name": "HS300财务质量价值",
     "description": "质量价值防守 + 现金质量 + 低波动（实验）",

@@ -6,6 +6,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_dividend_quality",
     "name": "HS300分红增长质量",
     "description": "TTM现金分红增长 + 质量价值 + 现金质量（实验）",

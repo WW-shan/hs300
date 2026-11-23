@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_macro_gate_quality",
     "name": "HS300宏观三闸门质量",
     "description": "ERP、信用利差、期限利差同时满足时持有股东集中度+质量价值+低波动（实验）",

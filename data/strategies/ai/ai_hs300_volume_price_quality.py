@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_volume_price_quality",
     "name": "HS300量价结构质量",
     "description": "量价相关、OBV趋势、成交额放大、量能趋势、收盘位置复合 + 财务质量（实验）",

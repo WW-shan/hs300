@@ -24,6 +24,7 @@ META = {
         "uf_low_vol": 0.20,
         "uf_cash_quality": 0.20,
     },
+    "params": [],
     "order_by": "score",
     "descending": True,
     "limit": 30,

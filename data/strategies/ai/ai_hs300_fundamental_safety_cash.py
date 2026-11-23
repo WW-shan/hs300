@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_fundamental_safety_cash",
     "name": "HS300财报安全现金",
     "description": "低负债/OCF覆盖负债/现金含量/低应计/毛利率复合（实验）",

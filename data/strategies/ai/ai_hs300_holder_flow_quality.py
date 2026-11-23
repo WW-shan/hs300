@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_holder_flow_quality",
     "name": "HS300股东资金流质量",
     "description": "重要股东90日净增持 + 前十大流通股东环比变化 + 质量价值/现金质量（实验）",

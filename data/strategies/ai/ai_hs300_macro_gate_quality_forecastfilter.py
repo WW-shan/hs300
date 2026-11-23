@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_macro_gate_quality_forecastfilter",
     "name": "HS300宏观三闸门质量(负向预告过滤)",
     "description": "宏观三闸门质量评分不变，仅剔除近60日负向业绩预告 (实验)",

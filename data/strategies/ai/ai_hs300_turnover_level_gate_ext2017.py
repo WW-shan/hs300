@@ -9,6 +9,7 @@ through 2017 so the 2018-2026 coverage test is not penalized by a missing
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_turnover_level_gate_ext2017",
     "name": "HS300 turnover-level timing (2017 history extended)",
     "description": "HS300 turnover 20d mean expanding z-score <0 (cool trading) holds HS300, otherwise cash (R203 experiment)",

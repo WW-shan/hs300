@@ -7,6 +7,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_low_fund_crowding_quality",
     "name": "HS300低基金拥挤质量",
     "description": "低基金覆盖 + 低基金持股比例 + 质量价值 + 现金质量（实验）",

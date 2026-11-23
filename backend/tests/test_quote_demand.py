@@ -10,6 +10,21 @@ from app.services.index_const import CORE_INDEX_SYMBOLS
 
 @pytest.fixture
 def market(monkeypatch, tmp_path):
+    # QuoteService derives watchlist and source-stamp state from the shared settings
+    # directory.  Point that root at tmp_path so the fixture never reads or writes
+    # a developer's live preferences/watchlist.
+    from app.config import settings
+    monkeypatch.setattr(settings, "data_dir", tmp_path)
+    monkeypatch.setattr(
+        preferences,
+        "load",
+        lambda: {
+            "realtime_data_provider": "tickflow",
+            "realtime_pull_stock": True,
+            "realtime_pull_etf": False,
+        },
+    )
+    monkeypatch.setattr(preferences, "data_source_stamp", lambda: ("test-source",))
     monkeypatch.setattr(watchlist, "list_symbols", lambda: [
         {"symbol": "000985.SH"}, {"symbol": "159558.SZ"}, {"symbol": "600519.SH"},
     ])

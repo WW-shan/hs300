@@ -2,6 +2,7 @@
 import polars as pl
 
 META = {
+    "research_only": True,
     "id": "ai_hs300_sentiment_tail_combo",
     "name": "HS300情绪尾部组合",
     "description": "反转情绪与低尾部风险两条复合腿 + 质量价值（实验）",
