@@ -66,3 +66,13 @@ def test_corrections_and_inventory_are_checksummed() -> None:
     inventory = json.loads(INVENTORY.read_text())
     assert inventory["factor_output_count"] >= 150
     assert inventory["evidence_missing_sidecars"] == 0
+
+
+def test_preregistration_chain_audit_is_checksummed_and_explicit() -> None:
+    path = E / "preregistration_chain_audit_2026-11-23.json"
+    assert _digest(path) == path.with_name(path.name + ".sha256").read_text(
+        encoding="ascii"
+    ).split()[0]
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    assert payload["mismatch_count"] == sum(not row["match"] for row in payload["checks"])
+    assert payload["mismatch_count"] == 4
