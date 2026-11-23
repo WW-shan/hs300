@@ -14,7 +14,7 @@ from collections import OrderedDict
 from collections.abc import Callable, Iterator, Mapping, Sequence
 from contextlib import contextmanager, nullcontext
 from contextvars import ContextVar
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import date
 from pathlib import Path
 from types import MappingProxyType
@@ -39,7 +39,11 @@ from app.price_limits import (
     parse_listing_date,
     write_numpy_price_limit_matrix,
 )
-from app.strategy.scoring import SCORING_DIRECTION_LOW
+from app.strategy.scoring import (
+    SCORING_DIRECTION_LOW,
+    neutralize_columns,
+    neutralize_enabled,
+)
 
 try:
     from numba import njit, prange
@@ -3605,6 +3609,8 @@ class MatrixPipelineConfig:
     descending: bool
     scoring_directions: dict[str, str] = field(default_factory=dict)
     asset_mask: np.ndarray | None = None
+    neutralize: Mapping[str, Any] | None = None
+    industry_by_symbol: Mapping[str, str] | None = None
     protect_strategy_cache: bool = False
 
 
@@ -3663,7 +3669,51 @@ class MatrixStrategyPipeline:
         )
         with cache_scope:
             basic_mask = build_pipeline_filter_mask(market, config)
+            base_resolver = decision_feature if dynamic else matrix_feature
+            neutralized: dict[str, np.ndarray] = {}
+            if neutralize_enabled(config.neutralize):
+                if not config.industry_by_symbol:
+                    raise ValueError("矩阵评分中性化缺少 industry_by_symbol")
+                style_columns = neutralize_columns(config.neutralize)
+                if not style_columns:
+                    raise ValueError("矩阵评分中性化缺少 style 字段")
+                industry_ids = np.asarray(
+                    [
+                        config.industry_by_symbol.get(symbol, "")
+                        for symbol in market.symbols
+                    ],
+                    dtype=object,
+                )
+                style_values = base_resolver(market, style_columns[0])
+                for name in config.scoring:
+                    if name in set(config.neutralize.get("exclude") or []):
+                        continue
+                    values = base_resolver(market, name)
+                    neutralized[name] = neutralize_matrix_feature(
+                        values,
+                        basic_mask,
+                        industry_ids,
+                        style_values,
+                        shrink=float(config.neutralize.get("shrink", 1.0)),
+                    )
+                # 中性化后的评分必须进入策略自身的阈值/排名逻辑，不能只改
+                # 展示用 score。把中性化字段替换进矩阵副本后重算入场和离场。
+                neutral_fields = MappingProxyType({**market.fields, **neutralized})
+                neutral_market = replace(market, fields=neutral_fields, _valid_bars=None)
+                signals = (
+                    current_replay().dynamic_signals(strategy, neutral_market, params)
+                    if dynamic
+                    else strategy.compute_signals(neutral_market, params)
+                )
+                validate_signal_matrix(signals, market.shape)
+
             entry = (signals.entry.astype(bool) & basic_mask).astype(np.uint8)
+
+            def resolve_feature(current_market, name):
+                if name in neutralized:
+                    return neutralized[name]
+                return base_resolver(current_market, name)
+
             score = build_matrix_score(
                 market,
                 entry.astype(bool),
@@ -3672,7 +3722,7 @@ class MatrixStrategyPipeline:
                 config.descending,
                 fallback=signals.score,
                 directions=config.scoring_directions,
-                resolve_feature=decision_feature if dynamic else matrix_feature,
+                resolve_feature=resolve_feature,
             )
             entry_codes = np.where(entry != 0, signals.entry_signal_code, -1).astype(np.int16)
             exit_codes = np.where(signals.exit != 0, signals.exit_signal_code, -1).astype(np.int16)
@@ -3792,6 +3842,66 @@ def _build_basic_filter_mask_uncached(market: MarketDataMatrix, config: dict) ->
             board_mask[asset_id] = _symbol_in_boards(symbol, boards)
         mask &= board_mask[None, :]
     return mask
+
+
+def neutralize_matrix_feature(
+    values: np.ndarray,
+    universe: np.ndarray,
+    industry_ids: np.ndarray,
+    style_values: np.ndarray | None = None,
+    *,
+    shrink: float = 1.0,
+) -> np.ndarray:
+    """Industry/size-neutralize one matrix feature without crossing dates.
+
+    Mirrors the Polars scoring contract: demean and z-score within each
+    (date, industry), optionally residualize against one style field first,
+    then blend the neutral value with the raw value by ``shrink``.
+    """
+    if values.shape != universe.shape:
+        raise ValueError("neutralization values and universe must have equal shape")
+    if industry_ids.shape != (values.shape[1],):
+        raise ValueError("neutralization industry ids must match asset axis")
+    if not 0.0 <= shrink <= 1.0:
+        raise ValueError("neutralization shrink must be between 0 and 1")
+    output = np.array(values, dtype=np.float32, copy=True)
+    valid = np.isfinite(values) & universe
+    if style_values is not None:
+        if style_values.shape != values.shape:
+            raise ValueError("neutralization style values must match feature shape")
+        valid &= np.isfinite(style_values)
+    for time_id in range(values.shape[0]):
+        row_valid = valid[time_id]
+        if not row_valid.any():
+            continue
+        raw = values[time_id].astype(np.float64, copy=True)
+        work = raw.copy()
+        if style_values is not None:
+            style = style_values[time_id].astype(np.float64, copy=True)
+            mean_raw = float(raw[row_valid].mean())
+            mean_style = float(style[row_valid].mean())
+            centered = raw - mean_raw
+            style_centered = style - mean_style
+            denom = float(np.dot(style_centered[row_valid], style_centered[row_valid]))
+            beta = (
+                float(np.dot(centered[row_valid], style_centered[row_valid])) / denom
+                if denom > 0.0
+                else 0.0
+            )
+            work = centered - beta * style_centered
+        neutral = np.full(values.shape[1], np.nan, dtype=np.float64)
+        for industry in set(industry_ids[row_valid].tolist()):
+            group = row_valid & (industry_ids == industry)
+            if not group.any():
+                continue
+            group_values = work[group]
+            mean = float(group_values.mean())
+            std = float(group_values.std(ddof=0))
+            neutral[group] = (group_values - mean) / std if std > 1e-12 else 0.0
+        output[time_id, row_valid] = (
+            shrink * neutral[row_valid] + (1.0 - shrink) * raw[row_valid]
+        ).astype(np.float32)
+    return output
 
 
 def build_matrix_score(

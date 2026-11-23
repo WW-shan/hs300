@@ -336,3 +336,77 @@ def test_dynamic_scoring_matches_per_date_static_scoring():
     )
     np.testing.assert_allclose(dynamic.score[0], first.score[0])
     np.testing.assert_allclose(dynamic.score[1], second.score[1])
+
+
+def test_matrix_pipeline_neutralization_changes_entry_selection() -> None:
+    from app.backtest.matrix import MatrixPipelineConfig, MatrixStrategyPipeline
+
+    panel = pl.DataFrame(
+        {
+            "symbol": ["A", "B", "C", "D"],
+            "date": [date(2024, 1, 2)] * 4,
+            "open": [10.0] * 4,
+            "high": [10.5] * 4,
+            "low": [9.5] * 4,
+            "close": [10.0] * 4,
+            "volume": [1_000.0] * 4,
+            "amount": [1.0, 2.0, 10.0, 11.0],
+            "turnover_rate": [1.0] * 4,
+            "industry_l1": ["bank", "bank", "tech", "tech"],
+            "log_float_mv": [1.0, 2.0, 3.0, 4.0],
+        }
+    )
+    market = build_market_data_matrix(
+        panel, field_columns={"amount", "turnover_rate", "industry_l1", "log_float_mv"}
+    )
+    strategy = StrategyEngine._load_file(STRATEGY_PATH).matrix_strategy
+    base = MatrixStrategyPipeline().run(
+        strategy,
+        market,
+        {
+            "scoring": {"amount": 1.0},
+            "directions": {"amount": "high"},
+            "entry_score": 0.0,
+            "exit_score": 0.0,
+            "top_rank": 1,
+        },
+        MatrixPipelineConfig(
+            basic_filter={"enabled": False},
+            scoring={"amount": 1.0},
+            order_by="score",
+            descending=True,
+            scoring_directions={"amount": "high"},
+        ),
+    )
+    neutral = MatrixStrategyPipeline().run(
+        strategy,
+        market,
+        {
+            "scoring": {"amount": 1.0},
+            "directions": {"amount": "high"},
+            "entry_score": 0.0,
+            "exit_score": 0.0,
+            "top_rank": 2,
+        },
+        MatrixPipelineConfig(
+            basic_filter={"enabled": False},
+            scoring={"amount": 1.0},
+            order_by="score",
+            descending=True,
+            scoring_directions={"amount": "high"},
+            neutralize={
+                "industry": "industry_l1",
+                "styles": ["log_float_mv"],
+                "shrink": 1.0,
+            },
+            industry_by_symbol={
+                "A": "bank",
+                "B": "bank",
+                "C": "tech",
+                "D": "tech",
+            },
+        ),
+    )
+    assert base.entry.sum() == 1
+    assert neutral.entry.sum() == 2
+    assert neutral.entry[0].tolist() != base.entry[0].tolist()

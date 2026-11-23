@@ -119,6 +119,19 @@ def test_matrix_causal_rolling_passes_without_modifying_inputs():
     np.testing.assert_equal(market.close, original)
 
 
+def test_matrix_neutralization_changes_within_industry_ranking() -> None:
+    from app.backtest.matrix import neutralize_matrix_feature
+
+    values = np.array([[1.0, 2.0, 10.0, 11.0]], dtype=np.float32)
+    universe = np.ones_like(values, dtype=bool)
+    industries = np.array(["bank", "bank", "tech", "tech"], dtype=object)
+    neutral = neutralize_matrix_feature(values, universe, industries)
+    assert neutral[0, 0] < neutral[0, 1]
+    assert neutral[0, 2] < neutral[0, 3]
+    assert abs(float(neutral[0, :2].mean())) < 1e-6
+    assert abs(float(neutral[0, 2:].mean())) < 1e-6
+
+
 def test_matrix_truncated_audit_can_receive_prefix_mask() -> None:
     market = build_market_data_matrix(_panel())
     seen: list[int] = []

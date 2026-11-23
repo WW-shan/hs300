@@ -246,6 +246,49 @@ def _formal_evidence_status(result: Any) -> str:
     return status if status in {"saved", "error", "missing"} else "missing"
 
 
+def _run_prepared_with_evidence(
+    service: StrategyBacktestService,
+    prepared,
+    scoring: dict[str, float],
+    directions: dict[str, str],
+    *,
+    start: date,
+    end: date,
+    max_positions: int,
+    cost_label: str,
+    label: str,
+    max_hold_days: int = 30,
+    neutralize: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Formal project evidence for a matrix strategy with an injected panel."""
+    config = _backtest_config(
+        scoring, directions,
+        start=start, end=end, max_positions=max_positions,
+        cost=_cost_parameters(cost_label), max_hold_days=max_hold_days,
+    )
+    prepared_symbols = prepared.signature[1]
+    config.symbols = None if prepared_symbols is None else list(prepared_symbols)
+    if neutralize is not None:
+        config.overrides = {**(config.overrides or {}), "neutralize": neutralize}
+    result = service.run_with_evidence(config, prepared=prepared)
+    if result.error:
+        raise RuntimeError(f"{label} failed: {result.error}")
+    status = _formal_evidence_status(result)
+    if status != "saved":
+        raise RuntimeError(f"{label} formal evidence not saved: {status}")
+    return {
+        "label": label,
+        "run_id": result.run_id,
+        "stats": dict(result.stats),
+        "trades": len(result.trades),
+        "formal_evidence": {
+            "status": status,
+            "lookahead": result.evidence.get("lookahead"),
+            "execution_timing": result.evidence.get("execution_timing"),
+        },
+    }
+
+
 def _industry_cap_from_project_data(
     *, max_industry_positions: int = 2,
 ) -> tuple[dict[str, str], int]:

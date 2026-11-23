@@ -71,12 +71,12 @@ from app.strategy.engine import StrategyDataContext, StrategyDef, StrategyEngine
 from app.strategy.scoring import (
     SCORING_DIRECTION_LOW,
     effective_neutralize,
-    neutralize_columns,
-    neutralize_enabled,
-    neutralize_scoring_columns,
     effective_scoring,
     effective_scoring_directions,
     materialize_scoring_columns,
+    neutralize_columns,
+    neutralize_enabled,
+    neutralize_scoring_columns,
     scoring_dependencies,
     scoring_value_expr,
     scoring_warmup_bars,
@@ -1015,7 +1015,16 @@ class StrategyBacktestService:
             config.holding_days,
             config.minute_fill,
             config.price_basis,
-            json.dumps(config.overrides or {}, sort_keys=True, ensure_ascii=False, default=str),
+            json.dumps(
+                {
+                    key: value
+                    for key, value in (config.overrides or {}).items()
+                    if key != "neutralize"
+                },
+                sort_keys=True,
+                ensure_ascii=False,
+                default=str,
+            ),
             json.dumps(config.regime_filter or {}, sort_keys=True, ensure_ascii=False, default=str),
             config.hs300,
         )
@@ -1422,8 +1431,16 @@ class StrategyBacktestService:
             sim_encoding=sim_encoding,
         )
 
-    def run_with_evidence(self, config, progress_cb=None, cancel_event=None) -> StrategyBacktestResult:
-        """正式交互回测启用检查和留档；优化器继续复用轻量 run。"""
+    def run_with_evidence(
+        self,
+        config,
+        progress_cb=None,
+        cancel_event=None,
+        prepared: PreparedMatrixBacktest | None = None,
+        result_policy: BacktestResultPolicy | None = None,
+        prepared_panel: PreparedPanelBacktest | None = None,
+    ) -> StrategyBacktestResult:
+        """正式回测启用检查和留档；优化器继续复用轻量 run。"""
         from app.backtest.evidence import EvidenceRecorder, save_evidence
 
         started = time.perf_counter()
@@ -1445,7 +1462,15 @@ class StrategyBacktestService:
         self.engine._evidence = recorder
         self.engine._entry_data = inputs
         try:
-            result = self.run(config, progress_cb, cancel_event, evidence=recorder)
+            result = self.run(
+                config,
+                progress_cb,
+                cancel_event,
+                prepared=prepared,
+                result_policy=result_policy,
+                prepared_panel=prepared_panel,
+                evidence=recorder,
+            )
             if result.error is None:
                 try:
                     version = inputs.freeze()
@@ -1753,7 +1778,13 @@ class StrategyBacktestService:
         if prepared is not None:
             if s.execution_backend != "matrix_native":
                 return _err("共享基础矩阵只能用于 matrix_native 策略")
-            if prepared.signature != self._matrix_prepare_signature(config):
+            # HS300 运行期会把 config.symbols 补成官方当前名单；这只是
+            # 数据加载边界，不是矩阵构建输入。比较构建签名前恢复显式池。
+            signature_config = replace(
+                config,
+                symbols=None if config.hs300 else config.symbols,
+            )
+            if prepared.signature != self._matrix_prepare_signature(signature_config):
                 return _err("共享基础矩阵与当前回测配置不匹配")
             load_start = prepared.load_start
             load_end = prepared.load_end
@@ -1770,8 +1801,6 @@ class StrategyBacktestService:
                     config, prepared.market_data.timestamp_labels
                 )
         elif s.execution_backend in ("matrix_native", "composite"):
-            if neutralize_enabled(effective_neutralize(s.meta, overrides)):
-                return _err("矩阵/复合策略暂不支持评分中性化 (neutralize)")
             t_load = time.perf_counter()
             cache_options = {}
             if snapshot is None:
@@ -2128,6 +2157,22 @@ class StrategyBacktestService:
 
             scoring = effective_scoring(s.meta.get("scoring"), overrides)
             try:
+                neutralize_spec = effective_neutralize(s.meta, overrides)
+                industry_by_symbol = None
+                if neutralize_enabled(neutralize_spec):
+                    from app.services.industry_map import load_industry_l1
+
+                    industry_frame = load_industry_l1(
+                        getattr(
+                            getattr(getattr(self.engine, "repo", None), "store", None),
+                            "data_dir",
+                            None,
+                        )
+                    )
+                    industry_by_symbol = {
+                        str(row["symbol"]): str(row["industry_l1"])
+                        for row in industry_frame.iter_rows(named=True)
+                    }
                 pipeline_config = MatrixPipelineConfig(
                     basic_filter=basic_filter,
                     scoring=scoring,
@@ -2139,6 +2184,8 @@ class StrategyBacktestService:
                         if hs300_membership is not None
                         else None
                     ),
+                    neutralize=neutralize_spec,
+                    industry_by_symbol=industry_by_symbol,
                     protect_strategy_cache=prepared is not None,
                 )
                 if prepared is None:
