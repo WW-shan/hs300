@@ -15,10 +15,16 @@ def _digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _is_runtime_artifact(path: Path) -> bool:
+    return "__pycache__" in path.parts or path.suffix in {".pyc", ".pyo"}
+
+
 def _assert_tree_sidecars(root: Path) -> None:
     missing = []
     for path in root.rglob("*"):
         if not path.is_file() or path.suffix in {".sha256", ".parquet"}:
+            continue
+        if _is_runtime_artifact(path):
             continue
         sidecar = path.with_name(path.name + ".sha256")
         if not sidecar.exists():
@@ -42,6 +48,8 @@ def test_ai_evidence_tree_is_digest_bound_except_missing_xlsx_gaps() -> None:
     missing = []
     for path in A.rglob("*"):
         if not path.is_file() or path.suffix in {".sha256", ".parquet"}:
+            continue
+        if _is_runtime_artifact(path):
             continue
         sidecar = path.with_name(path.name + ".sha256")
         if not sidecar.exists():
