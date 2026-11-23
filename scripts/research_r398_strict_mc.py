@@ -9,6 +9,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from app.factor_research.evidence_guard import require_formal_evidence
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 E = DATA / "factor_research" / "research"
@@ -71,7 +73,8 @@ def evaluate(module: Any, service: Any, row: dict[str, Any], start: str, end: st
         max_positions=int(row["max_positions"]), cost=module._cost_parameters(cost),
         max_hold_days=int(row["max_hold_days"]),
     )
-    result = service.run(config)
+    result = service.run_with_evidence(config)
+    require_formal_evidence(result, label="research_r398_strict_mc.py")
     if result.error:
         raise RuntimeError(f"{row['members']} {row['max_positions']} {row['max_hold_days']}: {result.error}")
     stats = result.stats

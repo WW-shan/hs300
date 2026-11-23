@@ -9,6 +9,8 @@ from typing import Any
 
 import polars as pl
 
+RESEARCH_TYPE = "diagnostic_custom_simulation"
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 E = DATA / "factor_research" / "research"

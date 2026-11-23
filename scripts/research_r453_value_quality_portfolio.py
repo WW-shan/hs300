@@ -13,6 +13,8 @@ from typing import Any
 
 import polars as pl
 
+from app.factor_research.evidence_guard import require_formal_evidence
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 E = DATA / "factor_research" / "research"
@@ -108,7 +110,8 @@ def run_variant(
     }
     config = p5.portfolio._backtest_config(scoring, {factor: directions[factor] for factor in scoring}, start=date.fromisoformat(start), end=date.fromisoformat(end), max_positions=positions, cost=cost, max_hold_days=hold)
     config.symbols = list(prepared.market_data.symbols)
-    result = service.run(config, prepared=prepared)
+    result = service.run_with_evidence(config, prepared=prepared)
+    require_formal_evidence(result, label="research_r453_value_quality_portfolio.py")
     if result.error:
         raise RuntimeError(result.error)
     return {"stats": p5._select_stats(result.stats), "curve": list(result.equity_curve), "trades": len(result.trades)}

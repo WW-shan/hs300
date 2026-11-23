@@ -177,6 +177,7 @@ The capability matrix (the registry in `backend/app/data_providers/capabilities.
 - Exit options such as "same-day close", "next-day open", and "next-minute open" must each be tested for time alignment and missing boundary data.
 - Optimization and walk-forward optimization share a matrix. The matrix must cover each fold's full window, and cache keys must include every input that changes matrix results.
 - When modifying strategy, scoring, or sorting logic, verify simultaneously whether historical strategy results, backtest trade records, and UI display use the same candidate set and sort direction.
+- Research runners that claim portfolio return, drawdown, Sharpe, or a strategy conclusion must use the project strategy chain and `run_with_evidence()` with saved persistence, passed look-ahead, and passed execution timing; see [`docs/research-standard.md`](docs/research-standard.md). Hand-written return simulators are diagnostic evidence only and may not be promoted as project backtests.
 
 ## 6. Caching, Concurrency, and Performance
 

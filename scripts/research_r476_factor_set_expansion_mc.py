@@ -11,6 +11,8 @@ from typing import Any
 
 import polars as pl
 
+from app.factor_research.evidence_guard import require_formal_evidence
+
 ROOT = Path(__file__).resolve().parents[1]
 E = ROOT / "data" / "factor_research" / "research"
 PREREG = E / "r476_factor_set_expansion_preregistration.json"
@@ -165,7 +167,8 @@ def run_sample(
     seed_config.symbols = list(symbols)
     prepared_base = service.prepare_matrix_optimization([seed_config])
     prepared = p5._extend_prepared_with_panel(prepared_base, panel, [field])
-    result = service.run(seed_config, prepared=prepared)
+    result = service.run_with_evidence(seed_config, prepared=prepared)
+    require_formal_evidence(result, label="research_r476_factor_set_expansion_mc.py")
     if result.error:
         if "未产生买入信号" in str(result.error):
             return failed_metrics()

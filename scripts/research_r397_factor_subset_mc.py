@@ -9,6 +9,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from app.factor_research.evidence_guard import require_formal_evidence
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 EVIDENCE = DATA / "factor_research" / "research"
@@ -83,7 +85,8 @@ def evaluate(module: Any, service: Any, row: dict[str, Any], *, start: str, end:
         cost=module._cost_parameters(cost),
     )
     config.holding_days = int(row["holding_days"])
-    result = service.run(config)
+    result = service.run_with_evidence(config)
+    require_formal_evidence(result, label="research_r397_factor_subset_mc.py")
     if result.error:
         raise RuntimeError(result.error)
     stats = result.stats

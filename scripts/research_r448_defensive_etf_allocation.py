@@ -11,6 +11,8 @@ from typing import Any
 
 import polars as pl
 
+RESEARCH_TYPE = "diagnostic_custom_simulation"
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 OFFENSIVE_SYMBOLS = {"510300.SH", "510500.SH", "512100.SH"}

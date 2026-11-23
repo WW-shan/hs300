@@ -12,7 +12,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 RESEARCH = DATA / "factor_research" / "research"
-OUTPUT = RESEARCH / "research_asset_ledger_2026-11-24_v4.json"
+OUTPUT = RESEARCH / "research_asset_ledger_2026-11-24_v20.json"
 STRATEGY_DIRS = (
     DATA / "strategies" / "ai",
     DATA / "strategies" / "custom",
@@ -95,11 +95,26 @@ def runner_row(path: Path) -> dict[str, Any]:
         pass
     has_project_engine = any(
         token in text
-        for token in ("StrategyBacktestService", "FactorBacktestService", "BacktestEngine")
+        for token in (
+            "StrategyBacktestService",
+            "FactorBacktestService",
+            "BacktestEngine",
+            "_backtest_config(",
+            "research_factor_set_portfolio",
+            "app.factor_research.evidence_guard",
+        )
     )
     has_project_data = any(
         token in text
-        for token in ("DataStore(", "KlineRepository(", "load_candidate_panel(", "load_fundamental_snapshot(")
+        for token in (
+            "DataStore(",
+            "KlineRepository(",
+            "load_candidate_panel(",
+            "load_fundamental_snapshot(",
+            "load_existing_ext_factors(",
+            "pl.read_parquet(",
+            "pl.scan_parquet("
+        )
     )
     formal = "run_with_evidence" in text
     external = bool(imports & {"akshare", "requests", "httpx", "urllib3", "aiohttp"})
@@ -223,7 +238,40 @@ def main() -> int:
     # historical ledger with different content.
     existing: bytes | None = OUTPUT.read_bytes() if OUTPUT.exists() else None
     rows: list[dict[str, Any]] = []
-    rows.extend(runner_row(path) for path in sorted((ROOT / "scripts").glob("research_*.py")))
+    conformance_path = RESEARCH / "research_conformance_audit_2026-11-23.json"
+    conformance = json.loads(conformance_path.read_text(encoding="utf-8"))
+    conformance_by_runner = {row["runner"]: row for row in conformance["runners"]}
+    runner_rows = [runner_row(path) for path in sorted((ROOT / "scripts").glob("research_*.py"))]
+    for row in runner_rows:
+        status_row = conformance_by_runner.get(row["path"])
+        if status_row is not None:
+            status = status_row["status"]
+            row["status"] = status
+            row["formal_evidence"] = status_row["formal_run_with_evidence"]
+            row["research_type"] = (
+                status_row.get("research_type")
+                or status_row.get("standard_research_type")
+            )
+            if status in {
+                "project_chain_with_formal_evidence",
+                "statistical_or_feasibility_only",
+                "derived_analysis_only",
+                "diagnostic_derived_analysis_only",
+                "diagnostic_attribution",
+                "diagnostic_statistical_screen",
+                "non_return_research",
+            }:
+                row["disposition"] = "keep"
+            elif status in {
+                "diagnostic_external_data_feasibility",
+                "diagnostic_external_data_diagnostic_simulation",
+                "diagnostic_custom_simulation",
+                "diagnostic_non_project_backtest_or_custom_simulation",
+            }:
+                row["disposition"] = "keep_as_negative_knowledge"
+            else:
+                raise RuntimeError(f"unclassified runner status: {status}")
+    rows.extend(runner_rows)
     for directory in STRATEGY_DIRS:
         if directory.exists():
             rows.extend(strategy_row(path) for path in sorted(directory.glob("*.py")))
@@ -238,7 +286,7 @@ def main() -> int:
     payload = {
         "schema_version": 1,
         "generated_at": "2026-11-24",
-        "method": "Static inventory plus AST metadata checks. A status is a disposition input, not a claim of live backtest success.",
+        "method": "Static inventory plus AST metadata checks. project_chain_with_formal_evidence means the runner calls a guarded project helper or direct run_with_evidence; it is not a rerun result. Custom simulations are retained as negative knowledge.",
         "counts": dict(sorted(counts.items())),
         "dispositions": dict(sorted(dispositions.items())),
         "rows": rows,

@@ -13,6 +13,8 @@ from typing import Any
 
 import polars as pl
 
+from app.factor_research.evidence_guard import require_formal_evidence
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 E = DATA / "factor_research" / "research"
@@ -93,7 +95,8 @@ def run_window(p5: Any, service: Any, panel: pl.DataFrame, symbols: list[str], m
         max_industry_positions=cap,
     )
     config.symbols = list(prepared.market_data.symbols)
-    result = service.run(config, prepared=prepared)
+    result = service.run_with_evidence(config, prepared=prepared)
+    require_formal_evidence(result, label="research_r449_five_factor_composite.py")
     if result.error:
         raise RuntimeError(result.error)
     return {"stats": p5._select_stats(result.stats), "equity_curve": list(result.equity_curve), "trades": len(result.trades)}

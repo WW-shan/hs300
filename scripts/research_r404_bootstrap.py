@@ -159,8 +159,9 @@ def main() -> int:
             strategy_returns = _returns(strategy_curve)
             # The benchmark is the same 000300.SH series used in R403. Re-fetch
             # it for the exact boundary and align it to the strategy dates.
-            from app.tickflow.repository import DataStore, KlineRepository
             from datetime import date
+
+            from app.tickflow.repository import DataStore, KlineRepository
             repo = KlineRepository(DataStore(ROOT / "data"))
             start = prereg["windows"][f"{boundary}_start"]
             end = prereg["windows"][f"{boundary}_end"]

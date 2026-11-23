@@ -10,6 +10,8 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
+from app.factor_research.evidence_guard import require_formal_evidence
+
 ROOT = Path(__file__).resolve().parents[1]
 E = ROOT / "data" / "factor_research" / "research"
 PREREG = E / "r469_operating_efficiency_attribution_preregistration.json"
@@ -122,7 +124,8 @@ def main() -> int:
     config.params = {**(config.params or {}), "entry_score": float(sample["entry_score"]), "exit_score": float(sample["exit_score"])}
     config.max_exposure_pct = float(sample["max_exposure_pct"])
     config.symbols = list(symbols)
-    engine_result = service.run(config)
+    engine_result = service.run_with_evidence(config)
+    require_formal_evidence(engine_result, label="research_r469_operating_efficiency_attribution.py")
     if engine_result.error:
         raise RuntimeError(engine_result.error)
     trades = [trade if isinstance(trade, dict) else service._trade_to_dict(trade) for trade in engine_result.trades]

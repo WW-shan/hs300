@@ -13,6 +13,8 @@ from typing import Any
 
 import polars as pl
 
+from app.factor_research.evidence_guard import require_formal_evidence
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 E = DATA / "factor_research" / "research"
@@ -310,7 +312,8 @@ def _run_config(p5: Any, service: Any, panel: pl.DataFrame, symbols: list[str], 
     }
     config.max_exposure_pct = float(sample["max_exposure_pct"])
     config.symbols = list(prepared.market_data.symbols)
-    result = service.run(config, prepared=prepared)
+    result = service.run_with_evidence(config, prepared=prepared)
+    require_formal_evidence(result, label="research_r464_joint_factor_library_mc.py")
     if result.error:
         if "未产生买入信号" in str(result.error):
             return _failed_metrics()

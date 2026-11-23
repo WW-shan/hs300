@@ -11,6 +11,8 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
+from app.factor_research.evidence_guard import require_formal_evidence
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 E = DATA / "factor_research" / "research"
@@ -46,7 +48,8 @@ def run(p5: Any, service: Any, *, start: str, end: str, cost: str, positions: in
         cost=p5.portfolio._cost_parameters(cost),
         max_hold_days=hold,
     )
-    result = service.run(config)
+    result = service.run_with_evidence(config)
+    require_formal_evidence(result, label="research_r424_pb_standalone.py")
     if result.error:
         raise RuntimeError(result.error)
     return {"stats": dict(result.stats), "equity_curve": list(result.equity_curve), "trades": len(result.trades)}

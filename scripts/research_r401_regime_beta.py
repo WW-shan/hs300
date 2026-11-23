@@ -11,6 +11,8 @@ from typing import Any
 
 import polars as pl
 
+from app.factor_research.evidence_guard import require_formal_evidence
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 E = DATA / "factor_research" / "research"
@@ -103,7 +105,8 @@ def run_window(name: str, rows: list[dict[str, Any]], path: Path, start: str, en
                 max_positions=int(row["max_positions"]), cost=module._cost_parameters("2x"),
                 max_hold_days=int(row["max_hold_days"]),
             )
-            result = service.run(config)
+            result = service.run_with_evidence(config)
+            require_formal_evidence(result, label="research_r401_regime_beta.py")
             if result.error:
                 raise RuntimeError(result.error)
             stats = result.stats

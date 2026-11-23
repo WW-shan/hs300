@@ -12,6 +12,8 @@ from typing import Any
 
 import polars as pl
 
+from app.factor_research.evidence_guard import require_formal_evidence
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 E = DATA / "factor_research" / "research"
@@ -153,7 +155,8 @@ def run_sample(
     # Keep the exact symbol tuple used to prepare the shared matrix. Replacing
     # it with prepared.market_data.symbols changes the matrix signature because
     # the prepared matrix can drop symbols with no usable price rows.
-    result = service.run(config, prepared=prepared)
+    result = service.run_with_evidence(config, prepared=prepared)
+    require_formal_evidence(result, label="research_r468_operating_efficiency_sleeve.py")
     if result.error:
         if "未产生买入信号" in str(result.error):
             return r464_failed_metrics()

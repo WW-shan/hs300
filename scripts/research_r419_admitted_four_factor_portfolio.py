@@ -12,6 +12,8 @@ from typing import Any
 
 import polars as pl
 
+from app.factor_research.evidence_guard import require_formal_evidence
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 E = DATA / "factor_research" / "research"
@@ -67,7 +69,8 @@ def run(p5: Any, service: Any, prepared: Any, members: list[str], directions: di
         cost=p5.portfolio._cost_parameters(cost),
         max_hold_days=max_hold_days,
     )
-    result = service.run(config)
+    result = service.run_with_evidence(config)
+    require_formal_evidence(result, label="research_r419_admitted_four_factor_portfolio.py")
     if result.error:
         raise RuntimeError(f"{label}: {result.error}")
     stats = result.stats

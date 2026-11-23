@@ -26,7 +26,14 @@ def test_r528_pins_framework_membership_and_restores_it() -> None:
     class Service:
         def run_with_evidence(self, config, prepared=None):
             seen.append(strategy_module._hs300_membership_frame(config.start, config.end))
-            return object()
+            result = type("Result", (), {})()
+            result.evidence = {
+                "persistence": {"status": "saved"},
+                "lookahead": {"status": "passed"},
+                "execution_timing": {"status": "passed"},
+            }
+            result.run_id = "r528-membership-contract"
+            return result
 
     class Config:
         hs300 = True

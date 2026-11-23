@@ -24,6 +24,7 @@ from app.backtest import stats_v2
 from app.backtest.strategy import PreparedMatrixBacktest, StrategyBacktestService
 from app.factor_research.automation import assert_portfolio_candidates_admitted
 from app.factor_research.catalog import build_catalog, save_catalog
+from app.factor_research.evidence_guard import require_formal_evidence
 from app.factor_research.extended_parameter_data import (
     load_event_panels,
     load_existing_ext_factors,
@@ -1043,13 +1044,7 @@ def _run_prepared(
     result = service.run_with_evidence(config, prepared=prepared)
     if result.error:
         raise RuntimeError(f"{label} failed: {result.error}")
-    evidence = result.evidence or {}
-    if evidence.get("persistence", {}).get("status") != "saved":
-        raise RuntimeError(f"{label} formal evidence not saved")
-    if evidence.get("lookahead", {}).get("status") != "passed":
-        raise RuntimeError(f"{label} lookahead audit did not pass")
-    if evidence.get("execution_timing", {}).get("status") != "passed":
-        raise RuntimeError(f"{label} execution timing audit did not pass")
+    evidence = require_formal_evidence(result, label=label)
     record = {
         "label": label,
         "start": str(start),
@@ -1179,6 +1174,8 @@ def _run_candidate_screen(
     baseline_full_3x: dict[str, Any],
     baseline_weak: dict[str, Any],
 ) -> dict[str, dict[str, Any]]:
+    # Every portfolio return produced by this helper must come from the
+    # guarded project run path in _run_prepared.
     base_gate = _gate_metrics(baseline_full, baseline_recent, baseline_full_3x)
     results: dict[str, dict[str, Any]] = {}
     for candidate in candidates:
@@ -1284,6 +1281,8 @@ def _run_ablation(
     prepared_by_window: dict[str, PreparedMatrixBacktest],
     windows: dict[str, tuple[date, date]],
 ) -> dict[str, Any]:
+    # Every portfolio return produced by this helper must come from the
+    # guarded project run path in _run_prepared.
     variants = _variant_factor_sets(final_ids)
     results: dict[str, dict[str, dict[str, Any]]] = {}
     for window, (start, end) in windows.items():

@@ -8,6 +8,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from app.factor_research.evidence_guard import require_formal_evidence
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 E = DATA / "factor_research" / "research"
@@ -42,8 +44,9 @@ def portfolio_module():
 
 
 def _index_return(start: str, end: str, symbol: str) -> float | None:
-    from app.tickflow.repository import DataStore, KlineRepository
     from datetime import date
+
+    from app.tickflow.repository import DataStore, KlineRepository
     repo = KlineRepository(DataStore(DATA))
     frame = repo.get_index_daily(symbol, date.fromisoformat(start), date.fromisoformat(end), columns=["date", "close"]).drop_nulls().sort("date")
     if frame.is_empty():
@@ -59,7 +62,8 @@ def evaluate(module: Any, service: Any, row: dict[str, Any], *, start: str, end:
         max_positions=int(row["max_positions"]), cost=module._cost_parameters(cost),
         max_hold_days=int(row["max_hold_days"]),
     )
-    result = service.run(config)
+    result = service.run_with_evidence(config)
+    require_formal_evidence(result, label="research_r400_growth_beta.py")
     if result.error:
         raise RuntimeError(result.error)
     stats = result.stats

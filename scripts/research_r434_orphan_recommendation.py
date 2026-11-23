@@ -11,6 +11,8 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
+from app.factor_research.evidence_guard import require_formal_evidence
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 E = DATA / "factor_research" / "research"
@@ -48,7 +50,8 @@ def variant_members(prereg: dict[str, Any]) -> list[str]:
 def run(p5: Any, service: Any, members: list[str], directions: dict[str, str], *, start: str, end: str, cost: str) -> dict[str, Any]:
     scoring, selected = p5._equal_inputs(members, directions)
     config = p5.portfolio._backtest_config(scoring, selected, start=date.fromisoformat(start), end=date.fromisoformat(end), max_positions=20, cost=p5.portfolio._cost_parameters(cost), max_hold_days=30)
-    result = service.run(config)
+    result = service.run_with_evidence(config)
+    require_formal_evidence(result, label="research_r434_orphan_recommendation.py")
     if result.error:
         raise RuntimeError(result.error)
     return {"stats": dict(result.stats), "equity_curve": list(result.equity_curve)}

@@ -12,6 +12,7 @@ from typing import Any
 
 from app.backtest.engine import BacktestEngine
 from app.backtest.strategy import StrategyBacktestConfig, StrategyBacktestService
+from app.factor_research.evidence_guard import require_formal_evidence
 from app.factor_research.fingerprints import sha256_json, utc_now
 from app.factor_research.ledger import ResearchLedger
 from app.factor_research.locking import atomic_write_json
@@ -273,6 +274,7 @@ def _run_prepared_with_evidence(
     result = service.run_with_evidence(config, prepared=prepared)
     if result.error:
         raise RuntimeError(f"{label} failed: {result.error}")
+    require_formal_evidence(result, label=label)
     status = _formal_evidence_status(result)
     if status != "saved":
         raise RuntimeError(f"{label} formal evidence not saved: {status}")
@@ -335,9 +337,8 @@ def _run(
     result = service.run_with_evidence(config)
     if result.error:
         raise RuntimeError(f"{label} failed: {result.error}")
+    require_formal_evidence(result, label=label)
     evidence_status = _formal_evidence_status(result)
-    if evidence_status != "saved":
-        raise RuntimeError(f"{label} formal evidence not saved: {evidence_status}")
     record = {
         "label": label,
         "start": str(start),
@@ -465,6 +466,7 @@ def run_industry_capped(
         max_industry_positions=cap,
     )
     result = _service().run_with_evidence(config)
+    require_formal_evidence(result, label="industry-capped run")
     if result.error:
         raise RuntimeError(result.error)
     status = _formal_evidence_status(result)

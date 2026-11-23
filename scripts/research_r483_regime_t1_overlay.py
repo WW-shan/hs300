@@ -12,6 +12,8 @@ from typing import Any
 
 import polars as pl
 
+RESEARCH_TYPE = "diagnostic_custom_simulation"
+
 ROOT = Path(__file__).resolve().parents[1]
 E = ROOT / "data" / "factor_research" / "research"
 PREREG = E / "r483_regime_t1_overlay_preregistration.json"

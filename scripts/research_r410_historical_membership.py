@@ -13,6 +13,8 @@ from typing import Any
 
 import polars as pl
 
+from app.factor_research.evidence_guard import require_formal_evidence
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 E = DATA / "factor_research" / "research"
@@ -98,7 +100,8 @@ def main() -> int:
                 cost=module._cost_parameters("2x"),
                 max_hold_days=40,
             )
-            result = service.run(config)
+            result = service.run_with_evidence(config)
+            require_formal_evidence(result, label="research_r410_historical_membership.py")
             if result.error:
                 raise RuntimeError(result.error)
             reports[boundary] = {

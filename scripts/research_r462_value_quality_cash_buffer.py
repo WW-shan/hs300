@@ -10,6 +10,8 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
+from app.factor_research.evidence_guard import require_formal_evidence
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 E = DATA / "factor_research" / "research"
@@ -61,7 +63,8 @@ def main() -> int:
                     config = p5.portfolio._backtest_config(weights, {factor: directions[factor] for factor in weights}, start=date.fromisoformat(windows[f"{window}_start"]), end=date.fromisoformat(windows[f"{window}_end"]), max_positions=positions, cost=p5.portfolio._cost_parameters("2x"), max_hold_days=hold)
                     config.max_exposure_pct = exposure
                     config.symbols = list(prepared.market_data.symbols)
-                    result = service.run(config, prepared=prepared)
+                    result = service.run_with_evidence(config, prepared=prepared)
+                    require_formal_evidence(result, label="research_r462_value_quality_cash_buffer.py")
                     if result.error:
                         raise RuntimeError(result.error)
                     row[window] = {"stats": p5._select_stats(result.stats), "curve": list(result.equity_curve), "trades": len(result.trades)}

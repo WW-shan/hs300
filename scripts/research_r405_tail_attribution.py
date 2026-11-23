@@ -75,9 +75,11 @@ def main() -> int:
     # Test-window monthly returns need the actual benchmark dates. Read the
     # R403V2 test curve as the strategy series and use the same points for a
     # descriptive benchmark proxy from the source's published benchmark totals.
-    import polars as pl
-    from app.tickflow.repository import DataStore, KlineRepository
     from datetime import date
+
+    import polars as pl
+
+    from app.tickflow.repository import DataStore, KlineRepository
     repo = KlineRepository(DataStore(ROOT / "data"))
     def idx(start: str, end: str) -> list[dict]:
         frame = repo.get_index_daily("000300.SH", date.fromisoformat(start), date.fromisoformat(end), columns=["date", "close"]).drop_nulls().sort("date")

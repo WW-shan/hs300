@@ -11,6 +11,7 @@
 | 在个股详情配置字段、日 K 显示范围和指标 | [个股详情与自定义图表指标](./custom-chart-indicators.md) |
 | 自建策略、因子、信号或导入资源 | [策略指南](./strategy.md) · [导入与备份](./extension-packages.md) |
 | 分析市场阶段、挖掘因子与验证结果 | [市场环境](./market-phase.md) · [因子与策略挖掘](./mining.md) · [回测证据](./backtest-evidence.md) |
+| 研究标准化、正式证据和删除规则 | [研究标准化与证据门禁](./research-standard.md) |
 | 选择前复权、后复权或动态复权，运行归档研究任务 | [策略回测](./features.md#-回测引擎backtest) · [动态复权](./engine-platform/workbench-research-jobs.md#动态复权扩展) · [引擎研究](./engine-platform/workbench-research-jobs.md) |
 
 ## 让 AI 接入或开发

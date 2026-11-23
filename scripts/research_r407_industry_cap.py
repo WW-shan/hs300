@@ -11,6 +11,8 @@ from typing import Any
 
 import polars as pl
 
+from app.factor_research.evidence_guard import require_formal_evidence
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 E = DATA / "factor_research" / "research"
@@ -43,7 +45,8 @@ def evaluate(module: Any, service: Any, members: list[str], industry: dict[str, 
     # not a production portfolio constructor.
     weights = {factor: 1.0 / len(members) for factor in members}
     config = module._backtest_config(weights, {factor: "high" for factor in weights}, start=date.fromisoformat(start), end=date.fromisoformat(end), max_positions=10, cost=module._cost_parameters("2x"), max_hold_days=40)
-    result = service.run(config)
+    result = service.run_with_evidence(config)
+    require_formal_evidence(result, label="research_r407_industry_cap.py")
     if result.error:
         raise RuntimeError(result.error)
     trades = result.trades

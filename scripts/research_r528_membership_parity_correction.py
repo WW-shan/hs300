@@ -19,6 +19,8 @@ from typing import Any
 
 import polars as pl
 
+from app.factor_research.evidence_guard import require_formal_evidence
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 E = DATA / "factor_research" / "research"
@@ -403,6 +405,7 @@ def run_hold30_family(prereg: dict[str, Any]) -> dict[str, Any]:
             )
             with r371._patched_membership(membership):
                 result = service.run_with_evidence(config)
+            require_formal_evidence(result, label="research_r528_membership_parity_correction.py")
             if result.error:
                 raise RuntimeError(f"R528 hold30 {kind} {cost}: {result.error}")
             curve = r385._curve_frame(result.equity_curve)
@@ -534,7 +537,9 @@ def run_with_pinned_membership(service, config, membership: pl.DataFrame, *, pre
     original = strategy_module._hs300_membership_frame
     strategy_module._hs300_membership_frame = lambda _start, _end: membership
     try:
-        return service.run_with_evidence(config, prepared=prepared)
+        result = service.run_with_evidence(config, prepared=prepared)
+        require_formal_evidence(result, label="research_r528_membership_parity_correction.py")
+        return result
     finally:
         strategy_module._hs300_membership_frame = original
 

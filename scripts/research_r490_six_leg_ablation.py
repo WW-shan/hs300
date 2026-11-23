@@ -15,6 +15,8 @@ from typing import Any
 
 import polars as pl
 
+from app.factor_research.evidence_guard import require_formal_evidence
+
 ROOT = Path(__file__).resolve().parents[1]
 E = ROOT / "data" / "factor_research" / "research"
 PREREG = E / "r490_six_leg_ablation_preregistration.json"
@@ -177,7 +179,8 @@ def run_sample(
     config.symbols = list(symbols)
     prepared_base = service.prepare_matrix_optimization([config])
     prepared = p5._extend_prepared_with_panel(prepared_base, panel, [field])
-    result = service.run(config, prepared=prepared)
+    result = service.run_with_evidence(config, prepared=prepared)
+    require_formal_evidence(result, label="research_r490_six_leg_ablation.py")
     if result.error:
         raise RuntimeError(result.error)
     return {

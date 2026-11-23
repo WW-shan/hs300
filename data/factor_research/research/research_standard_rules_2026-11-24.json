@@ -1,0 +1,59 @@
+{
+  "classification": {
+    "attribution": "Explains an already-frozen portfolio/result; MUST cite source result hashes; no new strategy selection or promotion. Reading a frozen result without a local return producer is derived analysis.",
+    "derived_analysis_only": "Reads one or more frozen result files, cites their hashes, and performs bootstrap, attribution, synthesis, or reconciliation without producing a new return path.",
+    "diagnostic_simulation": "External-data, ETF, overlay, or other custom simulation retained only as diagnostic/negative knowledge; MUST explicitly state no project execution claim and no promotion, even if a stock sleeve was separately run through the formal engine.",
+    "feasibility_probe": "Tests external data availability or coverage; MUST identify external source and may not claim tradability or portfolio performance.",
+    "private_runtime": "User-owned data/strategies/custom; not repository research evidence.",
+    "project_formal": "Produces portfolio return, drawdown, Sharpe, or strategy conclusion using project data and strategy engine. Direct calls MUST use StrategyBacktestService.run_with_evidence and require_formal_evidence; an indirect call is allowed only when the runner uses a repository helper that itself calls run_with_evidence and require_formal_evidence.",
+    "statistical_screen": "Produces factor IC, correlation, coverage, statistical admission, or parameter-statistical evidence; MUST use project data and declared statistical method; may not claim portfolio return/strategy conclusion."
+  },
+  "effective_from": "2026-11-24",
+  "mandatory_fields": {
+    "attribution": [
+      "research_type",
+      "source_result_hashes",
+      "result_hashes"
+    ],
+    "derived_analysis_only": [
+      "research_type",
+      "source_result_hashes",
+      "result_hashes"
+    ],
+    "diagnostic_simulation": [
+      "research_type",
+      "external_source",
+      "known_limits",
+      "result_hashes"
+    ],
+    "feasibility_probe": [
+      "research_type",
+      "external_source",
+      "result_hashes"
+    ],
+    "project_formal": [
+      "research_type",
+      "runner",
+      "preregistration_sha256",
+      "result_hashes",
+      "formal_evidence"
+    ],
+    "statistical_screen": [
+      "research_type",
+      "input_hashes",
+      "method",
+      "result_hashes"
+    ]
+  },
+  "prohibitions": [
+    "No result may be labeled project_formal without run_with_evidence persistence=saved.",
+    "No runner may compute portfolio returns with a hand-written simulator and call it a strategy conclusion.",
+    "No diagnostic result may promote active_version or generate orders/paper targets.",
+    "No strategy may be public unless research_only is explicitly false; research strategies default true.",
+    "No result file may be rewritten without a new dated version and a hash-linked amendment.",
+    "No hand-written ETF, overlay, or return simulator may be classified as derived_analysis_only.",
+    "No research runner may omit a standard research type; diagnostics must be explicit.",
+    "No diagnostic runner may be counted as a project portfolio result merely because part of its inputs came from the project data store."
+  ],
+  "schema_version": 1
+}
