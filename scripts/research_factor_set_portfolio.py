@@ -232,6 +232,40 @@ def _sha256_file(path: Path) -> str:
     return f"sha256:{digest.hexdigest()}"
 
 
+def _formal_evidence_status(result: Any) -> str:
+    """Return the project evidence state without treating a bare run as proof."""
+    evidence = getattr(result, "evidence", None)
+    if isinstance(result, dict):
+        evidence = result.get("evidence")
+    if not isinstance(evidence, dict):
+        return "missing"
+    persistence = evidence.get("persistence")
+    if not isinstance(persistence, dict):
+        return "missing"
+    status = str(persistence.get("status") or "missing")
+    return status if status in {"saved", "error", "missing"} else "missing"
+
+
+def _industry_cap_from_project_data(
+    *, max_industry_positions: int = 2,
+) -> tuple[dict[str, str], int]:
+    """Load the project's current THS industry mapping for execution-time caps.
+
+    This is an execution cap, not a PIT claim: the source mapping is a snapshot
+    and remains an explicit research limitation. Missing data fails closed.
+    """
+    from app.services.industry_map import load_industry_l1
+
+    frame = load_industry_l1(DATA)
+    mapping = {
+        str(row["symbol"]): str(row["industry_l1"])
+        for row in frame.iter_rows(named=True)
+    }
+    if not mapping:
+        raise RuntimeError("project industry mapping is empty")
+    return mapping, max(1, int(max_industry_positions))
+
+
 def _run(
     service: StrategyBacktestService,
     scoring: dict[str, float],
@@ -251,9 +285,12 @@ def _run(
         max_positions=max_positions,
         cost=_cost_parameters(cost_label),
     )
-    result = service.run(config)
+    result = service.run_with_evidence(config)
     if result.error:
         raise RuntimeError(f"{label} failed: {result.error}")
+    evidence_status = _formal_evidence_status(result)
+    if evidence_status != "saved":
+        raise RuntimeError(f"{label} formal evidence not saved: {evidence_status}")
     record = {
         "label": label,
         "start": str(start),
@@ -265,6 +302,13 @@ def _run(
         "stats": dict(result.stats),
         "trade_count": len(result.trades),
         "benchmark_return": _curve_return(result.benchmark_curve),
+        "formal_evidence": {
+            "status": evidence_status,
+            "run_id": result.run_id,
+            "persistence": result.evidence.get("persistence"),
+            "lookahead": result.evidence.get("lookahead"),
+            "execution_timing": result.evidence.get("execution_timing"),
+        },
     }
     print(
         f"{label}: return={result.stats.get('total_return')} "
@@ -301,6 +345,46 @@ def _checkpoints(
         "rolling_3x_positive_rate_at_least_70pct": (
             rolling_3x.get("positive_rate") or 0.0
         ) >= 0.70,
+    }
+
+
+def run_industry_capped(
+    *, max_positions: int = 20, max_industry_positions: int = 2,
+    cost_label: str = "2x", hold_days: int = 30,
+) -> dict[str, Any]:
+    """Run the watch set through the project chain with an explicit industry cap."""
+    sets = FactorSetStore(DATA)
+    head = sets.head("multi_dimension_v1")
+    if head is None or head.watch_version is None:
+        raise RuntimeError("multi_dimension_v1 watch version is unavailable")
+    version = sets.load_version("multi_dimension_v1", head.watch_version)
+    scoring, directions, _factor_ids = _portfolio_inputs(version)
+    industry, cap = _industry_cap_from_project_data(
+        max_industry_positions=max_industry_positions
+    )
+    config = _backtest_config(
+        scoring, directions,
+        start=FULL_START, end=END,
+        max_positions=max_positions,
+        cost=_cost_parameters(cost_label),
+        max_hold_days=hold_days,
+        industry_by_symbol=industry,
+        max_industry_positions=cap,
+    )
+    result = _service().run_with_evidence(config)
+    if result.error:
+        raise RuntimeError(result.error)
+    status = _formal_evidence_status(result)
+    if status != "saved":
+        raise RuntimeError(f"industry-capped run evidence not saved: {status}")
+    return {
+        "run_id": result.run_id,
+        "stats": dict(result.stats),
+        "trades": len(result.trades),
+        "max_industry_positions": cap,
+        "evidence_status": status,
+        "lookahead": result.evidence.get("lookahead", {}).get("status"),
+        "execution_timing": result.evidence.get("execution_timing", {}).get("status"),
     }
 
 

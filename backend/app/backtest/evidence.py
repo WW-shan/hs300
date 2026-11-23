@@ -127,7 +127,7 @@ def _check(kind: str, cutoff, compare: Callable[[], dict]) -> dict:
     except Exception as exc:  # noqa: BLE001 — 用户策略异常必须转为可见的检查失败。
         return {
             "kind": kind, "cutoff": str(cutoff), "status": "error",
-            "error": f"重算未完成（{type(exc).__name__}）",
+            "error": f"重算未完成（{type(exc).__name__}: {exc}）",
             "differences": 0, "compared_values": 0, "examples": [],
         }
 
@@ -156,6 +156,7 @@ def audit_matrix(
     baseline: SignalMatrix,
     evaluate: Callable[[MarketDataMatrix], SignalMatrix],
     *, start: str, end: str, cancel_event=None,
+    evaluate_truncated: Callable[[MarketDataMatrix, int], SignalMatrix] | None = None,
 ) -> dict:
     candidates = [
         i for i, label in enumerate(market.timestamp_labels[:-1])
@@ -171,7 +172,11 @@ def audit_matrix(
             data = slice_market_data_matrix(market, 0, cutoff + 1)
         else:
             data = _perturb_matrix(market, cutoff)
-        actual = evaluate(data)
+        actual = (
+            evaluate_truncated(data, cutoff)
+            if kind == "truncate" and evaluate_truncated is not None
+            else evaluate(data)
+        )
         if actual.shape != data.shape:
             raise ValueError("重算信号形状不匹配")
         rows = np.array([start <= t[:10] <= label[:10] for t in market.timestamp_labels[:cutoff + 1]])
@@ -439,13 +444,14 @@ class EvidenceRecorder:
             if frame is not None:
                 self.record_frame(name, frame)
 
-    def check_matrix(self, market, signals, evaluate) -> None:
+    def check_matrix(self, market, signals, evaluate, evaluate_truncated=None) -> None:
         self.datasets["daily_matrix"] = fingerprint_matrix(market)
         self.reports.append({
             "scope": "daily_signals",
             **audit_matrix(
                 market, signals, evaluate, start=str(self.config.start), end=str(self.config.end),
                 cancel_event=self.cancel_event,
+                evaluate_truncated=evaluate_truncated,
             ),
         })
 

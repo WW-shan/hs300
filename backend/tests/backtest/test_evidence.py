@@ -119,6 +119,30 @@ def test_matrix_causal_rolling_passes_without_modifying_inputs():
     np.testing.assert_equal(market.close, original)
 
 
+def test_matrix_truncated_audit_can_receive_prefix_mask() -> None:
+    market = build_market_data_matrix(_panel())
+    seen: list[int] = []
+
+    def evaluate(data):
+        return make_signal_matrix(data.shape, entry=np.ones(data.shape))
+
+    def evaluate_truncated(data, cutoff):
+        seen.append(data.shape[0])
+        assert data.shape[0] == cutoff + 1
+        return evaluate(data)
+
+    report = audit_matrix(
+        market,
+        evaluate(market),
+        evaluate,
+        start="2024-01-04",
+        end="2024-01-12",
+        evaluate_truncated=evaluate_truncated,
+    )
+    assert report["status"] == "passed"
+    assert seen
+
+
 @pytest.mark.parametrize("leak", ["next_bar", "global_mean", "last_bar"])
 def test_matrix_detects_future_dependency_with_location(leak):
     market = build_market_data_matrix(_panel())

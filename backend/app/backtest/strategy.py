@@ -2162,11 +2162,31 @@ class StrategyBacktestService:
                 return _err(f"矩阵策略信号计算失败: {e}")
 
             if evidence is not None:
+                def _evaluate_matrix(data):
+                    return MatrixStrategyPipeline().run(
+                        s.matrix_strategy, data, params, pipeline_config,
+                    )
+
+                def _evaluate_truncated_matrix(data, cutoff):
+                    # 逐日 HS300 掩码必须与截断后的矩阵一起缩短；否则正式证据
+                    # 会把 shape mismatch 误报成策略重算失败。
+                    if pipeline_config.asset_mask is None:
+                        return _evaluate_matrix(data)
+                    mask = pipeline_config.asset_mask
+                    if getattr(mask, "ndim", 0) != 2:
+                        return _evaluate_matrix(data)
+                    truncated = replace(
+                        pipeline_config,
+                        asset_mask=mask[: cutoff + 1],
+                    )
+                    return MatrixStrategyPipeline().run(
+                        s.matrix_strategy, data, params, truncated,
+                    )
+
                 evidence.check_matrix(
                     market_data, signal_matrix,
-                    lambda data: MatrixStrategyPipeline().run(
-                        s.matrix_strategy, data, params, pipeline_config,
-                    ),
+                    _evaluate_matrix,
+                    evaluate_truncated=_evaluate_truncated_matrix,
                 )
 
             sim_market_data = slice_market_data_matrix(market_data, start_id, stop_id)
