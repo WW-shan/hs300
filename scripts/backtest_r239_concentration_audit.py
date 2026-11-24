@@ -9,6 +9,8 @@ from collections import defaultdict
 from datetime import date
 from pathlib import Path
 
+from app.factor_research.evidence_guard import require_formal_evidence
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 EVIDENCE = DATA / "strategies" / "ai" / ".iterations" / "ai_hs300_multi_factor_rank" / "evidence"
@@ -39,7 +41,8 @@ def _run_segment(service, membership, r112, label: str, start: date, end: date) 
     )
     started = time.perf_counter()
     with r112._patched_membership(membership):
-        result = service.run(cfg)
+        result = service.run_with_evidence(cfg)
+    require_formal_evidence(result, label=Path(__file__).name)
     if result.error:
         raise RuntimeError(f"{label} {start}~{end}: {result.error}")
     trades = []

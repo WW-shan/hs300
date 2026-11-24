@@ -45,8 +45,8 @@ def _market_symbol(code: str) -> str:
 
 
 def _enckey() -> str:
-    from py_mini_racer import MiniRacer
     import akshare.stock.stock_hold_control_cninfo as module
+    from py_mini_racer import MiniRacer
 
     runtime = MiniRacer()
     runtime.eval(module._get_file_content_cninfo("cninfo.js"))

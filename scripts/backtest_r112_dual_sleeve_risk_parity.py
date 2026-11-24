@@ -26,6 +26,7 @@ import polars as pl
 from app.backtest import strategy as strategy_module
 from app.backtest.engine import BacktestEngine
 from app.backtest.strategy import StrategyBacktestConfig, StrategyBacktestService
+from app.factor_research.evidence_guard import require_formal_evidence
 from app.factors.store import load_into_registry
 from app.services.industry_map import industry_loader_for
 from app.strategy import config as strategy_config
@@ -154,7 +155,8 @@ def _run_sleeve(
     )
     started = time.perf_counter()
     with _patched_membership(membership):
-        result = service.run(cfg)
+        result = service.run_with_evidence(cfg)
+    require_formal_evidence(result, label=Path(__file__).name)
     if result.error:
         raise RuntimeError(f"{strategy_id} {start}: {result.error}")
     frame = _curve_frame(result.equity_curve)

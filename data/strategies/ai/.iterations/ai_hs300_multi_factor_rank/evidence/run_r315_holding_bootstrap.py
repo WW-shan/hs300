@@ -37,6 +37,7 @@ sys.path.insert(0, str(ROOT / "backend"))
 from app.backtest import strategy as strategy_module
 from app.backtest.engine import BacktestEngine
 from app.backtest.strategy import StrategyBacktestConfig, StrategyBacktestService
+from app.factor_research.evidence_guard import formal_run
 from app.factors.store import load_into_registry
 from app.services.industry_map import industry_loader_for
 from app.strategy import config as strategy_config
@@ -297,7 +298,7 @@ def main() -> int:
                 position_sizing="equal", mode="position", asset_type="stock", hs300=True,
             )
             with patched_membership(members):
-                result = service.run(cfg)
+                result = formal_run(service, cfg)
             if result.error:
                 raise RuntimeError(f"{strategy_id}: {result.error}")
             return curve_frame(result.equity_curve)

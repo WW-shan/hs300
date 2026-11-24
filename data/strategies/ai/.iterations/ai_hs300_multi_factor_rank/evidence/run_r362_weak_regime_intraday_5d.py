@@ -13,6 +13,8 @@ from pathlib import Path
 
 import polars as pl
 
+from app.factor_research.evidence_guard import formal_run
+
 ROOT = next(path for path in Path(__file__).resolve().parents if (path / "CONTRIBUTING.md").is_file())
 DATA = ROOT / "data"
 EVIDENCE = Path(__file__).resolve().parent
@@ -226,7 +228,7 @@ def main() -> int:
                     if curve_path.exists():
                         raise RuntimeError(f"R362 cache exists; refusing overwrite: {curve_path.name}")
                     config = make_backtest_config(strategy_id, start, cost)
-                    result = service.run(config)
+                    result = formal_run(service, config)
                     if result.error:
                         raise RuntimeError(f"R362 {key}: {result.error}")
                     curve = curve_frame(result.equity_curve)

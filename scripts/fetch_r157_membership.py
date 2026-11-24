@@ -1,7 +1,6 @@
 ﻿"""R157 step 1: fetch 2018-2020 monthly HS300 membership snapshots via BaoStock."""
 from __future__ import annotations
 
-import json
 from datetime import date
 from pathlib import Path
 

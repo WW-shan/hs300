@@ -13,6 +13,8 @@ from pathlib import Path
 
 import polars as pl
 
+from app.factor_research.evidence_guard import formal_run
+
 ROOT = next(path for path in Path(__file__).resolve().parents if (path / "CONTRIBUTING.md").is_file())
 DATA = ROOT / "data"
 EVIDENCE = Path(__file__).resolve().parent
@@ -227,7 +229,7 @@ def main() -> int:
                     if curve_path.exists():
                         raise RuntimeError(f"R364 cache exists; refusing overwrite: {curve_path.name}")
                     config = make_backtest_config(strategy_id, start, cost)
-                    result = service.run(config)
+                    result = formal_run(service, config)
                     if result.error:
                         raise RuntimeError(f"R364 {key}: {result.error}")
                     curve = curve_frame(result.equity_curve)
@@ -268,7 +270,7 @@ def main() -> int:
     }
     r362_baseline = json.loads(R362_RESULT.read_text(encoding="utf-8"))
     r363_baseline = json.loads(R363_RESULT.read_text(encoding="utf-8"))
-    baseline_comparison = {
+    r362_comparison = {
         label: {
             "r364_minus_r362_annual": metrics[label]["2x"]["annual"] - r362_baseline["metrics"][label]["2x"]["annual"],
             "r364_minus_r362_sharpe": metrics[label]["2x"]["sharpe"] - r362_baseline["metrics"][label]["2x"]["sharpe"],
@@ -306,6 +308,7 @@ def main() -> int:
         "input_hashes_after": after,
         "input_isolation": isolation_report,
         "metrics": metrics,
+        "r362_component_ablation": r362_comparison,
         "close_position_component_ablation_vs_r363_blend": close_position_ablation,
         "r363_backtest_sha256": sha(R363_RESULT),
         "trade_counts_by_run": trade_counts,

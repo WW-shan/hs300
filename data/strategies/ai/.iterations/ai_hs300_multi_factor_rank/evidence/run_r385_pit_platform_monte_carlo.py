@@ -22,6 +22,8 @@ from typing import Any
 
 import polars as pl
 
+from app.factor_research.evidence_guard import formal_run
+
 ROOT = next(path for path in Path(__file__).resolve().parents if (path / "CONTRIBUTING.md").is_file())
 EVIDENCE = Path(__file__).resolve().parent
 DATA = ROOT / "data"
@@ -446,7 +448,7 @@ def run_current_pit_engine() -> dict[str, Any]:
             )
             started = time.perf_counter()
             with r371._patched_membership(membership):
-                result = service.run(config)
+                result = formal_run(service, config)
             if result.error:
                 raise RuntimeError(f"R385 {kind} {label} {cost}: {result.error}")
             curve = _curve_frame(result.equity_curve)

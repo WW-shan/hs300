@@ -115,7 +115,6 @@ def _daily_benchmark(combined: pl.DataFrame, memberships: pl.DataFrame) -> dict[
 
     panel = combined.select(["symbol", "date", "open"]).sort(["symbol", "date"])
     panel = panel.with_columns(pl.col("open").shift(-1).over("symbol").alias("next_open"))
-    dates = sorted(panel["date"].unique().to_list())
     member_panel = panel.filter(_hs300_panel_row_mask(panel, memberships).fill_null(False))
     market = (
         member_panel.filter(
@@ -132,7 +131,6 @@ def _daily_benchmark(combined: pl.DataFrame, memberships: pl.DataFrame) -> dict[
 
 
 def _series_and_bench(combined: pl.DataFrame, memberships: pl.DataFrame):
-    from app.backtest.strategy import _hs300_panel_row_mask
 
     panel = combined.select(["symbol", "date", "open"]).sort(["symbol", "date"])
     bench = _daily_benchmark(combined, memberships)

@@ -132,7 +132,6 @@ def main() -> int:
         "backup": str(BACKUP.relative_to(ROOT)),
         "restored": False,
     }
-    rebuilt = None
     a_curve = b_curve = None
     try:
         shutil.move(str(EXT), str(BACKUP))

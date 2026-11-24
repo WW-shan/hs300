@@ -79,7 +79,6 @@ def main() -> int:
     sidecar = prereg_path.with_suffix(".sha256")
     if not sidecar.is_file() or sidecar.read_text(encoding="ascii").split()[0] != _sha(prereg_path):
         raise RuntimeError("R275 preregistration checksum mismatch")
-    prereg = json.loads(prereg_path.read_text(encoding="utf-8"))
     registrar_hash = _sha(Path(__file__).resolve())
     if OUT.exists() or OUT.with_suffix(".json.sha256").exists():
         prior = json.loads(OUT.read_text(encoding="utf-8"))

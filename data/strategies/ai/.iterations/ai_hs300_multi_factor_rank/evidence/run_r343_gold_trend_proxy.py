@@ -12,6 +12,8 @@ from pathlib import Path
 
 import polars as pl
 
+from app.factor_research.evidence_guard import formal_run
+
 ROOT = next(path for path in Path(__file__).resolve().parents if (path / "CONTRIBUTING.md").is_file())
 EVIDENCE = Path(__file__).resolve().parent
 DATA = ROOT / "data"
@@ -282,7 +284,7 @@ def main() -> int:
                 hs300=True,
             )
             with r324.patched_membership(members):
-                result = service.run(cfg)
+                result = formal_run(service, cfg)
             if result.error:
                 raise RuntimeError(f"{strategy_id} {start} {cost_factor}x: {result.error}")
             curve = r324.curve_frame(result.equity_curve)

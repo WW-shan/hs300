@@ -30,3 +30,14 @@ def require_formal_evidence(result: Any, *, label: str) -> dict[str, Any]:
             "execution_timing": execution.get("status"),
         },
     }
+
+
+def formal_run(service: Any, config: Any, *args: Any, label: str | None = None, **kwargs: Any) -> Any:
+    """Run one project backtest and fail closed when formal evidence is absent."""
+    import sys
+    from pathlib import Path
+
+    caller = Path(sys._getframe(1).f_code.co_filename).name
+    result = service.run_with_evidence(config, *args, **kwargs)
+    require_formal_evidence(result, label=label or caller)
+    return result

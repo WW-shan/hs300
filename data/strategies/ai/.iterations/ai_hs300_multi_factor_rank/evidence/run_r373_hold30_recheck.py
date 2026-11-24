@@ -7,7 +7,7 @@ import json
 import math
 import statistics as st
 import sys
-from datetime import date, timedelta
+from datetime import date
 from pathlib import Path
 from typing import Any
 
@@ -197,10 +197,6 @@ def build_report() -> dict[str, Any]:
                 threshold=prereg["evaluation"]["core_2x"],
             )
         )
-    control = next(
-        item for item in r371["rows"]
-        if (item["fade_days"], item["hold_days"], item["stop_loss"]) == tuple(prereg["control"])
-    )
     control_b = _curve(R371_CACHE / f"{_cell_slug(*prereg['control'])}.parquet")
     control_curve = _final_curve(a, control_b, c, ctx)
     control_stats = _stats(control_curve)

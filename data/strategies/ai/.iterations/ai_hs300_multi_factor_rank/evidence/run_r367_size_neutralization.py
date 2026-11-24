@@ -13,6 +13,8 @@ from pathlib import Path
 
 import polars as pl
 
+from app.factor_research.evidence_guard import formal_run
+
 ROOT = next(path for path in Path(__file__).resolve().parents if (path / "CONTRIBUTING.md").is_file())
 DATA = ROOT / "data"
 EVIDENCE = Path(__file__).resolve().parent
@@ -198,7 +200,7 @@ def main() -> int:
             for start in PHASES:
                 for cost in (2, 3):
                     key = run_key(label, start, cost)
-                    result = service.run(make_config(strategy_id, start, cost))
+                    result = formal_run(service, make_config(strategy_id, start, cost))
                     if result.error:
                         raise RuntimeError(f"R367 {key}: {result.error}")
                     curve = curve_frame(result.equity_curve)

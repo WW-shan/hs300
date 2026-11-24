@@ -8,7 +8,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 EVIDENCE = ROOT / "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence"
-RUNNER = ROOT / "scripts/backtest_r273_gate_exit.py"
+RUNNER = None
+# Historical R273 runner was pruned after its evidence was retained; re-registration requires a current runner.
 REGISTRAR = ROOT / "scripts/register_r273_panel.py"
 STRATEGY = ROOT / "data/strategies/ai/ai_hs300_macro_gate_quality_r273_gate_exit.py"
 PREVIOUS_PREREG = EVIDENCE / "r273_preregistration.json"
@@ -44,6 +45,7 @@ def _inventory(root: Path) -> dict:
 
 
 def main() -> int:
+    raise RuntimeError("R273 historical runner was pruned; re-register against a current runner before reuse")
     output = OUTPUT
     sidecar = output.with_suffix(".sha256")
     if output.exists() or sidecar.exists():
@@ -174,7 +176,7 @@ def main() -> int:
             "Exit signals use the stored daily gate state; positions can remain exposed until the next tradable open.",
             "A passing research test does not authorize paper trading or production; production remains pause_production.",
         ],
-        "runner_sha256": _sha256(RUNNER),
+        "runner_sha256": None,
         "panel_registrar_sha256": _sha256(REGISTRAR),
     }
     raw = json.dumps(payload, ensure_ascii=False, indent=2) + chr(10)

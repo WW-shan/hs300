@@ -16,6 +16,8 @@ from typing import Any
 
 import polars as pl
 
+from app.factor_research.evidence_guard import formal_run
+
 ROOT = next(path for path in Path(__file__).resolve().parents if (path / "CONTRIBUTING.md").is_file())
 EVIDENCE = Path(__file__).resolve().parent
 DATA = ROOT / "data"
@@ -417,7 +419,7 @@ def _run_grid() -> dict[str, Any]:
                         hs300=True,
                     )
                     with _patched_membership(membership_frame):
-                        result = service.run(config)
+                        result = formal_run(service, config)
                     if result.error:
                         raise RuntimeError(f"R371 {slug}: {result.error}")
                     curve = _curve_frame(result.equity_curve)

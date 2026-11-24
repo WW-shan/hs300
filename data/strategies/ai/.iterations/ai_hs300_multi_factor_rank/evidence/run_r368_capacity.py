@@ -13,6 +13,8 @@ from pathlib import Path
 
 import polars as pl
 
+from app.factor_research.evidence_guard import formal_run
+
 ROOT = next(path for path in Path(__file__).resolve().parents if (path / "CONTRIBUTING.md").is_file())
 DATA = ROOT / "data"
 EVIDENCE = Path(__file__).resolve().parent
@@ -149,7 +151,7 @@ def main() -> int:
     from app.indicators import pipeline
     from app.services import regime_builder
     from app.strategy.engine import StrategyEngine
-    from app.tickflow.repository import DataStore,KlineRepository
+    from app.tickflow.repository import DataStore, KlineRepository
     old_data=Path(settings.data_dir); old_membership_fn=strategy_module._hs300_membership_frame
     work=Path(tempfile.mkdtemp(prefix="r368_engine_")); curves={}; trades={}
     try:
@@ -169,7 +171,7 @@ def main() -> int:
                 for start in PHASES:
                     for cost in (2,3):
                         run_key=key(label,capacity,start,cost)
-                        result=service.run(make_backtest_config(sid,start,cost,capacity))
+                        result = formal_run(service, make_backtest_config(sid,start,cost,capacity))
                         if result.error:raise RuntimeError(f"R368 {run_key}: {result.error}")
                         curve=curve_frame(result.equity_curve)
                         if curve["date"].min()!=start or curve["date"].max()!=END:raise RuntimeError(f"R368 dates mismatch: {run_key}")

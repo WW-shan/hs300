@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-from collections import defaultdict
 from datetime import date
 from pathlib import Path
 

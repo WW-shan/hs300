@@ -13,7 +13,6 @@ import tomllib
 import zipfile
 from pathlib import Path, PurePosixPath
 
-
 PRIVATE_KEY_HEADER = re.compile(rb"-----BEGIN (?:[A-Z0-9 ]+ )?PRIVATE KEY-----")
 
 

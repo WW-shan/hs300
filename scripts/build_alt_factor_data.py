@@ -1441,7 +1441,7 @@ def _ah_premium_daily(dates: list[date]) -> pl.DataFrame:
     """Market-level AH premium factors, direction negative.
 
     Reads evidence/r194_ah_premium_scan.json monthly_records (built by
-    scripts/backtest_r194_ah_premium_scan.py). Signal is broadcast daily with
+    the archived source scan script). Signal is broadcast daily with
     a 45-day freshness cap; values are PIT month-end figures.
     """
     evidence = DATA / "strategies" / "ai" / ".iterations" / "ai_hs300_multi_factor_rank" / "evidence" / "r194_ah_premium_scan.json"
@@ -1505,7 +1505,7 @@ def _margin_safety_daily(dates: list[date]) -> pl.DataFrame:
     """Market-level margin maintenance-ratio factors, direction positive.
 
     Reads evidence/r196_margin_safety_scan.json monthly_records (built by
-    scripts/backtest_r196_margin_safety_scan.py). Signal is broadcast daily
+    the archived source scan script). Signal is broadcast daily
     with a 45-day freshness cap; values are PIT month-end figures.
     """
     evidence = DATA / "strategies" / "ai" / ".iterations" / "ai_hs300_multi_factor_rank" / "evidence" / "r196_margin_safety_scan.json"
@@ -1532,7 +1532,7 @@ def _breadth_daily(dates: list[date]) -> pl.DataFrame:
     """Market-level HS300 new-high/new-low breadth, direction positive.
 
     Reads evidence/r197_breadth_scan.json monthly_records (built by
-    scripts/backtest_r197_breadth_scan.py). Signal is broadcast daily with a
+    the archived source scan script). Signal is broadcast daily with a
     45-day freshness cap; values are PIT month-end figures.
     """
     evidence = DATA / "strategies" / "ai" / ".iterations" / "ai_hs300_multi_factor_rank" / "evidence" / "r197_breadth_scan.json"
@@ -1559,7 +1559,7 @@ def _shibor_tightness_daily(dates: list[date]) -> pl.DataFrame:
     """Market-level SHIBOR 3M tightness z-score, direction negative.
 
     Reads evidence/r198_shibor_scan.json monthly_records (built by
-    scripts/backtest_r198_shibor_scan.py). Signal is broadcast daily with a
+    the archived source scan script). Signal is broadcast daily with a
     45-day freshness cap; values are PIT month-end figures.
     """
     evidence = DATA / "strategies" / "ai" / ".iterations" / "ai_hs300_multi_factor_rank" / "evidence" / "r198_shibor_scan.json"
@@ -1585,7 +1585,7 @@ def _concentration_daily(dates: list[date]) -> pl.DataFrame:
     """Market-level HS300 turnover concentration, direction negative.
 
     Reads evidence/r199_concentration_scan.json monthly_records (built by
-    scripts/backtest_r199_concentration_scan.py). Signal is broadcast daily
+    the archived source scan script). Signal is broadcast daily
     with a 45-day freshness cap; values are PIT month-end figures.
     """
     evidence = DATA / "strategies" / "ai" / ".iterations" / "ai_hs300_multi_factor_rank" / "evidence" / "r199_concentration_scan.json"
@@ -1612,7 +1612,7 @@ def _turnover_level_daily(dates: list[date]) -> pl.DataFrame:
     """Market-level HS300 turnover-rate level, direction negative.
 
     Reads evidence/r201_turnover_scan.json monthly_records (built by
-    scripts/backtest_r201_turnover_scan.py). Signal is broadcast daily with a
+    the archived source scan script). Signal is broadcast daily with a
     45-day freshness cap; values are PIT month-end figures.
     """
     evidence = DATA / "strategies" / "ai" / ".iterations" / "ai_hs300_multi_factor_rank" / "evidence" / "r201_turnover_scan.json"

@@ -11,9 +11,9 @@ import json
 import sys
 import time
 import traceback
+from pathlib import Path
 
 import polars as pl
-from pathlib import Path
 
 EV = Path(__file__).resolve().parents[1] / "data" / "strategies" / "ai" / ".iterations" / "ai_hs300_multi_factor_rank" / "evidence"
 LOG = Path(__file__).resolve().parents[1] / "data" / "research" / "rebuild_log.json"

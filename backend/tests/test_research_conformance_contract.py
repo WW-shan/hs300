@@ -228,6 +228,8 @@ def test_asset_ledger_has_standard_type_for_every_runner() -> None:
     runners = [row for row in payload["rows"] if row.get("kind") == "runner"]
     assert runners
     assert all(row.get("research_type") for row in runners)
+    retained = [row for row in payload["rows"] if row.get("kind") == "runner" and row.get("status") == "project_chain_with_formal_evidence"]
+    assert retained
     assert {row["status"] for row in runners} <= {
         "project_chain_with_formal_evidence",
         "statistical_or_feasibility_only",
@@ -274,8 +276,49 @@ def test_conformance_classifier_rejects_unguarded_formal_call() -> None:
 
 def test_all_direct_formal_calls_are_guarded() -> None:
     offenders = []
-    for path in sorted((ROOT / "scripts").glob("research_*.py")):
+    paths = [
+        *sorted((ROOT / "scripts").glob("research_*.py")),
+        *sorted((ROOT / "scripts").glob("backtest_*.py")),
+        *sorted((ROOT / "data/strategies/ai/.iterations").rglob("*.py")),
+    ]
+    for path in paths:
         text = path.read_text(encoding="utf-8")
-        if "run_with_evidence" in text and "require_formal_evidence" not in text:
-            offenders.append(path.name)
+        if "run_with_evidence" in text and "require_formal_evidence" not in text and "formal_run" not in text:
+            offenders.append(path.as_posix())
     assert not offenders, offenders
+
+
+def test_all_retained_legacy_backtest_helpers_use_formal_evidence() -> None:
+    import json
+
+    path = ROOT / "data/factor_research/research/legacy_backtest_keep_closure_2026-11-24.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    retained = [row["path"] for row in payload["rows"] if row["keep_closure"]]
+    unguarded = []
+    for relative in retained:
+        text = (ROOT / relative).read_text(encoding="utf-8")
+        if "service.run(" in text or (
+            "run_with_evidence" in text and "require_formal_evidence" not in text
+        ):
+            unguarded.append(relative)
+    assert not unguarded, unguarded
+
+
+def test_formal_run_wrapper_uses_guarded_evidence() -> None:
+    from app.factor_research.evidence_guard import formal_run
+
+    class Result:
+        run_id = "wrapper-contract"
+        evidence = {
+            "persistence": {"status": "saved"},
+            "lookahead": {"status": "passed"},
+            "execution_timing": {"status": "passed"},
+        }
+
+    class Service:
+        def run_with_evidence(self, config):
+            assert config == "config"
+            return Result()
+
+    result = formal_run(Service(), "config")
+    assert result.run_id == "wrapper-contract"

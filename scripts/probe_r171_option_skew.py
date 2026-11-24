@@ -3,10 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
-import json
 import math
-import sys
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date
 from pathlib import Path
 
@@ -18,11 +15,12 @@ DATA = ROOT / "data"
 EVIDENCE = DATA / "strategies" / "ai" / ".iterations" / "ai_hs300_multi_factor_rank" / "evidence"
 OUT = EVIDENCE / "r171_option_data_probe.json"
 CACHE = DATA / "research" / "r171_option_skew"
-R167_SCRIPT = ROOT / "scripts" / "backtest_r167_target_price_scan.py"
 START = date(2020, 1, 1)
 END = date(2026, 8, 31)
 
 
+# The historical R167 runner was pruned after its frozen result was retained.
+# This probe must be re-registered against the current project runner before reuse.
 def _load(path: Path, name: str):
     spec = importlib.util.spec_from_file_location(name, path)
     module = importlib.util.module_from_spec(spec)
@@ -130,56 +128,10 @@ def _fetch_day(day: date) -> dict:
 
 
 def main() -> int:
-    r167 = _load(R167_SCRIPT, "r167")
-    calendar = r167._calendar()
-    month_ends = [day for day in r167._month_ends(calendar) if START <= day <= END]
-    rows = []
-    errors = []
-    with ThreadPoolExecutor(max_workers=4) as pool:
-        futures = {pool.submit(_fetch_day, day): day for day in month_ends}
-        for index, future in enumerate(as_completed(futures), start=1):
-            day = futures[future]
-            try:
-                rows.append(future.result())
-            except Exception as exc:
-                errors.append({"date": str(day), "error": f"{type(exc).__name__}: {exc}"})
-            if index % 12 == 0 or index == len(futures):
-                print(f"option probe {index}/{len(futures)}", flush=True)
-    rows.sort(key=lambda x: x["date"])
-    valid_skew = [row for row in rows if row["skew_25d"] is not None]
-    valid_pcr = [row for row in rows if row["pcr_volume"] is not None and row["pcr_oi"] is not None]
-    result = {
-        "purpose": "R171 300ETF option skew data-availability probe; no forward-return analysis",
-        "window": [str(START), str(END)],
-        "requested_months": len(month_ends),
-        "successful_months": len(rows),
-        "errors": errors,
-        "coverage": {
-            "skew_months": len(valid_skew),
-            "skew_start": valid_skew[0]["date"] if valid_skew else None,
-            "skew_end": valid_skew[-1]["date"] if valid_skew else None,
-            "pcr_months": len(valid_pcr),
-            "pcr_start": valid_pcr[0]["date"] if valid_pcr else None,
-            "pcr_end": valid_pcr[-1]["date"] if valid_pcr else None,
-        },
-        "audit": {
-            "min_contracts": min((row["contracts_510300"] for row in rows), default=None),
-            "max_contracts": max((row["contracts_510300"] for row in rows), default=None),
-            "months_with_multiple_expiries": sum(len(row["expiries"]) >= 2 for row in rows),
-            "months_missing_skew": [row["date"] for row in rows if row["skew_25d"] is None],
-        },
-        "records": rows,
-        "cache": str(CACHE.relative_to(ROOT)),
-        "limitations": [
-            "Only month-end official SSE risk-indicator snapshots are probed.",
-            "Adjusted and standard contracts are deduplicated by side and strike, preferring M contracts.",
-            "No forward returns or strategy performance are included in this probe.",
-        ],
-    }
-    EVIDENCE.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(json.dumps({"out": str(OUT), "coverage": result["coverage"], "audit": result["audit"], "errors": errors}, ensure_ascii=False, indent=2))
-    return 0
+    raise RuntimeError(
+        "R171 probe requires a reconstructed historical R167 calendar helper; "
+        "re-register it against the current project runner before reuse"
+    )
 
 
 if __name__ == "__main__":

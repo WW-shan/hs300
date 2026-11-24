@@ -12,6 +12,7 @@ from pathlib import Path
 
 import polars as pl
 
+from app.factor_research.evidence_guard import require_formal_evidence
 from app.services.industry_map import load_industry_l1
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -121,7 +122,8 @@ def _run_segment(service, membership: pl.DataFrame, r112, sid: str, start: date,
     )
     started = time.perf_counter()
     with r112._patched_membership(membership):
-        result = service.run(cfg)
+        result = service.run_with_evidence(cfg)
+    require_formal_evidence(result, label=Path(__file__).name)
     if result.error:
         if "\u672a\u4ea7\u751f\u4e70\u5165\u4fe1\u53f7" in str(result.error):
             frame = pl.DataFrame({"date": _benchmark_dates(start, end)}).with_columns(pl.lit(1_000_000.0).alias("value"))
