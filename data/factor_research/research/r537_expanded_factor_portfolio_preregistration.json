@@ -1,0 +1,171 @@
+{
+  "created_at": "2026-11-25T04:00:54+08:00",
+  "data_source": "project",
+  "execution": {
+    "cost_multiplier": 2,
+    "leverage": "none",
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0
+  },
+  "falsification_checks": [
+    "r536a_cluster_representatives_only",
+    "no_weight_or_parameter_search",
+    "formal_evidence_saved_lookahead_t1",
+    "gate_policy_v2_layered_thresholds",
+    "five_x_warning_only"
+  ],
+  "gates": {
+    "five_x_hard_rejection": false,
+    "gate_policy_v2": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/gate_policy_v2.json",
+    "validation_annual_positive": true
+  },
+  "hypothesis": "Broader independent factor breadth improves full-period risk-adjusted return without sacrificing the recent-year profile.",
+  "input_hashes": {
+    "gate_policy_v2": "d1b4d15169b0dfc99e93c5baf1eaef5c6fc334ca68a651971567e7ec53724123",
+    "r526_industry": "4f9fd44eb17e2a3acb5c91c0b6c15afb2595e36a9174f70de29611e6d3c6a30f",
+    "r526_membership": "3c7bee9c7dd8cb318cd1038a560dd3742a36f63f1ecb45a07d24e77c1d24781d",
+    "r533a_preregistration": "d86e5342bbca81289cbfc78bcedb284b10bcdced71f545b30c2c0a68f9b7a762",
+    "r533a_result": "e11c91864ac8a43d479ebf466e1fb2b004407dc940b1fbe7faeb0ee5e41ca1d7",
+    "r536a_preregistration": "362c6dd719b60964eb6b4f68cebc28bf6b2d4fe3b4dea266a76eee27af9851e3",
+    "r536a_result": "968851e407df5c197c6e895d1057d1db850fb57167a30eba633a00bb346af93c"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "parameters": {
+    "aggregation": "equal-weight percentile rank",
+    "control": "R533A six-factor core",
+    "entry_score": 70.0,
+    "exit_score": 40.0,
+    "expanded_representatives": [
+      {
+        "cluster": [
+          "amihud",
+          "amount_level"
+        ],
+        "family_id": "amount_level",
+        "parameter": 120
+      },
+      {
+        "cluster": [
+          "bollinger_width"
+        ],
+        "family_id": "bollinger_width",
+        "parameter": 10
+      },
+      {
+        "cluster": [
+          "dividend_yield_absolute",
+          "dividend_yield_quantile"
+        ],
+        "family_id": "dividend_yield_quantile",
+        "parameter": 0.7
+      },
+      {
+        "cluster": [
+          "fund_count_quantile"
+        ],
+        "family_id": "fund_count_quantile",
+        "parameter": 0.4
+      },
+      {
+        "cluster": [
+          "fund_holding_ratio_absolute",
+          "fund_holding_ratio_quantile"
+        ],
+        "family_id": "fund_holding_ratio_absolute",
+        "parameter": -0.05
+      },
+      {
+        "cluster": [
+          "lhb_inst_net_buy_event"
+        ],
+        "family_id": "lhb_inst_net_buy_event",
+        "parameter": 20
+      },
+      {
+        "cluster": [
+          "lhb_net_buy_event",
+          "lhb_net_buy_holding"
+        ],
+        "family_id": "lhb_net_buy_holding",
+        "parameter": 20
+      },
+      {
+        "cluster": [
+          "market_down_beta"
+        ],
+        "family_id": "market_down_beta",
+        "parameter": 120
+      },
+      {
+        "cluster": [
+          "annual_volatility",
+          "atr_risk",
+          "cs_spread",
+          "downside_volatility",
+          "idio_vol",
+          "max_return"
+        ],
+        "family_id": "max_return",
+        "parameter": 60
+      },
+      {
+        "cluster": [
+          "repurchase_event_decay"
+        ],
+        "family_id": "repurchase_event_decay",
+        "parameter": 20
+      },
+      {
+        "cluster": [
+          "repurchase_holding"
+        ],
+        "family_id": "repurchase_holding",
+        "parameter": 10
+      },
+      {
+        "cluster": [
+          "turnover_level"
+        ],
+        "family_id": "turnover_level",
+        "parameter": 120
+      },
+      {
+        "cluster": [
+          "vol_of_vol"
+        ],
+        "family_id": "vol_of_vol",
+        "parameter": 20
+      }
+    ],
+    "max_hold_days": 60,
+    "max_positions": 10,
+    "weight_search": false
+  },
+  "question": "Does an equal-weight portfolio of the 13 independent R536A representatives improve the formal R533 core portfolio after validation and recent-year confirmation?",
+  "research_id": "R537",
+  "research_type": "project_formal",
+  "runner": "scripts/research_r537_expanded_factor_portfolio.py",
+  "runner_sha256": "89330c40dd76a607284900db9535c12e407481e86341605ccf597df8f5556406",
+  "sample": {
+    "end": "2026-11-05",
+    "fresh_starts": [
+      "2022-05-05",
+      "2023-01-03",
+      "2024-01-02",
+      "2025-01-02",
+      "2025-10-14",
+      "2026-01-05"
+    ],
+    "recent_start": "2025-10-14",
+    "start": "2022-05-05",
+    "validation_end": "2025-10-13",
+    "validation_start": "2025-01-01"
+  },
+  "schema_version": 1,
+  "study_scope": "research_only"
+}
