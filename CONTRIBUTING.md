@@ -616,6 +616,14 @@ The measure of following this guide is not how much documentation is written, bu
 - 优化和步进优化共享矩阵时，矩阵必须覆盖每个 fold 的完整窗口；缓存键必须包含会改变矩阵结果的输入。
 - 修改策略、评分或排序逻辑时，同时核对历史策略结果、回测交易记录和 UI 展示是否使用同一候选集和排序方向。
 
+### 5.4 研究合同
+
+- 所有新增研究运行器，以及合同生效后发生字节变化的历史运行器，都必须遵守 `docs/superpowers/specs/2026-11-24-research-contract-design.md`。
+- 研究执行前必须冻结预注册和 sidecar，声明 `RESEARCH_TYPE` 与 `RESEARCH_PREREGISTRATION`，并发布与 ResearchLedger 绑定的不可覆盖 JSON/Markdown 证据。
+- `project_formal` 必须使用项目正式回测链并通过三项正式证据；合成、诊断、统计、可行性、归因和派生研究必须使用各自合同类型，不得冒充正式项目证据。
+- 合同生效前运行器只按 grandfather 清单中的精确路径和 SHA-256 豁免；任何字节变化都必须补研究合同。
+- `scripts/audit_research_contract.py` 是 CI 门禁；审计失败时不得合并研究改动。
+
 ## 6. 缓存、并发与性能
 
 项目同时存在仓库缓存、enriched 历史缓存、实时聚合、筛选缓存、策略结果缓存、回测矩阵缓存、mtime 缓存、SSE 和前端 TanStack Query。修改读写路径时必须列出受影响的缓存层。

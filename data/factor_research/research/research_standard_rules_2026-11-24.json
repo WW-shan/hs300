@@ -6,9 +6,12 @@
     "feasibility_probe": "Tests external data availability or coverage; MUST identify external source and may not claim tradability or portfolio performance.",
     "private_runtime": "User-owned data/strategies/custom; not repository research evidence.",
     "project_formal": "Produces portfolio return, drawdown, Sharpe, or strategy conclusion using project data and strategy engine. Direct calls MUST use StrategyBacktestService.run_with_evidence and require_formal_evidence; an indirect call is allowed only when the runner uses a repository helper that itself calls run_with_evidence and require_formal_evidence.",
-    "statistical_screen": "Produces factor IC, correlation, coverage, statistical admission, or parameter-statistical evidence; MUST use project data and declared statistical method; may not claim portfolio return/strategy conclusion."
+    "statistical_screen": "Produces factor IC, correlation, coverage, statistical admission, or parameter-statistical evidence; MUST use project data and declared statistical method; may not claim portfolio return/strategy conclusion.",
+    "synthetic_market_stress": "Uses a declared synthetic market model (including GBM) with project execution semantics for stress testing only; never a real-history conclusion and never promotion evidence."
   },
+  "contract_spec": "docs/superpowers/specs/2026-11-24-research-contract-design.md",
   "effective_from": "2026-11-24",
+  "grandfather_manifest": "data/factor_research/research/research_contract_grandfather_2026-11-24.json",
   "mandatory_fields": {
     "attribution": [
       "research_type",
@@ -43,6 +46,18 @@
       "input_hashes",
       "method",
       "result_hashes"
+    ],
+    "synthetic_market_stress": [
+      "research_type",
+      "question",
+      "hypothesis",
+      "runner",
+      "runner_sha256",
+      "preregistration_sha256",
+      "data_source",
+      "synthetic_model",
+      "falsification_checks",
+      "result_hashes"
     ]
   },
   "prohibitions": [
@@ -53,7 +68,19 @@
     "No result file may be rewritten without a new dated version and a hash-linked amendment.",
     "No hand-written ETF, overlay, or return simulator may be classified as derived_analysis_only.",
     "No research runner may omit a standard research type; diagnostics must be explicit.",
-    "No diagnostic runner may be counted as a project portfolio result merely because part of its inputs came from the project data store."
+    "No diagnostic runner may be counted as a project portfolio result merely because part of its inputs came from the project data store.",
+    "No new or modified research runner may bypass the mandatory research contract.",
+    "No synthetic_market_stress result may be labeled project_formal or promote active_version."
+  ],
+  "research_types": [
+    "attribution",
+    "derived_analysis_only",
+    "diagnostic_simulation",
+    "feasibility_probe",
+    "private_runtime",
+    "project_formal",
+    "statistical_screen",
+    "synthetic_market_stress"
   ],
   "schema_version": 1
 }

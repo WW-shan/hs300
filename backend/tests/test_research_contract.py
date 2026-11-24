@@ -306,3 +306,136 @@ def test_replaced_result_bytes_fail_closed(tmp_path: Path) -> None:
     except ValueError:
         return
     raise AssertionError("immutable result drift must fail closed")
+
+
+def _load_audit_module():
+    import importlib.util
+    import sys
+
+    root = Path(__file__).resolve().parents[2]
+    path = root / "scripts/audit_research_contract.py"
+    spec = importlib.util.spec_from_file_location("audit_research_contract_contract", path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def _fixture_root(tmp_path: Path, runner_text: str) -> Path:
+    runner = tmp_path / "scripts/research_contract_fixture.py"
+    runner.parent.mkdir(parents=True, exist_ok=True)
+    runner.write_text(runner_text, encoding="utf-8")
+    research = tmp_path / "data/factor_research/research"
+    research.mkdir(parents=True, exist_ok=True)
+    manifest = {
+        "schema_version": 1,
+        "generated_at": "2026-11-24",
+        "count": 0,
+        "rows": [],
+    }
+    (research / "research_contract_grandfather_2026-11-24.json").write_text(
+        json.dumps(manifest), encoding="utf-8"
+    )
+    return runner
+
+
+def test_contract_audit_rejects_new_undeclared_runner(tmp_path: Path) -> None:
+    module = _load_audit_module()
+    _fixture_root(tmp_path, "# fresh runner\n")
+    payload = module.audit_repository(tmp_path)
+    assert payload["errors"] == ["contract_declarations_missing:scripts/research_contract_fixture.py"]
+
+
+def test_contract_audit_accepts_exact_grandfather_and_rejects_drift(tmp_path: Path) -> None:
+    module = _load_audit_module()
+    runner = _fixture_root(tmp_path, "# frozen runner\n")
+    research = tmp_path / "data/factor_research/research"
+    manifest = {
+        "schema_version": 1,
+        "generated_at": "2026-11-24",
+        "count": 1,
+        "rows": [{
+            "path": "scripts/research_contract_fixture.py",
+            "sha256": hashlib.sha256(runner.read_bytes()).hexdigest(),
+            "disposition": "legacy_grandfathered",
+            "reason": "fixture",
+        }],
+    }
+    (research / "research_contract_grandfather_2026-11-24.json").write_text(
+        json.dumps(manifest), encoding="utf-8"
+    )
+    assert module.audit_repository(tmp_path)["errors"] == []
+    runner.write_text("# changed runner\n", encoding="utf-8")
+    assert module.audit_repository(tmp_path)["errors"] == [
+        "grandfathered_runner_changed:scripts/research_contract_fixture.py",
+        "contract_declarations_missing:scripts/research_contract_fixture.py",
+    ]
+
+
+def test_contract_audit_accepts_complete_new_contract(tmp_path: Path) -> None:
+    module = _load_audit_module()
+    runner = _fixture_root(
+        tmp_path,
+        'RESEARCH_TYPE = "non_return_research"\n'
+        'RESEARCH_PREREGISTRATION = "data/factor_research/research/r-audit_preregistration.json"\n',
+    )
+    research = tmp_path / "data/factor_research/research"
+    prereg_path = research / "r-audit_preregistration.json"
+    payload = _prereg(
+        research_type="non_return_research",
+        data_source="project",
+        synthetic_model=None,
+        input_hashes={"input": "a" * 64},
+        runner="scripts/research_contract_fixture.py",
+        runner_sha256=hashlib.sha256(runner.read_bytes()).hexdigest(),
+    )
+    raw = json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
+    prereg_path.write_text(raw, encoding="utf-8")
+    prereg_path.with_name(prereg_path.name + ".sha256").write_text(
+        hashlib.sha256(raw.encode()).hexdigest() + "  " + prereg_path.name + "\n",
+        encoding="ascii",
+    )
+    result_path = research / "r-audit_result.json"
+    markdown_path = research / "r-audit_result.md"
+    result = _result(
+        research_type="non_return_research",
+        preregistration_sha256=hashlib.sha256(raw.encode()).hexdigest(),
+        runner="scripts/research_contract_fixture.py",
+        runner_sha256=hashlib.sha256(runner.read_bytes()).hexdigest(),
+        metrics={"coverage": 1.0},
+        conclusion="inconclusive",
+    )
+    result_raw = json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
+    result_path.write_text(result_raw, encoding="utf-8")
+    result_path.with_name(result_path.name + ".sha256").write_text(
+        hashlib.sha256(result_raw.encode()).hexdigest() + "  " + result_path.name + "\n",
+        encoding="ascii",
+    )
+    markdown_path.write_text("result\n", encoding="utf-8")
+    markdown_path.with_name(markdown_path.name + ".sha256").write_text(
+        hashlib.sha256(b"result\n").hexdigest() + "  " + markdown_path.name + "\n",
+        encoding="ascii",
+    )
+    payload = module.audit_repository(tmp_path)
+    assert payload["errors"] == []
+    assert payload["runners"][0]["status"] == "contract_valid"
+
+
+def test_contract_audit_script_is_gated_in_ci() -> None:
+    root = Path(__file__).resolve().parents[2]
+    workflow = (root / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    assert "uv run --frozen python ../scripts/audit_research_contract.py" in workflow
+
+
+def test_standard_rules_reference_machine_contract_and_synthetic_type() -> None:
+    root = Path(__file__).resolve().parents[2]
+    rules = json.loads(
+        (root / "data/factor_research/research/research_standard_rules_2026-11-24.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert rules["contract_spec"] == "docs/superpowers/specs/2026-11-24-research-contract-design.md"
+    assert rules["grandfather_manifest"].endswith("research_contract_grandfather_2026-11-24.json")
+    assert "synthetic_market_stress" in rules["research_types"]
+    assert "synthetic_model" in rules["mandatory_fields"]["synthetic_market_stress"]

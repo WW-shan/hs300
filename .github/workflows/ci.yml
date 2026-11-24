@@ -80,6 +80,9 @@ jobs:
       - name: 安装依赖 (含 dev 测试链)
         run: uv sync --extra dev --frozen
 
+      - name: 研究合同审计
+        run: uv run --frozen python ../scripts/audit_research_contract.py
+
       - name: 后端全量测试
         run: uv run pytest tests -q
 

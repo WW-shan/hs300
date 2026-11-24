@@ -192,6 +192,8 @@ def classify(path: Path, payload: dict[str, Any] | None) -> dict[str, Any]:
         status = f"diagnostic_{research_type}"
     elif research_type == "diagnostic_custom_simulation":
         status = "diagnostic_custom_simulation"
+    elif research_type == "synthetic_market_stress":
+        status = "synthetic_market_stress"
     elif guarded_indirect:
         status = "project_chain_with_formal_evidence"
         formal_evidence = True
@@ -244,6 +246,7 @@ ALLOWED_RESEARCH_TYPES = {
     "external_data_diagnostic_simulation",
     "diagnostic_custom_simulation",
     "non_return_research",
+    "synthetic_market_stress",
 }
 
 
@@ -262,6 +265,7 @@ def assert_classification(item: dict[str, Any]) -> None:
         "diagnostic_statistical_screen": "statistical_screen",
         "diagnostic_non_project_backtest_or_custom_simulation": "diagnostic_custom_simulation",
         "diagnostic_custom_simulation": "diagnostic_custom_simulation",
+        "synthetic_market_stress": "synthetic_market_stress",
         "non_project_backtest_or_custom_simulation": "diagnostic_custom_simulation",
         "project_chain_without_formal_evidence": "project_formal_missing_evidence",
     }

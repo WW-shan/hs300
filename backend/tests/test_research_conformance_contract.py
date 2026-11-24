@@ -242,6 +242,7 @@ def test_asset_ledger_has_standard_type_for_every_runner() -> None:
         "diagnostic_statistical_screen",
         "diagnostic_custom_simulation",
         "diagnostic_non_project_backtest_or_custom_simulation",
+        "synthetic_market_stress",
     }
 
 
