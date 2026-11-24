@@ -1,0 +1,130 @@
+{
+  "created_at": "2026-11-25T05:30:56+08:00",
+  "data_source": "project",
+  "execution": {
+    "cost_multiplier": 2,
+    "leverage": "none",
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0
+  },
+  "falsification_checks": [
+    "training_only_threshold_selection",
+    "fixed_13_factor_members",
+    "fixed_r539c_execution",
+    "formal_evidence_saved_lookahead_t1",
+    "five_x_warning_only"
+  ],
+  "gates": {
+    "five_x_hard_rejection": false,
+    "gate_policy_v2": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/gate_policy_v2.json",
+    "recent_excess_vs_default": true,
+    "training_annual_min": 0.03,
+    "training_bootstrap_p05_positive": true,
+    "training_mdd_min": -0.2,
+    "training_sharpe_min": 0.8,
+    "training_trades_min": 20,
+    "validation_annual_positive": true
+  },
+  "hypothesis": "A different score threshold improves recent-year selection quality while preserving full-period risk.",
+  "input_hashes": {
+    "gate_policy_v2": "d1b4d15169b0dfc99e93c5baf1eaef5c6fc334ca68a651971567e7ec53724123",
+    "r526_industry": "4f9fd44eb17e2a3acb5c91c0b6c15afb2595e36a9174f70de29611e6d3c6a30f",
+    "r526_membership": "3c7bee9c7dd8cb318cd1038a560dd3742a36f63f1ecb45a07d24e77c1d24781d",
+    "r536a_preregistration": "362c6dd719b60964eb6b4f68cebc28bf6b2d4fe3b4dea266a76eee27af9851e3",
+    "r536a_result": "968851e407df5c197c6e895d1057d1db850fb57167a30eba633a00bb346af93c",
+    "r539c_preregistration": "845401546a7ef4474c608cedb2fe86bf58d69096b8a89c4c3b94a216ebb69474",
+    "r539c_result": "a2aa3b04d56783b724f91f40f03b4f71669b17f1db07703265bf195958e4b850"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "parameters": {
+    "bootstrap_block": 20,
+    "bootstrap_runs": 5000,
+    "bootstrap_seed": 541,
+    "industry_cap": 3,
+    "max_hold_days": 60,
+    "max_positions": 10,
+    "selection_order": [
+      "bootstrap_p05_desc",
+      "sharpe_desc",
+      "annual_desc",
+      "grid_order_asc"
+    ],
+    "stop_loss": -0.12,
+    "threshold_grid": [
+      {
+        "entry_score": 60,
+        "exit_score": 30,
+        "order": 0
+      },
+      {
+        "entry_score": 60,
+        "exit_score": 40,
+        "order": 1
+      },
+      {
+        "entry_score": 60,
+        "exit_score": 50,
+        "order": 2
+      },
+      {
+        "entry_score": 70,
+        "exit_score": 30,
+        "order": 3
+      },
+      {
+        "entry_score": 70,
+        "exit_score": 40,
+        "order": 4
+      },
+      {
+        "entry_score": 70,
+        "exit_score": 50,
+        "order": 5
+      },
+      {
+        "entry_score": 80,
+        "exit_score": 30,
+        "order": 6
+      },
+      {
+        "entry_score": 80,
+        "exit_score": 40,
+        "order": 7
+      },
+      {
+        "entry_score": 80,
+        "exit_score": 50,
+        "order": 8
+      }
+    ],
+    "trailing_stop": null
+  },
+  "question": "Can a training-only entry/exit score grid turn the R539C recent-year return positive?",
+  "research_id": "R541",
+  "research_type": "project_formal",
+  "runner": "scripts/research_r541_entry_exit_threshold_grid.py",
+  "runner_sha256": "2c3d8b3945286c3da5afa47f7391088b339b376646d30bd72ea837556a17e25a",
+  "sample": {
+    "end": "2026-11-05",
+    "fresh_starts": [
+      "2022-05-05",
+      "2023-01-03",
+      "2024-01-02",
+      "2025-01-02",
+      "2025-10-14",
+      "2026-01-05"
+    ],
+    "recent_start": "2025-10-14",
+    "train_end": "2024-12-31",
+    "train_start": "2022-05-05",
+    "validation_end": "2025-10-13",
+    "validation_start": "2025-01-01"
+  },
+  "schema_version": 1,
+  "study_scope": "research_only"
+}
