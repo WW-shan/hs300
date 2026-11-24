@@ -12,7 +12,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 RESEARCH = DATA / "factor_research" / "research"
-OUTPUT = RESEARCH / "research_asset_ledger_2026-11-25_v30.json"
+OUTPUT = RESEARCH / "research_asset_ledger_2026-11-25_v31.json"
 STRATEGY_DIRS = (
     DATA / "strategies" / "ai",
     DATA / "strategies" / "custom",
