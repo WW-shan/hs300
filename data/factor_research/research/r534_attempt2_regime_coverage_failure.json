@@ -1,0 +1,29 @@
+{
+  "attempted_preregistration": "data/factor_research/research/r534a_regime_gated_core_preregistration.json",
+  "attempted_preregistration_sha256": "c3e8514826a49670dc8d7cc49803e4c7d22f70c609df5725d0cce5f19a7fefab",
+  "attempted_runner_sha256": "eadcb581d6afc706b82d7467c621143826a115db69795e143fd340ef4b45ce85",
+  "correction": {
+    "end": "2026-10-14",
+    "round": "R534B",
+    "rule": "move the confirmation end to 2026-10-14, the last stock-market date whose T-1 regime chain is complete, without filling the missing regime day"
+  },
+  "failure": "ValueError: regime_history is missing 2026-10-15, required as T-1 for the 2026-10-16 matrix label",
+  "generated_at": "2026-11-25T02:51:41+08:00",
+  "impact": {
+    "result_published": false,
+    "rules_or_parameters_changed_after_oos_observation": false,
+    "training_rule_backtests_completed": true,
+    "validation_or_recent_returns_observed": false
+  },
+  "original_preregistration_remains_immutable": true,
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "root_cause": "R534A used 2026-10-21 as the confirmation end even though the project's enriched stock trading calendar contains 2026-10-15 and regime_history does not",
+  "round": "R534A",
+  "schema_version": 1,
+  "status": "attempt_2_failed_before_result_publication"
+}
