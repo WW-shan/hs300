@@ -4,6 +4,8 @@ import importlib.util
 import sys
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[2]
 RUNNER = ROOT / "scripts/research_r534_regime_gated_core.py"
 
@@ -90,6 +92,10 @@ def test_training_eligibility_rejects_return_drop_or_weak_bootstrap() -> None:
     assert not module.regime_rule_eligible(row, baseline_training_annual=0.1991)
 
 
+@pytest.mark.skipif(
+    not (ROOT / "data/regime_history/part.parquet").is_file(),
+    reason="regime_history is a local research data asset and is not tracked in CI",
+)
 def test_frozen_source_selected_parameters_are_supported() -> None:
     module = _module()
     source = module.load_source(ROOT)
