@@ -1,0 +1,109 @@
+{
+  "created_at": "2026-11-25T01:31:29+08:00",
+  "data_source": "project_data_with_r526_pit_membership",
+  "execution": {
+    "cost_multiplier": 2,
+    "leverage": "none",
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0
+  },
+  "falsification_checks": [
+    "training_only_correlation_clustering",
+    "validation_and_recent_not_used_for_representatives",
+    "fixed_seed_block_bootstrap_10_20_40"
+  ],
+  "gates": {
+    "at_least_two_clusters": true,
+    "bootstrap_ci_low_positive": true,
+    "coverage_min": 0.9,
+    "full_ic_min": 0.01,
+    "recent_ic_positive": true,
+    "train_ic_min": 0.01,
+    "validation_ic_positive": true
+  },
+  "hypothesis": "A small set of independent factor representatives preserves positive validation and recent IC.",
+  "input_hashes": {
+    "r526_industry": "4f9fd44eb17e2a3acb5c91c0b6c15afb2595e36a9174f70de29611e6d3c6a30f",
+    "r526_membership": "3c7bee9c7dd8cb318cd1038a560dd3742a36f63f1ecb45a07d24e77c1d24781d",
+    "r530_preregistration": "5b3158836c86b24c9e867f5c872d4b628685de345227a2a8e7df46670a120457",
+    "r530_result": "0b8b0c1317dd1be43f59a794bbea557bd2a148a6fcd6e9fbbf879b06ded6e2d8"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "parameters": {
+    "admitted_candidates": [
+      {
+        "family_id": "cs_spread",
+        "parameter": 60
+      },
+      {
+        "family_id": "idio_vol",
+        "parameter": 20
+      },
+      {
+        "family_id": "vol_of_vol",
+        "parameter": 20
+      },
+      {
+        "family_id": "amount_level",
+        "parameter": 5
+      },
+      {
+        "family_id": "annual_volatility",
+        "parameter": 10
+      },
+      {
+        "family_id": "atr_risk",
+        "parameter": 5
+      },
+      {
+        "family_id": "bollinger_width",
+        "parameter": 10
+      },
+      {
+        "family_id": "max_return",
+        "parameter": 60
+      },
+      {
+        "family_id": "turnover_level",
+        "parameter": 5
+      },
+      {
+        "family_id": "dividend_yield_absolute",
+        "parameter": 0.015
+      },
+      {
+        "family_id": "dividend_yield_quantile",
+        "parameter": 0.4
+      }
+    ],
+    "block_sizes": [
+      10,
+      20,
+      40
+    ],
+    "correlation_threshold": 0.7,
+    "final_mc": 5000,
+    "representative_rule": "highest R530 training directional IC within each training-only cluster",
+    "seed": 20261125
+  },
+  "question": "After removing highly correlated R530 admitted factors, does a training-only factor core retain predictive breadth?",
+  "research_id": "R531",
+  "research_type": "statistical_screen",
+  "runner": "scripts/research_r531_factor_library_core.py",
+  "runner_sha256": "5f40c17440e5438fae23a361c61b69cd8d3a00ca1678fa182f04387022189bff",
+  "sample": {
+    "end": "2026-11-05",
+    "recent_start": "2025-10-14",
+    "start": "2022-05-05",
+    "test_start": "2025-01-01",
+    "train_end": "2024-12-31",
+    "training_month_ends_min": 12
+  },
+  "schema_version": 1,
+  "study_scope": "research_only"
+}
