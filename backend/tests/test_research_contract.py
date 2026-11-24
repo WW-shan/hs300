@@ -197,3 +197,112 @@ def test_non_return_result_cannot_publish_return_metrics() -> None:
     except ValueError:
         return
     raise AssertionError("non-return research must reject return metrics")
+
+
+def _write_prereg(tmp_path: Path):
+    import hashlib
+    import json
+
+    from app.factor_research.research_contract import ResearchPreregistration
+
+    runner = tmp_path / "scripts/research_gbm_market_stress.py"
+    runner.parent.mkdir(parents=True, exist_ok=True)
+    runner.write_text("# runner\n", encoding="utf-8")
+    prereg_path = tmp_path / "data/factor_research/research/r-gbm-test-001_preregistration.json"
+    prereg_path.parent.mkdir(parents=True, exist_ok=True)
+    payload = _prereg()
+    payload["runner"] = "scripts/research_gbm_market_stress.py"
+    payload["runner_sha256"] = hashlib.sha256(runner.read_bytes()).hexdigest()
+    raw = json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
+    prereg_path.write_text(raw, encoding="utf-8")
+    prereg_path.with_name(prereg_path.name + ".sha256").write_text(
+        hashlib.sha256(raw.encode()).hexdigest() + "  " + prereg_path.name + "\n",
+        encoding="ascii",
+    )
+    return prereg_path, ResearchPreregistration.model_validate(payload)
+
+
+def test_publish_refuses_existing_result(tmp_path: Path) -> None:
+    from app.factor_research.research_contract import (
+        ResearchResultEnvelope,
+        publish_research_artifacts,
+    )
+
+    prereg_path, prereg = _write_prereg(tmp_path)
+    result = ResearchResultEnvelope.model_validate(_result())
+    target = tmp_path / "data/factor_research/research/r-gbm-test-001_result.json"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text("{}\n", encoding="utf-8")
+    try:
+        publish_research_artifacts(
+            tmp_path,
+            preregistration_path=prereg_path,
+            result=result,
+            markdown="# result\n",
+            operation="research_contract_test",
+        )
+    except FileExistsError:
+        return
+    raise AssertionError("publish must refuse an existing result")
+
+
+def test_republish_same_bytes_is_idempotent(tmp_path: Path) -> None:
+    import hashlib
+
+    from app.factor_research.research_contract import (
+        ResearchResultEnvelope,
+        publish_research_artifacts,
+    )
+
+    prereg_path, prereg = _write_prereg(tmp_path)
+    prereg_hash = hashlib.sha256(prereg_path.read_bytes()).hexdigest()
+    result = ResearchResultEnvelope.model_validate(
+        _result(preregistration_sha256=prereg_hash)
+    )
+    first = publish_research_artifacts(
+        tmp_path,
+        preregistration_path=prereg_path,
+        result=result,
+        markdown="# result\n",
+        operation="research_contract_test",
+    )
+    second = publish_research_artifacts(
+        tmp_path,
+        preregistration_path=prereg_path,
+        result=result,
+        markdown="# result\n",
+        operation="research_contract_test",
+    )
+    assert first.result_sha256 == second.result_sha256
+    assert first.ledger_record_id == second.ledger_record_id
+
+
+def test_replaced_result_bytes_fail_closed(tmp_path: Path) -> None:
+    from app.factor_research.research_contract import (
+        ResearchResultEnvelope,
+        publish_research_artifacts,
+    )
+
+    prereg_path, _ = _write_prereg(tmp_path)
+    result = ResearchResultEnvelope.model_validate(
+        _result(preregistration_sha256=__import__("hashlib").sha256(prereg_path.read_bytes()).hexdigest())
+    )
+    first = publish_research_artifacts(
+        tmp_path,
+        preregistration_path=prereg_path,
+        result=result,
+        markdown="# result\n",
+        operation="research_contract_test",
+    )
+    first.result_path.write_text("{}\n", encoding="utf-8")
+    try:
+        publish_research_artifacts(
+            tmp_path,
+            preregistration_path=prereg_path,
+            result=result,
+            markdown="# result\n",
+            operation="research_contract_test",
+        )
+    except ValueError:
+        return
+    raise AssertionError("immutable result drift must fail closed")
