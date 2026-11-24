@@ -1,0 +1,86 @@
+{
+  "created_at": "2026-11-25T03:18:15+08:00",
+  "data_source": "project_data_with_r526_pit_membership",
+  "execution": {
+    "cost_multiplier": 2,
+    "leverage": "none",
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0
+  },
+  "falsification_checks": [
+    "training_only_parameter_selection",
+    "training_neighbour_plateau",
+    "fixed_seed_bootstrap",
+    "validation_fdr",
+    "recent_not_used_in_parameter_order",
+    "r526_pit_membership_filter"
+  ],
+  "gates": {
+    "block10_40_mean_positive": true,
+    "coverage_min": 0.9,
+    "fdr_q_max": 0.1,
+    "full_ic_min": 0.01,
+    "recent_ic_positive": true,
+    "train_block20_ci_positive": true,
+    "train_ic_min": 0.01,
+    "training_plateau": true,
+    "validation_ic_positive": true
+  },
+  "hypothesis": "A full family census will recover more independent research exposures than the 15 historical recommended parameters alone.",
+  "input_hashes": {
+    "families": "94a1c9e8727c95790e59b31266e51ab5def1b8f43b607ca0acf778ef38a0c970",
+    "p1_historical_source": "a6bc94c4b572b5daba771e0a8d8544531f0030bd5afc6687732c7f69eecb3bb7",
+    "p2_historical_source": "b2162789150bd3b7d2b2f61b123e28c8f24cffec50638c696e360a500f9e77ea",
+    "p3_historical_source": "b79bcdec6911323e1e8416ac39310a1f0a26bd85464d59f739e9390b4d125661",
+    "p4_historical_source": "9c65600b73b19cab7d89c76a7b83ef416cdc3125dadc7ce61e0d47353e63f1d4",
+    "r526_industry": "4f9fd44eb17e2a3acb5c91c0b6c15afb2595e36a9174f70de29611e6d3c6a30f",
+    "r526_membership": "3c7bee9c7dd8cb318cd1038a560dd3742a36f63f1ecb45a07d24e77c1d24781d",
+    "r530_preregistration": "5b3158836c86b24c9e867f5c872d4b628685de345227a2a8e7df46670a120457",
+    "r530_result": "0b8b0c1317dd1be43f59a794bbea557bd2a148a6fcd6e9fbbf879b06ded6e2d8",
+    "r535_attempt1_failure": "ff5af43fd2081c129e71d90b4482ecf2bb2641c22bb31b01326f5315eb1dadc4",
+    "thresholds": "0ccd849050b53fd362c7069f16d7de3eef591afb5a15a2c67243d22530edbc0d"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "parameters": {
+    "family_count": 85,
+    "final_blocks": [
+      10,
+      20,
+      40
+    ],
+    "final_bootstrap_runs": 5000,
+    "parameter_point_count": 472,
+    "seed": 20261125,
+    "selection_rule": [
+      "training_icir_desc",
+      "training_ic_desc",
+      "training_block20_ci_desc",
+      "distance_to_current_parameter_asc",
+      "parameter_asc"
+    ],
+    "training_block": 20,
+    "training_bootstrap_runs": 1000
+  },
+  "question": "Which of the 85 registered parameter families survives training-only parameter selection and unified-PIT out-of-sample confirmation?",
+  "research_id": "R535A",
+  "research_type": "statistical_screen",
+  "runner": "scripts/research_r535_full_family_census.py",
+  "runner_sha256": "56c3ac6dcb06c6a73c356e5eaf205933df689fcb8f2e57aaf868e065f9f10d78",
+  "sample": {
+    "end": "2026-11-05",
+    "horizon_days": 5,
+    "minimum_cross_section": 30,
+    "neutralization": "industry+size",
+    "recent_start": "2025-10-14",
+    "start": "2022-05-05",
+    "test_start": "2025-01-01",
+    "train_end": "2024-12-31"
+  },
+  "schema_version": 1,
+  "study_scope": "research_only"
+}

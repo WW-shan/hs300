@@ -1,0 +1,30 @@
+{
+  "attempted_preregistration": "data/factor_research/research/r535_full_family_census_preregistration.json",
+  "attempted_preregistration_sha256": "6f75f2f35eecc0323dcb2fe1c1736ec5565f77a25be4bb8381b7e33cc3406bc2",
+  "attempted_runner_sha256": "d5ac1956063ca90f3ccff7abbf8d277451af9172b5f41aa7caf31c9fc81215c2",
+  "correction": {
+    "regression_test": "test_r535_full_family_census.py plus full scan smoke",
+    "round": "R535A",
+    "rule": "import app.backtest.stats_v2 directly and apply BH-FDR to selected validation p-values"
+  },
+  "failure": "AttributeError: research_r530_unified_factor_library_mc has no attribute stats_v2",
+  "generated_at": "2026-11-25T03:17:24+08:00",
+  "original_preregistration_remains_immutable": true,
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "root_cause": "the full census runner called r530.stats_v2.bh_fdr_qvalues even though R530 imports stats_v2 as a local symbol rather than exporting it as a module attribute in the expected form",
+  "round": "R535",
+  "schema_version": 1,
+  "scope": {
+    "families_scanned": 85,
+    "parameter_or_gate_changes_after_failure": false,
+    "parameter_points_scanned": 472,
+    "published_oos_claims": false,
+    "result_published": false
+  },
+  "status": "attempt_1_failed_before_result_publication"
+}
