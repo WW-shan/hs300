@@ -188,7 +188,11 @@ def classify(path: Path, payload: dict[str, Any] | None) -> dict[str, Any]:
         "statistical_screen",
         "attribution",
     }
-    if research_type in diagnostic_types:
+    if research_type == "derived_analysis_only":
+        status = "derived_analysis_only"
+    elif research_type == "non_return_research":
+        status = "non_return_research"
+    elif research_type in diagnostic_types:
         status = f"diagnostic_{research_type}"
     elif research_type == "diagnostic_custom_simulation":
         status = "diagnostic_custom_simulation"
@@ -199,8 +203,6 @@ def classify(path: Path, payload: dict[str, Any] | None) -> dict[str, Any]:
         formal_evidence = True
     elif research_claim and derived_only and not custom_simulation:
         status = "derived_analysis_only"
-    elif research_claim and engine and project_data and formal_evidence:
-        status = "project_chain_with_formal_evidence"
     elif research_claim and engine and formal_evidence:
         status = "project_chain_with_formal_evidence"
     elif research_claim and engine and project_data:
@@ -209,9 +211,9 @@ def classify(path: Path, payload: dict[str, Any] | None) -> dict[str, Any]:
         status = "external_data_with_project_engine"
     elif research_claim and derived_only and not custom_simulation:
         status = "derived_analysis_only"
-    elif research_claim and not engine and not derived_only:
-        status = "non_project_backtest_or_custom_simulation"
-    elif research_claim and custom_simulation:
+    elif research_claim and (
+        (not engine and not derived_only) or custom_simulation
+    ):
         status = "non_project_backtest_or_custom_simulation"
     elif statistical:
         status = "statistical_or_feasibility_only"

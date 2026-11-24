@@ -1,0 +1,211 @@
+{
+  "created_at": "2026-11-25T02:27:25+08:00",
+  "data_source": "project",
+  "execution": {
+    "cost_multiplier": 2,
+    "leverage": "none",
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0
+  },
+  "falsification_checks": [
+    "r526_daily_membership_only_score_rows",
+    "training_only_parameter_selection",
+    "fixed_seed_block_bootstrap_20_5000",
+    "formal_evidence_saved_lookahead_t1",
+    "gate_policy_v2_layered_thresholds",
+    "five_x_warning_only"
+  ],
+  "gates": {
+    "five_x_hard_rejection": false,
+    "gate_policy_v2": "data/strategies/ai/.iterations/ai_hs300_multi_factor_rank/evidence/gate_policy_v2.json",
+    "training_annual_min": 0.03,
+    "training_bootstrap_p05_positive": true,
+    "training_mdd_min": -0.3,
+    "training_sharpe_min": 0.7,
+    "training_trades_min": 20,
+    "validation_annual_positive": true
+  },
+  "hypothesis": "A diversified six-factor rank core survives realistic costs, the recent year and a simple two-factor control without leverage.",
+  "input_hashes": {
+    "gate_policy_v2": "d1b4d15169b0dfc99e93c5baf1eaef5c6fc334ca68a651971567e7ec53724123",
+    "r526_industry": "4f9fd44eb17e2a3acb5c91c0b6c15afb2595e36a9174f70de29611e6d3c6a30f",
+    "r526_membership": "3c7bee9c7dd8cb318cd1038a560dd3742a36f63f1ecb45a07d24e77c1d24781d",
+    "r530_preregistration": "5b3158836c86b24c9e867f5c872d4b628685de345227a2a8e7df46670a120457",
+    "r530_result": "0b8b0c1317dd1be43f59a794bbea557bd2a148a6fcd6e9fbbf879b06ded6e2d8",
+    "r531_preregistration": "8af29cfcd51cd4364ca6c844d7a1ac9ccef4c94c089fe2909d1415f1fe0ed990",
+    "r531_result": "d8ad81f623cedf9e66b93df09d99ba98c1345421ab48c0693b538f576d48906c",
+    "r532_preregistration": "21d7151e933ffa7a59391d96bb846a5686ed6587647267c1c531ff210de4e7f3",
+    "r532_result": "4b32dc230ed08bfae27224c95340382bd0217dc872a5cb51d1ea83dc15c82ef8",
+    "r533_attempt1_failure": "4b8e05e4cff9572651354cadbdbc4354ebb27d92c2f813e016e9a33824eb9af3"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "parameters": {
+    "amends_failed_attempt": "data/factor_research/research/r533_attempt1_signature_mismatch_failure.json",
+    "bootstrap_block": 20,
+    "bootstrap_runs": 5000,
+    "bootstrap_seed": 533,
+    "control_factors": [
+      "dividend_yield_absolute",
+      "atr_risk"
+    ],
+    "cost_baseline": "2x",
+    "cost_diagnostic": "5x",
+    "cost_stress": "3x",
+    "entry_score": 70.0,
+    "exit_score": 40.0,
+    "fresh_starts": [
+      "2022-05-05",
+      "2023-01-03",
+      "2024-01-02",
+      "2025-01-02",
+      "2025-10-14",
+      "2026-01-05"
+    ],
+    "representatives": [
+      {
+        "cluster": [
+          "amount_level"
+        ],
+        "cluster_size": 1,
+        "family_id": "amount_level",
+        "selection_basis": "highest R530 training directional IC; validation/recent not used",
+        "training_directional_ic": 0.023543
+      },
+      {
+        "cluster": [
+          "annual_volatility",
+          "atr_risk",
+          "bollinger_width",
+          "cs_spread",
+          "idio_vol"
+        ],
+        "cluster_size": 5,
+        "family_id": "atr_risk",
+        "selection_basis": "highest R530 training directional IC; validation/recent not used",
+        "training_directional_ic": 0.035085
+      },
+      {
+        "cluster": [
+          "dividend_yield_absolute",
+          "dividend_yield_quantile"
+        ],
+        "cluster_size": 2,
+        "family_id": "dividend_yield_absolute",
+        "selection_basis": "highest R530 training directional IC; validation/recent not used",
+        "training_directional_ic": 0.0339
+      },
+      {
+        "cluster": [
+          "max_return"
+        ],
+        "cluster_size": 1,
+        "family_id": "max_return",
+        "selection_basis": "highest R530 training directional IC; validation/recent not used",
+        "training_directional_ic": 0.042375
+      },
+      {
+        "cluster": [
+          "turnover_level"
+        ],
+        "cluster_size": 1,
+        "family_id": "turnover_level",
+        "selection_basis": "highest R530 training directional IC; validation/recent not used",
+        "training_directional_ic": 0.022265
+      },
+      {
+        "cluster": [
+          "vol_of_vol"
+        ],
+        "cluster_size": 1,
+        "family_id": "vol_of_vol",
+        "selection_basis": "highest R530 training directional IC; validation/recent not used",
+        "training_directional_ic": 0.031098
+      }
+    ],
+    "selection_order": [
+      "bootstrap_total_p05_desc",
+      "sharpe_desc",
+      "annual_desc",
+      "max_positions_asc",
+      "max_hold_days_asc"
+    ],
+    "training_grid": [
+      {
+        "entry_score": 70.0,
+        "exit_score": 40.0,
+        "max_hold_days": 20,
+        "max_positions": 10
+      },
+      {
+        "entry_score": 70.0,
+        "exit_score": 40.0,
+        "max_hold_days": 30,
+        "max_positions": 10
+      },
+      {
+        "entry_score": 70.0,
+        "exit_score": 40.0,
+        "max_hold_days": 60,
+        "max_positions": 10
+      },
+      {
+        "entry_score": 70.0,
+        "exit_score": 40.0,
+        "max_hold_days": 20,
+        "max_positions": 20
+      },
+      {
+        "entry_score": 70.0,
+        "exit_score": 40.0,
+        "max_hold_days": 30,
+        "max_positions": 20
+      },
+      {
+        "entry_score": 70.0,
+        "exit_score": 40.0,
+        "max_hold_days": 60,
+        "max_positions": 20
+      },
+      {
+        "entry_score": 70.0,
+        "exit_score": 40.0,
+        "max_hold_days": 20,
+        "max_positions": 30
+      },
+      {
+        "entry_score": 70.0,
+        "exit_score": 40.0,
+        "max_hold_days": 30,
+        "max_positions": 30
+      },
+      {
+        "entry_score": 70.0,
+        "exit_score": 40.0,
+        "max_hold_days": 60,
+        "max_positions": 30
+      }
+    ]
+  },
+  "question": "Does the frozen six-factor R531 core produce an investable long-only HS300 portfolio under the project formal T+1 path after training-only execution-parameter MC?",
+  "research_id": "R533A",
+  "research_type": "project_formal",
+  "runner": "scripts/research_r533_core_formal_portfolio.py",
+  "runner_sha256": "e07124ad667f36689045506664d873035b78d43c85e2a5460d423f261eba6abd",
+  "sample": {
+    "end": "2026-11-05",
+    "membership_days": 1414,
+    "recent_start": "2025-10-14",
+    "symbols": 460,
+    "train_end": "2024-12-31",
+    "train_start": "2022-05-05",
+    "validation_end": "2025-10-13",
+    "validation_start": "2025-01-01"
+  },
+  "schema_version": 1,
+  "study_scope": "research_only"
+}

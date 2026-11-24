@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 from pathlib import Path
+from typing import ClassVar
 
 ROOT = Path(__file__).resolve().parents[2]
 PORTFOLIO = ROOT / "scripts/research_factor_set_portfolio.py"
@@ -310,7 +311,7 @@ def test_formal_run_wrapper_uses_guarded_evidence() -> None:
 
     class Result:
         run_id = "wrapper-contract"
-        evidence = {
+        evidence: ClassVar[dict] = {
             "persistence": {"status": "saved"},
             "lookahead": {"status": "passed"},
             "execution_timing": {"status": "passed"},
@@ -323,3 +324,21 @@ def test_formal_run_wrapper_uses_guarded_evidence() -> None:
 
     result = formal_run(Service(), "config")
     assert result.run_id == "wrapper-contract"
+
+
+def test_declared_derived_analysis_contract_is_classified_without_heuristics() -> None:
+    import importlib.util
+    import sys
+
+    path = ROOT / "scripts/audit_research_conformance.py"
+    spec = importlib.util.spec_from_file_location(
+        "research_conformance_audit_derived_contract", path
+    )
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+
+    runner = ROOT / "scripts/research_r533b_core_formal_gate_reaudit.py"
+    result = module.classify(runner, {"research_type": "derived_analysis_only"})
+    assert result["status"] == "derived_analysis_only"
