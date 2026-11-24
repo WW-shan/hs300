@@ -65,7 +65,11 @@ def test_corrections_and_hygiene_audits_are_checksummed() -> None:
     assert corrections["unresolved_attachment_gaps"] == len(corrections["missing"])
     inventory = json.loads(INVENTORY.read_text())
     assert inventory["factor_output_count"] >= 150
-    assert inventory["evidence_file_count"] == 2121
+    evidence_files = [
+        path for path in A.rglob("*")
+        if path.is_file() and not path.name.endswith(".sha256") and "__pycache__" not in path.parts
+    ]
+    assert inventory["evidence_file_count"] == len(evidence_files)
     assert inventory["evidence_missing_sidecars"] == 0
     assert inventory["known_gaps"][0]["count"] == 4
 
@@ -119,7 +123,7 @@ def test_research_asset_ledger_matches_current_strategy_contract() -> None:
     assert all(s.execution_backend in {"polars_expr", "matrix_native"} for s in definitions)
 
     ledger = json.loads(
-        (E / "research_asset_ledger_2026-11-24_v21.json").read_text(encoding="utf-8")
+        (E / "research_asset_ledger_2026-11-25_v22.json").read_text(encoding="utf-8")
     )
     strategy_rows = [
         row for row in ledger["rows"]
@@ -131,7 +135,7 @@ def test_research_asset_ledger_matches_current_strategy_contract() -> None:
 
 
 def test_strategy_audit_ledger_is_checksummed_and_all_ai_strategies_are_kept() -> None:
-    path = E / "research_asset_ledger_2026-11-24_v21.json"
+    path = E / "research_asset_ledger_2026-11-25_v22.json"
     assert _assert_sidecar(path)
     payload = json.loads(path.read_text(encoding="utf-8"))
     rows = payload["rows"]

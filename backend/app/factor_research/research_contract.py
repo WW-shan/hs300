@@ -246,7 +246,8 @@ def publish_research_artifacts(
     errors = validate_result_for_preregistration(
         prereg, result, preregistration_sha256=prereg_hash
     )
-    runner_path = data_dir / prereg.runner
+    repository_root = preregistration_path.parents[3]
+    runner_path = repository_root / prereg.runner
     if not runner_path.is_file():
         raise ValueError(f"research runner does not exist: {prereg.runner}")
     if _sha256_bytes(runner_path.read_bytes()) != prereg.runner_sha256:
