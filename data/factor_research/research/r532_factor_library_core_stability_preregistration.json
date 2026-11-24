@@ -1,0 +1,193 @@
+{
+  "created_at": "2026-11-25T01:57:44+08:00",
+  "data_source": "project_data_with_r526_pit_membership",
+  "execution": {
+    "cost_multiplier": 2,
+    "leverage": "none",
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0
+  },
+  "falsification_checks": [
+    "r531_frozen_core_hash_chain",
+    "rolling_252d_step_21",
+    "fixed_seed_block_bootstrap_10_20_40_5000",
+    "fixed_seed_rolling_block20_5000",
+    "leave_one_out_not_used_for_selection"
+  ],
+  "gates": {
+    "coverage_min": 0.9,
+    "full_ic_min": 0.01,
+    "period_bootstrap_ci_low_positive": true,
+    "recent_ic_positive": true,
+    "rolling_bootstrap_positive_ratio_min": 0.7,
+    "rolling_median_positive": true,
+    "rolling_positive_ratio_min": 0.7,
+    "rolling_windows_min": 24,
+    "rolling_worst_bootstrap_ci_low_min": -0.01,
+    "rolling_worst_ic_min": -0.01,
+    "validation_ic_positive": true,
+    "yearly_positive_min": "4_of_5"
+  },
+  "hypothesis": "The six-representative equal-weight core remains positive in most regimes without retuning factors.",
+  "input_hashes": {
+    "r526_industry": "4f9fd44eb17e2a3acb5c91c0b6c15afb2595e36a9174f70de29611e6d3c6a30f",
+    "r526_membership": "3c7bee9c7dd8cb318cd1038a560dd3742a36f63f1ecb45a07d24e77c1d24781d",
+    "r530_preregistration": "5b3158836c86b24c9e867f5c872d4b628685de345227a2a8e7df46670a120457",
+    "r530_result": "0b8b0c1317dd1be43f59a794bbea557bd2a148a6fcd6e9fbbf879b06ded6e2d8",
+    "r531_preregistration": "8af29cfcd51cd4364ca6c844d7a1ac9ccef4c94c089fe2909d1415f1fe0ed990",
+    "r531_result": "d8ad81f623cedf9e66b93df09d99ba98c1345421ab48c0693b538f576d48906c"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "parameters": {
+    "aggregation": "equal-weight percentile rank",
+    "block_sizes": [
+      10,
+      20,
+      40
+    ],
+    "final_mc": 5000,
+    "recluster": false,
+    "representatives": [
+      {
+        "cluster": [
+          "amount_level"
+        ],
+        "cluster_size": 1,
+        "data_class": "price",
+        "family_id": "amount_level",
+        "parameter": 5,
+        "r530_bootstrap_ci_low": {
+          "10": 0.00275142,
+          "20": 0.00131147,
+          "40": 0.00024859
+        },
+        "r530_plateau_status": "robust_plateau",
+        "r530_prior_plateau": "robust_plateau",
+        "r530_q_value": 0.01071863,
+        "r531_training_ic": 0.023543
+      },
+      {
+        "cluster": [
+          "annual_volatility",
+          "atr_risk",
+          "bollinger_width",
+          "cs_spread",
+          "idio_vol"
+        ],
+        "cluster_size": 5,
+        "data_class": "price",
+        "family_id": "atr_risk",
+        "parameter": 5,
+        "r530_bootstrap_ci_low": {
+          "10": 0.01962442,
+          "20": 0.01905626,
+          "40": 0.02027248
+        },
+        "r530_plateau_status": "robust_plateau",
+        "r530_prior_plateau": "robust_plateau",
+        "r530_q_value": 1.25e-06,
+        "r531_training_ic": 0.035085
+      },
+      {
+        "cluster": [
+          "dividend_yield_absolute",
+          "dividend_yield_quantile"
+        ],
+        "cluster_size": 2,
+        "data_class": "financial",
+        "family_id": "dividend_yield_absolute",
+        "parameter": 0.015,
+        "r530_bootstrap_ci_low": {
+          "10": 0.01400678,
+          "20": 0.01424069,
+          "40": 0.01526433
+        },
+        "r530_plateau_status": "robust_plateau",
+        "r530_prior_plateau": "robust_plateau",
+        "r530_q_value": 0.00013112,
+        "r531_training_ic": 0.0339
+      },
+      {
+        "cluster": [
+          "max_return"
+        ],
+        "cluster_size": 1,
+        "data_class": "price",
+        "family_id": "max_return",
+        "parameter": 60,
+        "r530_bootstrap_ci_low": {
+          "10": 0.0237991,
+          "20": 0.02304404,
+          "40": 0.02362268
+        },
+        "r530_plateau_status": "robust_plateau",
+        "r530_prior_plateau": "robust_plateau",
+        "r530_q_value": 0.0,
+        "r531_training_ic": 0.042375
+      },
+      {
+        "cluster": [
+          "turnover_level"
+        ],
+        "cluster_size": 1,
+        "data_class": "price",
+        "family_id": "turnover_level",
+        "parameter": 5,
+        "r530_bootstrap_ci_low": {
+          "10": 0.00797361,
+          "20": 0.0080848,
+          "40": 0.00766386
+        },
+        "r530_plateau_status": "robust_plateau",
+        "r530_prior_plateau": "robust_plateau",
+        "r530_q_value": 0.00090015,
+        "r531_training_ic": 0.022265
+      },
+      {
+        "cluster": [
+          "vol_of_vol"
+        ],
+        "cluster_size": 1,
+        "data_class": "price",
+        "family_id": "vol_of_vol",
+        "parameter": 20,
+        "r530_bootstrap_ci_low": {
+          "10": 0.01436561,
+          "20": 0.01430103,
+          "40": 0.01480604
+        },
+        "r530_plateau_status": "robust_plateau",
+        "r530_prior_plateau": "robust_plateau",
+        "r530_q_value": 3.9e-06,
+        "r531_training_ic": 0.031098
+      }
+    ],
+    "retune_parameters": false,
+    "rolling_block_size": 20,
+    "rolling_step": 21,
+    "rolling_window": 252,
+    "seed": 20261125
+  },
+  "question": "Does the frozen R531 core retain positive, economically meaningful IC across years, rolling windows and the recent year?",
+  "research_id": "R532",
+  "research_type": "statistical_screen",
+  "runner": "scripts/research_r532_factor_library_core_stability.py",
+  "runner_sha256": "1fa51dbdad42d52cb3b533b4c79db9e7182c394e173d2e9d6fd998b934054310",
+  "sample": {
+    "end": "2026-11-05",
+    "horizon_days": 5,
+    "min_rolling_windows": 24,
+    "minimum_cross_section": 30,
+    "recent_start": "2025-10-14",
+    "start": "2022-05-05",
+    "test_start": "2025-01-01",
+    "train_end": "2024-12-31"
+  },
+  "schema_version": 1,
+  "study_scope": "research_only"
+}
