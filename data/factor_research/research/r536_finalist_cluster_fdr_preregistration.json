@@ -1,0 +1,82 @@
+{
+  "created_at": "2026-11-25T03:41:42+08:00",
+  "data_source": "project_data_with_r526_pit_membership",
+  "execution": {
+    "cost_multiplier": 2,
+    "leverage": "none",
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0
+  },
+  "falsification_checks": [
+    "training_only_correlation_clustering",
+    "representative_selection_before_validation",
+    "cluster_level_bh_fdr",
+    "r535_source_hashes"
+  ],
+  "gates": {
+    "block10_40_mean_positive": true,
+    "coverage_min": 0.9,
+    "fdr_q_max": 0.1,
+    "full_ic_min": 0.01,
+    "recent_ic_positive": true,
+    "train_block20_ci_positive": true,
+    "train_ic_min": 0.01,
+    "training_plateau": true,
+    "validation_ic_positive": true
+  },
+  "hypothesis": "Correlated price-risk and liquidity finalists collapse into a smaller independent set, avoiding the overly broad 22-way BH-FDR correction.",
+  "input_hashes": {
+    "r526_industry": "4f9fd44eb17e2a3acb5c91c0b6c15afb2595e36a9174f70de29611e6d3c6a30f",
+    "r526_membership": "3c7bee9c7dd8cb318cd1038a560dd3742a36f63f1ecb45a07d24e77c1d24781d",
+    "r535_preregistration": "b4774f85ff9b07cb6a27ef13cef58fe620fe5726a2c6731e2637f749cbacd315",
+    "r535_result": "c54221f800f4509ec5e42f71b864694591a81272e1251990f3361298b950d4ab"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "parameters": {
+    "correlation_threshold": 0.7,
+    "fdr_threshold": 0.1,
+    "minimum_training_months": 12,
+    "representative_rule": "highest train_icir, then train_ic, train_p05, parameter order",
+    "source_finalists": [
+      "amihud",
+      "amount_level",
+      "annual_volatility",
+      "atr_risk",
+      "bollinger_width",
+      "cs_spread",
+      "dividend_yield_absolute",
+      "dividend_yield_quantile",
+      "downside_volatility",
+      "fund_count_quantile",
+      "fund_holding_ratio_absolute",
+      "fund_holding_ratio_quantile",
+      "idio_vol",
+      "lhb_inst_net_buy_event",
+      "lhb_net_buy_event",
+      "lhb_net_buy_holding",
+      "market_down_beta",
+      "max_return",
+      "repurchase_event_decay",
+      "repurchase_holding",
+      "turnover_level",
+      "vol_of_vol"
+    ],
+    "training_end": "2024-12-31"
+  },
+  "question": "After clustering the 22 R535 finalists by training-period correlation, which independent representatives survive cluster-level FDR and recent/validation gates?",
+  "research_id": "R536",
+  "research_type": "statistical_screen",
+  "runner": "scripts/research_r536_finalist_cluster_fdr.py",
+  "runner_sha256": "595018880824048db318bdca2f1814db227b1bc9dd8bbf5f781845792ea64684",
+  "sample": {
+    "start": "2022-05-05",
+    "train_end": "2024-12-31"
+  },
+  "schema_version": 1,
+  "study_scope": "research_only"
+}

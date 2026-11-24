@@ -1,0 +1,30 @@
+{
+  "attempted_preregistration": "data/factor_research/research/r536_finalist_cluster_fdr_preregistration.json",
+  "attempted_preregistration_sha256": "571233fa8a3a3a7e1238f1bd7322cb1dd4aab245ecd1bfebce2eab4d4083f02e",
+  "attempted_runner_sha256": "595018880824048db318bdca2f1814db227b1bc9dd8bbf5f781845792ea64684",
+  "correction": {
+    "regression_test": "test_non_finite_payload_values_become_null",
+    "round": "R536A",
+    "rule": "recursively convert non-finite numeric values to JSON null before publishing; preserve raw correlation semantics as missing/unknown"
+  },
+  "failure": "ValueError: Out of range float values are not JSON compliant: nan",
+  "generated_at": "2026-11-25T03:42:45+08:00",
+  "original_preregistration_remains_immutable": true,
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "root_cause": "R531 pairwise correlation helper can return NaN when a pair has no finite daily correlation; the R536 payload passed NaN directly into the strict canonical JSON ledger hash",
+  "round": "R536",
+  "schema_version": 1,
+  "scope": {
+    "clusters_computed": 13,
+    "finalists": 22,
+    "parameter_or_gate_changes_after_failure": false,
+    "representatives_computed": 13,
+    "result_published": false
+  },
+  "status": "attempt_1_failed_before_result_publication"
+}
