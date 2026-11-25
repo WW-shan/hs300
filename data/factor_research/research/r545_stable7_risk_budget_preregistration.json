@@ -1,0 +1,186 @@
+{
+  "created_at": "2026-11-25T15:06:29+08:00",
+  "data_source": "project",
+  "execution": {
+    "cost_multiplier": 2,
+    "leverage": "none",
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0
+  },
+  "falsification_checks": [
+    "position_context_contains_only_causal_inputs",
+    "budget_scale_never_exceeds_one",
+    "training_only_risk_variant_selection",
+    "validation_and_recent_are_confirmation_only",
+    "recent_not_independent_oos",
+    "five_x_warning_only"
+  ],
+  "gates": {
+    "bootstrap_runs": 5000,
+    "confirmation_runs": 13,
+    "five_x_hard_rejection": false,
+    "formal_runs": 22,
+    "training_only_selection": true,
+    "training_variants": 9
+  },
+  "hypothesis": "A drawdown or volatility budget will reduce tail risk while retaining positive recent performance and stress-cost viability.",
+  "input_hashes": {
+    "r542_preregistration": "bd25dc357a4dfad6a2deee8d7733af86069863cb4d4fa7c90d9284d920cfb3c0",
+    "r542_result": "988988dab0f8db3cdb4a66e20b64984f56e3f5c292d07277fbf51e795c1e5216",
+    "r543_preregistration": "01661f7453d35f28279761ba95cc68f1908a1e4b054c1b0533d1a5e981ada31d",
+    "r543_result": "700d6cfbd12ce980e466d4c20cf82e842bde669fa23cd8e16f8e53ee912210ad",
+    "r543_runner": "2127c14c1965cfc986def6614a125eda820700e37c288f9225d58786504ae54a",
+    "r544_preregistration": "db07656160a70c36235f5ac5ef560e01e88ad2e638b1f30b074aa2ac0247290d",
+    "r544_result": "72f62812628b253ad89a023ae165b6dc83c4bc6461ab8f06330d1feb74a9e380",
+    "r544_runner": "21804b75bb90e34b3a6caec75b74c176bd93ed33665c9d67a82e7d7d254cef3b"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "parameters": {
+    "bootstrap_block": 20,
+    "bootstrap_runs": 5000,
+    "bootstrap_seed": 545,
+    "confirmation_runs": 13,
+    "confirmation_windows": {
+      "end": "2026-11-05",
+      "fresh_starts": [
+        "2022-05-05",
+        "2023-01-03",
+        "2024-01-02",
+        "2025-01-02",
+        "2025-10-14",
+        "2026-01-05"
+      ],
+      "recent_start": "2025-10-14",
+      "validation_end": "2025-10-13",
+      "validation_start": "2025-01-01"
+    },
+    "execution": {
+      "cost_multiplier": 2,
+      "five_x_policy": "warning_only",
+      "leverage": "none",
+      "matching": "open_t+1",
+      "max_exposure_pct": 1.0,
+      "position_sizing": "policy_budget_scale"
+    },
+    "formal_runs": 22,
+    "members": [
+      "amount_level",
+      "bollinger_width",
+      "dividend_yield_quantile",
+      "fund_holding_ratio_absolute",
+      "max_return",
+      "turnover_level",
+      "vol_of_vol"
+    ],
+    "output_policy": {
+      "active_version": null,
+      "orders_generated": false,
+      "paper_target_generated": false,
+      "production_enabled": false
+    },
+    "recent_is_independent_oos": false,
+    "selection_order": [
+      "mdd_desc",
+      "annual_desc",
+      "sharpe_desc",
+      "variant_order_asc"
+    ],
+    "selection_window": {
+      "end": "2024-12-31",
+      "start": "2022-05-05"
+    },
+    "variants": 9,
+    "variants_spec": [
+      {
+        "id": "control",
+        "kind": "control",
+        "order": 0
+      },
+      {
+        "id": "cash_80",
+        "kind": "cash",
+        "order": 1,
+        "scale": 0.8
+      },
+      {
+        "id": "cash_60",
+        "kind": "cash",
+        "order": 2,
+        "scale": 0.6
+      },
+      {
+        "id": "cash_40",
+        "kind": "cash",
+        "order": 3,
+        "scale": 0.4
+      },
+      {
+        "defensive": 0.5,
+        "id": "dd_10",
+        "kind": "drawdown",
+        "order": 4,
+        "threshold": -0.1
+      },
+      {
+        "defensive": 0.5,
+        "id": "dd_15",
+        "kind": "drawdown",
+        "order": 5,
+        "threshold": -0.15
+      },
+      {
+        "floor": 0.5,
+        "id": "vol_10",
+        "kind": "vol_target",
+        "lookback": 60,
+        "order": 6,
+        "target": 0.1
+      },
+      {
+        "floor": 0.5,
+        "id": "vol_12",
+        "kind": "vol_target",
+        "lookback": 60,
+        "order": 7,
+        "target": 0.12
+      },
+      {
+        "defensive": 0.5,
+        "floor": 0.5,
+        "id": "vol_12_dd_10",
+        "kind": "combined",
+        "lookback": 60,
+        "order": 8,
+        "target": 0.12,
+        "threshold": -0.1
+      }
+    ]
+  },
+  "question": "Can a causal, no-leverage budget scale improve the drawdown and validation profile of the R543 stable-seven portfolio?",
+  "research_id": "R545",
+  "research_type": "project_formal",
+  "runner": "scripts/research_r545_stable7_risk_budget.py",
+  "runner_sha256": "501fc04186ad22c9031bef245392895934a6d1d90cdf4cd7c79b6081665c41d8",
+  "sample": {
+    "end": "2026-11-05",
+    "fresh_starts": [
+      "2022-05-05",
+      "2023-01-03",
+      "2024-01-02",
+      "2025-01-02",
+      "2025-10-14",
+      "2026-01-05"
+    ],
+    "recent_start": "2025-10-14",
+    "start": "2022-05-05",
+    "validation_end": "2025-10-13",
+    "validation_start": "2025-01-01"
+  },
+  "schema_version": 1,
+  "study_scope": "research_only"
+}
