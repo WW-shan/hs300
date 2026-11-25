@@ -1,0 +1,158 @@
+{
+  "created_at": "2026-11-25T13:35:12+08:00",
+  "data_source": "project",
+  "execution": {
+    "cost_multiplier": 2,
+    "leverage": "none",
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0
+  },
+  "falsification_checks": [
+    "training_only_parameter_selection",
+    "neighborhood_plateau_not_isolated_spike",
+    "5000_block_bootstrap_for_platform_finalists",
+    "validation_and_recent_are_confirmation_only",
+    "recent_not_independent_oos",
+    "five_x_warning_only"
+  ],
+  "gates": {
+    "bootstrap_runs": 5000,
+    "confirmation_runs": 13,
+    "five_x_hard_rejection": false,
+    "formal_runs": 121,
+    "grid_points": 108,
+    "selection_uses_training_only": true
+  },
+  "hypothesis": "A neighborhood-stable parameter point will retain recent positive performance better than a single-point optimizer.",
+  "input_hashes": {
+    "r539_preregistration": "845401546a7ef4474c608cedb2fe86bf58d69096b8a89c4c3b94a216ebb69474",
+    "r539_result": "a2aa3b04d56783b724f91f40f03b4f71669b17f1db07703265bf195958e4b850",
+    "r542_preregistration": "bd25dc357a4dfad6a2deee8d7733af86069863cb4d4fa7c90d9284d920cfb3c0",
+    "r542_result": "988988dab0f8db3cdb4a66e20b64984f56e3f5c292d07277fbf51e795c1e5216",
+    "r542_runner": "8e59208be7e04b757a4fbbe98ba260d33f4131cd8178fbbec94b1a399a6b29b2",
+    "r543_preregistration": "01661f7453d35f28279761ba95cc68f1908a1e4b054c1b0533d1a5e981ada31d",
+    "r543_result": "700d6cfbd12ce980e466d4c20cf82e842bde669fa23cd8e16f8e53ee912210ad",
+    "r543_runner": "2127c14c1965cfc986def6614a125eda820700e37c288f9225d58786504ae54a"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "parameters": {
+    "bootstrap_block": 20,
+    "bootstrap_runs": 5000,
+    "bootstrap_seed": 544,
+    "confirmation_runs": 13,
+    "confirmation_windows": {
+      "end": "2026-11-05",
+      "fresh_starts": [
+        "2022-05-05",
+        "2023-01-03",
+        "2024-01-02",
+        "2025-01-02",
+        "2025-10-14",
+        "2026-01-05"
+      ],
+      "recent_start": "2025-10-14",
+      "validation_end": "2025-10-13",
+      "validation_start": "2025-01-01"
+    },
+    "execution": {
+      "cost_multiplier": 2,
+      "five_x_policy": "warning_only",
+      "leverage": "none",
+      "matching": "open_t+1",
+      "max_exposure_pct": 1.0
+    },
+    "formal_runs": 121,
+    "grid_points": 108,
+    "members": [
+      "amount_level",
+      "bollinger_width",
+      "dividend_yield_quantile",
+      "fund_holding_ratio_absolute",
+      "max_return",
+      "turnover_level",
+      "vol_of_vol"
+    ],
+    "output_policy": {
+      "active_version": null,
+      "orders_generated": false,
+      "paper_target_generated": false,
+      "production_enabled": false
+    },
+    "parameter_grid": {
+      "industry_cap": [
+        2,
+        3,
+        4
+      ],
+      "max_hold_days": [
+        40,
+        60,
+        80
+      ],
+      "max_positions": [
+        10,
+        15,
+        20
+      ],
+      "stops": [
+        {
+          "name": "stop_08",
+          "value": -0.08
+        },
+        {
+          "name": "stop_10",
+          "value": -0.1
+        },
+        {
+          "name": "stop_12",
+          "value": -0.12
+        },
+        {
+          "name": "stop_15",
+          "value": -0.15
+        }
+      ]
+    },
+    "recent_is_independent_oos": false,
+    "selection_order": [
+      "neighbor_pass_rate_desc",
+      "neighbor_median_sharpe_desc",
+      "neighbor_median_annual_desc",
+      "own_mdd_desc",
+      "default_distance_asc",
+      "bootstrap_p05_desc"
+    ],
+    "selection_window": {
+      "train_end": "2024-12-31",
+      "train_start": "2022-05-05"
+    }
+  },
+  "question": "Which execution-parameter plateau is robust for the R543 stable-seven factor set under training-only selection?",
+  "research_id": "R544",
+  "research_type": "project_formal",
+  "runner": "scripts/research_r544_stable7_parameter_mc.py",
+  "runner_sha256": "21804b75bb90e34b3a6caec75b74c176bd93ed33665c9d67a82e7d7d254cef3b",
+  "sample": {
+    "end": "2026-11-05",
+    "fresh_starts": [
+      "2022-05-05",
+      "2023-01-03",
+      "2024-01-02",
+      "2025-01-02",
+      "2025-10-14",
+      "2026-01-05"
+    ],
+    "recent_start": "2025-10-14",
+    "train_end": "2024-12-31",
+    "train_start": "2022-05-05",
+    "validation_end": "2025-10-13",
+    "validation_start": "2025-01-01"
+  },
+  "schema_version": 1,
+  "study_scope": "research_only"
+}
