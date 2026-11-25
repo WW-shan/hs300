@@ -1,0 +1,111 @@
+{
+  "created_at": "2026-11-25T11:55:09+08:00",
+  "data_source": "project",
+  "execution": {
+    "cost_multiplier": 2,
+    "leverage": "none",
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0
+  },
+  "falsification_checks": [
+    "formal_evidence_saved_lookahead_t1",
+    "baseline_reproduces_r539c_full_and_recent",
+    "all_13_factor_ic_and_quintiles",
+    "all_single_leg_and_leave_one_out_runs",
+    "no_factor_or_weight_selection",
+    "regime_coverage_gap_is_explicit",
+    "equal_weight_benchmark_is_costless_diagnostic",
+    "no_orders_or_active_version"
+  ],
+  "gates": {
+    "baseline_full_reproduced": true,
+    "baseline_recent_reproduced": true,
+    "diagnostic_only_attribution": true,
+    "factor_ic_diagnostics": 13,
+    "five_x_hard_rejection": false,
+    "formal_runs": 56,
+    "leave_one_out_runs": 26,
+    "selection_performed": false,
+    "single_leg_runs": 26
+  },
+  "hypothesis": "The recent loss may be driven by market beta and exposure rather than a uniform collapse in all 13 factor ICs.",
+  "input_hashes": {
+    "r526_industry": "4f9fd44eb17e2a3acb5c91c0b6c15afb2595e36a9174f70de29611e6d3c6a30f",
+    "r526_membership": "3c7bee9c7dd8cb318cd1038a560dd3742a36f63f1ecb45a07d24e77c1d24781d",
+    "r536_preregistration": "362c6dd719b60964eb6b4f68cebc28bf6b2d4fe3b4dea266a76eee27af9851e3",
+    "r536_result": "968851e407df5c197c6e895d1057d1db850fb57167a30eba633a00bb346af93c",
+    "r539_preregistration": "845401546a7ef4474c608cedb2fe86bf58d69096b8a89c4c3b94a216ebb69474",
+    "r539_result": "a2aa3b04d56783b724f91f40f03b4f71669b17f1db07703265bf195958e4b850",
+    "regime_history": "474332dcb2d0b3bc7b27c37973c78bb7c7f4e6bff535350a07dc4d8d7819c058"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "parameters": {
+    "baseline_runs": 2,
+    "execution": {
+      "cost_multiplier": 2,
+      "industry_cap": 3,
+      "leverage": "none",
+      "matching": "open_t+1",
+      "max_exposure_pct": 1.0,
+      "max_hold_days": 60,
+      "max_positions": 10,
+      "stop_loss": -0.12,
+      "trailing_stop": null
+    },
+    "formal_runs": 56,
+    "leave_one_out_runs": 26,
+    "model": "frozen_project_portfolio_attribution",
+    "no_stop_control_runs": 2,
+    "output_policy": {
+      "active_version": null,
+      "orders_generated": false,
+      "paper_target_generated": false,
+      "production_enabled": false
+    },
+    "representatives": [
+      "amount_level",
+      "bollinger_width",
+      "dividend_yield_quantile",
+      "fund_count_quantile",
+      "fund_holding_ratio_absolute",
+      "lhb_inst_net_buy_event",
+      "lhb_net_buy_holding",
+      "market_down_beta",
+      "max_return",
+      "repurchase_event_decay",
+      "repurchase_holding",
+      "turnover_level",
+      "vol_of_vol"
+    ],
+    "selection_performed": false,
+    "single_leg_runs": 26,
+    "windows": {
+      "end": "2026-11-05",
+      "recent_start": "2025-10-14",
+      "train_end": "2024-12-31",
+      "train_start": "2022-05-05",
+      "validation_end": "2025-10-13",
+      "validation_start": "2025-01-01"
+    }
+  },
+  "question": "Which factor, portfolio, exposure, execution, and market-regime components explain the frozen R539C recent-year loss?",
+  "research_id": "R542",
+  "research_type": "project_formal",
+  "runner": "scripts/research_r542_recent_failure_attribution.py",
+  "runner_sha256": "8e59208be7e04b757a4fbbe98ba260d33f4131cd8178fbbec94b1a399a6b29b2",
+  "sample": {
+    "end": "2026-11-05",
+    "recent_start": "2025-10-14",
+    "train_end": "2024-12-31",
+    "train_start": "2022-05-05",
+    "validation_end": "2025-10-13",
+    "validation_start": "2025-01-01"
+  },
+  "schema_version": 1,
+  "study_scope": "research_only"
+}
