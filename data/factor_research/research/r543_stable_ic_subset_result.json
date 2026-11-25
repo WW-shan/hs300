@@ -1,0 +1,866 @@
+{
+  "conclusion": "watch_only",
+  "formal_evidence": {
+    "execution_timing": "passed",
+    "lookahead": "passed",
+    "persistence": "saved",
+    "run_id": "1445543e24"
+  },
+  "gate_results": {
+    "conclusion": "watch_only",
+    "core_checks": {
+      "fresh_starts_pass": true,
+      "full_annual_min": true,
+      "full_mdd_min": true,
+      "full_sharpe_min": true,
+      "recent_return_strictly_positive": true,
+      "validation_annual_positive": true
+    },
+    "core_pass": true,
+    "failed_gates": [],
+    "five_x_hard_rejection": false,
+    "five_x_warnings": [],
+    "fresh_start": {
+      "median": 0.29455,
+      "pass": true,
+      "positive_count": 5
+    },
+    "stress_checks": {
+      "stress_3x_annual_min": true,
+      "stress_3x_mdd_min": true,
+      "stress_3x_recent_return_min": true
+    },
+    "stress_pass": true
+  },
+  "generated_at": "2026-11-25T12:14:20+08:00",
+  "known_limits": [
+    "R542 recent-year results were already observed; R543 recent is not independent OOS.",
+    "This round changes only the factor member set; execution parameters remain frozen.",
+    "The seven-factor rule uses train and validation IC only, but factor observation can still create selection bias.",
+    "The 7-factor equal-weight mean-available composite can differ from a missing-data-penalized weighted composite.",
+    "Five-times cost is warning-only and no leverage is used.",
+    "No active version, orders, paper targets or production enablement are produced."
+  ],
+  "metrics": {
+    "bootstrap": {
+      "full_2x": {
+        "mdd_p05": -0.2241588599986829,
+        "sharpe_p50": 0.9667623737474348,
+        "total_p05": 0.17879572895506457,
+        "total_p50": 0.7267481469039441
+      },
+      "recent_2x": {
+        "mdd_p05": -0.2323977663079998,
+        "sharpe_p50": 0.18180576430860262,
+        "total_p05": -0.16666595301253706,
+        "total_p50": 0.015536219754414882
+      }
+    },
+    "comparison": {
+      "baseline_full_2x": {
+        "annual_return": 0.1672,
+        "avg_exposure": 0.9895,
+        "max_drawdown": -0.1908,
+        "n_trades": 196.0,
+        "profit_factor": 1.89,
+        "sharpe": 1.14,
+        "sortino": 1.79,
+        "total_return": 0.9568,
+        "win_rate": 0.5867,
+        "worst": -0.1229
+      },
+      "baseline_recent_2x": {
+        "annual_return": -0.0088,
+        "avg_exposure": 0.9779,
+        "max_drawdown": -0.1881,
+        "n_trades": 53.0,
+        "profit_factor": 1.29,
+        "sharpe": -0.01,
+        "sortino": -0.01,
+        "total_return": -0.0091,
+        "win_rate": 0.434,
+        "worst": -0.1229
+      },
+      "equal_weight_recent": -0.00605503,
+      "full_annual_delta_vs_baseline": -0.0333,
+      "full_sharpe_delta_vs_baseline": -0.18,
+      "hs300_recent": -0.0937755,
+      "recent_mdd_delta_vs_baseline": 0.0286,
+      "recent_return_delta_vs_baseline": 0.0245,
+      "recent_vs_equal_weight": 0.02145503,
+      "recent_vs_hs300": 0.1091755
+    },
+    "concentration": {
+      "distinct_symbols": 61,
+      "gross_profit": 1358719.84,
+      "max_symbol_loss_to_gross": 0.030703,
+      "minimum_distinct_symbols": 40,
+      "net_to_gross": 0.534196,
+      "top1_gross_share": 0.079387,
+      "top3_gross_share": 0.215877,
+      "top5_gross_share": 0.314155,
+      "top_industry_gross_share": 0.277274
+    },
+    "design": {
+      "excluded": [
+        "fund_count_quantile",
+        "lhb_inst_net_buy_event",
+        "lhb_net_buy_holding",
+        "market_down_beta",
+        "repurchase_event_decay",
+        "repurchase_holding"
+      ],
+      "execution": {
+        "cost_multiplier": 2,
+        "five_x_policy": "warning_only",
+        "industry_cap": 3,
+        "leverage": "none",
+        "matching": "open_t+1",
+        "max_exposure_pct": 1.0,
+        "max_hold_days": 60,
+        "max_positions": 10,
+        "stop_loss": -0.12,
+        "trailing_stop": null
+      },
+      "formal_runs": 13,
+      "gates": {
+        "five_x_hard_rejection": false,
+        "fresh_median_positive": true,
+        "fresh_positive_min": 4,
+        "full_annual_min": 0.1,
+        "full_mdd_min": -0.2,
+        "full_sharpe_min": 0.9,
+        "recent_return_strictly_positive": true,
+        "stress_3x_annual_min": 0.08,
+        "stress_3x_mdd_min": -0.22,
+        "stress_3x_recent_return_min": -0.03,
+        "validation_annual_positive": true
+      },
+      "members": [
+        "amount_level",
+        "bollinger_width",
+        "dividend_yield_quantile",
+        "fund_holding_ratio_absolute",
+        "max_return",
+        "turnover_level",
+        "vol_of_vol"
+      ],
+      "output_policy": {
+        "active_version": null,
+        "orders_generated": false,
+        "paper_target_generated": false,
+        "production_enabled": false
+      },
+      "recent_is_independent_oos": false,
+      "selection_rule": "train_ic_gt_0_and_validation_ic_gt_0",
+      "windows": {
+        "end": "2026-11-05",
+        "fresh_starts": [
+          "2022-05-05",
+          "2023-01-03",
+          "2024-01-02",
+          "2025-01-02",
+          "2025-10-14",
+          "2026-01-05"
+        ],
+        "recent_start": "2025-10-14",
+        "train_end": "2024-12-31",
+        "train_start": "2022-05-05",
+        "validation_end": "2025-10-13",
+        "validation_start": "2025-01-01"
+      }
+    },
+    "excluded": [
+      "fund_count_quantile",
+      "lhb_inst_net_buy_event",
+      "lhb_net_buy_holding",
+      "market_down_beta",
+      "repurchase_event_decay",
+      "repurchase_holding"
+    ],
+    "formal_runs": [
+      {
+        "cost": "2x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "1445543e24"
+        },
+        "label": "full_2x",
+        "start": "2022-05-05",
+        "stats": {
+          "annual_return": 0.1339,
+          "avg_exposure": 0.9868,
+          "max_drawdown": -0.164,
+          "n_trades": 198.0,
+          "profit_factor": 1.19,
+          "sharpe": 0.96,
+          "sortino": 1.41,
+          "total_return": 0.7258,
+          "win_rate": 0.6667,
+          "worst": -0.1633
+        },
+        "trade_count": 198
+      },
+      {
+        "cost": "3x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "2060f511a3"
+        },
+        "label": "full_3x",
+        "start": "2022-05-05",
+        "stats": {
+          "annual_return": 0.1268,
+          "avg_exposure": 0.9865,
+          "max_drawdown": -0.1662,
+          "n_trades": 198.0,
+          "profit_factor": 1.22,
+          "sharpe": 0.92,
+          "sortino": 1.34,
+          "total_return": 0.6794,
+          "win_rate": 0.6515,
+          "worst": -0.1645
+        },
+        "trade_count": 198
+      },
+      {
+        "cost": "5x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "9702349274"
+        },
+        "label": "full_5x",
+        "start": "2022-05-05",
+        "stats": {
+          "annual_return": 0.1129,
+          "avg_exposure": 0.9866,
+          "max_drawdown": -0.1703,
+          "n_trades": 198.0,
+          "profit_factor": 1.23,
+          "sharpe": 0.83,
+          "sortino": 1.2,
+          "total_return": 0.5911,
+          "win_rate": 0.6313,
+          "worst": -0.1668
+        },
+        "trade_count": 198
+      },
+      {
+        "cost": "2x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "2bfac34624"
+        },
+        "label": "recent_2x",
+        "start": "2025-10-14",
+        "stats": {
+          "annual_return": 0.015,
+          "avg_exposure": 0.9835,
+          "max_drawdown": -0.1595,
+          "n_trades": 54.0,
+          "profit_factor": 1.06,
+          "sharpe": 0.18,
+          "sortino": 0.26,
+          "total_return": 0.0154,
+          "win_rate": 0.5185,
+          "worst": -0.1229
+        },
+        "trade_count": 54
+      },
+      {
+        "cost": "3x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "e112294ce9"
+        },
+        "label": "recent_3x",
+        "start": "2025-10-14",
+        "stats": {
+          "annual_return": 0.0079,
+          "avg_exposure": 0.9831,
+          "max_drawdown": -0.1612,
+          "n_trades": 54.0,
+          "profit_factor": 1.02,
+          "sharpe": 0.13,
+          "sortino": 0.18,
+          "total_return": 0.0081,
+          "win_rate": 0.5185,
+          "worst": -0.1241
+        },
+        "trade_count": 54
+      },
+      {
+        "cost": "5x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "dcf4d2def0"
+        },
+        "label": "recent_5x",
+        "start": "2025-10-14",
+        "stats": {
+          "annual_return": -0.0067,
+          "avg_exposure": 0.9839,
+          "max_drawdown": -0.1647,
+          "n_trades": 54.0,
+          "profit_factor": 1.08,
+          "sharpe": 0.01,
+          "sortino": 0.02,
+          "total_return": -0.0069,
+          "win_rate": 0.4815,
+          "worst": -0.1266
+        },
+        "trade_count": 54
+      },
+      {
+        "cost": "2x",
+        "end": "2025-10-13",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "e558037f21"
+        },
+        "label": "validation_2x",
+        "start": "2025-01-01",
+        "stats": {
+          "annual_return": 0.0802,
+          "avg_exposure": 0.9835,
+          "max_drawdown": -0.0564,
+          "n_trades": 40.0,
+          "profit_factor": 1.31,
+          "sharpe": 0.62,
+          "sortino": 0.88,
+          "total_return": 0.0586,
+          "win_rate": 0.575,
+          "worst": -0.1229
+        },
+        "trade_count": 40
+      },
+      {
+        "cost": "2x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "4c4b8965d0"
+        },
+        "label": "fresh_2022-05-05_2x",
+        "start": "2022-05-05",
+        "stats": {
+          "annual_return": 0.1339,
+          "avg_exposure": 0.9868,
+          "max_drawdown": -0.164,
+          "n_trades": 198.0,
+          "profit_factor": 1.19,
+          "sharpe": 0.96,
+          "sortino": 1.41,
+          "total_return": 0.7258,
+          "win_rate": 0.6667,
+          "worst": -0.1633
+        },
+        "trade_count": 198
+      },
+      {
+        "cost": "2x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "34f41acd18"
+        },
+        "label": "fresh_2023-01-03_2x",
+        "start": "2023-01-03",
+        "stats": {
+          "annual_return": 0.1362,
+          "avg_exposure": 0.987,
+          "max_drawdown": -0.1578,
+          "n_trades": 169.0,
+          "profit_factor": 1.39,
+          "sharpe": 0.99,
+          "sortino": 1.46,
+          "total_return": 0.6013,
+          "win_rate": 0.6154,
+          "worst": -0.1229
+        },
+        "trade_count": 169
+      },
+      {
+        "cost": "2x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "98f4688624"
+        },
+        "label": "fresh_2024-01-02_2x",
+        "start": "2024-01-02",
+        "stats": {
+          "annual_return": 0.1594,
+          "avg_exposure": 0.9868,
+          "max_drawdown": -0.1805,
+          "n_trades": 130.0,
+          "profit_factor": 1.52,
+          "sharpe": 1.03,
+          "sortino": 1.56,
+          "total_return": 0.4967,
+          "win_rate": 0.5923,
+          "worst": -0.125
+        },
+        "trade_count": 130
+      },
+      {
+        "cost": "2x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "612a9ae73e"
+        },
+        "label": "fresh_2025-01-02_2x",
+        "start": "2025-01-02",
+        "stats": {
+          "annual_return": 0.0513,
+          "avg_exposure": 0.9845,
+          "max_drawdown": -0.1794,
+          "n_trades": 86.0,
+          "profit_factor": 1.03,
+          "sharpe": 0.44,
+          "sortino": 0.63,
+          "total_return": 0.0924,
+          "win_rate": 0.5698,
+          "worst": -0.125
+        },
+        "trade_count": 86
+      },
+      {
+        "cost": "2x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "acc7219b6c"
+        },
+        "label": "fresh_2025-10-14_2x",
+        "start": "2025-10-14",
+        "stats": {
+          "annual_return": 0.015,
+          "avg_exposure": 0.9835,
+          "max_drawdown": -0.1595,
+          "n_trades": 54.0,
+          "profit_factor": 1.06,
+          "sharpe": 0.18,
+          "sortino": 0.26,
+          "total_return": 0.0154,
+          "win_rate": 0.5185,
+          "worst": -0.1229
+        },
+        "trade_count": 54
+      },
+      {
+        "cost": "2x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "f6c50f5e99"
+        },
+        "label": "fresh_2026-01-05_2x",
+        "start": "2026-01-05",
+        "stats": {
+          "annual_return": -0.0733,
+          "avg_exposure": 0.9767,
+          "max_drawdown": -0.1831,
+          "n_trades": 45.0,
+          "profit_factor": 0.95,
+          "sharpe": -0.49,
+          "sortino": -0.66,
+          "total_return": -0.0592,
+          "win_rate": 0.4222,
+          "worst": -0.1229
+        },
+        "trade_count": 45
+      }
+    ],
+    "fresh_starts": [
+      {
+        "cost": "2x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "4c4b8965d0"
+        },
+        "label": "fresh_2022-05-05_2x",
+        "start": "2022-05-05",
+        "stats": {
+          "annual_return": 0.1339,
+          "avg_exposure": 0.9868,
+          "max_drawdown": -0.164,
+          "n_trades": 198.0,
+          "profit_factor": 1.19,
+          "sharpe": 0.96,
+          "sortino": 1.41,
+          "total_return": 0.7258,
+          "win_rate": 0.6667,
+          "worst": -0.1633
+        },
+        "trade_count": 198
+      },
+      {
+        "cost": "2x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "34f41acd18"
+        },
+        "label": "fresh_2023-01-03_2x",
+        "start": "2023-01-03",
+        "stats": {
+          "annual_return": 0.1362,
+          "avg_exposure": 0.987,
+          "max_drawdown": -0.1578,
+          "n_trades": 169.0,
+          "profit_factor": 1.39,
+          "sharpe": 0.99,
+          "sortino": 1.46,
+          "total_return": 0.6013,
+          "win_rate": 0.6154,
+          "worst": -0.1229
+        },
+        "trade_count": 169
+      },
+      {
+        "cost": "2x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "98f4688624"
+        },
+        "label": "fresh_2024-01-02_2x",
+        "start": "2024-01-02",
+        "stats": {
+          "annual_return": 0.1594,
+          "avg_exposure": 0.9868,
+          "max_drawdown": -0.1805,
+          "n_trades": 130.0,
+          "profit_factor": 1.52,
+          "sharpe": 1.03,
+          "sortino": 1.56,
+          "total_return": 0.4967,
+          "win_rate": 0.5923,
+          "worst": -0.125
+        },
+        "trade_count": 130
+      },
+      {
+        "cost": "2x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "612a9ae73e"
+        },
+        "label": "fresh_2025-01-02_2x",
+        "start": "2025-01-02",
+        "stats": {
+          "annual_return": 0.0513,
+          "avg_exposure": 0.9845,
+          "max_drawdown": -0.1794,
+          "n_trades": 86.0,
+          "profit_factor": 1.03,
+          "sharpe": 0.44,
+          "sortino": 0.63,
+          "total_return": 0.0924,
+          "win_rate": 0.5698,
+          "worst": -0.125
+        },
+        "trade_count": 86
+      },
+      {
+        "cost": "2x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "acc7219b6c"
+        },
+        "label": "fresh_2025-10-14_2x",
+        "start": "2025-10-14",
+        "stats": {
+          "annual_return": 0.015,
+          "avg_exposure": 0.9835,
+          "max_drawdown": -0.1595,
+          "n_trades": 54.0,
+          "profit_factor": 1.06,
+          "sharpe": 0.18,
+          "sortino": 0.26,
+          "total_return": 0.0154,
+          "win_rate": 0.5185,
+          "worst": -0.1229
+        },
+        "trade_count": 54
+      },
+      {
+        "cost": "2x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "f6c50f5e99"
+        },
+        "label": "fresh_2026-01-05_2x",
+        "start": "2026-01-05",
+        "stats": {
+          "annual_return": -0.0733,
+          "avg_exposure": 0.9767,
+          "max_drawdown": -0.1831,
+          "n_trades": 45.0,
+          "profit_factor": 0.95,
+          "sharpe": -0.49,
+          "sortino": -0.66,
+          "total_return": -0.0592,
+          "win_rate": 0.4222,
+          "worst": -0.1229
+        },
+        "trade_count": 45
+      }
+    ],
+    "full": {
+      "2x": {
+        "cost": "2x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "1445543e24"
+        },
+        "label": "full_2x",
+        "start": "2022-05-05",
+        "stats": {
+          "annual_return": 0.1339,
+          "avg_exposure": 0.9868,
+          "max_drawdown": -0.164,
+          "n_trades": 198.0,
+          "profit_factor": 1.19,
+          "sharpe": 0.96,
+          "sortino": 1.41,
+          "total_return": 0.7258,
+          "win_rate": 0.6667,
+          "worst": -0.1633
+        },
+        "trade_count": 198
+      },
+      "3x": {
+        "cost": "3x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "2060f511a3"
+        },
+        "label": "full_3x",
+        "start": "2022-05-05",
+        "stats": {
+          "annual_return": 0.1268,
+          "avg_exposure": 0.9865,
+          "max_drawdown": -0.1662,
+          "n_trades": 198.0,
+          "profit_factor": 1.22,
+          "sharpe": 0.92,
+          "sortino": 1.34,
+          "total_return": 0.6794,
+          "win_rate": 0.6515,
+          "worst": -0.1645
+        },
+        "trade_count": 198
+      },
+      "5x": {
+        "cost": "5x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "9702349274"
+        },
+        "label": "full_5x",
+        "start": "2022-05-05",
+        "stats": {
+          "annual_return": 0.1129,
+          "avg_exposure": 0.9866,
+          "max_drawdown": -0.1703,
+          "n_trades": 198.0,
+          "profit_factor": 1.23,
+          "sharpe": 0.83,
+          "sortino": 1.2,
+          "total_return": 0.5911,
+          "win_rate": 0.6313,
+          "worst": -0.1668
+        },
+        "trade_count": 198
+      }
+    },
+    "members": [
+      "amount_level",
+      "bollinger_width",
+      "dividend_yield_quantile",
+      "fund_holding_ratio_absolute",
+      "max_return",
+      "turnover_level",
+      "vol_of_vol"
+    ],
+    "recent": {
+      "2x": {
+        "cost": "2x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "2bfac34624"
+        },
+        "label": "recent_2x",
+        "start": "2025-10-14",
+        "stats": {
+          "annual_return": 0.015,
+          "avg_exposure": 0.9835,
+          "max_drawdown": -0.1595,
+          "n_trades": 54.0,
+          "profit_factor": 1.06,
+          "sharpe": 0.18,
+          "sortino": 0.26,
+          "total_return": 0.0154,
+          "win_rate": 0.5185,
+          "worst": -0.1229
+        },
+        "trade_count": 54
+      },
+      "3x": {
+        "cost": "3x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "e112294ce9"
+        },
+        "label": "recent_3x",
+        "start": "2025-10-14",
+        "stats": {
+          "annual_return": 0.0079,
+          "avg_exposure": 0.9831,
+          "max_drawdown": -0.1612,
+          "n_trades": 54.0,
+          "profit_factor": 1.02,
+          "sharpe": 0.13,
+          "sortino": 0.18,
+          "total_return": 0.0081,
+          "win_rate": 0.5185,
+          "worst": -0.1241
+        },
+        "trade_count": 54
+      },
+      "5x": {
+        "cost": "5x",
+        "end": "2026-11-05",
+        "formal_evidence": {
+          "execution_timing": "passed",
+          "lookahead": "passed",
+          "persistence": "saved",
+          "run_id": "dcf4d2def0"
+        },
+        "label": "recent_5x",
+        "start": "2025-10-14",
+        "stats": {
+          "annual_return": -0.0067,
+          "avg_exposure": 0.9839,
+          "max_drawdown": -0.1647,
+          "n_trades": 54.0,
+          "profit_factor": 1.08,
+          "sharpe": 0.01,
+          "sortino": 0.02,
+          "total_return": -0.0069,
+          "win_rate": 0.4815,
+          "worst": -0.1266
+        },
+        "trade_count": 54
+      }
+    },
+    "validation": {
+      "cost": "2x",
+      "end": "2025-10-13",
+      "formal_evidence": {
+        "execution_timing": "passed",
+        "lookahead": "passed",
+        "persistence": "saved",
+        "run_id": "e558037f21"
+      },
+      "label": "validation_2x",
+      "start": "2025-01-01",
+      "stats": {
+        "annual_return": 0.0802,
+        "avg_exposure": 0.9835,
+        "max_drawdown": -0.0564,
+        "n_trades": 40.0,
+        "profit_factor": 1.31,
+        "sharpe": 0.62,
+        "sortino": 0.88,
+        "total_return": 0.0586,
+        "win_rate": 0.575,
+        "worst": -0.1229
+      },
+      "trade_count": 40
+    }
+  },
+  "negative_knowledge": [],
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "preregistration_sha256": "01661f7453d35f28279761ba95cc68f1908a1e4b054c1b0533d1a5e981ada31d",
+  "research_id": "R543",
+  "research_type": "project_formal",
+  "runner": "scripts/research_r543_stable_ic_subset.py",
+  "runner_sha256": "2127c14c1965cfc986def6614a125eda820700e37c288f9225d58786504ae54a",
+  "schema_version": 1,
+  "source_result_hashes": [
+    "988988dab0f8db3cdb4a66e20b64984f56e3f5c292d07277fbf51e795c1e5216",
+    "a2aa3b04d56783b724f91f40f03b4f71669b17f1db07703265bf195958e4b850"
+  ]
+}

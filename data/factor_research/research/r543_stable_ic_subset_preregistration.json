@@ -1,0 +1,137 @@
+{
+  "created_at": "2026-11-25T12:14:07+08:00",
+  "data_source": "project",
+  "execution": {
+    "cost_multiplier": 2,
+    "leverage": "none",
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0
+  },
+  "falsification_checks": [
+    "selection_uses_train_and_validation_only",
+    "formal_evidence_saved_lookahead_t1",
+    "recent_is_not_independent_oos",
+    "all_13_planned_runs_completed",
+    "five_x_warning_only",
+    "no_orders_or_active_version"
+  ],
+  "gates": {
+    "five_x_hard_rejection": false,
+    "fresh_median_positive": true,
+    "fresh_positive_min": 4,
+    "full_annual_min": 0.1,
+    "full_mdd_min": -0.2,
+    "full_sharpe_min": 0.9,
+    "recent_return_strictly_positive": true,
+    "stress_3x_annual_min": 0.08,
+    "stress_3x_mdd_min": -0.22,
+    "stress_3x_recent_return_min": -0.03,
+    "validation_annual_positive": true
+  },
+  "hypothesis": "Removing factors whose train or validation directional IC is non-positive will improve recent-year robustness without changing the execution skeleton.",
+  "input_hashes": {
+    "r539_preregistration": "845401546a7ef4474c608cedb2fe86bf58d69096b8a89c4c3b94a216ebb69474",
+    "r539_result": "a2aa3b04d56783b724f91f40f03b4f71669b17f1db07703265bf195958e4b850",
+    "r542_preregistration": "bd25dc357a4dfad6a2deee8d7733af86069863cb4d4fa7c90d9284d920cfb3c0",
+    "r542_result": "988988dab0f8db3cdb4a66e20b64984f56e3f5c292d07277fbf51e795c1e5216",
+    "r542_runner": "8e59208be7e04b757a4fbbe98ba260d33f4131cd8178fbbec94b1a399a6b29b2"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "parameters": {
+    "excluded": [
+      "fund_count_quantile",
+      "lhb_inst_net_buy_event",
+      "lhb_net_buy_holding",
+      "market_down_beta",
+      "repurchase_event_decay",
+      "repurchase_holding"
+    ],
+    "execution": {
+      "cost_multiplier": 2,
+      "five_x_policy": "warning_only",
+      "industry_cap": 3,
+      "leverage": "none",
+      "matching": "open_t+1",
+      "max_exposure_pct": 1.0,
+      "max_hold_days": 60,
+      "max_positions": 10,
+      "stop_loss": -0.12,
+      "trailing_stop": null
+    },
+    "formal_runs": 13,
+    "gates": {
+      "five_x_hard_rejection": false,
+      "fresh_median_positive": true,
+      "fresh_positive_min": 4,
+      "full_annual_min": 0.1,
+      "full_mdd_min": -0.2,
+      "full_sharpe_min": 0.9,
+      "recent_return_strictly_positive": true,
+      "stress_3x_annual_min": 0.08,
+      "stress_3x_mdd_min": -0.22,
+      "stress_3x_recent_return_min": -0.03,
+      "validation_annual_positive": true
+    },
+    "members": [
+      "amount_level",
+      "bollinger_width",
+      "dividend_yield_quantile",
+      "fund_holding_ratio_absolute",
+      "max_return",
+      "turnover_level",
+      "vol_of_vol"
+    ],
+    "output_policy": {
+      "active_version": null,
+      "orders_generated": false,
+      "paper_target_generated": false,
+      "production_enabled": false
+    },
+    "recent_is_independent_oos": false,
+    "selection_rule": "train_ic_gt_0_and_validation_ic_gt_0",
+    "windows": {
+      "end": "2026-11-05",
+      "fresh_starts": [
+        "2022-05-05",
+        "2023-01-03",
+        "2024-01-02",
+        "2025-01-02",
+        "2025-10-14",
+        "2026-01-05"
+      ],
+      "recent_start": "2025-10-14",
+      "train_end": "2024-12-31",
+      "train_start": "2022-05-05",
+      "validation_end": "2025-10-13",
+      "validation_start": "2025-01-01"
+    }
+  },
+  "question": "Does a train+validation stable-IC seven-factor subset improve the absolute recent-year return while retaining acceptable full-period risk?",
+  "research_id": "R543",
+  "research_type": "project_formal",
+  "runner": "scripts/research_r543_stable_ic_subset.py",
+  "runner_sha256": "2127c14c1965cfc986def6614a125eda820700e37c288f9225d58786504ae54a",
+  "sample": {
+    "end": "2026-11-05",
+    "fresh_starts": [
+      "2022-05-05",
+      "2023-01-03",
+      "2024-01-02",
+      "2025-01-02",
+      "2025-10-14",
+      "2026-01-05"
+    ],
+    "recent_start": "2025-10-14",
+    "train_end": "2024-12-31",
+    "train_start": "2022-05-05",
+    "validation_end": "2025-10-13",
+    "validation_start": "2025-01-01"
+  },
+  "schema_version": 1,
+  "study_scope": "research_only"
+}
