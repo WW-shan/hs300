@@ -1,0 +1,122 @@
+{
+  "created_at": "2026-11-25T23:14:04+08:00",
+  "data_source": "project",
+  "execution": {
+    "cost_multiplier": 2,
+    "leverage": "none",
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0
+  },
+  "falsification_checks": [
+    "fixed_vol12_only_no_search",
+    "causal_position_policy_context",
+    "budget_scale_never_exceeds_one",
+    "formal_evidence_saved_lookahead_t1",
+    "five_x_warning_only",
+    "recent_not_independent_oos"
+  ],
+  "gates": {
+    "bootstrap_runs": 5000,
+    "confirmation_runs": 13,
+    "five_x_hard_rejection": false,
+    "recent_is_independent_oos": false,
+    "variant": {
+      "floor": 0.5,
+      "id": "vol_12",
+      "kind": "vol_target",
+      "lookback": 60,
+      "order": 7,
+      "target": 0.12
+    }
+  },
+  "hypothesis": "A higher volatility target than R545 vol_10 will improve annual return without violating the drawdown and stress-cost constraints.",
+  "input_hashes": {
+    "r542_result": "988988dab0f8db3cdb4a66e20b64984f56e3f5c292d07277fbf51e795c1e5216",
+    "r543_preregistration": "01661f7453d35f28279761ba95cc68f1908a1e4b054c1b0533d1a5e981ada31d",
+    "r543_result": "700d6cfbd12ce980e466d4c20cf82e842bde669fa23cd8e16f8e53ee912210ad",
+    "r543_runner": "2127c14c1965cfc986def6614a125eda820700e37c288f9225d58786504ae54a",
+    "r544_result": "72f62812628b253ad89a023ae165b6dc83c4bc6461ab8f06330d1feb74a9e380",
+    "r545_preregistration": "a1241c1218a8a56321e6c7995ce2b06e6e11d9d9f02550bf19ff8e71d71afdcc",
+    "r545_result": "867e6eeed717db6f750b933030f83ffb3564d93cadfc4e730bfa91b4906814bb",
+    "r545_runner": "501fc04186ad22c9031bef245392895934a6d1d90cdf4cd7c79b6081665c41d8"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "parameters": {
+    "bootstrap_block": 20,
+    "bootstrap_runs": 5000,
+    "bootstrap_seed": 546,
+    "confirmation_runs": 13,
+    "execution": {
+      "cost_multiplier": 2,
+      "five_x_policy": "warning_only",
+      "leverage": "none",
+      "matching": "open_t+1",
+      "max_exposure_pct": 1.0
+    },
+    "formal_runs": 13,
+    "members": [
+      "amount_level",
+      "bollinger_width",
+      "dividend_yield_quantile",
+      "fund_holding_ratio_absolute",
+      "max_return",
+      "turnover_level",
+      "vol_of_vol"
+    ],
+    "output_policy": {
+      "active_version": null,
+      "orders_generated": false,
+      "paper_target_generated": false,
+      "production_enabled": false
+    },
+    "recent_is_independent_oos": false,
+    "variant": {
+      "floor": 0.5,
+      "id": "vol_12",
+      "kind": "vol_target",
+      "lookback": 60,
+      "order": 7,
+      "target": 0.12
+    },
+    "windows": {
+      "end": "2026-11-05",
+      "fresh_starts": [
+        "2022-05-05",
+        "2023-01-03",
+        "2024-01-02",
+        "2025-01-02",
+        "2025-10-14",
+        "2026-01-05"
+      ],
+      "recent_start": "2025-10-14",
+      "validation_end": "2025-10-13",
+      "validation_start": "2025-01-01"
+    }
+  },
+  "question": "Does the R545 vol_12 risk budget retain positive recent and validation returns while restoring the full-period annual return above 10%?",
+  "research_id": "R546",
+  "research_type": "project_formal",
+  "runner": "scripts/research_r546_vol12_confirmation.py",
+  "runner_sha256": "0305cfe292b028c8b00890c36271bae7ded06d201122ac8b8108ba167866e9db",
+  "sample": {
+    "end": "2026-11-05",
+    "fresh_starts": [
+      "2022-05-05",
+      "2023-01-03",
+      "2024-01-02",
+      "2025-01-02",
+      "2025-10-14",
+      "2026-01-05"
+    ],
+    "recent_start": "2025-10-14",
+    "validation_end": "2025-10-13",
+    "validation_start": "2025-01-01"
+  },
+  "schema_version": 1,
+  "study_scope": "research_only"
+}
