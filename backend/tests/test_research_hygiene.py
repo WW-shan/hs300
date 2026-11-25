@@ -123,7 +123,7 @@ def test_research_asset_ledger_matches_current_strategy_contract() -> None:
     assert all(s.execution_backend in {"polars_expr", "matrix_native"} for s in definitions)
 
     ledger = json.loads(
-        (E / "research_asset_ledger_2026-11-25_v34.json").read_text(encoding="utf-8")
+        (E / "research_asset_ledger_2026-11-25_v35.json").read_text(encoding="utf-8")
     )
     strategy_rows = [
         row for row in ledger["rows"]
@@ -135,7 +135,7 @@ def test_research_asset_ledger_matches_current_strategy_contract() -> None:
 
 
 def test_strategy_audit_ledger_is_checksummed_and_all_ai_strategies_are_kept() -> None:
-    path = E / "research_asset_ledger_2026-11-25_v34.json"
+    path = E / "research_asset_ledger_2026-11-25_v35.json"
     assert _assert_sidecar(path)
     payload = json.loads(path.read_text(encoding="utf-8"))
     rows = payload["rows"]
@@ -156,6 +156,16 @@ def test_strategy_audit_ledger_is_checksummed_and_all_ai_strategies_are_kept() -
     assert payload["counts"]["project_chain_with_formal_evidence"] >= 80
     assert payload["counts"].get("project_chain_without_formal_evidence", 0) == 0
     assert payload["counts"].get("non_project_backtest_or_custom_simulation", 0) == 0
+    synthetic_rows = [
+        row for row in rows
+        if row.get("kind") == "runner"
+        and row["status"] == "synthetic_market_stress"
+    ]
+    assert synthetic_rows
+    assert all(
+        row["disposition"] == "keep_as_negative_knowledge"
+        for row in synthetic_rows
+    )
     diagnostic_rows = [
         row for row in rows
         if row.get("kind") == "runner"

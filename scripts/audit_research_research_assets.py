@@ -12,7 +12,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 RESEARCH = DATA / "factor_research" / "research"
-OUTPUT = RESEARCH / "research_asset_ledger_2026-11-25_v34.json"
+OUTPUT = RESEARCH / "research_asset_ledger_2026-11-25_v35.json"
 STRATEGY_DIRS = (
     DATA / "strategies" / "ai",
     DATA / "strategies" / "custom",
@@ -267,6 +267,7 @@ def main() -> int:
                 "diagnostic_external_data_diagnostic_simulation",
                 "diagnostic_custom_simulation",
                 "diagnostic_non_project_backtest_or_custom_simulation",
+                "synthetic_market_stress",
             }:
                 row["disposition"] = "keep_as_negative_knowledge"
             else:
@@ -285,7 +286,7 @@ def main() -> int:
         dispositions[row["disposition"]] = dispositions.get(row["disposition"], 0) + 1
     payload = {
         "schema_version": 1,
-        "generated_at": "2026-11-24",
+        "generated_at": "2026-11-25",
         "method": "Static inventory plus AST metadata checks. project_chain_with_formal_evidence means the runner calls a guarded project helper or direct run_with_evidence; it is not a rerun result. Custom simulations are retained as negative knowledge.",
         "counts": dict(sorted(counts.items())),
         "dispositions": dict(sorted(dispositions.items())),

@@ -193,6 +193,7 @@ def test_every_authoritative_runner_declares_a_research_type_mapping() -> None:
         "diagnostic_statistical_screen": "statistical_screen",
         "diagnostic_non_project_backtest_or_custom_simulation": "diagnostic_custom_simulation",
         "diagnostic_custom_simulation": "diagnostic_custom_simulation",
+        "synthetic_market_stress": "synthetic_market_stress",
     }
     statuses = {row["status"] for row in payload["runners"]}
     assert statuses <= set(allowed)

@@ -1,0 +1,323 @@
+{
+  "created_at": "2026-11-25T07:54:25+08:00",
+  "data_source": "synthetic_gbm",
+  "execution": {
+    "cost_multiplier": 2,
+    "leverage": "none",
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0
+  },
+  "falsification_checks": [
+    "same_seed_byte_identical_replay",
+    "future_prices_do_not_change_past_scores",
+    "signal_t_fills_at_t_plus_one_open_only",
+    "ohlc_and_volume_invariants",
+    "cost_table_exact_2x_3x_5x",
+    "no_leverage_and_max_exposure_at_or_below_100pct",
+    "same_path_equal_weight_benchmark",
+    "all_cells_have_exact_path_count"
+  ],
+  "gates": {
+    "all_288_cells_present": true,
+    "all_costs_present": true,
+    "all_scenarios_present": true,
+    "all_signal_modes_present": true,
+    "all_stop_variants_present": true,
+    "benchmark_observations": 2400,
+    "deterministic_replay_required": true,
+    "five_x_hard_rejection": false,
+    "five_x_policy": "warning_only",
+    "leverage": "none",
+    "max_exposure_pct": 1.0,
+    "paths_per_cell": 100,
+    "same_path_benchmark_required": true,
+    "strategy_observations": 28800
+  },
+  "hypothesis": "Completing every synthetic cell will distinguish execution, turnover, cost, stop, and correlation effects from a random-null benchmark, but will not establish real-factor alpha.",
+  "input_hashes": {
+    "generator": "b9836c6a3c2a262e45a5db4dba513ea2b7be543c4cba202055255f19451fb005"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "parameters": {
+    "asset_count": 300,
+    "benchmark": "same_path_equal_weight_buy_and_hold",
+    "correlation_count": 2,
+    "correlations": [
+      0.0,
+      0.7
+    ],
+    "cost_multiplier_count": 3,
+    "cost_multipliers": [
+      2,
+      3,
+      5
+    ],
+    "cost_table": {
+      "2": {
+        "commission_pct": 0.0004,
+        "fees_pct": 0.0004,
+        "slippage_bps": 10.0,
+        "stamp_tax_pct": 0.0005
+      },
+      "3": {
+        "commission_pct": 0.0006,
+        "fees_pct": 0.0006,
+        "slippage_bps": 15.0,
+        "stamp_tax_pct": 0.0005
+      },
+      "5": {
+        "commission_pct": 0.001,
+        "fees_pct": 0.001,
+        "slippage_bps": 25.0,
+        "stamp_tax_pct": 0.0005
+      }
+    },
+    "end": "2025-12-05",
+    "entry_score": 70.0,
+    "evaluation_days": 504,
+    "execution": {
+      "baseline_cost_multiplier": 2,
+      "entry_delay_bars": 1,
+      "exit_delay_bars": 1,
+      "five_x_policy": "warning_only",
+      "initial_capital": 50000000.0,
+      "leverage": "none",
+      "matching": "open_t+1",
+      "max_exposure_pct": 1.0,
+      "max_hold_days": 60,
+      "max_positions": 10,
+      "position_sizing": "equal",
+      "stress_cost_multiplier": 3
+    },
+    "exit_score": 40.0,
+    "expected_benchmark_observations": 2400,
+    "expected_cells": 288,
+    "expected_strategy_observations": 28800,
+    "industry_cap": 3,
+    "industry_count": 30,
+    "industry_size": 10,
+    "master_seed": 20261125,
+    "model": "geometric_brownian_motion",
+    "path_count": 100,
+    "regime_count": 4,
+    "scenarios": [
+      {
+        "annual_drift": 0.0,
+        "annual_volatility": 0.2,
+        "scenario_id": "neutral"
+      },
+      {
+        "annual_drift": 0.08,
+        "annual_volatility": 0.18,
+        "scenario_id": "bull"
+      },
+      {
+        "annual_drift": -0.08,
+        "annual_volatility": 0.25,
+        "scenario_id": "bear"
+      },
+      {
+        "annual_drift": 0.0,
+        "annual_volatility": 0.35,
+        "scenario_id": "high_volatility"
+      }
+    ],
+    "signal_mode_count": 6,
+    "signal_modes": [
+      {
+        "definition": "deterministic uniform random score independent of prices",
+        "name": "random_null"
+      },
+      {
+        "definition": "cross-sectional percentile of 20-day return",
+        "name": "momentum_20"
+      },
+      {
+        "definition": "cross-sectional percentile of 60-day return",
+        "name": "momentum_60"
+      },
+      {
+        "definition": "cross-sectional percentile of negative 5-day return",
+        "name": "reversal_5"
+      },
+      {
+        "definition": "cross-sectional percentile of negative 20-day volatility",
+        "name": "low_volatility_20"
+      },
+      {
+        "definition": "equal blend of 20-day momentum and low-volatility scores",
+        "name": "momentum_low_vol_20"
+      }
+    ],
+    "start": "2024-01-02",
+    "stop_variant_count": 2,
+    "stop_variants": [
+      {
+        "name": "no_stop",
+        "stop_loss_pct": null
+      },
+      {
+        "name": "stop_12",
+        "stop_loss_pct": -0.12
+      }
+    ],
+    "top_rank": 30,
+    "warmup_days": 60
+  },
+  "question": "Under a frozen GBM world, how do the project execution skeleton, price-based signal modes, stop loss, costs, and market correlation change paired performance versus the same-path equal-weight control?",
+  "research_id": "R-GBM-001",
+  "research_type": "synthetic_market_stress",
+  "runner": "scripts/research_gbm_market_stress.py",
+  "runner_sha256": "e506b791f26634a80f08a4409aefe9fa76a04ec1089dfc24729c73cc09092853",
+  "sample": {
+    "asset_count": 300,
+    "end": "2025-12-05",
+    "evaluation_days": 504,
+    "expected_benchmark_observations": 2400,
+    "expected_cells": 288,
+    "expected_strategy_observations": 28800,
+    "industry_count": 30,
+    "path_count": 100,
+    "start": "2024-01-02",
+    "warmup_days": 60
+  },
+  "schema_version": 1,
+  "study_scope": "research_only",
+  "synthetic_model": {
+    "benchmark": "same_path_equal_weight_buy_and_hold",
+    "model": "geometric_brownian_motion",
+    "parameters": {
+      "asset_count": 300,
+      "benchmark": "same_path_equal_weight_buy_and_hold",
+      "correlation_count": 2,
+      "correlations": [
+        0.0,
+        0.7
+      ],
+      "cost_multiplier_count": 3,
+      "cost_multipliers": [
+        2,
+        3,
+        5
+      ],
+      "cost_table": {
+        "2": {
+          "commission_pct": 0.0004,
+          "fees_pct": 0.0004,
+          "slippage_bps": 10.0,
+          "stamp_tax_pct": 0.0005
+        },
+        "3": {
+          "commission_pct": 0.0006,
+          "fees_pct": 0.0006,
+          "slippage_bps": 15.0,
+          "stamp_tax_pct": 0.0005
+        },
+        "5": {
+          "commission_pct": 0.001,
+          "fees_pct": 0.001,
+          "slippage_bps": 25.0,
+          "stamp_tax_pct": 0.0005
+        }
+      },
+      "end": "2025-12-05",
+      "entry_score": 70.0,
+      "evaluation_days": 504,
+      "execution": {
+        "baseline_cost_multiplier": 2,
+        "entry_delay_bars": 1,
+        "exit_delay_bars": 1,
+        "five_x_policy": "warning_only",
+        "initial_capital": 50000000.0,
+        "leverage": "none",
+        "matching": "open_t+1",
+        "max_exposure_pct": 1.0,
+        "max_hold_days": 60,
+        "max_positions": 10,
+        "position_sizing": "equal",
+        "stress_cost_multiplier": 3
+      },
+      "exit_score": 40.0,
+      "expected_benchmark_observations": 2400,
+      "expected_cells": 288,
+      "expected_strategy_observations": 28800,
+      "industry_cap": 3,
+      "industry_count": 30,
+      "industry_size": 10,
+      "master_seed": 20261125,
+      "model": "geometric_brownian_motion",
+      "path_count": 100,
+      "regime_count": 4,
+      "scenarios": [
+        {
+          "annual_drift": 0.0,
+          "annual_volatility": 0.2,
+          "scenario_id": "neutral"
+        },
+        {
+          "annual_drift": 0.08,
+          "annual_volatility": 0.18,
+          "scenario_id": "bull"
+        },
+        {
+          "annual_drift": -0.08,
+          "annual_volatility": 0.25,
+          "scenario_id": "bear"
+        },
+        {
+          "annual_drift": 0.0,
+          "annual_volatility": 0.35,
+          "scenario_id": "high_volatility"
+        }
+      ],
+      "signal_mode_count": 6,
+      "signal_modes": [
+        {
+          "definition": "deterministic uniform random score independent of prices",
+          "name": "random_null"
+        },
+        {
+          "definition": "cross-sectional percentile of 20-day return",
+          "name": "momentum_20"
+        },
+        {
+          "definition": "cross-sectional percentile of 60-day return",
+          "name": "momentum_60"
+        },
+        {
+          "definition": "cross-sectional percentile of negative 5-day return",
+          "name": "reversal_5"
+        },
+        {
+          "definition": "cross-sectional percentile of negative 20-day volatility",
+          "name": "low_volatility_20"
+        },
+        {
+          "definition": "equal blend of 20-day momentum and low-volatility scores",
+          "name": "momentum_low_vol_20"
+        }
+      ],
+      "start": "2024-01-02",
+      "stop_variant_count": 2,
+      "stop_variants": [
+        {
+          "name": "no_stop",
+          "stop_loss_pct": null
+        },
+        {
+          "name": "stop_12",
+          "stop_loss_pct": -0.12
+        }
+      ],
+      "top_rank": 30,
+      "warmup_days": 60
+    },
+    "path_count": 100,
+    "seed": 20261125
+  }
+}
