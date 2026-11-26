@@ -1,0 +1,127 @@
+{
+  "created_at": "2026-11-26T15:43:14+08:00",
+  "data_source": "project_data_with_r526_pit_membership",
+  "execution": {
+    "cost_multiplier": 2,
+    "leverage": "none",
+    "matching": "signal_close_to_horizon_close_return",
+    "max_exposure_pct": 1.0
+  },
+  "falsification_checks": [
+    "selection_uses_training_and_validation_only",
+    "recent_not_used_for_selection",
+    "r547_candidates_reused_without_redefinition",
+    "financial_factors_use_announcement_t_plus_one_gate",
+    "r526_pit_membership_and_industry_used",
+    "no_portfolio_return_claim"
+  ],
+  "gates": {
+    "coverage_min": 0.75,
+    "fdr_q_max": 0.2,
+    "incremental_nw_p_max": 0.2,
+    "incremental_train_positive": true,
+    "recent_policy": "report_only_not_used_for_selection",
+    "stable7_correlation_max": 0.85,
+    "train_ic_min": 0.005,
+    "valid_dates_min": 500,
+    "validation_ic_positive": true
+  },
+  "hypothesis": "A slow fundamental composite can pass on a longer horizon even when the 5-day screen rejects it; the horizon must still pass training and validation.",
+  "input_hashes": {
+    "alt_config": "d77596336a8095aee140fc953406cbad67afb61df4782d4b26c57eaa12cd4323",
+    "alt_timeseries": "71ad0c9b0c46dfd068ac2c88d49e138cf99f2bb3146365e93be66fc5a9782567",
+    "balance_sheet": "9253a260bb045c37c0409617bdb3082624e7f21f253d35a147036e5eeac47283",
+    "candidate_definitions": "192208efa94676b0c73bb87f8b735a54b547f085a3cb99630237ad17165ccee6",
+    "cash_flow": "f34a3365dd92713d91a007b784b9ac8cd266cc7e7d19b5ab1df75a82381e3b5b",
+    "income": "9bf784d2939de14c4f9da2e96ad3fbecd3c87ae85e8c7dfea056b636ee8164e2",
+    "industry": "4f9fd44eb17e2a3acb5c91c0b6c15afb2595e36a9174f70de29611e6d3c6a30f",
+    "membership": "3c7bee9c7dd8cb318cd1038a560dd3742a36f63f1ecb45a07d24e77c1d24781d",
+    "metrics": "d458c82807fbd0957344021930ba065b478dae78d7bb17a6aea9e4cab4757886",
+    "r530_result": "0b8b0c1317dd1be43f59a794bbea557bd2a148a6fcd6e9fbbf879b06ded6e2d8",
+    "r536_result": "968851e407df5c197c6e895d1057d1db850fb57167a30eba633a00bb346af93c",
+    "r543_result": "700d6cfbd12ce980e466d4c20cf82e842bde669fa23cd8e16f8e53ee912210ad",
+    "r547_preregistration": "739e5e0969227f1488d06b19a8e481b4d18572005e3dd011216105d88d6d5959",
+    "r547_result": "16d8e02c680f8cd25d1d21cd701416d4dfd357f44172f7330ba1e4e138325195",
+    "r547_runner": "85964675f1f13eca74cfeea6ad85b4a74ca62dd7680af335016fffbb8a65ee25"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "parameters": {
+    "baseline": "stable7 rank-percentile composite from R547",
+    "candidate_definitions": {
+      "cf_r547_cash_quality": "2505efea441af5b38803f1d99148bb6d69bca5024c3ffb7f46dc110a28afbac1",
+      "cf_r547_growth_quality": "bcd29435d808f6721068dcdc76f70f4337b62d6b3b9b734efcc34f9a87adf48f",
+      "cf_r547_industry_quality": "720c8d44eb06eddd3b522b4f691521bd4ac3b323d230ba54aead20d54fb2bbe3",
+      "cf_r547_operating_efficiency": "04f9d3f219776f5d9ed3608669cefd2e817eeb5251c706efd9b8227fea3bdd93",
+      "cf_r547_smart_money_quality": "6d608712400189289febac75b68409d009e23bb075c83c12552cc18afd569d40",
+      "cf_r547_value_quality": "30c3a9c8e417f98e75db5d4498c7b07ba6fa6d4fa540c4ec83aad05465fb108f",
+      "cf_r547_value_quality_safety": "37f4e9f81309e32c55d767f5b32b2edda7585c5646c46572feca4c98d6e69bfe"
+    },
+    "candidates": [
+      "cf_r547_cash_quality",
+      "cf_r547_growth_quality",
+      "cf_r547_industry_quality",
+      "cf_r547_operating_efficiency",
+      "cf_r547_smart_money_quality",
+      "cf_r547_value_quality",
+      "cf_r547_value_quality_safety"
+    ],
+    "execution": {
+      "cost_multiplier": 2,
+      "leverage": "none",
+      "matching": "signal_close_to_horizon_close_return",
+      "max_exposure_pct": 1.0
+    },
+    "gates": {
+      "coverage_min": 0.75,
+      "fdr_q_max": 0.2,
+      "incremental_nw_p_max": 0.2,
+      "incremental_train_positive": true,
+      "recent_policy": "report_only_not_used_for_selection",
+      "stable7_correlation_max": 0.85,
+      "train_ic_min": 0.005,
+      "valid_dates_min": 500,
+      "validation_ic_positive": true
+    },
+    "horizons": [
+      20,
+      60
+    ],
+    "maximum_selected_horizon": 60,
+    "output_policy": {
+      "active_version": null,
+      "orders_generated": false,
+      "paper_target_generated": false,
+      "production_enabled": false
+    },
+    "recent_is_diagnostic_only": true,
+    "selection_policy": "a candidate passes if at least one predeclared horizon passes all train+validation checks",
+    "windows": {
+      "end": "2026-11-05",
+      "recent_start": "2025-10-14",
+      "start": "2022-05-05",
+      "train_end": "2024-12-31",
+      "validation_end": "2025-10-13",
+      "validation_start": "2025-01-01"
+    }
+  },
+  "question": "Do the R547 financial, sentiment-flow and industry-quality composites show incremental signal at 20- or 60-day horizons consistent with the 60-day portfolio hold?",
+  "research_id": "R548",
+  "research_type": "statistical_screen",
+  "runner": "scripts/research_r548_multi_horizon_incremental_screen.py",
+  "runner_sha256": "6dcf7f4fe02e303b7e69b8368fcccd04c876584ff0736ddbf121445e5e36cebe",
+  "sample": {
+    "end": "2026-11-05",
+    "recent_start": "2025-10-14",
+    "start": "2022-05-05",
+    "train_end": "2024-12-31",
+    "validation_end": "2025-10-13",
+    "validation_start": "2025-01-01"
+  },
+  "schema_version": 1,
+  "study_scope": "research_only"
+}
