@@ -1,0 +1,28 @@
+{
+  "attempted_preregistration": "data/factor_research/research/r549_quality_addon_portfolio_preregistration.json",
+  "attempted_preregistration_sha256": "a9342f1369680d3852f318a9e8c8176972b72f453c4ac247f2d5b6b870b56819",
+  "attempted_runner_sha256": "548a38e8f3280d451332cd8f4aa1a3017a722d7a91c2bbfc0721dd1d9a0e055f",
+  "correction": {
+    "round": "R549A",
+    "rule": "construct {\"2x\": discovery[selected][\"recent\"]} before adding 3x/5x runs"
+  },
+  "failure": "validation/recent runs completed but the runtime evidence-collation step treated the recent run mapping as scalar values, causing TypeError before publication",
+  "generated_at": "2026-11-26T15:53:47+08:00",
+  "impact": {
+    "all_discovery_and_final_backtests_completed": true,
+    "result_published": false,
+    "rules_or_parameters_changed_after_observation": false,
+    "validation_or_recent_returns_observed": true
+  },
+  "original_preregistration_remains_immutable": true,
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "root_cause": "the selected-variant recent mapping was copied with dict(run) instead of wrapped as {\"2x\": run}, so recent.values() included stats and string fields",
+  "round": "R549",
+  "schema_version": 1,
+  "status": "attempt_1_failed_before_result_publication"
+}

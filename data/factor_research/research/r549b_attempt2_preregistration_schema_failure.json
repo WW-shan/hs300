@@ -1,0 +1,28 @@
+{
+  "attempted_preregistration": "data/factor_research/research/r549a_quality_addon_portfolio_preregistration.json",
+  "attempted_preregistration_sha256": "3bd5e4bc7d19d94a5532bb13d5d2d5e3af9688770c819eccb092661f37c2422d",
+  "attempted_runner_sha256": "5b681a9aea22b06f161eae7c6d0d3ab15fbc42741c5d3a28b511daef64a67510",
+  "correction": {
+    "round": "R549B",
+    "rule": "serialize only the four contract execution fields in preregistration.execution; keep strategy protocol details under parameters"
+  },
+  "failure": "pre-registration validation rejected extra execution fields before the immutable result envelope could be written",
+  "generated_at": "2026-11-26T15:55:47+08:00",
+  "impact": {
+    "all_discovery_and_final_backtests_completed": true,
+    "result_published": false,
+    "rules_or_parameters_changed_after_observation": false,
+    "validation_or_recent_returns_observed": true
+  },
+  "original_preregistration_remains_immutable": true,
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "root_cause": "the formal execution mapping passed protocol details (positions, hold, stop, industry cap, five-x policy) into ResearchExecutionContext, which permits only matching, cost_multiplier, leverage and max_exposure_pct",
+  "round": "R549A",
+  "schema_version": 1,
+  "status": "attempt_2_failed_before_result_publication"
+}
