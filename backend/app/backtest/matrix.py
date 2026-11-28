@@ -3676,8 +3676,6 @@ class MatrixStrategyPipeline:
                 if not config.industry_by_symbol:
                     raise ValueError("矩阵评分中性化缺少 industry_by_symbol")
                 style_columns = neutralize_columns(config.neutralize)
-                if not style_columns:
-                    raise ValueError("矩阵评分中性化缺少 style 字段")
                 scoring_names = _neutralize_scoring_names(config, params)
                 if not scoring_names:
                     raise ValueError("矩阵评分中性化缺少评分字段")
@@ -3688,7 +3686,9 @@ class MatrixStrategyPipeline:
                     ],
                     dtype=object,
                 )
-                style_values = base_resolver(market, style_columns[0])
+                style_values = (
+                    base_resolver(market, style_columns[0]) if style_columns else None
+                )
                 excluded = set(config.neutralize.get("exclude") or [])
                 for name in scoring_names:
                     if name in excluded:

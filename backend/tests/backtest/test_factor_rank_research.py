@@ -412,6 +412,56 @@ def test_matrix_pipeline_neutralization_changes_entry_selection() -> None:
     assert neutral.entry[0].tolist() != base.entry[0].tolist()
 
 
+def test_matrix_pipeline_supports_industry_only_neutralization() -> None:
+    from app.backtest.matrix import MatrixPipelineConfig, MatrixStrategyPipeline
+
+    panel = pl.DataFrame(
+        {
+            "symbol": ["A", "B", "C", "D"],
+            "date": [date(2024, 1, 2)] * 4,
+            "open": [10.0] * 4,
+            "high": [10.5] * 4,
+            "low": [9.5] * 4,
+            "close": [10.0] * 4,
+            "volume": [1_000.0] * 4,
+            "amount": [1.0, 2.0, 10.0, 11.0],
+            "turnover_rate": [1.0] * 4,
+            "industry_l1": ["bank", "bank", "tech", "tech"],
+        }
+    )
+    market = build_market_data_matrix(
+        panel, field_columns={"amount", "turnover_rate", "industry_l1"}
+    )
+    strategy = StrategyEngine._load_file(STRATEGY_PATH).matrix_strategy
+    result = MatrixStrategyPipeline().run(
+        strategy,
+        market,
+        {
+            "scoring": {"amount": 1.0},
+            "directions": {"amount": "high"},
+            "entry_score": 0.0,
+            "exit_score": 0.0,
+            "top_rank": 2,
+        },
+        MatrixPipelineConfig(
+            basic_filter={"enabled": False},
+            scoring={"amount": 1.0},
+            order_by="score",
+            descending=True,
+            scoring_directions={"amount": "high"},
+            neutralize={"industry": "industry_l1", "styles": [], "shrink": 1.0},
+            industry_by_symbol={
+                "A": "bank",
+                "B": "bank",
+                "C": "tech",
+                "D": "tech",
+            },
+        ),
+    )
+
+    assert result.entry.sum() == 2
+
+
 def test_matrix_pipeline_neutralizes_parameter_scoring_when_meta_scoring_is_empty() -> None:
     """Research strategies carry scoring in params; neutralization must see it.
 
