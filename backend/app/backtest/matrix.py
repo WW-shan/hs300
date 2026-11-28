@@ -3893,7 +3893,10 @@ def neutralize_matrix_feature(
         raise ValueError("neutralization industry ids must match asset axis")
     if not 0.0 <= shrink <= 1.0:
         raise ValueError("neutralization shrink must be between 0 and 1")
-    output = np.array(values, dtype=np.float32, copy=True)
+    # Neutralized values are only defined inside the eligible cross-section.
+    # Keeping raw values for masked-out assets lets them dominate the later
+    # global min-max normalization and can erase every eligible candidate.
+    output = np.full(values.shape, np.nan, dtype=np.float32)
     valid = np.isfinite(values) & universe
     if style_values is not None:
         if style_values.shape != values.shape:

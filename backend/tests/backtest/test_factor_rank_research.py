@@ -462,6 +462,59 @@ def test_matrix_pipeline_supports_industry_only_neutralization() -> None:
     assert result.entry.sum() == 2
 
 
+def test_matrix_pipeline_neutralization_does_not_lose_asset_masked_candidates() -> None:
+    from app.backtest.matrix import MatrixPipelineConfig, MatrixStrategyPipeline
+
+    panel = pl.DataFrame(
+        {
+            "symbol": ["A", "B", "C", "D"],
+            "date": [date(2024, 1, 2)] * 4,
+            "open": [10.0] * 4,
+            "high": [10.5] * 4,
+            "low": [9.5] * 4,
+            "close": [10.0] * 4,
+            "volume": [1_000.0] * 4,
+            "amount": [1.0, 2.0, 10.0, 11.0],
+            "turnover_rate": [1.0] * 4,
+            "industry_l1": ["bank", "bank", "tech", "tech"],
+        }
+    )
+    market = build_market_data_matrix(
+        panel, field_columns={"amount", "turnover_rate", "industry_l1"}
+    )
+    strategy = StrategyEngine._load_file(STRATEGY_PATH).matrix_strategy
+    result = MatrixStrategyPipeline().run(
+        strategy,
+        market,
+        {
+            "scoring": {"amount": 1.0},
+            "directions": {"amount": "high"},
+            "entry_score": 0.0,
+            "exit_score": 0.0,
+            "top_rank": 1,
+        },
+        MatrixPipelineConfig(
+            basic_filter={"enabled": False},
+            scoring={},
+            order_by="score",
+            descending=True,
+            scoring_directions={},
+            neutralize={"industry": "industry_l1", "styles": [], "shrink": 1.0},
+            industry_by_symbol={
+                "A": "bank",
+                "B": "bank",
+                "C": "tech",
+                "D": "tech",
+            },
+            asset_mask=np.array([True, True, False, False]),
+        ),
+    )
+
+    assert result.entry.sum() == 1
+    assert result.entry[0, :2].any()
+    assert not result.entry[0, 2:].any()
+
+
 def test_matrix_pipeline_neutralizes_parameter_scoring_when_meta_scoring_is_empty() -> None:
     """Research strategies carry scoring in params; neutralization must see it.
 

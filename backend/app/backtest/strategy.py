@@ -2175,19 +2175,30 @@ class StrategyBacktestService:
                 neutralize_spec = effective_neutralize(s.meta, overrides)
                 industry_by_symbol = None
                 if neutralize_enabled(neutralize_spec):
-                    from app.services.industry_map import load_industry_l1
+                    configured_industries = params.get("industry_by_symbol")
+                    if configured_industries is not None:
+                        if not isinstance(configured_industries, Mapping) or not configured_industries:
+                            raise ValueError(
+                                "评分中性化 industry_by_symbol 必须是非空映射"
+                            )
+                        industry_by_symbol = {
+                            str(symbol): str(industry)
+                            for symbol, industry in configured_industries.items()
+                        }
+                    else:
+                        from app.services.industry_map import load_industry_l1
 
-                    industry_frame = load_industry_l1(
-                        getattr(
-                            getattr(getattr(self.engine, "repo", None), "store", None),
-                            "data_dir",
-                            None,
+                        industry_frame = load_industry_l1(
+                            getattr(
+                                getattr(getattr(self.engine, "repo", None), "store", None),
+                                "data_dir",
+                                None,
+                            )
                         )
-                    )
-                    industry_by_symbol = {
-                        str(row["symbol"]): str(row["industry_l1"])
-                        for row in industry_frame.iter_rows(named=True)
-                    }
+                        industry_by_symbol = {
+                            str(row["symbol"]): str(row["industry_l1"])
+                            for row in industry_frame.iter_rows(named=True)
+                        }
                 pipeline_config = MatrixPipelineConfig(
                     basic_filter=basic_filter,
                     scoring=scoring,
