@@ -181,3 +181,15 @@ def test_strategy_audit_ledger_is_checksummed_and_all_ai_strategies_are_kept() -
     ]
     assert diagnostic_rows
     assert all(row["disposition"] == "keep_as_negative_knowledge" for row in diagnostic_rows)
+
+
+def test_research_asset_audit_output_is_checksummed_and_current() -> None:
+    import re
+
+    source = (ROOT / "scripts" / "audit_research_research_assets.py").read_text(
+        encoding="utf-8"
+    )
+    match = re.search(r'OUTPUT = RESEARCH / "([^"]+)"', source)
+    assert match is not None
+    path = E / match.group(1)
+    assert _assert_sidecar(path)

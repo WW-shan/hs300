@@ -1,0 +1,18 @@
+{
+  "attempt": 1,
+  "created_at": "2026-11-28T21:45:20+08:00",
+  "failed_stage": "standard_validation_receipt",
+  "fix": "set the R559 standard parameter receipt status to complete before constraint validation",
+  "negative_knowledge": [
+    "Successful formal backtest windows do not imply the standard validation receipt is publishable.",
+    "The generic parameter selector omits the receipt status required by the standard validation constraint checker.",
+    "Runner bytes changed after preregistration, so R559 attempt 1 cannot reuse its original preregistration."
+  ],
+  "observed_failure": "R559 standard validation failed: ['parameter_status_allowed']",
+  "research_id": "R559",
+  "research_type": "project_formal",
+  "root_cause": "standard_parameter_receipt reused the generic selector output without setting its required complete status",
+  "runner": "scripts/research_r559_ready_regime_gate.py",
+  "schema_version": 1,
+  "status": "failed_before_publication"
+}

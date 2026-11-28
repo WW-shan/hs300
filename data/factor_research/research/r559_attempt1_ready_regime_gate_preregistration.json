@@ -1,0 +1,184 @@
+{
+  "created_at": "2026-11-28T21:29:16+08:00",
+  "data_source": "project",
+  "execution": {
+    "cost_multiplier": 2,
+    "leverage": "none",
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0
+  },
+  "falsification_checks": [
+    "six_gates_frozen_before_run",
+    "training_only_gate_selection",
+    "validation_confirmation",
+    "always_on_cannot_be_promoted",
+    "t_minus_one_regime_alignment",
+    "formal_evidence_passed",
+    "same_path_benchmark_and_100_path_gbm",
+    "moving_block_bootstrap_from_real_equity_curves",
+    "five_x_cost_is_warning_only",
+    "no_orders_or_active_version"
+  ],
+  "gates": {
+    "five_x_hard_rejection": false,
+    "full_annual_min": 0.1,
+    "full_mdd_min": -0.18,
+    "full_sharpe_min": 0.9,
+    "stress_3x_annual_min": 0.08,
+    "train_annual_drop_max": 0.03,
+    "train_mdd_min": -0.15,
+    "train_sharpe_min": 1.1,
+    "train_trades_min": 20,
+    "validation_beats_always_on": true,
+    "validation_positive": true
+  },
+  "hypothesis": "A fixed T-1 regime gate improves the frozen R558 strategy on training-selected evidence and confirms on validation.",
+  "input_hashes": {
+    "factor": "cfb70d8ff2ee66ce3e58765f9108823b1110a09de97479853fd1f584eb757cf8",
+    "matrix": "ae5a6ff344c8b1471b6db0f112c430e373139f48add6d964de583c2f80543132",
+    "position_policies": "2ea19c2845915337404c23b971d5480750231abc06add96e1fbdfc1b25190839",
+    "r558_preregistration": "54754a8be90dd532ae64cef3714921ef1ed8aa4a5eddaca97c0041ab726328a8",
+    "r558_result": "72e74775c477269cade6a5618fb805af381ef26f8129694522c98c884751de90",
+    "regime": "6767b0ad92b1f9e4a86e82e5f3ecd408ca3eef46847580aeab8364b629e2fe03",
+    "strategy": "34cd5f7f1aa5233c793422affee7c5181bc4ffe9b676e4339babadf149aedffa"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "parameters": {
+    "alignment": "T-1",
+    "cost_multipliers": [
+      2,
+      3,
+      5
+    ],
+    "execution": {
+      "cost_multiplier": 2,
+      "leverage": "none",
+      "matching": "open_t+1",
+      "max_exposure_pct": 1.0
+    },
+    "factor_id": "uf_r550_cash_safety_rank",
+    "fixed": {
+      "entry_score": 80.0,
+      "exit_score": 40.0,
+      "max_hold_days": 60,
+      "max_industry_positions": 2,
+      "max_positions": 10,
+      "stop_loss": -0.12,
+      "top_rank": 30
+    },
+    "gates": [
+      {
+        "gate_id": "always_on",
+        "regime_filter": null
+      },
+      {
+        "gate_id": "score_min_35",
+        "regime_filter": {
+          "min_score": 35,
+          "states": []
+        }
+      },
+      {
+        "gate_id": "score_min_40",
+        "regime_filter": {
+          "min_score": 40,
+          "states": []
+        }
+      },
+      {
+        "gate_id": "strong_lean_strong_only",
+        "regime_filter": {
+          "states": [
+            "strong",
+            "lean_strong"
+          ]
+        }
+      },
+      {
+        "gate_id": "exclude_weak_with_score30",
+        "regime_filter": {
+          "min_score": 30,
+          "states": [
+            "strong",
+            "lean_strong",
+            "range",
+            "lean_weak"
+          ]
+        }
+      },
+      {
+        "gate_id": "risk_on_combo",
+        "regime_filter": {
+          "min_score": 40,
+          "states": [
+            "strong",
+            "lean_strong",
+            "range"
+          ]
+        }
+      }
+    ],
+    "gates_gate": {
+      "five_x_hard_rejection": false,
+      "full_annual_min": 0.1,
+      "full_mdd_min": -0.18,
+      "full_sharpe_min": 0.9,
+      "stress_3x_annual_min": 0.08,
+      "train_annual_drop_max": 0.03,
+      "train_mdd_min": -0.15,
+      "train_sharpe_min": 1.1,
+      "train_trades_min": 20,
+      "validation_beats_always_on": true,
+      "validation_positive": true
+    },
+    "output_policy": {
+      "active_version": null,
+      "orders_generated": false,
+      "paper_target_generated": false,
+      "production_enabled": false
+    },
+    "policy_id": "up_vol_target_14",
+    "question": "Can a pre-registered T-1 market-regime gate improve the frozen R558 ready strategy without changing its selected parameters?",
+    "selection": {
+      "policy": "train_select_validation_confirm",
+      "ranking": "highest train annual return among gates passing training constraints",
+      "recent_used_for_selection": false
+    },
+    "standard_validation": {
+      "gbm": {
+        "path_count": 100,
+        "required": true
+      },
+      "parameter_mc": {
+        "platform": "discrete_regime_gate",
+        "recent_used_for_selection": false,
+        "require_plateau": false,
+        "required": true,
+        "selection_policy": "train_select_validation_confirm",
+        "status": "complete"
+      },
+      "suite_version": "v1"
+    },
+    "strategy_id": "ai_hs300_cash_safety_v14"
+  },
+  "question": "Can a pre-registered T-1 market-regime gate improve the frozen R558 ready strategy without changing its selected parameters?",
+  "research_id": "R559",
+  "research_type": "project_formal",
+  "runner": "scripts/research_r559_ready_regime_gate.py",
+  "runner_sha256": "420abb5ac636381368e43832bdaec3d2d96b82b98c225fc542eda8c4fe39dbd9",
+  "sample": {
+    "end": "2026-11-05",
+    "recent_start": "2025-10-14",
+    "start": "2022-05-05",
+    "train_end": "2024-12-31",
+    "validation_end": "2025-10-13",
+    "validation_start": "2025-01-01"
+  },
+  "schema_version": 1,
+  "study_scope": "research_only"
+}
