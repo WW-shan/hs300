@@ -228,7 +228,7 @@ def test_publish_refuses_existing_result(tmp_path: Path) -> None:
         publish_research_artifacts,
     )
 
-    prereg_path, prereg = _write_prereg(tmp_path)
+    prereg_path, _prereg_model = _write_prereg(tmp_path)
     result = ResearchResultEnvelope.model_validate(_result())
     target = tmp_path / "data/factor_research/research/r-gbm-test-001_result.json"
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -254,7 +254,7 @@ def test_republish_same_bytes_is_idempotent(tmp_path: Path) -> None:
         publish_research_artifacts,
     )
 
-    prereg_path, prereg = _write_prereg(tmp_path)
+    prereg_path, _prereg_model = _write_prereg(tmp_path)
     prereg_hash = hashlib.sha256(prereg_path.read_bytes()).hexdigest()
     result = ResearchResultEnvelope.model_validate(
         _result(preregistration_sha256=prereg_hash)
@@ -439,3 +439,164 @@ def test_standard_rules_reference_machine_contract_and_synthetic_type() -> None:
     assert rules["grandfather_manifest"].endswith("research_contract_grandfather_2026-11-24.json")
     assert "synthetic_market_stress" in rules["research_types"]
     assert "synthetic_model" in rules["mandatory_fields"]["synthetic_market_stress"]
+
+
+def _standard_validation_ok() -> dict:
+    return {
+        "schema_version": 1,
+        "suite_version": "v1",
+        "gbm": {
+            "status": "complete",
+            "path_count": 100,
+            "scenarios": 4,
+            "cost_multipliers": [2, 3, 5],
+            "same_path_benchmark": True,
+            "deterministic_replay": True,
+            "no_leverage": True,
+            "max_exposure": 0.99,
+        },
+        "parameter_mc": {
+            "status": "fixed_frozen",
+            "reason": "final parameters inherited from R550",
+            "recent_used_for_selection": False,
+        },
+        "artifacts": [
+            {"kind": "gbm_distribution", "path": "a.png", "sha256": "a" * 64},
+            {"kind": "gbm_constraints", "path": "b.png", "sha256": "b" * 64},
+        ],
+    }
+
+
+def test_new_project_formal_result_requires_standard_validation() -> None:
+    from app.factor_research.research_contract import ResearchResultEnvelope
+
+    payload = _result(
+        research_type="project_formal",
+        generated_at="2026-11-29T00:00:00Z",
+        formal_evidence={
+            "persistence": "saved",
+            "lookahead": "passed",
+            "execution_timing": "passed",
+        },
+        metrics={},
+    )
+    try:
+        ResearchResultEnvelope.model_validate(payload)
+    except ValueError:
+        return
+    raise AssertionError("new project_formal result must include standard_validation")
+
+
+def test_new_project_formal_result_rejects_leveraged_standard_validation() -> None:
+    from app.factor_research.research_contract import ResearchResultEnvelope
+
+    receipt = _standard_validation_ok()
+    receipt["gbm"]["max_exposure"] = 1.2
+    payload = _result(
+        research_type="project_formal",
+        generated_at="2026-11-29T00:00:00Z",
+        formal_evidence={
+            "persistence": "saved",
+            "lookahead": "passed",
+            "execution_timing": "passed",
+        },
+        metrics={"standard_validation": receipt},
+    )
+    try:
+        ResearchResultEnvelope.model_validate(payload)
+    except ValueError:
+        return
+    raise AssertionError("standard_validation must enforce exposure constraints")
+
+
+def test_new_non_formal_result_requires_explicit_standard_applicability() -> None:
+    from app.factor_research.research_contract import ResearchResultEnvelope
+
+    payload = _result(
+        research_type="statistical_screen",
+        generated_at="2026-11-29T00:00:00Z",
+        metrics={"coverage": 0.9},
+    )
+    try:
+        ResearchResultEnvelope.model_validate(payload)
+    except ValueError:
+        return
+    raise AssertionError("new results must explicitly declare standard validation applicability")
+
+
+def _standard_validation_declaration(**updates) -> dict:
+    payload = {
+        "suite_version": "v1",
+        "gbm": {"required": True, "path_count": 100},
+        "parameter_mc": {"required": True, "selection_policy": "train_select_validation_confirm"},
+    }
+    payload.update(updates)
+    return payload
+
+
+def test_new_project_formal_preregistration_requires_standard_suite_declaration() -> None:
+    from app.factor_research.research_contract import ResearchPreregistration
+
+    payload = _prereg(
+        research_type="project_formal",
+        data_source="project",
+        synthetic_model=None,
+        created_at="2026-11-29T00:00:00Z",
+        execution={
+            "matching": "open_t+1",
+            "cost_multiplier": 2,
+            "leverage": "none",
+            "max_exposure_pct": 1.0,
+        },
+        parameters={},
+    )
+    try:
+        ResearchPreregistration.model_validate(payload)
+    except ValueError:
+        return
+    raise AssertionError("new project_formal preregistration must declare standard_validation")
+
+
+def test_new_project_formal_preregistration_accepts_standard_suite_declaration() -> None:
+    from app.factor_research.research_contract import ResearchPreregistration
+
+    payload = _prereg(
+        research_type="project_formal",
+        data_source="project",
+        synthetic_model=None,
+        created_at="2026-11-29T00:00:00Z",
+        execution={
+            "matching": "open_t+1",
+            "cost_multiplier": 2,
+            "leverage": "none",
+            "max_exposure_pct": 1.0,
+        },
+        parameters={"standard_validation": _standard_validation_declaration()},
+    )
+    ResearchPreregistration.model_validate(payload)
+
+
+def test_publish_attachments_are_sidecar_bound(tmp_path: Path) -> None:
+    from app.factor_research.research_contract import (
+        ResearchResultEnvelope,
+        publish_research_artifacts,
+    )
+
+    prereg_path, _ = _write_prereg(tmp_path)
+    result = ResearchResultEnvelope.model_validate(
+        _result(
+            preregistration_sha256=hashlib.sha256(prereg_path.read_bytes()).hexdigest()
+        )
+    )
+    published = publish_research_artifacts(
+        tmp_path,
+        preregistration_path=prereg_path,
+        result=result,
+        markdown="# result\n",
+        operation="research_contract_attachments_test",
+        attachments=[("standard_validation.png", b"\x89PNG\r\n\x1a\nfixture")],
+    )
+    attachment = published.result_path.with_name("standard_validation.png")
+    sidecar = attachment.with_name(attachment.name + ".sha256")
+    assert attachment.read_bytes() == b"\x89PNG\r\n\x1a\nfixture"
+    assert sidecar.read_text().split()[0] == hashlib.sha256(attachment.read_bytes()).hexdigest()

@@ -1,0 +1,185 @@
+{
+  "created_at": "2026-11-28T08:52:52+08:00",
+  "data_source": "synthetic_gbm",
+  "execution": {
+    "cost_multiplier": 2,
+    "leverage": "none",
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0
+  },
+  "falsification_checks": [
+    "frozen_r550_score_panel",
+    "same_seed_byte_identical_replay",
+    "signal_t_fills_at_t_plus_one_open_only",
+    "no_leverage_and_max_exposure_at_or_below_100pct",
+    "same_path_equal_weight_benchmark",
+    "all_100_paths_completed",
+    "plots_are_sidecar_bound"
+  ],
+  "gates": {
+    "cost_multipliers": [
+      2,
+      3,
+      5
+    ],
+    "deterministic_replay": true,
+    "five_x_hard_rejection": false,
+    "no_leverage": true,
+    "path_count": 100,
+    "same_path_benchmark": true,
+    "scenarios": 4
+  },
+  "hypothesis": "The R550 score can be executed without leverage or exposure violations, but GBM is a diagnostic null for real financial-factor alpha and cannot grant production status.",
+  "input_hashes": {
+    "alt_timeseries": "71ad0c9b0c46dfd068ac2c88d49e138cf99f2bb3146365e93be66fc5a9782567",
+    "candidate_definitions": "192208efa94676b0c73bb87f8b735a54b547f085a3cb99630237ad17165ccee6",
+    "industry": "4f9fd44eb17e2a3acb5c91c0b6c15afb2595e36a9174f70de29611e6d3c6a30f",
+    "membership": "3c7bee9c7dd8cb318cd1038a560dd3742a36f63f1ecb45a07d24e77c1d24781d",
+    "r547_result": "16d8e02c680f8cd25d1d21cd701416d4dfd357f44172f7330ba1e4e138325195",
+    "r549_result": "51d28e2b17150855a8372a14671249606998db11c070a4070e28c383caa0c14a",
+    "r550_preregistration": "4258ae8acca43a7363a2adec62472c7c596d929f0ce388bd158dc69846075179",
+    "r550_result": "4fc131f34cefad189a943134f66c9fc92846c2f19d9e14f2a109cbf92af08f32"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "parameters": {
+    "benchmark": "same_path_equal_weight_buy_and_hold",
+    "betas": [
+      0.0,
+      0.7
+    ],
+    "candidate_definitions": {
+      "cf_r547_cash_quality": "2505efea441af5b38803f1d99148bb6d69bca5024c3ffb7f46dc110a28afbac1",
+      "cf_r547_growth_quality": "bcd29435d808f6721068dcdc76f70f4337b62d6b3b9b734efcc34f9a87adf48f",
+      "cf_r547_industry_quality": "720c8d44eb06eddd3b522b4f691521bd4ac3b323d230ba54aead20d54fb2bbe3",
+      "cf_r547_operating_efficiency": "04f9d3f219776f5d9ed3608669cefd2e817eeb5251c706efd9b8227fea3bdd93",
+      "cf_r547_smart_money_quality": "6d608712400189289febac75b68409d009e23bb075c83c12552cc18afd569d40",
+      "cf_r547_value_quality": "30c3a9c8e417f98e75db5d4498c7b07ba6fa6d4fa540c4ec83aad05465fb108f",
+      "cf_r547_value_quality_safety": "37f4e9f81309e32c55d767f5b32b2edda7585c5646c46572feca4c98d6e69bfe"
+    },
+    "cost_multipliers": [
+      2,
+      3,
+      5
+    ],
+    "evaluation_days": 504,
+    "execution": {
+      "five_x_policy": "warning_only",
+      "industry_cap": 3,
+      "leverage": "none",
+      "matching": "open_t+1",
+      "max_exposure_pct": 1.0,
+      "max_hold_days": 60,
+      "max_positions": 10
+    },
+    "fixed_addons": [
+      "cf_r547_cash_quality",
+      "cf_r547_value_quality_safety"
+    ],
+    "model": "geometric_brownian_motion",
+    "output_policy": {
+      "active_version": null,
+      "orders_generated": false,
+      "paper_target_generated": false,
+      "production_enabled": false
+    },
+    "path_count": 100,
+    "scenarios": [
+      {
+        "annual_drift": 0.0,
+        "annual_volatility": 0.2,
+        "scenario_id": "neutral"
+      },
+      {
+        "annual_drift": 0.08,
+        "annual_volatility": 0.18,
+        "scenario_id": "bull"
+      },
+      {
+        "annual_drift": -0.08,
+        "annual_volatility": 0.25,
+        "scenario_id": "bear"
+      },
+      {
+        "annual_drift": 0.0,
+        "annual_volatility": 0.35,
+        "scenario_id": "high_volatility"
+      }
+    ],
+    "score_source": "R550 cash_safety score panel; 300 highest-coverage fixed symbols",
+    "standard_validation": {
+      "gbm": {
+        "path_count": 100,
+        "required": true
+      },
+      "parameter_mc": {
+        "reason": "R550 parameters are frozen; R552 owns parameter-neighborhood MC",
+        "required": false,
+        "status": "fixed_frozen"
+      },
+      "suite_version": "v1"
+    },
+    "start": "2024-01-02",
+    "stop_loss": -0.12,
+    "top_rank": 20
+  },
+  "question": "How does the frozen R550 cash_safety score perform across standardized GBM market scenarios, 100 Monte Carlo paths and 2x/3x/5x costs versus the same-path equal-weight benchmark?",
+  "research_id": "R551",
+  "research_type": "synthetic_market_stress",
+  "runner": "scripts/research_r551_r550_gbm_stress.py",
+  "runner_sha256": "16dff3744679a92c0e0db06a29b7b3ab7c9eed62c9549beef117e6eb3059e652",
+  "sample": {
+    "asset_count": 300,
+    "beta_count": 2,
+    "cost_count": 3,
+    "evaluation_days": 504,
+    "path_count": 100,
+    "scenario_count": 4,
+    "start": "2024-01-02"
+  },
+  "schema_version": 1,
+  "study_scope": "research_only",
+  "synthetic_model": {
+    "benchmark": "same_path_equal_weight_buy_and_hold",
+    "model": "geometric_brownian_motion",
+    "parameters": {
+      "betas": [
+        0.0,
+        0.7
+      ],
+      "cost_multipliers": [
+        2,
+        3,
+        5
+      ],
+      "scenarios": [
+        {
+          "annual_drift": 0.0,
+          "annual_volatility": 0.2,
+          "scenario_id": "neutral"
+        },
+        {
+          "annual_drift": 0.08,
+          "annual_volatility": 0.18,
+          "scenario_id": "bull"
+        },
+        {
+          "annual_drift": -0.08,
+          "annual_volatility": 0.25,
+          "scenario_id": "bear"
+        },
+        {
+          "annual_drift": 0.0,
+          "annual_volatility": 0.35,
+          "scenario_id": "high_volatility"
+        }
+      ]
+    },
+    "path_count": 100,
+    "seed": 20261125
+  }
+}

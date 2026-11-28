@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
 
@@ -35,6 +36,7 @@ _RETURN_METRIC_KEYS = frozenset(
     {"annual_return", "total_return", "sharpe", "max_drawdown", "equity_curve"}
 )
 _ADMITTED_CONCLUSIONS = frozenset({"admitted_for_research", "watch_only"})
+STANDARD_VALIDATION_EFFECTIVE_AT = datetime(2026, 11, 28, tzinfo=UTC)
 
 
 class ResearchOutputPolicy(FactorResearchModel):
@@ -97,19 +99,38 @@ class ResearchPreregistration(FactorResearchModel):
                 raise ValueError("synthetic_market_stress requires synthetic_* data")
             if self.synthetic_model is None:
                 raise ValueError("synthetic_market_stress requires synthetic_model")
-        if self.research_type in {"attribution", "derived_analysis_only"}:
-            if not self.input_hashes:
+        created_at = self.created_at
+        if created_at.tzinfo is None:
+            created_at = created_at.replace(tzinfo=UTC)
+        if created_at >= STANDARD_VALIDATION_EFFECTIVE_AT:
+            declaration = self.parameters.get("standard_validation")
+            if not isinstance(declaration, dict):
                 raise ValueError(
-                    "attribution and derived_analysis_only require input_hashes"
+                    "new preregistration requires parameters.standard_validation"
                 )
-        if self.research_type in {"statistical_screen", "feasibility_probe"}:
-            if not self.input_hashes:
+            if declaration.get("suite_version") != "v1":
+                raise ValueError("standard_validation suite_version must be v1")
+            gbm = declaration.get("gbm")
+            parameter_mc = declaration.get("parameter_mc")
+            if not isinstance(gbm, dict) or not isinstance(parameter_mc, dict):
                 raise ValueError(
-                    "statistical_screen and feasibility_probe require input_hashes"
+                    "standard_validation requires gbm and parameter_mc declarations"
                 )
-        if self.research_type == "diagnostic_simulation":
-            if not self.gates.get("known_limits"):
-                raise ValueError("diagnostic_simulation requires known_limits")
+            if self.research_type in {"project_formal", "synthetic_market_stress"}:
+                if gbm.get("required") is not True:
+                    raise ValueError("project/synthetic research requires GBM validation")
+                if int(gbm.get("path_count") or 0) < 100:
+                    raise ValueError("project/synthetic GBM validation requires 100 paths")
+        if self.research_type in {"attribution", "derived_analysis_only"} and not self.input_hashes:
+            raise ValueError(
+                "attribution and derived_analysis_only require input_hashes"
+            )
+        if self.research_type in {"statistical_screen", "feasibility_probe"} and not self.input_hashes:
+            raise ValueError(
+                "statistical_screen and feasibility_probe require input_hashes"
+            )
+        if self.research_type == "diagnostic_simulation" and not self.gates.get("known_limits"):
+            raise ValueError("diagnostic_simulation requires known_limits")
         return self
 
 
@@ -142,11 +163,10 @@ class ResearchResultEnvelope(FactorResearchModel):
                 raise ValueError("project_formal lookahead must pass")
             if evidence.get("execution_timing") != "passed":
                 raise ValueError("project_formal execution timing must pass")
-        if self.research_type in {"attribution", "derived_analysis_only"}:
-            if not self.source_result_hashes:
-                raise ValueError(
-                    "attribution and derived_analysis_only require source_result_hashes"
-                )
+        if self.research_type in {"attribution", "derived_analysis_only"} and not self.source_result_hashes:
+            raise ValueError(
+                "attribution and derived_analysis_only require source_result_hashes"
+            )
         if self.research_type == "diagnostic_simulation":
             if not self.known_limits:
                 raise ValueError("diagnostic_simulation requires known_limits")
@@ -154,16 +174,37 @@ class ResearchResultEnvelope(FactorResearchModel):
                 raise ValueError(
                     "diagnostic_simulation cannot use an admitted conclusion"
                 )
-        if self.research_type == "synthetic_market_stress":
-            if self.conclusion in _ADMITTED_CONCLUSIONS:
-                raise ValueError(
-                    "synthetic_market_stress cannot use an admitted conclusion"
-                )
+        if self.research_type == "synthetic_market_stress" and self.conclusion in _ADMITTED_CONCLUSIONS:
+            raise ValueError(
+                "synthetic_market_stress cannot use an admitted conclusion"
+            )
         if self.research_type == "non_return_research":
             conflicts = set(self.metrics).intersection(_RETURN_METRIC_KEYS)
             if conflicts:
                 raise ValueError(
                     f"non_return_research cannot publish return metrics: {sorted(conflicts)}"
+                )
+        generated_at = self.generated_at
+        if generated_at.tzinfo is None:
+            generated_at = generated_at.replace(tzinfo=UTC)
+        if generated_at >= STANDARD_VALIDATION_EFFECTIVE_AT:
+            receipt = self.metrics.get("standard_validation")
+            if not isinstance(receipt, dict):
+                raise ValueError(
+                    "new research requires metrics.standard_validation"
+                )
+            from app.factor_research.standard_validation import (
+                check_standard_validation_constraints,
+            )
+
+            checked = check_standard_validation_constraints(
+                receipt,
+                research_type=self.research_type,
+            )
+            if not checked["pass"]:
+                raise ValueError(
+                    "standard_validation failed: "
+                    + ", ".join(checked["errors"])
                 )
         return self
 
@@ -233,6 +274,7 @@ def publish_research_artifacts(
     result: ResearchResultEnvelope,
     markdown: str,
     operation: str,
+    attachments: Sequence[tuple[str, bytes]] = (),
 ) -> PublishedResearch:
     """Publish immutable JSON/Markdown evidence and bind it to the ledger."""
     import json
@@ -269,11 +311,25 @@ def publish_research_artifacts(
     result_hash = _sha256_bytes(result_raw)
     markdown_hash = _sha256_bytes(markdown_raw)
 
+    attachment_specs: list[tuple[str, bytes]] = []
+    seen_names: set[str] = set()
+    for name, content in attachments:
+        if not name or Path(name).name != name:
+            raise ValueError("attachment names must be basenames")
+        if name in seen_names or name in {result_path.name, markdown_path.name}:
+            raise ValueError(f"duplicate attachment name: {name}")
+        if not isinstance(content, bytes):
+            raise ValueError(f"attachment content must be bytes: {name}")
+        seen_names.add(name)
+        attachment_specs.append((name, content))
+    attachment_paths = [result_path.with_name(name) for name, _ in attachment_specs]
     paths = [
         result_path,
         result_path.with_name(result_path.name + ".sha256"),
         markdown_path,
         markdown_path.with_name(markdown_path.name + ".sha256"),
+        *attachment_paths,
+        *[path.with_name(path.name + ".sha256") for path in attachment_paths],
     ]
     existing = [path for path in paths if path.exists()]
     if existing:
@@ -283,10 +339,16 @@ def publish_research_artifacts(
         stored_markdown_hash, stored_markdown_raw = _read_verified_sidecar(markdown_path)
         if stored_result_raw != result_raw or stored_markdown_raw != markdown_raw:
             raise ValueError("immutable research artifact bytes changed")
+        stored_attachment_hashes: dict[str, str] = {}
+        for path, (name, content) in zip(attachment_paths, attachment_specs, strict=True):
+            stored_hash, stored_raw = _read_verified_sidecar(path)
+            if stored_raw != content:
+                raise ValueError(f"immutable research attachment bytes changed: {name}")
+            stored_attachment_hashes[name] = stored_hash
         record, _created = bind_research_evidence(
             data_dir,
             operation=operation,
-            evidence_paths=[result_path, markdown_path],
+            evidence_paths=[result_path, markdown_path, *attachment_paths],
             research_id=prereg.research_id,
             payload={
                 "verdict": result.conclusion,
@@ -297,6 +359,7 @@ def publish_research_artifacts(
                     "runner_sha256": prereg.runner_sha256,
                     "result_sha256": stored_result_hash,
                     "markdown_sha256": stored_markdown_hash,
+                    "attachments": stored_attachment_hashes,
                 },
                 "metrics": result.metrics,
             },
@@ -341,10 +404,21 @@ def publish_research_artifacts(
             f"{markdown_hash}  {markdown_path.name}\n".encode("ascii"),
         )
         created_paths.append(markdown_path.with_name(markdown_path.name + ".sha256"))
+        attachment_hashes: dict[str, str] = {}
+        for path, (name, content) in zip(attachment_paths, attachment_specs, strict=True):
+            attachment_hash = _sha256_bytes(content)
+            atomic_create(path, content)
+            created_paths.append(path)
+            atomic_create(
+                path.with_name(path.name + ".sha256"),
+                f"{attachment_hash}  {path.name}\n".encode("ascii"),
+            )
+            created_paths.append(path.with_name(path.name + ".sha256"))
+            attachment_hashes[name] = attachment_hash
         record, _created = bind_research_evidence(
             data_dir,
             operation=operation,
-            evidence_paths=[result_path, markdown_path],
+            evidence_paths=[result_path, markdown_path, *attachment_paths],
             research_id=prereg.research_id,
             payload={
                 "verdict": result.conclusion,
@@ -354,6 +428,7 @@ def publish_research_artifacts(
                     "runner_sha256": prereg.runner_sha256,
                     "result_sha256": result_hash,
                     "markdown_sha256": markdown_hash,
+                    "attachments": attachment_hashes,
                 },
                 "metrics": result.metrics,
             },

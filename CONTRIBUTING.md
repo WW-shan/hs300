@@ -619,6 +619,8 @@ The measure of following this guide is not how much documentation is written, bu
 ### 5.4 研究合同
 
 - 所有新增研究运行器，以及合同生效后发生字节变化的历史运行器，都必须遵守 `docs/superpowers/specs/2026-11-24-research-contract-design.md`。
+- 新增研究必须提供 `metrics.standard_validation`：GBM 路径压力测试和参数 Monte Carlo 选择按 `docs/superpowers/specs/2026-11-28-standard-research-validation-design.md` 执行；项目正式研究必须有 100 条路径的完整 GBM 轴，参数搜索必须训练选参、验证确认、近期只披露，并发布 PNG、JSON、Markdown 及 sidecar。
+- 标准验证缺失、路径/情景/成本轴不完整、参数选择使用近期样本、PNG 未绑定 ledger 时，合同审计必须失败。
 - 研究执行前必须冻结预注册和 sidecar，声明 `RESEARCH_TYPE` 与 `RESEARCH_PREREGISTRATION`，并发布与 ResearchLedger 绑定的不可覆盖 JSON/Markdown 证据。
 - `project_formal` 必须使用项目正式回测链并通过三项正式证据；合成、诊断、统计、可行性、归因和派生研究必须使用各自合同类型，不得冒充正式项目证据。
 - 合同生效前运行器只按 grandfather 清单中的精确路径和 SHA-256 豁免；任何字节变化都必须补研究合同。

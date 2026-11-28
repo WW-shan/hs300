@@ -425,3 +425,65 @@ def test_full_diagnostic_payload_and_markdown_preserve_all_cells() -> None:
     assert "diagnostic_only" in markdown
     assert "全部 288 个诊断 cell" in markdown
     assert markdown.count("| 2× |") + markdown.count("| 3× |") + markdown.count("| 5× |") >= 288
+
+
+def test_generator_accepts_frozen_symbols_and_industry_map() -> None:
+    symbols = tuple(f"FROZEN{i:02d}" for i in range(24))
+    industries = {
+        symbol: f"FROZEN_IND_{index // 8}" for index, symbol in enumerate(symbols)
+    }
+    market = generate_synthetic_market(
+        _small_spec(),
+        asset_count=24,
+        warmup_days=20,
+        evaluation_days=40,
+        start=date(2024, 1, 2),
+        symbols=symbols,
+        industries=industries,
+    )
+    assert market.symbols == symbols
+    assert market.industries == industries
+    assert len(set(market.industries.values())) == 3
+
+
+def test_fixed_score_path_uses_custom_signal_and_same_path_benchmark() -> None:
+    from app.backtest.synthetic_gbm import run_fixed_score_path
+
+    scores = np.zeros((80, 24), dtype=np.float32)
+    scores[:, 0] = 100.0
+    scores[:, 1] = 50.0
+    scores[:, 2:] = 10.0
+
+    payload = run_fixed_score_path(
+        _small_spec(),
+        scores=scores,
+        score_name="r550_cash_safety",
+        asset_count=24,
+        warmup_days=20,
+        evaluation_days=80,
+        max_positions=5,
+        max_hold_days=20,
+        top_rank=12,
+        industry_cap=2,
+    )
+
+    assert payload["signal_name"] == "r550_cash_safety"
+    assert len(payload["benchmarks"]) == len(COST_MULTIPLIERS)
+    assert len(payload["observations"]) == len(COST_MULTIPLIERS)
+    assert {row["cost_multiplier"] for row in payload["observations"]} == set(COST_MULTIPLIERS)
+    for row in payload["observations"]:
+        assert row["signal_mode"] == "r550_cash_safety"
+        assert row["strategy_max_exposure"] <= 1.0
+        assert row["benchmark_max_exposure"] > 0.95
+        assert row["excess_return"] == pytest.approx(
+            row["strategy_total_return"] - row["benchmark_total_return"]
+        )
+    returns = [
+        next(
+            row["strategy_total_return"]
+            for row in payload["observations"]
+            if row["cost_multiplier"] == cost
+        )
+        for cost in COST_MULTIPLIERS
+    ]
+    assert returns[0] >= returns[1] >= returns[2]

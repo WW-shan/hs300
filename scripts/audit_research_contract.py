@@ -15,6 +15,7 @@ if str(ROOT / "backend") not in sys.path:
     sys.path.insert(0, str(ROOT / "backend"))
 
 from app.factor_research.research_contract import (  # noqa: E402
+    STANDARD_VALIDATION_EFFECTIVE_AT,
     ResearchPreregistration,
     ResearchResultEnvelope,
     validate_result_for_preregistration,
@@ -142,6 +143,19 @@ def audit_repository(root: Path) -> dict[str, Any]:
             errors.append(prereg_error)
         if prereg is not None and prereg.research_type != declared_type:
             errors.append(f"research_type_mismatch:{relative}")
+        runner_text = path.read_text(encoding="utf-8")
+        if prereg is not None and prereg.created_at >= STANDARD_VALIDATION_EFFECTIVE_AT:
+            declaration = prereg.parameters.get("standard_validation") or {}
+            gbm_decl = declaration.get("gbm") or {}
+            parameter_decl = declaration.get("parameter_mc") or {}
+            if gbm_decl.get("required") is True and not (
+                "run_fixed_score_path(" in runner_text
+                or "run_standard_gbm" in runner_text
+                or "run_standard_validation" in runner_text
+            ):
+                errors.append(f"standard_gbm_call_missing:{relative}")
+            if parameter_decl.get("required") is True and "select_standard_parameter(" not in runner_text:
+                errors.append(f"standard_parameter_mc_call_missing:{relative}")
         result_errors = (
             _result_errors(root, prereg, root / declared_prereg)
             if prereg is not None

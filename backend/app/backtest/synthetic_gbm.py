@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import hashlib
 import math
-from dataclasses import dataclass
+from collections.abc import Mapping, Sequence
+from dataclasses import dataclass, replace
 from datetime import date, timedelta
 from typing import Any
 
@@ -206,13 +207,37 @@ def generate_synthetic_market(
     evaluation_days: int = EVALUATION_DAYS,
     start: date = date(2024, 1, 2),
     start_price: float = 20.0,
+    symbols: Sequence[str] | None = None,
+    industries: Mapping[str, str] | None = None,
+    dates: Sequence[date] | None = None,
 ) -> SyntheticMarket:
     if asset_count < 2:
         raise ValueError("asset_count must be at least two")
     if warmup_days < 0 or evaluation_days < 2:
         raise ValueError("warmup_days must be non-negative and evaluation_days at least two")
+    evaluation_dates = tuple(dates) if dates is not None else None
+    if evaluation_dates is not None:
+        if len(evaluation_dates) != evaluation_days:
+            raise ValueError("dates length must equal evaluation_days")
+        if len(set(evaluation_dates)) != len(evaluation_dates):
+            raise ValueError("evaluation dates must be unique")
+        if any(not isinstance(value, date) for value in evaluation_dates):
+            raise ValueError("evaluation dates must be date objects")
+        start = evaluation_dates[0]
     if not math.isfinite(start_price) or start_price <= 0:
         raise ValueError("start_price must be finite and positive")
+    if symbols is not None:
+        if len(symbols) != asset_count:
+            raise ValueError("symbols length must equal asset_count")
+        if len(set(symbols)) != len(symbols):
+            raise ValueError("synthetic symbols must be unique")
+        if any(not symbol for symbol in symbols):
+            raise ValueError("synthetic symbols must be non-empty")
+    if industries is not None:
+        if symbols is None and len(industries) != asset_count:
+            raise ValueError("industries require matching symbols")
+        if symbols is not None and set(industries) != set(symbols):
+            raise ValueError("industry map must contain exactly the synthetic symbols")
 
     scenario = SCENARIOS[spec.scenario_id]
     total_days = warmup_days + evaluation_days
@@ -278,10 +303,12 @@ def generate_synthetic_market(
     )
 
     stop = warmup_days + evaluation_days
-    symbols = tuple(f"SYN{asset_id:03d}" for asset_id in range(asset_count))
-    industries = {
+    resolved_symbols = tuple(symbols) if symbols is not None else tuple(
+        f"SYN{asset_id:03d}" for asset_id in range(asset_count)
+    )
+    resolved_industries = dict(industries) if industries is not None else {
         symbol: f"SYN_IND_{(asset_id // INDUSTRY_SIZE):02d}"
-        for asset_id, symbol in enumerate(symbols)
+        for asset_id, symbol in enumerate(resolved_symbols)
     }
     all_scores = compute_signal_scores(
         full_close,
@@ -294,9 +321,9 @@ def generate_synthetic_market(
     }
     return SyntheticMarket(
         spec=spec,
-        dates=trading_days(start, evaluation_days),
-        symbols=symbols,
-        industries=industries,
+        dates=evaluation_dates or trading_days(start, evaluation_days),
+        symbols=resolved_symbols,
+        industries=resolved_industries,
         open=np.array(full_open[warmup_days:stop], dtype=np.float32, copy=True),
         high=np.array(full_high[warmup_days:stop], dtype=np.float32, copy=True),
         low=np.array(full_low[warmup_days:stop], dtype=np.float32, copy=True),
@@ -336,7 +363,7 @@ def build_synthetic_panel(market: SyntheticMarket) -> pl.DataFrame:
 def build_project_market(market: SyntheticMarket) -> MarketDataMatrix:
     return build_market_data_matrix(
         build_synthetic_panel(market),
-        field_columns=set(SIGNAL_MODES),
+        field_columns=set(market.scores),
     )
 
 
@@ -358,7 +385,7 @@ def build_strategy_signals(
     top_rank: int = TOP_RANK,
     industry_cap: int = INDUSTRY_CAP,
 ) -> SignalMatrix:
-    if signal_mode not in SIGNAL_MODES:
+    if signal_mode not in market.scores:
         raise ValueError(f"unknown synthetic signal mode: {signal_mode}")
     base = base_market or build_project_market(market)
     strategy = FactorRankResearchMatrixStrategy(scoring={signal_mode: 1.0})
@@ -496,6 +523,130 @@ def _simulation_metrics(
         "max_exposure": float(stats.get("max_exposure", 0.0)),
         "n_trades": int(stats.get("n_trades", 0)),
         "turnover": float(one_way_turnover),
+    }
+
+
+def with_fixed_score(
+    market: SyntheticMarket,
+    *,
+    scores: np.ndarray,
+    score_name: str = "fixed_strategy",
+) -> SyntheticMarket:
+    values = np.asarray(scores, dtype=np.float32)
+    if values.shape != market.shape:
+        raise ValueError("fixed scores must match market shape")
+    if not np.isfinite(values).all():
+        raise ValueError("fixed scores must be finite")
+    if np.any(values < 0.0) or np.any(values > 100.0):
+        raise ValueError("fixed scores must be between 0 and 100")
+    return replace(market, scores={score_name: np.array(values, copy=True)}), score_name
+
+
+def run_fixed_score_path(
+    spec: SyntheticPathSpec,
+    *,
+    scores: np.ndarray,
+    score_name: str = "fixed_strategy",
+    asset_count: int = ASSET_COUNT,
+    warmup_days: int = WARMUP_DAYS,
+    evaluation_days: int = EVALUATION_DAYS,
+    max_positions: int = MAX_POSITIONS,
+    max_hold_days: int = MAX_HOLD_DAYS,
+    top_rank: int = TOP_RANK,
+    industry_cap: int = INDUSTRY_CAP,
+    stop_loss_pct: float | None = -0.12,
+    cost_multipliers: tuple[int, ...] = COST_MULTIPLIERS,
+    symbols: Sequence[str] | None = None,
+    industries: Mapping[str, str] | None = None,
+    dates: Sequence[date] | None = None,
+) -> dict[str, Any]:
+    market = generate_synthetic_market(
+        spec,
+        asset_count=asset_count,
+        warmup_days=warmup_days,
+        evaluation_days=evaluation_days,
+        symbols=symbols,
+        industries=industries,
+        dates=dates,
+    )
+    market, resolved_name = with_fixed_score(market, scores=scores, score_name=score_name)
+    base = build_project_market(market)
+    engine = BacktestEngine(None)
+    years = evaluation_days / TRADING_DAYS_PER_YEAR
+    benchmark_matrix = build_benchmark_market(market, base_market=base)
+    benchmarks = {
+        cost: _simulation_metrics(
+            engine,
+            benchmark_matrix,
+            matcher_config(
+                cost,
+                stop_loss_pct=None,
+                max_positions=asset_count,
+                max_hold_days=None,
+            ),
+            years=years,
+        )
+        for cost in cost_multipliers
+    }
+    strategy_matrix = build_strategy_market(
+        market,
+        resolved_name,
+        base_market=base,
+        top_rank=top_rank,
+        industry_cap=industry_cap,
+    )
+    observations: list[dict[str, Any]] = []
+    for cost_multiplier in cost_multipliers:
+        metrics = _simulation_metrics(
+            engine,
+            strategy_matrix,
+            matcher_config(
+                cost_multiplier,
+                stop_loss_pct=stop_loss_pct,
+                max_positions=max_positions,
+                max_hold_days=max_hold_days,
+            ),
+            years=years,
+        )
+        benchmark = benchmarks[cost_multiplier]
+        observations.append({
+            "scenario_id": spec.scenario_id,
+            "beta": spec.beta,
+            "path_id": spec.path_id,
+            "signal_mode": resolved_name,
+            "stop_variant": "stop_12" if stop_loss_pct == -0.12 else "custom_stop",
+            "stop_loss_pct": stop_loss_pct,
+            "cost_multiplier": cost_multiplier,
+            **{f"strategy_{key}": value for key, value in metrics.items()},
+            **{f"benchmark_{key}": value for key, value in benchmark.items()},
+            "excess_return": float(metrics["total_return"]) - float(benchmark["total_return"]),
+        })
+    return {
+        "signal_name": resolved_name,
+        "path_key": {
+            "scenario_id": spec.scenario_id,
+            "beta": spec.beta,
+            "path_id": spec.path_id,
+        },
+        "realized": {
+            "scenario_id": spec.scenario_id,
+            "beta": spec.beta,
+            "path_id": spec.path_id,
+            "close_sha256": hashlib.sha256(market.close.tobytes()).hexdigest(),
+            "equal_weight_annual_return": market.realized_equal_weight_return,
+            "equal_weight_annual_volatility": market.realized_equal_weight_volatility,
+        },
+        "benchmarks": [
+            {
+                "scenario_id": spec.scenario_id,
+                "beta": spec.beta,
+                "path_id": spec.path_id,
+                "cost_multiplier": cost_multiplier,
+                **metrics,
+            }
+            for cost_multiplier, metrics in benchmarks.items()
+        ],
+        "observations": observations,
     }
 
 
