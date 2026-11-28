@@ -220,7 +220,7 @@ def _read_parquet(path: Path, table: str) -> pl.DataFrame | None:
     if not path.exists():
         return None
     try:
-        return pl.read_parquet(path)
+        return pl.read_parquet(path, glob=False)
     except Exception as exc:  # noqa: BLE001 - 数据源文件损坏时按缺失处理
         logger.warning("读取财务表 %s 失败: %s", table, exc)
         return None
