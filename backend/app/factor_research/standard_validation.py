@@ -302,11 +302,35 @@ def plot_parameter_pareto(points: list[dict[str, Any]], path: Path) -> Path:
     return _save(image, path)
 
 
+def parameter_bootstrap_series(distributions: dict[str, Any]) -> dict[str, dict[str, float]]:
+    """Normalize standard or legacy bootstrap windows for chart rendering."""
+    windows = distributions.get("windows") if isinstance(distributions, dict) else None
+    source = windows if isinstance(windows, dict) else distributions
+    output: dict[str, dict[str, float]] = {}
+    for name, distribution in (source or {}).items():
+        if not isinstance(distribution, dict):
+            continue
+        values = {}
+        for target, candidates in {
+            "p05": ("total_p05", "p05"),
+            "p50": ("total_p50", "p50"),
+            "p95": ("total_p95", "p95"),
+        }.items():
+            for candidate in candidates:
+                value = distribution.get(candidate)
+                if isinstance(value, (int, float)):
+                    values[target] = float(value)
+                    break
+        if values:
+            output[str(name)] = values
+    return output
+
+
 def plot_parameter_bootstrap(distributions: dict[str, Any], path: Path) -> Path:
     image = Image.new("RGB", (1100, 620), "white")
     draw = ImageDraw.Draw(image)
     left, top, right, bottom = _draw_axes(draw, 1100, 620, "Parameter MC bootstrap distribution")
-    items = list(distributions.items())
+    items = list(parameter_bootstrap_series(distributions).items())
     if not items:
         _text(draw, left, top, "no data")
         return _save(image, path)

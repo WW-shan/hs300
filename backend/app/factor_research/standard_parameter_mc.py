@@ -6,6 +6,8 @@ import hashlib
 from pathlib import Path
 from typing import Any
 
+import numpy as np
+
 from app.factor_research.standard_validation import (
     plot_parameter_artifacts,
 )
@@ -17,6 +19,80 @@ DEFAULT_CONSTRAINTS = {
     "require_plateau": True,
     "require_cost_monotonic": True,
 }
+
+TRADING_DAYS_PER_YEAR = 252
+
+
+def bootstrap_equity_curve(
+    curve: list[dict[str, Any]],
+    *,
+    block_size: int = 20,
+    bootstrap_paths: int = 2000,
+    seed: int,
+) -> dict[str, Any]:
+    """Bootstrap a portfolio's realized equity curve with moving blocks.
+
+    The input curve is observed strategy output, not a fitted return summary.
+    Circular blocks preserve adjacent-day dependence while keeping every
+    sampled path exactly as long as the source window.
+    """
+    values = np.asarray([row.get("value") for row in curve], dtype=np.float64)
+    if values.size < 2 or not np.isfinite(values).all() or np.any(values <= 0.0):
+        raise ValueError("equity curve requires at least two positive finite values")
+    returns = values[1:] / values[:-1] - 1.0
+    observations = int(returns.size)
+    block_size = min(int(block_size), observations)
+    if block_size <= 0 or bootstrap_paths <= 0:
+        raise ValueError("invalid bootstrap configuration")
+
+    blocks_per_path = int(np.ceil(observations / block_size))
+    rng = np.random.default_rng(seed)
+    starts = rng.integers(
+        0,
+        observations,
+        size=(int(bootstrap_paths), blocks_per_path),
+    )
+    indices = (starts[..., None] + np.arange(block_size)) % observations
+    sampled = returns[indices].reshape(int(bootstrap_paths), -1)[:, :observations]
+    path_values = np.cumprod(1.0 + sampled, axis=1)
+    totals = path_values[:, -1] - 1.0
+
+    path_peaks = np.maximum.accumulate(
+        np.concatenate([np.ones((path_values.shape[0], 1)), path_values], axis=1),
+        axis=1,
+    )
+    drawdowns = path_values / path_peaks[:, 1:] - 1.0
+    max_drawdowns = drawdowns.min(axis=1)
+    path_means = sampled.mean(axis=1)
+    path_volatility = sampled.std(axis=1, ddof=0)
+    sharpes = np.divide(
+        path_means,
+        path_volatility,
+        out=np.zeros_like(path_means),
+        where=path_volatility > 1e-12,
+    ) * np.sqrt(TRADING_DAYS_PER_YEAR)
+    years = observations / TRADING_DAYS_PER_YEAR
+
+    def quantile(values: np.ndarray, probability: float) -> float:
+        return round(float(np.quantile(values, probability)), 8)
+
+    return {
+        "method": "moving_block_bootstrap",
+        "block_size": block_size,
+        "bootstrap_paths": int(bootstrap_paths),
+        "seed": int(seed),
+        "observations": observations,
+        "total_p05": quantile(totals, 0.05),
+        "total_p50": quantile(totals, 0.50),
+        "total_p95": quantile(totals, 0.95),
+        "annualized_p05": round(float(np.quantile((1.0 + totals) ** (1.0 / years) - 1.0, 0.05)), 8),
+        "annualized_p50": round(float(np.quantile((1.0 + totals) ** (1.0 / years) - 1.0, 0.50)), 8),
+        "annualized_p95": round(float(np.quantile((1.0 + totals) ** (1.0 / years) - 1.0, 0.95)), 8),
+        "sharpe_p50": quantile(sharpes, 0.50),
+        "mdd_p05": quantile(max_drawdowns, 0.05),
+        "mdd_p50": quantile(max_drawdowns, 0.50),
+        "prob_positive": round(float(np.mean(totals > 0.0)), 6),
+    }
 
 
 def _metric(run: dict[str, Any], key: str) -> float | None:
@@ -69,12 +145,19 @@ def _rejection_reasons(point: dict[str, Any], constraints: dict[str, Any]) -> li
 def select_standard_parameter(
     points: list[dict[str, Any]],
     constraints: dict[str, Any] | None = None,
+    *,
+    bootstrap: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Select a parameter using train and validation only.
 
     The recent window is retained for reporting and is never read by the
     ranking key.  This is the enforceable difference from an ad-hoc scan.
     """
+    if bootstrap:
+        if bootstrap.get("method") != "moving_block_bootstrap":
+            raise ValueError("bootstrap must use moving_block_bootstrap")
+        if not isinstance(bootstrap.get("windows"), dict) or not bootstrap["windows"]:
+            raise ValueError("moving_block_bootstrap requires non-empty windows")
     policy = {**DEFAULT_CONSTRAINTS, **(constraints or {})}
     center = policy.get("center") if isinstance(policy.get("center"), dict) else None
     records: list[dict[str, Any]] = []
@@ -131,16 +214,7 @@ def select_standard_parameter(
             if not row["eligible"]
         ],
         "points": records,
-        "bootstrap": {
-            str(row.get("parameter")): {
-                "p05": float(_metric(row.get("train") or {}, "annual_return") or 0.0)
-                - float(_metric(row.get("train") or {}, "max_drawdown") or 0.0) * 0.5,
-                "p50": float(_metric(row.get("train") or {}, "annual_return") or 0.0),
-                "p95": float(_metric(row.get("train") or {}, "annual_return") or 0.0)
-                + float(_metric(row.get("train") or {}, "max_drawdown") or 0.0) * 0.5,
-            }
-            for row in records
-        },
+        "bootstrap": dict(bootstrap or {}),
     }
 
 

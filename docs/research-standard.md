@@ -19,7 +19,7 @@
 新增或字节变化的研究必须按 `docs/superpowers/specs/2026-11-28-standard-research-validation-design.md` 提供 `metrics.standard_validation`：
 
 - `project_formal` / `synthetic_market_stress`：GBM 必须完成至少 100 条路径、4 个情景、2 个相关性和 2x/3x/5x 成本轴，必须有同路径等权基准、无杠杆、确定性重放和至少两张 PNG。
-- 参数搜索：必须使用 `train_select_validation_confirm`，训练期选参、验证期确认，近期/测试只披露；必须输出参数路径图、收益-MDD Pareto 图和 bootstrap 图。
+- 参数搜索：必须使用 `train_select_validation_confirm`，训练期选参、验证期确认，近期/测试只披露；必须输出参数路径图、收益-MDD Pareto 图和 bootstrap 图。Bootstrap 必须由选中候选的真实权益曲线做确定性 moving-block 重采样，记录 block size、路径数和 seed；不得用收益/MDD 加减乘除伪造分位区间。
 - 图像与 JSON/Markdown 一样必须有 sidecar、进入 ResearchLedger，并使用不可覆盖发布。
 - 历史结果按 grandfather hash 保持原样；新结果没有标准验证回执时合同审计 fail-closed。
 

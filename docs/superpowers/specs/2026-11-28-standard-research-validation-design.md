@@ -58,7 +58,7 @@
    - 再按 min(train robust score, validation robust score) 排序
    - 再按验证收益、Sharpe、MDD 和参数靠近冻结中心的顺序打破平局
 5. 近期/测试结果只披露，不参与选择。
-6. 对候选参数执行 moving-block bootstrap，输出分位区间。
+6. 对选中候选的真实权益曲线执行确定性 moving-block bootstrap，输出分位区间，并记录 block size、重采样路径数和 seed。
 7. 输出参数曲线图、收益-MDD Pareto 图、bootstrap 分布图。
 
 硬约束：
@@ -69,6 +69,7 @@
 - 至少 20 个交易或项目既有最低交易门槛
 - 3x 成本下不能出现非预期失效
 - 参数平台不能只靠单点最优
+- Bootstrap 必须来自真实权益曲线；用收益和 MDD 派生出的伪区间不得进入回执
 - 结果必须记录未选参数及负知识
 
 ## 3. 标准验证回执
