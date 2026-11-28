@@ -363,7 +363,7 @@ def build_synthetic_panel(market: SyntheticMarket) -> pl.DataFrame:
 def build_project_market(market: SyntheticMarket) -> MarketDataMatrix:
     return build_market_data_matrix(
         build_synthetic_panel(market),
-        field_columns=set(market.scores),
+        field_columns=set(market.scores) | {"amount", "turnover_rate"},
     )
 
 

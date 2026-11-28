@@ -150,6 +150,7 @@ def audit_repository(root: Path) -> dict[str, Any]:
             parameter_decl = declaration.get("parameter_mc") or {}
             if gbm_decl.get("required") is True and not (
                 "run_fixed_score_path(" in runner_text
+                or "run_policy_path(" in runner_text
                 or "run_standard_gbm" in runner_text
                 or "run_standard_validation" in runner_text
             ):

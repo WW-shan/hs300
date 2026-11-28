@@ -1,0 +1,170 @@
+{
+  "created_at": "2026-11-28T10:58:24+08:00",
+  "data_source": "synthetic_gbm",
+  "execution": {
+    "cost_multiplier": 2,
+    "leverage": "none",
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0
+  },
+  "falsification_checks": [
+    "policy_injection_through_project_service",
+    "vol_12_budget_scale_le_1",
+    "same_seed_byte_identical_replay",
+    "signal_t_fills_at_t_plus_one_open_only",
+    "same_path_equal_weight_benchmark",
+    "plugins_and_artifacts_sidecar_bound"
+  ],
+  "gates": {
+    "cost_multipliers": [
+      2,
+      3,
+      5
+    ],
+    "deterministic_replay": true,
+    "five_x_hard_rejection": false,
+    "no_leverage": true,
+    "path_count": 100,
+    "same_path_benchmark": true,
+    "scenarios": 4
+  },
+  "hypothesis": "The policy will enforce the 12% volatility budget and preserve the no-leverage constraint under synthetic paths, but GBM remains a diagnostic null for real financial alpha.",
+  "input_hashes": {
+    "r550_result": "4fc131f34cefad189a943134f66c9fc92846c2f19d9e14f2a109cbf92af08f32",
+    "r551_result": "0a15775b38b19f808db9c768af7a666d6f4a448e39aa1beb23ea8fbe126524f6",
+    "r552_result": "530a2a9ba9bd431145d64203283c11c6f5ca2f7b9de5a7f9e7a9e5ca706dab18"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "parameters": {
+    "betas": [
+      0.0,
+      0.7
+    ],
+    "cost_multipliers": [
+      2,
+      3,
+      5
+    ],
+    "evaluation_days": 504,
+    "execution": {
+      "five_x_policy": "warning_only",
+      "leverage": "none",
+      "matching": "open_t+1",
+      "max_exposure_pct": 1.0
+    },
+    "fixed_addons": [
+      "cf_r547_cash_quality",
+      "cf_r547_value_quality_safety"
+    ],
+    "model": "geometric_brownian_motion",
+    "output_policy": {
+      "active_version": null,
+      "orders_generated": false,
+      "paper_target_generated": false,
+      "production_enabled": false
+    },
+    "path_count": 100,
+    "policy": "vol_12",
+    "policy_variant": {
+      "floor": 0.5,
+      "id": "vol_12",
+      "kind": "vol_target",
+      "lookback": 60,
+      "order": 12,
+      "target": 0.12
+    },
+    "scenarios": [
+      {
+        "annual_drift": 0.0,
+        "annual_volatility": 0.2,
+        "scenario_id": "neutral"
+      },
+      {
+        "annual_drift": 0.08,
+        "annual_volatility": 0.18,
+        "scenario_id": "bull"
+      },
+      {
+        "annual_drift": -0.08,
+        "annual_volatility": 0.25,
+        "scenario_id": "bear"
+      },
+      {
+        "annual_drift": 0.0,
+        "annual_volatility": 0.35,
+        "scenario_id": "high_volatility"
+      }
+    ],
+    "standard_validation": {
+      "gbm": {
+        "path_count": 100,
+        "required": true
+      },
+      "parameter_mc": {
+        "reason": "R552C owns parameter selection; R553 applies the fixed vol_12 policy to GBM",
+        "required": false,
+        "status": "fixed_frozen"
+      },
+      "suite_version": "v1"
+    }
+  },
+  "question": "How does the frozen R550 cash_safety strategy with the causal vol_12 position policy perform under the standardized GBM path matrix?",
+  "research_id": "R553",
+  "research_type": "synthetic_market_stress",
+  "runner": "scripts/research_r553_r550_policy_gbm_stress.py",
+  "runner_sha256": "5e65dc547fd92c8e4f94fea76b2190c7969e61260a5f06cbe211bb83299d7592",
+  "sample": {
+    "asset_count": 300,
+    "beta_count": 2,
+    "evaluation_days": 504,
+    "path_count": 100,
+    "scenario_count": 4,
+    "start": "2024-01-02"
+  },
+  "schema_version": 1,
+  "study_scope": "research_only",
+  "synthetic_model": {
+    "benchmark": "same_path_equal_weight_buy_and_hold",
+    "model": "geometric_brownian_motion",
+    "parameters": {
+      "betas": [
+        0.0,
+        0.7
+      ],
+      "cost_multipliers": [
+        2,
+        3,
+        5
+      ],
+      "scenarios": [
+        {
+          "annual_drift": 0.0,
+          "annual_volatility": 0.2,
+          "scenario_id": "neutral"
+        },
+        {
+          "annual_drift": 0.08,
+          "annual_volatility": 0.18,
+          "scenario_id": "bull"
+        },
+        {
+          "annual_drift": -0.08,
+          "annual_volatility": 0.25,
+          "scenario_id": "bear"
+        },
+        {
+          "annual_drift": 0.0,
+          "annual_volatility": 0.35,
+          "scenario_id": "high_volatility"
+        }
+      ]
+    },
+    "path_count": 100,
+    "seed": 20261125
+  }
+}
