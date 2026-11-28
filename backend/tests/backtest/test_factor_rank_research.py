@@ -515,6 +515,60 @@ def test_matrix_pipeline_neutralization_does_not_lose_asset_masked_candidates() 
     assert not result.entry[0, 2:].any()
 
 
+def test_matrix_pipeline_applies_generic_industry_position_cap() -> None:
+    from app.backtest.matrix import MatrixPipelineConfig, MatrixStrategyPipeline
+
+    panel = pl.DataFrame(
+        {
+            "symbol": ["A", "B", "C", "D"],
+            "date": [date(2024, 1, 2)] * 4,
+            "open": [10.0] * 4,
+            "high": [10.5] * 4,
+            "low": [9.5] * 4,
+            "close": [10.0] * 4,
+            "volume": [1_000.0] * 4,
+            "amount": [1.0, 2.0, 10.0, 11.0],
+            "turnover_rate": [1.0] * 4,
+            "industry_l1": ["bank", "bank", "tech", "tech"],
+        }
+    )
+    market = build_market_data_matrix(
+        panel, field_columns={"amount", "turnover_rate", "industry_l1"}
+    )
+    strategy = StrategyEngine._load_file(STRATEGY_PATH).matrix_strategy
+    result = MatrixStrategyPipeline().run(
+        strategy,
+        market,
+        {
+            "scoring": {"amount": 1.0},
+            "directions": {"amount": "high"},
+            "entry_score": 0.0,
+            "exit_score": 0.0,
+            "top_rank": 4,
+        },
+        MatrixPipelineConfig(
+            basic_filter={"enabled": False},
+            scoring={"amount": 1.0},
+            order_by="score",
+            descending=True,
+            scoring_directions={"amount": "high"},
+            industry_by_symbol={
+                "A": "bank",
+                "B": "bank",
+                "C": "tech",
+                "D": "tech",
+            },
+            max_industry_positions=1,
+        ),
+    )
+
+    assert result.entry.sum() == 2
+    assert result.entry[0, 0] == 0
+    assert result.entry[0, 1] == 1
+    assert result.entry[0, 2] == 0
+    assert result.entry[0, 3] == 1
+
+
 def test_matrix_pipeline_neutralizes_parameter_scoring_when_meta_scoring_is_empty() -> None:
     """Research strategies carry scoring in params; neutralization must see it.
 

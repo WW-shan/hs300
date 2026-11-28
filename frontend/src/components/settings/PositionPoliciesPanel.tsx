@@ -176,22 +176,28 @@ export function PositionPoliciesPanel() {
                 {p.description ? ` · ${p.description}` : ''}
               </div>
             </div>
-            <button
-              onClick={() => openEdit(p.id)}
-              className="rounded-btn border border-border p-1.5 text-secondary transition-colors hover:text-accent"
-              title="编辑"
-            >
-              <Pencil className="h-3.5 w-3.5" />
-            </button>
-            <button
-              onClick={() => {
-                if (window.confirm(`删除仓位策略「${p.label}」? 引用它的回测配置将报错。`)) deleteMut.mutate(p.id)
-              }}
-              className="rounded-btn border border-border p-1.5 text-secondary transition-colors hover:text-danger"
-              title="删除"
-            >
-              <Trash2 className="h-3.5 w-3.5" />
-            </button>
+            {p.builtin ? (
+              <span className="rounded-full border border-border px-2 py-0.5 text-[10px] text-muted">内置</span>
+            ) : (
+              <>
+                <button
+                  onClick={() => openEdit(p.id)}
+                  className="rounded-btn border border-border p-1.5 text-secondary transition-colors hover:text-accent"
+                  title="编辑"
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                </button>
+                <button
+                  onClick={() => {
+                    if (window.confirm(`删除仓位策略「${p.label}」? 引用它的回测配置将报错。`)) deleteMut.mutate(p.id)
+                  }}
+                  className="rounded-btn border border-border p-1.5 text-secondary transition-colors hover:text-danger"
+                  title="删除"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </button>
+              </>
+            )}
           </div>
         ))}
         {Object.entries(errors).map(([file, msg]) => (

@@ -1,0 +1,178 @@
+{
+  "created_at": "2026-11-28T17:37:06+08:00",
+  "data_source": "project",
+  "execution": {
+    "cost_multiplier": 2,
+    "cost_multipliers": [
+      2,
+      3,
+      5
+    ],
+    "leverage": "none",
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0
+  },
+  "falsification_checks": [
+    "strategy_loads_as_matrix_native",
+    "custom_factor_materialized_by_project_scoring",
+    "generic_industry_cap_applied",
+    "builtin_vol_target_policy_used",
+    "formal_evidence_passed",
+    "same_path_benchmark_and_100_path_gbm",
+    "r552c_reference_delta_reported",
+    "no_orders_or_active_version"
+  ],
+  "gates": {
+    "five_x_hard_rejection": false,
+    "fresh_median_positive": true,
+    "fresh_positive_min": 3,
+    "full_annual_min": 0.1,
+    "full_mdd_min": -0.18,
+    "full_sharpe_min": 0.9,
+    "long_phase_median_positive": true,
+    "long_phase_positive_min": 6,
+    "recent_return_positive": true,
+    "reference_annual_delta_min": -0.03,
+    "reference_sharpe_delta_min": -0.1,
+    "stress_3x_annual_min": 0.08,
+    "validation_annual_positive": true
+  },
+  "hypothesis": "The registered factor, standard matrix strategy and built-in volatility policy will reproduce R552C closely enough to make the candidate directly backtestable.",
+  "input_hashes": {
+    "factor": "cfb70d8ff2ee66ce3e58765f9108823b1110a09de97479853fd1f584eb757cf8",
+    "matrix": "ae5a6ff344c8b1471b6db0f112c430e373139f48add6d964de583c2f80543132",
+    "position_policies": "2ea19c2845915337404c23b971d5480750231abc06add96e1fbdfc1b25190839",
+    "r552_result": "530a2a9ba9bd431145d64203283c11c6f5ca2f7b9de5a7f9e7a9e5ca706dab18",
+    "r554_result": "cb4cbe24b3f485ef43f0812bb43917f8bda76eae74a1a49c1c22ceeb47142e5a",
+    "r555_result": "f9b9e401bb1f1d78ad48e32c629fe82dcda313960b77cf01af87dad18e69e285",
+    "r556_result": "530d4feea751b769b2cb7ad5c3ac2e682643790d41d5f8fcf819ffdb1dc85f19",
+    "strategy": "34cd5f7f1aa5233c793422affee7c5181bc4ffe9b676e4339babadf149aedffa"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "parameters": {
+    "execution": {
+      "cost_multiplier": 2,
+      "cost_multipliers": [
+        2,
+        3,
+        5
+      ],
+      "leverage": "none",
+      "matching": "open_t+1",
+      "max_exposure_pct": 1.0
+    },
+    "factor_id": "uf_r550_cash_safety_rank",
+    "fixed_parameters": {
+      "entry_score": 70.0,
+      "exit_score": 40.0,
+      "max_hold_days": 60,
+      "max_industry_positions": 3,
+      "max_positions": 10,
+      "stop_loss": -0.12,
+      "top_rank": 20
+    },
+    "gates": {
+      "five_x_hard_rejection": false,
+      "fresh_median_positive": true,
+      "fresh_positive_min": 3,
+      "full_annual_min": 0.1,
+      "full_mdd_min": -0.18,
+      "full_sharpe_min": 0.9,
+      "long_phase_median_positive": true,
+      "long_phase_positive_min": 6,
+      "recent_return_positive": true,
+      "reference_annual_delta_min": -0.03,
+      "reference_sharpe_delta_min": -0.1,
+      "stress_3x_annual_min": 0.08,
+      "validation_annual_positive": true
+    },
+    "output_policy": {
+      "active_version": null,
+      "orders_generated": false,
+      "paper_target_generated": false,
+      "production_enabled": false
+    },
+    "policy_id": "up_vol_target_14",
+    "question": "Does the UI-selectable cash-safety strategy reproduce the frozen R552C candidate when using the built-in 14% volatility policy and generic industry cap?",
+    "standard_validation": {
+      "gbm": {
+        "path_count": 100,
+        "required": true
+      },
+      "parameter_mc": {
+        "reason": "R552C selected p10_h60_v14 before this deployment-chain confirmation",
+        "required": false,
+        "source_research_id": "R552C",
+        "status": "fixed_frozen"
+      },
+      "suite_version": "v1"
+    },
+    "strategy_id": "ai_hs300_cash_safety_v14",
+    "windows": {
+      "end": "2026-11-05",
+      "fresh_starts": [
+        "2025-10-14",
+        "2026-01-05",
+        "2026-03-02",
+        "2026-05-06",
+        "2026-07-01"
+      ],
+      "long_phase_starts": [
+        "2022-05-05",
+        "2022-11-01",
+        "2023-05-04",
+        "2023-11-01",
+        "2024-05-06",
+        "2024-11-01",
+        "2025-01-02",
+        "2025-05-06",
+        "2025-10-14",
+        "2026-01-05"
+      ],
+      "recent_start": "2025-10-14",
+      "start": "2022-05-05",
+      "train_end": "2024-12-31",
+      "validation_end": "2025-10-13",
+      "validation_start": "2025-01-01"
+    }
+  },
+  "question": "Does the UI-selectable cash-safety strategy reproduce the frozen R552C candidate when using the built-in 14% volatility policy and generic industry cap?",
+  "research_id": "R557",
+  "research_type": "project_formal",
+  "runner": "scripts/research_r557_ready_cash_safety_confirmation.py",
+  "runner_sha256": "fb84b1d765a1c35110b4b0b0e6940e4615ab15076a0d999692988f341d79002b",
+  "sample": {
+    "end": "2026-11-05",
+    "fresh_starts": [
+      "2025-10-14",
+      "2026-01-05",
+      "2026-03-02",
+      "2026-05-06",
+      "2026-07-01"
+    ],
+    "long_phase_starts": [
+      "2022-05-05",
+      "2022-11-01",
+      "2023-05-04",
+      "2023-11-01",
+      "2024-05-06",
+      "2024-11-01",
+      "2025-01-02",
+      "2025-05-06",
+      "2025-10-14",
+      "2026-01-05"
+    ],
+    "recent_start": "2025-10-14",
+    "start": "2022-05-05",
+    "train_end": "2024-12-31",
+    "validation_end": "2025-10-13",
+    "validation_start": "2025-01-01"
+  },
+  "schema_version": 1,
+  "study_scope": "research_only"
+}

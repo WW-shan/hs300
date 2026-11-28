@@ -3612,6 +3612,7 @@ class MatrixPipelineConfig:
     asset_mask: np.ndarray | None = None
     neutralize: Mapping[str, Any] | None = None
     industry_by_symbol: Mapping[str, str] | None = None
+    max_industry_positions: int = 0
     protect_strategy_cache: bool = False
 
 
@@ -3712,7 +3713,19 @@ class MatrixStrategyPipeline:
                 )
                 validate_signal_matrix(signals, market.shape)
 
-            entry = (signals.entry.astype(bool) & basic_mask).astype(np.uint8)
+            entry_mask = signals.entry.astype(bool) & basic_mask
+            max_industry_positions = int(config.max_industry_positions or 0)
+            if max_industry_positions > 0:
+                if not config.industry_by_symbol:
+                    raise ValueError("行业持仓上限缺少 industry_by_symbol")
+                entry_mask = _limit_industry_positions(
+                    entry_mask,
+                    signals.score,
+                    market.symbols,
+                    config.industry_by_symbol,
+                    max_industry_positions,
+                )
+            entry = entry_mask.astype(np.uint8)
 
             def resolve_feature(current_market, name):
                 if name in neutralized:
@@ -3746,6 +3759,32 @@ class MatrixStrategyPipeline:
             entry_signal_ids=signals.entry_signal_ids,
             exit_signal_ids=signals.exit_signal_ids,
         )
+
+
+def _limit_industry_positions(
+    eligible: np.ndarray,
+    score: np.ndarray,
+    symbols: Sequence[str],
+    industry_by_symbol: Mapping[str, str],
+    maximum: int,
+) -> np.ndarray:
+    """Keep the highest-scored eligible names under a per-industry cap."""
+    if maximum <= 0:
+        return eligible
+    capped = np.zeros(eligible.shape, dtype=bool)
+    for time_id in range(eligible.shape[0]):
+        asset_ids = np.flatnonzero(eligible[time_id])
+        order = asset_ids[np.argsort(-score[time_id, asset_ids], kind="stable")]
+        counts: dict[str, int] = {}
+        for asset_id in order:
+            industry = industry_by_symbol.get(
+                symbols[int(asset_id)], "unclassified"
+            )
+            if counts.get(industry, 0) >= maximum:
+                continue
+            counts[industry] = counts.get(industry, 0) + 1
+            capped[time_id, asset_id] = True
+    return capped
 
 
 def _neutralize_scoring_names(

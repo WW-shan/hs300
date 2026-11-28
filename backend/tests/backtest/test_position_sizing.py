@@ -135,7 +135,7 @@ def test_save_list_get_delete_cycle(tmp_path: Path) -> None:
     assert saved["id"] == "up_vol_test"
     views, errors = pp.list_policies(tmp_path)
     assert errors == {}
-    assert [v["id"] for v in views] == ["up_vol_test"]
+    assert [v["id"] for v in views] == ["up_vol_target_14", "up_vol_test"]
     policy = pp.get_policy(tmp_path, "up_vol_test")
     assert policy is not None
     out = smoke_compute(policy.compute)
@@ -170,7 +170,7 @@ def test_broken_file_isolated_not_fatal(tmp_path: Path) -> None:
     (d / "broken.py").write_text("def (", encoding="utf-8")
     (d / "danger.py").write_text("import os\n", encoding="utf-8")
     views, errors = pp.list_policies(tmp_path)
-    assert [v["id"] for v in views] == ["up_good"]
+    assert [v["id"] for v in views] == ["up_vol_target_14", "up_good"]
     assert set(errors) == {"broken.py", "danger.py"}
 
 
@@ -183,5 +183,27 @@ def test_duplicate_id_rejected(tmp_path: Path) -> None:
     (d / "a.py").write_text(code, encoding="utf-8")
     (d / "b.py").write_text(code, encoding="utf-8")
     views, errors = pp.list_policies(tmp_path)
-    assert [v["id"] for v in views] == ["up_dup"]
+    assert [v["id"] for v in views] == ["up_vol_target_14", "up_dup"]
     assert "重复策略 id" in errors["b.py"]
+
+
+def test_builtin_portfolio_vol_target_policy_is_read_only_and_causal(tmp_path: Path) -> None:
+    policy = pp.get_policy(tmp_path, "up_vol_target_14")
+
+    assert policy is not None
+    assert policy.builtin is True
+    assert policy.label == "组合波动目标14%"
+    ctx = synthetic_context(3)
+    result = policy.compute(
+        type(ctx)(
+            selected=ctx.selected,
+            recent_returns=ctx.recent_returns,
+            closed_trades=ctx.closed_trades,
+            portfolio=ctx.portfolio,
+            params={"target": 0.14, "lookback": 60, "floor": 0.5},
+        )
+    )
+    weights, scale = normalize_result(result, 3)
+    assert weights == pytest.approx([1 / 3, 1 / 3, 1 / 3])
+    assert 0.0 < scale <= 1.0
+    assert pp.delete_policy(tmp_path, "up_vol_target_14") is False

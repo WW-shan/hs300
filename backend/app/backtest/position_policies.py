@@ -16,6 +16,7 @@ from __future__ import annotations
 import ast
 import json
 import logging
+import math
 import re
 import secrets
 import threading
@@ -23,7 +24,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from app.backtest.position_sizing import ComputeFn, smoke_compute
+from app.backtest.position_sizing import ComputeFn, PositionSizingResult, smoke_compute
 from app.services.fs_utils import atomic_write_text
 from app.strategy.ai_generator import AIStrategyGenerator
 
@@ -44,6 +45,59 @@ class PolicyDefinition:
     params: tuple[dict, ...]  # 与策略 META params 同构
     compute: ComputeFn
     source_file: str  # 相对 data_dir 的路径, 冒烟/列表展示用
+    builtin: bool = False
+
+
+def _portfolio_recent_return(ctx: Any, lookback: int) -> list[float]:
+    series = [list(values) for values in ctx.recent_returns.values()]
+    if not series:
+        return []
+    length = min(len(values) for values in series)
+    if length == 0:
+        return []
+    length = min(length, max(2, int(lookback)))
+    return [
+        sum(float(values[-length + index]) for values in series) / len(series)
+        for index in range(length)
+    ]
+
+
+def _compute_builtin_vol_target(ctx: Any) -> PositionSizingResult:
+    selected = len(ctx.selected)
+    if selected == 0:
+        raise ValueError("vol target policy requires at least one selected candidate")
+    target = float(ctx.params.get("target", 0.14))
+    lookback = int(ctx.params.get("lookback", 60))
+    floor = float(ctx.params.get("floor", 0.5))
+    values = _portfolio_recent_return(ctx, lookback)
+    scale = 1.0
+    if len(values) >= 2:
+        mean = sum(values) / len(values)
+        variance = sum((value - mean) ** 2 for value in values) / (len(values) - 1)
+        annual_vol = math.sqrt(variance) * math.sqrt(252.0)
+        if annual_vol > 1e-12:
+            scale = min(1.0, max(floor, target / annual_vol))
+    return PositionSizingResult(
+        weights=[1.0 / selected] * selected,
+        budget_scale=min(1.0, max(0.01, scale)),
+    )
+
+
+BUILTIN_POLICIES = {
+    "up_vol_target_14": PolicyDefinition(
+        id="up_vol_target_14",
+        label="组合波动目标14%",
+        description="60日组合波动目标14%，最低预算50%，只缩不放",
+        params=(
+            {"id": "target", "label": "年化波动目标", "type": "float", "default": 0.14, "min": 0.05, "max": 0.30, "step": 0.01},
+            {"id": "lookback", "label": "回看交易日", "type": "int", "default": 60, "min": 20, "max": 120, "step": 5},
+            {"id": "floor", "label": "最低预算比例", "type": "float", "default": 0.50, "min": 0.10, "max": 1.0, "step": 0.05},
+        ),
+        compute=_compute_builtin_vol_target,
+        source_file="<builtin>",
+        builtin=True,
+    ),
+}
 
 
 # ── 文件渲染与解析 (表单 ⇄ .py 往返) ────────────────────────
@@ -234,7 +288,7 @@ def _snapshot(data_dir: Path) -> _Snapshot:
         cached = _CACHE.get(key)
         if cached is not None and cached.signature == sig:
             return cached
-    policies: dict[str, PolicyDefinition] = {}
+    policies: dict[str, PolicyDefinition] = dict(BUILTIN_POLICIES)
     errors: dict[str, str] = {}
     if d.is_dir():
         for f in sorted(d.glob("*.py")):
@@ -271,6 +325,7 @@ def list_policies(data_dir: Path) -> tuple[list[dict], dict[str, str]]:
             "description": p.description,
             "params": list(p.params),
             "source_file": p.source_file,
+            "builtin": p.builtin,
         }
         for p in snap.policies.values()
     ]

@@ -57,6 +57,19 @@ def _validate_policy_id(policy_id: str) -> None:
 def get_position_policy(policy_id: str, request: Request) -> dict:
     _validate_policy_id(policy_id)
     d = _data_dir(request)
+    builtin = pp.get_policy(d, policy_id)
+    if builtin is not None and builtin.builtin:
+        return {
+            "id": builtin.id,
+            "meta": {
+                "id": builtin.id,
+                "label": builtin.label,
+                "description": builtin.description,
+                "params": list(builtin.params),
+            },
+            "code": "",
+            "builtin": True,
+        }
     path = d / pp.POLICY_DIR / f"{policy_id}.py"
     if not path.exists():
         raise HTTPException(status_code=404, detail=f"仓位策略不存在: {policy_id}")

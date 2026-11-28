@@ -39,6 +39,18 @@ def test_templates_endpoint(client: TestClient) -> None:
     assert keys == ["blank", "vol_target", "drawdown"]
 
 
+def test_builtin_policy_is_listed_and_visible_but_not_deletable(client: TestClient) -> None:
+    listed = client.get("/api/backtest/position-policies").json()["policies"]
+    builtin = next(policy for policy in listed if policy["id"] == "up_vol_target_14")
+    assert builtin["builtin"] is True
+
+    got = client.get("/api/backtest/position-policies/up_vol_target_14")
+    assert got.status_code == 200
+    assert got.json()["builtin"] is True
+    assert got.json()["meta"]["label"] == "组合波动目标14%"
+    assert client.delete("/api/backtest/position-policies/up_vol_target_14").status_code == 404
+
+
 def test_validate_rejects_bad_code(client: TestClient) -> None:
     r = client.post(
         "/api/backtest/position-policies/validate",
@@ -84,10 +96,13 @@ def test_save_get_list_delete_cycle(client: TestClient, tmp_path: Path) -> None:
     assert "def compute(ctx)" in got["code"]
 
     listed = client.get("/api/backtest/position-policies").json()
-    assert [p["id"] for p in listed["policies"]] == [policy_id]
+    assert [p["id"] for p in listed["policies"]] == ["up_vol_target_14", policy_id]
+    builtin = next(p for p in listed["policies"] if p["id"] == "up_vol_target_14")
+    assert builtin["builtin"] is True
 
     assert client.delete(f"/api/backtest/position-policies/{policy_id}").status_code == 200
-    assert client.get("/api/backtest/position-policies").json()["policies"] == []
+    remaining = client.get("/api/backtest/position-policies").json()["policies"]
+    assert [p["id"] for p in remaining] == ["up_vol_target_14"]
 
 
 def test_backtest_run_with_unknown_policy_returns_400(client: TestClient) -> None:

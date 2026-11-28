@@ -1,0 +1,17 @@
+{
+  "attempt": 2,
+  "created_at": "2026-11-28T17:52:36+08:00",
+  "failed_stage": "publish_research_artifacts_preregistration_validation",
+  "fix": "publish R557C with the cost axis outside execution",
+  "negative_knowledge": [
+    "All costly computations can succeed and publication can still fail if preregistration strictness is not validated before the run.",
+    "Runner bytes changed after preregistration, so R557B cannot reuse its original preregistration."
+  ],
+  "observed_failure": "execution.cost_multipliers: Extra inputs are not permitted",
+  "research_id": "R557B",
+  "research_type": "project_formal",
+  "root_cause": "The preregistration execution schema allows only the single baseline cost_multiplier; the full cost axis belongs in result metrics and design, not execution",
+  "runner": "scripts/research_r557_ready_cash_safety_confirmation.py",
+  "schema_version": 1,
+  "status": "failed_before_publication"
+}

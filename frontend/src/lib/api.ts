@@ -882,6 +882,7 @@ export interface PositionPolicyInfo {
   description: string
   params: StrategyParamDef[]
   source_file: string
+  builtin: boolean
 }
 export interface PositionPolicyTemplate {
   key: string

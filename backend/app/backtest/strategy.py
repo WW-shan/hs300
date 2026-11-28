@@ -2173,13 +2173,23 @@ class StrategyBacktestService:
             scoring = effective_scoring(s.meta.get("scoring"), overrides)
             try:
                 neutralize_spec = effective_neutralize(s.meta, overrides)
+                try:
+                    max_industry_positions = int(
+                        params.get("max_industry_positions", 0) or 0
+                    )
+                except (TypeError, ValueError) as exc:
+                    raise ValueError(
+                        "max_industry_positions must be an integer"
+                    ) from exc
+                if max_industry_positions < 0:
+                    raise ValueError("max_industry_positions must be non-negative")
                 industry_by_symbol = None
-                if neutralize_enabled(neutralize_spec):
+                if neutralize_enabled(neutralize_spec) or max_industry_positions > 0:
                     configured_industries = params.get("industry_by_symbol")
                     if configured_industries is not None:
                         if not isinstance(configured_industries, Mapping) or not configured_industries:
                             raise ValueError(
-                                "评分中性化 industry_by_symbol 必须是非空映射"
+                                "industry_by_symbol 必须是非空映射"
                             )
                         industry_by_symbol = {
                             str(symbol): str(industry)
@@ -2212,6 +2222,7 @@ class StrategyBacktestService:
                     ),
                     neutralize=neutralize_spec,
                     industry_by_symbol=industry_by_symbol,
+                    max_industry_positions=max_industry_positions,
                     protect_strategy_cache=prepared is not None,
                 )
                 if prepared is None:
