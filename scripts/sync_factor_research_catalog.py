@@ -7,14 +7,14 @@ from pathlib import Path
 
 from app.factor_research.catalog import build_catalog, save_catalog
 from app.factor_research.ledger import ResearchLedger
-from app.factors.store import load_into_registry
+from app.factors.store import load_runtime_registry
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 
 
 def main() -> int:
-    load_into_registry(DATA)
+    load_runtime_registry(DATA)
     snapshot = build_catalog(DATA)
     path = save_catalog(DATA, snapshot)
     ledger = ResearchLedger(DATA)

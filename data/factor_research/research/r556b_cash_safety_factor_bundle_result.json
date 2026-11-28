@@ -1,0 +1,339 @@
+{
+  "conclusion": "rejected",
+  "formal_evidence": null,
+  "gate_results": {
+    "checks": {
+      "all_definitions_loaded": true,
+      "coverage_min": true,
+      "full_ic_min": true,
+      "neutral_full_ic_min": true,
+      "recent_ic_positive": true,
+      "train_ic_min": true,
+      "validation_ic_positive": false
+    },
+    "failed": [
+      "validation_ic_positive"
+    ],
+    "pass": false
+  },
+  "generated_at": "2026-11-28T14:09:30+08:00",
+  "known_limits": [
+    "R556 is a factor-only statistical reconciliation and makes no portfolio-return claim.",
+    "The reusable rank composite preserves the source factor signs but is not numerically identical to R531's internal composite.",
+    "A negative validation IC blocks factor-set promotion even if full and recent IC are positive.",
+    "No active version, orders, paper targets or production enablement are produced."
+  ],
+  "metrics": {
+    "coverage": {
+      "ratio": 0.908378,
+      "rows": 271388,
+      "valid_rows": 246523
+    },
+    "definitions": {
+      "cf_r550_cash_quality": {
+        "dependencies": [
+          "accrual",
+          "fcf_proxy_to_revenue_ttm",
+          "ocf_ni",
+          "ocf_to_revenue_ttm"
+        ],
+        "kind": "composite",
+        "path": "data/user_data/custom_factors/cf_r550_cash_quality.json",
+        "sha256": "050a9043b2b2c8659197a8f949c521fada1526b7765d8d748fd9b262f79de7ae",
+        "warmup_bars": 1
+      },
+      "cf_r550_cash_safety": {
+        "dependencies": [
+          "accrual",
+          "amount",
+          "close",
+          "debt_ratio_latest",
+          "ext_alt_hs300_dividend_yield",
+          "ext_alt_hs300_fund_holding_ratio_low",
+          "ext_alt_hs300_vol_of_vol_20d_low",
+          "fcf_proxy_to_revenue_ttm",
+          "ocf_debt",
+          "ocf_ni",
+          "ocf_to_revenue_ttm",
+          "pb_latest",
+          "raw_close",
+          "turnover_rate"
+        ],
+        "kind": "composite",
+        "path": "data/user_data/custom_factors/cf_r550_cash_safety.json",
+        "sha256": "8f7f418f07a42c9a3d63b09c1c2487513898d5e9e82f06ab4afb250fe291d9b0",
+        "warmup_bars": 121
+      },
+      "cf_r550_stable7": {
+        "dependencies": [
+          "amount",
+          "close",
+          "ext_alt_hs300_dividend_yield",
+          "ext_alt_hs300_fund_holding_ratio_low",
+          "ext_alt_hs300_vol_of_vol_20d_low",
+          "turnover_rate"
+        ],
+        "kind": "composite",
+        "path": "data/user_data/custom_factors/cf_r550_stable7.json",
+        "sha256": "09b2a854a9301a9a037b937cb55478f68bde58349ba948467425baf1eecffa0a",
+        "warmup_bars": 121
+      },
+      "cf_r550_value_quality_safety": {
+        "dependencies": [
+          "accrual",
+          "debt_ratio_latest",
+          "ocf_debt",
+          "pb_latest",
+          "raw_close"
+        ],
+        "kind": "composite",
+        "path": "data/user_data/custom_factors/cf_r550_value_quality_safety.json",
+        "sha256": "646087a150275ae4e8c9c7cd3fb792dba87b618c92f84776741b2785ca882bac",
+        "warmup_bars": 1
+      },
+      "uf_r550_amount_120": {
+        "dependencies": [
+          "amount"
+        ],
+        "kind": "custom",
+        "path": "data/user_data/custom_factors/uf_r550_amount_120.json",
+        "sha256": "750d4fa26e01a8a305541c58775f82d0810b80a93a940ee79d66f560202c7ebc",
+        "warmup_bars": 121
+      },
+      "uf_r550_boll_width_10": {
+        "dependencies": [
+          "close"
+        ],
+        "kind": "custom",
+        "path": "data/user_data/custom_factors/uf_r550_boll_width_10.json",
+        "sha256": "9f8cfa3442e9ed2c8384ff798752b6d1286fa073b9b5dac1c8439f7549271ff0",
+        "warmup_bars": 11
+      },
+      "uf_r550_cash_safety_rank": {
+        "dependencies": [
+          "accrual",
+          "amount",
+          "close",
+          "debt_ratio_latest",
+          "ext_alt_hs300_dividend_yield",
+          "ext_alt_hs300_fund_holding_ratio_low",
+          "ext_alt_hs300_vol_of_vol_20d_low",
+          "fcf_proxy_to_revenue_ttm",
+          "ocf_debt",
+          "ocf_ni",
+          "ocf_to_revenue_ttm",
+          "pb_latest",
+          "raw_close",
+          "turnover_rate"
+        ],
+        "kind": "custom",
+        "path": "data/user_data/custom_factors/uf_r550_cash_safety_rank.json",
+        "sha256": "cfb70d8ff2ee66ce3e58765f9108823b1110a09de97479853fd1f584eb757cf8",
+        "warmup_bars": 121
+      },
+      "uf_r550_dividend_q70": {
+        "dependencies": [
+          "ext_alt_hs300_dividend_yield"
+        ],
+        "kind": "custom",
+        "path": "data/user_data/custom_factors/uf_r550_dividend_q70.json",
+        "sha256": "67fa7f155f5d0f5d8df7aaee423dc6dea4bc77b06ecba393733d54fe2a33eb55",
+        "warmup_bars": 1
+      },
+      "uf_r550_fund_holding_n005": {
+        "dependencies": [
+          "ext_alt_hs300_fund_holding_ratio_low"
+        ],
+        "kind": "custom",
+        "path": "data/user_data/custom_factors/uf_r550_fund_holding_n005.json",
+        "sha256": "5d2bb5e7420ed4ae79abf5923849a36be25e42e73294a818bba57df81fda7506",
+        "warmup_bars": 1
+      },
+      "uf_r550_max_return_60": {
+        "dependencies": [
+          "close"
+        ],
+        "kind": "custom",
+        "path": "data/user_data/custom_factors/uf_r550_max_return_60.json",
+        "sha256": "816ff6c376c6eaf47ef31ead1047a233cde03f2503e02615e8bc243be42bb071",
+        "warmup_bars": 62
+      },
+      "uf_r550_turnover_120": {
+        "dependencies": [
+          "turnover_rate"
+        ],
+        "kind": "custom",
+        "path": "data/user_data/custom_factors/uf_r550_turnover_120.json",
+        "sha256": "ad6631861cd3c2d2fe8e6430d69a693d75014f219598c71f61f50e352f76defa",
+        "warmup_bars": 121
+      }
+    },
+    "design": {
+      "factor_id": "uf_r550_cash_safety_rank",
+      "factor_ids": [
+        "uf_r550_cash_safety_rank",
+        "cf_r550_cash_safety",
+        "cf_r550_stable7",
+        "cf_r550_cash_quality",
+        "cf_r550_value_quality_safety",
+        "uf_r550_amount_120",
+        "uf_r550_turnover_120",
+        "uf_r550_max_return_60",
+        "uf_r550_boll_width_10",
+        "uf_r550_dividend_q70",
+        "uf_r550_fund_holding_n005"
+      ],
+      "gates": {
+        "all_definitions_loaded": true,
+        "coverage_min": 0.9,
+        "full_ic_min": 0.01,
+        "neutral_full_ic_min": 0.01,
+        "recent_ic_positive": true,
+        "train_ic_min": 0.01,
+        "validation_ic_positive": true
+      },
+      "input_sources": [
+        "r550",
+        "r552c",
+        "r553",
+        "r554",
+        "r555b"
+      ],
+      "metrics": {
+        "minimum_cross_section": 30,
+        "neutralization": {
+          "exclude": [],
+          "industry": "industry_l1",
+          "shrink": 1.0,
+          "styles": [
+            "log_float_mv"
+          ]
+        },
+        "return_col": "forward_return_5d"
+      },
+      "output_policy": {
+        "active_version": null,
+        "orders_generated": false,
+        "paper_target_generated": false,
+        "production_enabled": false
+      },
+      "question": "Can the R537/R550 cash-safety research score be reproduced by reusable registered factors without losing its cross-sectional IC?",
+      "standard_validation": {
+        "gbm": {
+          "reason": "R556 reconciles factor definitions only and produces no portfolio returns",
+          "required": false,
+          "status": "not_applicable"
+        },
+        "parameter_mc": {
+          "reason": "The factor formulas are frozen from prior research; no parameter search is run",
+          "required": false,
+          "status": "not_applicable"
+        },
+        "suite_version": "v1"
+      },
+      "windows": {
+        "end": "2026-11-05",
+        "recent_start": "2025-10-14",
+        "start": "2022-05-05",
+        "train_end": "2024-12-31",
+        "validation_end": "2025-10-13",
+        "validation_start": "2025-01-01"
+      }
+    },
+    "neutral_ic": {
+      "full": {
+        "ic_mean": 0.042924,
+        "ic_std": 0.131371,
+        "ir": 0.326738,
+        "n_dates": 1088,
+        "win_rate": 0.632353
+      },
+      "recent": {
+        "ic_mean": 0.036879,
+        "ic_std": 0.14695,
+        "ir": 0.250961,
+        "n_dates": 253,
+        "win_rate": 0.592885
+      },
+      "train": {
+        "ic_mean": 0.058723,
+        "ic_std": 0.125848,
+        "ir": 0.466615,
+        "n_dates": 649,
+        "win_rate": 0.694915
+      },
+      "validation": {
+        "ic_mean": -0.003979,
+        "ic_std": 0.114876,
+        "ir": -0.034639,
+        "n_dates": 186,
+        "win_rate": 0.467742
+      }
+    },
+    "raw_ic": {
+      "full": {
+        "ic_mean": 0.059325,
+        "ic_std": 0.290199,
+        "ir": 0.204428,
+        "n_dates": 1088,
+        "win_rate": 0.597426
+      },
+      "recent": {
+        "ic_mean": 0.05572,
+        "ic_std": 0.350072,
+        "ir": 0.159168,
+        "n_dates": 253,
+        "win_rate": 0.573123
+      },
+      "train": {
+        "ic_mean": 0.084188,
+        "ic_std": 0.254865,
+        "ir": 0.330322,
+        "n_dates": 649,
+        "win_rate": 0.645609
+      },
+      "validation": {
+        "ic_mean": -0.022524,
+        "ic_std": 0.300665,
+        "ir": -0.074913,
+        "n_dates": 186,
+        "win_rate": 0.462366
+      }
+    },
+    "standard_validation": {
+      "artifacts": [],
+      "gbm": {
+        "reason": "Factor-only reconciliation has no synthetic market strategy path",
+        "status": "not_applicable"
+      },
+      "parameter_mc": {
+        "reason": "Definitions are frozen from prior research and no parameter search is run",
+        "status": "not_applicable"
+      },
+      "schema_version": 1,
+      "suite_version": "v1"
+    }
+  },
+  "negative_knowledge": [
+    "validation_ic_positive"
+  ],
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "preregistration_sha256": "bd5ecbe0addef180ad85591ad6a0a3977cda55cc28324e7f88d27288427a065f",
+  "research_id": "R556B",
+  "research_type": "statistical_screen",
+  "runner": "scripts/research_r556_cash_safety_factor_bundle.py",
+  "runner_sha256": "3155aaeb8b8d303e425c5526cb15d99a21c8a566620efe120d3d4ce051a11548",
+  "schema_version": 1,
+  "source_result_hashes": [
+    "4fc131f34cefad189a943134f66c9fc92846c2f19d9e14f2a109cbf92af08f32",
+    "530a2a9ba9bd431145d64203283c11c6f5ca2f7b9de5a7f9e7a9e5ca706dab18",
+    "cadbd0ef340cc3173900dc46b8fc94d8210eec374a39d5bbdeabcadb2bbf6f93",
+    "cb4cbe24b3f485ef43f0812bb43917f8bda76eae74a1a49c1c22ceeb47142e5a",
+    "f9b9e401bb1f1d78ad48e32c629fe82dcda313960b77cf01af87dad18e69e285"
+  ]
+}

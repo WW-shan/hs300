@@ -1,0 +1,139 @@
+{
+  "created_at": "2026-11-28T14:06:54+08:00",
+  "data_source": "project",
+  "execution": {
+    "leverage": "none",
+    "matching": "not_applicable",
+    "max_exposure_pct": 0.0
+  },
+  "falsification_checks": [
+    "all_registered_definitions_compile",
+    "rank_composite_uses_project_registered_factors",
+    "coverage_checked",
+    "train_validation_recent_ic_reported",
+    "industry_size_neutral_ic_reported",
+    "no_portfolio_return_claim",
+    "no_orders_or_active_version"
+  ],
+  "gates": {
+    "all_definitions_loaded": true,
+    "coverage_min": 0.9,
+    "full_ic_min": 0.01,
+    "neutral_full_ic_min": 0.01,
+    "recent_ic_positive": true,
+    "train_ic_min": 0.01,
+    "validation_ic_positive": true
+  },
+  "hypothesis": "A reusable registered cash-safety factor will preserve positive full/training IC, but it will not be promoted if validation or recent IC is non-positive.",
+  "input_hashes": {
+    "cf_r550_cash_quality": "050a9043b2b2c8659197a8f949c521fada1526b7765d8d748fd9b262f79de7ae",
+    "cf_r550_cash_safety": "8f7f418f07a42c9a3d63b09c1c2487513898d5e9e82f06ab4afb250fe291d9b0",
+    "cf_r550_stable7": "09b2a854a9301a9a037b937cb55478f68bde58349ba948467425baf1eecffa0a",
+    "cf_r550_value_quality_safety": "646087a150275ae4e8c9c7cd3fb792dba87b618c92f84776741b2785ca882bac",
+    "r550": "4fc131f34cefad189a943134f66c9fc92846c2f19d9e14f2a109cbf92af08f32",
+    "r552c": "530a2a9ba9bd431145d64203283c11c6f5ca2f7b9de5a7f9e7a9e5ca706dab18",
+    "r553": "cadbd0ef340cc3173900dc46b8fc94d8210eec374a39d5bbdeabcadb2bbf6f93",
+    "r554": "cb4cbe24b3f485ef43f0812bb43917f8bda76eae74a1a49c1c22ceeb47142e5a",
+    "r555b": "f9b9e401bb1f1d78ad48e32c629fe82dcda313960b77cf01af87dad18e69e285",
+    "uf_r550_amount_120": "750d4fa26e01a8a305541c58775f82d0810b80a93a940ee79d66f560202c7ebc",
+    "uf_r550_boll_width_10": "9f8cfa3442e9ed2c8384ff798752b6d1286fa073b9b5dac1c8439f7549271ff0",
+    "uf_r550_cash_safety_rank": "cfb70d8ff2ee66ce3e58765f9108823b1110a09de97479853fd1f584eb757cf8",
+    "uf_r550_dividend_q70": "67fa7f155f5d0f5d8df7aaee423dc6dea4bc77b06ecba393733d54fe2a33eb55",
+    "uf_r550_fund_holding_n005": "5d2bb5e7420ed4ae79abf5923849a36be25e42e73294a818bba57df81fda7506",
+    "uf_r550_max_return_60": "816ff6c376c6eaf47ef31ead1047a233cde03f2503e02615e8bc243be42bb071",
+    "uf_r550_turnover_120": "ad6631861cd3c2d2fe8e6430d69a693d75014f219598c71f61f50e352f76defa"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "parameters": {
+    "factor_id": "uf_r550_cash_safety_rank",
+    "factor_ids": [
+      "uf_r550_cash_safety_rank",
+      "cf_r550_cash_safety",
+      "cf_r550_stable7",
+      "cf_r550_cash_quality",
+      "cf_r550_value_quality_safety",
+      "uf_r550_amount_120",
+      "uf_r550_turnover_120",
+      "uf_r550_max_return_60",
+      "uf_r550_boll_width_10",
+      "uf_r550_dividend_q70",
+      "uf_r550_fund_holding_n005"
+    ],
+    "gates": {
+      "all_definitions_loaded": true,
+      "coverage_min": 0.9,
+      "full_ic_min": 0.01,
+      "neutral_full_ic_min": 0.01,
+      "recent_ic_positive": true,
+      "train_ic_min": 0.01,
+      "validation_ic_positive": true
+    },
+    "input_sources": [
+      "r550",
+      "r552c",
+      "r553",
+      "r554",
+      "r555b"
+    ],
+    "metrics": {
+      "minimum_cross_section": 30,
+      "neutralization": {
+        "exclude": [],
+        "industry": "industry_l1",
+        "shrink": 1.0,
+        "styles": [
+          "log_float_mv"
+        ]
+      },
+      "return_col": "forward_return_5d"
+    },
+    "output_policy": {
+      "active_version": null,
+      "orders_generated": false,
+      "paper_target_generated": false,
+      "production_enabled": false
+    },
+    "question": "Can the R537/R550 cash-safety research score be reproduced by reusable registered factors without losing its cross-sectional IC?",
+    "standard_validation": {
+      "gbm": {
+        "reason": "R556 reconciles factor definitions only and produces no portfolio returns",
+        "required": false,
+        "status": "not_applicable"
+      },
+      "parameter_mc": {
+        "reason": "The factor formulas are frozen from prior research; no parameter search is run",
+        "required": false,
+        "status": "not_applicable"
+      },
+      "suite_version": "v1"
+    },
+    "windows": {
+      "end": "2026-11-05",
+      "recent_start": "2025-10-14",
+      "start": "2022-05-05",
+      "train_end": "2024-12-31",
+      "validation_end": "2025-10-13",
+      "validation_start": "2025-01-01"
+    }
+  },
+  "question": "Can the R537/R550 cash-safety research score be reproduced by reusable registered factors without losing its cross-sectional IC?",
+  "research_id": "R556",
+  "research_type": "statistical_screen",
+  "runner": "scripts/research_r556_cash_safety_factor_bundle.py",
+  "runner_sha256": "18273173ee5a985adc9207500b3becf0e91692cf986def4546b295c7398931dc",
+  "sample": {
+    "end": "2026-11-05",
+    "recent_start": "2025-10-14",
+    "start": "2022-05-05",
+    "train_end": "2024-12-31",
+    "validation_end": "2025-10-13",
+    "validation_start": "2025-01-01"
+  },
+  "schema_version": 1,
+  "study_scope": "research_only"
+}
