@@ -1,0 +1,29 @@
+{
+  "attempt": 2,
+  "created_at": "2026-11-28T12:46:39+08:00",
+  "failed_stage": "synthetic_gbm_project_service",
+  "fix": "use a non-empty explicit params.industry_by_symbol mapping before falling back to the local industry loader",
+  "negative_knowledge": [
+    "Synthetic project-service stress tests cannot reproduce industry neutralization without an explicit industry mapping.",
+    "Ignoring an already validated explicit mapping makes the real PIT industry cap and neutralization use different sources."
+  ],
+  "observed_failure": "矩阵策略信号计算失败: 行业中性化需要本地数据目录, 当前不可用",
+  "reproducer": {
+    "asset_count": 24,
+    "beta": 0.0,
+    "engine": "BacktestEngine(None)",
+    "neutralize": {
+      "industry": "industry_l1",
+      "shrink": 1.0,
+      "styles": []
+    },
+    "path_id": 0,
+    "scenario": "neutral"
+  },
+  "research_id": "R554",
+  "research_type": "project_formal",
+  "root_cause": "StrategyBacktestService always loaded industry_l1 from a local DataStore and ignored the explicit params.industry_by_symbol mapping required by synthetic research markets",
+  "runner": "scripts/research_r554_industry_neutral_confirmation.py",
+  "schema_version": 1,
+  "status": "failed_before_publication"
+}

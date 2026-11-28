@@ -1,0 +1,195 @@
+{
+  "created_at": "2026-11-28T12:10:44+08:00",
+  "data_source": "project",
+  "execution": {
+    "cost_multiplier": 2,
+    "leverage": "none",
+    "matching": "open_t+1",
+    "max_exposure_pct": 1.0
+  },
+  "falsification_checks": [
+    "primary_variant_frozen_before_run",
+    "recent_not_used_for_variant_selection",
+    "industry_neutralization_applied_in_matrix_pipeline",
+    "same_factor_score_and_parameters_as_control",
+    "benchmark_is_project_000300_sh",
+    "equal_weight_hs300_reported_separately",
+    "gbm_100_paths_2_betas_4_scenarios_2_3_5_costs",
+    "moving_block_bootstrap_from_real_equity_curves",
+    "no_orders_or_active_version"
+  ],
+  "gates": {
+    "five_x_hard_rejection": false,
+    "fresh_median_positive": true,
+    "fresh_positive_min": 3,
+    "full_annual_min": 0.1,
+    "full_mdd_min": -0.18,
+    "full_sharpe_min": 0.9,
+    "long_phase_median_positive": true,
+    "long_phase_positive_min": 6,
+    "recent_return_positive": true,
+    "stress_3x_annual_min": 0.08,
+    "validation_annual_positive": true,
+    "validation_beats_control": true
+  },
+  "hypothesis": "Removing the cross-industry level from the frozen cash-safety score will reduce concentration and improve validation robustness without leverage.",
+  "input_hashes": {
+    "candidate_cf_r547_cash_quality": "2505efea441af5b38803f1d99148bb6d69bca5024c3ffb7f46dc110a28afbac1",
+    "candidate_cf_r547_growth_quality": "bcd29435d808f6721068dcdc76f70f4337b62d6b3b9b734efcc34f9a87adf48f",
+    "candidate_cf_r547_industry_quality": "720c8d44eb06eddd3b522b4f691521bd4ac3b323d230ba54aead20d54fb2bbe3",
+    "candidate_cf_r547_operating_efficiency": "04f9d3f219776f5d9ed3608669cefd2e817eeb5251c706efd9b8227fea3bdd93",
+    "candidate_cf_r547_smart_money_quality": "6d608712400189289febac75b68409d009e23bb075c83c12552cc18afd569d40",
+    "candidate_cf_r547_value_quality": "30c3a9c8e417f98e75db5d4498c7b07ba6fa6d4fa540c4ec83aad05465fb108f",
+    "candidate_cf_r547_value_quality_safety": "37f4e9f81309e32c55d767f5b32b2edda7585c5646c46572feca4c98d6e69bfe",
+    "r547_result": "16d8e02c680f8cd25d1d21cd701416d4dfd357f44172f7330ba1e4e138325195",
+    "r550_result": "4fc131f34cefad189a943134f66c9fc92846c2f19d9e14f2a109cbf92af08f32",
+    "r552_result": "530a2a9ba9bd431145d64203283c11c6f5ca2f7b9de5a7f9e7a9e5ca706dab18",
+    "r553_result": "cadbd0ef340cc3173900dc46b8fc94d8210eec374a39d5bbdeabcadb2bbf6f93"
+  },
+  "output_policy": {
+    "active_version": null,
+    "orders_generated": false,
+    "paper_target_generated": false,
+    "production_enabled": false
+  },
+  "parameters": {
+    "control_variant": "control",
+    "execution": {
+      "cost_multiplier": 2,
+      "leverage": "none",
+      "matching": "open_t+1",
+      "max_exposure_pct": 1.0
+    },
+    "fixed_addons": [
+      "cf_r547_cash_quality",
+      "cf_r547_value_quality_safety"
+    ],
+    "fixed_parameters": {
+      "industry_cap": 3,
+      "max_hold_days": 60,
+      "max_positions": 10,
+      "stop_loss": -0.12,
+      "vol_target": 0.14
+    },
+    "fixed_policy": {
+      "floor": 0.5,
+      "id": "vol_14",
+      "kind": "vol_target",
+      "lookback": 60,
+      "order": 14,
+      "target": 0.14
+    },
+    "fixed_variant": "cash_safety",
+    "gates": {
+      "five_x_hard_rejection": false,
+      "fresh_median_positive": true,
+      "fresh_positive_min": 3,
+      "full_annual_min": 0.1,
+      "full_mdd_min": -0.18,
+      "full_sharpe_min": 0.9,
+      "long_phase_median_positive": true,
+      "long_phase_positive_min": 6,
+      "recent_return_positive": true,
+      "stress_3x_annual_min": 0.08,
+      "validation_annual_positive": true,
+      "validation_beats_control": true
+    },
+    "neutralization": {
+      "industry": "industry_l1",
+      "recent_used_for_selection": false,
+      "selection": "fixed_before_run_from_user_neutralization_requirement",
+      "shrink": 1.0,
+      "styles": []
+    },
+    "output_policy": {
+      "active_version": null,
+      "orders_generated": false,
+      "paper_target_generated": false,
+      "production_enabled": false
+    },
+    "primary_variant": "industry_neutral",
+    "question": "Does industry-neutral scoring improve the frozen R552C cash-safety portfolio?",
+    "standard_validation": {
+      "gbm": {
+        "path_count": 100,
+        "required": true
+      },
+      "parameter_mc": {
+        "reason": "R552C selected p10_h60_v14 before this neutralization confirmation",
+        "required": false,
+        "source_research_id": "R552C",
+        "status": "fixed_frozen"
+      },
+      "suite_version": "v1"
+    },
+    "variants": {
+      "control": null,
+      "industry_neutral": {
+        "industry": "industry_l1",
+        "shrink": 1.0,
+        "styles": []
+      }
+    },
+    "windows": {
+      "end": "2026-11-05",
+      "fresh_starts": [
+        "2025-10-14",
+        "2026-01-05",
+        "2026-03-02",
+        "2026-05-06",
+        "2026-07-01"
+      ],
+      "long_phase_starts": [
+        "2022-05-05",
+        "2022-11-01",
+        "2023-05-04",
+        "2023-11-01",
+        "2024-05-06",
+        "2024-11-01",
+        "2025-01-02",
+        "2025-05-06",
+        "2025-10-14",
+        "2026-01-05"
+      ],
+      "recent_start": "2025-10-14",
+      "start": "2022-05-05",
+      "train_end": "2024-12-31",
+      "validation_end": "2025-10-13",
+      "validation_start": "2025-01-01"
+    }
+  },
+  "question": "Does industry-neutral scoring improve the frozen R552C cash-safety portfolio?",
+  "research_id": "R554",
+  "research_type": "project_formal",
+  "runner": "scripts/research_r554_industry_neutral_confirmation.py",
+  "runner_sha256": "b7b56594f7c9b8fbf548f498fa7a96c353453a67e15c5a163b467e6b71f10496",
+  "sample": {
+    "end": "2026-11-05",
+    "fresh_starts": [
+      "2025-10-14",
+      "2026-01-05",
+      "2026-03-02",
+      "2026-05-06",
+      "2026-07-01"
+    ],
+    "long_phase_starts": [
+      "2022-05-05",
+      "2022-11-01",
+      "2023-05-04",
+      "2023-11-01",
+      "2024-05-06",
+      "2024-11-01",
+      "2025-01-02",
+      "2025-05-06",
+      "2025-10-14",
+      "2026-01-05"
+    ],
+    "recent_start": "2025-10-14",
+    "start": "2022-05-05",
+    "train_end": "2024-12-31",
+    "validation_end": "2025-10-13",
+    "validation_start": "2025-01-01"
+  },
+  "schema_version": 1,
+  "study_scope": "research_only"
+}

@@ -1,0 +1,33 @@
+{
+  "attempt": 1,
+  "created_at": "2026-11-28T12:23:47+08:00",
+  "failed_stage": "project_formal_evidence_guard",
+  "fix": "set neutralized values outside the eligible universe to NaN and add an asset-mask regression test",
+  "negative_knowledge": [
+    "Industry neutralization cannot be validated while masked-out raw values remain eligible for downstream min-max normalization.",
+    "A neutralized strategy run with zero buys must fail the formal evidence guard rather than be published."
+  ],
+  "observed_failure": "execution timing audit did not pass",
+  "reproducer": {
+    "control_execution_timing": {
+      "compared_values": 234,
+      "differences": 0,
+      "status": "passed"
+    },
+    "cost": "2x",
+    "execution_timing": {
+      "compared_values": 0,
+      "differences": 0,
+      "status": "insufficient"
+    },
+    "strategy_error": "在指定区间内未产生买入信号",
+    "variant": "industry_neutral",
+    "window": "2022-05-05..2024-12-31"
+  },
+  "research_id": "R554",
+  "research_type": "project_formal",
+  "root_cause": "neutralize_matrix_feature retained raw values for assets outside the eligible asset mask; the strategy then normalized those raw values against in-pool industry z-scores and could produce no eligible entries",
+  "runner": "scripts/research_r554_industry_neutral_confirmation.py",
+  "schema_version": 1,
+  "status": "failed_before_publication"
+}
