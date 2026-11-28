@@ -67,7 +67,7 @@ def test_industry_asof_never_uses_future_effective_date() -> None:
 def test_library_census_has_all_registered_factors_and_families() -> None:
     module = _module()
     census = module.library_census(ROOT)
-    assert census["factor_count"] == 235
+    assert census["factor_count"] == 246
     assert census["window_family_count"] == 62
     assert census["threshold_family_count"] == 23
     assert census["parameter_trial_count"] == 472

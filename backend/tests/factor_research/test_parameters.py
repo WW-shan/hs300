@@ -204,8 +204,8 @@ def test_p1_manifest_covers_eight_families_and_all_catalog_members() -> None:
     assert catalog is not None
     registry = load_parameter_registry(root / "data")
 
-    assert catalog.factor_count == 235
-    assert len(catalog.factors) == 235
+    assert catalog.factor_count == 246
+    assert len(catalog.factors) == 246
     assert {
         "idio_vol",
         "cs_spread",
@@ -219,7 +219,21 @@ def test_p1_manifest_covers_eight_families_and_all_catalog_members() -> None:
     assert validate_parameter_registry(registry, {item.factor_id for item in catalog.factors}) == []
 
     rows = classify_factor_parameters(catalog.factors, registry)
-    assert len(rows) == 235
+    assert len(rows) == 246
+    r550_fixed = {
+        "uf_r550_amount_120",
+        "uf_r550_turnover_120",
+        "uf_r550_max_return_60",
+        "uf_r550_boll_width_10",
+        "uf_r550_dividend_q70",
+        "uf_r550_fund_holding_n005",
+        "cf_r550_cash_quality",
+        "cf_r550_value_quality_safety",
+        "cf_r550_stable7",
+        "cf_r550_cash_safety",
+        "uf_r550_cash_safety_rank",
+    }
+    assert {row.factor_id for row in rows if row.status == "fixed"} >= r550_fixed
     assert all(
         row.status == "grouped"
         for row in rows
